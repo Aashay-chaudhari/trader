@@ -1,9 +1,9 @@
 # Trading Journal — 2026-03-21
 
-**Run ID:** `20260321_225915`  
+**Run ID:** `20260321_232024`  
 **Phase:** research  
 **Strategist:** Codex Strategist  
-**Time:** 23:02 UTC  
+**Time:** 23:23 UTC  
 
 ## Screener Results
 
@@ -26,97 +26,97 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 
 **Overall Sentiment:** neutral
 
-> U.S. equities traded risk-off into Friday, March 20, 2026, with the S&P 500 down 1.51% and the Dow down 0.96% in broad de-risking. Several large-cap names on this list also closed lower on heavy volume, signaling fragile short-term momentum. The tape favors selective setups with tight risk controls rather than aggressive exposure.
+> Risk appetite is mixed: SPY has been hovering around the 670-680 zone while volatility has stayed elevated, with recent VIX prints in the mid-20s. Geopolitical and macro uncertainty are keeping downside tails active, so selective long setups with defined stops are preferable to broad beta exposure. In this regime, quality large caps with clear catalysts and controlled position sizing are favored.
 
-### MU [~]
-- **Sentiment:** neutral | **Confidence:** 58% | **Recommendation:** watch
+### MU [+]
+- **Sentiment:** bullish | **Confidence:** 70% | **Recommendation:** buy
 - **Observations:**
-  - MU was referenced around $469 pre-earnings with options implying about a 7% post-print swing.
-  - RSI(14) was reported near 61.737 with MACD around 7.07 (short-term momentum positive but extended).
-  - Investopedia noted YTD gain near 65%, indicating elevated volatility and positioning risk.
-- **Catalysts:** AI memory pricing and supply-demand tightness, Post-earnings estimate revisions, Semiconductor sector momentum
-- **Risks:** Post-earnings volatility crush and profit taking, Memory-cycle peak concerns, High-beta downside in risk-off tape
+  - MU traded around 385.92 with a 377.35-391.18 day range and 397.05 previous close.
+  - 52-week range is 61.54-455.50, showing strong trend persistence despite pullbacks.
+  - Earnings date was listed as March 18, 2026, and volume was 16,094,267 vs 33,870,980 average.
+- **Catalysts:** AI server memory demand and HBM ramp, Post-earnings estimate revisions, Supply tightness in DRAM/NAND
+- **Risks:** High-beta semiconductor volatility, Sharp macro risk-off drawdowns, Any negative guidance revision after recent strength
 
-### INTC [+]
-- **Sentiment:** bullish | **Confidence:** 67% | **Recommendation:** buy
+### INTC [~]
+- **Sentiment:** neutral | **Confidence:** 53% | **Recommendation:** hold
 - **Observations:**
-  - INTC closed at $43.87 on Mar 20, 2026 after a -5.00% day; prior close was $46.18 on Mar 19.
-  - RSI(14) was reported near 63.951 with MACD near 0.76, and MA20 around 46.63.
-  - 30-day range reported near $41.64 to $49.17, giving nearby support/resistance structure.
-- **Catalysts:** Continuation in semiconductor rotation, Positive estimate revisions, Follow-through above MA20 region
-- **Risks:** Break below $43.6 low invalidates setup, Sector-wide drawdown in risk-off regime, Headline risk around execution/competition
+  - INTC traded near 45.95 with a 44.70-46.48 day range and 45.58 previous close.
+  - 52-week range is 17.67-54.60, indicating large prior recovery but still below highs.
+  - Volume was 77,949,326 vs 101,516,910 average volume.
+- **Catalysts:** AI/data-center CPU demand commentary, Next earnings on Apr 23, 2026
+- **Risks:** Execution risk versus peers, Semiconductor sector beta and macro sensitivity
 
-### PANW [~]
-- **Sentiment:** neutral | **Confidence:** 55% | **Recommendation:** watch
+### PANW [-]
+- **Sentiment:** bearish | **Confidence:** 74% | **Recommendation:** watch
 - **Observations:**
-  - PANW closed at $162.95 on Mar 20, 2026, down -4.00% day/day.
-  - RSI(14) near 55.16 with MACD near -2.26 suggests mixed momentum (not deeply oversold).
-  - 30-day range near $139.57 to $172.00; current price is mid-range after a sharp pullback.
-- **Catalysts:** Cybersecurity spending resilience, Multiple expansion if rates stabilize, Reclaim of 20-day/50-day moving averages
-- **Risks:** Further de-rating in growth tech, Failure at 165-170 resistance, Macro-driven beta selloff
+  - PANW printed around 152.35 after a sharp drop from 163.50 previous close in the referenced session.
+  - Day range was 147.15-155.28 with elevated volume of 26,239,578 vs 8,387,327 average.
+  - 52-week range is 144.15-223.61, showing material drawdown from highs.
+- **Catalysts:** Integration progress and margin updates, Cybersecurity demand resilience
+- **Risks:** Further estimate cuts, Post-acquisition execution drag
 
-### UNH [-]
-- **Sentiment:** bearish | **Confidence:** 72% | **Recommendation:** sell
-- **Observations:**
-  - UNH closed at $275.59 on Mar 20, 2026, down -1.73%; intraday range was $275.00 to $283.10.
-  - Market coverage indicated prior guidance pressure including expected 2026 revenue contraction.
-  - Despite RSI(14) around 52.505, fundamental headline risk remains dominant over technical signal.
-- **Catalysts:** Further guidance cuts or reimbursement pressure, Regulatory/legal developments, Defensive sector rotation changes
-- **Risks:** Short squeeze on policy relief headlines, Value buyers stepping in near multi-month lows, Unexpectedly strong quarterly metrics
-
-### ABT [-]
-- **Sentiment:** bearish | **Confidence:** 64% | **Recommendation:** sell
-- **Observations:**
-  - ABT was reported at $105.46 close on Mar 20, 2026, down -1.61% with unusually high volume (~80.4M vs ~10.6M 50-day avg).
-  - RSI(14) around 44.879 and MACD around -0.37 indicate weak momentum.
-  - Recent references show ABT trading well below its 52-week high (~$139.06).
-- **Catalysts:** Upcoming earnings update and guidance, Medical devices segment trends, Sector rotation into/out of defensives
-- **Risks:** Oversold rebound on defensive bid, Positive earnings surprise, Short-covering after high-volume decline
-
-### HON [-]
-- **Sentiment:** bearish | **Confidence:** 60% | **Recommendation:** watch
-- **Observations:**
-  - HON was referenced at $221.50 on Mar 20, 2026 in peer-comparison market coverage.
-  - RSI(14) around 48.65 with MACD near -0.04 indicates weak/neutral momentum with bearish bias.
-  - Investing historical/technical data showed price slipping under several short-to-medium moving averages.
-- **Catalysts:** Aerospace and automation order updates, Analyst target revisions, Broader industrials sentiment
-- **Risks:** Continued de-risking in cyclicals, Failure to reclaim moving averages, Macro growth disappointments
-
-### LMT [+]
-- **Sentiment:** bullish | **Confidence:** 62% | **Recommendation:** buy
-- **Observations:**
-  - LMT closed at $627.43 on Mar 20, 2026, down -1.58%, with volume near 6.4M vs ~1.9M 50-day average.
-  - RSI(14) around 38.831 and MACD near -2.92 indicate near-oversold conditions after pullback.
-  - Recent highs near $692 and pullback into the low-620s create a defined risk zone for tactical entries.
-- **Catalysts:** Defense spending visibility, Geopolitical risk premium, Mean reversion from oversold RSI zone
-- **Risks:** Breakdown below 620 support, Sector-wide defense de-risking, Broader equity drawdown acceleration
-
-### HD [-]
-- **Sentiment:** bearish | **Confidence:** 63% | **Recommendation:** sell
-- **Observations:**
-  - Recent HD reference showed close at $330.93 on Mar 18, 2026 after a -3.08% day; another recent close was $342.58 on Mar 16.
-  - RSI(14) around 39.441 with MACD near -2.40 and MA50 around 358.97 suggests trend weakness.
-  - 52-week high reference near $426.75 leaves shares materially below prior peak.
-- **Catalysts:** Housing/rates sensitivity, Consumer discretionary spending trends, Retail peer guidance
-- **Risks:** Relief rally from oversold conditions, Rates decline could support housing-linked names, Unexpectedly strong same-store sales commentary
-
-### MA [~]
-- **Sentiment:** neutral | **Confidence:** 57% | **Recommendation:** watch
-- **Observations:**
-  - MA closed at $496.32 on Mar 20, 2026 (+1.05% day/day), but still well below the 52-week high near $601.77.
-  - RSI(14) around 42.62 with MACD around -5.36 and MA50 near 539.07 indicates medium-term downside bias.
-  - Pivot area around 515.9 from technical tables marks a key reclaim level.
-- **Catalysts:** Digital payments volume growth, Stablecoin/crypto rail integration narrative, Reclaim of 50-day trend levels
-- **Risks:** Persistent relative weakness below moving averages, Regulatory/payment-fee pressure, Macro slowdown in consumer spending
-
-### V [~]
+### UNH [~]
 - **Sentiment:** neutral | **Confidence:** 56% | **Recommendation:** watch
 - **Observations:**
-  - V recent quoted close was $314.43 (Mar 10, 2026 in historical table context).
-  - RSI(14) around 38.294 with MACD around -2.01 and MA50 near 316.18 indicates bearish/oversold pressure.
-  - Recent ranges show repeated failures to hold above the low-320s.
-- **Catalysts:** Global card spending trends, Cross-border volume data, Reversal confirmation through moving-average reclaim
-- **Risks:** Continued lower highs in risk-off tape, Payment fee/regulatory pressure, Further rotation out of mega-cap financials
+  - UNH traded around 293.27 with a 283.85-294.13 day range and 286.66 previous close.
+  - 52-week range is 234.60-606.36, reflecting a large re-rating.
+  - Volume was 6,793,581 vs 8,897,680 average; earnings date listed Apr 16, 2026.
+- **Catalysts:** Apr 16 earnings and medical-cost trend commentary, Any legal/regulatory clarity
+- **Risks:** Regulatory/legal headline shocks, Medical cost inflation and margin compression
+
+### ABT [~]
+- **Sentiment:** neutral | **Confidence:** 58% | **Recommendation:** hold
+- **Observations:**
+  - ABT traded around 107.44 with a 106.08-110.05 day range and 108.61 previous close.
+  - 52-week range is 105.78-141.23, and price is near lower end of that band.
+  - Volume was 15,758,073 vs 6,864,144 average volume.
+- **Catalysts:** Apr 15, 2026 earnings, Pipeline/product launch updates
+- **Risks:** Execution risk in weaker segments, Defensive-sector underperformance in sharp risk-on rotations
+
+### HON [+]
+- **Sentiment:** bullish | **Confidence:** 63% | **Recommendation:** watch
+- **Observations:**
+  - HON traded near 222.64 with 219.69-222.76 day range and 219.17 previous close.
+  - 52-week range is 169.05-227.82; price is near upper quartile.
+  - Volume was 1,555,956 vs 4,434,526 average, suggesting controlled move rather than panic.
+- **Catalysts:** Aerospace demand, Portfolio actions/spinoff execution
+- **Risks:** Industrial cyclicality if macro weakens, Execution risk around strategic changes
+
+### LMT [+]
+- **Sentiment:** bullish | **Confidence:** 76% | **Recommendation:** buy
+- **Observations:**
+  - LMT showed strength around the 660-670 area with a 656.40-672.86 day range and 655.00 previous close.
+  - 52-week range is 410.11-692.00, with YTD performance significantly positive in referenced data.
+  - Volume was 1,873,547 vs 1,771,790 average, indicating healthy participation.
+- **Catalysts:** Defense budget/contract flow, Persistent geopolitical risk premium
+- **Risks:** Sudden de-escalation headlines, Budget timing or procurement delays
+
+### HD [~]
+- **Sentiment:** neutral | **Confidence:** 57% | **Recommendation:** hold
+- **Observations:**
+  - HD traded near 370.81 with day range 369.00-375.11 and previous close 380.72.
+  - 52-week range is 326.31-426.75, with price currently below recent highs.
+  - Volume was 4,487,865 vs 4,408,461 average volume.
+- **Catalysts:** US housing turnover and rates path, Pro-customer demand recovery
+- **Risks:** Consumer spending slowdown, Rate volatility pressuring home-improvement demand
+
+### MA [+]
+- **Sentiment:** bullish | **Confidence:** 66% | **Recommendation:** watch
+- **Observations:**
+  - MA trading references show price around 514-515 with 509.01-519.88 day range and 509.39 previous close.
+  - 52-week range is 465.59-601.77, and market cap is around 459B in referenced snapshot.
+  - Earnings date listed Apr 30, 2026.
+- **Catalysts:** Cross-border spend growth, Value-added services expansion, Earnings on Apr 30
+- **Risks:** Regulatory/fee pressure headlines, Consumer spending deceleration
+
+### V [~]
+- **Sentiment:** neutral | **Confidence:** 61% | **Recommendation:** hold
+- **Observations:**
+  - V traded around 321.83 with a 321.60-333.00 day range and 331.80 previous close.
+  - 52-week range is 299.00-375.51 and market cap around 620.5B in referenced data.
+  - Volume was 11,177,996 vs 6,982,891 average in the referenced session.
+- **Catalysts:** Consumer and travel spend trends, Apr 28, 2026 earnings
+- **Risks:** Regulatory overhang on fees, Global spending slowdown
 
 ## LLM Telemetry
 
@@ -124,8 +124,8 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 - **Provider Preference:** auto
 - **Selected Provider:** cli:codex
 - **Selected Model:** default
-- **Token Usage:** input=93593, output=10452, total=0
-- **LLM Latency:** 162032.1 ms
+- **Token Usage:** input=73481, output=8947, total=0
+- **LLM Latency:** 126976.3 ms
 ## News Inputs Seen By The LLM
 
 ### Market Headlines

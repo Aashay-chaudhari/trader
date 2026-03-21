@@ -1,5 +1,5 @@
 {
-  "run_id": "20260321_230237",
+  "run_id": "20260321_232314",
   "phase": "monitor",
   "profile": {
     "id": "codex",
@@ -13,7 +13,7 @@
     "dry_run": true,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-03-21T23:04:14.072887+00:00",
+  "timestamp": "2026-03-21T23:24:18.118271+00:00",
   "screener": null,
   "research": {
     "symbols": [
@@ -2682,18 +2682,18 @@
     },
     "research": {
       "overall_sentiment": "neutral",
-      "market_summary": "Risk tone appears weaker versus earlier in the day, with broad-market headlines pointing to a risk-off backdrop and elevated volatility. Micron (MU) has meaningful fresh catalyst flow (post-earnings/AI-memory narrative), and UNH remains headline-sensitive around medical-cost/Medicare pressure themes. I could not read the local morning cache/staging files in this run due a sandbox execution failure, so symbol-by-symbol morning deltas are flagged with lower confidence except where live web checks showed clear new signals.",
-      "market_regime": "risk_off",
+      "market_summary": "Unable to complete a true morning-vs-now change audit because local strategist files could not be accessed in this session (sandbox loopback error). A limited external check was run on UNH via Yahoo Finance quote page; no validated full-watchlist delta could be computed from repository data.",
+      "market_regime": "neutral",
       "stocks": {
         "MU": {
-          "sentiment": "bullish",
-          "confidence": 0.72,
+          "sentiment": "neutral",
+          "confidence": 0.2,
           "key_observations": [
-            "Fresh earnings-related upside narrative and strong AI-memory demand headlines emerged.",
-            "Recent pricing context indicates high momentum but also elevated volatility after sharp runs."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
-          "news_impact": "positive",
-          "news_summary": "MU had strong recent earnings/news flow with reported upside guidance context and continued AI-memory demand focus.",
+          "news_impact": "none",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
           "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
@@ -2701,80 +2701,43 @@
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
-          "changed_since_morning": true,
-          "change_summary": "New, material post-earnings/news catalyst flow and momentum continuation signals were observed in live checks.",
-          "supporting_articles": [
-            {
-              "title": "Micron Sales Nearly Triple Amid Tight Memory Supply",
-              "url": "https://www.wsj.com/business/earnings/micron-sales-nearly-triple-amid-tight-memory-supply-e46ddd64",
-              "source": "The Wall Street Journal",
-              "kind": "news",
-              "reason": "Direct earnings and forward-demand signal affecting near-term MU thesis."
-            },
-            {
-              "title": "Micron Technology, Inc. (MU) Stock Price, News, Quote & History",
-              "url": "https://finance.yahoo.com/quote/MU/",
-              "source": "Yahoo Finance",
-              "kind": "web",
-              "reason": "Intraday quote context and headline stream used for quick live verification."
-            }
-          ]
+          "changed_since_morning": false,
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
+          "supporting_articles": []
         },
         "INTC": {
           "sentiment": "neutral",
-          "confidence": 0.33,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified incremental catalyst from this check.",
-            "Likely trading with broader semiconductor and macro risk-off flow."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material new verified INTC-specific update in this pass.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed symbol-specific change from available checks.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "PANW": {
           "sentiment": "neutral",
-          "confidence": 0.31,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified new PANW-specific headline in this quick sweep.",
-            "Macro volatility can still drive beta swings."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh PANW-specific news confirmed in this run.",
-          "recommendation": "hold",
-          "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
-          },
-          "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
-          "supporting_articles": []
-        },
-        "UNH": {
-          "sentiment": "bearish",
-          "confidence": 0.66,
-          "key_observations": [
-            "Headline sensitivity remains high around medical-cost and Medicare-related pressure themes.",
-            "Risk-off tape can amplify downside in already-sensitive healthcare insurers."
-          ],
-          "news_impact": "negative",
-          "news_summary": "Recent coverage continues to emphasize margin/Medicare concerns and pressure on sentiment.",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
           "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
@@ -2782,181 +2745,194 @@
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
-          "changed_since_morning": true,
-          "change_summary": "Fresh headline risk remains active and skews negative, reinforcing defensive stance.",
+          "changed_since_morning": false,
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
+          "supporting_articles": []
+        },
+        "UNH": {
+          "sentiment": "neutral",
+          "confidence": 0.25,
+          "key_observations": [
+            "External quote page check performed",
+            "Repository morning-vs-current comparison unavailable due local file access failure"
+          ],
+          "news_impact": "neutral",
+          "news_summary": "Yahoo Finance quote page showed routine headline flow; no repository-validated new risk flag was available in-session.",
+          "recommendation": "watch",
+          "trade_plan": {
+            "entry": 0.0,
+            "stop_loss": 0.0,
+            "target": 0.0,
+            "risk_reward_ratio": 0.0,
+            "position_size_pct": 0.0,
+            "timeframe": "intraday"
+          },
+          "changed_since_morning": false,
+          "change_summary": "Could not confirm threshold/level hits from morning plan without readable local artifacts.",
           "supporting_articles": [
             {
               "title": "UnitedHealth Group Incorporated (UNH) Stock Price, News, Quote & History",
               "url": "https://finance.yahoo.com/quote/UNH/",
               "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Used for live quote/headline validation and current sentiment context."
-            },
-            {
-              "title": "UnitedHealth Group (NYSE:UNH) Stock Price Down 3% - Here's What Happened",
-              "url": "https://www.marketbeat.com/instant-alerts/unitedhealth-group-nyseunh-stock-price-down-3-heres-what-happened-2026-02-04/",
-              "source": "MarketBeat",
-              "kind": "news",
-              "reason": "Highlights continuing Medicare/rate and margin pressure narrative."
+              "reason": "Used as limited live sanity check when local staged data was inaccessible."
             }
           ]
         },
         "ABT": {
           "sentiment": "neutral",
-          "confidence": 0.3,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified fresh ABT-specific catalyst in this quick check."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material new ABT headline confirmed.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "HON": {
           "sentiment": "neutral",
-          "confidence": 0.3,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified HON-specific incremental news in this pass."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh HON-specific news confirmed.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "LMT": {
           "sentiment": "neutral",
-          "confidence": 0.32,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified LMT-specific headline update in this quick run.",
-            "Geopolitical backdrop can still impact defense names indirectly."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh LMT-specific news confirmed in this pass.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed symbol-specific change from available checks.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "HD": {
           "sentiment": "neutral",
-          "confidence": 0.29,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified HD-specific fresh catalyst in this pass."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh HD-specific news confirmed.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "MA": {
           "sentiment": "neutral",
-          "confidence": 0.29,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified MA-specific breaking update in this run."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh MA-specific news confirmed.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         },
         "V": {
           "sentiment": "neutral",
-          "confidence": 0.29,
+          "confidence": 0.2,
           "key_observations": [
-            "No verified V-specific fresh catalyst in this quick check."
+            "Morning baseline and current staged data were not readable in-session",
+            "No validated intraday divergence assessment completed"
           ],
           "news_impact": "none",
-          "news_summary": "No material fresh V-specific news confirmed.",
-          "recommendation": "hold",
+          "news_summary": "No new verified symbol-specific update from repository staging due access failure.",
+          "recommendation": "watch",
           "trade_plan": {
             "entry": 0.0,
             "stop_loss": 0.0,
             "target": 0.0,
             "risk_reward_ratio": 0.0,
             "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "timeframe": "intraday"
           },
           "changed_since_morning": false,
-          "change_summary": "No confirmed change from available data in this pass.",
+          "change_summary": "Change status could not be verified against morning_research.json and market_data.json.",
           "supporting_articles": []
         }
       },
       "web_checks": [
         {
-          "symbol": "MU",
-          "query": "MU Yahoo Finance quote + latest earnings/news confirmation",
-          "source": "Yahoo Finance / WSJ",
-          "url": "https://finance.yahoo.com/quote/MU/",
-          "finding": "MU shows active intraday movement and fresh catalyst-heavy news flow after earnings context."
-        },
-        {
           "symbol": "UNH",
-          "query": "UNH Yahoo Finance quote + recent healthcare insurer headline risk",
-          "source": "Yahoo Finance / MarketBeat",
+          "query": "Yahoo Finance quote page sanity check",
+          "source": "Yahoo Finance",
           "url": "https://finance.yahoo.com/quote/UNH/",
-          "finding": "UNH remains headline-sensitive with continued pressure narrative tied to medical-cost and Medicare concerns."
+          "finding": "Limited live reference retrieved; full morning-vs-now verification remains incomplete without local data access."
         }
       ],
       "_meta": {
         "status": "success",
         "provider": "cli:codex",
         "model": "default",
-        "duration_ms": 81949.4,
+        "duration_ms": 46870.5,
         "session_id": null,
         "usage": {
-          "input_tokens": 57923,
-          "cached_input_tokens": 33280,
-          "output_tokens": 5436
+          "input_tokens": 50581,
+          "cached_input_tokens": 11008,
+          "output_tokens": 3491
         }
       }
     },
@@ -9783,88 +9759,88 @@
     {
       "symbol": "INTC",
       "action": "sell",
-      "strength": 0.386,
+      "strength": 0.348,
       "strategy": "combined(trend+volume_breakout+relative_strength)",
-      "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: hold (33% confidence)",
+      "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 43.869998931884766
     },
     {
       "symbol": "PANW",
       "action": "sell",
-      "strength": 0.352,
+      "strength": 0.322,
       "strategy": "combined(volume_breakout+relative_strength)",
-      "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: hold (31% confidence)",
+      "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 162.9499969482422
     },
     {
       "symbol": "UNH",
       "action": "sell",
-      "strength": 0.622,
+      "strength": 0.469,
       "strategy": "combined(trend+volume_breakout)",
-      "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (66% confidence)",
-      "suggested_size_pct": 8.0,
+      "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (25% confidence)",
+      "suggested_size_pct": 5.0,
       "latest_price": 275.5899963378906
     },
     {
       "symbol": "ABT",
       "action": "buy",
-      "strength": 0.368,
+      "strength": 0.339,
       "strategy": "combined(mean_reversion+support_resistance+vwap)",
-      "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: hold (30% confidence)",
+      "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 105.45999908447266
     },
     {
       "symbol": "HON",
       "action": "buy",
-      "strength": 0.384,
+      "strength": 0.355,
       "strategy": "combined(mean_reversion+vwap)",
-      "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: hold (30% confidence)",
+      "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 221.5
     },
     {
       "symbol": "LMT",
       "action": "buy",
-      "strength": 0.278,
+      "strength": 0.253,
       "strategy": "combined(mean_reversion+vwap)",
-      "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: hold (32% confidence)",
+      "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: watch (20% confidence)",
       "suggested_size_pct": 2.0,
       "latest_price": 627.4299926757812,
       "rejection_reasons": [
-        "Signal strength 0.28 below minimum 0.3"
+        "Signal strength 0.25 below minimum 0.3"
       ]
     },
     {
       "symbol": "HD",
       "action": "buy",
-      "strength": 0.421,
+      "strength": 0.392,
       "strategy": "combined(mean_reversion+support_resistance+vwap)",
-      "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: hold (29% confidence)",
+      "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 320.75
     },
     {
       "symbol": "MA",
       "action": "buy",
-      "strength": 0.437,
+      "strength": 0.407,
       "strategy": "combined(relative_strength+news_catalyst)",
-      "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: hold (29% confidence)",
+      "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: watch (20% confidence)",
       "suggested_size_pct": 5.0,
       "latest_price": 496.32000732421875
     },
     {
       "symbol": "V",
       "action": "buy",
-      "strength": 0.292,
+      "strength": 0.271,
       "strategy": "combined(mean_reversion+relative_strength)",
-      "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: hold (29% confidence)",
+      "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (20% confidence)",
       "suggested_size_pct": 2.0,
       "latest_price": 301.6199951171875,
       "rejection_reasons": [
-        "Signal strength 0.29 below minimum 0.3"
+        "Signal strength 0.27 below minimum 0.3"
       ]
     }
   ],
@@ -9873,63 +9849,63 @@
       {
         "symbol": "INTC",
         "action": "sell",
-        "strength": 0.386,
+        "strength": 0.348,
         "strategy": "combined(trend+volume_breakout+relative_strength)",
-        "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: hold (33% confidence)",
+        "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 43.869998931884766
       },
       {
         "symbol": "PANW",
         "action": "sell",
-        "strength": 0.352,
+        "strength": 0.322,
         "strategy": "combined(volume_breakout+relative_strength)",
-        "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: hold (31% confidence)",
+        "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 162.9499969482422
       },
       {
         "symbol": "UNH",
         "action": "sell",
-        "strength": 0.622,
+        "strength": 0.469,
         "strategy": "combined(trend+volume_breakout)",
-        "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (66% confidence)",
-        "suggested_size_pct": 8.0,
+        "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (25% confidence)",
+        "suggested_size_pct": 5.0,
         "latest_price": 275.5899963378906
       },
       {
         "symbol": "ABT",
         "action": "buy",
-        "strength": 0.368,
+        "strength": 0.339,
         "strategy": "combined(mean_reversion+support_resistance+vwap)",
-        "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: hold (30% confidence)",
+        "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 105.45999908447266
       },
       {
         "symbol": "HON",
         "action": "buy",
-        "strength": 0.384,
+        "strength": 0.355,
         "strategy": "combined(mean_reversion+vwap)",
-        "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: hold (30% confidence)",
+        "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 221.5
       },
       {
         "symbol": "HD",
         "action": "buy",
-        "strength": 0.421,
+        "strength": 0.392,
         "strategy": "combined(mean_reversion+support_resistance+vwap)",
-        "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: hold (29% confidence)",
+        "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 320.75
       },
       {
         "symbol": "MA",
         "action": "buy",
-        "strength": 0.437,
+        "strength": 0.407,
         "strategy": "combined(relative_strength+news_catalyst)",
-        "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: hold (29% confidence)",
+        "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: watch (20% confidence)",
         "suggested_size_pct": 5.0,
         "latest_price": 496.32000732421875
       }
@@ -9938,25 +9914,25 @@
       {
         "symbol": "LMT",
         "action": "buy",
-        "strength": 0.278,
+        "strength": 0.253,
         "strategy": "combined(mean_reversion+vwap)",
-        "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: hold (32% confidence)",
+        "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: watch (20% confidence)",
         "suggested_size_pct": 2.0,
         "latest_price": 627.4299926757812,
         "rejection_reasons": [
-          "Signal strength 0.28 below minimum 0.3"
+          "Signal strength 0.25 below minimum 0.3"
         ]
       },
       {
         "symbol": "V",
         "action": "buy",
-        "strength": 0.292,
+        "strength": 0.271,
         "strategy": "combined(mean_reversion+relative_strength)",
-        "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: hold (29% confidence)",
+        "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (20% confidence)",
         "suggested_size_pct": 2.0,
         "latest_price": 301.6199951171875,
         "rejection_reasons": [
-          "Signal strength 0.29 below minimum 0.3"
+          "Signal strength 0.27 below minimum 0.3"
         ]
       }
     ],
@@ -12651,9 +12627,9 @@
     {
       "symbol": "UNH",
       "action": "sell",
-      "quantity": 29,
+      "quantity": 18,
       "estimated_price": 275.5899963378906,
-      "estimated_value": 7992.109893798828,
+      "estimated_value": 4960.619934082031,
       "profile": "codex",
       "profile_label": "Codex Strategist",
       "status": "dry_run",
@@ -12705,48 +12681,48 @@
     }
   ],
   "portfolio": {
-    "timestamp": "2026-03-21T23:04:14.071635+00:00",
+    "timestamp": "2026-03-21T23:24:18.117297+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
-    "cash": 65748.48,
-    "invested": 34251.52,
+    "cash": 80395.93,
+    "invested": 19604.07,
     "total_pnl": 0.0,
     "total_pnl_pct": 0.0,
     "positions": [
-      {
-        "symbol": "HON",
-        "shares": 44,
-        "avg_cost": 221.5,
-        "current_price": 221.5,
-        "current_value": 9746.0,
-        "unrealized_pnl": 0.0,
-        "unrealized_pnl_pct": 0.0
-      },
-      {
-        "symbol": "HD",
-        "shares": 30,
-        "avg_cost": 320.75,
-        "current_price": 320.75,
-        "current_value": 9622.5,
-        "unrealized_pnl": 0.0,
-        "unrealized_pnl_pct": 0.0
-      },
-      {
-        "symbol": "MA",
-        "shares": 20,
-        "avg_cost": 496.32,
-        "current_price": 496.32,
-        "current_value": 9926.4,
-        "unrealized_pnl": 0.0,
-        "unrealized_pnl_pct": 0.0
-      },
       {
         "symbol": "ABT",
         "shares": 47,
         "avg_cost": 105.46,
         "current_price": 105.46,
         "current_value": 4956.62,
+        "unrealized_pnl": 0.0,
+        "unrealized_pnl_pct": 0.0
+      },
+      {
+        "symbol": "HON",
+        "shares": 22,
+        "avg_cost": 221.5,
+        "current_price": 221.5,
+        "current_value": 4873.0,
+        "unrealized_pnl": 0.0,
+        "unrealized_pnl_pct": 0.0
+      },
+      {
+        "symbol": "HD",
+        "shares": 15,
+        "avg_cost": 320.75,
+        "current_price": 320.75,
+        "current_value": 4811.25,
+        "unrealized_pnl": 0.0,
+        "unrealized_pnl_pct": 0.0
+      },
+      {
+        "symbol": "MA",
+        "shares": 10,
+        "avg_cost": 496.32,
+        "current_price": 496.32,
+        "current_value": 4963.2,
         "unrealized_pnl": 0.0,
         "unrealized_pnl_pct": 0.0
       }

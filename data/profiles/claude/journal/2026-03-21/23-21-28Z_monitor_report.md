@@ -1,86 +1,28 @@
 # Trading Journal — 2026-03-21
 
-**Run ID:** `20260321_215856`  
+**Run ID:** `20260321_232109`  
 **Phase:** monitor  
 **Strategist:** Claude Strategist  
-**Time:** 21:59 UTC  
+**Time:** 23:21 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Market remains in a risk-off sentiment with slight downward pressure evident in major indices.
-
-### MU [+]
-- **Sentiment:** bullish | **Confidence:** 75% | **Recommendation:** buy
-- **Observations:**
-  - MU is showing strength above the 20-day SMA with positive technical indicators despite a current drop.
-- **Catalysts:** AI advancements and market recovery, Potential recovery in semiconductor demand
-- **Risks:** Continued market downturn, Sector-specific weakness in technology
-
-### V [+]
-- **Sentiment:** bullish | **Confidence:** 70% | **Recommendation:** buy
-- **Observations:**
-  - V remains resilient with a slight gain today, consolidating near critical support levels.
-- **Catalysts:** Increased digital payment adoption, Better than expected earnings report
-- **Risks:** Fluctuation in economic metrics, Regulatory impacts on fees
-
-### INTC [-]
-- **Sentiment:** bearish | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - INTC is down sharply, with bearish technical indicators and no clear signs of recovery.
-
-### PANW [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - PANW shows mixed signals with a slight decline and no clear direction.
-
-### UNH [-]
-- **Sentiment:** bearish | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - UNH continues to trend downward, lacking momentum for a rebound.
-
-### ABT [-]
-- **Sentiment:** bearish | **Confidence:** 40% | **Recommendation:** hold
-- **Observations:**
-  - ABT remains under pressure with bearish technicals and no signs of recovery.
-
-### HON [-]
-- **Sentiment:** bearish | **Confidence:** 40% | **Recommendation:** hold
-- **Observations:**
-  - HON shows weakness with continued bearish indicators.
-
-### LMT [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - LMT's movement is indecisive, remaining mixed.
-
-### HD [-]
-- **Sentiment:** bearish | **Confidence:** 40% | **Recommendation:** hold
-- **Observations:**
-  - HD is deeply oversold, but no clear reversal signals are present.
-
-### MA [-]
-- **Sentiment:** bearish | **Confidence:** 40% | **Recommendation:** hold
-- **Observations:**
-  - MA continues to decline with bearish momentum.
+> LLM analysis failed: anthropic/claude-haiku-4-5-20251001: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH5pya67AnXJxERvBrLE'}
 
 ## LLM Telemetry
 
 - **Platform:** github_actions
 - **Provider Preference:** anthropic
-- **Selected Provider:** openai
-- **Selected Model:** gpt-4o-mini-2024-07-18
-- **Token Usage:** input=5065, output=933, total=5998
-- **Capacity Before First Request (estimate):** 201,993 tokens remaining
-- **Request ID:** `req_d6cfdcdb228c4a77bdc4ccc9f178d30d`
-- **LLM Latency:** 14131.8 ms
-- **Quota Note:** Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyZiCWTufNWBSqyLieu'}
+- **Selected Provider:** anthropic
+- **Selected Model:** claude-haiku-4-5-20251001
+- **Quota Note:** Credit balance is too low
 
 ### Provider Attempts
 
-- anthropic | claude-haiku-4-5-20251001 | error | 170.2 ms | Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing 
-- openai | gpt-4o-mini | success | 14131.8 ms
+- cli:claude | claude-haiku-4-5-20251001 | error | 2080.9 ms | Credit balance is too low
+- anthropic | claude-haiku-4-5-20251001 | error | 104.2 ms | Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing 
 
 ## News Inputs Seen By The LLM
 
@@ -101,10 +43,10 @@
 
 ### INTC Headlines
 
-- **EV Stocks Have Massive Upside, but Investors Need to Avoid This Profit Blackhole** [Motley Fool]
-- **Better Semiconductor Stock: Broadcom vs. Marvell Technology** [Motley Fool]
-- **Got $5,000? 2 Beaten-Down Tech Stocks Smart Money Is Quietly Accumulating** [Motley Fool]
-- **Microsoft Is Now the Cheapest "Magnificent Seven" Stock. Does That Make It a Buy?** [Motley Fool]
+- **Is This Stock a Buy on the Dip?** [Motley Fool]
+- **Uber's Advertising Business May Be Bigger Than Investors Think** [Motley Fool]
+- **This Nuclear Energy Trend Could Be Bigger Than Investors Think in 2026** [Motley Fool]
+- **Is Berkshire Hathaway Stock a Buy Right Now?** [Motley Fool]
 
 ### PANW Headlines
 
@@ -169,12 +111,12 @@
 | **INTC** | SELL | 0.43 | combined(trend+volume_breakout+relative_strength) | Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move  |
 | **PANW** | SELL | 0.40 | combined(volume_breakout+relative_strength) | Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs S |
 | **UNH** | SELL | 0.56 | combined(trend+volume_breakout) | Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% mov |
-| **ABT** | BUY | 0.40 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
-| **HON** | BUY | 0.41 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
+| **ABT** | BUY | 0.42 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
+| **HON** | BUY | 0.44 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
 | **LMT** | BUY | 0.32 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
-| **HD** | BUY | 0.46 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
-| **MA** | BUY | 0.47 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
-| **V** | BUY | 0.38 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
+| **HD** | BUY | 0.49 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
+| **MA** | BUY | 0.51 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
+| **V** | BUY | 0.34 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
 
 ## Risk Assessment
 

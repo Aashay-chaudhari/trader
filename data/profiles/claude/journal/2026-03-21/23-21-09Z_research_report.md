@@ -1,9 +1,9 @@
 # Trading Journal — 2026-03-21
 
-**Run ID:** `20260321_225921`  
+**Run ID:** `20260321_232023`  
 **Phase:** research  
 **Strategist:** Claude Strategist  
-**Time:** 23:00 UTC  
+**Time:** 23:21 UTC  
 
 ## Screener Results
 
@@ -26,7 +26,7 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 
 **Overall Sentiment:** neutral
 
-> LLM analysis failed: anthropic/claude-sonnet-4-6: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH4CJeASFKru1VCz6kqg'}
+> LLM analysis failed: anthropic/claude-sonnet-4-6: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH5obJ7mgAqn59ZsEvdE'}
 
 ## LLM Telemetry
 
@@ -38,8 +38,8 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 
 ### Provider Attempts
 
-- cli:claude | claude-sonnet-4-6 | error | 1465.7 ms | Credit balance is too low
-- anthropic | claude-sonnet-4-6 | error | 178.0 ms | Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing 
+- cli:claude | claude-sonnet-4-6 | error | 1656.3 ms | Credit balance is too low
+- anthropic | claude-sonnet-4-6 | error | 91.3 ms | Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing 
 
 ## News Inputs Seen By The LLM
 

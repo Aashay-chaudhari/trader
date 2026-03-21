@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-03-21T21:59:34.226210+00:00",
+  "timestamp": "2026-03-21T23:21:28.107913+00:00",
   "phase": "monitor",
-  "provider": "openai",
-  "model": "gpt-4o-mini-2024-07-18",
+  "provider": "anthropic",
+  "model": "claude-haiku-4-5-20251001",
   "symbols": [
     "MU",
     "INTC",
@@ -17,7 +17,7 @@
   ],
   "prompt_sections": {
     "performance_feedback": "No trade history yet \u2014 this is the first run.",
-    "artifact_context": "CACHED WATCHLIST FROM PRIOR RUN:\n  MU, INTC, PANW, UNH, ABT, HON, LMT, HD, MA, V\nRECENT SAVED RESEARCH ARTIFACTS:\n- 2026-03-21 research 2158 [research] sentiment=neutral, regime=risk_off, best=MU, V\n  Strong calls: MU buy 75%, V buy 70%\n  Summary: The current market regime is risk-off, evidenced by the elevated VIX and a downward trend in major indices like the S&P 500 and Nasdaq. Although there's some bearish news affecting",
+    "artifact_context": "CACHED WATCHLIST FROM PRIOR RUN:\n  MU, INTC, PANW, UNH, ABT, HON, LMT, HD, MA, V\nRECENT SAVED RESEARCH ARTIFACTS:\n- 2026-03-21 research 2321 [research] sentiment=neutral, regime=unknown, best=none\n  Summary: LLM analysis failed: anthropic/claude-sonnet-4-6: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to acces",
     "market_data": {
       "MU": {
         "price": 422.8999938964844,
@@ -341,107 +341,17 @@
     },
     "morning_context": {
       "overall_sentiment": "neutral",
-      "market_summary": "The current market regime is risk-off, evidenced by the elevated VIX and a downward trend in major indices like the S&P 500 and Nasdaq. Although there's some bearish news affecting various sectors, conservative trading should focus on setups with clear defined risk.",
-      "market_regime": "risk_off",
-      "best_opportunities": [
-        "MU",
-        "V"
-      ],
-      "stocks": {
-        "MU": {
-          "sentiment": "bullish",
-          "confidence": 0.75,
-          "key_observations": [
-            "Micron Technology (MU) dropped 4.81% today but is above its 20-day SMA by 1.52%, showing upward momentum in a down market.",
-            "The news around Micron mentions significant shifts in AI-focused technology, which could drive future interest despite current bearish sentiment."
-          ],
-          "news_impact": "positive",
-          "news_summary": "Micron has been noted for its strong AI fundamentals, which could enhance its performance in the near term.",
-          "technical_setup": "The stock is in an uptrend and has support at the lower Bollinger Band around $369.65. The bullish MACD indicates potential upward movement.",
-          "recommendation": "buy",
-          "trade_plan": {
-            "entry": 420.0,
-            "stop_loss": 400.0,
-            "target": 450.0,
-            "risk_reward_ratio": 2.0,
-            "position_size_pct": 5.0,
-            "timeframe": "swing_1_2_weeks"
-          },
-          "catalysts": [
-            "AI advancements and market recovery",
-            "Potential recovery in semiconductor demand"
-          ],
-          "risks": [
-            "Continued market downturn",
-            "Sector-specific weakness in technology"
-          ],
-          "earnings_warning": false
-        },
-        "V": {
-          "sentiment": "bullish",
-          "confidence": 0.7,
-          "key_observations": [
-            "Visa Inc. (V) has rallied slightly today by 0.64% amidst a trending market that is generally down, suggesting underlying strength.",
-            "The stock is at a critical support level near $297, where buying pressure could build."
-          ],
-          "news_impact": "positive",
-          "news_summary": "Visa's launch of new services may attract positive investor sentiment.",
-          "technical_setup": "Visa is trading below its 20-day and 50-day SMAs but shows signs of consolidating at the lower price range. A potential reversal pattern is forming.",
-          "recommendation": "buy",
-          "trade_plan": {
-            "entry": 299.0,
-            "stop_loss": 290.0,
-            "target": 320.0,
-            "risk_reward_ratio": 2.33,
-            "position_size_pct": 5.0,
-            "timeframe": "swing_1_2_weeks"
-          },
-          "catalysts": [
-            "Increased digital payment adoption",
-            "Better than expected earnings report"
-          ],
-          "risks": [
-            "Fluctuation in economic metrics",
-            "Regulatory impacts on fees"
-          ],
-          "earnings_warning": true
-        }
-      },
-      "self_reflection": "My confidence should be calibrated to consider the overall market conditions more heavily; while some setups look promising, volatility remains a concern given the current risk-off sentiment.",
+      "market_summary": "LLM analysis failed: anthropic/claude-sonnet-4-6: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH5obJ7mgAqn59ZsEvdE'}",
+      "stocks": {},
       "_meta": {
-        "status": "success",
+        "status": "error",
         "provider_preference": "anthropic",
-        "provider": "openai",
-        "model": "gpt-4o-mini-2024-07-18",
-        "usage": {
-          "input_tokens": 6987,
-          "output_tokens": 712,
-          "total_tokens": 7699,
-          "cached_input_tokens": 0,
-          "reasoning_output_tokens": 0
-        },
-        "service_tier": "default",
-        "request_id": "req_9dced421426a42fe82781be5316da1d9",
-        "rate_limits": {
-          "headers": {
-            "x-ratelimit-limit-requests": "10000",
-            "x-ratelimit-limit-tokens": "200000",
-            "x-ratelimit-remaining-requests": "9999",
-            "x-ratelimit-remaining-tokens": "194369",
-            "x-ratelimit-reset-requests": "8.64s",
-            "x-ratelimit-reset-tokens": "1.689s"
-          },
-          "estimates": {
-            "requests_remaining_after_request": 9999,
-            "requests_remaining_before_request_estimate": 10000,
-            "tokens_remaining_after_request": 194369,
-            "tokens_remaining_before_request_estimate": 202068
-          },
-          "billing_balance_before_workflow": {
-            "available": false,
-            "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
-          }
-        },
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-6",
+        "usage": {},
+        "service_tier": null,
+        "request_id": null,
+        "rate_limits": {},
         "runtime": {
           "platform": "github_actions",
           "python_version": "3.12.13",
@@ -453,76 +363,62 @@
             "workflow": "Trading Pipeline",
             "event_name": "workflow_dispatch",
             "actor": "Aashay-chaudhari",
-            "run_id": "23389664797",
+            "run_id": "23391025962",
             "run_attempt": "1",
-            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23389664797",
-            "sha": "ac70396335c35f929093267abb4b6ff82a19df38",
+            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23391025962",
+            "sha": "d61e61abedd5d0910a5629d0a7b8d697f13c88cc",
             "ref": "refs/heads/main"
           }
         },
-        "duration_ms": 10360.3,
+        "duration_ms": null,
         "attempts": [
+          {
+            "provider": "cli:claude",
+            "model": "claude-sonnet-4-6",
+            "status": "error",
+            "duration_ms": 1656.3,
+            "error": "Credit balance is too low",
+            "quota_issue_detected": true
+          },
           {
             "provider": "anthropic",
             "model": "claude-sonnet-4-6",
             "status": "error",
-            "duration_ms": 146.2,
-            "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyXArYj8SYigSfgah7Y'}",
+            "duration_ms": 91.3,
+            "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH5obJ7mgAqn59ZsEvdE'}",
             "quota_issue_detected": true
-          },
-          {
-            "provider": "openai",
-            "model": "gpt-4o-mini",
-            "status": "success",
-            "duration_ms": 10360.3,
-            "usage": {
-              "input_tokens": 6987,
-              "output_tokens": 712,
-              "total_tokens": 7699,
-              "cached_input_tokens": 0,
-              "reasoning_output_tokens": 0
-            }
           }
         ],
         "quota_issue_detected": true,
-        "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyXArYj8SYigSfgah7Y'}"
-      }
+        "quota_note": "Credit balance is too low"
+      },
+      "web_checks": [
+        {
+          "symbol": "V",
+          "query": "Visa Inc. V stock",
+          "source": "Google News",
+          "url": "https://news.google.com/rss/search?q=Visa+Inc.+V+stock&hl=en-US&gl=US&ceid=US:en",
+          "finding": "Verified recent coverage for V via Yahoo Finance, Insider Monkey; captured 3 current article links."
+        },
+        {
+          "symbol": "MU",
+          "query": "Micron Technology, Inc. MU stock",
+          "source": "Google News",
+          "url": "https://news.google.com/rss/search?q=Micron+Technology%2C+Inc.+MU+stock&hl=en-US&gl=US&ceid=US:en",
+          "finding": "Verified recent coverage for MU via Seeking Alpha, MarketBeat; captured 3 current article links."
+        }
+      ]
     }
   },
   "llm_meta": {
-    "status": "success",
+    "status": "error",
     "provider_preference": "anthropic",
-    "provider": "openai",
-    "model": "gpt-4o-mini-2024-07-18",
-    "usage": {
-      "input_tokens": 5065,
-      "output_tokens": 933,
-      "total_tokens": 5998,
-      "cached_input_tokens": 0,
-      "reasoning_output_tokens": 0
-    },
-    "service_tier": "default",
-    "request_id": "req_d6cfdcdb228c4a77bdc4ccc9f178d30d",
-    "rate_limits": {
-      "headers": {
-        "x-ratelimit-limit-requests": "10000",
-        "x-ratelimit-limit-tokens": "200000",
-        "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "195995",
-        "x-ratelimit-reset-requests": "8.64s",
-        "x-ratelimit-reset-tokens": "1.201s"
-      },
-      "estimates": {
-        "requests_remaining_after_request": 9999,
-        "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 195995,
-        "tokens_remaining_before_request_estimate": 201993
-      },
-      "billing_balance_before_workflow": {
-        "available": false,
-        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
-      }
-    },
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "usage": {},
+    "service_tier": null,
+    "request_id": null,
+    "rate_limits": {},
     "runtime": {
       "platform": "github_actions",
       "python_version": "3.12.13",
@@ -534,38 +430,33 @@
         "workflow": "Trading Pipeline",
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
-        "run_id": "23389664797",
+        "run_id": "23391025962",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23389664797",
-        "sha": "ac70396335c35f929093267abb4b6ff82a19df38",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23391025962",
+        "sha": "d61e61abedd5d0910a5629d0a7b8d697f13c88cc",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 14131.8,
+    "duration_ms": null,
     "attempts": [
+      {
+        "provider": "cli:claude",
+        "model": "claude-haiku-4-5-20251001",
+        "status": "error",
+        "duration_ms": 2080.9,
+        "error": "Credit balance is too low",
+        "quota_issue_detected": true
+      },
       {
         "provider": "anthropic",
         "model": "claude-haiku-4-5-20251001",
         "status": "error",
-        "duration_ms": 170.2,
-        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyZiCWTufNWBSqyLieu'}",
+        "duration_ms": 104.2,
+        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZH5pya67AnXJxERvBrLE'}",
         "quota_issue_detected": true
-      },
-      {
-        "provider": "openai",
-        "model": "gpt-4o-mini",
-        "status": "success",
-        "duration_ms": 14131.8,
-        "usage": {
-          "input_tokens": 5065,
-          "output_tokens": 933,
-          "total_tokens": 5998,
-          "cached_input_tokens": 0,
-          "reasoning_output_tokens": 0
-        }
       }
     ],
     "quota_issue_detected": true,
-    "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyZiCWTufNWBSqyLieu'}"
+    "quota_note": "Credit balance is too low"
   }
 }

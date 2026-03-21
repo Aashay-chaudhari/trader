@@ -1,75 +1,75 @@
 # Trading Journal — 2026-03-21
 
-**Run ID:** `20260321_215925`  
+**Run ID:** `20260321_232314`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 22:00 UTC  
+**Time:** 23:24 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Unable to complete the morning-vs-current delta check because local data files could not be accessed in this run environment (sandbox loopback error), so no verified change assessment is available.
+> Unable to complete a true morning-vs-now change audit because local strategist files could not be accessed in this session (sandbox loopback error). A limited external check was run on UNH via Yahoo Finance quote page; no validated full-watchlist delta could be computed from repository data.
 
 ### MU [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### INTC [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### PANW [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### UNH [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 25% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - External quote page check performed
+  - Repository morning-vs-current comparison unavailable due local file access failure
 
 ### ABT [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### HON [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### LMT [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### HD [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### MA [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ### V [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
 - **Observations:**
-  - Current staging and morning cache comparison not completed
-  - No verified price/news/signal delta available
+  - Morning baseline and current staged data were not readable in-session
+  - No validated intraday divergence assessment completed
 
 ## LLM Telemetry
 
@@ -77,8 +77,8 @@
 - **Provider Preference:** auto
 - **Selected Provider:** cli:codex
 - **Selected Model:** default
-- **Token Usage:** input=35098, output=2758, total=0
-- **LLM Latency:** 31267.1 ms
+- **Token Usage:** input=50581, output=3491, total=0
+- **LLM Latency:** 46870.5 ms
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
@@ -98,10 +98,10 @@
 
 ### INTC Headlines
 
-- **EV Stocks Have Massive Upside, but Investors Need to Avoid This Profit Blackhole** [Motley Fool]
-- **Better Semiconductor Stock: Broadcom vs. Marvell Technology** [Motley Fool]
-- **Got $5,000? 2 Beaten-Down Tech Stocks Smart Money Is Quietly Accumulating** [Motley Fool]
-- **Microsoft Is Now the Cheapest "Magnificent Seven" Stock. Does That Make It a Buy?** [Motley Fool]
+- **Is This Stock a Buy on the Dip?** [Motley Fool]
+- **Uber's Advertising Business May Be Bigger Than Investors Think** [Motley Fool]
+- **This Nuclear Energy Trend Could Be Bigger Than Investors Think in 2026** [Motley Fool]
+- **Is Berkshire Hathaway Stock a Buy Right Now?** [Motley Fool]
 
 ### PANW Headlines
 
@@ -163,33 +163,35 @@
 
 | Symbol | Action | Strength | Strategy | Reasoning |
 |--------|--------|----------|----------|-----------|
-| **INTC** | SELL | 0.30 | combined(trend+volume_breakout+relative_strength) | Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move  |
-| **PANW** | SELL | 0.28 | combined(volume_breakout+relative_strength) | Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs S |
-| **UNH** | SELL | 0.39 | combined(trend+volume_breakout) | Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% mov |
-| **ABT** | BUY | 0.30 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
-| **HON** | BUY | 0.31 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
-| **LMT** | BUY | 0.22 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
-| **HD** | BUY | 0.34 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
-| **MA** | BUY | 0.36 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
-| **V** | BUY | 0.24 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
+| **INTC** | SELL | 0.35 | combined(trend+volume_breakout+relative_strength) | Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move  |
+| **PANW** | SELL | 0.32 | combined(volume_breakout+relative_strength) | Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs S |
+| **UNH** | SELL | 0.47 | combined(trend+volume_breakout) | Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% mov |
+| **ABT** | BUY | 0.34 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
+| **HON** | BUY | 0.35 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
+| **LMT** | BUY | 0.25 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
+| **HD** | BUY | 0.39 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
+| **MA** | BUY | 0.41 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
+| **V** | BUY | 0.27 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
 
 ## Risk Assessment
 
-- **Approved:** 5 trades
-- **Rejected:** 4 trades
+- **Approved:** 7 trades
+- **Rejected:** 2 trades
 
 ### Rejected Trades
 
-- **PANW** (sell): Signal strength 0.28 below minimum 0.3
-- **ABT** (buy): Signal strength 0.30 below minimum 0.3
-- **LMT** (buy): Signal strength 0.22 below minimum 0.3
-- **V** (buy): Signal strength 0.24 below minimum 0.3
+- **LMT** (buy): Signal strength 0.25 below minimum 0.3
+- **V** (buy): Signal strength 0.27 below minimum 0.3
 
 ## Execution
 
 - **INTC** SELL 113 shares @ ~$43.87 = $4,957.31 [DRY RUN]
   - _Dry run mode — no order placed_
+- **PANW** SELL 30 shares @ ~$162.95 = $4,888.50 [DRY RUN]
+  - _Dry run mode — no order placed_
 - **UNH** SELL 18 shares @ ~$275.59 = $4,960.62 [DRY RUN]
+  - _Dry run mode — no order placed_
+- **ABT** BUY 47 shares @ ~$105.46 = $4,956.62 [DRY RUN]
   - _Dry run mode — no order placed_
 - **HON** BUY 22 shares @ ~$221.50 = $4,873.00 [DRY RUN]
   - _Dry run mode — no order placed_
@@ -203,15 +205,16 @@
 | Metric | Value |
 |--------|------:|
 | **Total Value** | $100,000.00 |
-| **Cash** | $85,352.55 |
-| **Invested** | $14,647.45 |
+| **Cash** | $80,395.93 |
+| **Invested** | $19,604.07 |
 | **Total P&L** | $+0.00 (+0.00%) |
-| **Positions** | 3 |
+| **Positions** | 4 |
 
 ### Open Positions
 
 | Symbol | Shares | Avg Cost | Current | Value | P&L |
 |--------|-------:|---------:|--------:|------:|----:|
+| ABT | 47 | $105.46 | $105.46 | $4,956.62 | +$0.00 (+0.00%) |
 | HON | 22 | $221.50 | $221.50 | $4,873.00 | +$0.00 (+0.00%) |
 | HD | 15 | $320.75 | $320.75 | $4,811.25 | +$0.00 (+0.00%) |
 | MA | 10 | $496.32 | $496.32 | $4,963.20 | +$0.00 (+0.00%) |

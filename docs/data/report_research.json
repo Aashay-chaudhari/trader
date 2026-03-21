@@ -1,5 +1,5 @@
 {
-  "run_id": "20260321_225915",
+  "run_id": "20260321_232024",
   "phase": "research",
   "profile": {
     "id": "codex",
@@ -13,7 +13,7 @@
     "dry_run": true,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-03-21T23:02:37.663608+00:00",
+  "timestamp": "2026-03-21T23:23:14.268127+00:00",
   "screener": {
     "shortlist": [
       {
@@ -2830,52 +2830,59 @@
     },
     "research": {
       "overall_sentiment": "neutral",
-      "market_summary": "U.S. equities traded risk-off into Friday, March 20, 2026, with the S&P 500 down 1.51% and the Dow down 0.96% in broad de-risking. Several large-cap names on this list also closed lower on heavy volume, signaling fragile short-term momentum. The tape favors selective setups with tight risk controls rather than aggressive exposure.",
+      "market_summary": "Risk appetite is mixed: SPY has been hovering around the 670-680 zone while volatility has stayed elevated, with recent VIX prints in the mid-20s. Geopolitical and macro uncertainty are keeping downside tails active, so selective long setups with defined stops are preferable to broad beta exposure. In this regime, quality large caps with clear catalysts and controlled position sizing are favored.",
       "market_regime": "risk_off",
       "best_opportunities": [
-        "INTC",
-        "LMT"
+        "LMT",
+        "MU"
       ],
       "stocks": {
         "MU": {
-          "sentiment": "neutral",
-          "confidence": 0.58,
+          "sentiment": "bullish",
+          "confidence": 0.7,
           "key_observations": [
-            "MU was referenced around $469 pre-earnings with options implying about a 7% post-print swing.",
-            "RSI(14) was reported near 61.737 with MACD around 7.07 (short-term momentum positive but extended).",
-            "Investopedia noted YTD gain near 65%, indicating elevated volatility and positioning risk."
+            "MU traded around 385.92 with a 377.35-391.18 day range and 397.05 previous close.",
+            "52-week range is 61.54-455.50, showing strong trend persistence despite pullbacks.",
+            "Earnings date was listed as March 18, 2026, and volume was 16,094,267 vs 33,870,980 average."
           ],
           "news_impact": "positive",
-          "news_summary": "Recent coverage highlighted strong AI-memory demand and bullish EPS/revenue expectations, but with high event-volatility around earnings.",
-          "technical_setup": "Momentum is still constructive on RSI/MACD, but the stock is extended after a large run and prone to sharp mean reversion after earnings catalysts. Conservative approach is to buy only after a clean hold above support.",
-          "recommendation": "watch",
+          "news_summary": "Recent reporting continues to confirm AI memory demand strength and constrained supply, supporting Micron's medium-term revenue/margin narrative.",
+          "technical_setup": "Price is pulling back after a strong run; a controlled re-entry near 380-390 with a hard stop under 370 offers a defined-risk continuation setup. Failure to hold 370 would negate the bullish swing structure.",
+          "recommendation": "buy",
           "trade_plan": {
-            "entry": 450.0,
-            "stop_loss": 428.0,
-            "target": 495.0,
-            "risk_reward_ratio": 2.05,
-            "position_size_pct": 3.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 386.0,
+            "stop_loss": 370.0,
+            "target": 420.0,
+            "risk_reward_ratio": 2.13,
+            "position_size_pct": 2.5,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "AI memory pricing and supply-demand tightness",
+            "AI server memory demand and HBM ramp",
             "Post-earnings estimate revisions",
-            "Semiconductor sector momentum"
+            "Supply tightness in DRAM/NAND"
           ],
           "risks": [
-            "Post-earnings volatility crush and profit taking",
-            "Memory-cycle peak concerns",
-            "High-beta downside in risk-off tape"
+            "High-beta semiconductor volatility",
+            "Sharp macro risk-off drawdowns",
+            "Any negative guidance revision after recent strength"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no symbol-specific prior win/loss pattern was available.",
           "supporting_articles": [
             {
-              "title": "Here's How Much Micron Stock Is Expected to Move After Earnings",
-              "url": "https://www.investopedia.com/here-is-how-much-micron-stock-is-expected-to-move-after-earnings-mu-q2-fy2026-update-11922240",
-              "source": "Investopedia",
+              "title": "Micron Technology, Inc. (MU) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/MU/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided current trading levels, range, volume, and earnings date context used for risk parameters."
+            },
+            {
+              "title": "Micron Sales Nearly Triple Amid Tight Memory Supply",
+              "url": "https://www.wsj.com/business/earnings/micron-sales-nearly-triple-amid-tight-memory-supply-e46ddd64",
+              "source": "The Wall Street Journal",
               "kind": "news",
-              "reason": "Confirms near-term earnings catalyst, options-implied move, and consensus expectations."
+              "reason": "Confirms fundamental demand/supply backdrop behind the move."
             },
             {
               "title": "Micron Technology And Its Real Value (NASDAQ:MU)",
@@ -2910,380 +2917,377 @@
           ]
         },
         "INTC": {
-          "sentiment": "bullish",
-          "confidence": 0.67,
+          "sentiment": "neutral",
+          "confidence": 0.53,
           "key_observations": [
-            "INTC closed at $43.87 on Mar 20, 2026 after a -5.00% day; prior close was $46.18 on Mar 19.",
-            "RSI(14) was reported near 63.951 with MACD near 0.76, and MA20 around 46.63.",
-            "30-day range reported near $41.64 to $49.17, giving nearby support/resistance structure."
+            "INTC traded near 45.95 with a 44.70-46.48 day range and 45.58 previous close.",
+            "52-week range is 17.67-54.60, indicating large prior recovery but still below highs.",
+            "Volume was 77,949,326 vs 101,516,910 average volume."
           ],
           "news_impact": "neutral",
-          "news_summary": "No major new fundamental shock was confirmed; recent flow was primarily price-action and relative performance driven.",
-          "technical_setup": "Momentum has improved on RSI/MACD but Friday\u2019s sharp drop increased whipsaw risk; a conservative long requires reclaim/hold above mid-46s. Failed reclaim keeps setup neutral.",
-          "recommendation": "buy",
+          "news_summary": "Narrative remains tied to AI/data-center CPU recovery, but no fresh high-conviction catalyst was confirmed in this pass.",
+          "technical_setup": "Price is range-bound in the mid-40s; a break above 46.5 is needed for momentum confirmation. Until then, risk/reward is middling.",
+          "recommendation": "hold",
           "trade_plan": {
             "entry": 46.6,
-            "stop_loss": 43.9,
-            "target": 52.0,
-            "risk_reward_ratio": 2.0,
-            "position_size_pct": 6.0,
+            "stop_loss": 44.2,
+            "target": 50.5,
+            "risk_reward_ratio": 1.63,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Continuation in semiconductor rotation",
-            "Positive estimate revisions",
-            "Follow-through above MA20 region"
+            "AI/data-center CPU demand commentary",
+            "Next earnings on Apr 23, 2026"
           ],
           "risks": [
-            "Break below $43.6 low invalidates setup",
-            "Sector-wide drawdown in risk-off regime",
-            "Headline risk around execution/competition"
+            "Execution risk versus peers",
+            "Semiconductor sector beta and macro sensitivity"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no symbol-specific prior trade pattern was available.",
           "supporting_articles": [
             {
-              "title": "Historical INTC stock prices (quote) - Intel Corporation",
-              "url": "https://stockinvest.us/stock-price/INTC",
-              "source": "StockInvest",
+              "title": "Intel Corporation (INTC) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/INTC/",
+              "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Provided latest close, range context, and recent session highs/lows used for risk levels."
+              "reason": "Used for current price structure, volume, and earnings calendar context."
             }
           ]
         },
         "PANW": {
-          "sentiment": "neutral",
-          "confidence": 0.55,
+          "sentiment": "bearish",
+          "confidence": 0.74,
           "key_observations": [
-            "PANW closed at $162.95 on Mar 20, 2026, down -4.00% day/day.",
-            "RSI(14) near 55.16 with MACD near -2.26 suggests mixed momentum (not deeply oversold).",
-            "30-day range near $139.57 to $172.00; current price is mid-range after a sharp pullback."
+            "PANW printed around 152.35 after a sharp drop from 163.50 previous close in the referenced session.",
+            "Day range was 147.15-155.28 with elevated volume of 26,239,578 vs 8,387,327 average.",
+            "52-week range is 144.15-223.61, showing material drawdown from highs."
           ],
-          "news_impact": "neutral",
-          "news_summary": "No fresh high-confidence fundamental catalyst was confirmed in this pass; move appears mostly technical/risk-off related.",
-          "technical_setup": "Short-term trend bounced off February lows but Friday\u2019s selloff rejected higher levels. Better risk-adjusted entry is on stabilization above 165-167 rather than catching downside momentum.",
+          "news_impact": "negative",
+          "news_summary": "Recent Reuters-covered reporting indicates profit outlook pressure from acquisition integration costs despite revenue strength.",
+          "technical_setup": "The stock is in a high-volatility post-gap adjustment phase; reclaiming 160-164 is needed to stabilize. Until that happens, setup quality is weak for new longs.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 167.0,
-            "stop_loss": 161.5,
-            "target": 178.0,
-            "risk_reward_ratio": 2.0,
-            "position_size_pct": 3.0,
+            "entry": 160.0,
+            "stop_loss": 151.0,
+            "target": 176.0,
+            "risk_reward_ratio": 1.78,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Cybersecurity spending resilience",
-            "Multiple expansion if rates stabilize",
-            "Reclaim of 20-day/50-day moving averages"
+            "Integration progress and margin updates",
+            "Cybersecurity demand resilience"
           ],
           "risks": [
-            "Further de-rating in growth tech",
-            "Failure at 165-170 resistance",
-            "Macro-driven beta selloff"
+            "Further estimate cuts",
+            "Post-acquisition execution drag"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no prior PANW trade outcomes were available.",
           "supporting_articles": [
             {
-              "title": "Historical PANW stock prices (quote) - Palo Alto Networks Inc",
-              "url": "https://stockinvest.us/stock-price/PANW",
-              "source": "StockInvest",
+              "title": "Palo Alto shares fall as deal costs pile up amid AI security push",
+              "url": "https://www.investing.com/news/stock-market-news/palo-alto-shares-fall-as-deal-costs-pile-up-amid-ai-security-push-4510696",
+              "source": "Reuters via Investing.com",
+              "kind": "news",
+              "reason": "Directly confirms the earnings-guidance pressure narrative affecting setup quality."
+            },
+            {
+              "title": "Palo Alto Networks, Inc. (PANW) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/PANW/",
+              "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Used for latest close, session volatility, and 30/90-day range structure."
+              "reason": "Provided gap/volume/range data used for technical risk assessment."
             }
           ]
         },
         "UNH": {
-          "sentiment": "bearish",
-          "confidence": 0.72,
+          "sentiment": "neutral",
+          "confidence": 0.56,
           "key_observations": [
-            "UNH closed at $275.59 on Mar 20, 2026, down -1.73%; intraday range was $275.00 to $283.10.",
-            "Market coverage indicated prior guidance pressure including expected 2026 revenue contraction.",
-            "Despite RSI(14) around 52.505, fundamental headline risk remains dominant over technical signal."
+            "UNH traded around 293.27 with a 283.85-294.13 day range and 286.66 previous close.",
+            "52-week range is 234.60-606.36, reflecting a large re-rating.",
+            "Volume was 6,793,581 vs 8,897,680 average; earnings date listed Apr 16, 2026."
           ],
           "news_impact": "negative",
-          "news_summary": "Recent reporting tied the stock\u2019s sharp drawdown to weak 2026 revenue outlook and regulatory/investigation overhangs.",
-          "technical_setup": "Price is near lower end of recent range and can bounce tactically, but trend quality is weak given repeated fundamental shocks. Conservative stance is to avoid fresh longs until base formation above 285.",
-          "recommendation": "sell",
+          "news_summary": "Coverage referencing DOJ Medicare billing-practice scrutiny remains an overhang even as valuation appears compressed.",
+          "technical_setup": "Near-term bounce attempts are possible, but headline risk and event risk into earnings reduce conviction. Better treated as wait-for-clarity.",
+          "recommendation": "watch",
           "trade_plan": {
-            "entry": 275.5,
-            "stop_loss": 286.5,
-            "target": 255.0,
-            "risk_reward_ratio": 1.86,
-            "position_size_pct": 4.0,
-            "timeframe": "swing_1_2_weeks"
+            "entry": 296.0,
+            "stop_loss": 282.0,
+            "target": 325.0,
+            "risk_reward_ratio": 2.07,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_2_5_days"
           },
           "catalysts": [
-            "Further guidance cuts or reimbursement pressure",
-            "Regulatory/legal developments",
-            "Defensive sector rotation changes"
+            "Apr 16 earnings and medical-cost trend commentary",
+            "Any legal/regulatory clarity"
           ],
           "risks": [
-            "Short squeeze on policy relief headlines",
-            "Value buyers stepping in near multi-month lows",
-            "Unexpectedly strong quarterly metrics"
+            "Regulatory/legal headline shocks",
+            "Medical cost inflation and margin compression"
           ],
-          "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "earnings_warning": true,
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no prior UNH-specific hit-rate pattern was available.",
           "supporting_articles": [
             {
-              "title": "UnitedHealth's stock falls 20% after saying it expects revenue to decline in 2026",
-              "url": "https://www.marketwatch.com/story/unitedhealths-stock-falls-further-after-saying-it-expects-revenue-to-decline-in-2026-5046edb6",
-              "source": "MarketWatch",
+              "title": "UnitedHealth Group Incorporated (UNH) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/UNH/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for current levels and earnings timing context."
+            },
+            {
+              "title": "UnitedHealth tumbles on WSJ report the DOJ is investigating Medicare billing practices",
+              "url": "https://www.cnbc.com/2025/02/21/unitedhealth-tumbles-12percent-on-wsj-report-the-doj-is-investigating-medicare-billing-practices.html",
+              "source": "CNBC",
               "kind": "news",
-              "reason": "Confirms bearish fundamental narrative behind the larger trend breakdown."
+              "reason": "Confirms material headline risk still relevant for risk management."
             }
           ]
         },
         "ABT": {
-          "sentiment": "bearish",
-          "confidence": 0.64,
+          "sentiment": "neutral",
+          "confidence": 0.58,
           "key_observations": [
-            "ABT was reported at $105.46 close on Mar 20, 2026, down -1.61% with unusually high volume (~80.4M vs ~10.6M 50-day avg).",
-            "RSI(14) around 44.879 and MACD around -0.37 indicate weak momentum.",
-            "Recent references show ABT trading well below its 52-week high (~$139.06)."
+            "ABT traded around 107.44 with a 106.08-110.05 day range and 108.61 previous close.",
+            "52-week range is 105.78-141.23, and price is near lower end of that band.",
+            "Volume was 15,758,073 vs 6,864,144 average volume."
           ],
-          "news_impact": "negative",
-          "news_summary": "Recent session flow showed repeated underperformance and a high-volume down close, signaling distribution risk.",
-          "technical_setup": "Momentum is soft and volume expanded on downside, which is not ideal for conservative longs. Prefer waiting for a higher low and RSI recovery above 50 before considering entries.",
-          "recommendation": "sell",
+          "news_impact": "neutral",
+          "news_summary": "Recent commentary highlights mixed fundamentals with nutrition-segment pressure but continued 2026 product-cycle expectations.",
+          "technical_setup": "Stock is near support around 106; a base above 106-108 is required before considering risk-controlled longs. Without base confirmation, edge is limited.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 105.5,
-            "stop_loss": 109.8,
-            "target": 98.5,
-            "risk_reward_ratio": 1.63,
-            "position_size_pct": 3.0,
+            "entry": 108.5,
+            "stop_loss": 105.5,
+            "target": 114.0,
+            "risk_reward_ratio": 1.83,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Upcoming earnings update and guidance",
-            "Medical devices segment trends",
-            "Sector rotation into/out of defensives"
+            "Apr 15, 2026 earnings",
+            "Pipeline/product launch updates"
           ],
           "risks": [
-            "Oversold rebound on defensive bid",
-            "Positive earnings surprise",
-            "Short-covering after high-volume decline"
+            "Execution risk in weaker segments",
+            "Defensive-sector underperformance in sharp risk-on rotations"
           ],
           "earnings_warning": true,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no ABT-specific prior pattern was available.",
           "supporting_articles": [
             {
-              "title": "Abbott Laboratories stock underperforms Friday when compared to competitors",
-              "url": "https://www.marketwatch.com/data-news/abbott-laboratories-stock-underperforms-friday-when-compared-to-competitors-d7ab244b-6415486b528f",
-              "source": "MarketWatch",
-              "kind": "news",
-              "reason": "Provided latest close, relative performance context, and abnormal volume signal."
+              "title": "Abbott Laboratories (ABT) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/ABT/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided current price/range/volume and upcoming earnings context."
             }
           ]
         },
         "HON": {
-          "sentiment": "bearish",
-          "confidence": 0.6,
+          "sentiment": "bullish",
+          "confidence": 0.63,
           "key_observations": [
-            "HON was referenced at $221.50 on Mar 20, 2026 in peer-comparison market coverage.",
-            "RSI(14) around 48.65 with MACD near -0.04 indicates weak/neutral momentum with bearish bias.",
-            "Investing historical/technical data showed price slipping under several short-to-medium moving averages."
+            "HON traded near 222.64 with 219.69-222.76 day range and 219.17 previous close.",
+            "52-week range is 169.05-227.82; price is near upper quartile.",
+            "Volume was 1,555,956 vs 4,434,526 average, suggesting controlled move rather than panic."
           ],
-          "news_impact": "neutral",
-          "news_summary": "No major same-day company-specific shock was confirmed; performance appears tied to industrials risk-off pressure.",
-          "technical_setup": "Trend has rolled over from recent highs and lacks clear reversal confirmation. Conservative posture is to avoid long entries until reclaim of 230+ with volume.",
+          "news_impact": "positive",
+          "news_summary": "Recent tone has been constructive around aerospace momentum and strategic restructuring/spinoff themes.",
+          "technical_setup": "Trend remains constructive above 219; a break and hold above 223-224 can open continuation toward the highs. Stop discipline below 217 is needed due macro chop.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 230.0,
-            "stop_loss": 221.0,
-            "target": 246.0,
-            "risk_reward_ratio": 1.78,
-            "position_size_pct": 2.5,
+            "entry": 224.0,
+            "stop_loss": 217.0,
+            "target": 236.0,
+            "risk_reward_ratio": 1.71,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Aerospace and automation order updates",
-            "Analyst target revisions",
-            "Broader industrials sentiment"
+            "Aerospace demand",
+            "Portfolio actions/spinoff execution"
           ],
           "risks": [
-            "Continued de-risking in cyclicals",
-            "Failure to reclaim moving averages",
-            "Macro growth disappointments"
+            "Industrial cyclicality if macro weakens",
+            "Execution risk around strategic changes"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no HON-specific prior trade memory was available.",
           "supporting_articles": [
             {
-              "title": "Honeywell Stock Price History",
-              "url": "https://www.investing.com/equities/honeywell-intl-historical-data",
-              "source": "Investing.com",
+              "title": "Honeywell International Inc. (HON) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/HON/",
+              "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Used for recent price path and range levels to frame support/resistance."
+              "reason": "Used for trend/range and valuation context in setup calibration."
             }
           ]
         },
         "LMT": {
           "sentiment": "bullish",
-          "confidence": 0.62,
+          "confidence": 0.76,
           "key_observations": [
-            "LMT closed at $627.43 on Mar 20, 2026, down -1.58%, with volume near 6.4M vs ~1.9M 50-day average.",
-            "RSI(14) around 38.831 and MACD near -2.92 indicate near-oversold conditions after pullback.",
-            "Recent highs near $692 and pullback into the low-620s create a defined risk zone for tactical entries."
+            "LMT showed strength around the 660-670 area with a 656.40-672.86 day range and 655.00 previous close.",
+            "52-week range is 410.11-692.00, with YTD performance significantly positive in referenced data.",
+            "Volume was 1,873,547 vs 1,771,790 average, indicating healthy participation."
           ],
-          "news_impact": "neutral",
-          "news_summary": "Latest coverage highlighted relative underperformance in a risk-off day but no new fundamental break in the defense thesis.",
-          "technical_setup": "Setup is a pullback-in-uptrend candidate if price holds 620-625 support; loss of that zone would invalidate a swing long. Conservative entry should be scaled and stop-disciplined.",
+          "news_impact": "positive",
+          "news_summary": "Defense spending and geopolitical tension narratives continue to support demand visibility for prime contractors.",
+          "technical_setup": "Uptrend is intact while holding above 650-655; pullback entries with stops under 650 offer cleaner risk definition than chasing highs. Momentum continuation above 673 can target retest of 690+.",
           "recommendation": "buy",
           "trade_plan": {
-            "entry": 630.0,
-            "stop_loss": 618.0,
-            "target": 660.0,
-            "risk_reward_ratio": 2.5,
-            "position_size_pct": 5.0,
-            "timeframe": "swing_1_2_weeks"
-          },
-          "catalysts": [
-            "Defense spending visibility",
-            "Geopolitical risk premium",
-            "Mean reversion from oversold RSI zone"
-          ],
-          "risks": [
-            "Breakdown below 620 support",
-            "Sector-wide defense de-risking",
-            "Broader equity drawdown acceleration"
-          ],
-          "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
-          "supporting_articles": [
-            {
-              "title": "Lockheed Martin Corp. stock underperforms Friday when compared to competitors",
-              "url": "https://www.marketwatch.com/data-news/lockheed-martin-corp-stock-underperforms-friday-when-compared-to-competitors-8a69a58f-8d43c6599c87",
-              "source": "MarketWatch",
-              "kind": "news",
-              "reason": "Confirms latest close, daily move, and abnormal volume, useful for risk-defined swing planning."
-            }
-          ]
-        },
-        "HD": {
-          "sentiment": "bearish",
-          "confidence": 0.63,
-          "key_observations": [
-            "Recent HD reference showed close at $330.93 on Mar 18, 2026 after a -3.08% day; another recent close was $342.58 on Mar 16.",
-            "RSI(14) around 39.441 with MACD near -2.40 and MA50 around 358.97 suggests trend weakness.",
-            "52-week high reference near $426.75 leaves shares materially below prior peak."
-          ],
-          "news_impact": "negative",
-          "news_summary": "Recent market updates show persistent underperformance versus peers during down sessions, consistent with weak near-term demand sentiment.",
-          "technical_setup": "HD is in a downward channel with oversold signals that can produce short bounces but no confirmed reversal. Conservative strategy is to avoid longs until reclaim of 350+.",
-          "recommendation": "sell",
-          "trade_plan": {
-            "entry": 331.0,
-            "stop_loss": 343.0,
-            "target": 314.0,
-            "risk_reward_ratio": 1.42,
+            "entry": 668.0,
+            "stop_loss": 650.0,
+            "target": 705.0,
+            "risk_reward_ratio": 2.06,
             "position_size_pct": 3.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Housing/rates sensitivity",
-            "Consumer discretionary spending trends",
-            "Retail peer guidance"
+            "Defense budget/contract flow",
+            "Persistent geopolitical risk premium"
           ],
           "risks": [
-            "Relief rally from oversold conditions",
-            "Rates decline could support housing-linked names",
-            "Unexpectedly strong same-store sales commentary"
+            "Sudden de-escalation headlines",
+            "Budget timing or procurement delays"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no LMT-specific prior outcomes were available.",
           "supporting_articles": [
             {
-              "title": "Home Depot Inc. stock underperforms Wednesday when compared to competitors",
-              "url": "https://www.marketwatch.com/data-news/home-depot-inc-stock-underperforms-wednesday-when-compared-to-competitors-98ad25a4-a917081e8453",
-              "source": "MarketWatch",
-              "kind": "news",
-              "reason": "Provided recent downside price action and relative-performance context."
+              "title": "Lockheed Martin Corporation (LMT) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/LMT/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided current structure and participation metrics used to frame the long setup."
+            }
+          ]
+        },
+        "HD": {
+          "sentiment": "neutral",
+          "confidence": 0.57,
+          "key_observations": [
+            "HD traded near 370.81 with day range 369.00-375.11 and previous close 380.72.",
+            "52-week range is 326.31-426.75, with price currently below recent highs.",
+            "Volume was 4,487,865 vs 4,408,461 average volume."
+          ],
+          "news_impact": "neutral",
+          "news_summary": "Macro-sensitive housing/consumer backdrop remains mixed; company-specific execution appears stable but not enough for aggressive positioning.",
+          "technical_setup": "Near-term bias is weak below 375-381 resistance; only a reclaim of that zone improves long probability. Until then, risk/reward is mediocre.",
+          "recommendation": "hold",
+          "trade_plan": {
+            "entry": 376.0,
+            "stop_loss": 367.0,
+            "target": 392.0,
+            "risk_reward_ratio": 1.78,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
+          },
+          "catalysts": [
+            "US housing turnover and rates path",
+            "Pro-customer demand recovery"
+          ],
+          "risks": [
+            "Consumer spending slowdown",
+            "Rate volatility pressuring home-improvement demand"
+          ],
+          "earnings_warning": false,
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no HD-specific prior edge data was available.",
+          "supporting_articles": [
+            {
+              "title": "The Home Depot, Inc. (HD) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/HD/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for price, range, and earnings-date context to avoid low-quality entries."
             }
           ]
         },
         "MA": {
-          "sentiment": "neutral",
-          "confidence": 0.57,
+          "sentiment": "bullish",
+          "confidence": 0.66,
           "key_observations": [
-            "MA closed at $496.32 on Mar 20, 2026 (+1.05% day/day), but still well below the 52-week high near $601.77.",
-            "RSI(14) around 42.62 with MACD around -5.36 and MA50 near 539.07 indicates medium-term downside bias.",
-            "Pivot area around 515.9 from technical tables marks a key reclaim level."
+            "MA trading references show price around 514-515 with 509.01-519.88 day range and 509.39 previous close.",
+            "52-week range is 465.59-601.77, and market cap is around 459B in referenced snapshot.",
+            "Earnings date listed Apr 30, 2026."
           ],
           "news_impact": "positive",
-          "news_summary": "A reported BVNK acquisition ties MA to stablecoin/payment-rail expansion, a positive strategic long-term catalyst but not yet a clean short-term technical reversal.",
-          "technical_setup": "Price remains below major moving averages, so trend confirmation is missing despite a one-day rebound. Conservative plan is breakout-only above resistance.",
+          "news_summary": "Payment-volume and value-added services narrative remains constructive, with continued digital/crypto-adjacent product expansion.",
+          "technical_setup": "Stock appears to be stabilizing after pullback; a breakout through 520 can trigger continuation to mid-530s. Clean invalidation is below 508.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 516.0,
-            "stop_loss": 498.0,
-            "target": 548.0,
-            "risk_reward_ratio": 1.78,
-            "position_size_pct": 2.5,
+            "entry": 520.0,
+            "stop_loss": 508.0,
+            "target": 545.0,
+            "risk_reward_ratio": 2.08,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Digital payments volume growth",
-            "Stablecoin/crypto rail integration narrative",
-            "Reclaim of 50-day trend levels"
+            "Cross-border spend growth",
+            "Value-added services expansion",
+            "Earnings on Apr 30"
           ],
           "risks": [
-            "Persistent relative weakness below moving averages",
-            "Regulatory/payment-fee pressure",
-            "Macro slowdown in consumer spending"
+            "Regulatory/fee pressure headlines",
+            "Consumer spending deceleration"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no MA-specific prior performance memory was available.",
           "supporting_articles": [
             {
-              "title": "Mastercard Inc. stock outperforms competitors on strong trading day",
-              "url": "https://www.marketwatch.com/data-news/mastercard-inc-stock-outperforms-competitors-on-strong-trading-day-f4859dc8-66fdd2de95bf",
-              "source": "MarketWatch",
-              "kind": "news",
-              "reason": "Confirms latest close and relative strength context for short-term setup."
+              "title": "Mastercard Incorporated (MA) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/MA/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Supplied key levels, valuation context, and earnings timing for conservative setup filtering."
             }
           ]
         },
         "V": {
           "sentiment": "neutral",
-          "confidence": 0.56,
+          "confidence": 0.61,
           "key_observations": [
-            "V recent quoted close was $314.43 (Mar 10, 2026 in historical table context).",
-            "RSI(14) around 38.294 with MACD around -2.01 and MA50 near 316.18 indicates bearish/oversold pressure.",
-            "Recent ranges show repeated failures to hold above the low-320s."
+            "V traded around 321.83 with a 321.60-333.00 day range and 331.80 previous close.",
+            "52-week range is 299.00-375.51 and market cap around 620.5B in referenced data.",
+            "Volume was 11,177,996 vs 6,982,891 average in the referenced session."
           ],
           "news_impact": "neutral",
-          "news_summary": "No immediate company-specific negative shock was confirmed; weakness appears mostly technical and market-regime driven.",
-          "technical_setup": "Visa is in a short-term downtrend with oversold readings, which can create bounce attempts but lacks confirmation until it reclaims 318-320. Conservative approach is watchlist rather than proactive buying.",
-          "recommendation": "watch",
+          "news_summary": "Fundamental tone remains stable after earnings beats, but recent pullback and macro uncertainty reduce immediate trend clarity.",
+          "technical_setup": "Price is below short-term resistance near 332-333; reclaiming that area would improve setup quality. Until then, better to wait for confirmation.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 320.0,
-            "stop_loss": 312.0,
-            "target": 334.0,
-            "risk_reward_ratio": 1.75,
-            "position_size_pct": 2.5,
+            "entry": 333.5,
+            "stop_loss": 321.0,
+            "target": 352.0,
+            "risk_reward_ratio": 1.48,
+            "position_size_pct": 0.0,
             "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Global card spending trends",
-            "Cross-border volume data",
-            "Reversal confirmation through moving-average reclaim"
+            "Consumer and travel spend trends",
+            "Apr 28, 2026 earnings"
           ],
           "risks": [
-            "Continued lower highs in risk-off tape",
-            "Payment fee/regulatory pressure",
-            "Further rotation out of mega-cap financials"
+            "Regulatory overhang on fees",
+            "Global spending slowdown"
           ],
           "earnings_warning": false,
-          "historical_context": "Historical journal/trade files under data/profiles/codex could not be accessed in this run due local shell sandbox failure, so no symbol-specific prior outcome pattern was retrievable.",
+          "historical_context": "Could not retrieve local journal/trade artifacts from data/profiles/codex in this run due sandbox execution failure, so no V-specific prior trade pattern was available.",
           "supporting_articles": [
             {
-              "title": "V Technical Analysis, RSI and Moving Averages",
-              "url": "https://www.investing.com/equities/visa-inc-technical",
-              "source": "Investing.com",
+              "title": "Visa Inc. (V) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/V//",
+              "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Provided RSI/MACD/moving-average context for conservative timing and risk controls."
+              "reason": "Provided current pullback levels and earnings context for risk-defined planning."
             },
             {
               "title": "Visa Inc. (V) Announces Launch of Visa Agentic Ready",
@@ -3306,40 +3310,40 @@
               "summary": "Visa Inc. (V) Announces Launch of Visa Agentic Ready Insider Monkey"
             },
             {
-              "title": "VISA INC. (V)",
-              "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPMHE0MThfMlk0dGJNa3MyalVLZlNIaE9PU2E4U0pZTG5qaUI2My05WVNjM0ZsdkdjbnF4VGNhYlVvUnAyVWtwRGJEVDMybkFleWtfeFVET2k3ak1nMFZVR0hnUXFxV3RHUUhacFJVOFRQdnQxN25VVkVVeTBOTHo3cDJn?oc=5",
+              "title": "Why Middle East crisis has little impact on Visa Inc (V)\u2019s revenue as stablecoin cards business expands",
+              "url": "https://news.google.com/rss/articles/CBMi-wJBVV95cUxOZjF1OW9kRERXWDBaclRkdG41clBKdC1nMEkzWXdKRHNtZHpWNlZzcjQ1UUx2LUs1N0tmX1lrYVQyOWtrNldUQzNmUW1fczJPZllpWVVFdHBLSE5wM2E3ZVMzUmRoMk9ubWV6TVFZWjE1aHROUHJ2Y25nemh4dTRYYk1sUjRzUm4tZW1ZbVh3ZkhIWE02eGo5a0lkR0JWX0tKeFhrSy1NLVBNQ2JBMkhGMWVESWpmRDhCb3FwTnR5S1NhMHBiUldKb2FoYS1tQ1N0ZzBia1NuSmRfMVA5Rzk1YzlGeElHWTNtclhBbzRReXFDR09tWE81cFdSTjg2SzZrQWJWOFNLamNfejVnZnh2REk0djk4WVNyYmhXa0drb3JWUXdZaXl5bG90WDlUWWRfMFhqblZvZkhaMGZqNDRzVXAwajZOdkYxU0xqeUNSVDlMNXlldXRERXBfOWtRaElpVnlBTW5wS1BmeWwweElCc29VN1RqZGRSRzBv?oc=5",
               "source": "MSN",
               "publisher": "MSN",
-              "published": "Wed, 18 Mar 2026 21:05:48 GMT",
+              "published": "Sat, 21 Mar 2026 11:34:19 GMT",
               "kind": "web",
               "reason": "Live Google News verification for V",
-              "summary": "VISA INC. (V) MSN"
+              "summary": "Why Middle East crisis has little impact on Visa Inc (V)\u2019s revenue as stablecoin cards business expands MSN"
             }
           ]
         }
       },
-      "self_reflection": "Confidence is intentionally capped because I could not retrieve local journal/trade-history artifacts from data/profiles/codex in this run due shell sandbox failure. I compensated with targeted live verification and kept recommendations selective with smaller position sizing and explicit invalidation levels.",
+      "self_reflection": "Confidence is moderated because local strategist memory files were inaccessible in this run, so I could not calibrate with prior codex-specific hit-rate by symbol. I compensated by lowering conviction outside the clearest risk-defined setups and restricting actionable ideas to two names.",
       "web_checks": [
         {
-          "symbol": "MU",
-          "query": "Investopedia MU earnings move expectations March 2026",
-          "source": "Investopedia",
-          "url": "https://www.investopedia.com/here-is-how-much-micron-stock-is-expected-to-move-after-earnings-mu-q2-fy2026-update-11922240",
-          "finding": "Confirmed high-volatility earnings context, strong AI-demand narrative, and options-implied \u00b17% move profile."
+          "symbol": "PANW",
+          "query": "Reuters Palo Alto integration costs 2026 guidance",
+          "source": "Reuters via Investing.com",
+          "url": "https://www.investing.com/news/stock-market-news/palo-alto-shares-fall-as-deal-costs-pile-up-amid-ai-security-push-4510696",
+          "finding": "Confirmed negative near-term profitability revision tied to acquisition integration costs, supporting a cautious/watch stance."
         },
         {
-          "symbol": "INTC",
-          "query": "INTC latest close and range context",
-          "source": "StockInvest",
-          "url": "https://stockinvest.us/stock-price/INTC",
-          "finding": "Confirmed Mar 20 close at $43.87, -5.00% day move, and 30-day range roughly $41.64-$49.17 for support/resistance planning."
+          "symbol": "MU",
+          "query": "Micron March 2026 earnings demand/supply context",
+          "source": "The Wall Street Journal",
+          "url": "https://www.wsj.com/business/earnings/micron-sales-nearly-triple-amid-tight-memory-supply-e46ddd64",
+          "finding": "Confirmed strong revenue/profit momentum under tight memory supply, supporting MU as a qualified opportunity with strict stop discipline."
         },
         {
           "symbol": "UNH",
-          "query": "UNH 2026 outlook headline risk and stock reaction",
-          "source": "MarketWatch",
-          "url": "https://www.marketwatch.com/story/unitedhealths-stock-falls-further-after-saying-it-expects-revenue-to-decline-in-2026-5046edb6",
-          "finding": "Confirmed bearish narrative tied to 2026 revenue-pressure guidance and ongoing overhang, supporting a cautious/defensive stance."
+          "query": "UnitedHealth Medicare billing investigation headline risk",
+          "source": "CNBC",
+          "url": "https://www.cnbc.com/2025/02/21/unitedhealth-tumbles-12percent-on-wsj-report-the-doj-is-investigating-medicare-billing-practices.html",
+          "finding": "Confirmed legal/regulatory headline overhang, reinforcing reduced confidence and watch-only posture ahead of earnings."
         },
         {
           "symbol": "V",
@@ -3360,12 +3364,12 @@
         "status": "success",
         "provider": "cli:codex",
         "model": "default",
-        "duration_ms": 162032.1,
+        "duration_ms": 126976.3,
         "session_id": null,
         "usage": {
-          "input_tokens": 93593,
-          "cached_input_tokens": 23552,
-          "output_tokens": 10452
+          "input_tokens": 73481,
+          "cached_input_tokens": 45952,
+          "output_tokens": 8947
         }
       }
     },
@@ -3632,33 +3636,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.404,
+            "sentiment": 0.406,
             "category": "headline",
             "url": "https://www.trefis.com/stock/txn/articles2/594360/mu-looks-smarter-buy-than-texas-instruments-stock-2/2026-03-21",
             "summary": "This article argues that Micron Technology (MU) is a smarter investment than Texas Instruments (TXN) due to MU's lower valuation and higher revenue and operating income growth. It provides a comparative analysis of key metrics for both companies, both currently and a year ago, to support its claim. The article suggests that while valuation is attractive, a multi-factor analysis is crucial for investment decisions.",
             "publisher": "Trefis",
             "metadata": {
-              "overall_sentiment": 0.210308,
+              "overall_sentiment": 0.244921,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "TXN": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.0929,
+                  "sentiment_score": 0.0876,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.9963,
-                  "sentiment_score": 0.4038,
+                  "relevance": 0.9652,
+                  "sentiment_score": 0.4059,
                   "sentiment_label": "Bullish"
                 },
                 "FSLR": {
-                  "relevance": 0.6253,
-                  "sentiment_score": 0.2007,
+                  "relevance": 0.6481,
+                  "sentiment_score": 0.2103,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "DRI": {
-                  "relevance": 0.5513,
-                  "sentiment_score": 0.2255,
+                  "relevance": 0.5627,
+                  "sentiment_score": 0.1925,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3676,38 +3680,38 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.145,
+            "sentiment": 0.136,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/itau-unibanco-holding-sa-nyseitub-announces-special-dividend-of-007-2026-03-21/",
             "summary": "Itau Unibanco Holding S.A. (NYSE:ITUB) has declared a special dividend of $0.068 per share, with the ex-dividend date set for March 23rd, and payment scheduled for September 8th. The company maintains a dividend payout ratio of 74.4%, which is expected to be 70.1% next year based on projected EPS of $0.87. Despite recent quarterly results missing analyst estimates, the stock has a market capitalization of approximately $86.9 billion.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.121176,
+              "overall_sentiment": 0.107487,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "ITUB": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.1495,
+                  "sentiment_score": 0.1417,
                   "sentiment_label": "Neutral"
                 },
                 "DLTR": {
-                  "relevance": 0.6222,
-                  "sentiment_score": 0.1383,
+                  "relevance": 0.6164,
+                  "sentiment_score": 0.1313,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.6236,
-                  "sentiment_score": 0.1449,
+                  "relevance": 0.6047,
+                  "sentiment_score": 0.1356,
                   "sentiment_label": "Neutral"
                 },
                 "AIZ": {
-                  "relevance": 0.631,
-                  "sentiment_score": 0.1123,
+                  "relevance": 0.6298,
+                  "sentiment_score": 0.1267,
                   "sentiment_label": "Neutral"
                 },
                 "KEYS": {
-                  "relevance": 0.64,
-                  "sentiment_score": 0.1225,
+                  "relevance": 0.6391,
+                  "sentiment_score": 0.1384,
                   "sentiment_label": "Neutral"
                 }
               },
@@ -3724,33 +3728,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.185,
+            "sentiment": 0.213,
             "category": "headline",
             "url": "https://nationaltoday.com/us/mo/st-louis/news/2026/03/21/st-louis-asset-manager-acquires-3-6m-stake-in-procter-gamble/",
             "summary": "St. Louis Financial Planners Asset Management LLC has acquired a new stake in Procter & Gamble Co (NYSE:PG), purchasing 25,413 shares valued at approximately $3.6 million during Q4 2025. This acquisition makes Procter & Gamble the 15th largest holding in the firm's portfolio, representing 2.2% of its total holdings. The move signifies confidence in the consumer goods giant's long-term prospects.",
             "publisher": "National Today",
             "metadata": {
-              "overall_sentiment": 0.257896,
+              "overall_sentiment": 0.250412,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "PG": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.423,
+                  "sentiment_score": 0.4178,
                   "sentiment_label": "Bullish"
                 },
                 "MU": {
-                  "relevance": 0.6251,
-                  "sentiment_score": 0.1855,
+                  "relevance": 0.6339,
+                  "sentiment_score": 0.213,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "CRM": {
-                  "relevance": 0.6304,
-                  "sentiment_score": 0.186,
+                  "relevance": 0.629,
+                  "sentiment_score": 0.2112,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MS": {
-                  "relevance": 0.5988,
-                  "sentiment_score": 0.1828,
+                  "relevance": 0.5806,
+                  "sentiment_score": 0.2282,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3767,28 +3771,28 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.136,
+            "sentiment": 0.146,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/rollins-inc-nyserol-receives-average-rating-of-moderate-buy-from-analysts-2026-03-21/",
             "summary": "Rollins, Inc. (NYSE:ROL) has received an average rating of \"Moderate Buy\" from analysts, with eleven buy recommendations and four hold ratings, and a mean 12-month price target of $66.08. Despite missing last quarter's earnings and revenue consensus, the company reported 9.7% year-over-year revenue growth and pays a quarterly dividend. Insider selling was noted, with Chairman Gary W. Rollins and Elizabeth B. Chandler disposing of shares recently.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.108497,
+              "overall_sentiment": 0.115298,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "ROL": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.0816,
+                  "sentiment_score": 0.0998,
                   "sentiment_label": "Neutral"
                 },
                 "DLTR": {
-                  "relevance": 0.6181,
-                  "sentiment_score": 0.1079,
+                  "relevance": 0.6249,
+                  "sentiment_score": 0.1188,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.6047,
-                  "sentiment_score": 0.1355,
+                  "relevance": 0.6122,
+                  "sentiment_score": 0.1462,
                   "sentiment_label": "Neutral"
                 }
               },
@@ -3805,38 +3809,38 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.344,
+            "sentiment": 0.338,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/filing-new-mexico-educational-retirement-board-invests-2-million-in-elanco-animal-health-incorporated-elan-2026-03-21/",
             "summary": "The New Mexico Educational Retirement Board recently acquired 99,200 shares, valued at approximately $1.998 million, of Elanco Animal Health Incorporated ($ELAN) in the third quarter, indicating renewed institutional interest. Several analysts have upgraded their ratings for Elanco, resulting in a \"Moderate Buy\" consensus and an average target price of $27.67. Elanco also reported strong Q3 earnings, beating analyst estimates with an EPS of $0.13 and revenue of $1.14 billion, and provided positive FY2026 guidance.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.253533,
+              "overall_sentiment": 0.266249,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "ELAN": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.4035,
+                  "sentiment_score": 0.3943,
                   "sentiment_label": "Bullish"
                 },
                 "ZTS": {
-                  "relevance": 0.6427,
-                  "sentiment_score": 0.1244,
+                  "relevance": 0.6293,
+                  "sentiment_score": 0.101,
                   "sentiment_label": "Neutral"
                 },
                 "FITB": {
-                  "relevance": 0.7263,
-                  "sentiment_score": 0.2283,
+                  "relevance": 0.7283,
+                  "sentiment_score": 0.2256,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "DLTR": {
-                  "relevance": 0.6448,
-                  "sentiment_score": 0.2842,
+                  "relevance": 0.6458,
+                  "sentiment_score": 0.2978,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.6067,
-                  "sentiment_score": 0.3441,
+                  "relevance": 0.6362,
+                  "sentiment_score": 0.3381,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3854,23 +3858,23 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.243,
+            "sentiment": 0.245,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/filing-aventura-private-wealth-llc-buys-shares-of-12571-texas-instruments-incorporated-txn-2026-03-21/",
             "summary": "Aventura Private Wealth LLC has acquired 12,571 shares of Texas Instruments, valued at approximately $2.18 million, making it their 22nd largest holding. This comes amidst significant insider selling of TXN stock and a slight earnings miss in the last quarter, though the company maintains a 3.0% dividend yield and a \"Hold\" consensus analyst rating.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.018212,
+              "overall_sentiment": 0.021418,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "TXN": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.2259,
+                  "sentiment_score": -0.2096,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "MU": {
-                  "relevance": 0.6273,
-                  "sentiment_score": 0.2427,
+                  "relevance": 0.6166,
+                  "sentiment_score": 0.2454,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3888,33 +3892,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.345,
+            "sentiment": 0.303,
             "category": "headline",
             "url": "https://www.msn.com/en-us/money/topstocks/western-digital-corp-stock-underperforms-friday-when-compared-to-competitors/ar-AA1Z5qmj",
             "summary": "Western Digital Corp. (WDC) stock fell on Friday, underperforming its competitors. The stock closed at $68.04, a 0.28% loss for the day, while its rivals saw gains.",
             "publisher": "MSN",
             "metadata": {
-              "overall_sentiment": 0.157895,
+              "overall_sentiment": 0.173301,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "WDC": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.3543,
+                  "sentiment_score": -0.3731,
                   "sentiment_label": "Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.7351,
-                  "sentiment_score": 0.345,
+                  "relevance": 0.7449,
+                  "sentiment_score": 0.3301,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "AVGO": {
-                  "relevance": 0.7478,
-                  "sentiment_score": 0.3287,
+                  "relevance": 0.7137,
+                  "sentiment_score": 0.3384,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.7199,
-                  "sentiment_score": 0.3447,
+                  "relevance": 0.7231,
+                  "sentiment_score": 0.3026,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3931,28 +3935,28 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": -0.338,
+            "sentiment": -0.341,
             "category": "headline",
             "url": "https://www.tradingkey.com/news/Market-Movers/261705428-market-movers-avgo-20260320",
             "summary": "Broadcom Inc (AVGO) stock fell by 3.05% on March 20, 2026, influenced by broad market pressures, an EU antitrust probe regarding VMware licensing, and an analyst downgrade citing weak non-AI business performance. The decline was also exacerbated by significant selling from both company insiders and institutional investors, despite recent strong quarterly earnings driven by AI. Technical indicators suggest a sell signal, and media coverage for AVGO is low.",
             "publisher": "TradingKey",
             "metadata": {
-              "overall_sentiment": -0.364233,
+              "overall_sentiment": -0.350595,
               "overall_label": "Bearish",
               "ticker_sentiments": {
                 "AVGO": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.4176,
+                  "sentiment_score": -0.4257,
                   "sentiment_label": "Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.6227,
-                  "sentiment_score": -0.3209,
+                  "relevance": 0.6022,
+                  "sentiment_score": -0.316,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "MU": {
-                  "relevance": 0.6022,
-                  "sentiment_score": -0.3384,
+                  "relevance": 0.6028,
+                  "sentiment_score": -0.3406,
                   "sentiment_label": "Somewhat-Bearish"
                 }
               },
@@ -3972,28 +3976,28 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": -0.334,
+            "sentiment": -0.318,
             "category": "headline",
             "url": "https://www.tradingkey.com/news/Market-Movers/261705210-market-movers-stx-20260320",
             "summary": "Seagate Technology Holdings PLC (STX) saw its stock decline by 4.31% on March 20, influenced by institutional investor adjustments, insider selling, and broader market downturns. Despite a positive long-term outlook driven by AI and data center demand, profit-taking and cautionary sentiment contributed to intraday volatility. The article also provides technical and fundamental analyses, highlighting specific risks the company faces.",
             "publisher": "TradingKey",
             "metadata": {
-              "overall_sentiment": -0.333068,
+              "overall_sentiment": -0.335282,
               "overall_label": "Somewhat-Bearish",
               "ticker_sentiments": {
                 "STX": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.4004,
+                  "sentiment_score": -0.3808,
                   "sentiment_label": "Bearish"
                 },
                 "MU": {
-                  "relevance": 0.5907,
-                  "sentiment_score": -0.3337,
+                  "relevance": 0.6083,
+                  "sentiment_score": -0.3182,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.5318,
-                  "sentiment_score": -0.2372,
+                  "relevance": 0.5636,
+                  "sentiment_score": -0.2017,
                   "sentiment_label": "Somewhat-Bearish"
                 }
               },
@@ -4011,33 +4015,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.235,
+            "sentiment": 0.216,
             "category": "headline",
             "url": "https://www.tikr.com/blog/teradyne-stock-analysts-see-more-upside-in-2026-after-soaring-242-last-year?",
             "summary": "Teradyne (TER) saw its stock surge by 242% last year, driven by significant AI-related revenue growth which reached over 60% in Q4 2025 and is projected at 70% for Q1 2026. The company, a major player in automated chip-testing, particularly for AI accelerators, expects continued strong momentum in 2026, with a long-term target of $6 billion in revenue and EPS of $9.50 to $11.00. While analysts predict modest short-term upside, the TIKR model projects a 43.6% total return through December 2030, anchored by AI demand and strategic ventures.",
             "publisher": "TIKR.com",
             "metadata": {
-              "overall_sentiment": 0.349294,
+              "overall_sentiment": 0.301543,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "TER": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.4634,
+                  "sentiment_score": 0.4888,
                   "sentiment_label": "Bullish"
                 },
                 "NVDA": {
-                  "relevance": 0.7221,
-                  "sentiment_score": 0.3248,
+                  "relevance": 0.7239,
+                  "sentiment_score": 0.3002,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.5828,
-                  "sentiment_score": 0.2349,
+                  "relevance": 0.5588,
+                  "sentiment_score": 0.2159,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "JCI": {
-                  "relevance": 0.5623,
-                  "sentiment_score": 0.288,
+                  "relevance": 0.5664,
+                  "sentiment_score": 0.2513,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },

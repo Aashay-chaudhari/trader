@@ -39,6 +39,7 @@
         </div>
         <div class="buttons">
           <a class="btn" id="runLink" href="data/report_research.md" target="_blank" rel="noreferrer">Open latest report</a>
+          <a class="btn" id="resetLink" href="https://github.com/Aashay-chaudhari/trader/actions/workflows/trading.yml" target="_blank" rel="noreferrer">Reset project state</a>
           <a class="btn" id="researchLink" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
           <a class="btn" id="monitorLink" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
           <a class="btn" id="contextLink" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
@@ -173,6 +174,19 @@
       return Object.entries(profiles).map(([profileId,profileBundle])=>{const latest=obj(profileBundle.latest),llm=obj(profileBundle.llm),trades=arr(profileBundle.trades),closed=trades.filter(t=>typeof t==="object"&&typeof t.pnl==="number"),wins=closed.filter(t=>(t.pnl||0)>0);return {profile:profileId,label:obj(profileBundle.profile).label||labelFromId(profileId),last_updated:latest.timestamp,portfolio_value:latest.portfolio_value,total_pnl:latest.total_pnl,total_pnl_pct:latest.total_pnl_pct,trade_count:trades.length,closed_trade_count:closed.length,win_rate:closed.length?Math.round(wins.length/closed.length*1000)/10:null,provider:llm.selected_provider||llm.provider,model:llm.selected_model||llm.model};});
     }
 
+    function workflowUrlFromContext(runtime,runUrl){
+      const repo=obj(obj(runtime).github).repository;
+      if(repo)return `https://github.com/${repo}/actions/workflows/trading.yml`;
+      const match=String(runUrl||"").match(/https:\/\/github\.com\/([^\/]+\/[^\/]+)\/actions\/runs\//i);
+      if(match)return `https://github.com/${match[1]}/actions/workflows/trading.yml`;
+      if(location.hostname.endsWith(".github.io")){
+        const owner=location.hostname.replace(/\.github\.io$/i,"");
+        const repoName=location.pathname.split("/").filter(Boolean)[0];
+        if(owner&&repoName)return `https://github.com/${owner}/${repoName}/actions/workflows/trading.yml`;
+      }
+      return "https://github.com";
+    }
+
     function initialProfile(bundle,profiles){
       if(bundle.active_profile&&profiles[bundle.active_profile])return bundle.active_profile;
       return Object.keys(profiles)[0]||"default";
@@ -190,7 +204,7 @@
       document.getElementById("comparisonTable").innerHTML=summary.length?summary.map(item=>`<tr${item.profile===selectedProfile?' style="background:rgba(125,211,252,.08)"':""}><td><strong>${esc(item.label||labelFromId(item.profile))}</strong><div class="sub">${esc(item.profile)}</div></td><td>${fmtMoney(item.portfolio_value)}</td><td class="${cls(item.total_pnl)}">${signMoney(item.total_pnl)}<div class="sub ${cls(item.total_pnl_pct)}">${fmtPct(item.total_pnl_pct)}</div></td><td>${esc(String(item.trade_count??0))}<div class="sub">${esc(String(item.closed_trade_count??0))} closed</div></td><td>${esc(item.win_rate===null?"-":`${Number(item.win_rate).toFixed(1)}%`)}</td><td>${esc(item.provider||"-")}</td><td>${esc(item.model||"-")}</td><td>${esc(dateText(item.last_updated))}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No strategist summaries available yet.")}</td></tr>`;
     }
 
-    function updateLinks(profileBundle,runUrl){
+    function updateLinks(profileBundle,runUrl,runtime){
       const artifacts=obj(profileBundle.artifacts);
       const researchPath=artifacts.research_report_md||"data/report_research.md";
       const monitorPath=artifacts.monitor_report_md||"data/report_monitor.md";
@@ -201,6 +215,10 @@
       document.getElementById("dashboardLink").href=artifacts.dashboard_json||"data/dashboard.json";
       const runLink=document.getElementById("runLink");
       if(runUrl){runLink.href=runUrl;runLink.textContent="Open GitHub Actions run";}else{runLink.href=researchPath;runLink.textContent="Open latest report";}
+      const resetLink=document.getElementById("resetLink");
+      const workflowUrl=workflowUrlFromContext(runtime,runUrl);
+      resetLink.href=workflowUrl;
+      resetLink.title="Open the GitHub Actions workflow page, then dispatch a run with reset_state enabled.";
     }
 
     function renderProfile(profileBundle,bundle){
@@ -211,8 +229,9 @@
       const totalArticles=Object.values(perSymbol).reduce((s,v)=>s+arr(obj(v).news_headlines).length,0)+marketHeadlines.length+Object.values(webArticlesBySymbol).reduce((s,v)=>s+arr(v).length,0);
       const best=arr(research.best_opportunities), signals=arr(reportMonitor.signals), approved=arr(obj(reportMonitor.risk).approved_trades), rejected=arr(obj(reportMonitor.risk).rejected_trades), executed=arr(reportMonitor.executed), webChecks=arr(research.web_checks).length+arr(reportMonitor.web_checks).length;
 
-      const runUrl=llm.runtime?.github?.run_url||context.llm_meta?.runtime?.github?.run_url||"";
-      updateLinks(profileBundle,runUrl);
+      const runtime=obj(llm.runtime)||obj(obj(context.llm_meta).runtime);
+      const runUrl=runtime.github?.run_url||context.llm_meta?.runtime?.github?.run_url||"";
+      updateLinks(profileBundle,runUrl,runtime);
       document.getElementById("heroSummary").textContent=[`${profile.label||labelFromId(profile.id)} is active.`,research.market_summary,research.market_regime?`Regime: ${research.market_regime}`:"",best.length?`Top ideas: ${best.join(", ")}`:""].filter(Boolean).join(" | ")||"Latest research and workflow context loaded.";
       document.getElementById("heroMeta").innerHTML=[["Strategist",profile.label||labelFromId(profile.id)],["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
       document.getElementById("portfolioValue").textContent=fmtMoney(latest.portfolio_value); document.getElementById("cashValue").textContent=fmtMoney(latest.cash); document.getElementById("positionCount").textContent=String(latest.position_count||positions.length); document.getElementById("tradeCount").textContent=String(trades.length); document.getElementById("articleCount").textContent=String(totalArticles); document.getElementById("modeNote").textContent=trades.some(t=>(t.status||"").toLowerCase()!=="dry_run")?"Live execution detected":"Dry-run history";
