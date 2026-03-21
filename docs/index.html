@@ -65,7 +65,7 @@
 <body>
     <h1>Agent Trader Dashboard</h1>
     <p class="subtitle">
-        Last updated: <span id="lastUpdated">â€”</span> |
+        Last updated: <span id="lastUpdated">—</span> |
         Mode: <span class="tag tag-dry" id="modeTag">DRY RUN</span>
     </p>
 
@@ -73,28 +73,28 @@
     <div class="grid">
         <div class="card">
             <div class="card-label">Portfolio Value</div>
-            <div class="card-value" id="portfolioValue">â€”</div>
+            <div class="card-value" id="portfolioValue">—</div>
         </div>
         <div class="card">
             <div class="card-label">Total P&L</div>
-            <div class="card-value" id="totalPnl">â€”</div>
+            <div class="card-value" id="totalPnl">—</div>
             <div class="card-sub" id="totalPnlPct"></div>
         </div>
         <div class="card">
             <div class="card-label">Cash Available</div>
-            <div class="card-value" id="cash">â€”</div>
+            <div class="card-value" id="cash">—</div>
         </div>
         <div class="card">
             <div class="card-label">Open Positions</div>
-            <div class="card-value" id="positionCount">â€”</div>
+            <div class="card-value" id="positionCount">—</div>
         </div>
         <div class="card">
             <div class="card-label">Total Trades</div>
-            <div class="card-value" id="totalTrades">â€”</div>
+            <div class="card-value" id="totalTrades">—</div>
         </div>
         <div class="card">
             <div class="card-label">Win Rate</div>
-            <div class="card-value" id="winRate">â€”</div>
+            <div class="card-value" id="winRate">—</div>
         </div>
     </div>
 
@@ -149,7 +149,7 @@
             <div class="flow-arrow">&#8594;</div>
             <div class="flow-node" id="fn-news">News<br><small>headlines + context</small></div>
             <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node flow-ai" id="fn-research">Claude<br><small id="fn-research-model">Sonnet</small></div>
+            <div class="flow-node flow-ai" id="fn-research"><span id="fn-research-provider">LLM</span><br><small id="fn-research-model">model</small></div>
             <div class="flow-arrow">&#8594;</div>
             <div class="flow-node" id="fn-strategy">Strategy<br><small>8 strategies vote</small></div>
             <div class="flow-arrow">&#8594;</div>
@@ -160,6 +160,16 @@
             <div class="flow-node" id="fn-portfolio">Portfolio<br><small>update P&L</small></div>
         </div>
         <div id="pipelineDetails" style="font-size:0.8rem;color:#64748b;margin-top:8px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+        <h2 style="margin-top:0">LLM Telemetry</h2>
+        <div class="stats-grid" id="llmStats">
+            <div class="stat">
+                <div class="stat-value neutral">-</div>
+                <div class="stat-label">No telemetry yet</div>
+            </div>
+        </div>
     </div>
 
     <!-- Performance Stats -->
@@ -175,25 +185,28 @@
 
     async function loadData() {
         try {
-            const [latestRes, historyRes, tradesRes, researchRes] = await Promise.all([
+            const [latestRes, historyRes, tradesRes, researchRes, llmRes] = await Promise.all([
                 fetch('data/latest.json').catch(() => null),
                 fetch('data/history.json').catch(() => null),
                 fetch('data/trades.json').catch(() => null),
                 fetch('data/research.json').catch(() => null),
+                fetch('data/llm.json').catch(() => null),
             ]);
 
             const latest = latestRes?.ok ? await latestRes.json() : null;
             const history = historyRes?.ok ? await historyRes.json() : [];
             const trades = tradesRes?.ok ? await tradesRes.json() : [];
             const research = researchRes?.ok ? await researchRes.json() : null;
+            const llm = llmRes?.ok ? await llmRes.json() : null;
 
             if (latest) renderOverview(latest);
             if (history.length > 0) renderChart(history);
             if (latest?.positions) renderPositions(latest.positions);
             if (trades.length > 0) renderTrades(trades);
             if (research) renderResearch(research);
+            if (llm) renderLlm(llm);
             if (trades.length > 0) renderPerformance(trades);
-            renderPipeline(latest, research, trades);
+            renderPipeline(latest, research, trades, llm);
         } catch (e) {
             console.error('Dashboard load error:', e);
         }
@@ -260,11 +273,11 @@
                 <td>${new Date(t.timestamp).toLocaleDateString()}</td>
                 <td><strong>${t.symbol}</strong></td>
                 <td><span class="tag tag-${t.action}">${t.action}</span></td>
-                <td>${t.quantity || 'â€”'}</td>
-                <td>${t.price ? fmt(t.price) : 'â€”'}</td>
-                <td>${t.value ? fmt(t.value) : 'â€”'}</td>
+                <td>${t.quantity || '—'}</td>
+                <td>${t.price ? fmt(t.price) : '—'}</td>
+                <td>${t.value ? fmt(t.value) : '—'}</td>
                 <td><span class="tag tag-${t.status === 'dry_run' ? 'dry' : 'live'}">${t.status}</span></td>
-                <td class="trade-reasoning">${t.reasoning || 'â€”'}</td>
+                <td class="trade-reasoning">${t.reasoning || '—'}</td>
             </tr>
         `).join('');
     }
@@ -278,7 +291,7 @@
 
         container.innerHTML = `
             <div style="margin-bottom:12px;color:#94a3b8">
-                <strong>Sentiment:</strong> ${data.overall_sentiment || 'â€”'}
+                <strong>Sentiment:</strong> ${data.overall_sentiment || '—'}
                 <br><small>${data.market_summary || ''}</small>
             </div>
         ` + entries.slice(0, 5).map(([sym, s]) => {
@@ -302,7 +315,7 @@
 
         const completed = trades.filter(t => t.pnl !== undefined);
         if (!completed.length) {
-            document.getElementById('winRate').textContent = 'â€”';
+            document.getElementById('winRate').textContent = '—';
             return;
         }
 
@@ -333,7 +346,38 @@
         `).join('');
     }
 
-    function renderPipeline(latest, research, trades) {
+    function renderLlm(data) {
+        const container = document.getElementById('llmStats');
+        if (!container || !data) return;
+
+        const usage = data.usage || {};
+        const estimates = data.rate_limits?.estimates || {};
+        const github = data.runtime?.github || {};
+        const model = data.selected_model || data.model || '-';
+        const provider = data.selected_provider || data.provider || '-';
+        const tokensBefore = estimates.tokens_remaining_before_request_estimate;
+        const requestId = data.request_id || '-';
+
+        container.innerHTML = [
+            { label: 'Provider', value: provider },
+            { label: 'Model', value: model },
+            { label: 'Platform', value: data.runtime?.platform || '-' },
+            { label: 'Input Tokens', value: usage.input_tokens ?? '-' },
+            { label: 'Output Tokens', value: usage.output_tokens ?? '-' },
+            { label: 'Total Tokens', value: usage.total_tokens ?? '-' },
+            { label: 'Capacity Before Request', value: tokensBefore !== undefined ? tokensBefore.toLocaleString() : 'n/a' },
+            { label: 'Latency', value: data.duration_ms ? Math.round(data.duration_ms) + ' ms' : '-' },
+            { label: 'Run ID', value: github.run_id || '-' },
+            { label: 'Request ID', value: requestId.length > 16 ? requestId.slice(0, 16) + '...' : requestId },
+        ].map(s => `
+            <div class="stat">
+                <div class="stat-value">${s.value}</div>
+                <div class="stat-label">${s.label}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderPipeline(latest, research, trades, llm) {
         // Light up the flow nodes based on available data
         const nodes = {
             screener: !!research?.stocks,
@@ -357,6 +401,13 @@
         if (research?.market_regime) details.push(`Regime: ${research.market_regime}`);
         if (research?.best_opportunities?.length) details.push(`Best picks: ${research.best_opportunities.join(', ')}`);
         if (trades?.length) details.push(`${trades.length} trade(s) logged`);
+        if (llm?.selected_provider) details.push(`LLM: ${llm.selected_provider}`);
+        if (llm?.selected_model) details.push(`Model: ${llm.selected_model}`);
+
+        const providerEl = document.getElementById('fn-research-provider');
+        const modelEl = document.getElementById('fn-research-model');
+        if (providerEl) providerEl.textContent = llm?.selected_provider || research?._meta?.provider || 'LLM';
+        if (modelEl) modelEl.textContent = llm?.selected_model || research?._meta?.model || 'model';
 
         const detailsEl = document.getElementById('pipelineDetails');
         if (detailsEl && details.length) detailsEl.textContent = details.join(' | ');
