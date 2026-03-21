@@ -5,6 +5,7 @@ Usage:
   python -m agent_trader monitor               # Monitor & trade phase
   python -m agent_trader run                   # Both phases back-to-back
   python -m agent_trader run --dry-run         # Full run, no orders
+  python -m agent_trader reset                 # Reset generated runtime state
   python -m agent_trader status                # Show portfolio
   python -m agent_trader dashboard             # Generate dashboard HTML
 """
@@ -41,6 +42,15 @@ def main():
     # Status command
     subparsers.add_parser("status", help="Show portfolio status")
 
+    # Reset command
+    reset_parser = subparsers.add_parser("reset", help="Reset generated runtime state")
+    reset_parser.add_argument("--all-profiles", action="store_true",
+                              help="Reset all strategist profile data under data/profiles")
+    reset_parser.add_argument("--docs", action="store_true",
+                              help="Also clear generated GitHub Pages output under docs/")
+    reset_parser.add_argument("--data-dir", help="Override data directory to reset")
+    reset_parser.add_argument("--docs-dir", help="Override docs directory to reset")
+
     # Dashboard command
     subparsers.add_parser("dashboard", help="Generate dashboard data")
 
@@ -54,6 +64,8 @@ def main():
         asyncio.run(cmd_run(args))
     elif args.command == "status":
         cmd_status()
+    elif args.command == "reset":
+        cmd_reset(args)
     elif args.command == "dashboard":
         cmd_dashboard()
     else:
@@ -122,6 +134,26 @@ def cmd_dashboard():
     from agent_trader.dashboard.generator import generate_dashboard
     generate_dashboard()
     console.print("[green]Dashboard generated at docs/index.html[/green]")
+
+
+def cmd_reset(args):
+    """Reset generated runtime state."""
+    from agent_trader.utils.project_state import reset_project_state
+
+    summary = reset_project_state(
+        data_dir=args.data_dir,
+        docs_dir=args.docs_dir,
+        all_profiles=bool(args.all_profiles),
+        include_docs=bool(args.docs),
+    )
+    console.print("[green]Project state reset complete.[/green]")
+    console.print(f"  Data root: {summary['data_root']}")
+    console.print(f"  Removed paths: {len(summary['removed'])}")
+    if summary["removed"]:
+        for path in summary["removed"][:12]:
+            console.print(f"    - {path}")
+        if len(summary["removed"]) > 12:
+            console.print(f"    ... and {len(summary['removed']) - 12} more")
 
 
 if __name__ == "__main__":

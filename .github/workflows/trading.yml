@@ -50,6 +50,11 @@ on:
           - both
           - claude
           - codex
+      reset_state:
+        description: "Reset stored runtime state before running"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -80,6 +85,7 @@ jobs:
   strategist-run:
     needs: determine-phase
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == matrix.profile_id }}
     strategy:
       fail-fast: false
       matrix:
@@ -128,6 +134,14 @@ jobs:
           test -n "$OPENAI_API_KEY"
           printf '%s' "$OPENAI_API_KEY" | codex login --with-api-key
           codex login status
+
+      - name: Reset strategist state
+        if: github.event_name == 'workflow_dispatch' && inputs.reset_state == true
+        env:
+          DATA_DIR: data/profiles/${{ matrix.profile_id }}
+          AGENT_PROFILE: ${{ matrix.profile_id }}
+          AGENT_LABEL: ${{ matrix.profile_label }}
+        run: python -m agent_trader reset
 
       - name: Run strategist pipeline
         env:
@@ -191,6 +205,10 @@ jobs:
 
       - name: Pull latest
         run: git pull --ff-only origin main || true
+
+      - name: Reset merged project state
+        if: github.event_name == 'workflow_dispatch' && inputs.reset_state == true
+        run: python -m agent_trader reset --all-profiles --docs
 
       - name: Clean previous strategist bundles
         run: |

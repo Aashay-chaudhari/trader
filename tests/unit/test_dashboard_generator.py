@@ -148,6 +148,7 @@ def test_generate_dashboard_writes_context_rich_bundle():
         assert "Strategist Arena" in html
         assert "News Influence" in html
         assert "foldout" in html
+        assert "Reset project state" in html
         assert bundle["profiles"]["default"]["profile"]["id"] == "default"
         assert bundle["comparison"]["summary"][0]["profile"] == "default"
         assert bundle["context"]["prompt_sections"]["news_inputs"]["per_symbol"]["ABBV"]["news_headlines"][0]["title"] == (
