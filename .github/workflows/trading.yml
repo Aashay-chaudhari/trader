@@ -99,6 +99,11 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SEC_EDGAR_USER_AGENT: ${{ secrets.SEC_EDGAR_USER_AGENT }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
           LLM_PROVIDER: ${{ inputs.llm_provider || vars.LLM_PROVIDER || 'auto' }}
           DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
         run: python -m agent_trader ${{ steps.phase.outputs.phase }}
@@ -146,6 +151,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 1
+
+      - name: Pull latest (trade job may have pushed)
+        run: git pull --ff-only origin main || true
 
       - name: Deploy dashboard to gh-pages
         uses: peaceiris/actions-gh-pages@v4
