@@ -1,24 +1,8 @@
 {
-  "timestamp": "2026-03-21T17:53:18.600693+00:00",
-  "phase": "research",
-  "symbols": [
-    "INTC",
-    "PANW",
-    "UNH",
-    "ABBV",
-    "ABT",
-    "HON",
-    "LMT",
-    "META",
-    "HD",
-    "JNJ"
-  ],
-  "provider_preference": "openai",
-  "selected_provider": "openai",
-  "selected_model": "gpt-4o-mini-2024-07-18",
   "status": "success",
-  "quota_issue_detected": false,
-  "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
+  "provider_preference": "openai",
+  "provider": "openai",
+  "model": "gpt-4o-mini-2024-07-18",
   "usage": {
     "input_tokens": 6715,
     "output_tokens": 728,
@@ -26,6 +10,8 @@
     "cached_input_tokens": 0,
     "reasoning_output_tokens": 0
   },
+  "service_tier": "default",
+  "request_id": "req_cb8bf8d1c83746f3968a0ef302ece01b",
   "rate_limits": {
     "headers": {
       "x-ratelimit-limit-requests": "10000",
@@ -46,8 +32,22 @@
       "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
     }
   },
-  "service_tier": "default",
-  "request_id": "req_cb8bf8d1c83746f3968a0ef302ece01b",
+  "runtime": {
+    "platform": "github_actions",
+    "python_version": "3.12.13",
+    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+    "github": {
+      "repository": "Aashay-chaudhari/trader",
+      "workflow": "Trading Pipeline",
+      "event_name": "workflow_dispatch",
+      "actor": "Aashay-chaudhari",
+      "run_id": "23385277549",
+      "run_attempt": "1",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23385277549",
+      "sha": "b4a39062c275b320042739e320e29d03c3418db2",
+      "ref": "refs/heads/main"
+    }
+  },
   "duration_ms": 29687.9,
   "attempts": [
     {
@@ -64,20 +64,22 @@
       }
     }
   ],
-  "runtime": {
-    "platform": "github_actions",
-    "python_version": "3.12.13",
-    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
-    "github": {
-      "repository": "Aashay-chaudhari/trader",
-      "workflow": "Trading Pipeline",
-      "event_name": "workflow_dispatch",
-      "actor": "Aashay-chaudhari",
-      "run_id": "23385277549",
-      "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23385277549",
-      "sha": "b4a39062c275b320042739e320e29d03c3418db2",
-      "ref": "refs/heads/main"
-    }
-  }
+  "quota_issue_detected": false,
+  "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
+  "timestamp": "2026-03-21T17:53:18.600693+00:00",
+  "phase": "research",
+  "symbols": [
+    "INTC",
+    "PANW",
+    "UNH",
+    "ABBV",
+    "ABT",
+    "HON",
+    "LMT",
+    "META",
+    "HD",
+    "JNJ"
+  ],
+  "selected_provider": "openai",
+  "selected_model": "gpt-4o-mini-2024-07-18"
 }

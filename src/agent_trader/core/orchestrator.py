@@ -67,6 +67,7 @@ class Orchestrator:
         hot_stocks = []
         finviz_data = {}
         market_context = {}
+        market_headlines = []
         news_agent = self._agents.get("news")
         if news_agent:
             console.print("  [cyan]Scanning[/cyan] news for stock discoveries...")
@@ -141,10 +142,15 @@ class Orchestrator:
             )
             if response and response.type == MessageType.RESULT:
                 news_data = response.data.get("news", {})
+                market_headlines = response.data.get("market_headlines", [])
                 # Update market context with fresh data
                 market_context = response.data.get("market_context", {}) or market_context
                 results["news"] = response.data
-                console.print(f"  [green]Done[/green] news ({sum(len(v.get('news_headlines', [])) for v in news_data.values())} headlines)")
+                headline_count = sum(len(v.get("news_headlines", [])) for v in news_data.values())
+                source_stats = response.data.get("source_stats", {})
+                sources_msg = ", ".join(f"{k}:{v}" for k, v in source_stats.items() if v) if source_stats else ""
+                console.print(f"  [green]Done[/green] news ({headline_count} headlines"
+                              + (f" | {sources_msg}" if sources_msg else "") + ")")
 
         # Step 5: Claude Sonnet deep research (with everything)
         research_agent = self._agents.get("research")
@@ -157,6 +163,7 @@ class Orchestrator:
                     "phase": "research",
                     "screener_results": screener_results,
                     "news": news_data,
+                    "market_headlines": market_headlines,
                     "market_context": market_context,
                     "news_discoveries": news_discoveries,
                     "hot_stocks": hot_stocks,
@@ -208,6 +215,7 @@ class Orchestrator:
         # Step 2: Check for new news
         news_data = {}
         market_context = {}
+        market_headlines = []
         news_agent = self._agents.get("news")
         if news_agent:
             console.print("  [cyan]Checking[/cyan] news...")
@@ -218,6 +226,7 @@ class Orchestrator:
             if response and response.type == MessageType.RESULT:
                 news_data = response.data.get("news", {})
                 market_context = response.data.get("market_context", {})
+                market_headlines = response.data.get("market_headlines", [])
 
         # Step 3: Light Claude Haiku check
         research_data = {}
@@ -231,6 +240,7 @@ class Orchestrator:
                     "phase": "monitor",
                     "morning_context": morning_context,
                     "news": news_data,
+                    "market_headlines": market_headlines,
                     "market_context": market_context,
                 })
             )
@@ -337,11 +347,17 @@ class Orchestrator:
         try:
             from agent_trader.utils.journal import create_journal_entry
 
-            research_data = results.get("research", {}).get("data", {})
-            strategy_data = results.get("strategy", {}).get("data", {})
-            risk_data = results.get("risk", {}).get("data", {})
-            execution_data = results.get("execution", {}).get("data", {})
-            portfolio_data = results.get("portfolio", {}).get("data", {})
+            def unwrap_stage(stage_key: str) -> dict[str, Any]:
+                stage = results.get(stage_key, {})
+                if isinstance(stage, dict) and "data" in stage:
+                    return stage.get("data", {}) or {}
+                return stage if isinstance(stage, dict) else {}
+
+            research_data = unwrap_stage("research")
+            strategy_data = unwrap_stage("strategy")
+            risk_data = unwrap_stage("risk")
+            execution_data = unwrap_stage("execution")
+            portfolio_data = unwrap_stage("portfolio")
 
             filepath = create_journal_entry(
                 run_id=run_id, phase=phase,
@@ -385,7 +401,10 @@ class Orchestrator:
 
     def _print_research_summary(self, results):
         console.print("\n[bold]Research Summary[/bold]")
-        research = results.get("research", {}).get("data", {}).get("research", {})
+        research_stage = results.get("research", {})
+        research = research_stage.get("data", {}).get("research", {})
+        if not research and isinstance(research_stage, dict):
+            research = research_stage.get("research", {})
         if not research:
             console.print("  [yellow]No research results[/yellow]")
             return

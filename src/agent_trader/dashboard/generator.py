@@ -1,560 +1,634 @@
-"""Dashboard generator — creates a static HTML dashboard from portfolio data.
+"""Generate the static GitHub Pages dashboard and JSON bundles."""
 
-Reads snapshot data, trade history, and research insights to generate
-a comprehensive single-page dashboard deployed to GitHub Pages.
-
-Sections:
-  - Portfolio overview cards (value, P&L, cash, positions)
-  - Portfolio value chart over time
-  - Open positions table
-  - Trade history log (every trade with reasoning)
-  - Performance stats (win rate, avg gain/loss, best/worst)
-  - Latest research insights
-"""
+from __future__ import annotations
 
 import json
-from pathlib import Path
+import re
 from datetime import datetime, timezone
+from pathlib import Path
+from textwrap import dedent
+from typing import Any
 
 
-DASHBOARD_HTML = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Trader Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #0f172a; color: #e2e8f0;
-            padding: 20px; max-width: 1400px; margin: 0 auto;
-        }
-        h1 { font-size: 1.8rem; margin-bottom: 4px; }
-        h2 { font-size: 1.2rem; color: #94a3b8; margin: 24px 0 12px; }
-        .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 0.9rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
-        .card {
-            background: #1e293b; border-radius: 12px; padding: 16px;
-            border: 1px solid #334155;
-        }
-        .card-label { color: #94a3b8; font-size: 0.8rem; margin-bottom: 4px; }
-        .card-value { font-size: 1.5rem; font-weight: 700; }
-        .card-sub { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
-        .positive { color: #4ade80; }
-        .negative { color: #f87171; }
-        .neutral { color: #94a3b8; }
-        .chart-container { background: #1e293b; border-radius: 12px; padding: 16px; border: 1px solid #334155; margin-bottom: 24px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { text-align: left; color: #94a3b8; font-weight: 500; padding: 10px 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; }
-        td { padding: 10px 8px; border-bottom: 1px solid #1e293b; }
-        .tag {
-            display: inline-block; padding: 2px 8px; border-radius: 4px;
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-        }
-        .tag-buy { background: #166534; color: #4ade80; }
-        .tag-sell { background: #7f1d1d; color: #f87171; }
-        .tag-dry { background: #1e3a5f; color: #60a5fa; }
-        .tag-live { background: #166534; color: #4ade80; }
-        .empty-state { text-align: center; padding: 40px 20px; color: #475569; }
-        .insight-card { background: #1e293b; border-radius: 8px; padding: 14px; border: 1px solid #334155; margin-bottom: 8px; }
-        .insight-card .symbol { font-weight: 700; color: #818cf8; }
-        .insight-card .sentiment { font-size: 0.8rem; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
-        .stat { text-align: center; padding: 12px; }
-        .stat-value { font-size: 1.3rem; font-weight: 700; }
-        .stat-label { font-size: 0.75rem; color: #64748b; }
-        .trade-reasoning { font-size: 0.8rem; color: #64748b; max-width: 300px; }
-        .flow-node {
-            background: #1e293b; border: 2px solid #334155; border-radius: 8px;
-            padding: 10px 14px; text-align: center; font-size: 0.85rem; font-weight: 600;
-            min-width: 90px; transition: all 0.3s;
-        }
-        .flow-node small { font-weight: 400; color: #64748b; font-size: 0.7rem; }
-        .flow-node.flow-ai { border-color: #818cf8; background: #1e1b4b; }
-        .flow-node.flow-ok { border-color: #4ade80; }
-        .flow-node.flow-err { border-color: #f87171; }
-        .flow-node.flow-skip { opacity: 0.4; }
-        .flow-arrow { color: #475569; font-size: 1.2rem; }
-    </style>
-</head>
-<body>
-    <h1>Agent Trader Dashboard</h1>
-    <p class="subtitle">
-        Last updated: <span id="lastUpdated">—</span> |
-        Mode: <span class="tag tag-dry" id="modeTag">DRY RUN</span>
-    </p>
-
-    <!-- Overview Cards -->
-    <div class="grid">
-        <div class="card">
-            <div class="card-label">Portfolio Value</div>
-            <div class="card-value" id="portfolioValue">—</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Total P&L</div>
-            <div class="card-value" id="totalPnl">—</div>
-            <div class="card-sub" id="totalPnlPct"></div>
-        </div>
-        <div class="card">
-            <div class="card-label">Cash Available</div>
-            <div class="card-value" id="cash">—</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Open Positions</div>
-            <div class="card-value" id="positionCount">—</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Total Trades</div>
-            <div class="card-value" id="totalTrades">—</div>
-        </div>
-        <div class="card">
-            <div class="card-label">Win Rate</div>
-            <div class="card-value" id="winRate">—</div>
-        </div>
-    </div>
-
-    <!-- Charts -->
-    <div class="chart-container">
-        <canvas id="valueChart" height="80"></canvas>
-    </div>
-
-    <div class="grid-2">
-        <!-- Open Positions -->
-        <div class="card">
-            <h2 style="margin-top:0">Open Positions</h2>
-            <table>
-                <thead>
-                    <tr><th>Symbol</th><th>Shares</th><th>Cost</th><th>Current</th><th>P&L</th></tr>
-                </thead>
-                <tbody id="positionsTable">
-                    <tr><td colspan="5" class="empty-state">No positions yet</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Latest Research -->
-        <div class="card">
-            <h2 style="margin-top:0">Latest Research</h2>
-            <div id="researchInsights">
-                <div class="empty-state">No research data yet</div>
+DASHBOARD_HTML = dedent(
+    """
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Agent Trader Control Center</title>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <style>
+        :root{--bg:#07111f;--panel:#0f1d35;--panel2:#132746;--line:rgba(126,166,235,.16);--text:#eef5ff;--muted:#95a7ca;--accent:#7dd3fc;--good:#86efac;--bad:#fda4af;--warn:#fcd34d}
+        *{box-sizing:border-box}body{margin:0;color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at top left,rgba(125,211,252,.14),transparent 30%),linear-gradient(180deg,#07111f,#091629 48%,#09111f)}a{color:inherit}
+        .page{max-width:1460px;margin:0 auto;padding:24px 18px 40px}.hero,.panel,.card,.stage,.decision,.tile{border:1px solid var(--line);background:rgba(15,29,53,.92);box-shadow:0 16px 46px rgba(0,0,0,.25)}.hero{padding:26px;border-radius:28px;margin-bottom:18px;background:linear-gradient(135deg,rgba(20,40,69,.96),rgba(9,18,34,.96))}.panel{padding:20px;border-radius:22px;margin-bottom:18px}.card,.stage,.decision,.tile{padding:16px;border-radius:18px}
+        h1{margin:10px 0;font-size:clamp(2rem,4vw,3.1rem);line-height:1.02}h2{margin:0;font-size:1.16rem}h3{margin:0 0 10px;font-size:1rem}p{margin:0;color:var(--muted);line-height:1.55}
+        .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(125,211,252,.22);background:#0b1830;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.accent{color:var(--accent)}.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+        .hero-grid,.metrics,.split,.workflow,.decisions,.newscols,.context,.meta,.buttons,.mini,.articles{display:grid;gap:14px}.hero-grid{grid-template-columns:1.45fr 1fr;align-items:end}.meta{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:16px}.buttons{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+        .btn{display:flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:999px;border:1px solid rgba(125,211,252,.28);background:#0b1830;text-decoration:none;font-weight:700}.btn:hover{border-color:rgba(125,211,252,.48);transform:translateY(-1px)}
+        .metrics{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:18px}.label{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.value{font-size:1.7rem;font-weight:800}.sub{margin-top:6px;font-size:.85rem;color:var(--muted)}
+        .section{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}.split{grid-template-columns:1.1fr .9fr}.workflow{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.decisions{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}.newscols,.context{grid-template-columns:1fr 1fr}.mini{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+        .chart{height:300px}.stage,.decision{position:relative;background:linear-gradient(180deg,#12233f,#0b1730)}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.metric{font-size:1.15rem;font-weight:800;text-align:right;min-width:64px}
+        .mini .tile{padding:12px;border-radius:14px;background:#0b1730;border:1px solid rgba(126,166,235,.14)}.tile strong{display:block;font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.tile span{font-weight:700;line-height:1.45}
+        .list strong{display:block;margin:14px 0 8px;font-size:.77rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}.list ul{margin:0;padding-left:18px}.list li{margin-bottom:7px;line-height:1.45}
+        .articles{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:10px}.article{position:relative}.article a,.article div.body{display:block;padding:12px;border-radius:16px;border:1px solid rgba(126,166,235,.14);background:#0b1730;text-decoration:none;min-height:122px}.article-title{font-weight:700;line-height:1.45;margin-bottom:10px}.article-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.8rem;color:var(--muted)}.article-copy{margin-top:10px;font-size:.9rem;color:var(--muted);line-height:1.5}
+        .hover{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;padding:14px;border-radius:16px;border:1px solid rgba(125,211,252,.26);background:rgba(8,19,35,.98);box-shadow:0 18px 40px rgba(0,0,0,.36)}.hover strong{display:block;margin-bottom:8px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}.hover ul{margin:0;padding-left:18px}.hover li{margin-bottom:6px;line-height:1.45;color:var(--muted)}.stage:hover .hover,.stage:focus-within .hover,.article:hover .hover,.article:focus-within .hover{display:block}
+        .stack{display:grid;gap:14px}.mono{margin:0;padding:14px;border-radius:16px;border:1px solid rgba(126,166,235,.12);background:#0b1730;white-space:pre-wrap;font-family:Consolas,monospace;color:var(--muted)}
+        .table{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}th{padding:10px 8px;text-align:left;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(126,166,235,.16)}td{padding:12px 8px;border-bottom:1px solid rgba(126,166,235,.08);vertical-align:top}.empty{padding:22px 16px;border:1px dashed rgba(126,166,235,.16);border-radius:16px;color:var(--muted);text-align:center}
+        @media (max-width:1080px){.hero-grid,.split,.newscols,.context{grid-template-columns:1fr}}@media (max-width:760px){.page{padding:16px 12px 28px}.hero{padding:20px}}
+      </style>
+    </head>
+    <body>
+      <div class="page">
+        <header class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="pill accent">Agent Trader Control Center</div>
+              <h1>What the system saw before it acted</h1>
+              <p id="heroSummary">Latest research, workflow context, and article-level catalysts from the trading pipeline.</p>
+              <div class="meta" id="heroMeta"></div>
             </div>
-        </div>
-    </div>
-
-    <!-- Trade History -->
-    <div class="card">
-        <h2 style="margin-top:0">Trade History</h2>
-        <table>
-            <thead>
-                <tr><th>Date</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Reasoning</th></tr>
-            </thead>
-            <tbody id="tradeHistory">
-                <tr><td colspan="8" class="empty-state">No trades yet. Run the pipeline to start tracking.</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pipeline Flow Visualization -->
-    <div class="card" style="margin-bottom:24px">
-        <h2 style="margin-top:0">Pipeline Flow (Last Run)</h2>
-        <div id="pipelineFlow" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 0">
-            <div class="flow-node" id="fn-screener">Screener<br><small>scan 60 stocks</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-data">Data<br><small>prices + indicators</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-news">News<br><small>headlines + context</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node flow-ai" id="fn-research"><span id="fn-research-provider">LLM</span><br><small id="fn-research-model">model</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-strategy">Strategy<br><small>8 strategies vote</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-risk">Risk<br><small>4 checks</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-execute">Execute<br><small id="fn-exec-status">dry run</small></div>
-            <div class="flow-arrow">&#8594;</div>
-            <div class="flow-node" id="fn-portfolio">Portfolio<br><small>update P&L</small></div>
-        </div>
-        <div id="pipelineDetails" style="font-size:0.8rem;color:#64748b;margin-top:8px"></div>
-    </div>
-
-    <div class="card" style="margin-bottom:24px">
-        <h2 style="margin-top:0">LLM Telemetry</h2>
-        <div class="stats-grid" id="llmStats">
-            <div class="stat">
-                <div class="stat-value neutral">-</div>
-                <div class="stat-label">No telemetry yet</div>
+            <div class="buttons">
+              <a class="btn" id="runLink" href="data/report_research.md" target="_blank" rel="noreferrer">Open latest report</a>
+              <a class="btn" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
+              <a class="btn" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
+              <a class="btn" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
+              <a class="btn" href="data/llm.json" target="_blank" rel="noreferrer">LLM analytics JSON</a>
+              <a class="btn" href="data/dashboard.json" target="_blank" rel="noreferrer">Dashboard bundle</a>
             </div>
-        </div>
-    </div>
+          </div>
+        </header>
 
-    <!-- Performance Stats -->
-    <div class="card" id="perfSection" style="display:none">
-        <h2 style="margin-top:0">Performance Stats</h2>
-        <div class="stats-grid" id="perfStats"></div>
-    </div>
+        <section class="metrics">
+          <div class="card"><div class="label">Portfolio Value</div><div class="value" id="portfolioValue">-</div></div>
+          <div class="card"><div class="label">Total PnL</div><div class="value" id="totalPnl">-</div><div class="sub" id="totalPnlPct">-</div></div>
+          <div class="card"><div class="label">Cash Available</div><div class="value" id="cashValue">-</div></div>
+          <div class="card"><div class="label">Open Positions</div><div class="value" id="positionCount">-</div></div>
+          <div class="card"><div class="label">Trades Logged</div><div class="value" id="tradeCount">-</div></div>
+          <div class="card"><div class="label">Prompt Articles</div><div class="value" id="articleCount">-</div><div class="sub" id="modeNote">Mode unknown</div></div>
+        </section>
 
-    <script>
-    const fmt = (n) => '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const signFmt = (n) => (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const pnlClass = (n) => n >= 0 ? 'positive' : 'negative';
+        <section class="panel">
+          <div class="section"><div><h2>Workflow Map</h2><p>Hover a stage to inspect the inputs that survived into the latest run.</p></div></div>
+          <div class="workflow" id="workflow"></div>
+        </section>
 
-    async function loadData() {
-        try {
-            const [latestRes, historyRes, tradesRes, researchRes, llmRes] = await Promise.all([
-                fetch('data/latest.json').catch(() => null),
-                fetch('data/history.json').catch(() => null),
-                fetch('data/trades.json').catch(() => null),
-                fetch('data/research.json').catch(() => null),
-                fetch('data/llm.json').catch(() => null),
-            ]);
+        <section class="split">
+          <div class="panel">
+            <div class="section"><div><h2>Portfolio Curve</h2><p>Portfolio snapshots archived across workflow runs.</p></div></div>
+            <div class="chart"><canvas id="valueChart"></canvas></div>
+          </div>
+          <div class="panel">
+            <div class="section"><div><h2>Run Snapshot</h2><p>Provider, model, phases, and execution summary.</p></div></div>
+            <div class="mini" id="runSummary"></div>
+          </div>
+        </section>
 
-            const latest = latestRes?.ok ? await latestRes.json() : null;
-            const history = historyRes?.ok ? await historyRes.json() : [];
-            const trades = tradesRes?.ok ? await tradesRes.json() : [];
-            const research = researchRes?.ok ? await researchRes.json() : null;
-            const llm = llmRes?.ok ? await llmRes.json() : null;
+        <section class="panel">
+          <div class="section"><div><h2>Decision board</h2><p>Recommendation, trade plan, shortlist rationale, and the articles the LLM had while making the call.</p></div></div>
+          <div class="decisions" id="decisionBoard"></div>
+        </section>
 
-            if (latest) renderOverview(latest);
-            if (history.length > 0) renderChart(history);
-            if (latest?.positions) renderPositions(latest.positions);
-            if (trades.length > 0) renderTrades(trades);
-            if (research) renderResearch(research);
-            if (llm) renderLlm(llm);
-            if (trades.length > 0) renderPerformance(trades);
-            renderPipeline(latest, research, trades, llm);
-        } catch (e) {
-            console.error('Dashboard load error:', e);
-        }
-    }
-
-    function renderOverview(data) {
-        document.getElementById('lastUpdated').textContent = new Date(data.timestamp).toLocaleString();
-        document.getElementById('portfolioValue').textContent = fmt(data.portfolio_value);
-        document.getElementById('cash').textContent = fmt(data.cash);
-        document.getElementById('positionCount').textContent = data.position_count;
-
-        const pnlEl = document.getElementById('totalPnl');
-        pnlEl.textContent = signFmt(data.total_pnl);
-        pnlEl.className = 'card-value ' + pnlClass(data.total_pnl);
-
-        document.getElementById('totalPnlPct').textContent = (data.total_pnl >= 0 ? '+' : '') + data.total_pnl_pct + '%';
-        document.getElementById('totalPnlPct').className = 'card-sub ' + pnlClass(data.total_pnl);
-    }
-
-    function renderChart(history) {
-        const ctx = document.getElementById('valueChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: history.map(h => new Date(h.timestamp).toLocaleDateString()),
-                datasets: [{
-                    label: 'Portfolio Value',
-                    data: history.map(h => h.portfolio_value),
-                    borderColor: '#818cf8', backgroundColor: 'rgba(129,140,248,0.08)',
-                    fill: true, tension: 0.3, pointRadius: 2,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { color: '#94a3b8' } } },
-                scales: {
-                    x: { ticks: { color: '#475569', maxTicksLimit: 15 }, grid: { color: '#1e293b' } },
-                    y: { ticks: { color: '#475569', callback: v => '$' + v.toLocaleString() }, grid: { color: '#1e293b' } },
-                }
-            }
-        });
-    }
-
-    function renderPositions(positions) {
-        const tbody = document.getElementById('positionsTable');
-        if (!positions.length) return;
-        tbody.innerHTML = positions.map(p => `
-            <tr>
-                <td><strong>${p.symbol}</strong></td>
-                <td>${p.shares}</td>
-                <td>${fmt(p.avg_cost)}</td>
-                <td>${fmt(p.current_price)}</td>
-                <td class="${pnlClass(p.unrealized_pnl)}">${signFmt(p.unrealized_pnl)}</td>
-            </tr>
-        `).join('');
-    }
-
-    function renderTrades(trades) {
-        const tbody = document.getElementById('tradeHistory');
-        document.getElementById('totalTrades').textContent = trades.length;
-
-        tbody.innerHTML = trades.slice(-50).reverse().map(t => `
-            <tr>
-                <td>${new Date(t.timestamp).toLocaleDateString()}</td>
-                <td><strong>${t.symbol}</strong></td>
-                <td><span class="tag tag-${t.action}">${t.action}</span></td>
-                <td>${t.quantity || '—'}</td>
-                <td>${t.price ? fmt(t.price) : '—'}</td>
-                <td>${t.value ? fmt(t.value) : '—'}</td>
-                <td><span class="tag tag-${t.status === 'dry_run' ? 'dry' : 'live'}">${t.status}</span></td>
-                <td class="trade-reasoning">${t.reasoning || '—'}</td>
-            </tr>
-        `).join('');
-    }
-
-    function renderResearch(data) {
-        const container = document.getElementById('researchInsights');
-        const stocks = data.stocks || {};
-        const entries = Object.entries(stocks);
-
-        if (!entries.length) return;
-
-        container.innerHTML = `
-            <div style="margin-bottom:12px;color:#94a3b8">
-                <strong>Sentiment:</strong> ${data.overall_sentiment || '—'}
-                <br><small>${data.market_summary || ''}</small>
+        <section class="panel">
+          <div class="section"><div><h2>News influence explorer</h2><p>Market headlines, discoveries, hot stocks, and analyst changes.</p></div></div>
+          <div class="newscols">
+            <div class="stack">
+              <div class="card"><h3>Market headlines</h3><div id="marketHeadlines"></div></div>
+              <div class="card"><h3>News discoveries</h3><div id="discoveries"></div></div>
             </div>
-        ` + entries.slice(0, 5).map(([sym, s]) => {
-            const sentColor = s.sentiment === 'bullish' ? 'positive' : s.sentiment === 'bearish' ? 'negative' : 'neutral';
-            return `
-                <div class="insight-card">
-                    <span class="symbol">${sym}</span>
-                    <span class="sentiment ${sentColor}">${s.sentiment} (${Math.round((s.confidence||0)*100)}%)</span>
-                    <span class="tag tag-${s.recommendation === 'buy' ? 'buy' : s.recommendation === 'sell' ? 'sell' : 'dry'}" style="float:right">${s.recommendation || 'watch'}</span>
-                    <div style="margin-top:6px;font-size:0.8rem;color:#64748b">
-                        ${(s.key_observations || []).slice(0,2).join(' | ')}
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
+            <div class="stack">
+              <div class="card"><h3>Cross-source hot stocks</h3><div id="hotStocks"></div></div>
+              <div class="card"><h3>Analyst tape</h3><div id="analystTape"></div></div>
+            </div>
+          </div>
+        </section>
 
-    function renderPerformance(trades) {
-        const section = document.getElementById('perfSection');
-        const container = document.getElementById('perfStats');
+        <section class="panel">
+          <div class="section"><div><h2>Prompt context explorer</h2><p>Market regime, shortlist rationale, saved artifacts, and LLM telemetry.</p></div></div>
+          <div class="context">
+            <div class="stack">
+              <div class="card"><h3>Market regime</h3><p id="marketSummary">No market summary yet.</p><div class="mini" id="marketCards" style="margin-top:14px"></div></div>
+              <div class="card"><h3>Artifact memory</h3><pre class="mono" id="artifactMemory">No saved artifacts yet.</pre></div>
+              <div class="card"><h3>LLM telemetry</h3><div class="mini" id="llmSummary"></div><div class="stack" id="providerAttempts" style="margin-top:14px"></div></div>
+            </div>
+            <div class="stack">
+              <div class="card"><h3>Screener rationale</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Source</th><th>Score</th><th>Why</th></tr></thead><tbody id="shortlistTable"></tbody></table></div></div>
+              <div class="card"><h3>Open positions</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>PnL</th></tr></thead><tbody id="positionsTable"></tbody></table></div></div>
+            </div>
+          </div>
+        </section>
 
-        const completed = trades.filter(t => t.pnl !== undefined);
-        if (!completed.length) {
-            document.getElementById('winRate').textContent = '—';
-            return;
+        <section class="panel">
+          <div class="section"><div><h2>Trade history</h2><p>Journal-backed trade log with execution status and stored reasoning.</p></div></div>
+          <div class="table"><table><thead><tr><th>Date</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Reasoning</th></tr></thead><tbody id="tradesTable"></tbody></table></div>
+        </section>
+      </div>
+
+      <script>
+        const arr=v=>Array.isArray(v)?v:[], obj=v=>v&&typeof v==="object"&&!Array.isArray(v)?v:{};
+        const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
+        const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+        const safeUrl=v=>/^https?:\\/\\//i.test(String(v||""))?String(v):"";
+        const truncate=(v,n=140)=>{const t=String(v||"");return t.length>n?t.slice(0,n-1)+"...":t};
+        const dateText=v=>{if(!v)return"-";const d=new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString()};
+        const fmtMoney=v=>{const n=num(v);return n===null?"-":"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})};
+        const signMoney=v=>{const n=num(v);return n===null?"-":(n>=0?"+$":"-$")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})};
+        const fmtPct=v=>{const n=num(v);return n===null?"-":(n>=0?"+":"")+n.toFixed(2)+"%"};
+        const cls=v=>{const n=num(v);return n===null?"":(n>=0?"good":"bad")};
+        const empty=msg=>`<div class="empty">${esc(msg)}</div>`;
+        const hover=(title,lines)=>{const items=arr(lines).filter(Boolean);return items.length?`<div class="hover"><strong>${esc(title)}</strong><ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""};
+        const listBlock=(items,fallback)=>{const vals=arr(items).filter(Boolean);return `<ul>${(vals.length?vals:[fallback]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`};
+        const miniCard=(label,value)=>`<div class="tile"><strong>${esc(label)}</strong><span>${esc(value)}</span></div>`;
+        const articleCard=a=>{const url=safeUrl(a.url),pub=a.publisher||a.source||"Unknown source",sent=num(a.sentiment);const body=`<div class="article-title">${esc(truncate(a.title||"Untitled",110))}</div><div class="article-meta"><span>${esc(pub)}</span><span>${esc(dateText(a.published))}</span><span>${esc(sent===null?"Context item":"Sentiment "+sent.toFixed(1))}</span></div><div class="article-copy">${esc(truncate(a.summary||"No article summary captured.",180))}</div>`;return `<div class="article">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer">${body}</a>`:`<div class="body">${body}</div>`}${hover(a.title||"Article context",[pub,dateText(a.published),a.category?`Category: ${a.category}`:"",sent===null?"":`Sentiment: ${sent.toFixed(2)}`,a.summary||"No article summary captured."])}</div>`};
+        const articleGrid=(items,msg)=>{const list=arr(items).slice(0,6);return list.length?`<div class="articles">${list.map(articleCard).join("")}</div>`:empty(msg)};
+        const stackCards=(items,msg)=>{const list=arr(items);return list.length?`<div class="stack">${list.join("")}</div>`:empty(msg)};
+
+        function render(bundle){
+          const latest=obj(bundle.latest), trades=arr(bundle.trades), reports=obj(bundle.reports), reportResearch=obj(reports.research), reportMonitor=obj(reports.monitor), reportPayload=obj(reportResearch.research);
+          const research=Object.keys(obj(bundle.research)).length?obj(bundle.research):obj(reportPayload.research), context=obj(bundle.context), prompt=obj(context.prompt_sections), newsInputs=obj(prompt.news_inputs), perSymbol=obj(newsInputs.per_symbol), screener=obj(prompt.screener_context), market=obj(prompt.market_context);
+          const llm=Object.keys(obj(bundle.llm)).length?obj(bundle.llm):(obj(research._meta)||obj(context.llm_meta));
+          const shortlist=arr(screener.shortlist), marketHeadlines=arr(newsInputs.market_headlines), discoveries=arr(newsInputs.news_discoveries), hotStocks=arr(newsInputs.hot_stocks), analystChanges=arr(obj(newsInputs.finviz).analyst_changes), positions=arr(latest.positions);
+          const totalArticles=Object.values(perSymbol).reduce((s,v)=>s+arr(obj(v).news_headlines).length,0)+marketHeadlines.length;
+          const best=arr(research.best_opportunities), signals=arr(reportMonitor.signals), approved=arr(obj(reportMonitor.risk).approved_trades), rejected=arr(obj(reportMonitor.risk).rejected_trades), executed=arr(reportMonitor.executed);
+
+          document.getElementById("heroSummary").textContent=[research.market_summary,research.market_regime?`Regime: ${research.market_regime}`:"",best.length?`Top ideas: ${best.join(", ")}`:""].filter(Boolean).join(" | ")||"Latest research and workflow context loaded.";
+          document.getElementById("heroMeta").innerHTML=[["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
+          const runUrl=llm.runtime?.github?.run_url||context.llm_meta?.runtime?.github?.run_url||""; if(runUrl){const link=document.getElementById("runLink");link.href=runUrl;link.textContent="Open GitHub Actions run";}
+          document.getElementById("portfolioValue").textContent=fmtMoney(latest.portfolio_value); document.getElementById("cashValue").textContent=fmtMoney(latest.cash); document.getElementById("positionCount").textContent=String(latest.position_count||positions.length); document.getElementById("tradeCount").textContent=String(trades.length); document.getElementById("articleCount").textContent=String(totalArticles); document.getElementById("modeNote").textContent=trades.some(t=>(t.status||"").toLowerCase()!=="dry_run")?"Live execution detected":"Dry-run history";
+          const pnl=document.getElementById("totalPnl"); pnl.textContent=signMoney(latest.total_pnl); pnl.className="value "+cls(latest.total_pnl); const pnlPct=document.getElementById("totalPnlPct"); pnlPct.textContent=fmtPct(latest.total_pnl_pct); pnlPct.className="sub "+cls(latest.total_pnl_pct);
+
+          document.getElementById("workflow").innerHTML=[
+            {title:"News",summary:"Headlines, filings, and analyst changes were gathered before research.",metric:String(totalArticles),lines:[`${marketHeadlines.length} market headlines`,`${discoveries.length} discoveries`,`${hotStocks.length} hot stocks`,...marketHeadlines.slice(0,3).map(x=>x.title||"")]},
+            {title:"Screener",summary:"News and technical context narrowed the universe into a shortlist.",metric:String(shortlist.length),lines:[`Total scanned: ${screener.total_scanned||0}`,`Candidates found: ${screener.candidates_found||0}`,`News boosts: ${screener.news_discovered||0}`,...shortlist.slice(0,3).map(x=>`${x.symbol||"?"} - ${x.discovery_reason||x.top_headline||x.source||"technical setup"}`)]},
+            {title:"Research",summary:"The LLM returned the structured thesis and trade plan.",metric:String(best.length),lines:[`Overall sentiment: ${research.overall_sentiment||"unknown"}`,`Market regime: ${research.market_regime||market.market_regime||"unknown"}`,`Provider: ${llm.selected_provider||llm.provider||context.provider||"-"}`,`Model: ${llm.selected_model||llm.model||context.model||"-"}`,`Total tokens: ${llm.usage?.total_tokens??"n/a"}`]},
+            {title:"Monitor / Execution",summary:"Signals, approvals, and trades were archived for follow-up.",metric:String(executed.length),lines:[`${signals.length} signals`,`${approved.length} approved trades`,`${rejected.length} rejected trades`,...executed.slice(0,3).map(x=>`${x.symbol||"?"} ${String((x.action||"").toUpperCase())} ${x.quantity||0}`)]}
+          ].map(x=>`<article class="stage"><div class="top"><div><div class="label">${esc(x.title)}</div><p>${esc(x.summary)}</p></div><div class="metric">${esc(x.metric)}</div></div>${hover(x.title+" details",x.lines)}</article>`).join("");
+
+          document.getElementById("runSummary").innerHTML=[["Research Run",reportResearch.run_id||"-"],["Research Time",dateText(reportResearch.timestamp||context.timestamp)],["Monitor Time",dateText(reportMonitor.timestamp)],["Signals",String(signals.length)],["Approved",String(approved.length)],["Executed",String(executed.length)],["Quota Note",llm.quota_note||"No quota note recorded"],["Platform",llm.runtime?.platform||"-"]].map(([l,v])=>miniCard(l,String(v))).join("");
+
+          const researchStocks=obj(research.stocks), shortlistMap=Object.fromEntries(shortlist.map(x=>[x.symbol,x])), symbols=[]; [...best,...Object.keys(researchStocks),...Object.keys(perSymbol),...shortlist.map(x=>x.symbol)].forEach(s=>{if(s&&!symbols.includes(s))symbols.push(s)});
+          document.getElementById("decisionBoard").innerHTML=symbols.length?symbols.map(symbol=>{const analysis=obj(researchStocks[symbol]), news=obj(perSymbol[symbol]), pick=obj(shortlistMap[symbol]), plan=obj(analysis.trade_plan), rec=analysis.recommendation||"watch"; return `<article class="decision"><div class="top"><div><h3>${esc(symbol)}</h3><p>${esc(analysis.technical_setup||analysis.news_summary||pick.discovery_reason||"No narrative stored for this symbol.")}</p></div><span class="pill ${rec==="buy"?"good":rec==="sell"?"bad":"warn"}">${esc(rec)}</span></div><div class="mini">${miniCard("Sentiment",analysis.sentiment||news.sentiment||"neutral")}${miniCard("Confidence",analysis.confidence!==undefined?Math.round(Number(analysis.confidence)*100)+"%":"-")}${miniCard("News Impact",analysis.news_impact||"none")}${miniCard("Shortlist Source",pick.source||"research_only")}${miniCard("Entry",fmtMoney(plan.entry))}${miniCard("Stop",fmtMoney(plan.stop_loss))}${miniCard("Target",fmtMoney(plan.target))}${miniCard("R / R",plan.risk_reward_ratio!==undefined?Number(plan.risk_reward_ratio).toFixed(2):"-")}</div><div class="list"><strong>Why it was interesting</strong>${listBlock([pick.discovery_reason||pick.top_headline||analysis.news_summary||"No shortlist rationale captured.",`Score: ${pick.score!==undefined?Number(pick.score).toFixed(3):"n/a"} | Source: ${pick.source||"n/a"}`],"No shortlist rationale captured.")}</div><div class="list"><strong>Key observations</strong>${listBlock(analysis.key_observations,"No observations were returned.")}</div><div class="list"><strong>Catalysts</strong>${listBlock(analysis.catalysts,"No catalysts were listed.")}</div><div class="list"><strong>Risks</strong>${listBlock(analysis.risks,"No explicit risks were listed.")}</div><div class="list"><strong>Articles seen by the LLM</strong>${articleGrid(news.news_headlines,"No symbol-specific articles were captured for this decision.")}</div></article>`}).join(""):empty("No research decisions available yet.");
+
+          document.getElementById("marketHeadlines").innerHTML=articleGrid(marketHeadlines,"No market headlines were captured in the latest run.");
+          document.getElementById("discoveries").innerHTML=stackCards(discoveries.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc(x.discovery_reason||x.top_headline||"No discovery reason captured.")}</span><div class="sub">${esc((x.sentiment_label||"mixed")+" | "+(x.news_sentiment!==undefined?Number(x.news_sentiment).toFixed(2):"n/a"))}</div></div>`),"No news-driven discoveries were stored for the latest run.");
+          document.getElementById("hotStocks").innerHTML=stackCards(hotStocks.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc((x.sentiment||"mixed")+" across "+String(x.source_count||0)+" sources")}</span><div class="sub">${esc(truncate(arr(x.reasons).join(" | "),160)||"No reasons captured.")}</div></div>`),"No cross-source hot stocks were persisted.");
+          document.getElementById("analystTape").innerHTML=stackCards(analystChanges.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc((x.firm||"?")+": "+(x.action||"?"))}</span><div class="sub">${esc((x.from_grade||"?")+" -> "+(x.to_grade||"?"))}</div></div>`),"No analyst changes were captured.");
+
+          document.getElementById("marketSummary").textContent=research.market_summary||"No market summary available.";
+          const marketCards=[]; if(market.market_regime)marketCards.push(["Regime",market.market_regime]); if(market.sp500?.change_pct!==undefined)marketCards.push(["SPY",fmtPct(market.sp500.change_pct)]); if(market.nasdaq?.change_pct!==undefined)marketCards.push(["QQQ",fmtPct(market.nasdaq.change_pct)]); if(market.vix?.value!==undefined)marketCards.push(["VIX",String(market.vix.value)]); if(market.treasury_10y?.yield_pct!==undefined)marketCards.push(["10Y Yield",market.treasury_10y.yield_pct+"%"]); if(arr(market.sector_leaders).length)marketCards.push(["Leaders",arr(market.sector_leaders).map(x=>`${x.sector} ${fmtPct(x.daily_pct)}`).join(", ")]); if(arr(market.sector_laggards).length)marketCards.push(["Laggards",arr(market.sector_laggards).map(x=>`${x.sector} ${fmtPct(x.daily_pct)}`).join(", ")]);
+          document.getElementById("marketCards").innerHTML=marketCards.length?marketCards.map(([l,v])=>miniCard(l,v)).join(""):empty("No market regime cards were captured.");
+          document.getElementById("artifactMemory").textContent=prompt.artifact_context||"No saved artifacts yet.";
+          document.getElementById("llmSummary").innerHTML=[["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Input Tokens",llm.usage?.input_tokens??"-"],["Output Tokens",llm.usage?.output_tokens??"-"],["Total Tokens",llm.usage?.total_tokens??"-"],["Capacity Before Request",String(llm.rate_limits?.estimates?.tokens_remaining_before_request_estimate??llm.rate_limits?.estimates?.input_tokens_remaining_before_request_estimate??"n/a")],["Latency",llm.duration_ms?`${Math.round(Number(llm.duration_ms))} ms`:"-"],["Run ID",llm.runtime?.github?.run_id||"-"],["Request ID",llm.request_id||"-"],["Quota Note",llm.quota_note||"No quota note recorded"]].map(([l,v])=>miniCard(l,String(v))).join("");
+          document.getElementById("providerAttempts").innerHTML=arr(llm.attempts).length?arr(llm.attempts).map(x=>`<div class="tile"><strong>${esc((x.provider||"?")+" / "+(x.model||"?"))}</strong><span>${esc("Status: "+(x.status||"unknown"))}</span><div class="sub">${esc(x.duration_ms!==undefined?`${x.duration_ms} ms`:"duration n/a")}${x.error?` | ${esc(truncate(String(x.error),90))}`:""}</div></div>`).join(""):empty("No provider attempts were recorded.");
+
+          document.getElementById("shortlistTable").innerHTML=shortlist.length?shortlist.map(x=>`<tr><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(x.source||"")}</td><td>${x.score!==undefined?Number(x.score).toFixed(3):"-"}</td><td>${esc(x.discovery_reason||x.top_headline||"Technical move only")}</td></tr>`).join(""):`<tr><td colspan="4">${empty("No shortlist stored in latest context.")}</td></tr>`;
+          document.getElementById("positionsTable").innerHTML=positions.length?positions.map(x=>`<tr><td><strong>${esc(x.symbol)}</strong></td><td>${esc(x.shares)}</td><td>${fmtMoney(x.avg_cost)}</td><td>${fmtMoney(x.current_price)}</td><td class="${cls(x.unrealized_pnl)}">${signMoney(x.unrealized_pnl)}</td></tr>`).join(""):`<tr><td colspan="5">${empty("No positions yet.")}</td></tr>`;
+          document.getElementById("tradesTable").innerHTML=trades.length?trades.slice(-60).reverse().map(x=>`<tr><td>${esc(dateText(x.timestamp))}</td><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(String((x.action||"").toUpperCase()))}</td><td>${esc(x.quantity??"-")}</td><td>${fmtMoney(x.price)}</td><td>${fmtMoney(x.value)}</td><td>${esc(x.status||"-")}</td><td>${esc(x.reasoning||x.reason||"-")}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No trades yet.")}</td></tr>`;
+
+          const history=arr(bundle.history); if(history.length&&window.Chart){new Chart(document.getElementById("valueChart").getContext("2d"),{type:"line",data:{labels:history.map(x=>dateText(x.timestamp)),datasets:[{label:"Portfolio Value",data:history.map(x=>x.portfolio_value),borderColor:"#7dd3fc",backgroundColor:"rgba(125,211,252,.12)",fill:true,tension:.25,borderWidth:2,pointRadius:2}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:"#95a7ca"}}},scales:{x:{ticks:{color:"#95a7ca",maxTicksLimit:8},grid:{color:"rgba(126,166,235,.08)"}},y:{ticks:{color:"#95a7ca",callback:v=>"$"+Number(v).toLocaleString()},grid:{color:"rgba(126,166,235,.08)"}}}}});}
         }
 
-        const wins = completed.filter(t => t.pnl > 0);
-        const losses = completed.filter(t => t.pnl <= 0);
-        const winRate = (wins.length / completed.length * 100).toFixed(0);
-        const avgWin = wins.length ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
-        const avgLoss = losses.length ? losses.reduce((s, t) => s + t.pnl, 0) / losses.length : 0;
-        const bestTrade = completed.reduce((b, t) => t.pnl > b.pnl ? t : b, completed[0]);
-        const worstTrade = completed.reduce((w, t) => t.pnl < w.pnl ? t : w, completed[0]);
-
-        document.getElementById('winRate').textContent = winRate + '%';
-        document.getElementById('winRate').className = 'card-value ' + (parseInt(winRate) >= 50 ? 'positive' : 'negative');
-
-        section.style.display = 'block';
-        container.innerHTML = [
-            { label: 'Win Rate', value: winRate + '%', cls: parseInt(winRate) >= 50 ? 'positive' : 'negative' },
-            { label: 'Avg Win', value: signFmt(avgWin), cls: 'positive' },
-            { label: 'Avg Loss', value: signFmt(avgLoss), cls: 'negative' },
-            { label: 'Best Trade', value: bestTrade.symbol + ' ' + signFmt(bestTrade.pnl), cls: 'positive' },
-            { label: 'Worst Trade', value: worstTrade.symbol + ' ' + signFmt(worstTrade.pnl), cls: 'negative' },
-            { label: 'Total Trades', value: completed.length, cls: '' },
-        ].map(s => `
-            <div class="stat">
-                <div class="stat-value ${s.cls}">${s.value}</div>
-                <div class="stat-label">${s.label}</div>
-            </div>
-        `).join('');
-    }
-
-    function renderLlm(data) {
-        const container = document.getElementById('llmStats');
-        if (!container || !data) return;
-
-        const usage = data.usage || {};
-        const estimates = data.rate_limits?.estimates || {};
-        const github = data.runtime?.github || {};
-        const model = data.selected_model || data.model || '-';
-        const provider = data.selected_provider || data.provider || '-';
-        const tokensBefore = estimates.tokens_remaining_before_request_estimate;
-        const requestId = data.request_id || '-';
-
-        container.innerHTML = [
-            { label: 'Provider', value: provider },
-            { label: 'Model', value: model },
-            { label: 'Platform', value: data.runtime?.platform || '-' },
-            { label: 'Input Tokens', value: usage.input_tokens ?? '-' },
-            { label: 'Output Tokens', value: usage.output_tokens ?? '-' },
-            { label: 'Total Tokens', value: usage.total_tokens ?? '-' },
-            { label: 'Capacity Before Request', value: tokensBefore !== undefined ? tokensBefore.toLocaleString() : 'n/a' },
-            { label: 'Latency', value: data.duration_ms ? Math.round(data.duration_ms) + ' ms' : '-' },
-            { label: 'Run ID', value: github.run_id || '-' },
-            { label: 'Request ID', value: requestId.length > 16 ? requestId.slice(0, 16) + '...' : requestId },
-        ].map(s => `
-            <div class="stat">
-                <div class="stat-value">${s.value}</div>
-                <div class="stat-label">${s.label}</div>
-            </div>
-        `).join('');
-    }
-
-    function renderPipeline(latest, research, trades, llm) {
-        // Light up the flow nodes based on available data
-        const nodes = {
-            screener: !!research?.stocks,
-            data: !!latest,
-            news: !!research?.market_summary,
-            research: !!research?.overall_sentiment,
-            strategy: trades?.length > 0 || !!research,
-            risk: trades?.length > 0,
-            execute: trades?.length > 0,
-            portfolio: !!latest?.portfolio_value,
-        };
-
-        Object.entries(nodes).forEach(([key, ok]) => {
-            const el = document.getElementById('fn-' + key);
-            if (el) el.classList.add(ok ? 'flow-ok' : 'flow-skip');
-        });
-
-        // Show details
-        const details = [];
-        if (research?.overall_sentiment) details.push(`Sentiment: ${research.overall_sentiment}`);
-        if (research?.market_regime) details.push(`Regime: ${research.market_regime}`);
-        if (research?.best_opportunities?.length) details.push(`Best picks: ${research.best_opportunities.join(', ')}`);
-        if (trades?.length) details.push(`${trades.length} trade(s) logged`);
-        if (llm?.selected_provider) details.push(`LLM: ${llm.selected_provider}`);
-        if (llm?.selected_model) details.push(`Model: ${llm.selected_model}`);
-
-        const providerEl = document.getElementById('fn-research-provider');
-        const modelEl = document.getElementById('fn-research-model');
-        if (providerEl) providerEl.textContent = llm?.selected_provider || research?._meta?.provider || 'LLM';
-        if (modelEl) modelEl.textContent = llm?.selected_model || research?._meta?.model || 'model';
-
-        const detailsEl = document.getElementById('pipelineDetails');
-        if (detailsEl && details.length) detailsEl.textContent = details.join(' | ');
-    }
-
-    loadData();
-    </script>
-</body>
-</html>"""
+        fetch("data/dashboard.json").then(r=>r.json()).then(render).catch(err=>console.error("Dashboard load error",err));
+      </script>
+    </body>
+    </html>
+    """
+).strip() + "\n"
 
 
-def generate_dashboard():
-    """Generate the static dashboard HTML and copy data files."""
-    docs_dir = Path("docs")
-    data_dir = docs_dir / "data"
-    docs_dir.mkdir(exist_ok=True)
-    data_dir.mkdir(exist_ok=True)
+def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
+    """Generate the dashboard HTML and JSON bundles."""
+    data_root = Path(data_dir)
+    docs_root = Path(docs_dir)
+    data_out = docs_root / "data"
+    docs_root.mkdir(parents=True, exist_ok=True)
+    data_out.mkdir(parents=True, exist_ok=True)
 
-    # Write the HTML
-    (docs_dir / "index.html").write_text(DASHBOARD_HTML)
+    bundle = _build_dashboard_bundle(data_root)
+    (docs_root / "index.html").write_text(DASHBOARD_HTML, encoding="utf-8")
+    _write_json(data_out / "dashboard.json", bundle)
+    _write_json(data_out / "latest.json", bundle["latest"])
+    _write_json(data_out / "history.json", bundle["history"])
+    _write_json(data_out / "trades.json", bundle["trades"])
+    _write_json(data_out / "research.json", bundle["research"])
+    _write_json(data_out / "llm.json", bundle["llm"])
+    _write_json(data_out / "context.json", bundle["context"])
+    _write_json(data_out / "report_research.json", bundle["reports"]["research"])
+    _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
+    _copy_latest_report_artifact(data_root, data_out / "report_research.md", phase="research", suffix=".md")
+    _copy_latest_report_artifact(data_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
 
-    # Copy snapshot data
-    snapshots_dir = Path("data/snapshots")
-
-    if (snapshots_dir / "latest.json").exists():
-        (data_dir / "latest.json").write_text(
-            (snapshots_dir / "latest.json").read_text()
+    rules_path = data_root / "feedback" / "learned_rules.json"
+    if rules_path.exists():
+        (data_out / "rules.json").write_text(
+            rules_path.read_text(encoding="utf-8"),
+            encoding="utf-8",
         )
 
-    if (snapshots_dir / "history.json").exists():
-        (data_dir / "history.json").write_text(
-            (snapshots_dir / "history.json").read_text()
-        )
-    else:
-        (data_dir / "history.json").write_text("[]")
 
-    # Collect trade history from journal files
-    trades = _collect_trade_history()
-    (data_dir / "trades.json").write_text(json.dumps(trades, indent=2, default=str))
-
-    # Copy latest research
-    research = _get_latest_research()
-    (data_dir / "research.json").write_text(json.dumps(research, indent=2, default=str))
-
-    analytics_path = Path("data/analytics/latest_llm.json")
-    if analytics_path.exists():
-        (data_dir / "llm.json").write_text(analytics_path.read_text())
-    else:
-        (data_dir / "llm.json").write_text("{}")
-
-    # Copy feedback/performance data
-    feedback_dir = Path("data/feedback")
-    if (feedback_dir / "completed_trades.json").exists():
-        (data_dir / "trades.json").write_text(
-            (feedback_dir / "completed_trades.json").read_text()
-        )
-    if (feedback_dir / "learned_rules.json").exists():
-        (data_dir / "rules.json").write_text(
-            (feedback_dir / "learned_rules.json").read_text()
-        )
-
-    # Write placeholder if no snapshot exists yet
-    if not (snapshots_dir / "latest.json").exists():
-        placeholder = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "portfolio_value": 100000.0,
-            "cash": 100000.0,
-            "invested": 0,
-            "total_pnl": 0,
-            "total_pnl_pct": 0,
-            "positions": [],
-            "position_count": 0,
-        }
-        (data_dir / "latest.json").write_text(json.dumps(placeholder, indent=2))
+def _build_dashboard_bundle(data_root: Path) -> dict[str, Any]:
+    research_report = _get_latest_report(data_root, "research")
+    monitor_report = _get_latest_report(data_root, "monitor")
+    report_payload = _extract_report_payload(research_report)
+    research = _get_latest_json(data_root / "research") or _extract_research_analysis(report_payload)
+    context = _normalize_context(
+        _read_json(data_root / "context" / "latest_research.json", {}),
+        report_payload,
+        research_report,
+    )
+    llm = _normalize_llm(
+        _read_json(data_root / "analytics" / "latest_llm.json", {}),
+        context,
+        research,
+    )
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "latest": _load_latest_snapshot(data_root),
+        "history": _read_json(data_root / "snapshots" / "history.json", []),
+        "trades": _load_trade_history(data_root),
+        "research": research,
+        "llm": llm,
+        "context": context,
+        "reports": {"research": research_report, "monitor": monitor_report},
+    }
 
 
-def _collect_trade_history() -> list[dict]:
-    """Collect all trades from journal JSON files."""
-    journal_dir = Path("data/journal")
-    trades = []
+def _load_latest_snapshot(data_root: Path) -> dict[str, Any]:
+    latest = _read_json(data_root / "snapshots" / "latest.json", {})
+    return latest or {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "portfolio_value": 100000.0,
+        "cash": 100000.0,
+        "invested": 0.0,
+        "total_pnl": 0.0,
+        "total_pnl_pct": 0.0,
+        "positions": [],
+        "position_count": 0,
+    }
 
+
+def _load_trade_history(data_root: Path) -> list[dict[str, Any]]:
+    completed = _read_json(data_root / "feedback" / "completed_trades.json", [])
+    if completed:
+        return completed
+
+    trades: list[dict[str, Any]] = []
+    journal_dir = data_root / "journal"
     if not journal_dir.exists():
         return trades
 
-    for json_file in sorted(journal_dir.rglob("*.json")):
-        try:
-            data = json.loads(json_file.read_text())
-            executed = data.get("executed") or []
-            signals = data.get("signals") or []
-
-            # Map signals to their execution results
-            signal_map = {s["symbol"]: s for s in signals} if signals else {}
-
-            for trade in executed:
-                entry = {
-                    "timestamp": data.get("timestamp", ""),
+    for path in sorted(journal_dir.rglob("*_report.json")):
+        payload = _read_json(path, {})
+        signals = {
+            item.get("symbol"): item
+            for item in _safe_list(payload.get("signals"))
+            if isinstance(item, dict) and item.get("symbol")
+        }
+        for trade in _safe_list(payload.get("executed")):
+            if not isinstance(trade, dict):
+                continue
+            signal = signals.get(trade.get("symbol", ""), {})
+            trades.append(
+                {
+                    "timestamp": payload.get("timestamp", ""),
                     "symbol": trade.get("symbol", ""),
                     "action": trade.get("action", ""),
                     "quantity": trade.get("quantity"),
                     "price": trade.get("estimated_price"),
                     "value": trade.get("estimated_value"),
                     "status": trade.get("status", ""),
-                    "reasoning": "",
+                    "reasoning": signal.get("reasoning", trade.get("reason", "")),
+                    "pnl": trade.get("pnl"),
                 }
-
-                # Attach reasoning from the signal
-                sig = signal_map.get(trade.get("symbol", ""), {})
-                entry["reasoning"] = sig.get("reasoning", trade.get("reason", ""))
-
-                trades.append(entry)
-
-        except (json.JSONDecodeError, KeyError):
-            continue
-
+            )
     return trades
 
 
-def _get_latest_research() -> dict:
-    """Get the most recent research analysis."""
-    research_dir = Path("data/research")
-    if not research_dir.exists():
-        return {}
+def _get_latest_report(data_root: Path, phase: str) -> dict[str, Any]:
+    path = _get_latest_report_path(data_root, phase=phase, suffix=".json")
+    return _read_json(path, {}) if path else {}
 
-    files = sorted(research_dir.glob("*.json"), reverse=True)
+
+def _get_latest_report_path(data_root: Path, *, phase: str, suffix: str) -> Path | None:
+    journal_dir = data_root / "journal"
+    if not journal_dir.exists():
+        return None
+    if suffix != ".json":
+        json_source = _get_latest_report_path(data_root, phase=phase, suffix=".json")
+        if json_source is not None:
+            paired = json_source.with_suffix(suffix)
+            if paired.exists():
+                return paired
+
+    files = sorted(journal_dir.rglob(f"*_{phase}_report{suffix}"))
     if not files:
-        return {}
+        return None
+    if suffix != ".json":
+        return files[-1]
+    return max(files, key=_report_score)
 
-    try:
-        return json.loads(files[0].read_text())
-    except (json.JSONDecodeError, KeyError):
+
+def _get_latest_json(directory: Path) -> dict[str, Any]:
+    if not directory.exists():
         return {}
+    files = sorted(directory.glob("*.json"), reverse=True)
+    return _read_json(files[0], {}) if files else {}
+
+
+def _report_score(path: Path) -> tuple[int, str]:
+    score = int(path.stat().st_size)
+    payload = _read_json(path, {})
+    if isinstance(payload.get("research"), dict) and payload.get("research"):
+        score += 5000
+    if isinstance(payload.get("screener"), dict) and payload.get("screener"):
+        score += 2500
+    if payload.get("signals"):
+        score += 1500
+    if payload.get("executed"):
+        score += 1500
+    if isinstance(payload.get("portfolio"), dict) and payload.get("portfolio"):
+        score += 1000
+    return score, path.name
+
+
+def _parse_legacy_news_context(text: str) -> dict[str, Any]:
+    parsed: dict[str, Any] = {
+        "per_symbol": {},
+        "market_headlines": [],
+        "news_discoveries": [],
+        "hot_stocks": [],
+        "finviz": {"analyst_changes": []},
+    }
+    if not text:
+        return parsed
+
+    section = ""
+    current_symbol = ""
+    current_discovery: dict[str, Any] | None = None
+    current_hot_stock: dict[str, Any] | None = None
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line == "MARKET HEADLINES:":
+            section = "market"
+            current_symbol = ""
+            continue
+        if line == "PER-STOCK NEWS:":
+            section = "stock"
+            current_symbol = ""
+            continue
+        if line.startswith("NEWS-DRIVEN DISCOVERIES"):
+            section = "discoveries"
+            current_discovery = None
+            continue
+        if line.startswith("CROSS-SOURCE HOT STOCKS"):
+            section = "hot"
+            current_hot_stock = None
+            continue
+        if line.startswith("RECENT ANALYST ACTIONS:"):
+            section = "analyst"
+            continue
+
+        if section == "market" and line.startswith("- ["):
+            headline = _parse_legacy_headline(line)
+            if headline:
+                parsed["market_headlines"].append(headline)
+            continue
+
+        if section == "stock":
+            match = re.match(
+                r"([A-Z][A-Z0-9.-]{0,9}) \(sentiment: ([^,]+), score: ([^,)]+)",
+                line,
+            )
+            if match:
+                current_symbol = match.group(1)
+                parsed["per_symbol"].setdefault(
+                    current_symbol,
+                    {
+                        "symbol": current_symbol,
+                        "news_headlines": [],
+                        "sentiment": match.group(2),
+                        "sentiment_score": _safe_float(match.group(3)),
+                        "source_count": 0,
+                    },
+                )
+                continue
+            if line.startswith("- [") and current_symbol:
+                headline = _parse_legacy_headline(line)
+                if headline:
+                    parsed["per_symbol"][current_symbol]["news_headlines"].append(headline)
+                continue
+
+        if section == "discoveries":
+            match = re.match(
+                r"([A-Z][A-Z0-9.-]{0,9}): ([a-z_]+) sentiment \(([+-]?\d+(?:\.\d+)?)\), price ([+-]?\d+(?:\.\d+)?)%",
+                line,
+            )
+            if match:
+                current_discovery = {
+                    "symbol": match.group(1),
+                    "sentiment_label": match.group(2),
+                    "news_sentiment": _safe_float(match.group(3)),
+                    "price_change_pct": _safe_float(match.group(4)),
+                }
+                parsed["news_discoveries"].append(current_discovery)
+                continue
+            if line.startswith("Headline:") and current_discovery is not None:
+                current_discovery["top_headline"] = line.replace("Headline:", "", 1).strip()
+                continue
+            if line.startswith("Why:") and current_discovery is not None:
+                current_discovery["discovery_reason"] = line.replace("Why:", "", 1).strip()
+                continue
+
+        if section == "hot":
+            match = re.match(
+                r"([A-Z][A-Z0-9.-]{0,9}): ([^,]+) across (\d+) sources, (\d+) mentions",
+                line,
+            )
+            if match:
+                current_hot_stock = {
+                    "symbol": match.group(1),
+                    "sentiment": match.group(2),
+                    "source_count": int(match.group(3)),
+                    "mention_count": int(match.group(4)),
+                    "reasons": [],
+                }
+                parsed["hot_stocks"].append(current_hot_stock)
+                continue
+            if line.startswith("-") and current_hot_stock is not None:
+                current_hot_stock["reasons"].append(line[1:].strip())
+                continue
+
+        if section == "analyst":
+            match = re.match(
+                r"([A-Z][A-Z0-9.-]{0,9}): (.+?) - (.+?) \((.+?) -> (.+?)\)",
+                line.replace("—", "-"),
+            )
+            if match:
+                parsed["finviz"]["analyst_changes"].append(
+                    {
+                        "symbol": match.group(1),
+                        "firm": match.group(2),
+                        "action": match.group(3),
+                        "from_grade": match.group(4),
+                        "to_grade": match.group(5),
+                    }
+                )
+
+    for summary in parsed["per_symbol"].values():
+        headlines = summary.get("news_headlines", [])
+        summary["source_count"] = len(
+            {
+                item.get("publisher") or item.get("source")
+                for item in headlines
+                if item.get("publisher") or item.get("source")
+            }
+        )
+
+    return parsed
+
+
+def _parse_legacy_headline(line: str) -> dict[str, Any] | None:
+    match = re.match(r"- \[([^\]]+)\] (.+?)(?: \[([+-]?\d+(?:\.\d+)?)\])?$", line)
+    if not match:
+        return None
+    return {
+        "title": match.group(2).strip(),
+        "publisher": match.group(1).strip(),
+        "source": match.group(1).strip(),
+        "summary": "",
+        "url": "",
+        "sentiment": _safe_float(match.group(3)),
+        "category": "headline",
+    }
+
+
+def _safe_float(value: str | None) -> float:
+    if value is None:
+        return 0.0
+    try:
+        return float(str(value).replace("+", ""))
+    except ValueError:
+        return 0.0
+
+
+def _normalize_context(
+    saved_context: dict[str, Any],
+    report_payload: dict[str, Any],
+    report: dict[str, Any],
+) -> dict[str, Any]:
+    context = dict(saved_context) if isinstance(saved_context, dict) else {}
+    prompt = dict(context.get("prompt_sections") or {})
+    news_inputs = dict(prompt.get("news_inputs") or {})
+    legacy_news = _parse_legacy_news_context(prompt.get("news_context", ""))
+
+    if not news_inputs:
+        news_inputs = {
+            "per_symbol": report_payload.get("news", {}) or {},
+            "market_headlines": report_payload.get("market_headlines", []) or [],
+            "news_discoveries": report_payload.get("news_discoveries", []) or [],
+            "hot_stocks": report_payload.get("hot_stocks", []) or [],
+            "finviz": report_payload.get("finviz", {}) or {},
+        }
+    if not news_inputs.get("per_symbol"):
+        news_inputs["per_symbol"] = legacy_news.get("per_symbol", {})
+    if not news_inputs.get("market_headlines"):
+        news_inputs["market_headlines"] = legacy_news.get("market_headlines", [])
+    if not news_inputs.get("news_discoveries"):
+        news_inputs["news_discoveries"] = legacy_news.get("news_discoveries", [])
+    if not news_inputs.get("hot_stocks"):
+        news_inputs["hot_stocks"] = legacy_news.get("hot_stocks", [])
+    if not news_inputs.get("finviz"):
+        news_inputs["finviz"] = legacy_news.get("finviz", {})
+
+    prompt["news_inputs"] = news_inputs
+    if not prompt.get("market_context"):
+        prompt["market_context"] = report_payload.get("market_context", {}) or {}
+    if not prompt.get("market_data"):
+        prompt["market_data"] = report_payload.get("market_data", {}) or {}
+    if not prompt.get("screener_context"):
+        prompt["screener_context"] = (
+            report_payload.get("screener_results", {}) or report.get("screener", {}) or {}
+        )
+    context["prompt_sections"] = prompt
+    if not context.get("symbols"):
+        context["symbols"] = report_payload.get("symbols", []) or []
+    if not context.get("provider"):
+        context["provider"] = _extract_llm_meta(report_payload).get("provider", "")
+    if not context.get("model"):
+        context["model"] = _extract_llm_meta(report_payload).get("model", "")
+    if not context.get("llm_meta"):
+        context["llm_meta"] = _extract_llm_meta(report_payload)
+    return context
+
+
+def _normalize_llm(
+    analytics: dict[str, Any],
+    context: dict[str, Any],
+    research: dict[str, Any],
+) -> dict[str, Any]:
+    llm = _deep_merge(_extract_llm_meta(research), analytics)
+    if "provider" not in llm and context.get("provider"):
+        llm["provider"] = context["provider"]
+    if "model" not in llm and context.get("model"):
+        llm["model"] = context["model"]
+    return llm
+
+
+def _extract_report_payload(report: dict[str, Any]) -> dict[str, Any]:
+    payload = report.get("research")
+    return payload if isinstance(payload, dict) else {}
+
+
+def _extract_research_analysis(payload: dict[str, Any]) -> dict[str, Any]:
+    research = payload.get("research")
+    return research if isinstance(research, dict) else {}
+
+
+def _extract_llm_meta(source: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(source, dict):
+        return {}
+    meta = source.get("_meta") or source.get("llm_meta")
+    return meta if isinstance(meta, dict) else {}
+
+
+def _copy_latest_report_artifact(
+    data_root: Path,
+    destination: Path,
+    *,
+    phase: str,
+    suffix: str,
+) -> None:
+    source = _get_latest_report_path(data_root, phase=phase, suffix=suffix)
+    if source:
+        destination.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+
+
+def _read_json(path: Path | None, default: Any) -> Any:
+    if path is None or not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return default
+
+
+def _write_json(path: Path, payload: Any) -> None:
+    path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+
+
+def _safe_list(value: Any) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
+def _deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, value in overlay.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = value
+    return merged

@@ -1,5 +1,8 @@
 """Tests for the Orchestrator — pipeline coordination."""
 
+import json
+import tempfile
+from pathlib import Path
 import pytest
 from agent_trader.core import MessageBus, Orchestrator, BaseAgent, AgentRole, MessageType
 
@@ -93,3 +96,32 @@ async def test_run_single_agent():
     assert result is not None
     assert result.type == MessageType.RESULT
     assert result.data == {"test": "value"}
+
+
+def test_write_journal_preserves_research_phase_payload(monkeypatch):
+    original_cwd = Path.cwd()
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.chdir(Path(temp_dir).resolve())
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+
+        orch._write_journal(
+            "20260321_175214",
+            "research",
+            {
+                "research": {
+                    "research": {
+                        "overall_sentiment": "neutral",
+                        "market_summary": "test summary",
+                        "stocks": {},
+                    }
+                }
+            },
+            screener_results={"shortlist": []},
+        )
+
+        report = next((Path("data") / "journal").rglob("*_research_report.json"))
+        raw = json.loads(report.read_text(encoding="utf-8"))
+        monkeypatch.chdir(original_cwd)
+
+        assert raw["research"]["research"]["overall_sentiment"] == "neutral"

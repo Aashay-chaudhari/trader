@@ -171,6 +171,33 @@ def create_journal_entry(
                     lines.append(f"- {' | '.join(pieces)}")
                 lines.append("")
 
+        news_by_symbol = research_results.get("news", {})
+        market_headlines = research_results.get("market_headlines", [])
+        if news_by_symbol or market_headlines:
+            lines.append("## News Inputs Seen By The LLM")
+            lines.append("")
+
+            if market_headlines:
+                lines.append("### Market Headlines")
+                lines.append("")
+                for headline in market_headlines[:5]:
+                    title = headline.get("title", "Untitled")
+                    source = headline.get("publisher") or headline.get("source") or "unknown"
+                    lines.append(f"- **{title}** [{source}]")
+                lines.append("")
+
+            for symbol, summary in news_by_symbol.items():
+                headlines = summary.get("news_headlines", [])
+                if not headlines:
+                    continue
+                lines.append(f"### {symbol} Headlines")
+                lines.append("")
+                for headline in headlines[:4]:
+                    title = headline.get("title", "Untitled")
+                    source = headline.get("publisher") or headline.get("source") or "unknown"
+                    lines.append(f"- **{title}** [{source}]")
+                lines.append("")
+
     # ── Signals Section ──────────────────────────────────────────
     if signals:
         lines.append("## Trade Signals")
@@ -289,6 +316,7 @@ def create_journal_entry(
         "timestamp": now.isoformat(),
         "screener": screener_results,
         "research": research_results,
+        "market_data": market_data,
         "signals": signals,
         "risk": risk_results,
         "executed": executed,
