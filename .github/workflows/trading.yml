@@ -95,6 +95,25 @@ jobs:
       - name: Generate dashboard
         run: python -m agent_trader dashboard
 
+      - name: Build artifact stamp
+        id: artifact_stamp
+        if: always()
+        run: echo "stamp=$(date -u +%Y-%m-%dT%H%MZ)" >> $GITHUB_OUTPUT
+
+      - name: Upload trading artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-trader-${{ steps.phase.outputs.phase }}-${{ steps.artifact_stamp.outputs.stamp }}
+          path: |
+            data/journal/
+            data/research/
+            data/context/
+            data/cache/
+            docs/data/
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Commit results
         run: |
           git config user.name "Agent Trader Bot"
