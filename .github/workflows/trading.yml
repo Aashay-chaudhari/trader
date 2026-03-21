@@ -85,7 +85,6 @@ jobs:
   strategist-run:
     needs: determine-phase
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == matrix.profile_id }}
     strategy:
       fail-fast: false
       matrix:
