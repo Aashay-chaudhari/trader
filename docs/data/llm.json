@@ -4,28 +4,28 @@
   "provider": "openai",
   "model": "gpt-4o-mini-2024-07-18",
   "usage": {
-    "input_tokens": 5237,
-    "output_tokens": 1202,
-    "total_tokens": 6439,
+    "input_tokens": 5230,
+    "output_tokens": 1206,
+    "total_tokens": 6436,
     "cached_input_tokens": 0,
     "reasoning_output_tokens": 0
   },
   "service_tier": "default",
-  "request_id": "req_36e1a6b071cf4ed7ab71cc46138c9563",
+  "request_id": "req_201fc01cdd534cf18fd275f4eb3549ac",
   "rate_limits": {
     "headers": {
       "x-ratelimit-limit-requests": "10000",
       "x-ratelimit-limit-tokens": "200000",
       "x-ratelimit-remaining-requests": "9999",
-      "x-ratelimit-remaining-tokens": "195844",
+      "x-ratelimit-remaining-tokens": "195842",
       "x-ratelimit-reset-requests": "8.64s",
-      "x-ratelimit-reset-tokens": "1.246s"
+      "x-ratelimit-reset-tokens": "1.247s"
     },
     "estimates": {
       "requests_remaining_after_request": 9999,
       "requests_remaining_before_request_estimate": 10000,
-      "tokens_remaining_after_request": 195844,
-      "tokens_remaining_before_request_estimate": 202283
+      "tokens_remaining_after_request": 195842,
+      "tokens_remaining_before_request_estimate": 202278
     },
     "billing_balance_before_workflow": {
       "available": false,
@@ -41,40 +41,40 @@
       "workflow": "Trading Pipeline",
       "event_name": "workflow_dispatch",
       "actor": "Aashay-chaudhari",
-      "run_id": "23386875942",
+      "run_id": "23386977734",
       "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386875942",
-      "sha": "f897d2c0c8fe081570d075df566babdacff17a4c",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386977734",
+      "sha": "a95796b0f855eff1fbc4a4224b34b5aa11406c0e",
       "ref": "refs/heads/main"
     }
   },
-  "duration_ms": 28753.6,
+  "duration_ms": 33157.6,
   "attempts": [
     {
       "provider": "anthropic",
       "model": "claude-haiku-4-5-20251001",
       "status": "error",
-      "duration_ms": 85.7,
-      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmfjzBLNJYVwiLZ2ybD'}",
+      "duration_ms": 57.7,
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn5ys2DptU8py8dTQd5'}",
       "quota_issue_detected": true
     },
     {
       "provider": "openai",
       "model": "gpt-4o-mini",
       "status": "success",
-      "duration_ms": 28753.6,
+      "duration_ms": 33157.6,
       "usage": {
-        "input_tokens": 5237,
-        "output_tokens": 1202,
-        "total_tokens": 6439,
+        "input_tokens": 5230,
+        "output_tokens": 1206,
+        "total_tokens": 6436,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       }
     }
   ],
   "quota_issue_detected": true,
-  "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmfjzBLNJYVwiLZ2ybD'}",
-  "timestamp": "2026-03-21T19:23:48.787508+00:00",
+  "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn5ys2DptU8py8dTQd5'}",
+  "timestamp": "2026-03-21T19:29:22.012300+00:00",
   "phase": "monitor",
   "symbols": [
     "MU",

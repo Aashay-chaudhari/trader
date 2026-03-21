@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-21T19:23:49.868004+00:00",
+  "generated_at": "2026-03-21T19:29:23.072515+00:00",
   "latest": {
-    "timestamp": "2026-03-21T19:23:48.792111+00:00",
+    "timestamp": "2026-03-21T19:29:22.016890+00:00",
     "portfolio_value": 100000.0,
-    "cash": 61334.64,
-    "invested": 38665.36,
+    "cash": 51560.19,
+    "invested": 48439.81,
     "total_pnl": 0.0,
     "total_pnl_pct": 0.0,
     "positions": [
@@ -46,19 +46,19 @@
       },
       {
         "symbol": "HD",
-        "shares": 15,
+        "shares": 30,
         "avg_cost": 320.75,
         "current_price": 320.75,
-        "current_value": 4811.25,
+        "current_value": 9622.5,
         "unrealized_pnl": 0.0,
         "unrealized_pnl_pct": 0.0
       },
       {
         "symbol": "MA",
-        "shares": 10,
+        "shares": 20,
         "avg_cost": 496.32,
         "current_price": 496.32,
-        "current_value": 4963.2,
+        "current_value": 9926.4,
         "unrealized_pnl": 0.0,
         "unrealized_pnl_pct": 0.0
       },
@@ -208,6 +208,80 @@
         }
       ],
       "position_count": 7
+    },
+    {
+      "timestamp": "2026-03-21T19:29:22.016890+00:00",
+      "portfolio_value": 100000.0,
+      "cash": 51560.19,
+      "invested": 48439.81,
+      "total_pnl": 0.0,
+      "total_pnl_pct": 0.0,
+      "positions": [
+        {
+          "symbol": "ABBV",
+          "shares": 48,
+          "avg_cost": 205.07,
+          "current_price": 205.07,
+          "current_value": 9843.36,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "ABT",
+          "shares": 47,
+          "avg_cost": 105.46,
+          "current_price": 105.46,
+          "current_value": 4956.62,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "HON",
+          "shares": 22,
+          "avg_cost": 221.5,
+          "current_price": 221.5,
+          "current_value": 4873.0,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "LMT",
+          "shares": 7,
+          "avg_cost": 627.43,
+          "current_price": 627.43,
+          "current_value": 4392.01,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "HD",
+          "shares": 30,
+          "avg_cost": 320.75,
+          "current_price": 320.75,
+          "current_value": 9622.5,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "MA",
+          "shares": 20,
+          "avg_cost": 496.32,
+          "current_price": 496.32,
+          "current_value": 9926.4,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        },
+        {
+          "symbol": "V",
+          "shares": 16,
+          "avg_cost": 301.62,
+          "current_price": 301.62,
+          "current_value": 4825.92,
+          "unrealized_pnl": 0.0,
+          "unrealized_pnl_pct": 0.0
+        }
+      ],
+      "position_count": 7
     }
   ],
   "trades": [
@@ -309,11 +383,33 @@
       "status": "dry_run",
       "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: hold (40% confidence)",
       "pnl": null
+    },
+    {
+      "timestamp": "2026-03-21T19:29:22.018250+00:00",
+      "symbol": "HD",
+      "action": "buy",
+      "quantity": 15,
+      "price": 320.75,
+      "value": 4811.25,
+      "status": "dry_run",
+      "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: hold (0% confidence)",
+      "pnl": null
+    },
+    {
+      "timestamp": "2026-03-21T19:29:22.018250+00:00",
+      "symbol": "MA",
+      "action": "buy",
+      "quantity": 10,
+      "price": 496.32000732421875,
+      "value": 4963.2000732421875,
+      "status": "dry_run",
+      "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 3 sources agree | Research: buy (66% confidence)",
+      "pnl": null
     }
   ],
   "research": {
-    "overall_sentiment": "bullish",
-    "market_summary": "The market is currently in a risk-off regime, marked by significant volatility with a high VIX at 26.78. Although the major indices are down, there are select stocks, particularly in healthcare, showing potential bullish setups amid the downturn.",
+    "overall_sentiment": "neutral",
+    "market_summary": "The market is currently in a risk-off regime characterized by high volatility and declining major indices. With elevated VIX levels and multiple stocks experiencing significant downward movement, caution is advised in entering new long positions.",
     "market_regime": "risk_off",
     "best_opportunities": [
       "UNH",
@@ -322,92 +418,94 @@
     "stocks": {
       "UNH": {
         "sentiment": "bullish",
-        "confidence": 0.7,
+        "confidence": 0.68,
         "key_observations": [
-          "UNH is trading below its 20-day and 50-day moving averages, indicating a corrective phase.",
-          "The RSI is at 40.5, suggesting it may be approaching oversold levels."
+          "Price closed at $275.59, which is showing signs of support near the 20-day SMA at $283.75.",
+          "Despite the market being in decline, UNH has a strong buy rating from analysts (22 Buy) indicating underlying strength."
         ],
         "news_impact": "positive",
-        "news_summary": "UnitedHealth Group announced a national expansion of its Doula offering, which may drive future growth.",
-        "technical_setup": "The stock has recently bounced off the lower Bollinger Band, indicating potential support at $273.81. There's room for a short-term recovery towards resistance around $283.75.",
+        "news_summary": "UnitedHealth announced a national expansion of its doula offering which could increase market reach.",
+        "technical_setup": "UNH has shown a recent downtrend but appears to be finding support near its 20-day SMA, with a bullish MACD setup as well.",
         "recommendation": "buy",
         "trade_plan": {
-          "entry": 274.0,
+          "entry": 276.0,
           "stop_loss": 270.0,
-          "target": 285.0,
-          "risk_reward_ratio": 3.5,
-          "position_size_pct": 25,
+          "target": 290.0,
+          "risk_reward_ratio": 2.0,
+          "position_size_pct": 10.0,
           "timeframe": "swing_1_2_weeks"
         },
         "catalysts": [
-          "Potential growth from healthcare expansion initiatives",
-          "Broader market recovery from risk-off sentiment"
+          "Continued positive sentiment in the healthcare sector",
+          "National expansion news",
+          "Potential market stabilization"
         ],
         "risks": [
-          "Further market downturns could negatively affect performance",
-          "Sector-specific risks in healthcare"
+          "Further market decline",
+          "Negative earnings surprises in upcoming reports"
         ],
         "earnings_warning": false
       },
       "MA": {
         "sentiment": "bullish",
-        "confidence": 0.68,
+        "confidence": 0.66,
         "key_observations": [
-          "Currently, MA has a bullish sentiment with a slight positive movement today, suggesting potential upward momentum.",
-          "The stock price sits below the 20-day and 50-day moving averages."
+          "Price has been moving downwards, currently at $496.32, and has faced resistance around the 20-day SMA at $508.67.",
+          "Analysts maintain a strong buy rating (34 Buy) on MA, indicating strong potential for recovery."
         ],
         "news_impact": "positive",
-        "news_summary": "Visa and Mastercard are appealing a UK ruling on merchant fees, which could positively affect their operational margins.",
-        "technical_setup": "MA\u2019s price is recovering after testing support around $485. The stock shows a short-term uptrend potential against a bearish market backdrop.",
+        "news_summary": "Recent news highlights potential legal victories that could positively affect Mastercard's profitability.",
+        "technical_setup": "MA is experiencing a bearish trend, but there is a potential reversal point as it approaches a support level at $485.50.",
         "recommendation": "buy",
         "trade_plan": {
           "entry": 497.0,
           "stop_loss": 490.0,
-          "target": 510.0,
-          "risk_reward_ratio": 2.5,
-          "position_size_pct": 25,
+          "target": 520.0,
+          "risk_reward_ratio": 2.0,
+          "position_size_pct": 10.0,
           "timeframe": "swing_1_2_weeks"
         },
         "catalysts": [
-          "Positive news regarding regulatory appeals",
-          "Market sentiment potentially shifting to favor financials"
+          "Potential positive legal outcomes",
+          "Market positioning improvement",
+          "Sector recovery signs"
         ],
         "risks": [
-          "Ongoing bearish market sentiment",
-          "Potential negative regulatory outcomes"
+          "Continued bearish pressure in the market",
+          "Sector rotation impacting financial stocks"
         ],
         "earnings_warning": false
       }
     },
-    "self_reflection": "My confidence in trade selection will need a slight adjustment based on current market conditions; while I'm sticking to conservative plays, I should remain vigilant for more rapid shifts in market sentiment.",
+    "self_reflection": "Based on the recent evaluation, I recognize the need to remain cautious as the market is in a risk-off environment. Adjusting confidence levels for bullish trade recommendations in such conditions is crucial for better risk management.",
     "_meta": {
       "status": "success",
       "provider_preference": "auto",
       "provider": "openai",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
-        "input_tokens": 7341,
-        "output_tokens": 697,
-        "total_tokens": 8038,
+        "input_tokens": 7281,
+        "output_tokens": 708,
+        "total_tokens": 7989,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       },
       "service_tier": "default",
-      "request_id": "req_4c02771a5e384825a25f6cb0f0b0f012",
+      "request_id": "req_bb443af2491e461e8f3e3aab641d11bb",
       "rate_limits": {
         "headers": {
           "x-ratelimit-limit-requests": "10000",
           "x-ratelimit-limit-tokens": "200000",
           "x-ratelimit-remaining-requests": "9999",
-          "x-ratelimit-remaining-tokens": "194039",
+          "x-ratelimit-remaining-tokens": "194093",
           "x-ratelimit-reset-requests": "8.64s",
-          "x-ratelimit-reset-tokens": "1.788s"
+          "x-ratelimit-reset-tokens": "1.772s"
         },
         "estimates": {
           "requests_remaining_after_request": 9999,
           "requests_remaining_before_request_estimate": 10000,
-          "tokens_remaining_after_request": 194039,
-          "tokens_remaining_before_request_estimate": 202077
+          "tokens_remaining_after_request": 194093,
+          "tokens_remaining_before_request_estimate": 202082
         },
         "billing_balance_before_workflow": {
           "available": false,
@@ -423,39 +521,39 @@
           "workflow": "Trading Pipeline",
           "event_name": "workflow_dispatch",
           "actor": "Aashay-chaudhari",
-          "run_id": "23386875942",
+          "run_id": "23386977734",
           "run_attempt": "1",
-          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386875942",
-          "sha": "f897d2c0c8fe081570d075df566babdacff17a4c",
+          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386977734",
+          "sha": "a95796b0f855eff1fbc4a4224b34b5aa11406c0e",
           "ref": "refs/heads/main"
         }
       },
-      "duration_ms": 32531.3,
+      "duration_ms": 24292.8,
       "attempts": [
         {
           "provider": "anthropic",
           "model": "claude-sonnet-4-6",
           "status": "error",
-          "duration_ms": 423.5,
-          "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmbzCahHsY4yMRwFASM'}",
+          "duration_ms": 52.1,
+          "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn3FJNyyum7s6ygqLa3'}",
           "quota_issue_detected": true
         },
         {
           "provider": "openai",
           "model": "gpt-4o-mini",
           "status": "success",
-          "duration_ms": 32531.3,
+          "duration_ms": 24292.8,
           "usage": {
-            "input_tokens": 7341,
-            "output_tokens": 697,
-            "total_tokens": 8038,
+            "input_tokens": 7281,
+            "output_tokens": 708,
+            "total_tokens": 7989,
             "cached_input_tokens": 0,
             "reasoning_output_tokens": 0
           }
         }
       ],
       "quota_issue_detected": true,
-      "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmbzCahHsY4yMRwFASM'}"
+      "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn3FJNyyum7s6ygqLa3'}"
     }
   },
   "llm": {
@@ -464,28 +562,28 @@
     "provider": "openai",
     "model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 5237,
-      "output_tokens": 1202,
-      "total_tokens": 6439,
+      "input_tokens": 5230,
+      "output_tokens": 1206,
+      "total_tokens": 6436,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_36e1a6b071cf4ed7ab71cc46138c9563",
+    "request_id": "req_201fc01cdd534cf18fd275f4eb3549ac",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
         "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "195844",
+        "x-ratelimit-remaining-tokens": "195842",
         "x-ratelimit-reset-requests": "8.64s",
-        "x-ratelimit-reset-tokens": "1.246s"
+        "x-ratelimit-reset-tokens": "1.247s"
       },
       "estimates": {
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 195844,
-        "tokens_remaining_before_request_estimate": 202283
+        "tokens_remaining_after_request": 195842,
+        "tokens_remaining_before_request_estimate": 202278
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -501,40 +599,40 @@
         "workflow": "Trading Pipeline",
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
-        "run_id": "23386875942",
+        "run_id": "23386977734",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386875942",
-        "sha": "f897d2c0c8fe081570d075df566babdacff17a4c",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386977734",
+        "sha": "a95796b0f855eff1fbc4a4224b34b5aa11406c0e",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 28753.6,
+    "duration_ms": 33157.6,
     "attempts": [
       {
         "provider": "anthropic",
         "model": "claude-haiku-4-5-20251001",
         "status": "error",
-        "duration_ms": 85.7,
-        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmfjzBLNJYVwiLZ2ybD'}",
+        "duration_ms": 57.7,
+        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn5ys2DptU8py8dTQd5'}",
         "quota_issue_detected": true
       },
       {
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 28753.6,
+        "duration_ms": 33157.6,
         "usage": {
-          "input_tokens": 5237,
-          "output_tokens": 1202,
-          "total_tokens": 6439,
+          "input_tokens": 5230,
+          "output_tokens": 1206,
+          "total_tokens": 6436,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
       }
     ],
     "quota_issue_detected": true,
-    "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmfjzBLNJYVwiLZ2ybD'}",
-    "timestamp": "2026-03-21T19:23:48.787508+00:00",
+    "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn5ys2DptU8py8dTQd5'}",
+    "timestamp": "2026-03-21T19:29:22.012300+00:00",
     "phase": "monitor",
     "symbols": [
       "MU",
@@ -552,7 +650,7 @@
     "selected_model": "gpt-4o-mini-2024-07-18"
   },
   "context": {
-    "timestamp": "2026-03-21T19:23:02.330808+00:00",
+    "timestamp": "2026-03-21T19:28:36.423432+00:00",
     "phase": "research",
     "provider": "openai",
     "model": "gpt-4o-mini-2024-07-18",
@@ -571,7 +669,7 @@
     "prompt_sections": {
       "performance_feedback": "No trade history yet \u2014 this is the first run.",
       "learned_rules": "",
-      "artifact_context": "RECENT SAVED RESEARCH ARTIFACTS:\n- 2026-03-21 research 1854 [research] sentiment=neutral, regime=risk_off, best=UNH, ABBV\n  Strong calls: UNH buy 68%, ABBV buy 70%\n  Summary: The market is currently in a risk-off regime with the S&P 500 down 1.43% and a high VIX of 26.78. This calls for caution in trading decisions as volatility increases and the genera\n- 2026-03-21 research 1753 [research] sentiment=bullish, regime=risk_off, best=UNH, ABBV\n  Strong calls: UNH buy 68%, ABBV buy 70%\n  Summary: The market is currently in a risk-off regime with increased volatility, as indicated by a high VIX of 26.78 and a downtrend in major indices like the S&P 500 and Nasdaq. This neces\n- 2026-03-21 research 1748 [research] sentiment=neutral, regime=risk_off, best=UNH, ABBV\n  Strong calls: UNH buy 68%, ABBV buy 70%\n  Summary: The market is currently in a risk-off regime, with the S&P 500 down 1.43% and a high VIX indicating increased volatility. This necessitates a cautious approach in selecting trades,",
+      "artifact_context": "RECENT SAVED RESEARCH ARTIFACTS:\n- 2026-03-21 research 1923 [research] sentiment=bullish, regime=risk_off, best=UNH, MA\n  Strong calls: UNH buy 70%, MA buy 68%\n  Summary: The market is currently in a risk-off regime, marked by significant volatility with a high VIX at 26.78. Although the major indices are down, there are select stocks, particularly \n- 2026-03-21 research 1854 [research] sentiment=neutral, regime=risk_off, best=UNH, ABBV\n  Strong calls: UNH buy 68%, ABBV buy 70%\n  Summary: The market is currently in a risk-off regime with the S&P 500 down 1.43% and a high VIX of 26.78. This calls for caution in trading decisions as volatility increases and the genera\n- 2026-03-21 research 1753 [research] sentiment=bullish, regime=risk_off, best=UNH, ABBV\n  Strong calls: UNH buy 68%, ABBV buy 70%\n  Summary: The market is currently in a risk-off regime with increased volatility, as indicated by a high VIX of 26.78 and a downtrend in major indices like the S&P 500 and Nasdaq. This neces",
       "market_context": {
         "sp500": {
           "price": 648.57,
@@ -1053,7 +1151,7 @@
           }
         }
       },
-      "news_context": "MARKET HEADLINES:\n  - [rss] This 1 ETF Keeps Outrallying the SPY, While Also Losing Less During Downturns\n  - [rss] Who\u2019s Right on Arbor Realty? Insiders Load Up While Bears Circle\n  - [rss] NNN REIT\u2019s 36-Year Dividend Streak Meets Its Toughest Test Yet\n  - [rss] Small-Cap Oil Producer Hits 50 Consecutive Dividends With a 10.6% Yield, But the Cushion Is Thin [-1.0]\n  - [rss] Coinbase Launches 24/7 Perpetual Futures Trading for Major U.S. Stocks and ETFs\n  - [rss] Exchange-Traded Funds Decline as US Equities Point Lower After Midday [-1.0]\n\nPER-STOCK NEWS:\n\nMU (sentiment: neutral, score: +0.15, 5 sources):\n  - [finnhub] 2 Artificial Intelligence (AI) Stocks That Are Quietly Outperforming Micron Technology in 2026 With 76% and 82% Gains [+1.0]\n  - [finnhub] Investing.com\u2019s stocks of the week [+0.0]\n  - [finnhub] Micron\u2019s AI-Fueled Q2 Surge And Record Capex Plan Could Be A Game Changer For Micron Technology (MU) [+1.0]\n  - [finnhub] Stocks to Watch After Blowout Earnings: Micron, FedEx & More [+0.0]\n  SEC FILING: SEC 8-K: MU \u2014 Filed 2026-03-18 (2026-03-18)\n  Analysts: 36 Buy / 6 Hold / 1 Sell (consensus: strong_buy)\n  Insider activity: insider_selling (buys: 1, sells: 7)\n  UPCOMING: event on 2026-03-18\n\nINTC (sentiment: neutral, score: +0.12, 3 sources):\n  - [yfinance] Wall Street Analyst Warns of AI Bubble and Urges Investors to buy SaaS Stocks. 5 Stocks to Buy if He Is Right. [-1.0]\n  - [yfinance] A Once-in-a-Lifetime Opportunity: This Quantum Stock Looks Primed to Skyrocket [+0.0]\n  - [yfinance] 2 Great Dividend-Paying Oil Stocks to Buy as Oil Surges [+1.0]\n  - [yfinance] Realty Income Secures Another $1 Billion Partnership. Is This Top Monthly Dividend Stock a Buy? [+1.0]\n  Analysts: 9 Buy / 33 Hold / 6 Sell (consensus: hold)\n  Insider activity: mixed (buys: 1, sells: 1)\n  UPCOMING: event on 2026-04-23\n\nPANW (sentiment: neutral, score: -0.01):\n  - [finnhub] Palo Alto Networks Acquired 3 Companies in the Past Year. Here's Why Its Platformization Strategy Could Pay Off Big. [+0.0]\n  - [finnhub] Palo Alto Networks Stock Is Still Deeply Undervalued Based on its FCF - How to Play PANW [+0.0]\n  - [finnhub] PANW vs. OKTA: Which Cybersecurity Stock Has an Edge Right Now? [+0.0]\n  - [finnhub] Palo Alto Networks Faces Rising AI Cyber Threats And Investor Implications [+0.0]\n  Analysts: 46 Buy / 10 Hold / 1 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 6)\n  UPCOMING: event on 2026-05-20\n\nUNH (sentiment: bullish, score: +0.20, 3 sources):\n  - [finnhub] Market Madness: Palantir, Walmart, & other hot stock picks [+0.0]\n  - [finnhub] UnitedHealth Group (UNH) Announces National Expansion of Doula Offering [+0.0]\n  - [finnhub] The Zacks Analyst Blog Highlights Procter & Gamble, UnitedHealth, Wells Fargo and  Seneca Foods [+0.0]\n  - [finnhub] UnitedHealth Group (UNH) Sees a More Significant Dip Than Broader Market: Some Facts to Know [+0.0]\n  Analysts: 22 Buy / 5 Hold / 2 Sell (consensus: buy)\n  UPCOMING: event on 2026-04-21\n\nABT (sentiment: neutral, score: +0.19, 2 sources):\n  - [finnhub] Transformational Opportunities: UBS Suggests 2 Longevity Stocks to Buy as the $8T Aging Boom Accelerates [+0.0]\n  - [finnhub] Sector Update: Health Care Stocks Retreat Late Afternoon [+0.0]\n  - [finnhub] Abbott to close $21B Exact Sciences acquisition Monday [+1.0]\n  - [finnhub] 1 Magnificent Dividend Stock Down 22% That's a Screaming Buy Right Now [-1.0]\n  Analysts: 22 Buy / 7 Hold / 0 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 6)\n  UPCOMING: event on 2026-04-15\n\nHON (sentiment: neutral, score: +0.10, 4 sources):\n  - [finnhub] Why Companies Are Chopping Up Big Bond Deals Into Smaller Pieces [+1.0]\n  - [marketaux] Honeywell International Inc. (HON) Falls More Steeply Than Broader Market: What Investors Need to Know [-1.0]\n  - [finnhub] Why Did Honeywell Stock Just Drop? [+0.0]\n  - [finnhub] A New U.S. Facility Could Break China\u2019s Grip on Critical Materials [+0.0]\n  SEC FILING: SEC 8-K: HON \u2014 Filed 2026-03-16 (2026-03-16)\n  Analysts: 14 Buy / 9 Hold / 2 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 4)\n  UPCOMING: event on 2026-04-28\n\nLMT (sentiment: neutral, score: -0.09, 2 sources):\n  - [finnhub] Here's Why Lockheed Martin (LMT) Fell More Than Broader Market [+0.0]\n  - [finnhub] Here is What to Know Beyond Why Lockheed Martin Corporation (LMT) is a Trending Stock [+0.0]\n  - [finnhub] Lockheed Martin vs. Northrop Grumman: Who's Currently the Better Play? [+0.0]\n  - [finnhub] Lockheed Martin Bets On Neuromorphic AI Chips For Future Defense Edge [+0.0]\n  Analysts: 6 Buy / 14 Hold / 1 Sell (consensus: hold)\n  Insider activity: insider_selling (buys: 0, sells: 3)\n  UPCOMING: event on 2026-04-21\n\nHD (sentiment: neutral, score: +0.00, 3 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [finnhub] Is It Time To Reassess Home Depot (HD) After Recent Share Price Weakness? [-1.0]\n  - [finnhub] Home Depot Builds Pro Loyalty With New AI & Project Management Tools [+0.0]\n  - [yfinance] Home Depot to open 12 US stores in 2026 expansion [+0.0]\n  Analysts: 21 Buy / 15 Hold / 0 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 2)\n  UPCOMING: event on 2026-05-19\n\nMA (sentiment: bullish, score: +0.29, 3 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [finnhub] Oil Prices Are Bullish. Why Are Bets for a Fall Rising? [+1.0]\n  - [marketaux] Mastercard Incorporated (MA) and Visa Allowed to Appeal UK Ruling That Merchant Fees Breach Antitrust Law, Reuters Reports [+0.0]\n  - [finnhub] Could Buying Visa (V) Today Set You Up for Life? [+1.0]\n  Analysts: 34 Buy / 3 Hold / 0 Sell (consensus: strong_buy)\n  UPCOMING: event on 2026-04-30\n\nV (sentiment: bullish, score: +0.30, 4 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [marketaux] Mastercard Incorporated (MA) and Visa Allowed to Appeal UK Ruling That Merchant Fees Breach Antitrust Law, Reuters Reports [+0.0]\n  - [finnhub] Could Buying Visa (V) Today Set You Up for Life? [+1.0]\n  - [yfinance] Visa Inc. (V) Announces Launch of Visa Agentic Ready [+0.0]\n  Analysts: 35 Buy / 3 Hold / 0 Sell (consensus: strong_buy)\n  Insider activity: insider_selling (buys: 0, sells: 1)\n  UPCOMING: event on 2026-04-28\n\nNEWS-DRIVEN DISCOVERIES (stocks in the news today):\n  SPY: bearish sentiment (-1.00), price +0.0%\n    Headline: Small-Cap Oil Producer Hits 50 Consecutive Dividends With a 10.6% Yield, But the Cushion Is Thin\n    Why: rss: Small-Cap Oil Producer Hits 50 Consecutive Dividends With a \n  IWM: bearish sentiment (-1.00), price +0.0%\n    Headline: Exchange-Traded Funds Decline as US Equities Point Lower After Midday\n    Why: rss: Exchange-Traded Funds Decline as US Equities Point Lower Aft\n  QQQ: bearish sentiment (-1.00), price +0.0%\n    Headline: Exchange-Traded Funds Decline as US Equities Point Lower After Midday\n    Why: rss: Exchange-Traded Funds Decline as US Equities Point Lower Aft\n  DIA: bearish sentiment (-1.00), price +0.0%\n    Headline: The S&P Falls Close to 1% As Oil Blasts Past $100 A Barrel\n    Why: rss: The S&P Falls Close to 1% As Oil Blasts Past $100 A Barrel\n  XLF: bearish sentiment (-1.00), price +0.0%\n    Headline: Sector Update: Financial Stocks Lean Lower Premarket Friday\n    Why: rss: Sector Update: Financial Stocks Lean Lower Premarket Friday\n  MU: bullish sentiment (+0.60), price -4.8%\n    Headline: 2 Artificial Intelligence (AI) Stocks That Are Quietly Outperforming Micron Technology in 2026 With 76% and 82% Gains\n    Why: strong bullish news sentiment (+0.60) + significant price move (-4.8%) + high news volume (10 articles)\n  V: bullish sentiment (+0.60), price +0.6%\n    Headline: Visa Inc. (V) Announces Launch of Visa Agentic Ready\n    Why: strong bullish news sentiment (+0.60) + high news volume (10 articles)\n  MA: bullish sentiment (+0.60), price +1.1%\n    Headline: Oil Prices Are Bullish. Why Are Bets for a Fall Rising?\n    Why: strong bullish news sentiment (+0.60) + high news volume (10 articles)\n  LLY.DE: bullish sentiment (+0.32), price +0.0%\n    Headline: India is well positioned to attract future investments: Patrick Johnson, President, Lilly International\n    Why: Marketaux: India is well positioned to attract future investments: Patr\n  MSF.DE: bullish sentiment (+0.34), price +0.0%\n    Headline: RBC Capital and Jefferies Keep Bullish Ratings on Microsoft (MSFT)\n    Why: Marketaux: RBC Capital and Jefferies Keep Bullish Ratings on Microsoft ",
+      "news_context": "MARKET HEADLINES:\n  - [rss] This 1 ETF Keeps Outrallying the SPY, While Also Losing Less During Downturns\n  - [rss] Who\u2019s Right on Arbor Realty? Insiders Load Up While Bears Circle\n  - [rss] NNN REIT\u2019s 36-Year Dividend Streak Meets Its Toughest Test Yet\n  - [rss] Small-Cap Oil Producer Hits 50 Consecutive Dividends With a 10.6% Yield, But the Cushion Is Thin [-1.0]\n  - [rss] Coinbase Launches 24/7 Perpetual Futures Trading for Major U.S. Stocks and ETFs\n  - [rss] Exchange-Traded Funds Decline as US Equities Point Lower After Midday [-1.0]\n\nPER-STOCK NEWS:\n\nMU (sentiment: neutral, score: +0.15, 5 sources):\n  - [finnhub] 2 Artificial Intelligence (AI) Stocks That Are Quietly Outperforming Micron Technology in 2026 With 76% and 82% Gains [+1.0]\n  - [finnhub] Investing.com\u2019s stocks of the week [+0.0]\n  - [finnhub] Micron\u2019s AI-Fueled Q2 Surge And Record Capex Plan Could Be A Game Changer For Micron Technology (MU) [+1.0]\n  - [finnhub] Stocks to Watch After Blowout Earnings: Micron, FedEx & More [+0.0]\n  SEC FILING: SEC 8-K: MU \u2014 Filed 2026-03-18 (2026-03-18)\n  Analysts: 36 Buy / 6 Hold / 1 Sell (consensus: strong_buy)\n  Insider activity: insider_selling (buys: 1, sells: 7)\n  UPCOMING: event on 2026-03-18\n\nINTC (sentiment: neutral, score: +0.12, 3 sources):\n  - [yfinance] Wall Street Analyst Warns of AI Bubble and Urges Investors to buy SaaS Stocks. 5 Stocks to Buy if He Is Right. [-1.0]\n  - [yfinance] A Once-in-a-Lifetime Opportunity: This Quantum Stock Looks Primed to Skyrocket [+0.0]\n  - [yfinance] 2 Great Dividend-Paying Oil Stocks to Buy as Oil Surges [+1.0]\n  - [yfinance] Realty Income Secures Another $1 Billion Partnership. Is This Top Monthly Dividend Stock a Buy? [+1.0]\n  Analysts: 9 Buy / 33 Hold / 6 Sell (consensus: hold)\n  Insider activity: mixed (buys: 1, sells: 1)\n  UPCOMING: event on 2026-04-23\n\nPANW (sentiment: neutral, score: -0.01):\n  - [finnhub] Palo Alto Networks Acquired 3 Companies in the Past Year. Here's Why Its Platformization Strategy Could Pay Off Big. [+0.0]\n  - [finnhub] Palo Alto Networks Stock Is Still Deeply Undervalued Based on its FCF - How to Play PANW [+0.0]\n  - [finnhub] PANW vs. OKTA: Which Cybersecurity Stock Has an Edge Right Now? [+0.0]\n  - [finnhub] Palo Alto Networks Faces Rising AI Cyber Threats And Investor Implications [+0.0]\n  Analysts: 46 Buy / 10 Hold / 1 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 6)\n  UPCOMING: event on 2026-05-20\n\nUNH (sentiment: bullish, score: +0.20, 3 sources):\n  - [finnhub] Market Madness: Palantir, Walmart, & other hot stock picks [+0.0]\n  - [finnhub] UnitedHealth Group (UNH) Announces National Expansion of Doula Offering [+0.0]\n  - [finnhub] The Zacks Analyst Blog Highlights Procter & Gamble, UnitedHealth, Wells Fargo and  Seneca Foods [+0.0]\n  - [finnhub] UnitedHealth Group (UNH) Sees a More Significant Dip Than Broader Market: Some Facts to Know [+0.0]\n  Analysts: 22 Buy / 5 Hold / 2 Sell (consensus: buy)\n  UPCOMING: event on 2026-04-21\n\nABT (sentiment: neutral, score: +0.19, 2 sources):\n  - [finnhub] Transformational Opportunities: UBS Suggests 2 Longevity Stocks to Buy as the $8T Aging Boom Accelerates [+0.0]\n  - [finnhub] Sector Update: Health Care Stocks Retreat Late Afternoon [+0.0]\n  - [finnhub] Abbott to close $21B Exact Sciences acquisition Monday [+1.0]\n  - [finnhub] 1 Magnificent Dividend Stock Down 22% That's a Screaming Buy Right Now [-1.0]\n  Analysts: 22 Buy / 7 Hold / 0 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 6)\n  UPCOMING: event on 2026-04-15\n\nHON (sentiment: neutral, score: +0.10, 4 sources):\n  - [finnhub] Why Companies Are Chopping Up Big Bond Deals Into Smaller Pieces [+1.0]\n  - [marketaux] Honeywell International Inc. (HON) Falls More Steeply Than Broader Market: What Investors Need to Know [-1.0]\n  - [finnhub] Why Did Honeywell Stock Just Drop? [+0.0]\n  - [finnhub] A New U.S. Facility Could Break China\u2019s Grip on Critical Materials [+0.0]\n  SEC FILING: SEC 8-K: HON \u2014 Filed 2026-03-16 (2026-03-16)\n  Analysts: 14 Buy / 9 Hold / 2 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 4)\n  UPCOMING: event on 2026-04-28\n\nLMT (sentiment: neutral, score: -0.09, 2 sources):\n  - [finnhub] Here's Why Lockheed Martin (LMT) Fell More Than Broader Market [+0.0]\n  - [finnhub] Here is What to Know Beyond Why Lockheed Martin Corporation (LMT) is a Trending Stock [+0.0]\n  - [finnhub] Lockheed Martin vs. Northrop Grumman: Who's Currently the Better Play? [+0.0]\n  - [finnhub] Lockheed Martin Bets On Neuromorphic AI Chips For Future Defense Edge [+0.0]\n  Analysts: 6 Buy / 14 Hold / 1 Sell (consensus: hold)\n  Insider activity: insider_selling (buys: 0, sells: 3)\n  UPCOMING: event on 2026-04-21\n\nHD (sentiment: neutral, score: +0.00, 3 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [finnhub] Is It Time To Reassess Home Depot (HD) After Recent Share Price Weakness? [-1.0]\n  - [finnhub] Home Depot Builds Pro Loyalty With New AI & Project Management Tools [+0.0]\n  - [yfinance] Home Depot to open 12 US stores in 2026 expansion [+0.0]\n  Analysts: 21 Buy / 15 Hold / 0 Sell (consensus: buy)\n  Insider activity: insider_selling (buys: 0, sells: 2)\n  UPCOMING: event on 2026-05-19\n\nMA (sentiment: bullish, score: +0.29, 3 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [finnhub] Oil Prices Are Bullish. Why Are Bets for a Fall Rising? [+1.0]\n  - [marketaux] Mastercard Incorporated (MA) and Visa Allowed to Appeal UK Ruling That Merchant Fees Breach Antitrust Law, Reuters Reports [+0.0]\n  - [finnhub] Could Buying Visa (V) Today Set You Up for Life? [+1.0]\n  Analysts: 34 Buy / 3 Hold / 0 Sell (consensus: strong_buy)\n  UPCOMING: event on 2026-04-30\n\nV (sentiment: bullish, score: +0.39, 3 sources):\n  - [finnhub] The Only 3 Growth ETFs I Would Buy and Hold Through Any Market [+1.0]\n  - [marketaux] Mastercard Incorporated (MA) and Visa Allowed to Appeal UK Ruling That Merchant Fees Breach Antitrust Law, Reuters Reports [+0.0]\n  - [finnhub] Could Buying Visa (V) Today Set You Up for Life? [+1.0]\n  - [yfinance] Visa Inc. (V) Announces Launch of Visa Agentic Ready [+0.0]\n  Analysts: 35 Buy / 3 Hold / 0 Sell (consensus: strong_buy)\n  Insider activity: insider_selling (buys: 0, sells: 1)\n  UPCOMING: event on 2026-04-28\n\nNEWS-DRIVEN DISCOVERIES (stocks in the news today):\n  SPY: bearish sentiment (-1.00), price +0.0%\n    Headline: Small-Cap Oil Producer Hits 50 Consecutive Dividends With a 10.6% Yield, But the Cushion Is Thin\n    Why: rss: Small-Cap Oil Producer Hits 50 Consecutive Dividends With a \n  IWM: bearish sentiment (-1.00), price +0.0%\n    Headline: Exchange-Traded Funds Decline as US Equities Point Lower After Midday\n    Why: rss: Exchange-Traded Funds Decline as US Equities Point Lower Aft\n  QQQ: bearish sentiment (-1.00), price +0.0%\n    Headline: Exchange-Traded Funds Decline as US Equities Point Lower After Midday\n    Why: rss: Exchange-Traded Funds Decline as US Equities Point Lower Aft\n  DIA: bearish sentiment (-1.00), price +0.0%\n    Headline: The S&P Falls Close to 1% As Oil Blasts Past $100 A Barrel\n    Why: rss: The S&P Falls Close to 1% As Oil Blasts Past $100 A Barrel\n  XLF: bearish sentiment (-1.00), price +0.0%\n    Headline: Sector Update: Financial Stocks Lean Lower Premarket Friday\n    Why: rss: Sector Update: Financial Stocks Lean Lower Premarket Friday\n  MU: bullish sentiment (+0.60), price -4.8%\n    Headline: 2 Artificial Intelligence (AI) Stocks That Are Quietly Outperforming Micron Technology in 2026 With 76% and 82% Gains\n    Why: strong bullish news sentiment (+0.60) + significant price move (-4.8%) + high news volume (10 articles)\n  V: bullish sentiment (+0.60), price +0.6%\n    Headline: Visa Inc. (V) Announces Launch of Visa Agentic Ready\n    Why: strong bullish news sentiment (+0.60) + high news volume (10 articles)\n  MA: bullish sentiment (+0.60), price +1.1%\n    Headline: Oil Prices Are Bullish. Why Are Bets for a Fall Rising?\n    Why: strong bullish news sentiment (+0.60) + high news volume (10 articles)\n  LLY.DE: bullish sentiment (+0.32), price +0.0%\n    Headline: India is well positioned to attract future investments: Patrick Johnson, President, Lilly International\n    Why: Marketaux: India is well positioned to attract future investments: Patr",
       "news_inputs": {
         "per_symbol": {
           "MU": {
@@ -4865,445 +4963,11 @@
                   "change": -650,
                   "transaction_type": ""
                 }
-              },
-              {
-                "title": "Holos Integrated Wealth LLC Buys $605,000 Stake in Exxon Mobil",
-                "source": "alpha_vantage",
-                "published": "20260321T120554",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.111,
-                "category": "headline",
-                "url": "https://nationaltoday.com/us/ny/new-york/news/2026/03/21/holos-integrated-wealth-llc-buys-605-000-stake-in-exxon-mobil/",
-                "summary": "Holos Integrated Wealth LLC acquired a new stake of 4,932 shares in Exxon Mobil Corporation, valued at approximately $605,000, during the fourth quarter of 2025. This investment highlights continued investor interest in Exxon Mobil, one of the world's largest integrated oil and gas companies, and its role as a key indicator for the energy sector. The firm's move signals confidence in the company's performance and the broader industry.",
-                "publisher": "National Today",
-                "metadata": {
-                  "overall_sentiment": 0.174003,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "XOM": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.3109,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "BK": {
-                      "relevance": 0.7058,
-                      "sentiment_score": 0.1325,
-                      "sentiment_label": "Neutral"
-                    },
-                    "C": {
-                      "relevance": 0.6063,
-                      "sentiment_score": 0.1273,
-                      "sentiment_label": "Neutral"
-                    },
-                    "CMI": {
-                      "relevance": 0.6315,
-                      "sentiment_score": 0.1275,
-                      "sentiment_label": "Neutral"
-                    },
-                    "V": {
-                      "relevance": 0.6423,
-                      "sentiment_score": 0.1111,
-                      "sentiment_label": "Neutral"
-                    }
-                  },
-                  "topics": [
-                    "financial_markets",
-                    "energy_transportation"
-                  ]
-                }
-              },
-              {
-                "title": "PayPal rolls out PYUSD stablecoin across 70 markets beyond U.S.",
-                "source": "alpha_vantage",
-                "published": "20260321T031404",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.28,
-                "category": "headline",
-                "url": "https://mugglehead.com/paypal-rolls-out-pyusd-stablecoin-across-70-markets-beyond-u-s/",
-                "summary": "PayPal is expanding the reach of its dollar-backed stablecoin, PYUSD, to 70 markets outside the United States. This expansion aims to enhance the use of stablecoins in a global payments network for consumers and merchants, offering benefits like reduced costs and faster settlement for transactions. Users in these new regions can now utilize PYUSD within their PayPal accounts for various functions, further solidifying the company's push into digital payments.",
-                "publisher": "Mugglehead Magazine",
-                "metadata": {
-                  "overall_sentiment": 0.3206,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "PYPL": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.4594,
-                      "sentiment_label": "Bullish"
-                    },
-                    "MA": {
-                      "relevance": 0.7278,
-                      "sentiment_score": 0.2574,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.7221,
-                      "sentiment_score": 0.2804,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "blockchain",
-                    "finance",
-                    "technology"
-                  ]
-                }
-              },
-              {
-                "title": "Visa Expands Latin America Reach And Omnichannel Payments While Shares Lag Targets",
-                "source": "alpha_vantage",
-                "published": "20260319T200836",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": -0.105,
-                "category": "headline",
-                "url": "https://www.sahmcapital.com/news/content/visa-expands-latin-america-reach-and-omnichannel-payments-while-shares-lag-targets-2026-03-18",
-                "summary": "Visa (NYSE:V) is expanding its presence in Latin America through partnerships with Prisma Medios de Pago and Newpay in Argentina, and a global collaboration with Ingenico to enhance omnichannel payments. These strategic moves aim to strengthen Visa's core business in payment processing and merchant services. Despite these expansions, Visa's shares are trading below analyst targets and estimated fair value, with recent momentum showing a slight decline.",
-                "publisher": "Sahm",
-                "metadata": {
-                  "overall_sentiment": -0.120859,
-                  "overall_label": "Neutral",
-                  "ticker_sentiments": {
-                    "V": {
-                      "relevance": 1.0,
-                      "sentiment_score": -0.1052,
-                      "sentiment_label": "Neutral"
-                    }
-                  },
-                  "topics": [
-                    "mergers_and_acquisitions",
-                    "finance",
-                    "financial_markets"
-                  ]
-                }
-              },
-              {
-                "title": "Analysts Offer Insights on Financial Companies: Bread Financial Holdings (BFH), Visa (V) and Goldman Sachs Group (GS)",
-                "source": "alpha_vantage",
-                "published": "20260318T140832",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.468,
-                "category": "headline",
-                "url": "https://www.theglobeandmail.com/investing/markets/stocks/GS/pressreleases/820357/analysts-offer-insights-on-financial-companies-bread-financial-holdings-bfh-visa-v-and-goldman-sachs-group-gs/",
-                "summary": "Analysts from Bank of America Securities and Evercore ISI have provided bullish insights on several financial companies. Bread Financial Holdings (BFH) received a Buy rating with a potential 16.4% upside. Visa (V) was also rated Buy, with analysts projecting a 29.2% upside, and Goldman Sachs Group (GS) secured a Buy rating from Evercore ISI with a significant price target.",
-                "publisher": "The Globe and Mail",
-                "metadata": {
-                  "overall_sentiment": 0.425481,
-                  "overall_label": "Bullish",
-                  "ticker_sentiments": {
-                    "BFH": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.4607,
-                      "sentiment_label": "Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.8267,
-                      "sentiment_score": 0.4677,
-                      "sentiment_label": "Bullish"
-                    },
-                    "GS": {
-                      "relevance": 0.7361,
-                      "sentiment_score": 0.4984,
-                      "sentiment_label": "Bullish"
-                    },
-                    "BAC": {
-                      "relevance": 0.5779,
-                      "sentiment_score": 0.3068,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "MS": {
-                      "relevance": 0.5909,
-                      "sentiment_score": 0.3482,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "finance",
-                    "financial_markets"
-                  ]
-                }
-              },
-              {
-                "title": "SAP Concur Fusion 2026: New AI Capabilities and Partnerships",
-                "source": "alpha_vantage",
-                "published": "20260317T173946",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.293,
-                "category": "headline",
-                "url": "https://news.sap.com/2026/03/sap-concur-fusion-2026-ai-capabilities-integrated-travel-expense-enhancements-global-partnerships/",
-                "summary": "SAP announced new AI-enabled capabilities, travel and expense management enhancements, and expanded partnerships at SAP Concur Fusion 2026. Key developments include deeper integration of Joule with Microsoft 365 Copilot, new AI-powered expense agents for compliance and reporting, and innovations with American Express Global Business Travel and Visa for streamlined payments and expense creation. These updates aim to unify data, simplify workflows, and enhance productivity in travel and expense solutions.",
-                "publisher": "SAP News Center",
-                "metadata": {
-                  "overall_sentiment": 0.32418,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "SAP": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.4482,
-                      "sentiment_label": "Bullish"
-                    },
-                    "MSFT": {
-                      "relevance": 0.7073,
-                      "sentiment_score": 0.3209,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "AXP": {
-                      "relevance": 0.6182,
-                      "sentiment_score": 0.312,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.6168,
-                      "sentiment_score": 0.2934,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "AAPL": {
-                      "relevance": 0.6466,
-                      "sentiment_score": 0.2169,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "technology"
-                  ]
-                }
-              },
-              {
-                "title": "Fair Isaac Corp. stock outperforms competitors on strong trading day",
-                "source": "alpha_vantage",
-                "published": "20260317T170736",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.284,
-                "category": "headline",
-                "url": "http://www.msn.com/en-us/money/topstocks/fair-isaac-corp-stock-outperforms-competitors-on-strong-trading-day/ar-AA1YzBLQ?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
-                "summary": "Fair Isaac Corp. (FICO) stock saw a significant gain of 1.48% on a robust trading day, closing at $1290.72. This performance allowed it to outperform both its competitors and the broader market indices like the S&P 500 and Dow Jones Industrial Average.",
-                "publisher": "MSN",
-                "metadata": {
-                  "overall_sentiment": 0.307731,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "FICO": {
-                      "relevance": 0.978,
-                      "sentiment_score": 0.455,
-                      "sentiment_label": "Bullish"
-                    },
-                    "MA": {
-                      "relevance": 0.6631,
-                      "sentiment_score": 0.2813,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.6907,
-                      "sentiment_score": 0.2844,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "GPN": {
-                      "relevance": 0.6959,
-                      "sentiment_score": 0.2925,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "SPGI": {
-                      "relevance": 0.5612,
-                      "sentiment_score": 0.2395,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "financial_markets",
-                    "finance"
-                  ]
-                }
-              },
-              {
-                "title": "Mairs & Power Inc. Raises Stake in WEC Energy Group, Inc. $WEC",
-                "source": "alpha_vantage",
-                "published": "20260317T121536",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.222,
-                "category": "headline",
-                "url": "https://www.marketbeat.com/instant-alerts/filing-mairs-power-inc-raises-stake-in-wec-energy-group-inc-wec-2026-03-17/",
-                "summary": "Mairs & Power Inc. increased its stake in WEC Energy Group, Inc. by 20.2% in the third quarter, acquiring an additional 301,323 shares and bringing their total holdings to 1,793,851 shares valued at approximately $205.6 million. Despite insider sales totaling over $4.8 million in the last three months, institutional investors own 77.2% of the company. WEC Energy Group has a \"Moderate Buy\" consensus rating from analysts, with an average target price of $120.67, and recently exceeded quarterly EPS estimates by $0.03.",
-                "publisher": "MarketBeat",
-                "metadata": {
-                  "overall_sentiment": 0.326013,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "WEC": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.6002,
-                      "sentiment_label": "Bullish"
-                    },
-                    "PNC": {
-                      "relevance": 0.6064,
-                      "sentiment_score": 0.3442,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.6303,
-                      "sentiment_score": 0.2215,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "JPM": {
-                      "relevance": 0.6161,
-                      "sentiment_score": 0.2215,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "WFC": {
-                      "relevance": 0.6098,
-                      "sentiment_score": 0.2036,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "earnings",
-                    "financial_markets",
-                    "finance",
-                    "energy_transportation",
-                    "economy_macro"
-                  ]
-                }
-              },
-              {
-                "title": "Charles Schwab executive Dennis Howard joins Frontdoor board",
-                "source": "alpha_vantage",
-                "published": "20260317T121017",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.114,
-                "category": "headline",
-                "url": "https://www.stocktitan.net/news/FTDR/dennis-howard-joins-frontdoor-board-of-t4wkifr7fic1.html",
-                "summary": "Frontdoor, Inc. has announced the unanimous election of Dennis Howard, a managing director at Charles Schwab, to its board of directors and Audit Committee, effective immediately. Howard brings over 30 years of experience in information technology and cybersecurity from consumer-focused businesses. His expertise is expected to significantly contribute to Frontdoor's technological advancements and operational strategy.",
-                "publisher": "Stock Titan",
-                "metadata": {
-                  "overall_sentiment": 0.211657,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "FTDR": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.3043,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "SCHW": {
-                      "relevance": 0.7402,
-                      "sentiment_score": 0.2086,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.6439,
-                      "sentiment_score": 0.1135,
-                      "sentiment_label": "Neutral"
-                    }
-                  },
-                  "topics": [
-                    "finance",
-                    "technology"
-                  ]
-                }
-              },
-              {
-                "title": "Holocene Advisors LP Decreases Stock Holdings in Natera, Inc. $NTRA",
-                "source": "alpha_vantage",
-                "published": "20260317T100843",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.159,
-                "category": "headline",
-                "url": "https://www.marketbeat.com/instant-alerts/filing-holocene-advisors-lp-decreases-stock-holdings-in-natera-inc-ntra-2026-03-17/",
-                "summary": "Holocene Advisors LP significantly reduced its stake in Natera, Inc. (NASDAQ:NTRA) by 43.8% in the third quarter, selling over 250,000 shares. Despite this, other institutional investors like JPMorgan Chase & Co., Norges Bank, and Vanguard Group Inc. increased their positions, indicating mixed institutional sentiment. The article also highlights recent insider stock sales by Natera's CFO and CEO, totaling over $28 million.",
-                "publisher": "MarketBeat",
-                "metadata": {
-                  "overall_sentiment": 0.169266,
-                  "overall_label": "Somewhat-Bullish",
-                  "ticker_sentiments": {
-                    "NTRA": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.0393,
-                      "sentiment_label": "Neutral"
-                    },
-                    "JPM": {
-                      "relevance": 0.7049,
-                      "sentiment_score": 0.1763,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "BEN": {
-                      "relevance": 0.6193,
-                      "sentiment_score": 0.1651,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "MS": {
-                      "relevance": 0.5678,
-                      "sentiment_score": 0.1653,
-                      "sentiment_label": "Somewhat-Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.5436,
-                      "sentiment_score": 0.1593,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "earnings",
-                    "financial_markets",
-                    "life_sciences",
-                    "finance"
-                  ]
-                }
-              },
-              {
-                "title": "Banco Santander S.A. stock gains traction after strong EPS beat and AI pilot launch",
-                "source": "alpha_vantage",
-                "published": "20260317T073844",
-                "symbols": [
-                  "V"
-                ],
-                "sentiment": 0.336,
-                "category": "headline",
-                "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/banco-santander-s-a-stock-gains-traction-after-strong-eps-beat-and-ai/68699524",
-                "summary": "Banco Santander S.A.'s stock has gained significant traction following robust quarterly results, showcasing an EPS of $0.28 against expectations of $0.24, and launching an AI-powered payment pilot with Visa. This performance, combined with its stability, euro-denominated trading, and diversification across Europe and Latin America, positions the bank as an attractive defensive play for investors. The article highlights the bank's strong financial metrics, strategic technological integration, and investor relevance for DACH portfolios, despite acknowledging potential risks like interest rate re",
-                "publisher": "AD HOC NEWS",
-                "metadata": {
-                  "overall_sentiment": 0.426789,
-                  "overall_label": "Bullish",
-                  "ticker_sentiments": {
-                    "SAN": {
-                      "relevance": 1.0,
-                      "sentiment_score": 0.5362,
-                      "sentiment_label": "Bullish"
-                    },
-                    "V": {
-                      "relevance": 0.6466,
-                      "sentiment_score": 0.3359,
-                      "sentiment_label": "Somewhat-Bullish"
-                    }
-                  },
-                  "topics": [
-                    "earnings",
-                    "finance",
-                    "financial_markets",
-                    "economy_monetary",
-                    "technology"
-                  ]
-                }
               }
             ],
-            "sentiment_score": 0.3,
+            "sentiment_score": 0.39,
             "sentiment": "bullish",
-            "source_count": 4,
+            "source_count": 3,
             "analyst_recommendations": {
               "strong_buy": 7,
               "buy": 28,
@@ -5687,16 +5351,6 @@
             "price_change_pct": 0,
             "price": 0,
             "discovery_reason": "Marketaux: India is well positioned to attract future investments: Patr"
-          },
-          {
-            "symbol": "MSF.DE",
-            "news_sentiment": 0.34,
-            "sentiment_label": "bullish",
-            "headline_count": 1,
-            "top_headline": "RBC Capital and Jefferies Keep Bullish Ratings on Microsoft (MSFT)",
-            "price_change_pct": 0,
-            "price": 0,
-            "discovery_reason": "Marketaux: RBC Capital and Jefferies Keep Bullish Ratings on Microsoft "
           }
         ],
         "hot_stocks": [],
@@ -5849,8 +5503,8 @@
           "V"
         ],
         "total_scanned": 70,
-        "candidates_found": 77,
-        "news_discovered": 10,
+        "candidates_found": 76,
+        "news_discovered": 9,
         "hot_stocks_count": 0
       }
     },
@@ -5860,28 +5514,28 @@
       "provider": "openai",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
-        "input_tokens": 7341,
-        "output_tokens": 697,
-        "total_tokens": 8038,
+        "input_tokens": 7281,
+        "output_tokens": 708,
+        "total_tokens": 7989,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       },
       "service_tier": "default",
-      "request_id": "req_4c02771a5e384825a25f6cb0f0b0f012",
+      "request_id": "req_bb443af2491e461e8f3e3aab641d11bb",
       "rate_limits": {
         "headers": {
           "x-ratelimit-limit-requests": "10000",
           "x-ratelimit-limit-tokens": "200000",
           "x-ratelimit-remaining-requests": "9999",
-          "x-ratelimit-remaining-tokens": "194039",
+          "x-ratelimit-remaining-tokens": "194093",
           "x-ratelimit-reset-requests": "8.64s",
-          "x-ratelimit-reset-tokens": "1.788s"
+          "x-ratelimit-reset-tokens": "1.772s"
         },
         "estimates": {
           "requests_remaining_after_request": 9999,
           "requests_remaining_before_request_estimate": 10000,
-          "tokens_remaining_after_request": 194039,
-          "tokens_remaining_before_request_estimate": 202077
+          "tokens_remaining_after_request": 194093,
+          "tokens_remaining_before_request_estimate": 202082
         },
         "billing_balance_before_workflow": {
           "available": false,
@@ -5897,39 +5551,39 @@
           "workflow": "Trading Pipeline",
           "event_name": "workflow_dispatch",
           "actor": "Aashay-chaudhari",
-          "run_id": "23386875942",
+          "run_id": "23386977734",
           "run_attempt": "1",
-          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386875942",
-          "sha": "f897d2c0c8fe081570d075df566babdacff17a4c",
+          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23386977734",
+          "sha": "a95796b0f855eff1fbc4a4224b34b5aa11406c0e",
           "ref": "refs/heads/main"
         }
       },
-      "duration_ms": 32531.3,
+      "duration_ms": 24292.8,
       "attempts": [
         {
           "provider": "anthropic",
           "model": "claude-sonnet-4-6",
           "status": "error",
-          "duration_ms": 423.5,
-          "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmbzCahHsY4yMRwFASM'}",
+          "duration_ms": 52.1,
+          "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn3FJNyyum7s6ygqLa3'}",
           "quota_issue_detected": true
         },
         {
           "provider": "openai",
           "model": "gpt-4o-mini",
           "status": "success",
-          "duration_ms": 32531.3,
+          "duration_ms": 24292.8,
           "usage": {
-            "input_tokens": 7341,
-            "output_tokens": 697,
-            "total_tokens": 8038,
+            "input_tokens": 7281,
+            "output_tokens": 708,
+            "total_tokens": 7989,
             "cached_input_tokens": 0,
             "reasoning_output_tokens": 0
           }
         }
       ],
       "quota_issue_detected": true,
-      "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGmbzCahHsY4yMRwFASM'}"
+      "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGn3FJNyyum7s6ygqLa3'}"
     }
   },
   "reports": {
