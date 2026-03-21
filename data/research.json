@@ -1,6 +1,6 @@
 {
-  "overall_sentiment": "neutral",
-  "market_summary": "The market is currently in a risk-off regime, with the S&P 500 down 1.43% and a high VIX indicating increased volatility. This necessitates a cautious approach in selecting trades, as the overall sentiment remains bearish.",
+  "overall_sentiment": "bullish",
+  "market_summary": "The market is currently in a risk-off regime with increased volatility, as indicated by a high VIX of 26.78 and a downtrend in major indices like the S&P 500 and Nasdaq. This necessitates cautious trading, targeting stocks with potential bullish reversals based on technical setups and recent news.",
   "market_regime": "risk_off",
   "best_opportunities": [
     "UNH",
@@ -8,44 +8,44 @@
   ],
   "stocks": {
     "UNH": {
-      "sentiment": "neutral",
+      "sentiment": "bullish",
       "confidence": 0.68,
       "key_observations": [
-        "Price is currently at $275.59, which is 7.10% below the 50-day SMA of $296.64.",
-        "RSI at 40.5 indicates the stock is nearing oversold territory."
+        "UNH shows a bullish MACD signal despite a price decline today, indicating a potential reversal.",
+        "The stock is close to the lower Bollinger Band suggesting it may be oversold."
       ],
-      "news_impact": "neutral",
-      "news_summary": "Recent news discusses the national expansion of certain healthcare offerings, which could support price stabilization.",
-      "technical_setup": "The stock is in a downtrend but close to oversold conditions, suggesting potential stabilization at current price levels.",
+      "news_impact": "positive",
+      "news_summary": "Recent expansion news, including the introduction of a national doula offering, could support price recovery.",
+      "technical_setup": "UNH is in a downtrend with support at $275.00; the price is trading below both the 20 and 50-day SMA, which may indicate a buying opportunity close to support.",
       "recommendation": "buy",
       "trade_plan": {
         "entry": 274.0,
         "stop_loss": 270.0,
-        "target": 290.0,
+        "target": 285.0,
         "risk_reward_ratio": 3.0,
         "position_size_pct": 2.0,
         "timeframe": "swing_1_2_weeks"
       },
       "catalysts": [
-        "Positive news about the expansion of services",
-        "Possible sector recovery in healthcare"
+        "Positive expansion news",
+        "Upcoming earnings announcement on April 21, 2026"
       ],
       "risks": [
-        "Market may continue to decline affecting all sectors",
-        "Earnings date approaching, which may impact stock before trade can mature"
+        "Continued market volatility",
+        "Disappointment in upcoming earnings"
       ],
       "earnings_warning": true
     },
     "ABBV": {
-      "sentiment": "neutral",
+      "sentiment": "bullish",
       "confidence": 0.7,
       "key_observations": [
-        "ABBV is oversold with an RSI of 27.6, indicating a potential reversal.",
-        "Current price of $205.07 is 8.79% below the 20-day SMA of $224.82."
+        "ABBV is currently oversold with an RSI of 27.6, indicating potential for a bullish reversal.",
+        "Price is significantly below its 20-day and 50-day SMA, which may present a buying opportunity."
       ],
       "news_impact": "positive",
-      "news_summary": "The stock is viewed favorably due to ongoing developments in immunology partnerships.",
-      "technical_setup": "The stock shows oversold signals and has potential for a bounce back.",
+      "news_summary": "Analysts suggest AbbVie's innovative partnerships could lead to growth, supporting a bullish outlook.",
+      "technical_setup": "ABBV is in a downtrend but experiences high interest due to recent partnerships; current price near $205.00 is approaching critical support.",
       "recommendation": "buy",
       "trade_plan": {
         "entry": 204.0,
@@ -56,31 +56,31 @@
         "timeframe": "swing_1_2_weeks"
       },
       "catalysts": [
-        "Positive sentiment from insider news and upcoming product launches",
-        "Recovery in the healthcare sector"
+        "Analyst upgrades",
+        "Innovations in product development"
       ],
       "risks": [
-        "General market risk with current volatility",
-        "Potential earnings report may create uncertainty"
+        "Sector-specific headwinds",
+        "Market declines affecting price"
       ],
       "earnings_warning": true
     }
   },
-  "self_reflection": "Based on my analysis of the current market conditions and confidence levels, I should maintain caution in adding new positions and focus on well-defined setups with clear risk management.",
+  "self_reflection": "I am confident in my analysis of both UNH and ABBV given their favorable technical setups and news catalysts. However, I recognize the necessity to remain cautious and adjust my confidence on future picks based on how these trades perform amid high market volatility.",
   "_meta": {
     "status": "success",
     "provider_preference": "openai",
     "provider": "openai",
     "model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 6719,
-      "output_tokens": 686,
-      "total_tokens": 7405,
+      "input_tokens": 6715,
+      "output_tokens": 728,
+      "total_tokens": 7443,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_e610abeb58134892b016531b05c964b2",
+    "request_id": "req_cb8bf8d1c83746f3968a0ef302ece01b",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
@@ -94,7 +94,7 @@
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
         "tokens_remaining_after_request": 194482,
-        "tokens_remaining_before_request_estimate": 201887
+        "tokens_remaining_before_request_estimate": 201925
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -110,24 +110,24 @@
         "workflow": "Trading Pipeline",
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
-        "run_id": "23385202363",
+        "run_id": "23385277549",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23385202363",
-        "sha": "38734469b9284ab3ae1bc3738947f5d321a46c9a",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23385277549",
+        "sha": "b4a39062c275b320042739e320e29d03c3418db2",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 27285.5,
+    "duration_ms": 29687.9,
     "attempts": [
       {
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 27285.5,
+        "duration_ms": 29687.9,
         "usage": {
-          "input_tokens": 6719,
-          "output_tokens": 686,
-          "total_tokens": 7405,
+          "input_tokens": 6715,
+          "output_tokens": 728,
+          "total_tokens": 7443,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
