@@ -1,0 +1,137 @@
+{
+  "overall_sentiment": "neutral",
+  "market_summary": "The current market is in a risk-off regime with the S&P 500 declining 1.43% today and the VIX at 26.78, indicating high volatility. This suggests a cautious approach is necessary when considering new positions.",
+  "market_regime": "risk_off",
+  "best_opportunities": [
+    "UNH",
+    "ABBV"
+  ],
+  "stocks": {
+    "UNH": {
+      "sentiment": "neutral",
+      "confidence": 0.68,
+      "key_observations": [
+        "Currently trading at $275.59, it is down 1.73% today and has an RSI of 40.5, indicating it is nearing oversold territory.",
+        "The stock is below both the 20-day SMA ($283.75) and the 50-day SMA ($296.63), signaling a potential reversal if it can hold above support."
+      ],
+      "news_impact": "neutral",
+      "news_summary": "Recent expansions in offering without significant price catalysts noted.",
+      "technical_setup": "The stock has been in a downtrend but is approaching near-term support in the $270-$275 range, which could act as a reversal point if held.",
+      "recommendation": "buy",
+      "trade_plan": {
+        "entry": 275.0,
+        "stop_loss": 265.0,
+        "target": 295.0,
+        "risk_reward_ratio": 2.0,
+        "position_size_pct": 5.0,
+        "timeframe": "swing_1_2_weeks"
+      },
+      "catalysts": [
+        "Potential recovery as market stabilizes and healthcare sector responds positively to broader economic news."
+      ],
+      "risks": [
+        "Overall market continues to decline, deeper losses could occur.",
+        "Earnings upcoming may add volatility."
+      ],
+      "earnings_warning": true
+    },
+    "ABBV": {
+      "sentiment": "bullish",
+      "confidence": 0.7,
+      "key_observations": [
+        "Currently at $205.07 with an RSI of 27.6, which is considered oversold, potentially indicating a reversion to the mean.",
+        "It is trading significantly below both the 20-day and 50-day SMAs, indicating strong selling pressure."
+      ],
+      "news_impact": "positive",
+      "news_summary": "Analysts bullish on future potential with positive news sentiment around recent deals.",
+      "technical_setup": "The stock is at a significant support level around $205, which could lead to a price rebound if buyers step in.",
+      "recommendation": "buy",
+      "trade_plan": {
+        "entry": 205.0,
+        "stop_loss": 195.0,
+        "target": 225.0,
+        "risk_reward_ratio": 2.0,
+        "position_size_pct": 5.0,
+        "timeframe": "swing_1_2_weeks"
+      },
+      "catalysts": [
+        "Strong recovery potential based on oversold conditions and upcoming earnings may provide a catalyst."
+      ],
+      "risks": [
+        "Continued sector weakness could suppress price further.",
+        "Negative earnings results or guidance could impact stock performance."
+      ],
+      "earnings_warning": true
+    }
+  },
+  "self_reflection": "Confidence calibration appears aligned with current market conditions; however, increased caution is advisable given the volatility and current market regime. Future assessments may require more conservative estimates to avoid potential overconfidence in bullish setups.",
+  "_meta": {
+    "status": "success",
+    "provider_preference": "openai",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "usage": {
+      "input_tokens": 6705,
+      "output_tokens": 746,
+      "total_tokens": 7451,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "service_tier": "default",
+    "request_id": "req_34074ea361344536a1c5a2bf3a81fac8",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-tokens": "194491",
+        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-tokens": "1.652s"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
+        "tokens_remaining_after_request": 194491,
+        "tokens_remaining_before_request_estimate": 201942
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "workflow_dispatch",
+        "actor": "Aashay-chaudhari",
+        "run_id": "23384803861",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23384803861",
+        "sha": "b4adb2a4361cdb7f61376f596c643a6ba2fd5763",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": 12066.6,
+    "attempts": [
+      {
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "status": "success",
+        "duration_ms": 12066.6,
+        "usage": {
+          "input_tokens": 6705,
+          "output_tokens": 746,
+          "total_tokens": 7451,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
+  }
+}
