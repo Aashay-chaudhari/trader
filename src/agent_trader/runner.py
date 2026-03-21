@@ -14,6 +14,7 @@ from agent_trader.agents import (
 )
 from agent_trader.agents.news_agent import NewsAgent
 from agent_trader.config.settings import Settings, get_settings, reset_settings
+from agent_trader.utils.profiles import ensure_profile_metadata
 
 console = Console()
 
@@ -22,6 +23,7 @@ def build_system(settings: Settings | None = None) -> tuple[Orchestrator, Settin
     """Create and wire up all agents."""
     reset_settings()
     settings = settings or get_settings()
+    ensure_profile_metadata(settings)
 
     console.print("[bold]Building trading system...[/bold]")
 

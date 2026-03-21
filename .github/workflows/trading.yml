@@ -1,59 +1,55 @@
-# Two-phase trading pipeline running on GitHub Actions (free tier).
+# Dual-strategist trading pipeline running on GitHub Actions.
 #
-# Phase 1 - Morning Research (9:00 AM ET = 14:00 UTC):
-#   Screens stocks, fetches data, runs Claude analysis.
-#   Produces today's watchlist and research insights.
+# Each scheduled/manual run executes two independent strategist books:
+#   1. Claude CLI primary, Anthropic API fallback
+#   2. Codex CLI primary, OpenAI API fallback
 #
-# Phase 2 - Monitor & Trade (every 30 min from 9:30 AM - 4:00 PM ET):
-#   Refreshes prices, checks for signals, executes approved trades.
-#   Each run is logged to the trade journal.
-#
-# Budget: ~15 runs/day × ~1.5 min = ~22 min/day × 20 trading days = ~450 min/month
-# Well within GitHub's free 2000 min/month.
+# Their artifacts are stored separately under data/profiles/<strategist>/ and
+# then merged into one dashboard deployment for GitHub Pages comparison.
 
 name: Trading Pipeline
 
 on:
   schedule:
     # Phase 1: Morning research at 9:00 AM ET (14:00 UTC) weekdays
-    - cron: '0 14 * * 1-5'
+    - cron: "0 14 * * 1-5"
 
     # Phase 2: Monitor every 30 min from 9:30 AM - 4:00 PM ET
     # (14:30 - 21:00 UTC) weekdays
-    - cron: '30 14 * * 1-5'
-    - cron: '0 15 * * 1-5'
-    - cron: '30 15 * * 1-5'
-    - cron: '0 16 * * 1-5'
-    - cron: '30 16 * * 1-5'
-    - cron: '0 17 * * 1-5'
-    - cron: '30 17 * * 1-5'
-    - cron: '0 18 * * 1-5'
-    - cron: '30 18 * * 1-5'
-    - cron: '0 19 * * 1-5'
-    - cron: '30 19 * * 1-5'
-    - cron: '0 20 * * 1-5'
-    - cron: '30 20 * * 1-5'
+    - cron: "30 14 * * 1-5"
+    - cron: "0 15 * * 1-5"
+    - cron: "30 15 * * 1-5"
+    - cron: "0 16 * * 1-5"
+    - cron: "30 16 * * 1-5"
+    - cron: "0 17 * * 1-5"
+    - cron: "30 17 * * 1-5"
+    - cron: "0 18 * * 1-5"
+    - cron: "30 18 * * 1-5"
+    - cron: "0 19 * * 1-5"
+    - cron: "30 19 * * 1-5"
+    - cron: "0 20 * * 1-5"
+    - cron: "30 20 * * 1-5"
 
   workflow_dispatch:
     inputs:
       phase:
-        description: 'Which phase to run'
+        description: "Which phase to run"
         required: true
-        default: 'run'
+        default: "run"
         type: choice
         options:
           - research
           - monitor
           - run
-      llm_provider:
-        description: 'Preferred LLM provider'
-        required: false
-        default: 'auto'
+      strategists:
+        description: "Which strategist books to run"
+        required: true
+        default: "both"
         type: choice
         options:
-          - auto
-          - anthropic
-          - openai
+          - both
+          - claude
+          - codex
 
 permissions:
   contents: write
@@ -61,39 +57,80 @@ permissions:
   id-token: write
 
 jobs:
-  trade:
+  determine-phase:
     runs-on: ubuntu-latest
+    outputs:
+      phase: ${{ steps.phase.outputs.phase }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: pip install -e .
-
       - name: Determine phase
         id: phase
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "phase=${{ inputs.phase }}" >> $GITHUB_OUTPUT
+            echo "phase=${{ inputs.phase }}" >> "$GITHUB_OUTPUT"
           else
-            # Check current UTC hour to determine phase
             HOUR=$(date -u +%H)
             MINUTE=$(date -u +%M)
             if [ "$HOUR" = "14" ] && [ "$MINUTE" -lt "30" ]; then
-              echo "phase=research" >> $GITHUB_OUTPUT
+              echo "phase=research" >> "$GITHUB_OUTPUT"
             else
-              echo "phase=monitor" >> $GITHUB_OUTPUT
+              echo "phase=monitor" >> "$GITHUB_OUTPUT"
             fi
           fi
 
-      - name: Run trading pipeline
+  strategist-run:
+    needs: determine-phase
+    if: github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == matrix.profile_id
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile_id: claude
+            profile_label: Claude Strategist
+            cli_provider: claude
+            llm_provider: anthropic
+            npm_package: "@anthropic-ai/claude-code@latest"
+            version_command: "claude --version"
+          - profile_id: codex
+            profile_label: Codex Strategist
+            cli_provider: codex
+            llm_provider: openai
+            npm_package: "@openai/codex@latest"
+            version_command: "codex --version"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Install strategist CLI
+        run: |
+          npm install -g "${{ matrix.npm_package }}"
+          ${{ matrix.version_command }}
+
+      - name: Authenticate Codex CLI with API key
+        if: matrix.cli_provider == 'codex'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$OPENAI_API_KEY"
+          printf '%s' "$OPENAI_API_KEY" | codex login --with-api-key
+          codex login status
+
+      - name: Run strategist pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -104,46 +141,85 @@ jobs:
           SEC_EDGAR_USER_AGENT: ${{ secrets.SEC_EDGAR_USER_AGENT }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
-          LLM_PROVIDER: ${{ inputs.llm_provider || vars.LLM_PROVIDER || 'auto' }}
+          DATA_DIR: data/profiles/${{ matrix.profile_id }}
+          AGENT_PROFILE: ${{ matrix.profile_id }}
+          AGENT_LABEL: ${{ matrix.profile_label }}
           DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
-        run: python -m agent_trader ${{ steps.phase.outputs.phase }}
+          USE_CLI_AGENT: "true"
+          CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
+          CLI_AGENT_MAX_TURNS: ${{ vars.CLI_AGENT_MAX_TURNS || '5' }}
+          CLI_AGENT_TIMEOUT: ${{ vars.CLI_AGENT_TIMEOUT || '300' }}
+          LLM_PROVIDER: ${{ matrix.llm_provider }}
+        run: python -m agent_trader ${{ needs.determine-phase.outputs.phase }}
 
-      - name: Generate dashboard
-        run: python -m agent_trader dashboard
-
-      - name: Build artifact stamp
-        id: artifact_stamp
+      - name: Check strategist analysis mode used
         if: always()
-        run: echo "stamp=$(date -u +%Y-%m-%dT%H%MZ)" >> $GITHUB_OUTPUT
+        env:
+          DATA_DIR: data/profiles/${{ matrix.profile_id }}
+          AGENT_PROFILE: ${{ matrix.profile_id }}
+          AGENT_LABEL: ${{ matrix.profile_label }}
+        run: python -m agent_trader.utils.check_mode
 
-      - name: Upload trading artifacts
+      - name: Upload strategist artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agent-trader-${{ steps.phase.outputs.phase }}-${{ steps.artifact_stamp.outputs.stamp }}
-          path: |
-            data/journal/
-            data/research/
-            data/context/
-            data/analytics/
-            data/cache/
-            docs/data/
+          name: strategist-${{ matrix.profile_id }}-${{ needs.determine-phase.outputs.phase }}
+          path: data/profiles/${{ matrix.profile_id }}/
           if-no-files-found: warn
           retention-days: 30
+
+  publish-results:
+    needs:
+      - determine-phase
+      - strategist-run
+    if: always() && needs.determine-phase.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Pull latest
+        run: git pull --ff-only origin main || true
+
+      - name: Clean previous strategist bundles
+        run: |
+          rm -rf data/profiles/claude data/profiles/codex docs/data/profiles
+          mkdir -p data/profiles docs/data
+
+      - name: Download strategist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: strategist-*-${{ needs.determine-phase.outputs.phase }}
+          path: .
+          merge-multiple: true
+
+      - name: Generate merged dashboard
+        run: python -m agent_trader dashboard
 
       - name: Commit results
         run: |
           git config user.name "Agent Trader Bot"
           git config user.email "bot@agent-trader"
-          git add data/ docs/
-          git diff --staged --quiet || git commit -m "[${{ steps.phase.outputs.phase }}] $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+          git add -A data/profiles docs/
+          git diff --staged --quiet || git commit -m "[${{ needs.determine-phase.outputs.phase }}] $(date -u +%Y-%m-%d\ %H:%M\ UTC) dual-strategist update"
           git push
 
   deploy-dashboard:
-    needs: trade
+    needs: publish-results
     runs-on: ubuntu-latest
-    # Deploy on every manual trigger and on the last monitor run of the day
-    if: github.event_name == 'workflow_dispatch' || (github.event.schedule == '30 20 * * 1-5')
+    if: needs.publish-results.result == 'success' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '30 20 * * 1-5')
     permissions:
       pages: write
       id-token: write
@@ -156,7 +232,7 @@ jobs:
           ref: main
           fetch-depth: 1
 
-      - name: Pull latest (trade job may have pushed)
+      - name: Pull latest
         run: git pull --ff-only origin main || true
 
       - name: Upload Pages artifact

@@ -145,7 +145,10 @@ def test_generate_dashboard_writes_context_rich_bundle():
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
         assert "Decision board" in html
+        assert "Strategist Arena" in html
         assert "News influence explorer" in html
+        assert bundle["profiles"]["default"]["profile"]["id"] == "default"
+        assert bundle["comparison"]["summary"][0]["profile"] == "default"
         assert bundle["context"]["prompt_sections"]["news_inputs"]["per_symbol"]["ABBV"]["news_headlines"][0]["title"] == (
             "AbbVie signs new antibody discovery deal"
         )
@@ -214,3 +217,105 @@ def test_generate_dashboard_backfills_legacy_news_context():
             "AbbVie signs antibody discovery deal"
         )
         assert news_inputs["news_discoveries"][0]["symbol"] == "ABBV"
+
+
+def test_generate_dashboard_merges_multiple_profiles():
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        for profile_id, label, provider, portfolio_value in (
+            ("claude", "Claude Strategist", "anthropic", 101250.0),
+            ("codex", "Codex Strategist", "openai", 100400.0),
+        ):
+            profile_root = data_dir / "profiles" / profile_id
+            (profile_root / "snapshots").mkdir(parents=True)
+            (profile_root / "research").mkdir(parents=True)
+            (profile_root / "analytics").mkdir(parents=True)
+            (profile_root / "context").mkdir(parents=True)
+            (profile_root / "journal" / "2026-03-21").mkdir(parents=True)
+
+            (profile_root / "profile.json").write_text(
+                json.dumps({"id": profile_id, "label": label}),
+                encoding="utf-8",
+            )
+            (profile_root / "snapshots" / "latest.json").write_text(
+                json.dumps(
+                    {
+                        "timestamp": f"2026-03-21T1{8 if profile_id == 'claude' else 7}:00:00Z",
+                        "profile": profile_id,
+                        "profile_label": label,
+                        "portfolio_value": portfolio_value,
+                        "cash": 90000.0,
+                        "invested": 10000.0,
+                        "total_pnl": portfolio_value - 100000.0,
+                        "total_pnl_pct": round((portfolio_value - 100000.0) / 1000, 2),
+                        "positions": [],
+                        "position_count": 0,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (profile_root / "snapshots" / "history.json").write_text(
+                json.dumps(
+                    [
+                        {
+                            "timestamp": "2026-03-21T16:00:00Z",
+                            "portfolio_value": 100000.0,
+                        },
+                        {
+                            "timestamp": f"2026-03-21T1{8 if profile_id == 'claude' else 7}:00:00Z",
+                            "portfolio_value": portfolio_value,
+                        },
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            (profile_root / "research" / f"2026-03-21_{profile_id}.json").write_text(
+                json.dumps(
+                    {
+                        "market_summary": f"{label} summary",
+                        "best_opportunities": ["ABBV" if profile_id == "claude" else "MSFT"],
+                        "stocks": {},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (profile_root / "analytics" / "latest_llm.json").write_text(
+                json.dumps({"selected_provider": provider, "selected_model": f"{provider}-model"}),
+                encoding="utf-8",
+            )
+            (profile_root / "context" / "latest_research.json").write_text(
+                json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+                encoding="utf-8",
+            )
+            (profile_root / "journal" / "2026-03-21" / f"{profile_id}_research_report.json").write_text(
+                json.dumps({"run_id": f"{profile_id}-run", "phase": "research"}),
+                encoding="utf-8",
+            )
+            (profile_root / "journal" / "2026-03-21" / f"{profile_id}_research_report.md").write_text(
+                f"# {label} report",
+                encoding="utf-8",
+            )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        claude_bundle = json.loads(
+            (docs_dir / "data" / "profiles" / "claude" / "dashboard.json").read_text(encoding="utf-8")
+        )
+        codex_bundle = json.loads(
+            (docs_dir / "data" / "profiles" / "codex" / "dashboard.json").read_text(encoding="utf-8")
+        )
+
+        assert set(bundle["profiles"]) == {"claude", "codex"}
+        assert bundle["active_profile"] == "claude"
+        assert bundle["comparison"]["leaders"]["portfolio_value"] == "claude"
+        assert {item["profile"] for item in bundle["comparison"]["summary"]} == {"claude", "codex"}
+        assert claude_bundle["profile"]["label"] == "Claude Strategist"
+        assert codex_bundle["profile"]["label"] == "Codex Strategist"
+        assert (docs_dir / "data" / "profiles" / "claude" / "report_research.md").exists()
+        assert (docs_dir / "data" / "profiles" / "codex" / "report_research.md").exists()

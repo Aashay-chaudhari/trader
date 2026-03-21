@@ -37,6 +37,15 @@ class Settings(BaseSettings):
     monitor_model: str = "claude-haiku-4-5-20251001"
     research_model_openai: str = "gpt-4o-mini"
 
+    # --- CLI Agent Mode ---
+    # When True, use Claude Code CLI (claude -p) instead of direct API calls.
+    # The CLI agent can explore the full repo for historical context.
+    # Falls back to direct API call if CLI is not available.
+    use_cli_agent: bool = False          # Set to True to enable CLI agent mode
+    cli_agent_provider: str = "claude"   # "claude" or "codex"
+    cli_agent_max_turns: int = 5         # Max agent iterations (controls cost)
+    cli_agent_timeout: int = 300         # Max seconds before timeout
+
     # --- Trading Config ---
     watchlist: list[str] = Field(
         default=["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"],
@@ -55,6 +64,8 @@ class Settings(BaseSettings):
     # --- Paths ---
     data_dir: str = "data"
     log_dir: str = "logs"
+    agent_profile: str = "default"
+    agent_label: str = ""
 
     # --- Schedule ---
     run_frequency: str = "daily"       # "daily", "hourly", "manual"

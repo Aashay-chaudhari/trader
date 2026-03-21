@@ -15,6 +15,7 @@ from typing import Any
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
 from agent_trader.config.settings import get_settings
+from agent_trader.utils.profiles import build_profile_metadata
 
 
 class ExecutionAgent(BaseAgent):
@@ -77,6 +78,7 @@ class ExecutionAgent(BaseAgent):
         """Execute a single trade. Returns execution result."""
         symbol = trade["symbol"]
         action = trade["action"]
+        profile = build_profile_metadata(settings)
 
         # Calculate quantity based on position size and portfolio value
         portfolio_value = settings.paper_portfolio_value
@@ -93,6 +95,8 @@ class ExecutionAgent(BaseAgent):
         if price <= 0:
             return {
                 "symbol": symbol,
+                "profile": profile["id"],
+                "profile_label": profile["label"],
                 "status": "failed",
                 "reason": "Could not determine price",
             }
@@ -107,6 +111,8 @@ class ExecutionAgent(BaseAgent):
                 "quantity": qty,
                 "estimated_price": price,
                 "estimated_value": qty * price,
+                "profile": profile["id"],
+                "profile_label": profile["label"],
                 "status": "dry_run",
                 "reason": "Dry run mode — no order placed",
             }
@@ -130,6 +136,8 @@ class ExecutionAgent(BaseAgent):
                 "action": action,
                 "quantity": qty,
                 "order_id": str(order.id),
+                "profile": profile["id"],
+                "profile_label": profile["label"],
                 "status": "submitted",
                 "estimated_value": qty * price,
             }
@@ -139,6 +147,8 @@ class ExecutionAgent(BaseAgent):
                 "symbol": symbol,
                 "action": action,
                 "quantity": qty,
+                "profile": profile["id"],
+                "profile_label": profile["label"],
                 "status": "failed",
                 "reason": str(e),
             }

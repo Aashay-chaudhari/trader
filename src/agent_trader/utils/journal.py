@@ -20,6 +20,9 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 
+from agent_trader.config.settings import get_settings
+from agent_trader.utils.profiles import build_profile_metadata
+
 
 def create_journal_entry(
     run_id: str,
@@ -31,6 +34,8 @@ def create_journal_entry(
     executed: list | None = None,
     portfolio_snapshot: dict | None = None,
     market_data: dict | None = None,
+    data_dir: str | None = None,
+    profile: dict | None = None,
 ) -> str:
     """Generate a markdown journal entry and save it to disk.
 
@@ -40,12 +45,16 @@ def create_journal_entry(
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%H:%M UTC")
     time_slug = now.strftime("%H-%M-%SZ")
+    settings = get_settings()
+    resolved_data_dir = data_dir or settings.data_dir
+    profile_meta = profile or build_profile_metadata(settings)
 
     lines = [
         f"# Trading Journal — {date_str}",
         "",
         f"**Run ID:** `{run_id}`  ",
         f"**Phase:** {phase}  ",
+        f"**Strategist:** {profile_meta.get('label', profile_meta.get('id', 'Unknown'))}  ",
         f"**Time:** {time_str}  ",
         "",
     ]
@@ -302,7 +311,7 @@ def create_journal_entry(
     content = "\n".join(lines)
 
     # Save to journal directory
-    journal_dir = Path("data/journal") / date_str
+    journal_dir = Path(resolved_data_dir) / "journal" / date_str
     journal_dir.mkdir(parents=True, exist_ok=True)
 
     filename = f"{time_slug}_{phase}_report.md"
@@ -313,6 +322,7 @@ def create_journal_entry(
     raw_data = {
         "run_id": run_id,
         "phase": phase,
+        "profile": profile_meta,
         "timestamp": now.isoformat(),
         "screener": screener_results,
         "research": research_results,

@@ -25,6 +25,8 @@ def build_runtime_metadata() -> dict[str, Any]:
         "platform": "github_actions" if os.getenv("GITHUB_ACTIONS") == "true" else "local",
         "python_version": sys.version.split()[0],
         "os": platform_lib.platform(),
+        "agent_profile": os.getenv("AGENT_PROFILE") or None,
+        "agent_label": os.getenv("AGENT_LABEL") or None,
         "github": {
             "repository": repo or None,
             "workflow": os.getenv("GITHUB_WORKFLOW") or None,

@@ -17,8 +17,9 @@ The performance feedback loop is what makes this system improve over time.
 Claude sees its own win rate, confidence calibration, and past mistakes.
 """
 
-from typing import Any
 import json
+import logging
+from typing import Any
 from pathlib import Path
 from datetime import datetime, timezone
 from time import perf_counter
@@ -34,6 +35,13 @@ from agent_trader.utils.llm_analytics import (
 from agent_trader.utils.research_context import (
     build_recent_artifact_summary,
     save_prompt_context_snapshot,
+)
+from agent_trader.utils.cli_agent import (
+    is_cli_available,
+    write_staging_data,
+    build_research_task,
+    build_monitor_task,
+    run_cli_agent,
 )
 
 
@@ -209,10 +217,11 @@ class ResearchAgent(BaseAgent):
 
     def __init__(self, message_bus: MessageBus):
         super().__init__(AgentRole.RESEARCH, message_bus)
+        self.logger = logging.getLogger(__name__)
         self._llm_clients: dict[str, Any] = {}
         self._last_provider = None
         self._last_model = None
-        self._tracker = PerformanceTracker()
+        self._tracker = PerformanceTracker(get_settings().data_dir)
 
     def _get_client(self, provider: str):
         if provider in self._llm_clients:
@@ -279,7 +288,7 @@ class ResearchAgent(BaseAgent):
             raise ValueError("No market data provided to ResearchAgent")
 
         summary = self._prepare_rich_summary(market_data)
-        artifact_context = build_recent_artifact_summary()
+        artifact_context = build_recent_artifact_summary(data_dir=get_settings().data_dir)
         provider = self._get_provider_name()
         prompt_sections: dict[str, Any] = {}
 
@@ -353,7 +362,23 @@ class ResearchAgent(BaseAgent):
             )
             run_mode = "research"
 
-        analysis = await self._call_llm(prompt, phase=run_mode)
+        # Try CLI agent mode first (if enabled), fall back to direct API call
+        analysis = await self._call_analysis(
+            prompt=prompt,
+            phase=run_mode,
+            symbols=message.data.get("symbols", []),
+            market_data=market_data,
+            news_data=news_data,
+            market_context=market_context,
+            market_headlines=market_headlines,
+            screener_results=screener_results,
+            news_discoveries=news_discoveries,
+            hot_stocks=hot_stocks,
+            finviz_data=finviz_data,
+            performance_feedback=prompt_sections.get("performance_feedback", ""),
+            learned_rules=prompt_sections.get("learned_rules", ""),
+            artifact_context=artifact_context,
+        )
         llm_meta = analysis.get("_meta", {})
         selected_provider = llm_meta.get("provider", provider or "unresolved")
         selected_model = llm_meta.get(
@@ -368,11 +393,13 @@ class ResearchAgent(BaseAgent):
             symbols=message.data.get("symbols", []),
             prompt_sections=prompt_sections,
             llm_meta=llm_meta,
+            data_dir=get_settings().data_dir,
         )
         record_llm_analytics(
             phase=phase,
             symbols=message.data.get("symbols", []),
             llm_meta=llm_meta,
+            data_dir=get_settings().data_dir,
         )
 
         # If this is a weekly review, save the learned rules
@@ -755,6 +782,112 @@ class ResearchAgent(BaseAgent):
 
         return "\n".join(lines)
 
+    async def _call_analysis(
+        self,
+        *,
+        prompt: str,
+        phase: str,
+        symbols: list[str],
+        market_data: dict,
+        news_data: dict,
+        market_context: dict,
+        market_headlines: list,
+        screener_results: dict | None,
+        news_discoveries: list | None,
+        hot_stocks: list | None,
+        finviz_data: dict | None,
+        performance_feedback: str,
+        learned_rules: str,
+        artifact_context: str,
+    ) -> dict:
+        """Route analysis to CLI agent or direct API call.
+
+        When CLI agent mode is enabled and available:
+          1. Write all data to staging directory
+          2. Build a task prompt for the agent
+          3. Run the agent (it can explore the repo for historical context)
+          4. If agent fails, fall back to direct API call
+
+        When CLI agent mode is disabled or unavailable:
+          Uses the traditional direct API call path.
+        """
+        settings = get_settings()
+        use_cli = settings.use_cli_agent
+
+        if use_cli:
+            cli_provider = settings.cli_agent_provider
+            if is_cli_available(cli_provider):
+                self.logger.info("CLI agent mode: writing staging data...")
+
+                write_staging_data(
+                    market_data=market_data,
+                    news_data=news_data,
+                    market_context=market_context,
+                    market_headlines=market_headlines,
+                    screener_results=screener_results,
+                    performance_feedback=performance_feedback
+                    if isinstance(performance_feedback, str) else str(performance_feedback),
+                    learned_rules=learned_rules
+                    if isinstance(learned_rules, str) else str(learned_rules),
+                    artifact_context=artifact_context
+                    if isinstance(artifact_context, str) else str(artifact_context),
+                    news_discoveries=news_discoveries,
+                    hot_stocks=hot_stocks,
+                    finviz_data=finviz_data,
+                    data_dir=settings.data_dir,
+                )
+
+                # Build the task prompt
+                if phase == "monitor":
+                    task = build_monitor_task(symbols, data_dir=settings.data_dir)
+                else:
+                    task = build_research_task(symbols, data_dir=settings.data_dir)
+
+                # Determine model for the CLI agent
+                cli_model = None
+                if cli_provider == "claude":
+                    cli_model = settings.research_model if phase != "monitor" else settings.monitor_model
+
+                self.logger.info(
+                    "Running %s CLI agent (model=%s, max_turns=%d)...",
+                    cli_provider,
+                    cli_model or "default",
+                    settings.cli_agent_max_turns,
+                )
+
+                analysis = run_cli_agent(
+                    task,
+                    provider=cli_provider,
+                    max_turns=settings.cli_agent_max_turns,
+                    model=cli_model,
+                    timeout_seconds=settings.cli_agent_timeout,
+                    allowed_tools=["Read", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"],
+                )
+
+                meta = analysis.get("_meta", {})
+                if meta.get("status") == "success":
+                    self.logger.info(
+                        "CLI agent succeeded in %.1fs",
+                        meta.get("duration_ms", 0) / 1000,
+                    )
+                    self._last_provider = f"cli:{cli_provider}"
+                    self._last_model = cli_model or "default"
+                    return analysis
+
+                # CLI failed — fall through to API
+                self.logger.warning(
+                    "CLI agent failed (%s), falling back to direct API call",
+                    meta.get("error", "unknown"),
+                )
+            else:
+                self.logger.info(
+                    "CLI agent enabled but '%s' not on PATH — using direct API",
+                    cli_provider,
+                )
+
+        # Default path: direct API call
+        return await self._call_llm(prompt, phase=phase)
+
     async def _call_llm(self, prompt: str, phase: str) -> dict:
         providers = self._get_provider_sequence()
         runtime = build_runtime_metadata()
@@ -1044,7 +1177,7 @@ class ResearchAgent(BaseAgent):
         return json.loads(raw_text)
 
     def _save_research(self, analysis: dict, phase: str) -> None:
-        archive_dir = Path("data/research")
+        archive_dir = Path(get_settings().data_dir) / "research"
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         now = datetime.now(timezone.utc)

@@ -93,8 +93,9 @@ def cmd_status():
     """Show current portfolio status."""
     from pathlib import Path
     import json
+    from agent_trader.config.settings import get_settings
 
-    snapshot_path = Path("data/snapshots/latest.json")
+    snapshot_path = Path(get_settings().data_dir) / "snapshots" / "latest.json"
     if not snapshot_path.exists():
         console.print("[yellow]No portfolio data yet. Run the pipeline first.[/yellow]")
         return

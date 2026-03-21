@@ -9,6 +9,8 @@ from pathlib import Path
 from textwrap import dedent
 from typing import Any
 
+from agent_trader.utils.profiles import DEFAULT_PROFILE_LABELS
+
 
 DASHBOARD_HTML = dedent(
     """
@@ -26,7 +28,7 @@ DASHBOARD_HTML = dedent(
         h1{margin:10px 0;font-size:clamp(2rem,4vw,3.1rem);line-height:1.02}h2{margin:0;font-size:1.16rem}h3{margin:0 0 10px;font-size:1rem}p{margin:0;color:var(--muted);line-height:1.55}
         .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(125,211,252,.22);background:#0b1830;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.accent{color:var(--accent)}.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
         .hero-grid,.metrics,.split,.workflow,.decisions,.newscols,.context,.meta,.buttons,.mini,.articles{display:grid;gap:14px}.hero-grid{grid-template-columns:1.45fr 1fr;align-items:end}.meta{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:16px}.buttons{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-        .btn{display:flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:999px;border:1px solid rgba(125,211,252,.28);background:#0b1830;text-decoration:none;font-weight:700}.btn:hover{border-color:rgba(125,211,252,.48);transform:translateY(-1px)}
+        .btn{display:flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:999px;border:1px solid rgba(125,211,252,.28);background:#0b1830;text-decoration:none;font-weight:700;cursor:pointer;font:inherit;color:var(--text);appearance:none}.btn:hover{border-color:rgba(125,211,252,.48);transform:translateY(-1px)}.btn.active{border-color:rgba(134,239,172,.55);background:#123053;color:var(--text)}
         .metrics{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:18px}.label{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.value{font-size:1.7rem;font-weight:800}.sub{margin-top:6px;font-size:.85rem;color:var(--muted)}
         .section{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}.split{grid-template-columns:1.1fr .9fr}.workflow{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.decisions{grid-template-columns:repeat(auto-fit,minmax(460px,1fr))}.newscols,.context{grid-template-columns:1fr 1fr}.mini{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
         .chart{height:300px}.stage,.decision{position:relative;background:linear-gradient(180deg,#12233f,#0b1730)}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.metric{font-size:1.15rem;font-weight:800;text-align:right;min-width:64px}
@@ -52,14 +54,21 @@ DASHBOARD_HTML = dedent(
             </div>
             <div class="buttons">
               <a class="btn" id="runLink" href="data/report_research.md" target="_blank" rel="noreferrer">Open latest report</a>
-              <a class="btn" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
-              <a class="btn" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
-              <a class="btn" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
-              <a class="btn" href="data/llm.json" target="_blank" rel="noreferrer">LLM analytics JSON</a>
-              <a class="btn" href="data/dashboard.json" target="_blank" rel="noreferrer">Dashboard bundle</a>
+              <a class="btn" id="researchLink" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
+              <a class="btn" id="monitorLink" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
+              <a class="btn" id="contextLink" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
+              <a class="btn" id="llmLink" href="data/llm.json" target="_blank" rel="noreferrer">LLM analytics JSON</a>
+              <a class="btn" id="dashboardLink" href="data/dashboard.json" target="_blank" rel="noreferrer">Dashboard bundle</a>
             </div>
           </div>
         </header>
+
+        <section class="panel">
+          <div class="section"><div><h2>Strategist Arena</h2><p>Toggle between the independent Claude and Codex books, then use the comparison board to see which one is compounding more effectively.</p></div></div>
+          <div class="buttons" id="profileTabs"></div>
+          <div class="mini" id="comparisonCards" style="margin-top:14px"></div>
+          <div class="table" style="margin-top:14px"><table><thead><tr><th>Strategist</th><th>Portfolio</th><th>Total PnL</th><th>Trades</th><th>Win Rate</th><th>Provider</th><th>Model</th><th>Updated</th></tr></thead><tbody id="comparisonTable"></tbody></table></div>
+        </section>
 
         <section class="metrics">
           <div class="card"><div class="label">Portfolio Value</div><div class="value" id="portfolioValue">-</div></div>
@@ -149,18 +158,68 @@ DASHBOARD_HTML = dedent(
         const headlineRow=a=>{const sent=num(a.sentiment),src=a.source||"",pub=a.publisher||src||"?",cat=a.category||"headline",url=safeUrl(a.url),title=a.title||"Untitled";return `<div class="headline-row">`+`<div class="hl-sent ${sentCls(sent)}">${sentLabel(sent)}</div>`+`<div class="hl-body">`+`<div class="hl-title">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer" style="color:inherit;text-decoration:none">${esc(truncate(title,120))}</a>`:esc(truncate(title,120))}</div>`+`<div class="hl-meta"><span class="source-tag">${esc(src)}</span>${esc(pub)} &middot; ${esc(cat)} &middot; ${esc(dateText(a.published))}</div>`+`</div></div>`};
         const headlineList=(items,msg)=>{const list=arr(items);return list.length?`<div class="headline-list">${list.map(headlineRow).join("")}</div>`:empty(msg)};
         const sourceBreakdown=items=>{const counts={};arr(items).forEach(a=>{const s=a.source||"unknown";counts[s]=(counts[s]||0)+1});return Object.keys(counts).length?`<div class="source-breakdown">${Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([s,c])=>`<span class="src-chip"><span class="source-tag">${esc(s)}</span>${c} article${c>1?"s":""}</span>`).join("")}</div>`:""};
+        const labelFromId=id=>String(id||"default").replace(/[-_]+/g," ").replace(/\\b\\w/g,m=>m.toUpperCase());
 
-        function render(bundle){
-          const latest=obj(bundle.latest), trades=arr(bundle.trades), reports=obj(bundle.reports), reportResearch=obj(reports.research), reportMonitor=obj(reports.monitor), reportPayload=obj(reportResearch.research);
-          const research=Object.keys(obj(bundle.research)).length?obj(bundle.research):obj(reportPayload.research), context=obj(bundle.context), prompt=obj(context.prompt_sections), newsInputs=obj(prompt.news_inputs), perSymbol=obj(newsInputs.per_symbol), screener=obj(prompt.screener_context), market=obj(prompt.market_context);
-          const llm=Object.keys(obj(bundle.llm)).length?obj(bundle.llm):(obj(research._meta)||obj(context.llm_meta));
+        let dashboardBundle=null;
+        let selectedProfile=null;
+        let valueChartInstance=null;
+
+        function bundleProfiles(bundle){
+          const profiles=obj(bundle.profiles);
+          if(Object.keys(profiles).length)return profiles;
+          const fallbackProfile=obj(bundle.profile);
+          const profileId=fallbackProfile.id||bundle.active_profile||"default";
+          return {[profileId]:{profile:{id:profileId,label:fallbackProfile.label||labelFromId(profileId)},latest:obj(bundle.latest),history:arr(bundle.history),trades:arr(bundle.trades),research:obj(bundle.research),llm:obj(bundle.llm),context:obj(bundle.context),reports:obj(bundle.reports),artifacts:obj(bundle.artifacts)}};
+        }
+
+        function comparisonSummary(bundle,profiles){
+          const summary=arr(obj(bundle.comparison).summary);
+          if(summary.length)return summary;
+          return Object.entries(profiles).map(([profileId,profileBundle])=>{const latest=obj(profileBundle.latest),llm=obj(profileBundle.llm),trades=arr(profileBundle.trades),closed=trades.filter(t=>typeof t==="object"&&typeof t.pnl==="number"),wins=closed.filter(t=>(t.pnl||0)>0);return {profile:profileId,label:obj(profileBundle.profile).label||labelFromId(profileId),last_updated:latest.timestamp,portfolio_value:latest.portfolio_value,total_pnl:latest.total_pnl,total_pnl_pct:latest.total_pnl_pct,trade_count:trades.length,closed_trade_count:closed.length,win_rate:closed.length?Math.round(wins.length/closed.length*1000)/10:null,provider:llm.selected_provider||llm.provider,model:llm.selected_model||llm.model};});
+        }
+
+        function initialProfile(bundle,profiles){
+          if(bundle.active_profile&&profiles[bundle.active_profile])return bundle.active_profile;
+          return Object.keys(profiles)[0]||"default";
+        }
+
+        function renderComparison(bundle,profiles){
+          const summary=comparisonSummary(bundle,profiles).sort((a,b)=>(num(b.portfolio_value)||0)-(num(a.portfolio_value)||0));
+          const byId=Object.fromEntries(summary.map(item=>[item.profile,item]));
+          const leaders=obj(obj(bundle.comparison).leaders);
+          const leaderText=(key,formatter)=>{const entry=byId[leaders[key]];return entry?`${entry.label||entry.profile} (${formatter(entry[key])})`:"No leader yet";};
+          const tabs=document.getElementById("profileTabs");
+          tabs.innerHTML=summary.map(item=>`<button type="button" class="btn ${item.profile===selectedProfile?"active":""}" data-profile="${esc(item.profile)}">${esc(item.label||labelFromId(item.profile))}</button>`).join("");
+          tabs.querySelectorAll("[data-profile]").forEach(node=>node.addEventListener("click",()=>window.selectProfile(node.getAttribute("data-profile")||"default")));
+          document.getElementById("comparisonCards").innerHTML=[["Top Equity Curve",leaderText("portfolio_value",fmtMoney)],["Best Total PnL",leaderText("total_pnl",signMoney)],["Best Win Rate",leaderText("win_rate",v=>v===null?"-":`${Number(v).toFixed(1)}%`)],["Most Trades",leaderText("trade_count",v=>String(v??0))]].map(([label,value])=>miniCard(label,value)).join("");
+          document.getElementById("comparisonTable").innerHTML=summary.length?summary.map(item=>`<tr${item.profile===selectedProfile?' style="background:rgba(125,211,252,.08)"':""}><td><strong>${esc(item.label||labelFromId(item.profile))}</strong><div class="sub">${esc(item.profile)}</div></td><td>${fmtMoney(item.portfolio_value)}</td><td class="${cls(item.total_pnl)}">${signMoney(item.total_pnl)}<div class="sub ${cls(item.total_pnl_pct)}">${fmtPct(item.total_pnl_pct)}</div></td><td>${esc(String(item.trade_count??0))}<div class="sub">${esc(String(item.closed_trade_count??0))} closed</div></td><td>${esc(item.win_rate===null?"-":`${Number(item.win_rate).toFixed(1)}%`)}</td><td>${esc(item.provider||"-")}</td><td>${esc(item.model||"-")}</td><td>${esc(dateText(item.last_updated))}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No strategist summaries available yet.")}</td></tr>`;
+        }
+
+        function updateLinks(profileBundle,runUrl){
+          const artifacts=obj(profileBundle.artifacts);
+          const researchPath=artifacts.research_report_md||"data/report_research.md";
+          const monitorPath=artifacts.monitor_report_md||"data/report_monitor.md";
+          document.getElementById("researchLink").href=researchPath;
+          document.getElementById("monitorLink").href=monitorPath;
+          document.getElementById("contextLink").href=artifacts.context_json||"data/context.json";
+          document.getElementById("llmLink").href=artifacts.llm_json||"data/llm.json";
+          document.getElementById("dashboardLink").href=artifacts.dashboard_json||"data/dashboard.json";
+          const runLink=document.getElementById("runLink");
+          if(runUrl){runLink.href=runUrl;runLink.textContent="Open GitHub Actions run";}else{runLink.href=researchPath;runLink.textContent="Open latest report";}
+        }
+
+        function renderProfile(profileBundle,bundle){
+          const profile=obj(profileBundle.profile), latest=obj(profileBundle.latest), trades=arr(profileBundle.trades), reports=obj(profileBundle.reports), reportResearch=obj(reports.research), reportMonitor=obj(reports.monitor), reportPayload=obj(reportResearch.research);
+          const research=Object.keys(obj(profileBundle.research)).length?obj(profileBundle.research):obj(reportPayload.research), context=obj(profileBundle.context), prompt=obj(context.prompt_sections), newsInputs=obj(prompt.news_inputs), perSymbol=obj(newsInputs.per_symbol), screener=obj(prompt.screener_context), market=obj(prompt.market_context);
+          const llm=Object.keys(obj(profileBundle.llm)).length?obj(profileBundle.llm):(obj(research._meta)||obj(context.llm_meta));
           const shortlist=arr(screener.shortlist), marketHeadlines=arr(newsInputs.market_headlines), discoveries=arr(newsInputs.news_discoveries), hotStocks=arr(newsInputs.hot_stocks), analystChanges=arr(obj(newsInputs.finviz).analyst_changes), positions=arr(latest.positions);
           const totalArticles=Object.values(perSymbol).reduce((s,v)=>s+arr(obj(v).news_headlines).length,0)+marketHeadlines.length;
           const best=arr(research.best_opportunities), signals=arr(reportMonitor.signals), approved=arr(obj(reportMonitor.risk).approved_trades), rejected=arr(obj(reportMonitor.risk).rejected_trades), executed=arr(reportMonitor.executed);
 
-          document.getElementById("heroSummary").textContent=[research.market_summary,research.market_regime?`Regime: ${research.market_regime}`:"",best.length?`Top ideas: ${best.join(", ")}`:""].filter(Boolean).join(" | ")||"Latest research and workflow context loaded.";
-          document.getElementById("heroMeta").innerHTML=[["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
-          const runUrl=llm.runtime?.github?.run_url||context.llm_meta?.runtime?.github?.run_url||""; if(runUrl){const link=document.getElementById("runLink");link.href=runUrl;link.textContent="Open GitHub Actions run";}
+          const runUrl=llm.runtime?.github?.run_url||context.llm_meta?.runtime?.github?.run_url||"";
+          updateLinks(profileBundle,runUrl);
+          document.getElementById("heroSummary").textContent=[`${profile.label||labelFromId(profile.id)} is active.`,research.market_summary,research.market_regime?`Regime: ${research.market_regime}`:"",best.length?`Top ideas: ${best.join(", ")}`:""].filter(Boolean).join(" | ")||"Latest research and workflow context loaded.";
+          document.getElementById("heroMeta").innerHTML=[["Strategist",profile.label||labelFromId(profile.id)],["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
           document.getElementById("portfolioValue").textContent=fmtMoney(latest.portfolio_value); document.getElementById("cashValue").textContent=fmtMoney(latest.cash); document.getElementById("positionCount").textContent=String(latest.position_count||positions.length); document.getElementById("tradeCount").textContent=String(trades.length); document.getElementById("articleCount").textContent=String(totalArticles); document.getElementById("modeNote").textContent=trades.some(t=>(t.status||"").toLowerCase()!=="dry_run")?"Live execution detected":"Dry-run history";
           const pnl=document.getElementById("totalPnl"); pnl.textContent=signMoney(latest.total_pnl); pnl.className="value "+cls(latest.total_pnl); const pnlPct=document.getElementById("totalPnlPct"); pnlPct.textContent=fmtPct(latest.total_pnl_pct); pnlPct.className="sub "+cls(latest.total_pnl_pct);
 
@@ -192,10 +251,20 @@ DASHBOARD_HTML = dedent(
           document.getElementById("positionsTable").innerHTML=positions.length?positions.map(x=>`<tr><td><strong>${esc(x.symbol)}</strong></td><td>${esc(x.shares)}</td><td>${fmtMoney(x.avg_cost)}</td><td>${fmtMoney(x.current_price)}</td><td class="${cls(x.unrealized_pnl)}">${signMoney(x.unrealized_pnl)}</td></tr>`).join(""):`<tr><td colspan="5">${empty("No positions yet.")}</td></tr>`;
           document.getElementById("tradesTable").innerHTML=trades.length?trades.slice(-60).reverse().map(x=>`<tr><td>${esc(dateText(x.timestamp))}</td><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(String((x.action||"").toUpperCase()))}</td><td>${esc(x.quantity??"-")}</td><td>${fmtMoney(x.price)}</td><td>${fmtMoney(x.value)}</td><td>${esc(x.status||"-")}</td><td>${esc(x.reasoning||x.reason||"-")}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No trades yet.")}</td></tr>`;
 
-          const history=arr(bundle.history); if(history.length&&window.Chart){new Chart(document.getElementById("valueChart").getContext("2d"),{type:"line",data:{labels:history.map(x=>dateText(x.timestamp)),datasets:[{label:"Portfolio Value",data:history.map(x=>x.portfolio_value),borderColor:"#7dd3fc",backgroundColor:"rgba(125,211,252,.12)",fill:true,tension:.25,borderWidth:2,pointRadius:2}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:"#95a7ca"}}},scales:{x:{ticks:{color:"#95a7ca",maxTicksLimit:8},grid:{color:"rgba(126,166,235,.08)"}},y:{ticks:{color:"#95a7ca",callback:v=>"$"+Number(v).toLocaleString()},grid:{color:"rgba(126,166,235,.08)"}}}}});}
+          if(valueChartInstance){valueChartInstance.destroy();valueChartInstance=null;}
+          const history=arr(profileBundle.history); if(history.length&&window.Chart){valueChartInstance=new Chart(document.getElementById("valueChart").getContext("2d"),{type:"line",data:{labels:history.map(x=>dateText(x.timestamp)),datasets:[{label:"Portfolio Value",data:history.map(x=>x.portfolio_value),borderColor:"#7dd3fc",backgroundColor:"rgba(125,211,252,.12)",fill:true,tension:.25,borderWidth:2,pointRadius:2}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:"#95a7ca"}}},scales:{x:{ticks:{color:"#95a7ca",maxTicksLimit:8},grid:{color:"rgba(126,166,235,.08)"}},y:{ticks:{color:"#95a7ca",callback:v=>"$"+Number(v).toLocaleString()},grid:{color:"rgba(126,166,235,.08)"}}}}});}
         }
 
-        fetch("data/dashboard.json").then(r=>r.json()).then(render).catch(err=>console.error("Dashboard load error",err));
+        function renderDashboard(){
+          const profiles=bundleProfiles(dashboardBundle||{});
+          if(!selectedProfile||!profiles[selectedProfile])selectedProfile=initialProfile(dashboardBundle||{},profiles);
+          renderComparison(dashboardBundle||{},profiles);
+          renderProfile(profiles[selectedProfile]||Object.values(profiles)[0]||{},dashboardBundle||{});
+        }
+
+        window.selectProfile=profileId=>{selectedProfile=profileId;renderDashboard();};
+
+        fetch("data/dashboard.json").then(r=>r.json()).then(bundle=>{dashboardBundle=bundle;renderDashboard();}).catch(err=>console.error("Dashboard load error",err));
       </script>
     </body>
     </html>
@@ -211,7 +280,8 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     docs_root.mkdir(parents=True, exist_ok=True)
     data_out.mkdir(parents=True, exist_ok=True)
 
-    bundle = _build_dashboard_bundle(data_root)
+    profile_roots = _discover_profile_roots(data_root)
+    bundle = _build_dashboard_bundle(data_root, profile_roots=profile_roots)
     (docs_root / "index.html").write_text(DASHBOARD_HTML, encoding="utf-8")
     _write_json(data_out / "dashboard.json", bundle)
     _write_json(data_out / "latest.json", bundle["latest"])
@@ -222,10 +292,27 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "context.json", bundle["context"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
-    _copy_latest_report_artifact(data_root, data_out / "report_research.md", phase="research", suffix=".md")
-    _copy_latest_report_artifact(data_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
+    active_root = profile_roots.get(bundle["active_profile"], data_root)
+    _copy_latest_report_artifact(active_root, data_out / "report_research.md", phase="research", suffix=".md")
+    _copy_latest_report_artifact(active_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
 
-    rules_path = data_root / "feedback" / "learned_rules.json"
+    for profile_id, profile_root in profile_roots.items():
+        profile_bundle = bundle["profiles"][profile_id]
+        profile_out = data_out / "profiles" / profile_id
+        profile_out.mkdir(parents=True, exist_ok=True)
+        _write_json(profile_out / "dashboard.json", profile_bundle)
+        _write_json(profile_out / "latest.json", profile_bundle["latest"])
+        _write_json(profile_out / "history.json", profile_bundle["history"])
+        _write_json(profile_out / "trades.json", profile_bundle["trades"])
+        _write_json(profile_out / "research.json", profile_bundle["research"])
+        _write_json(profile_out / "llm.json", profile_bundle["llm"])
+        _write_json(profile_out / "context.json", profile_bundle["context"])
+        _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
+        _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
+        _copy_latest_report_artifact(profile_root, profile_out / "report_research.md", phase="research", suffix=".md")
+        _copy_latest_report_artifact(profile_root, profile_out / "report_monitor.md", phase="monitor", suffix=".md")
+
+    rules_path = active_root / "feedback" / "learned_rules.json"
     if rules_path.exists():
         (data_out / "rules.json").write_text(
             rules_path.read_text(encoding="utf-8"),
@@ -233,7 +320,50 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         )
 
 
-def _build_dashboard_bundle(data_root: Path) -> dict[str, Any]:
+def _build_dashboard_bundle(
+    data_root: Path,
+    *,
+    profile_roots: dict[str, Path] | None = None,
+) -> dict[str, Any]:
+    profile_roots = profile_roots or _discover_profile_roots(data_root)
+    multi_profile = len(profile_roots) > 1 or any(profile_id != "default" for profile_id in profile_roots)
+    profiles = {
+        profile_id: _build_profile_bundle(profile_root, profile_id=profile_id, multi_profile=multi_profile)
+        for profile_id, profile_root in profile_roots.items()
+    }
+    active_profile = _select_active_profile(profiles)
+    active_bundle = profiles.get(active_profile) or next(iter(profiles.values()), _empty_profile_bundle("default"))
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "active_profile": active_profile,
+        "profiles": profiles,
+        "comparison": _build_comparison_bundle(profiles),
+        "profile": active_bundle["profile"],
+        "latest": active_bundle["latest"],
+        "history": active_bundle["history"],
+        "trades": active_bundle["trades"],
+        "research": active_bundle["research"],
+        "llm": active_bundle["llm"],
+        "context": active_bundle["context"],
+        "reports": active_bundle["reports"],
+    }
+
+
+def _discover_profile_roots(data_root: Path) -> dict[str, Path]:
+    profiles_root = data_root / "profiles"
+    if profiles_root.exists():
+        discovered = {
+            path.name: path
+            for path in sorted(profiles_root.iterdir())
+            if path.is_dir()
+        }
+        if discovered:
+            return discovered
+    return {"default": data_root}
+
+
+def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bool) -> dict[str, Any]:
+    profile = _load_profile_metadata(data_root, profile_id=profile_id)
     research_report = _get_latest_report(data_root, "research")
     monitor_report = _get_latest_report(data_root, "monitor")
     report_payload = _extract_report_payload(research_report)
@@ -249,21 +379,24 @@ def _build_dashboard_bundle(data_root: Path) -> dict[str, Any]:
         research,
     )
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "latest": _load_latest_snapshot(data_root),
+        "profile": profile,
+        "latest": _load_latest_snapshot(data_root, profile=profile),
         "history": _read_json(data_root / "snapshots" / "history.json", []),
-        "trades": _load_trade_history(data_root),
+        "trades": _load_trade_history(data_root, profile=profile),
         "research": research,
         "llm": llm,
         "context": context,
         "reports": {"research": research_report, "monitor": monitor_report},
+        "artifacts": _build_profile_artifacts(profile["id"], multi_profile=multi_profile),
     }
 
 
-def _load_latest_snapshot(data_root: Path) -> dict[str, Any]:
+def _load_latest_snapshot(data_root: Path, *, profile: dict[str, Any]) -> dict[str, Any]:
     latest = _read_json(data_root / "snapshots" / "latest.json", {})
     return latest or {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "profile": profile["id"],
+        "profile_label": profile["label"],
         "portfolio_value": 100000.0,
         "cash": 100000.0,
         "invested": 0.0,
@@ -274,10 +407,18 @@ def _load_latest_snapshot(data_root: Path) -> dict[str, Any]:
     }
 
 
-def _load_trade_history(data_root: Path) -> list[dict[str, Any]]:
+def _load_trade_history(data_root: Path, *, profile: dict[str, Any]) -> list[dict[str, Any]]:
     completed = _read_json(data_root / "feedback" / "completed_trades.json", [])
     if completed:
-        return completed
+        return [
+            {
+                **item,
+                "profile": item.get("profile", profile["id"]),
+                "profile_label": item.get("profile_label", profile["label"]),
+            }
+            for item in completed
+            if isinstance(item, dict)
+        ]
 
     trades: list[dict[str, Any]] = []
     journal_dir = data_root / "journal"
@@ -298,6 +439,8 @@ def _load_trade_history(data_root: Path) -> list[dict[str, Any]]:
             trades.append(
                 {
                     "timestamp": payload.get("timestamp", ""),
+                    "profile": payload.get("profile", {}).get("id", profile["id"]),
+                    "profile_label": payload.get("profile", {}).get("label", profile["label"]),
                     "symbol": trade.get("symbol", ""),
                     "action": trade.get("action", ""),
                     "quantity": trade.get("quantity"),
@@ -356,6 +499,108 @@ def _report_score(path: Path) -> tuple[int, str]:
     if isinstance(payload.get("portfolio"), dict) and payload.get("portfolio"):
         score += 1000
     return score, path.name
+
+
+def _load_profile_metadata(data_root: Path, *, profile_id: str) -> dict[str, Any]:
+    saved = _read_json(data_root / "profile.json", {})
+    metadata = saved if isinstance(saved, dict) else {}
+    metadata.setdefault("id", profile_id)
+    metadata.setdefault(
+        "label",
+        DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.replace("-", " ").title()),
+    )
+    return metadata
+
+
+def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[str, str]:
+    base = f"data/profiles/{profile_id}"
+    return {
+        "dashboard_json": f"{base}/dashboard.json",
+        "latest_json": f"{base}/latest.json",
+        "history_json": f"{base}/history.json",
+        "trades_json": f"{base}/trades.json",
+        "research_json": f"{base}/research.json",
+        "llm_json": f"{base}/llm.json",
+        "context_json": f"{base}/context.json",
+        "research_report_json": f"{base}/report_research.json",
+        "monitor_report_json": f"{base}/report_monitor.json",
+        "research_report_md": f"{base}/report_research.md",
+        "monitor_report_md": f"{base}/report_monitor.md",
+    }
+
+
+def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
+    profile = {
+        "id": profile_id,
+        "label": DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.replace("-", " ").title()),
+    }
+    return {
+        "profile": profile,
+        "latest": _load_latest_snapshot(Path("."), profile=profile),
+        "history": [],
+        "trades": [],
+        "research": {},
+        "llm": {},
+        "context": {},
+        "reports": {"research": {}, "monitor": {}},
+        "artifacts": _build_profile_artifacts(profile_id, multi_profile=True),
+    }
+
+
+def _select_active_profile(profiles: dict[str, dict[str, Any]]) -> str:
+    if not profiles:
+        return "default"
+    return max(
+        profiles.items(),
+        key=lambda item: (
+            str(item[1].get("latest", {}).get("timestamp", "")),
+            item[0],
+        ),
+    )[0]
+
+
+def _build_comparison_bundle(profiles: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    summary: list[dict[str, Any]] = []
+    for profile_id, bundle in profiles.items():
+        profile = bundle.get("profile", {})
+        latest = bundle.get("latest", {})
+        llm = bundle.get("llm", {})
+        trades = [item for item in bundle.get("trades", []) if isinstance(item, dict)]
+        closed_trades = [trade for trade in trades if isinstance(trade.get("pnl"), (int, float))]
+        wins = [trade for trade in closed_trades if (trade.get("pnl") or 0) > 0]
+        win_rate = round(len(wins) / len(closed_trades) * 100, 1) if closed_trades else None
+        summary.append(
+            {
+                "profile": profile_id,
+                "label": profile.get("label", DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.title())),
+                "last_updated": latest.get("timestamp"),
+                "portfolio_value": latest.get("portfolio_value", 0),
+                "total_pnl": latest.get("total_pnl", 0),
+                "total_pnl_pct": latest.get("total_pnl_pct", 0),
+                "position_count": latest.get("position_count", 0),
+                "trade_count": len(trades),
+                "closed_trade_count": len(closed_trades),
+                "win_rate": win_rate,
+                "provider": llm.get("selected_provider") or llm.get("provider"),
+                "model": llm.get("selected_model") or llm.get("model"),
+            }
+        )
+
+    def _leader(key: str) -> str | None:
+        if not summary:
+            return None
+        ranked = sorted(summary, key=lambda item: item.get(key) or 0, reverse=True)
+        return ranked[0]["profile"]
+
+    return {
+        "summary": summary,
+        "leaders": {
+            "portfolio_value": _leader("portfolio_value"),
+            "total_pnl": _leader("total_pnl"),
+            "win_rate": _leader("win_rate"),
+            "trade_count": _leader("trade_count"),
+        },
+    }
 
 
 def _parse_legacy_news_context(text: str) -> dict[str, Any]:

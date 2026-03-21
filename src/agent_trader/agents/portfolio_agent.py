@@ -18,6 +18,7 @@ from typing import Any
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message
 from agent_trader.config.settings import get_settings
+from agent_trader.utils.profiles import build_profile_metadata
 
 
 class PortfolioAgent(BaseAgent):
@@ -110,6 +111,7 @@ class PortfolioAgent(BaseAgent):
     def _generate_snapshot(self, market_data: dict) -> dict:
         """Generate a portfolio snapshot for the dashboard."""
         settings = get_settings()
+        profile = build_profile_metadata(settings)
 
         total_value = sum(
             p.get("current_value", 0) for p in self._portfolio.values()
@@ -135,6 +137,8 @@ class PortfolioAgent(BaseAgent):
 
         snapshot = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
+            "profile": profile["id"],
+            "profile_label": profile["label"],
             "portfolio_value": round(total_value + cash, 2),
             "cash": round(cash, 2),
             "invested": round(total_invested, 2),

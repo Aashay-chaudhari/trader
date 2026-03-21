@@ -3,11 +3,15 @@
 import pytest
 
 import agent_trader.agents.research_agent as research_module
+from agent_trader.core.message_bus import Message, MessageType
 from agent_trader.agents.research_agent import ResearchAgent
 from agent_trader.config.settings import reset_settings
 
 
 class DummyTracker:
+    def __init__(self, *args, **kwargs):
+        return None
+
     def get_recent_trades_for_prompt(self, last_n: int = 10) -> str:
         return ""
 
@@ -23,7 +27,7 @@ class DummyTracker:
 
 def test_research_agent_prefers_anthropic_models_when_key_present(message_bus, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "")
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
     reset_settings()
 
@@ -37,7 +41,7 @@ def test_research_agent_prefers_anthropic_models_when_key_present(message_bus, m
 def test_research_agent_falls_back_to_openai_when_only_openai_key_present(
     message_bus, monkeypatch
 ):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
     reset_settings()
@@ -151,3 +155,73 @@ async def test_research_agent_retries_with_openai_when_primary_provider_fails(
     assert response["market_summary"] == "fallback ok"
     assert response["_meta"]["provider"] == "openai"
     assert response["_meta"]["model"] == "gpt-4o-mini"
+
+
+@pytest.mark.asyncio
+async def test_research_agent_cli_path_falls_back_without_raising(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    monkeypatch.setattr(research_module, "build_recent_artifact_summary", lambda **kwargs: "")
+    monkeypatch.setattr(research_module, "save_prompt_context_snapshot", lambda **kwargs: None)
+    monkeypatch.setattr(research_module, "record_llm_analytics", lambda **kwargs: None)
+    monkeypatch.setattr(ResearchAgent, "_save_research", lambda self, analysis, phase: None)
+    monkeypatch.setattr(research_module, "is_cli_available", lambda provider: True)
+    monkeypatch.setattr(research_module, "write_staging_data", lambda **kwargs: None)
+    monkeypatch.setattr(research_module, "build_research_task", lambda symbols, **kwargs: "task")
+    monkeypatch.setattr(
+        research_module,
+        "run_cli_agent",
+        lambda *args, **kwargs: {
+            "_meta": {
+                "status": "error",
+                "error": "cli failed",
+                "provider": "cli:claude",
+            }
+        },
+    )
+
+    async def fake_call_llm(self, prompt: str, phase: str) -> dict:
+        return {
+            "overall_sentiment": "neutral",
+            "market_summary": "fallback ok",
+            "stocks": {},
+            "_meta": {"status": "success", "provider": "openai", "model": "gpt-4o-mini"},
+        }
+
+    monkeypatch.setattr(ResearchAgent, "_call_llm", fake_call_llm)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+    result = await agent.process(
+        Message(
+            type=MessageType.COMMAND,
+            source="test",
+            data={
+                "symbols": ["AAPL"],
+                "market_data": {
+                    "AAPL": {
+                        "latest_price": 100.0,
+                        "price_change_pct": 1.0,
+                        "volume": 1000,
+                        "indicators": {},
+                        "price_history": [],
+                        "info": {},
+                    }
+                },
+                "phase": "research",
+                "news": {},
+                "market_headlines": [],
+                "market_context": {},
+                "news_discoveries": [],
+                "hot_stocks": [],
+                "finviz": {},
+            },
+        )
+    )
+
+    assert result["research"]["market_summary"] == "fallback ok"
+    assert result["research"]["_meta"]["provider"] == "openai"

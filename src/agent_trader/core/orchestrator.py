@@ -29,8 +29,10 @@ from typing import Any
 from rich.console import Console
 from rich.table import Table
 
+from agent_trader.config.settings import get_settings
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
+from agent_trader.utils.profiles import build_profile_metadata
 
 console = Console()
 
@@ -346,6 +348,7 @@ class Orchestrator:
     def _write_journal(self, run_id, phase, results, screener_results=None):
         try:
             from agent_trader.utils.journal import create_journal_entry
+            settings = get_settings()
 
             def unwrap_stage(stage_key: str) -> dict[str, Any]:
                 stage = results.get(stage_key, {})
@@ -368,6 +371,8 @@ class Orchestrator:
                 executed=execution_data.get("executed") if execution_data else None,
                 portfolio_snapshot=portfolio_data,
                 market_data=strategy_data.get("market_data") if strategy_data else None,
+                data_dir=settings.data_dir,
+                profile=build_profile_metadata(settings),
             )
             console.print(f"  [dim]Journal: {filepath}[/dim]")
         except Exception as e:
@@ -378,18 +383,18 @@ class Orchestrator:
     def _save_morning_context(self):
         if not self._morning_research:
             return
-        ctx_dir = Path("data/cache")
+        ctx_dir = Path(get_settings().data_dir) / "cache"
         ctx_dir.mkdir(parents=True, exist_ok=True)
         (ctx_dir / "morning_research.json").write_text(
             json.dumps(self._morning_research, indent=2, default=str))
         (ctx_dir / "watchlist.json").write_text(json.dumps(self._today_watchlist))
 
     def _load_morning_context(self) -> dict | None:
-        path = Path("data/cache/morning_research.json")
+        path = Path(get_settings().data_dir) / "cache" / "morning_research.json"
         return json.loads(path.read_text()) if path.exists() else None
 
     def _load_watchlist(self) -> list[str]:
-        path = Path("data/cache/watchlist.json")
+        path = Path(get_settings().data_dir) / "cache" / "watchlist.json"
         return json.loads(path.read_text()) if path.exists() else []
 
     # ── Display ──────────────────────────────────────────────────
