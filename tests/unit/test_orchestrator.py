@@ -1,7 +1,7 @@
 """Tests for the Orchestrator — pipeline coordination."""
 
 import pytest
-from agent_trader.core import MessageBus, Orchestrator, BaseAgent, AgentRole, Message, MessageType
+from agent_trader.core import MessageBus, Orchestrator, BaseAgent, AgentRole, MessageType
 
 
 class MockAgent(BaseAgent):
@@ -31,11 +31,35 @@ async def test_pipeline_runs_agents_in_order():
     orch.register(data_agent)
     orch.register(strategy_agent)
 
-    results = await orch.run_pipeline(["AAPL"])
+    await orch.run_pipeline(["AAPL"])
 
     # Both agents should have run (data agent runs in both phases)
     assert len(data_agent.received_messages) >= 1
     assert len(strategy_agent.received_messages) >= 1
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_uses_research_watchlist_for_monitor():
+    bus = MessageBus()
+    orch = Orchestrator(bus)
+
+    screener_agent = MockAgent(
+        AgentRole.DATA,
+        bus,
+        return_value={"symbols": ["ABBV", "UNH"], "shortlist": []},
+    )
+    screener_agent.role_name = "screener"
+    data_agent = MockAgent(AgentRole.DATA, bus, return_value={"market_data": {}})
+    strategy_agent = MockAgent(AgentRole.STRATEGY, bus, return_value={"signals": []})
+
+    orch.register(screener_agent)
+    orch.register(data_agent)
+    orch.register(strategy_agent)
+
+    await orch.run_pipeline(["AAPL", "MSFT"])
+
+    assert len(strategy_agent.received_messages) == 1
+    assert strategy_agent.received_messages[0].data["symbols"] == ["ABBV", "UNH"]
 
 
 @pytest.mark.asyncio
@@ -50,7 +74,7 @@ async def test_pipeline_continues_after_agent_failure():
     orch.register(data_agent)
     orch.register(strategy_agent)
 
-    results = await orch.run_pipeline(["AAPL"])
+    await orch.run_pipeline(["AAPL"])
 
     # Strategy still ran (with error data from previous step)
     assert len(strategy_agent.received_messages) >= 1

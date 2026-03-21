@@ -45,6 +45,7 @@ class ExecutionAgent(BaseAgent):
 
     async def process(self, message: Message) -> Any:
         approved_trades = message.data.get("approved_trades", [])
+        market_data = message.data.get("market_data", {})
         settings = get_settings()
 
         if not approved_trades:
@@ -52,14 +53,14 @@ class ExecutionAgent(BaseAgent):
                 "executed": [],
                 "message": "No approved trades to execute",
                 "symbols": message.data.get("symbols", []),
-                "market_data": message.data.get("market_data", {}),
+                "market_data": market_data,
             }
 
         client = self._get_client()
         executed = []
 
         for trade in approved_trades:
-            result = await self._execute_trade(trade, client, settings)
+            result = await self._execute_trade(trade, market_data, client, settings)
             executed.append(result)
 
             self.emit(MessageType.TRADE_EXECUTED, result)
@@ -67,11 +68,11 @@ class ExecutionAgent(BaseAgent):
         return {
             "executed": executed,
             "symbols": message.data.get("symbols", []),
-            "market_data": message.data.get("market_data", {}),
+            "market_data": market_data,
         }
 
     async def _execute_trade(
-        self, trade: dict, client, settings
+        self, trade: dict, market_data: dict, client, settings
     ) -> dict:
         """Execute a single trade. Returns execution result."""
         symbol = trade["symbol"]
@@ -84,7 +85,11 @@ class ExecutionAgent(BaseAgent):
 
         # Get approximate share count
         # In a real system, we'd use the current bid/ask
-        price = trade.get("latest_price", 0)
+        price = (
+            trade.get("latest_price")
+            or trade.get("entry")
+            or market_data.get(symbol, {}).get("latest_price", 0)
+        )
         if price <= 0:
             return {
                 "symbol": symbol,

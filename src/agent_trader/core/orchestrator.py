@@ -319,7 +319,8 @@ class Orchestrator:
     async def run_pipeline(self, symbols: list[str]) -> dict:
         self._today_watchlist = symbols
         research = await self.run_research_phase(fallback_symbols=symbols)
-        monitor = await self.run_monitor_phase(symbols)
+        monitor_symbols = self._today_watchlist or symbols
+        monitor = await self.run_monitor_phase(monitor_symbols)
         return {"research": research, "monitor": monitor}
 
     async def run_single(self, role: AgentRole, data: Any = None) -> Message | None:

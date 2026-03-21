@@ -41,6 +41,7 @@ class TradeSignal:
     strategy: str
     reasoning: str
     suggested_size_pct: float
+    latest_price: float | None = None
     entry: float | None = None
     stop_loss: float | None = None
     target: float | None = None
@@ -54,6 +55,8 @@ class TradeSignal:
             "reasoning": self.reasoning,
             "suggested_size_pct": self.suggested_size_pct,
         }
+        if self.latest_price is not None:
+            d["latest_price"] = self.latest_price
         if self.entry:
             d["entry"] = self.entry
         if self.stop_loss:
@@ -91,6 +94,7 @@ class StrategyAgent(BaseAgent):
                 market_context, settings,
             )
             if signal:
+                signal.latest_price = stock_data.get("latest_price")
                 all_signals.append(signal.to_dict())
 
         # "Best available" mode: if no signals passed the strict filter,
@@ -100,6 +104,7 @@ class StrategyAgent(BaseAgent):
             if best:
                 best.suggested_size_pct = 2.0  # Tiny position — learning trade
                 best.reasoning = f"[BEST AVAILABLE] {best.reasoning}"
+                best.latest_price = market_data.get(best.symbol, {}).get("latest_price")
                 all_signals.append(best.to_dict())
 
         return {
