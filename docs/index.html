@@ -65,7 +65,7 @@
 <body>
     <h1>Agent Trader Dashboard</h1>
     <p class="subtitle">
-        Last updated: <span id="lastUpdated">—</span> |
+        Last updated: <span id="lastUpdated">â€”</span> |
         Mode: <span class="tag tag-dry" id="modeTag">DRY RUN</span>
     </p>
 
@@ -73,28 +73,28 @@
     <div class="grid">
         <div class="card">
             <div class="card-label">Portfolio Value</div>
-            <div class="card-value" id="portfolioValue">—</div>
+            <div class="card-value" id="portfolioValue">â€”</div>
         </div>
         <div class="card">
             <div class="card-label">Total P&L</div>
-            <div class="card-value" id="totalPnl">—</div>
+            <div class="card-value" id="totalPnl">â€”</div>
             <div class="card-sub" id="totalPnlPct"></div>
         </div>
         <div class="card">
             <div class="card-label">Cash Available</div>
-            <div class="card-value" id="cash">—</div>
+            <div class="card-value" id="cash">â€”</div>
         </div>
         <div class="card">
             <div class="card-label">Open Positions</div>
-            <div class="card-value" id="positionCount">—</div>
+            <div class="card-value" id="positionCount">â€”</div>
         </div>
         <div class="card">
             <div class="card-label">Total Trades</div>
-            <div class="card-value" id="totalTrades">—</div>
+            <div class="card-value" id="totalTrades">â€”</div>
         </div>
         <div class="card">
             <div class="card-label">Win Rate</div>
-            <div class="card-value" id="winRate">—</div>
+            <div class="card-value" id="winRate">â€”</div>
         </div>
     </div>
 
@@ -273,11 +273,11 @@
                 <td>${new Date(t.timestamp).toLocaleDateString()}</td>
                 <td><strong>${t.symbol}</strong></td>
                 <td><span class="tag tag-${t.action}">${t.action}</span></td>
-                <td>${t.quantity || '—'}</td>
-                <td>${t.price ? fmt(t.price) : '—'}</td>
-                <td>${t.value ? fmt(t.value) : '—'}</td>
+                <td>${t.quantity || 'â€”'}</td>
+                <td>${t.price ? fmt(t.price) : 'â€”'}</td>
+                <td>${t.value ? fmt(t.value) : 'â€”'}</td>
                 <td><span class="tag tag-${t.status === 'dry_run' ? 'dry' : 'live'}">${t.status}</span></td>
-                <td class="trade-reasoning">${t.reasoning || '—'}</td>
+                <td class="trade-reasoning">${t.reasoning || 'â€”'}</td>
             </tr>
         `).join('');
     }
@@ -291,7 +291,7 @@
 
         container.innerHTML = `
             <div style="margin-bottom:12px;color:#94a3b8">
-                <strong>Sentiment:</strong> ${data.overall_sentiment || '—'}
+                <strong>Sentiment:</strong> ${data.overall_sentiment || 'â€”'}
                 <br><small>${data.market_summary || ''}</small>
             </div>
         ` + entries.slice(0, 5).map(([sym, s]) => {
@@ -315,7 +315,7 @@
 
         const completed = trades.filter(t => t.pnl !== undefined);
         if (!completed.length) {
-            document.getElementById('winRate').textContent = '—';
+            document.getElementById('winRate').textContent = 'â€”';
             return;
         }
 
