@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # --- LLM Models ---
     # Sonnet for deep morning research (worth the $0.01-0.03)
     # Haiku for periodic monitoring checks ($0.001)
+    llm_provider: str = "auto"  # "auto", "anthropic", or "openai"
     research_model: str = "claude-sonnet-4-6"
     monitor_model: str = "claude-haiku-4-5-20251001"
     research_model_openai: str = "gpt-4o-mini"

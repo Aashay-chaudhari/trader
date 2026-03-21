@@ -45,6 +45,15 @@ on:
           - research
           - monitor
           - run
+      llm_provider:
+        description: 'Preferred LLM provider'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - anthropic
+          - openai
 
 permissions:
   contents: write
@@ -89,6 +98,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          LLM_PROVIDER: ${{ inputs.llm_provider || vars.LLM_PROVIDER || 'auto' }}
           DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
         run: python -m agent_trader ${{ steps.phase.outputs.phase }}
 

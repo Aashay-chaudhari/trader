@@ -204,40 +204,59 @@ class ResearchAgent(BaseAgent):
 
     def __init__(self, message_bus: MessageBus):
         super().__init__(AgentRole.RESEARCH, message_bus)
-        self._llm_client = None
-        self._provider = None
+        self._llm_clients: dict[str, Any] = {}
+        self._last_provider = None
+        self._last_model = None
         self._tracker = PerformanceTracker()
 
-    def _get_client(self):
-        if self._llm_client is not None:
-            return self._llm_client
+    def _get_client(self, provider: str):
+        if provider in self._llm_clients:
+            return self._llm_clients[provider]
 
         settings = get_settings()
 
-        if settings.anthropic_api_key:
+        if provider == "anthropic" and settings.anthropic_api_key:
             import anthropic
-            self._llm_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
-            self._provider = "anthropic"
-        elif settings.openai_api_key:
+            self._llm_clients[provider] = anthropic.Anthropic(
+                api_key=settings.anthropic_api_key
+            )
+        elif provider == "openai" and settings.openai_api_key:
             import openai
-            self._llm_client = openai.OpenAI(api_key=settings.openai_api_key)
-            self._provider = "openai"
+            self._llm_clients[provider] = openai.OpenAI(api_key=settings.openai_api_key)
         else:
-            raise RuntimeError("No LLM API key configured")
+            raise RuntimeError(f"No API key configured for provider '{provider}'")
 
-        return self._llm_client
+        return self._llm_clients[provider]
+
+    def _get_available_providers(self) -> list[str]:
+        settings = get_settings()
+        providers = []
+        if settings.anthropic_api_key:
+            providers.append("anthropic")
+        if settings.openai_api_key:
+            providers.append("openai")
+        return providers
+
+    def _get_provider_preference(self) -> str:
+        preference = get_settings().llm_provider.strip().lower()
+        if preference in {"auto", "anthropic", "openai"}:
+            return preference
+        return "auto"
+
+    def _get_provider_sequence(self) -> list[str]:
+        available = self._get_available_providers()
+        preference = self._get_provider_preference()
+
+        if preference == "auto":
+            return available
+        if preference in available:
+            return [preference] + [provider for provider in available if provider != preference]
+        return available
 
     def _get_provider_name(self) -> str:
-        """Resolve provider without relying on client initialization side effects."""
-        if self._provider is not None:
-            return self._provider
-
-        settings = get_settings()
-        if settings.anthropic_api_key:
-            return "anthropic"
-        if settings.openai_api_key:
-            return "openai"
-        return ""
+        """Resolve the preferred provider based on config and available keys."""
+        providers = self._get_provider_sequence()
+        return providers[0] if providers else ""
 
     async def process(self, message: Message) -> Any:
         market_data = message.data.get("market_data", {})
@@ -258,6 +277,8 @@ class ResearchAgent(BaseAgent):
         provider = self._get_provider_name()
         prompt_sections: dict[str, Any] = {}
 
+        run_mode = "research"
+
         # Build the prompt based on phase
         if phase == "monitor" and morning_context:
             performance_feedback = self._tracker.get_recent_trades_for_prompt(5)
@@ -273,7 +294,7 @@ class ResearchAgent(BaseAgent):
                 market_data=json.dumps(summary, indent=2),
                 morning_context=json.dumps(morning_context, indent=2),
             )
-            model = self._get_monitor_model()
+            run_mode = "monitor"
         elif phase == "weekly_review":
             performance_summary = self._tracker.get_performance_summary()
             trade_details = self._tracker.get_recent_trades_for_prompt(20)
@@ -286,7 +307,6 @@ class ResearchAgent(BaseAgent):
                 performance_summary=json.dumps(performance_summary, indent=2),
                 trade_details=trade_details,
             )
-            model = self._get_research_model()
         else:
             performance_feedback = self._tracker.get_recent_trades_for_prompt()
             learned_rules = self._tracker.get_learned_rules()
@@ -313,7 +333,9 @@ class ResearchAgent(BaseAgent):
                 news_context=news_context,
                 screener_context=screener_context,
             )
-            model = self._get_research_model()
+            run_mode = "research"
+
+        model = self._get_model_for_phase(provider, run_mode)
 
         save_prompt_context_snapshot(
             phase=phase,
@@ -323,7 +345,7 @@ class ResearchAgent(BaseAgent):
             prompt_sections=prompt_sections,
         )
 
-        analysis = await self._call_llm(prompt, model)
+        analysis = await self._call_llm(prompt, phase=run_mode)
 
         # If this is a weekly review, save the learned rules
         if phase == "weekly_review" and "new_rules" in analysis:
@@ -340,19 +362,26 @@ class ResearchAgent(BaseAgent):
             "market_context": market_context,
         }
 
-    def _get_research_model(self) -> str:
+    def _get_research_model(self, provider: str | None = None) -> str:
         """Sonnet for deep research — smarter, worth the extra $0.02."""
         settings = get_settings()
-        if self._get_provider_name() == "anthropic":
+        provider = provider or self._get_provider_name()
+        if provider == "anthropic":
             return settings.research_model
         return settings.research_model_openai
 
-    def _get_monitor_model(self) -> str:
+    def _get_monitor_model(self, provider: str | None = None) -> str:
         """Haiku for monitoring — fast and cheap."""
         settings = get_settings()
-        if self._get_provider_name() == "anthropic":
+        provider = provider or self._get_provider_name()
+        if provider == "anthropic":
             return settings.monitor_model
         return settings.research_model_openai
+
+    def _get_model_for_phase(self, provider: str, phase: str) -> str:
+        if phase == "monitor":
+            return self._get_monitor_model(provider)
+        return self._get_research_model(provider)
 
     def _prepare_rich_summary(self, market_data: dict) -> dict:
         """Build comprehensive but token-efficient summary for Claude."""
@@ -624,47 +653,70 @@ class ResearchAgent(BaseAgent):
 
         return "\n".join(lines)
 
-    async def _call_llm(self, prompt: str, model: str) -> dict:
-        client = self._get_client()
+    async def _call_llm(self, prompt: str, phase: str) -> dict:
+        providers = self._get_provider_sequence()
+        if not providers:
+            return {
+                "overall_sentiment": "neutral",
+                "market_summary": "LLM analysis failed: No LLM API key configured",
+                "stocks": {},
+            }
+
         raw_text = ""
+        errors = []
 
-        try:
-            if self._provider == "anthropic":
-                response = client.messages.create(
-                    model=model,
-                    max_tokens=4000,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                raw_text = response.content[0].text
+        for provider in providers:
+            model = self._get_model_for_phase(provider, phase)
+            client = self._get_client(provider)
 
-            elif self._provider == "openai":
-                response = client.chat.completions.create(
-                    model=model,
-                    max_tokens=4000,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                raw_text = response.choices[0].message.content
+            try:
+                raw_text = self._call_llm_once(client, provider, model, prompt)
+                analysis = self._parse_llm_response(raw_text)
+                analysis.setdefault("_meta", {})
+                analysis["_meta"].update({"provider": provider, "model": model})
+                self._last_provider = provider
+                self._last_model = model
+                return analysis
+            except json.JSONDecodeError as exc:
+                errors.append(f"{provider}/{model}: could not parse JSON ({exc})")
+            except Exception as exc:
+                errors.append(f"{provider}/{model}: {exc}")
 
-            raw_text = raw_text.strip()
-            if raw_text.startswith("```"):
-                raw_text = raw_text.split("\n", 1)[1]
-                raw_text = raw_text.rsplit("```", 1)[0]
+        failure = {
+            "overall_sentiment": "neutral",
+            "market_summary": f"LLM analysis failed: {' | '.join(errors)}",
+            "stocks": {},
+        }
+        if raw_text:
+            failure["raw_response"] = raw_text[:500]
+        return failure
 
-            return json.loads(raw_text)
+    def _call_llm_once(self, client: Any, provider: str, model: str, prompt: str) -> str:
+        if provider == "anthropic":
+            response = client.messages.create(
+                model=model,
+                max_tokens=4000,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return response.content[0].text
 
-        except json.JSONDecodeError:
-            return {
-                "overall_sentiment": "neutral",
-                "market_summary": "Analysis could not be parsed.",
-                "raw_response": raw_text[:500],
-                "stocks": {},
-            }
-        except Exception as e:
-            return {
-                "overall_sentiment": "neutral",
-                "market_summary": f"LLM analysis failed: {str(e)}",
-                "stocks": {},
-            }
+        if provider == "openai":
+            response = client.chat.completions.create(
+                model=model,
+                max_tokens=4000,
+                response_format={"type": "json_object"},
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return response.choices[0].message.content or ""
+
+        raise RuntimeError(f"Unsupported LLM provider '{provider}'")
+
+    def _parse_llm_response(self, raw_text: str) -> dict:
+        raw_text = raw_text.strip()
+        if raw_text.startswith("```"):
+            raw_text = raw_text.split("\n", 1)[1]
+            raw_text = raw_text.rsplit("```", 1)[0]
+        return json.loads(raw_text)
 
     def _save_research(self, analysis: dict, phase: str) -> None:
         archive_dir = Path("data/research")
