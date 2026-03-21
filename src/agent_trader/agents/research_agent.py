@@ -17,13 +17,18 @@ The performance feedback loop is what makes this system improve over time.
 Claude sees its own win rate, confidence calibration, and past mistakes.
 """
 
-import json
 import logging
-from typing import Any
-from pathlib import Path
+import json
+import re
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
+from html import unescape
+from pathlib import Path
 from time import perf_counter
+from typing import Any
+from urllib.parse import quote_plus
 
+import httpx
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message
 from agent_trader.config.settings import get_settings
@@ -344,6 +349,7 @@ class ResearchAgent(BaseAgent):
         artifact_context = build_recent_artifact_summary(data_dir=get_settings().data_dir)
         provider = self._get_provider_name()
         prompt_sections: dict[str, Any] = {}
+        web_context: dict[str, Any] = {}
 
         run_mode = "research"
 
@@ -379,12 +385,18 @@ class ResearchAgent(BaseAgent):
             performance_feedback = self._tracker.get_recent_trades_for_prompt()
             learned_rules = self._tracker.get_learned_rules()
             market_context_text = self._format_market_context(market_context)
+            web_context = self._collect_web_context(
+                market_data,
+                news_data,
+                limit=2,
+            )
             news_inputs = self._build_news_inputs_snapshot(
                 news_data,
                 market_headlines=market_headlines,
                 news_discoveries=news_discoveries,
                 hot_stocks=hot_stocks,
                 finviz_data=finviz_data,
+                web_context=web_context,
             )
             news_context = self._format_news(
                 news_data,
@@ -392,6 +404,7 @@ class ResearchAgent(BaseAgent):
                 news_discoveries=news_discoveries,
                 hot_stocks=hot_stocks,
                 finviz_data=finviz_data,
+                web_context=web_context,
             )
             screener_context = self._format_screener_context(screener_results)
             prompt_sections = {
@@ -432,6 +445,7 @@ class ResearchAgent(BaseAgent):
             learned_rules=prompt_sections.get("learned_rules", ""),
             artifact_context=artifact_context,
         )
+        analysis = self._merge_web_context_into_analysis(analysis, web_context)
         llm_meta = analysis.get("_meta", {})
         selected_provider = llm_meta.get("provider", provider or "unresolved")
         selected_model = llm_meta.get(
@@ -565,12 +579,231 @@ class ResearchAgent(BaseAgent):
 
         return summary
 
+    def _collect_web_context(
+        self,
+        market_data: dict[str, Any],
+        news_data: dict[str, Any],
+        *,
+        limit: int,
+    ) -> dict[str, Any]:
+        priority_symbols = self._select_priority_web_symbols(
+            market_data,
+            news_data,
+            limit=limit,
+        )
+        if not priority_symbols:
+            return {"priority_symbols": [], "checks": [], "articles_by_symbol": {}}
+
+        articles_by_symbol: dict[str, list[dict[str, Any]]] = {}
+        checks: list[dict[str, Any]] = []
+
+        for symbol in priority_symbols:
+            query = self._build_web_query(symbol, market_data.get(symbol, {}))
+            search_url = (
+                "https://news.google.com/rss/search?"
+                f"q={quote_plus(query)}&hl=en-US&gl=US&ceid=US:en"
+            )
+            articles = self._fetch_google_news_articles(
+                symbol=symbol,
+                query=query,
+                search_url=search_url,
+                limit=3,
+            )
+            if not articles:
+                continue
+
+            articles_by_symbol[symbol] = articles
+            sources = [
+                source
+                for source in dict.fromkeys(
+                    article.get("source", "") for article in articles if article.get("source")
+                )
+            ]
+            source_text = ", ".join(sources[:2]) or "Google News"
+            checks.append(
+                {
+                    "symbol": symbol,
+                    "query": query,
+                    "source": "Google News",
+                    "url": search_url,
+                    "finding": (
+                        f"Verified recent coverage for {symbol} via {source_text}; "
+                        f"captured {len(articles)} current article links."
+                    ),
+                }
+            )
+
+        return {
+            "priority_symbols": priority_symbols,
+            "checks": checks,
+            "articles_by_symbol": articles_by_symbol,
+        }
+
+    def _select_priority_web_symbols(
+        self,
+        market_data: dict[str, Any],
+        news_data: dict[str, Any],
+        *,
+        limit: int,
+    ) -> list[str]:
+        ranked: list[tuple[float, float, float, float, str]] = []
+        for symbol, data in market_data.items():
+            if not isinstance(data, dict) or data.get("error"):
+                continue
+            news_entry = news_data.get(symbol, {}) if isinstance(news_data.get(symbol), dict) else {}
+            info = data.get("info", {}) if isinstance(data.get("info"), dict) else {}
+            market_cap = self._safe_float(info.get("market_cap")) or 0.0
+            price = self._safe_float(data.get("latest_price")) or 0.0
+            source_count = float(news_entry.get("source_count") or 0.0)
+            headline_count = float(len(news_entry.get("news_headlines", []) or []))
+            ranked.append((market_cap, price, source_count, headline_count, symbol))
+
+        ranked.sort(reverse=True)
+        return [symbol for *_rest, symbol in ranked[:limit]]
+
+    def _build_web_query(self, symbol: str, market_entry: dict[str, Any]) -> str:
+        info = market_entry.get("info", {}) if isinstance(market_entry, dict) else {}
+        company_name = str(info.get("name") or "").strip()
+        if company_name:
+            return f"{company_name} {symbol} stock"
+        return f"{symbol} stock"
+
+    def _fetch_google_news_articles(
+        self,
+        *,
+        symbol: str,
+        query: str,
+        search_url: str,
+        limit: int,
+    ) -> list[dict[str, Any]]:
+        try:
+            response = httpx.get(
+                search_url,
+                timeout=10.0,
+                follow_redirects=True,
+                headers={"User-Agent": "agent-trader/1.0"},
+            )
+            response.raise_for_status()
+            root = ET.fromstring(response.text)
+        except Exception as exc:
+            self.logger.info(
+                "Skipping live web verification for %s (%s): %s",
+                symbol,
+                query,
+                exc,
+            )
+            return []
+
+        articles: list[dict[str, Any]] = []
+        for item in root.findall("./channel/item")[:limit]:
+            raw_title = (item.findtext("title", "") or "").strip()
+            source = (item.findtext("source", "") or "").strip() or "Google News"
+            link = (item.findtext("link", "") or "").strip()
+            if not raw_title or not link:
+                continue
+
+            title = self._clean_google_news_title(raw_title, source)
+            description = (item.findtext("description", "") or "").strip()
+            summary = self._strip_html(description)
+            articles.append(
+                {
+                    "title": title,
+                    "url": link,
+                    "source": source,
+                    "publisher": source,
+                    "published": (item.findtext("pubDate", "") or "").strip(),
+                    "kind": "web",
+                    "reason": f"Live Google News verification for {symbol}",
+                    "summary": summary or f"Live search result for {query}",
+                }
+            )
+
+        return self._dedupe_article_list(articles)
+
+    def _merge_web_context_into_analysis(
+        self,
+        analysis: dict[str, Any],
+        web_context: dict[str, Any] | None,
+    ) -> dict[str, Any]:
+        if not isinstance(analysis, dict):
+            return analysis
+
+        context = web_context or {}
+        checks = list(context.get("checks") or [])
+        articles_by_symbol = context.get("articles_by_symbol") or {}
+        if not checks and not articles_by_symbol:
+            return analysis
+
+        merged = dict(analysis)
+        merged["web_checks"] = self._dedupe_web_checks(
+            [*list(merged.get("web_checks") or []), *checks]
+        )
+
+        stocks = merged.get("stocks")
+        if not isinstance(stocks, dict):
+            return merged
+
+        updated_stocks: dict[str, Any] = {}
+        for symbol, payload in stocks.items():
+            stock_payload = dict(payload) if isinstance(payload, dict) else {}
+            auto_articles = list(articles_by_symbol.get(symbol) or [])
+            stock_payload["supporting_articles"] = self._dedupe_article_list(
+                [
+                    *list(stock_payload.get("supporting_articles") or []),
+                    *auto_articles,
+                ]
+            )
+            updated_stocks[symbol] = stock_payload
+        merged["stocks"] = updated_stocks
+        return merged
+
+    def _dedupe_web_checks(self, checks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        deduped: list[dict[str, Any]] = []
+        seen: set[tuple[str, str]] = set()
+        for check in checks:
+            if not isinstance(check, dict):
+                continue
+            key = (
+                str(check.get("symbol") or "").upper(),
+                str(check.get("url") or check.get("query") or "").strip().lower(),
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append(check)
+        return deduped
+
+    def _dedupe_article_list(self, articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        deduped: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for article in articles:
+            if not isinstance(article, dict):
+                continue
+            key = str(article.get("url") or article.get("title") or "").strip().lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(article)
+        return deduped
+
+    def _clean_google_news_title(self, title: str, source: str) -> str:
+        suffix = f" - {source}"
+        if source and title.endswith(suffix):
+            return title[: -len(suffix)].strip()
+        return title.strip()
+
+    def _strip_html(self, value: str) -> str:
+        text = re.sub(r"<[^>]+>", " ", value or "")
+        text = unescape(text)
+        return re.sub(r"\s+", " ", text).strip()
+
     def _format_news(
         self, news_data: dict,
         market_headlines: list | None = None,
         news_discoveries: list | None = None,
         hot_stocks: list | None = None,
         finviz_data: dict | None = None,
+        web_context: dict | None = None,
     ) -> str:
         """Format all news context for Claude's prompt."""
         sections = []
@@ -688,6 +921,24 @@ class ResearchAgent(BaseAgent):
                     hot_lines.append(f"    - {reason}")
             sections.append("\n".join(hot_lines))
 
+        live_articles = (web_context or {}).get("articles_by_symbol", {})
+        live_checks = list((web_context or {}).get("checks", []))
+        if live_checks or live_articles:
+            web_lines = ["LIVE WEB VERIFICATION:"]
+            for check in live_checks:
+                web_lines.append(
+                    f"  {check.get('symbol', '?')}: {check.get('finding', 'Live check completed.')}"
+                )
+                if check.get("url"):
+                    web_lines.append(f"    Search: <{check['url']}>")
+            for symbol, articles in live_articles.items():
+                for article in articles[:2]:
+                    web_lines.append(
+                        f"  - {symbol}: [{article.get('source', 'web')}] "
+                        f"{article.get('title', '')} <{article.get('url', '')}>"
+                    )
+            sections.append("\n".join(web_lines))
+
         # Analyst upgrades/downgrades
         if finviz_data and finviz_data.get("analyst_changes"):
             analyst_lines = ["RECENT ANALYST ACTIONS:"]
@@ -709,6 +960,7 @@ class ResearchAgent(BaseAgent):
         news_discoveries: list | None = None,
         hot_stocks: list | None = None,
         finviz_data: dict | None = None,
+        web_context: dict | None = None,
     ) -> dict[str, Any]:
         """Persist the structured news inputs that fed the LLM prompt."""
         return {
@@ -717,6 +969,7 @@ class ResearchAgent(BaseAgent):
             "news_discoveries": news_discoveries or [],
             "hot_stocks": hot_stocks or [],
             "finviz": finviz_data or {},
+            "web_influence": web_context or {},
         }
 
     def _format_market_context(self, ctx: dict) -> str:
@@ -1260,6 +1513,14 @@ class ResearchAgent(BaseAgent):
             return None
         try:
             return int(str(value).replace(",", "").strip())
+        except ValueError:
+            return None
+
+    def _safe_float(self, value: Any) -> float | None:
+        if value is None:
+            return None
+        try:
+            return float(str(value).replace(",", "").strip())
         except ValueError:
             return None
 

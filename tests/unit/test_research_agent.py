@@ -101,6 +101,88 @@ def test_research_agent_codex_cli_limits_api_fallback_to_openai(
     assert agent._get_provider_name() == "openai"
 
 
+def test_research_agent_collects_web_context_for_high_value_symbols(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    def fake_fetch(*, symbol: str, query: str, search_url: str, limit: int) -> list[dict]:
+        return [
+            {
+                "title": f"{symbol} live article",
+                "url": f"https://example.com/{symbol.lower()}",
+                "source": "ExampleWire",
+                "reason": f"Live verification for {symbol}",
+            }
+        ]
+
+    monkeypatch.setattr(agent, "_fetch_google_news_articles", fake_fetch)
+
+    context = agent._collect_web_context(
+        {
+            "AAPL": {"latest_price": 190.0, "info": {"market_cap": 3_000_000_000_000}},
+            "MSFT": {"latest_price": 430.0, "info": {"market_cap": 3_200_000_000_000}},
+            "SOFI": {"latest_price": 8.0, "info": {"market_cap": 8_000_000_000}},
+        },
+        {
+            "AAPL": {"news_headlines": [{"title": "AAPL headline"}], "source_count": 2},
+            "MSFT": {"news_headlines": [{"title": "MSFT headline"}], "source_count": 3},
+            "SOFI": {"news_headlines": [], "source_count": 0},
+        },
+        limit=2,
+    )
+
+    assert context["priority_symbols"] == ["MSFT", "AAPL"]
+    assert [check["symbol"] for check in context["checks"]] == ["MSFT", "AAPL"]
+    assert context["articles_by_symbol"]["MSFT"][0]["url"] == "https://example.com/msft"
+
+
+def test_research_agent_merges_web_context_into_analysis(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+    merged = agent._merge_web_context_into_analysis(
+        {
+            "stocks": {
+                "AAPL": {
+                    "supporting_articles": [
+                        {"title": "Original", "url": "https://example.com/original"}
+                    ]
+                },
+                "MSFT": {},
+            },
+            "web_checks": [{"symbol": "AAPL", "url": "https://example.com/search/aapl"}],
+        },
+        {
+            "checks": [
+                {"symbol": "AAPL", "url": "https://example.com/search/aapl"},
+                {"symbol": "MSFT", "url": "https://example.com/search/msft"},
+            ],
+            "articles_by_symbol": {
+                "AAPL": [
+                    {"title": "Original", "url": "https://example.com/original"},
+                    {"title": "Fresh AAPL", "url": "https://example.com/aapl"},
+                ],
+                "MSFT": [{"title": "Fresh MSFT", "url": "https://example.com/msft"}],
+            },
+        },
+    )
+
+    assert len(merged["web_checks"]) == 2
+    assert len(merged["stocks"]["AAPL"]["supporting_articles"]) == 2
+    assert merged["stocks"]["MSFT"]["supporting_articles"][0]["url"] == "https://example.com/msft"
+
+
 class AnthropicErroringClient:
     class Messages:
         @staticmethod

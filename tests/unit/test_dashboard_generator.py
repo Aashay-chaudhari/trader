@@ -422,6 +422,7 @@ def test_generate_dashboard_preserves_linkable_evidence():
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
         assert "link-chip" in html
+        assert "Web Evidence" in html
         assert bundle["profiles"]["default"]["research"]["stocks"]["ABBV"]["supporting_articles"][0]["url"] == (
             "https://example.com/abbv-deal"
         )
