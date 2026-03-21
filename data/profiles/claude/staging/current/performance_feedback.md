@@ -1,0 +1,1 @@
+No trade history yet — this is the first run.

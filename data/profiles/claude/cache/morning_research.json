@@ -1,0 +1,149 @@
+{
+  "overall_sentiment": "neutral",
+  "market_summary": "The current market regime is risk-off, evidenced by the elevated VIX and a downward trend in major indices like the S&P 500 and Nasdaq. Although there's some bearish news affecting various sectors, conservative trading should focus on setups with clear defined risk.",
+  "market_regime": "risk_off",
+  "best_opportunities": [
+    "MU",
+    "V"
+  ],
+  "stocks": {
+    "MU": {
+      "sentiment": "bullish",
+      "confidence": 0.75,
+      "key_observations": [
+        "Micron Technology (MU) dropped 4.81% today but is above its 20-day SMA by 1.52%, showing upward momentum in a down market.",
+        "The news around Micron mentions significant shifts in AI-focused technology, which could drive future interest despite current bearish sentiment."
+      ],
+      "news_impact": "positive",
+      "news_summary": "Micron has been noted for its strong AI fundamentals, which could enhance its performance in the near term.",
+      "technical_setup": "The stock is in an uptrend and has support at the lower Bollinger Band around $369.65. The bullish MACD indicates potential upward movement.",
+      "recommendation": "buy",
+      "trade_plan": {
+        "entry": 420.0,
+        "stop_loss": 400.0,
+        "target": 450.0,
+        "risk_reward_ratio": 2.0,
+        "position_size_pct": 5.0,
+        "timeframe": "swing_1_2_weeks"
+      },
+      "catalysts": [
+        "AI advancements and market recovery",
+        "Potential recovery in semiconductor demand"
+      ],
+      "risks": [
+        "Continued market downturn",
+        "Sector-specific weakness in technology"
+      ],
+      "earnings_warning": false
+    },
+    "V": {
+      "sentiment": "bullish",
+      "confidence": 0.7,
+      "key_observations": [
+        "Visa Inc. (V) has rallied slightly today by 0.64% amidst a trending market that is generally down, suggesting underlying strength.",
+        "The stock is at a critical support level near $297, where buying pressure could build."
+      ],
+      "news_impact": "positive",
+      "news_summary": "Visa's launch of new services may attract positive investor sentiment.",
+      "technical_setup": "Visa is trading below its 20-day and 50-day SMAs but shows signs of consolidating at the lower price range. A potential reversal pattern is forming.",
+      "recommendation": "buy",
+      "trade_plan": {
+        "entry": 299.0,
+        "stop_loss": 290.0,
+        "target": 320.0,
+        "risk_reward_ratio": 2.33,
+        "position_size_pct": 5.0,
+        "timeframe": "swing_1_2_weeks"
+      },
+      "catalysts": [
+        "Increased digital payment adoption",
+        "Better than expected earnings report"
+      ],
+      "risks": [
+        "Fluctuation in economic metrics",
+        "Regulatory impacts on fees"
+      ],
+      "earnings_warning": true
+    }
+  },
+  "self_reflection": "My confidence should be calibrated to consider the overall market conditions more heavily; while some setups look promising, volatility remains a concern given the current risk-off sentiment.",
+  "_meta": {
+    "status": "success",
+    "provider_preference": "anthropic",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "usage": {
+      "input_tokens": 6987,
+      "output_tokens": 712,
+      "total_tokens": 7699,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "service_tier": "default",
+    "request_id": "req_9dced421426a42fe82781be5316da1d9",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-tokens": "194369",
+        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-tokens": "1.689s"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
+        "tokens_remaining_after_request": 194369,
+        "tokens_remaining_before_request_estimate": 202068
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+      "agent_profile": "claude",
+      "agent_label": "Claude Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "workflow_dispatch",
+        "actor": "Aashay-chaudhari",
+        "run_id": "23389664797",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23389664797",
+        "sha": "ac70396335c35f929093267abb4b6ff82a19df38",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": 10360.3,
+    "attempts": [
+      {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-6",
+        "status": "error",
+        "duration_ms": 146.2,
+        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyXArYj8SYigSfgah7Y'}",
+        "quota_issue_detected": true
+      },
+      {
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "status": "success",
+        "duration_ms": 10360.3,
+        "usage": {
+          "input_tokens": 6987,
+          "output_tokens": 712,
+          "total_tokens": 7699,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "quota_issue_detected": true,
+    "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyXArYj8SYigSfgah7Y'}"
+  }
+}

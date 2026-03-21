@@ -1,0 +1,95 @@
+{
+  "status": "success",
+  "provider_preference": "anthropic",
+  "provider": "openai",
+  "model": "gpt-4o-mini-2024-07-18",
+  "usage": {
+    "input_tokens": 5065,
+    "output_tokens": 933,
+    "total_tokens": 5998,
+    "cached_input_tokens": 0,
+    "reasoning_output_tokens": 0
+  },
+  "service_tier": "default",
+  "request_id": "req_d6cfdcdb228c4a77bdc4ccc9f178d30d",
+  "rate_limits": {
+    "headers": {
+      "x-ratelimit-limit-requests": "10000",
+      "x-ratelimit-limit-tokens": "200000",
+      "x-ratelimit-remaining-requests": "9999",
+      "x-ratelimit-remaining-tokens": "195995",
+      "x-ratelimit-reset-requests": "8.64s",
+      "x-ratelimit-reset-tokens": "1.201s"
+    },
+    "estimates": {
+      "requests_remaining_after_request": 9999,
+      "requests_remaining_before_request_estimate": 10000,
+      "tokens_remaining_after_request": 195995,
+      "tokens_remaining_before_request_estimate": 201993
+    },
+    "billing_balance_before_workflow": {
+      "available": false,
+      "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+    }
+  },
+  "runtime": {
+    "platform": "github_actions",
+    "python_version": "3.12.13",
+    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+    "agent_profile": "claude",
+    "agent_label": "Claude Strategist",
+    "github": {
+      "repository": "Aashay-chaudhari/trader",
+      "workflow": "Trading Pipeline",
+      "event_name": "workflow_dispatch",
+      "actor": "Aashay-chaudhari",
+      "run_id": "23389664797",
+      "run_attempt": "1",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23389664797",
+      "sha": "ac70396335c35f929093267abb4b6ff82a19df38",
+      "ref": "refs/heads/main"
+    }
+  },
+  "duration_ms": 14131.8,
+  "attempts": [
+    {
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001",
+      "status": "error",
+      "duration_ms": 170.2,
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyZiCWTufNWBSqyLieu'}",
+      "quota_issue_detected": true
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "status": "success",
+      "duration_ms": 14131.8,
+      "usage": {
+        "input_tokens": 5065,
+        "output_tokens": 933,
+        "total_tokens": 5998,
+        "cached_input_tokens": 0,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "quota_issue_detected": true,
+  "quota_note": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZGyZiCWTufNWBSqyLieu'}",
+  "timestamp": "2026-03-21T21:59:34.227761+00:00",
+  "phase": "monitor",
+  "symbols": [
+    "MU",
+    "INTC",
+    "PANW",
+    "UNH",
+    "ABT",
+    "HON",
+    "LMT",
+    "HD",
+    "MA",
+    "V"
+  ],
+  "selected_provider": "openai",
+  "selected_model": "gpt-4o-mini-2024-07-18"
+}
