@@ -1,9 +1,9 @@
 # Trading Journal — 2026-03-21
 
-**Run ID:** `20260321_215743`  
+**Run ID:** `20260321_225915`  
 **Phase:** research  
 **Strategist:** Codex Strategist  
-**Time:** 21:59 UTC  
+**Time:** 23:02 UTC  
 
 ## Screener Results
 
@@ -26,87 +26,97 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 
 **Overall Sentiment:** neutral
 
-> Analysis could not be completed from repository inputs because local file access commands failed in the current runtime sandbox. Without staged indicator/news files and historical journal/trade artifacts, any directional call would be speculative. Conservative posture is to avoid new risk until data access is restored.
+> U.S. equities traded risk-off into Friday, March 20, 2026, with the S&P 500 down 1.51% and the Dow down 0.96% in broad de-risking. Several large-cap names on this list also closed lower on heavy volume, signaling fragile short-term momentum. The tape favors selective setups with tight risk controls rather than aggressive exposure.
 
 ### MU [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 58% | **Recommendation:** watch
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Semiconductor cycle updates, Earnings guidance revisions
-- **Risks:** Entering without validated technical levels, Unseen headline risk
+  - MU was referenced around $469 pre-earnings with options implying about a 7% post-print swing.
+  - RSI(14) was reported near 61.737 with MACD around 7.07 (short-term momentum positive but extended).
+  - Investopedia noted YTD gain near 65%, indicating elevated volatility and positioning risk.
+- **Catalysts:** AI memory pricing and supply-demand tightness, Post-earnings estimate revisions, Semiconductor sector momentum
+- **Risks:** Post-earnings volatility crush and profit taking, Memory-cycle peak concerns, High-beta downside in risk-off tape
 
-### INTC [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### INTC [+]
+- **Sentiment:** bullish | **Confidence:** 67% | **Recommendation:** buy
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Foundry execution milestones, Policy/subsidy developments
-- **Risks:** Execution risk, Positioning without validated trend data
+  - INTC closed at $43.87 on Mar 20, 2026 after a -5.00% day; prior close was $46.18 on Mar 19.
+  - RSI(14) was reported near 63.951 with MACD near 0.76, and MA20 around 46.63.
+  - 30-day range reported near $41.64 to $49.17, giving nearby support/resistance structure.
+- **Catalysts:** Continuation in semiconductor rotation, Positive estimate revisions, Follow-through above MA20 region
+- **Risks:** Break below $43.6 low invalidates setup, Sector-wide drawdown in risk-off regime, Headline risk around execution/competition
 
 ### PANW [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 55% | **Recommendation:** watch
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Cybersecurity spending trends, Large enterprise deal flow
-- **Risks:** High multiple sensitivity, No validated support/resistance levels
+  - PANW closed at $162.95 on Mar 20, 2026, down -4.00% day/day.
+  - RSI(14) near 55.16 with MACD near -2.26 suggests mixed momentum (not deeply oversold).
+  - 30-day range near $139.57 to $172.00; current price is mid-range after a sharp pullback.
+- **Catalysts:** Cybersecurity spending resilience, Multiple expansion if rates stabilize, Reclaim of 20-day/50-day moving averages
+- **Risks:** Further de-rating in growth tech, Failure at 165-170 resistance, Macro-driven beta selloff
 
-### UNH [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### UNH [-]
+- **Sentiment:** bearish | **Confidence:** 72% | **Recommendation:** sell
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Medical cost trend updates, Regulatory policy changes
-- **Risks:** Policy/legal headline risk, Trading without confirmed technical context
+  - UNH closed at $275.59 on Mar 20, 2026, down -1.73%; intraday range was $275.00 to $283.10.
+  - Market coverage indicated prior guidance pressure including expected 2026 revenue contraction.
+  - Despite RSI(14) around 52.505, fundamental headline risk remains dominant over technical signal.
+- **Catalysts:** Further guidance cuts or reimbursement pressure, Regulatory/legal developments, Defensive sector rotation changes
+- **Risks:** Short squeeze on policy relief headlines, Value buyers stepping in near multi-month lows, Unexpectedly strong quarterly metrics
 
-### ABT [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### ABT [-]
+- **Sentiment:** bearish | **Confidence:** 64% | **Recommendation:** sell
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Device pipeline updates, Diagnostics demand signals
-- **Risks:** Product/legal headline risk, No validated volatility framework
+  - ABT was reported at $105.46 close on Mar 20, 2026, down -1.61% with unusually high volume (~80.4M vs ~10.6M 50-day avg).
+  - RSI(14) around 44.879 and MACD around -0.37 indicate weak momentum.
+  - Recent references show ABT trading well below its 52-week high (~$139.06).
+- **Catalysts:** Upcoming earnings update and guidance, Medical devices segment trends, Sector rotation into/out of defensives
+- **Risks:** Oversold rebound on defensive bid, Positive earnings surprise, Short-covering after high-volume decline
 
-### HON [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### HON [-]
+- **Sentiment:** bearish | **Confidence:** 60% | **Recommendation:** watch
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Industrial order momentum, Aerospace demand trajectory
-- **Risks:** Macro cyclicality, No confirmed support/resistance
+  - HON was referenced at $221.50 on Mar 20, 2026 in peer-comparison market coverage.
+  - RSI(14) around 48.65 with MACD near -0.04 indicates weak/neutral momentum with bearish bias.
+  - Investing historical/technical data showed price slipping under several short-to-medium moving averages.
+- **Catalysts:** Aerospace and automation order updates, Analyst target revisions, Broader industrials sentiment
+- **Risks:** Continued de-risking in cyclicals, Failure to reclaim moving averages, Macro growth disappointments
 
-### LMT [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### LMT [+]
+- **Sentiment:** bullish | **Confidence:** 62% | **Recommendation:** buy
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Defense budget headlines, Contract award flow
-- **Risks:** Program execution delays, No validated trend confirmation
+  - LMT closed at $627.43 on Mar 20, 2026, down -1.58%, with volume near 6.4M vs ~1.9M 50-day average.
+  - RSI(14) around 38.831 and MACD near -2.92 indicate near-oversold conditions after pullback.
+  - Recent highs near $692 and pullback into the low-620s create a defined risk zone for tactical entries.
+- **Catalysts:** Defense spending visibility, Geopolitical risk premium, Mean reversion from oversold RSI zone
+- **Risks:** Breakdown below 620 support, Sector-wide defense de-risking, Broader equity drawdown acceleration
 
-### HD [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+### HD [-]
+- **Sentiment:** bearish | **Confidence:** 63% | **Recommendation:** sell
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Housing turnover indicators, Consumer spending resilience
-- **Risks:** Rate sensitivity, No validated setup quality
+  - Recent HD reference showed close at $330.93 on Mar 18, 2026 after a -3.08% day; another recent close was $342.58 on Mar 16.
+  - RSI(14) around 39.441 with MACD near -2.40 and MA50 around 358.97 suggests trend weakness.
+  - 52-week high reference near $426.75 leaves shares materially below prior peak.
+- **Catalysts:** Housing/rates sensitivity, Consumer discretionary spending trends, Retail peer guidance
+- **Risks:** Relief rally from oversold conditions, Rates decline could support housing-linked names, Unexpectedly strong same-store sales commentary
 
 ### MA [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 57% | **Recommendation:** watch
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Cross-border volume trends, Consumer payment velocity
-- **Risks:** Regulatory fees pressure, No confirmed price structure
+  - MA closed at $496.32 on Mar 20, 2026 (+1.05% day/day), but still well below the 52-week high near $601.77.
+  - RSI(14) around 42.62 with MACD around -5.36 and MA50 near 539.07 indicates medium-term downside bias.
+  - Pivot area around 515.9 from technical tables marks a key reclaim level.
+- **Catalysts:** Digital payments volume growth, Stablecoin/crypto rail integration narrative, Reclaim of 50-day trend levels
+- **Risks:** Persistent relative weakness below moving averages, Regulatory/payment-fee pressure, Macro slowdown in consumer spending
 
 ### V [~]
-- **Sentiment:** neutral | **Confidence:** 5% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 56% | **Recommendation:** watch
 - **Observations:**
-  - Staging inputs unavailable: data/profiles/codex/staging/current/*.json could not be read
-  - Historical context unavailable: journal/feedback/research files could not be read
-- **Catalysts:** Travel and cross-border spending, Payments volume growth
-- **Risks:** Regulatory/legal developments, No validated technical confirmation
+  - V recent quoted close was $314.43 (Mar 10, 2026 in historical table context).
+  - RSI(14) around 38.294 with MACD around -2.01 and MA50 near 316.18 indicates bearish/oversold pressure.
+  - Recent ranges show repeated failures to hold above the low-320s.
+- **Catalysts:** Global card spending trends, Cross-border volume data, Reversal confirmation through moving-average reclaim
+- **Risks:** Continued lower highs in risk-off tape, Payment fee/regulatory pressure, Further rotation out of mega-cap financials
 
 ## LLM Telemetry
 
@@ -114,8 +124,8 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 - **Provider Preference:** auto
 - **Selected Provider:** cli:codex
 - **Selected Model:** default
-- **Token Usage:** input=48507, output=3791, total=0
-- **LLM Latency:** 44804.2 ms
+- **Token Usage:** input=93593, output=10452, total=0
+- **LLM Latency:** 162032.1 ms
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
@@ -135,10 +145,10 @@ Scanned 70 stocks, found 76 candidates, selected top 10.
 
 ### INTC Headlines
 
-- **EV Stocks Have Massive Upside, but Investors Need to Avoid This Profit Blackhole** [Motley Fool]
-- **Better Semiconductor Stock: Broadcom vs. Marvell Technology** [Motley Fool]
-- **Got $5,000? 2 Beaten-Down Tech Stocks Smart Money Is Quietly Accumulating** [Motley Fool]
-- **Microsoft Is Now the Cheapest "Magnificent Seven" Stock. Does That Make It a Buy?** [Motley Fool]
+- **Is This Stock a Buy on the Dip?** [Motley Fool]
+- **Uber's Advertising Business May Be Bigger Than Investors Think** [Motley Fool]
+- **This Nuclear Energy Trend Could Be Bigger Than Investors Think in 2026** [Motley Fool]
+- **Is Berkshire Hathaway Stock a Buy Right Now?** [Motley Fool]
 
 ### PANW Headlines
 

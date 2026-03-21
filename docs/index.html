@@ -23,6 +23,7 @@
     .stack{display:grid;gap:14px}.mono{margin:0;padding:14px;border-radius:16px;border:1px solid rgba(126,166,235,.12);background:#0b1730;white-space:pre-wrap;font-family:Consolas,monospace;color:var(--muted)}
     .table{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}th{padding:10px 8px;text-align:left;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(126,166,235,.16)}td{padding:12px 8px;border-bottom:1px solid rgba(126,166,235,.08);vertical-align:top}.empty{padding:22px 16px;border:1px dashed rgba(126,166,235,.16);border-radius:16px;color:var(--muted);text-align:center}
     .headline-list{max-height:340px;overflow-y:auto;margin-top:8px;padding-right:4px}.headline-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(126,166,235,.08);background:#0a1628;margin-bottom:6px}.headline-row:hover{border-color:rgba(125,211,252,.28);background:#0d1c36}.hl-sent{flex-shrink:0;width:42px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.72rem;font-weight:800}.hl-sent.pos{background:rgba(134,239,172,.14);color:var(--good)}.hl-sent.neg{background:rgba(253,164,175,.14);color:var(--bad)}.hl-sent.neu{background:rgba(252,211,77,.1);color:var(--warn)}.hl-body{flex:1;min-width:0}.hl-title{font-size:.85rem;font-weight:600;line-height:1.4;margin-bottom:2px}.hl-meta{font-size:.72rem;color:var(--muted)}.source-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(125,211,252,.1);color:var(--accent);margin-right:4px}.source-breakdown{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.src-chip{padding:4px 8px;border-radius:8px;font-size:.72rem;font-weight:600;border:1px solid rgba(126,166,235,.14);background:#0a1628}
+    .foldout{padding:0;overflow:hidden}.foldout summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;cursor:pointer;font-weight:700}.foldout summary::-webkit-details-marker{display:none}.foldout summary span{color:var(--muted);font-size:.84rem;font-weight:600}.foldout .foldout-body{padding:0 20px 20px}.link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.link-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(125,211,252,.22);background:#0b1830;font-size:.76rem;text-decoration:none;color:var(--accent)}.link-chip:hover{border-color:rgba(125,211,252,.45)}.reason-list{display:grid;gap:10px}.reason-item{padding:10px 12px;border-radius:14px;border:1px solid rgba(126,166,235,.12);background:#0b1730}.compact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.compact-grid .card{height:100%}
     @media (max-width:1080px){.hero-grid,.split,.newscols,.context{grid-template-columns:1fr}}@media (max-width:760px){.page{padding:16px 12px 28px}.hero{padding:20px}}
   </style>
 </head>
@@ -63,60 +64,63 @@
       <div class="card"><div class="label">Prompt Articles</div><div class="value" id="articleCount">-</div><div class="sub" id="modeNote">Mode unknown</div></div>
     </section>
 
-    <section class="panel">
-      <div class="section"><div><h2>Workflow Map</h2><p>Hover a stage to inspect the inputs that survived into the latest run.</p></div></div>
-      <div class="workflow" id="workflow"></div>
-    </section>
-
-    <section class="split">
-      <div class="panel">
-        <div class="section"><div><h2>Portfolio Curve</h2><p>Portfolio snapshots archived across workflow runs.</p></div></div>
-        <div class="chart"><canvas id="valueChart"></canvas></div>
+    <details class="panel foldout">
+      <summary><div><h2>Workflow Snapshot</h2><p>Quick path from news intake to execution.</p></div><span>Expand</span></summary>
+      <div class="foldout-body">
+        <div class="workflow" id="workflow"></div>
+        <div class="split" style="margin-top:14px">
+          <div class="card">
+            <div class="section"><div><h3>Portfolio Curve</h3><p>Snapshots across workflow runs.</p></div></div>
+            <div class="chart"><canvas id="valueChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="section"><div><h3>Run Snapshot</h3><p>Provider, phases, and execution summary.</p></div></div>
+            <div class="mini" id="runSummary"></div>
+          </div>
+        </div>
       </div>
-      <div class="panel">
-        <div class="section"><div><h2>Run Snapshot</h2><p>Provider, model, phases, and execution summary.</p></div></div>
-        <div class="mini" id="runSummary"></div>
-      </div>
-    </section>
+    </details>
 
     <section class="panel">
       <div class="section"><div><h2>Decision board</h2><p>Recommendation, trade plan, shortlist rationale, and the articles the LLM had while making the call.</p></div></div>
       <div class="decisions" id="decisionBoard"></div>
     </section>
 
-    <section class="panel">
-      <div class="section"><div><h2>News influence explorer</h2><p>Market headlines, discoveries, hot stocks, and analyst changes.</p></div></div>
-      <div class="newscols">
-        <div class="stack">
-          <div class="card"><h3>Market headlines</h3><div id="marketHeadlines"></div></div>
-          <div class="card"><h3>News discoveries</h3><div id="discoveries"></div></div>
-        </div>
-        <div class="stack">
-          <div class="card"><h3>Cross-source hot stocks</h3><div id="hotStocks"></div></div>
+    <details class="panel foldout" open>
+      <summary><div><h2>News Influence</h2><p>Linked evidence behind discoveries, headlines, and cross-source movers.</p></div><span>Expand</span></summary>
+      <div class="foldout-body">
+        <div class="compact-grid" style="margin-bottom:14px">
+          <div class="card"><h3>Market regime</h3><p id="marketSummary">No market summary yet.</p><div class="mini" id="marketCards" style="margin-top:14px"></div></div>
           <div class="card"><h3>Analyst tape</h3><div id="analystTape"></div></div>
         </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section"><div><h2>Prompt context explorer</h2><p>Market regime, shortlist rationale, saved artifacts, and LLM telemetry.</p></div></div>
-      <div class="context">
-        <div class="stack">
-          <div class="card"><h3>Market regime</h3><p id="marketSummary">No market summary yet.</p><div class="mini" id="marketCards" style="margin-top:14px"></div></div>
-          <div class="card"><h3>Artifact memory</h3><pre class="mono" id="artifactMemory">No saved artifacts yet.</pre></div>
-          <div class="card"><h3>LLM telemetry</h3><div class="mini" id="llmSummary"></div><div class="stack" id="providerAttempts" style="margin-top:14px"></div></div>
-        </div>
-        <div class="stack">
-          <div class="card"><h3>Screener rationale</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Source</th><th>Score</th><th>Why</th></tr></thead><tbody id="shortlistTable"></tbody></table></div></div>
-          <div class="card"><h3>Open positions</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>PnL</th></tr></thead><tbody id="positionsTable"></tbody></table></div></div>
+        <div class="newscols">
+          <div class="stack">
+            <div class="card"><h3>Market headlines</h3><div id="marketHeadlines"></div></div>
+            <div class="card"><h3>News discoveries</h3><div id="discoveries"></div></div>
+          </div>
+          <div class="stack">
+            <div class="card"><h3>Cross-source hot stocks</h3><div id="hotStocks"></div></div>
+            <div class="card"><h3>Screener rationale</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Source</th><th>Score</th><th>Why</th></tr></thead><tbody id="shortlistTable"></tbody></table></div></div>
+          </div>
         </div>
       </div>
-    </section>
+    </details>
 
-    <section class="panel">
-      <div class="section"><div><h2>Trade history</h2><p>Journal-backed trade log with execution status and stored reasoning.</p></div></div>
-      <div class="table"><table><thead><tr><th>Date</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Reasoning</th></tr></thead><tbody id="tradesTable"></tbody></table></div>
-    </section>
+    <details class="panel foldout">
+      <summary><div><h2>Context & Telemetry</h2><p>Saved memory, provider attempts, and open positions.</p></div><span>Expand</span></summary>
+      <div class="foldout-body">
+        <div class="context">
+          <div class="stack">
+            <div class="card"><h3>Artifact memory</h3><pre class="mono" id="artifactMemory">No saved artifacts yet.</pre></div>
+            <div class="card"><h3>LLM telemetry</h3><div class="mini" id="llmSummary"></div><div class="stack" id="providerAttempts" style="margin-top:14px"></div></div>
+          </div>
+          <div class="stack">
+            <div class="card"><h3>Open positions</h3><div class="table"><table><thead><tr><th>Symbol</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>PnL</th></tr></thead><tbody id="positionsTable"></tbody></table></div></div>
+            <div class="card"><h3>Trade history</h3><div class="table"><table><thead><tr><th>Date</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Reasoning</th></tr></thead><tbody id="tradesTable"></tbody></table></div></div>
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
 
   <script>
@@ -134,7 +138,7 @@
     const hover=(title,lines)=>{const items=arr(lines).filter(Boolean);return items.length?`<div class="hover"><strong>${esc(title)}</strong><ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""};
     const listBlock=(items,fallback)=>{const vals=arr(items).filter(Boolean);return `<ul>${(vals.length?vals:[fallback]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`};
     const miniCard=(label,value)=>`<div class="tile"><strong>${esc(label)}</strong><span>${esc(value)}</span></div>`;
-    const articleCard=a=>{const url=safeUrl(a.url),pub=a.publisher||a.source||"Unknown source",sent=num(a.sentiment);const body=`<div class="article-title">${esc(truncate(a.title||"Untitled",110))}</div><div class="article-meta"><span>${esc(pub)}</span><span>${esc(dateText(a.published))}</span><span>${esc(sent===null?"Context item":"Sentiment "+sent.toFixed(1))}</span></div><div class="article-copy">${esc(truncate(a.summary||"No article summary captured.",180))}</div>`;return `<div class="article">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer">${body}</a>`:`<div class="body">${body}</div>`}${hover(a.title||"Article context",[pub,dateText(a.published),a.category?`Category: ${a.category}`:"",sent===null?"":`Sentiment: ${sent.toFixed(2)}`,a.summary||"No article summary captured."])}</div>`};
+    const articleCard=a=>{const url=safeUrl(a.url),pub=a.publisher||a.source||"Unknown source",sent=num(a.sentiment),copy=a.summary||a.reason||"No article summary captured.";const body=`<div class="article-title">${esc(truncate(a.title||"Untitled",110))}</div><div class="article-meta"><span>${esc(pub)}</span><span>${esc(dateText(a.published))}</span><span>${esc(sent===null?(a.kind||"Context item"):"Sentiment "+sent.toFixed(1))}</span></div><div class="article-copy">${esc(truncate(copy,180))}</div>`;return `<div class="article">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer">${body}</a>`:`<div class="body">${body}</div>`}${hover(a.title||"Article context",[pub,dateText(a.published),a.category?`Category: ${a.category}`:a.kind?`Type: ${a.kind}`:"",sent===null?"":`Sentiment: ${sent.toFixed(2)}`,copy])}</div>`};
     const articleGrid=(items,msg)=>{const list=arr(items).slice(0,6);return list.length?`<div class="articles">${list.map(articleCard).join("")}</div>`:empty(msg)};
     const stackCards=(items,msg)=>{const list=arr(items);return list.length?`<div class="stack">${list.join("")}</div>`:empty(msg)};
     const sentCls=v=>{const n=num(v);return n===null?"neu":n>0.1?"pos":n<-0.1?"neg":"neu"};
@@ -142,6 +146,13 @@
     const headlineRow=a=>{const sent=num(a.sentiment),src=a.source||"",pub=a.publisher||src||"?",cat=a.category||"headline",url=safeUrl(a.url),title=a.title||"Untitled";return `<div class="headline-row">`+`<div class="hl-sent ${sentCls(sent)}">${sentLabel(sent)}</div>`+`<div class="hl-body">`+`<div class="hl-title">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer" style="color:inherit;text-decoration:none">${esc(truncate(title,120))}</a>`:esc(truncate(title,120))}</div>`+`<div class="hl-meta"><span class="source-tag">${esc(src)}</span>${esc(pub)} &middot; ${esc(cat)} &middot; ${esc(dateText(a.published))}</div>`+`</div></div>`};
     const headlineList=(items,msg)=>{const list=arr(items);return list.length?`<div class="headline-list">${list.map(headlineRow).join("")}</div>`:empty(msg)};
     const sourceBreakdown=items=>{const counts={};arr(items).forEach(a=>{const s=a.source||"unknown";counts[s]=(counts[s]||0)+1});return Object.keys(counts).length?`<div class="source-breakdown">${Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([s,c])=>`<span class="src-chip"><span class="source-tag">${esc(s)}</span>${c} article${c>1?"s":""}</span>`).join("")}</div>`:""};
+    const linkChip=a=>{const url=safeUrl(a.url);if(!url)return"";const label=a.source||a.publisher||a.title||"Source";return `<a class="link-chip" href="${esc(url)}" target="_blank" rel="noreferrer">${esc(truncate(label,42))}</a>`};
+    const dedupeArticles=items=>{const seen=new Set();return arr(items).filter(a=>{const key=(safeUrl(a.url)||String(a.title||"")).toLowerCase();if(!key||seen.has(key))return false;seen.add(key);return true;});};
+    const supportingArticlesForSymbol=(analysis,headlines,webArticles)=>dedupeArticles([...arr(analysis.supporting_articles),...arr(headlines),...arr(webArticles)]);
+    const matchedArticles=(text,articles)=>{const pool=dedupeArticles(articles);if(!pool.length)return[];const tokens=String(text||"").toLowerCase().match(/[a-z]{4,}/g)||[];const ranked=pool.map(a=>{const haystack=`${String(a.title||"")} ${String(a.summary||"")} ${String(a.reason||"")}`.toLowerCase();const score=tokens.reduce((sum,token)=>sum+(haystack.includes(token)?1:0),0)+(a.reason&&String(text||"").toLowerCase().includes(String(a.reason).toLowerCase())?2:0);return {article:a,score};}).sort((a,b)=>b.score-a.score);const strong=ranked.filter(x=>x.score>0).map(x=>x.article).slice(0,2);return strong.length?strong:pool.slice(0,Math.min(2,pool.length));};
+    const linkedReasonList=(items,articles,fallback)=>{const vals=arr(items).filter(Boolean);const rows=(vals.length?vals:[fallback]).map(item=>`<div class="reason-item"><div>${esc(item)}</div><div class="link-row">${matchedArticles(item,articles).map(linkChip).join("")}</div></div>`);return `<div class="reason-list">${rows.join("")}</div>`};
+    const discoveryCard=d=>{const url=safeUrl(d.top_headline_url||d.url);const title=d.top_headline||d.discovery_reason||"No discovery reason captured.";const heading=url?`<a href="${esc(url)}" target="_blank" rel="noreferrer" style="color:inherit;text-decoration:none">${esc(title)}</a>`:esc(title);return `<div class="tile"><strong>${esc(d.symbol||"?")}</strong><span>${heading}</span><div class="sub">${esc((d.sentiment_label||"mixed")+" | "+(d.news_sentiment!==undefined?Number(d.news_sentiment).toFixed(2):"n/a"))}</div></div>`};
+    const hotStockCard=h=>{const articles=dedupeArticles(arr(h.articles));return `<div class="tile"><strong>${esc(h.symbol||"?")}</strong><span>${esc((h.sentiment||"mixed")+" across "+String(h.source_count||0)+" sources")}</span><div class="sub">${esc(truncate(arr(h.reasons).join(" | "),160)||"No reasons captured.")}</div><div class="link-row">${articles.slice(0,3).map(linkChip).join("")}</div></div>`};
     const labelFromId=id=>String(id||"default").replace(/[-_]+/g," ").replace(/\b\w/g,m=>m.toUpperCase());
 
     let dashboardBundle=null;
@@ -194,11 +205,11 @@
 
     function renderProfile(profileBundle,bundle){
       const profile=obj(profileBundle.profile), latest=obj(profileBundle.latest), trades=arr(profileBundle.trades), reports=obj(profileBundle.reports), reportResearch=obj(reports.research), reportMonitor=obj(reports.monitor), reportPayload=obj(reportResearch.research);
-      const research=Object.keys(obj(profileBundle.research)).length?obj(profileBundle.research):obj(reportPayload.research), context=obj(profileBundle.context), prompt=obj(context.prompt_sections), newsInputs=obj(prompt.news_inputs), perSymbol=obj(newsInputs.per_symbol), screener=obj(prompt.screener_context), market=obj(prompt.market_context);
+      const research=Object.keys(obj(profileBundle.research)).length?obj(profileBundle.research):obj(reportPayload.research), context=obj(profileBundle.context), prompt=obj(context.prompt_sections), newsInputs=obj(prompt.news_inputs), perSymbol=obj(newsInputs.per_symbol), webInfluence=obj(newsInputs.web_influence), webArticlesBySymbol=obj(webInfluence.articles_by_symbol), screener=obj(prompt.screener_context), market=obj(prompt.market_context);
       const llm=Object.keys(obj(profileBundle.llm)).length?obj(profileBundle.llm):(obj(research._meta)||obj(context.llm_meta));
       const shortlist=arr(screener.shortlist), marketHeadlines=arr(newsInputs.market_headlines), discoveries=arr(newsInputs.news_discoveries), hotStocks=arr(newsInputs.hot_stocks), analystChanges=arr(obj(newsInputs.finviz).analyst_changes), positions=arr(latest.positions);
-      const totalArticles=Object.values(perSymbol).reduce((s,v)=>s+arr(obj(v).news_headlines).length,0)+marketHeadlines.length;
-      const best=arr(research.best_opportunities), signals=arr(reportMonitor.signals), approved=arr(obj(reportMonitor.risk).approved_trades), rejected=arr(obj(reportMonitor.risk).rejected_trades), executed=arr(reportMonitor.executed);
+      const totalArticles=Object.values(perSymbol).reduce((s,v)=>s+arr(obj(v).news_headlines).length,0)+marketHeadlines.length+Object.values(webArticlesBySymbol).reduce((s,v)=>s+arr(v).length,0);
+      const best=arr(research.best_opportunities), signals=arr(reportMonitor.signals), approved=arr(obj(reportMonitor.risk).approved_trades), rejected=arr(obj(reportMonitor.risk).rejected_trades), executed=arr(reportMonitor.executed), webChecks=arr(research.web_checks).length+arr(reportMonitor.web_checks).length;
 
       const runUrl=llm.runtime?.github?.run_url||context.llm_meta?.runtime?.github?.run_url||"";
       updateLinks(profileBundle,runUrl);
@@ -214,14 +225,14 @@
         {title:"Monitor / Execution",summary:"Signals, approvals, and trades were archived for follow-up.",metric:String(executed.length),lines:[`${signals.length} signals`,`${approved.length} approved trades`,`${rejected.length} rejected trades`,...executed.slice(0,3).map(x=>`${x.symbol||"?"} ${String((x.action||"").toUpperCase())} ${x.quantity||0}`)]}
       ].map(x=>`<article class="stage"><div class="top"><div><div class="label">${esc(x.title)}</div><p>${esc(x.summary)}</p></div><div class="metric">${esc(x.metric)}</div></div>${hover(x.title+" details",x.lines)}</article>`).join("");
 
-      document.getElementById("runSummary").innerHTML=[["Research Run",reportResearch.run_id||"-"],["Research Time",dateText(reportResearch.timestamp||context.timestamp)],["Monitor Time",dateText(reportMonitor.timestamp)],["Signals",String(signals.length)],["Approved",String(approved.length)],["Executed",String(executed.length)],["Quota Note",llm.quota_note||"No quota note recorded"],["Platform",llm.runtime?.platform||"-"]].map(([l,v])=>miniCard(l,String(v))).join("");
+      document.getElementById("runSummary").innerHTML=[["Research Run",reportResearch.run_id||"-"],["Research Time",dateText(reportResearch.timestamp||context.timestamp)],["Monitor Time",dateText(reportMonitor.timestamp)],["Signals",String(signals.length)],["Approved",String(approved.length)],["Executed",String(executed.length)],["Web Checks",String(webChecks)],["Quota Note",llm.quota_note||"No quota note recorded"],["Platform",llm.runtime?.platform||"-"]].map(([l,v])=>miniCard(l,String(v))).join("");
 
       const researchStocks=obj(research.stocks), shortlistMap=Object.fromEntries(shortlist.map(x=>[x.symbol,x])), symbols=[]; [...best,...Object.keys(researchStocks),...Object.keys(perSymbol),...shortlist.map(x=>x.symbol)].forEach(s=>{if(s&&!symbols.includes(s))symbols.push(s)});
-      document.getElementById("decisionBoard").innerHTML=symbols.length?symbols.map(symbol=>{const analysis=obj(researchStocks[symbol]), news=obj(perSymbol[symbol]), pick=obj(shortlistMap[symbol]), plan=obj(analysis.trade_plan), rec=analysis.recommendation||"watch", headlines=arr(news.news_headlines), srcCount=news.source_count||0; return `<article class="decision"><div class="top"><div><h3>${esc(symbol)}</h3><p>${esc(analysis.technical_setup||analysis.news_summary||pick.discovery_reason||"No narrative stored for this symbol.")}</p></div><span class="pill ${rec==="buy"?"good":rec==="sell"?"bad":"warn"}">${esc(rec)}</span></div><div class="mini">${miniCard("Sentiment",analysis.sentiment||news.sentiment||"neutral")}${miniCard("Confidence",analysis.confidence!==undefined?Math.round(Number(analysis.confidence)*100)+"%":"-")}${miniCard("News Impact",analysis.news_impact||"none")}${miniCard("Sources",String(srcCount)+" provider"+(srcCount!==1?"s":""))}${miniCard("Headlines",String(headlines.length))}${miniCard("Entry",fmtMoney(plan.entry))}${miniCard("Stop",fmtMoney(plan.stop_loss))}${miniCard("Target",fmtMoney(plan.target))}${miniCard("R / R",plan.risk_reward_ratio!==undefined?Number(plan.risk_reward_ratio).toFixed(2):"-")}${miniCard("Shortlist",pick.source||"research")}</div>${sourceBreakdown(headlines)}<div class="list"><strong>Why it was interesting</strong>${listBlock([pick.discovery_reason||pick.top_headline||analysis.news_summary||"No shortlist rationale captured.",`Score: ${pick.score!==undefined?Number(pick.score).toFixed(3):"n/a"} | Source: ${pick.source||"n/a"}`],"No shortlist rationale captured.")}</div><div class="list"><strong>Key observations</strong>${listBlock(analysis.key_observations,"No observations were returned.")}</div><div class="list"><strong>Catalysts</strong>${listBlock(analysis.catalysts,"No catalysts were listed.")}</div><div class="list"><strong>Risks</strong>${listBlock(analysis.risks,"No explicit risks were listed.")}</div><div class="list"><strong>All headlines that influenced this decision (${headlines.length})</strong>${headlineList(headlines,"No symbol-specific articles were captured for this decision.")}</div></article>`}).join(""):empty("No research decisions available yet.");
+      document.getElementById("decisionBoard").innerHTML=symbols.length?symbols.map(symbol=>{const analysis=obj(researchStocks[symbol]), news=obj(perSymbol[symbol]), pick=obj(shortlistMap[symbol]), plan=obj(analysis.trade_plan), rec=analysis.recommendation||"watch", headlines=arr(news.news_headlines), webArticles=arr(webArticlesBySymbol[symbol]), supporting=supportingArticlesForSymbol(analysis,headlines,webArticles), uniqueSources=new Set(supporting.map(a=>a.source||a.publisher).filter(Boolean)); const srcCount=Math.max(news.source_count||0,uniqueSources.size); return `<article class="decision"><div class="top"><div><h3>${esc(symbol)}</h3><p>${esc(analysis.technical_setup||analysis.news_summary||pick.discovery_reason||"No narrative stored for this symbol.")}</p></div><span class="pill ${rec==="buy"?"good":rec==="sell"?"bad":"warn"}">${esc(rec)}</span></div><div class="mini">${miniCard("Sentiment",analysis.sentiment||news.sentiment||"neutral")}${miniCard("Confidence",analysis.confidence!==undefined?Math.round(Number(analysis.confidence)*100)+"%":"-")}${miniCard("News Impact",analysis.news_impact||"none")}${miniCard("Sources",String(srcCount)+" provider"+(srcCount!==1?"s":""))}${miniCard("Headlines",String(headlines.length))}${miniCard("Web Evidence",String(webArticles.length))}${miniCard("Entry",fmtMoney(plan.entry))}${miniCard("Stop",fmtMoney(plan.stop_loss))}${miniCard("Target",fmtMoney(plan.target))}${miniCard("R / R",plan.risk_reward_ratio!==undefined?Number(plan.risk_reward_ratio).toFixed(2):"-")}${miniCard("Shortlist",pick.source||"research")}</div>${sourceBreakdown(supporting.length?supporting:headlines)}<div class="list"><strong>Why it was interesting</strong>${linkedReasonList([pick.discovery_reason||pick.top_headline||analysis.news_summary||"No shortlist rationale captured.",`Score: ${pick.score!==undefined?Number(pick.score).toFixed(3):"n/a"} | Source: ${pick.source||"n/a"}`],supporting,"No shortlist rationale captured.")}</div><div class="list"><strong>Key observations</strong>${listBlock(analysis.key_observations,"No observations were returned.")}</div><div class="list"><strong>Catalysts</strong>${linkedReasonList(analysis.catalysts,supporting,"No catalysts were listed.")}</div><div class="list"><strong>Risks</strong>${linkedReasonList(analysis.risks,supporting,"No explicit risks were listed.")}</div><div class="list"><strong>Linked evidence</strong>${articleGrid(supporting.slice(0,4),"No linked evidence was stored for this decision.")}</div><div class="list"><strong>All headlines that influenced this decision (${headlines.length})</strong>${headlineList(headlines,"No symbol-specific articles were captured for this decision.")}</div></article>`}).join(""):empty("No research decisions available yet.");
 
       document.getElementById("marketHeadlines").innerHTML=articleGrid(marketHeadlines,"No market headlines were captured in the latest run.");
-      document.getElementById("discoveries").innerHTML=stackCards(discoveries.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc(x.discovery_reason||x.top_headline||"No discovery reason captured.")}</span><div class="sub">${esc((x.sentiment_label||"mixed")+" | "+(x.news_sentiment!==undefined?Number(x.news_sentiment).toFixed(2):"n/a"))}</div></div>`),"No news-driven discoveries were stored for the latest run.");
-      document.getElementById("hotStocks").innerHTML=stackCards(hotStocks.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc((x.sentiment||"mixed")+" across "+String(x.source_count||0)+" sources")}</span><div class="sub">${esc(truncate(arr(x.reasons).join(" | "),160)||"No reasons captured.")}</div></div>`),"No cross-source hot stocks were persisted.");
+      document.getElementById("discoveries").innerHTML=stackCards(discoveries.map(discoveryCard),"No news-driven discoveries were stored for the latest run.");
+      document.getElementById("hotStocks").innerHTML=stackCards(hotStocks.map(hotStockCard),"No cross-source hot stocks were persisted.");
       document.getElementById("analystTape").innerHTML=stackCards(analystChanges.map(x=>`<div class="tile"><strong>${esc(x.symbol||"?")}</strong><span>${esc((x.firm||"?")+": "+(x.action||"?"))}</span><div class="sub">${esc((x.from_grade||"?")+" -> "+(x.to_grade||"?"))}</div></div>`),"No analyst changes were captured.");
 
       document.getElementById("marketSummary").textContent=research.market_summary||"No market summary available.";
@@ -231,7 +242,7 @@
       document.getElementById("llmSummary").innerHTML=[["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Input Tokens",llm.usage?.input_tokens??"-"],["Output Tokens",llm.usage?.output_tokens??"-"],["Total Tokens",llm.usage?.total_tokens??"-"],["Capacity Before Request",String(llm.rate_limits?.estimates?.tokens_remaining_before_request_estimate??llm.rate_limits?.estimates?.input_tokens_remaining_before_request_estimate??"n/a")],["Latency",llm.duration_ms?`${Math.round(Number(llm.duration_ms))} ms`:"-"],["Run ID",llm.runtime?.github?.run_id||"-"],["Request ID",llm.request_id||"-"],["Quota Note",llm.quota_note||"No quota note recorded"]].map(([l,v])=>miniCard(l,String(v))).join("");
       document.getElementById("providerAttempts").innerHTML=arr(llm.attempts).length?arr(llm.attempts).map(x=>`<div class="tile"><strong>${esc((x.provider||"?")+" / "+(x.model||"?"))}</strong><span>${esc("Status: "+(x.status||"unknown"))}</span><div class="sub">${esc(x.duration_ms!==undefined?`${x.duration_ms} ms`:"duration n/a")}${x.error?` | ${esc(truncate(String(x.error),90))}`:""}</div></div>`).join(""):empty("No provider attempts were recorded.");
 
-      document.getElementById("shortlistTable").innerHTML=shortlist.length?shortlist.map(x=>`<tr><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(x.source||"")}</td><td>${x.score!==undefined?Number(x.score).toFixed(3):"-"}</td><td>${esc(x.discovery_reason||x.top_headline||"Technical move only")}</td></tr>`).join(""):`<tr><td colspan="4">${empty("No shortlist stored in latest context.")}</td></tr>`;
+      document.getElementById("shortlistTable").innerHTML=shortlist.length?shortlist.map(x=>`<tr><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(x.source||"")}</td><td>${x.score!==undefined?Number(x.score).toFixed(3):"-"}</td><td>${safeUrl(x.top_headline_url||x.url)?`<a href="${esc(safeUrl(x.top_headline_url||x.url))}" target="_blank" rel="noreferrer">${esc(x.discovery_reason||x.top_headline||"Technical move only")}</a>`:esc(x.discovery_reason||x.top_headline||"Technical move only")}</td></tr>`).join(""):`<tr><td colspan="4">${empty("No shortlist stored in latest context.")}</td></tr>`;
       document.getElementById("positionsTable").innerHTML=positions.length?positions.map(x=>`<tr><td><strong>${esc(x.symbol)}</strong></td><td>${esc(x.shares)}</td><td>${fmtMoney(x.avg_cost)}</td><td>${fmtMoney(x.current_price)}</td><td class="${cls(x.unrealized_pnl)}">${signMoney(x.unrealized_pnl)}</td></tr>`).join(""):`<tr><td colspan="5">${empty("No positions yet.")}</td></tr>`;
       document.getElementById("tradesTable").innerHTML=trades.length?trades.slice(-60).reverse().map(x=>`<tr><td>${esc(dateText(x.timestamp))}</td><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(String((x.action||"").toUpperCase()))}</td><td>${esc(x.quantity??"-")}</td><td>${fmtMoney(x.price)}</td><td>${fmtMoney(x.value)}</td><td>${esc(x.status||"-")}</td><td>${esc(x.reasoning||x.reason||"-")}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No trades yet.")}</td></tr>`;
 
