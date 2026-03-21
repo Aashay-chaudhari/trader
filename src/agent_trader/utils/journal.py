@@ -1,0 +1,240 @@
+"""Trade Journal — creates readable markdown logs of every trading decision.
+
+Every pipeline run produces a journal entry stored in data/journal/.
+These are committed to git by GitHub Actions, so you can browse them
+on GitHub like a trading diary.
+
+Each entry includes:
+  - Date and time
+  - Screener results (what stocks were picked and why)
+  - Research insights (Claude's analysis)
+  - Signals generated (which strategies fired)
+  - Risk decisions (what was approved/rejected and why)
+  - Trades executed (or dry-run simulated)
+  - Portfolio snapshot
+
+This gives you a complete audit trail of every decision the system made.
+"""
+
+import json
+from pathlib import Path
+from datetime import datetime, timezone
+
+
+def create_journal_entry(
+    run_id: str,
+    phase: str,
+    screener_results: dict | None = None,
+    research_results: dict | None = None,
+    signals: list | None = None,
+    risk_results: dict | None = None,
+    executed: list | None = None,
+    portfolio_snapshot: dict | None = None,
+    market_data: dict | None = None,
+) -> str:
+    """Generate a markdown journal entry and save it to disk.
+
+    Returns the file path of the saved entry.
+    """
+    now = datetime.now(timezone.utc)
+    date_str = now.strftime("%Y-%m-%d")
+    time_str = now.strftime("%H:%M UTC")
+
+    lines = [
+        f"# Trading Journal — {date_str}",
+        f"",
+        f"**Run ID:** `{run_id}`  ",
+        f"**Phase:** {phase}  ",
+        f"**Time:** {time_str}  ",
+        f"",
+    ]
+
+    # ── Screener Section ─────────────────────────────────────────
+    if screener_results:
+        shortlist = screener_results.get("shortlist", [])
+        lines.append("## Screener Results")
+        lines.append("")
+        lines.append(f"Scanned {screener_results.get('total_scanned', 0)} stocks, "
+                     f"found {screener_results.get('candidates_found', 0)} candidates, "
+                     f"selected top {len(shortlist)}.")
+        lines.append("")
+
+        if shortlist:
+            lines.append("| Symbol | Price | Change | Volume | Vol Ratio | Score |")
+            lines.append("|--------|------:|-------:|-------:|----------:|------:|")
+            for s in shortlist:
+                lines.append(
+                    f"| **{s['symbol']}** "
+                    f"| ${s['price']:.2f} "
+                    f"| {s['change_pct']:+.2f}% "
+                    f"| {s['volume']:,} "
+                    f"| {s['volume_ratio']:.1f}x "
+                    f"| {s['score']:.3f} |"
+                )
+            lines.append("")
+
+    # ── Research Section ─────────────────────────────────────────
+    if research_results:
+        lines.append("## Research Analysis")
+        lines.append("")
+        research = research_results.get("research", {})
+        lines.append(f"**Overall Sentiment:** {research.get('overall_sentiment', 'N/A')}")
+        lines.append("")
+
+        summary = research.get("market_summary", "")
+        if summary:
+            lines.append(f"> {summary}")
+            lines.append("")
+
+        stocks = research.get("stocks", {})
+        for symbol, analysis in stocks.items():
+            sentiment = analysis.get("sentiment", "N/A")
+            confidence = analysis.get("confidence", 0)
+            rec = analysis.get("recommendation", "N/A")
+            emoji = {"bullish": "+", "bearish": "-", "neutral": "~"}.get(sentiment, "?")
+
+            lines.append(f"### {symbol} [{emoji}]")
+            lines.append(f"- **Sentiment:** {sentiment} | **Confidence:** {confidence:.0%} | **Recommendation:** {rec}")
+
+            observations = analysis.get("key_observations", [])
+            if observations:
+                lines.append("- **Observations:**")
+                for obs in observations:
+                    lines.append(f"  - {obs}")
+
+            catalysts = analysis.get("catalysts", [])
+            if catalysts:
+                lines.append(f"- **Catalysts:** {', '.join(catalysts)}")
+
+            risks = analysis.get("risks", [])
+            if risks:
+                lines.append(f"- **Risks:** {', '.join(risks)}")
+
+            lines.append("")
+
+    # ── Signals Section ──────────────────────────────────────────
+    if signals:
+        lines.append("## Trade Signals")
+        lines.append("")
+        lines.append("| Symbol | Action | Strength | Strategy | Reasoning |")
+        lines.append("|--------|--------|----------|----------|-----------|")
+        for sig in signals:
+            lines.append(
+                f"| **{sig['symbol']}** "
+                f"| {sig['action'].upper()} "
+                f"| {sig['strength']:.2f} "
+                f"| {sig['strategy']} "
+                f"| {sig['reasoning'][:80]} |"
+            )
+        lines.append("")
+    else:
+        lines.append("## Trade Signals")
+        lines.append("")
+        lines.append("*No signals generated this run.*")
+        lines.append("")
+
+    # ── Risk Decisions ───────────────────────────────────────────
+    if risk_results:
+        approved = risk_results.get("approved_trades", [])
+        rejected = risk_results.get("rejected_trades", [])
+
+        lines.append("## Risk Assessment")
+        lines.append("")
+        lines.append(f"- **Approved:** {len(approved)} trades")
+        lines.append(f"- **Rejected:** {len(rejected)} trades")
+        lines.append("")
+
+        if rejected:
+            lines.append("### Rejected Trades")
+            lines.append("")
+            for r in rejected:
+                reasons = ", ".join(r.get("rejection_reasons", ["unknown"]))
+                lines.append(f"- **{r['symbol']}** ({r['action']}): {reasons}")
+            lines.append("")
+
+    # ── Execution Section ────────────────────────────────────────
+    if executed:
+        lines.append("## Execution")
+        lines.append("")
+        for trade in executed:
+            status = trade.get("status", "unknown")
+            status_label = {
+                "dry_run": "DRY RUN",
+                "submitted": "SUBMITTED",
+                "failed": "FAILED",
+            }.get(status, status.upper())
+
+            lines.append(
+                f"- **{trade.get('symbol')}** {trade.get('action', '').upper()} "
+                f"{trade.get('quantity', 0)} shares @ ~${trade.get('estimated_price', 0):.2f} "
+                f"= ${trade.get('estimated_value', 0):,.2f} "
+                f"[{status_label}]"
+            )
+            if trade.get("reason"):
+                lines.append(f"  - _{trade['reason']}_")
+        lines.append("")
+    else:
+        lines.append("## Execution")
+        lines.append("")
+        lines.append("*No trades executed.*")
+        lines.append("")
+
+    # ── Portfolio Snapshot ────────────────────────────────────────
+    if portfolio_snapshot:
+        lines.append("## Portfolio Snapshot")
+        lines.append("")
+        lines.append(f"| Metric | Value |")
+        lines.append(f"|--------|------:|")
+        lines.append(f"| **Total Value** | ${portfolio_snapshot.get('portfolio_value', 0):,.2f} |")
+        lines.append(f"| **Cash** | ${portfolio_snapshot.get('cash', 0):,.2f} |")
+        lines.append(f"| **Invested** | ${portfolio_snapshot.get('invested', 0):,.2f} |")
+        lines.append(f"| **Total P&L** | ${portfolio_snapshot.get('total_pnl', 0):+,.2f} ({portfolio_snapshot.get('total_pnl_pct', 0):+.2f}%) |")
+        lines.append(f"| **Positions** | {portfolio_snapshot.get('position_count', 0)} |")
+        lines.append("")
+
+        positions = portfolio_snapshot.get("positions", [])
+        if positions:
+            lines.append("### Open Positions")
+            lines.append("")
+            lines.append("| Symbol | Shares | Avg Cost | Current | Value | P&L |")
+            lines.append("|--------|-------:|---------:|--------:|------:|----:|")
+            for p in positions:
+                pnl_sign = "+" if p["unrealized_pnl"] >= 0 else ""
+                lines.append(
+                    f"| {p['symbol']} "
+                    f"| {p['shares']} "
+                    f"| ${p['avg_cost']:.2f} "
+                    f"| ${p['current_price']:.2f} "
+                    f"| ${p['current_value']:,.2f} "
+                    f"| {pnl_sign}${p['unrealized_pnl']:,.2f} ({pnl_sign}{p['unrealized_pnl_pct']:.2f}%) |"
+                )
+            lines.append("")
+
+    lines.append("---")
+    lines.append(f"*Generated by Agent Trader v0.1.0*")
+
+    content = "\n".join(lines)
+
+    # Save to journal directory
+    journal_dir = Path("data/journal") / date_str
+    journal_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = f"{run_id}_{phase}.md"
+    filepath = journal_dir / filename
+    filepath.write_text(content, encoding="utf-8")
+
+    # Also save raw data as JSON for programmatic access
+    raw_data = {
+        "run_id": run_id,
+        "phase": phase,
+        "timestamp": now.isoformat(),
+        "screener": screener_results,
+        "signals": signals,
+        "risk": risk_results,
+        "executed": executed,
+        "portfolio": portfolio_snapshot,
+    }
+    json_path = journal_dir / f"{run_id}_{phase}.json"
+    json_path.write_text(json.dumps(raw_data, indent=2, default=str), encoding="utf-8")
+
+    return str(filepath)

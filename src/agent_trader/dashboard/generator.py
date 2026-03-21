@@ -1,0 +1,503 @@
+"""Dashboard generator — creates a static HTML dashboard from portfolio data.
+
+Reads snapshot data, trade history, and research insights to generate
+a comprehensive single-page dashboard deployed to GitHub Pages.
+
+Sections:
+  - Portfolio overview cards (value, P&L, cash, positions)
+  - Portfolio value chart over time
+  - Open positions table
+  - Trade history log (every trade with reasoning)
+  - Performance stats (win rate, avg gain/loss, best/worst)
+  - Latest research insights
+"""
+
+import json
+from pathlib import Path
+from datetime import datetime, timezone
+
+
+DASHBOARD_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Trader Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0f172a; color: #e2e8f0;
+            padding: 20px; max-width: 1400px; margin: 0 auto;
+        }
+        h1 { font-size: 1.8rem; margin-bottom: 4px; }
+        h2 { font-size: 1.2rem; color: #94a3b8; margin: 24px 0 12px; }
+        .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .card {
+            background: #1e293b; border-radius: 12px; padding: 16px;
+            border: 1px solid #334155;
+        }
+        .card-label { color: #94a3b8; font-size: 0.8rem; margin-bottom: 4px; }
+        .card-value { font-size: 1.5rem; font-weight: 700; }
+        .card-sub { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+        .positive { color: #4ade80; }
+        .negative { color: #f87171; }
+        .neutral { color: #94a3b8; }
+        .chart-container { background: #1e293b; border-radius: 12px; padding: 16px; border: 1px solid #334155; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { text-align: left; color: #94a3b8; font-weight: 500; padding: 10px 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; }
+        td { padding: 10px 8px; border-bottom: 1px solid #1e293b; }
+        .tag {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+        }
+        .tag-buy { background: #166534; color: #4ade80; }
+        .tag-sell { background: #7f1d1d; color: #f87171; }
+        .tag-dry { background: #1e3a5f; color: #60a5fa; }
+        .tag-live { background: #166534; color: #4ade80; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #475569; }
+        .insight-card { background: #1e293b; border-radius: 8px; padding: 14px; border: 1px solid #334155; margin-bottom: 8px; }
+        .insight-card .symbol { font-weight: 700; color: #818cf8; }
+        .insight-card .sentiment { font-size: 0.8rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+        .stat { text-align: center; padding: 12px; }
+        .stat-value { font-size: 1.3rem; font-weight: 700; }
+        .stat-label { font-size: 0.75rem; color: #64748b; }
+        .trade-reasoning { font-size: 0.8rem; color: #64748b; max-width: 300px; }
+        .flow-node {
+            background: #1e293b; border: 2px solid #334155; border-radius: 8px;
+            padding: 10px 14px; text-align: center; font-size: 0.85rem; font-weight: 600;
+            min-width: 90px; transition: all 0.3s;
+        }
+        .flow-node small { font-weight: 400; color: #64748b; font-size: 0.7rem; }
+        .flow-node.flow-ai { border-color: #818cf8; background: #1e1b4b; }
+        .flow-node.flow-ok { border-color: #4ade80; }
+        .flow-node.flow-err { border-color: #f87171; }
+        .flow-node.flow-skip { opacity: 0.4; }
+        .flow-arrow { color: #475569; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <h1>Agent Trader Dashboard</h1>
+    <p class="subtitle">
+        Last updated: <span id="lastUpdated">—</span> |
+        Mode: <span class="tag tag-dry" id="modeTag">DRY RUN</span>
+    </p>
+
+    <!-- Overview Cards -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-label">Portfolio Value</div>
+            <div class="card-value" id="portfolioValue">—</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Total P&L</div>
+            <div class="card-value" id="totalPnl">—</div>
+            <div class="card-sub" id="totalPnlPct"></div>
+        </div>
+        <div class="card">
+            <div class="card-label">Cash Available</div>
+            <div class="card-value" id="cash">—</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Open Positions</div>
+            <div class="card-value" id="positionCount">—</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Total Trades</div>
+            <div class="card-value" id="totalTrades">—</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Win Rate</div>
+            <div class="card-value" id="winRate">—</div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-container">
+        <canvas id="valueChart" height="80"></canvas>
+    </div>
+
+    <div class="grid-2">
+        <!-- Open Positions -->
+        <div class="card">
+            <h2 style="margin-top:0">Open Positions</h2>
+            <table>
+                <thead>
+                    <tr><th>Symbol</th><th>Shares</th><th>Cost</th><th>Current</th><th>P&L</th></tr>
+                </thead>
+                <tbody id="positionsTable">
+                    <tr><td colspan="5" class="empty-state">No positions yet</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Latest Research -->
+        <div class="card">
+            <h2 style="margin-top:0">Latest Research</h2>
+            <div id="researchInsights">
+                <div class="empty-state">No research data yet</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade History -->
+    <div class="card">
+        <h2 style="margin-top:0">Trade History</h2>
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Reasoning</th></tr>
+            </thead>
+            <tbody id="tradeHistory">
+                <tr><td colspan="8" class="empty-state">No trades yet. Run the pipeline to start tracking.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pipeline Flow Visualization -->
+    <div class="card" style="margin-bottom:24px">
+        <h2 style="margin-top:0">Pipeline Flow (Last Run)</h2>
+        <div id="pipelineFlow" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 0">
+            <div class="flow-node" id="fn-screener">Screener<br><small>scan 60 stocks</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-data">Data<br><small>prices + indicators</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-news">News<br><small>headlines + context</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node flow-ai" id="fn-research">Claude<br><small id="fn-research-model">Sonnet</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-strategy">Strategy<br><small>8 strategies vote</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-risk">Risk<br><small>4 checks</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-execute">Execute<br><small id="fn-exec-status">dry run</small></div>
+            <div class="flow-arrow">&#8594;</div>
+            <div class="flow-node" id="fn-portfolio">Portfolio<br><small>update P&L</small></div>
+        </div>
+        <div id="pipelineDetails" style="font-size:0.8rem;color:#64748b;margin-top:8px"></div>
+    </div>
+
+    <!-- Performance Stats -->
+    <div class="card" id="perfSection" style="display:none">
+        <h2 style="margin-top:0">Performance Stats</h2>
+        <div class="stats-grid" id="perfStats"></div>
+    </div>
+
+    <script>
+    const fmt = (n) => '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const signFmt = (n) => (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const pnlClass = (n) => n >= 0 ? 'positive' : 'negative';
+
+    async function loadData() {
+        try {
+            const [latestRes, historyRes, tradesRes, researchRes] = await Promise.all([
+                fetch('data/latest.json').catch(() => null),
+                fetch('data/history.json').catch(() => null),
+                fetch('data/trades.json').catch(() => null),
+                fetch('data/research.json').catch(() => null),
+            ]);
+
+            const latest = latestRes?.ok ? await latestRes.json() : null;
+            const history = historyRes?.ok ? await historyRes.json() : [];
+            const trades = tradesRes?.ok ? await tradesRes.json() : [];
+            const research = researchRes?.ok ? await researchRes.json() : null;
+
+            if (latest) renderOverview(latest);
+            if (history.length > 0) renderChart(history);
+            if (latest?.positions) renderPositions(latest.positions);
+            if (trades.length > 0) renderTrades(trades);
+            if (research) renderResearch(research);
+            if (trades.length > 0) renderPerformance(trades);
+            renderPipeline(latest, research, trades);
+        } catch (e) {
+            console.error('Dashboard load error:', e);
+        }
+    }
+
+    function renderOverview(data) {
+        document.getElementById('lastUpdated').textContent = new Date(data.timestamp).toLocaleString();
+        document.getElementById('portfolioValue').textContent = fmt(data.portfolio_value);
+        document.getElementById('cash').textContent = fmt(data.cash);
+        document.getElementById('positionCount').textContent = data.position_count;
+
+        const pnlEl = document.getElementById('totalPnl');
+        pnlEl.textContent = signFmt(data.total_pnl);
+        pnlEl.className = 'card-value ' + pnlClass(data.total_pnl);
+
+        document.getElementById('totalPnlPct').textContent = (data.total_pnl >= 0 ? '+' : '') + data.total_pnl_pct + '%';
+        document.getElementById('totalPnlPct').className = 'card-sub ' + pnlClass(data.total_pnl);
+    }
+
+    function renderChart(history) {
+        const ctx = document.getElementById('valueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: history.map(h => new Date(h.timestamp).toLocaleDateString()),
+                datasets: [{
+                    label: 'Portfolio Value',
+                    data: history.map(h => h.portfolio_value),
+                    borderColor: '#818cf8', backgroundColor: 'rgba(129,140,248,0.08)',
+                    fill: true, tension: 0.3, pointRadius: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    x: { ticks: { color: '#475569', maxTicksLimit: 15 }, grid: { color: '#1e293b' } },
+                    y: { ticks: { color: '#475569', callback: v => '$' + v.toLocaleString() }, grid: { color: '#1e293b' } },
+                }
+            }
+        });
+    }
+
+    function renderPositions(positions) {
+        const tbody = document.getElementById('positionsTable');
+        if (!positions.length) return;
+        tbody.innerHTML = positions.map(p => `
+            <tr>
+                <td><strong>${p.symbol}</strong></td>
+                <td>${p.shares}</td>
+                <td>${fmt(p.avg_cost)}</td>
+                <td>${fmt(p.current_price)}</td>
+                <td class="${pnlClass(p.unrealized_pnl)}">${signFmt(p.unrealized_pnl)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderTrades(trades) {
+        const tbody = document.getElementById('tradeHistory');
+        document.getElementById('totalTrades').textContent = trades.length;
+
+        tbody.innerHTML = trades.slice(-50).reverse().map(t => `
+            <tr>
+                <td>${new Date(t.timestamp).toLocaleDateString()}</td>
+                <td><strong>${t.symbol}</strong></td>
+                <td><span class="tag tag-${t.action}">${t.action}</span></td>
+                <td>${t.quantity || '—'}</td>
+                <td>${t.price ? fmt(t.price) : '—'}</td>
+                <td>${t.value ? fmt(t.value) : '—'}</td>
+                <td><span class="tag tag-${t.status === 'dry_run' ? 'dry' : 'live'}">${t.status}</span></td>
+                <td class="trade-reasoning">${t.reasoning || '—'}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderResearch(data) {
+        const container = document.getElementById('researchInsights');
+        const stocks = data.stocks || {};
+        const entries = Object.entries(stocks);
+
+        if (!entries.length) return;
+
+        container.innerHTML = `
+            <div style="margin-bottom:12px;color:#94a3b8">
+                <strong>Sentiment:</strong> ${data.overall_sentiment || '—'}
+                <br><small>${data.market_summary || ''}</small>
+            </div>
+        ` + entries.slice(0, 5).map(([sym, s]) => {
+            const sentColor = s.sentiment === 'bullish' ? 'positive' : s.sentiment === 'bearish' ? 'negative' : 'neutral';
+            return `
+                <div class="insight-card">
+                    <span class="symbol">${sym}</span>
+                    <span class="sentiment ${sentColor}">${s.sentiment} (${Math.round((s.confidence||0)*100)}%)</span>
+                    <span class="tag tag-${s.recommendation === 'buy' ? 'buy' : s.recommendation === 'sell' ? 'sell' : 'dry'}" style="float:right">${s.recommendation || 'watch'}</span>
+                    <div style="margin-top:6px;font-size:0.8rem;color:#64748b">
+                        ${(s.key_observations || []).slice(0,2).join(' | ')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderPerformance(trades) {
+        const section = document.getElementById('perfSection');
+        const container = document.getElementById('perfStats');
+
+        const completed = trades.filter(t => t.pnl !== undefined);
+        if (!completed.length) {
+            document.getElementById('winRate').textContent = '—';
+            return;
+        }
+
+        const wins = completed.filter(t => t.pnl > 0);
+        const losses = completed.filter(t => t.pnl <= 0);
+        const winRate = (wins.length / completed.length * 100).toFixed(0);
+        const avgWin = wins.length ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
+        const avgLoss = losses.length ? losses.reduce((s, t) => s + t.pnl, 0) / losses.length : 0;
+        const bestTrade = completed.reduce((b, t) => t.pnl > b.pnl ? t : b, completed[0]);
+        const worstTrade = completed.reduce((w, t) => t.pnl < w.pnl ? t : w, completed[0]);
+
+        document.getElementById('winRate').textContent = winRate + '%';
+        document.getElementById('winRate').className = 'card-value ' + (parseInt(winRate) >= 50 ? 'positive' : 'negative');
+
+        section.style.display = 'block';
+        container.innerHTML = [
+            { label: 'Win Rate', value: winRate + '%', cls: parseInt(winRate) >= 50 ? 'positive' : 'negative' },
+            { label: 'Avg Win', value: signFmt(avgWin), cls: 'positive' },
+            { label: 'Avg Loss', value: signFmt(avgLoss), cls: 'negative' },
+            { label: 'Best Trade', value: bestTrade.symbol + ' ' + signFmt(bestTrade.pnl), cls: 'positive' },
+            { label: 'Worst Trade', value: worstTrade.symbol + ' ' + signFmt(worstTrade.pnl), cls: 'negative' },
+            { label: 'Total Trades', value: completed.length, cls: '' },
+        ].map(s => `
+            <div class="stat">
+                <div class="stat-value ${s.cls}">${s.value}</div>
+                <div class="stat-label">${s.label}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderPipeline(latest, research, trades) {
+        // Light up the flow nodes based on available data
+        const nodes = {
+            screener: !!research?.stocks,
+            data: !!latest,
+            news: !!research?.market_summary,
+            research: !!research?.overall_sentiment,
+            strategy: trades?.length > 0 || !!research,
+            risk: trades?.length > 0,
+            execute: trades?.length > 0,
+            portfolio: !!latest?.portfolio_value,
+        };
+
+        Object.entries(nodes).forEach(([key, ok]) => {
+            const el = document.getElementById('fn-' + key);
+            if (el) el.classList.add(ok ? 'flow-ok' : 'flow-skip');
+        });
+
+        // Show details
+        const details = [];
+        if (research?.overall_sentiment) details.push(`Sentiment: ${research.overall_sentiment}`);
+        if (research?.market_regime) details.push(`Regime: ${research.market_regime}`);
+        if (research?.best_opportunities?.length) details.push(`Best picks: ${research.best_opportunities.join(', ')}`);
+        if (trades?.length) details.push(`${trades.length} trade(s) logged`);
+
+        const detailsEl = document.getElementById('pipelineDetails');
+        if (detailsEl && details.length) detailsEl.textContent = details.join(' | ');
+    }
+
+    loadData();
+    </script>
+</body>
+</html>"""
+
+
+def generate_dashboard():
+    """Generate the static dashboard HTML and copy data files."""
+    docs_dir = Path("docs")
+    data_dir = docs_dir / "data"
+    docs_dir.mkdir(exist_ok=True)
+    data_dir.mkdir(exist_ok=True)
+
+    # Write the HTML
+    (docs_dir / "index.html").write_text(DASHBOARD_HTML)
+
+    # Copy snapshot data
+    snapshots_dir = Path("data/snapshots")
+
+    if (snapshots_dir / "latest.json").exists():
+        (data_dir / "latest.json").write_text(
+            (snapshots_dir / "latest.json").read_text()
+        )
+
+    if (snapshots_dir / "history.json").exists():
+        (data_dir / "history.json").write_text(
+            (snapshots_dir / "history.json").read_text()
+        )
+    else:
+        (data_dir / "history.json").write_text("[]")
+
+    # Collect trade history from journal files
+    trades = _collect_trade_history()
+    (data_dir / "trades.json").write_text(json.dumps(trades, indent=2, default=str))
+
+    # Copy latest research
+    research = _get_latest_research()
+    (data_dir / "research.json").write_text(json.dumps(research, indent=2, default=str))
+
+    # Copy feedback/performance data
+    feedback_dir = Path("data/feedback")
+    if (feedback_dir / "completed_trades.json").exists():
+        (data_dir / "trades.json").write_text(
+            (feedback_dir / "completed_trades.json").read_text()
+        )
+    if (feedback_dir / "learned_rules.json").exists():
+        (data_dir / "rules.json").write_text(
+            (feedback_dir / "learned_rules.json").read_text()
+        )
+
+    # Write placeholder if no snapshot exists yet
+    if not (snapshots_dir / "latest.json").exists():
+        placeholder = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "portfolio_value": 100000.0,
+            "cash": 100000.0,
+            "invested": 0,
+            "total_pnl": 0,
+            "total_pnl_pct": 0,
+            "positions": [],
+            "position_count": 0,
+        }
+        (data_dir / "latest.json").write_text(json.dumps(placeholder, indent=2))
+
+
+def _collect_trade_history() -> list[dict]:
+    """Collect all trades from journal JSON files."""
+    journal_dir = Path("data/journal")
+    trades = []
+
+    if not journal_dir.exists():
+        return trades
+
+    for json_file in sorted(journal_dir.rglob("*.json")):
+        try:
+            data = json.loads(json_file.read_text())
+            executed = data.get("executed") or []
+            signals = data.get("signals") or []
+
+            # Map signals to their execution results
+            signal_map = {s["symbol"]: s for s in signals} if signals else {}
+
+            for trade in executed:
+                entry = {
+                    "timestamp": data.get("timestamp", ""),
+                    "symbol": trade.get("symbol", ""),
+                    "action": trade.get("action", ""),
+                    "quantity": trade.get("quantity"),
+                    "price": trade.get("estimated_price"),
+                    "value": trade.get("estimated_value"),
+                    "status": trade.get("status", ""),
+                    "reasoning": "",
+                }
+
+                # Attach reasoning from the signal
+                sig = signal_map.get(trade.get("symbol", ""), {})
+                entry["reasoning"] = sig.get("reasoning", trade.get("reason", ""))
+
+                trades.append(entry)
+
+        except (json.JSONDecodeError, KeyError):
+            continue
+
+    return trades
+
+
+def _get_latest_research() -> dict:
+    """Get the most recent research analysis."""
+    research_dir = Path("data/research")
+    if not research_dir.exists():
+        return {}
+
+    files = sorted(research_dir.glob("*.json"), reverse=True)
+    if not files:
+        return {}
+
+    try:
+        return json.loads(files[0].read_text())
+    except (json.JSONDecodeError, KeyError):
+        return {}

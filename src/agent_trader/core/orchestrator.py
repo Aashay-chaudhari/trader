@@ -1,0 +1,424 @@
+"""Orchestrator — the brain that coordinates all agents.
+
+Two operating modes:
+
+PHASE 1 — Morning Research (9:00 AM ET):
+  1. ScreenerAgent scans universe for today's opportunities
+  2. DataAgent fetches detailed data for shortlisted stocks
+  3. NewsAgent gathers headlines, analyst recs, earnings calendar
+  4. ResearchAgent does deep Claude Sonnet analysis with full context
+  → Output: today's watchlist + research insights + trade plans
+  → Saved to journal
+
+PHASE 2 — Monitor & Trade (every 30 min during market hours):
+  1. DataAgent refreshes prices for the watchlist
+  2. NewsAgent checks for new headlines
+  3. ResearchAgent does light Claude Haiku check
+  4. StrategyAgent checks 8 strategies for entry/exit signals
+  5. RiskAgent validates proposed trades
+  6. ExecutionAgent places approved trades (or dry-run logs)
+  7. PortfolioAgent updates positions and dashboard
+  → Each run saved to journal with full reasoning
+"""
+
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from rich.console import Console
+from rich.table import Table
+
+from agent_trader.core.base_agent import BaseAgent, AgentRole
+from agent_trader.core.message_bus import MessageBus, Message, MessageType
+
+console = Console()
+
+
+class Orchestrator:
+    """Coordinates all agents through research and trading pipelines."""
+
+    def __init__(self, message_bus: MessageBus | None = None):
+        self.bus = message_bus or MessageBus()
+        self._agents: dict[str, BaseAgent] = {}
+        self._today_watchlist: list[str] = []
+        self._morning_research: dict | None = None
+
+    def register(self, agent: BaseAgent) -> None:
+        key = getattr(agent, "role_name", agent.role.value)
+        self._agents[key] = agent
+        console.print(f"  [green]Registered[/green] {agent.name}")
+
+    def get_agent(self, key: str) -> BaseAgent | None:
+        return self._agents.get(key)
+
+    # ── Phase 1: Morning Research ────────────────────────────────
+
+    async def run_research_phase(self, fallback_symbols: list[str] | None = None) -> dict:
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        self._print_header(run_id, "Morning Research")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "research"}
+        screener_results = None
+
+        # Step 1: News discovery FIRST — find what's in the news
+        # This feeds into the screener so stock selection is news+data driven
+        news_discoveries = []
+        hot_stocks = []
+        finviz_data = {}
+        market_context = {}
+        news_agent = self._agents.get("news")
+        if news_agent:
+            console.print("  [cyan]Scanning[/cyan] news for stock discoveries...")
+            response = await news_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={"symbols": [], "market_data": {}, "discover_stocks": True})
+            )
+            if response and response.type == MessageType.RESULT:
+                news_discoveries = response.data.get("news_discoveries", [])
+                hot_stocks = response.data.get("hot_stocks", [])
+                finviz_data = response.data.get("finviz", {})
+                market_context = response.data.get("market_context", {})
+                results["news_discovery"] = {
+                    "discoveries": len(news_discoveries),
+                    "hot_stocks": len(hot_stocks),
+                    "analyst_changes": len(finviz_data.get("analyst_changes", [])),
+                    "market_regime": market_context.get("market_regime", "unknown"),
+                }
+                disc_symbols = [d["symbol"] for d in news_discoveries]
+                if disc_symbols:
+                    console.print(f"  [green]News found[/green] {len(disc_symbols)} stocks: "
+                                  f"{', '.join(disc_symbols)}")
+                else:
+                    console.print("  [dim]No strong news-driven discoveries[/dim]")
+
+        # Step 2: Screen with news context — news discovers, data confirms
+        screener = self._agents.get("screener")
+        if screener:
+            console.print("  [cyan]Screening[/cyan] stock universe (news + technicals)...")
+            response = await screener.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={
+                            "max_stocks": 10,
+                            "news_discoveries": news_discoveries,
+                            "hot_stocks": hot_stocks,
+                            "finviz": finviz_data,
+                        })
+            )
+            if response and response.type == MessageType.RESULT:
+                screener_results = response.data
+                self._today_watchlist = response.data.get("symbols", [])
+                console.print(f"  [green]Found[/green] {len(self._today_watchlist)} stocks: "
+                              f"{', '.join(self._today_watchlist)}")
+                results["screener"] = response.data
+            else:
+                console.print("  [yellow]Screener failed, using fallback[/yellow]")
+                self._today_watchlist = fallback_symbols or ["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN"]
+        else:
+            self._today_watchlist = fallback_symbols or ["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN"]
+
+        # Step 3: Fetch detailed data for the shortlist
+        market_data = {}
+        data_agent = self._agents.get("data")
+        if data_agent:
+            console.print("  [cyan]Fetching[/cyan] market data...")
+            response = await data_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={"symbols": self._today_watchlist})
+            )
+            if response and response.type == MessageType.RESULT:
+                results["data"] = response.data
+                market_data = response.data.get("market_data", {})
+                console.print("  [green]Done[/green] market data")
+
+        # Step 4: Full news for the shortlisted stocks (per-stock detail)
+        news_data = {}
+        if news_agent:
+            console.print("  [cyan]Gathering[/cyan] detailed news for shortlist...")
+            response = await news_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={"symbols": self._today_watchlist, "market_data": market_data})
+            )
+            if response and response.type == MessageType.RESULT:
+                news_data = response.data.get("news", {})
+                # Update market context with fresh data
+                market_context = response.data.get("market_context", {}) or market_context
+                results["news"] = response.data
+                console.print(f"  [green]Done[/green] news ({sum(len(v.get('news_headlines', [])) for v in news_data.values())} headlines)")
+
+        # Step 5: Claude Sonnet deep research (with everything)
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Analyzing[/cyan] with Claude Sonnet...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "symbols": self._today_watchlist,
+                    "market_data": market_data,
+                    "phase": "research",
+                    "screener_results": screener_results,
+                    "news": news_data,
+                    "market_context": market_context,
+                    "news_discoveries": news_discoveries,
+                    "hot_stocks": hot_stocks,
+                    "finviz": finviz_data,
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                self._morning_research = response.data.get("research", {})
+                results["research"] = response.data
+                sentiment = self._morning_research.get("overall_sentiment", "unknown")
+                regime = self._morning_research.get("market_regime", "unknown")
+                console.print(f"  [green]Done[/green] research — {sentiment}, regime: {regime}")
+
+        self._save_morning_context()
+        self._write_journal(run_id, "research", results, screener_results)
+        self._print_research_summary(results)
+
+        return results
+
+    # ── Phase 2: Monitor & Trade ─────────────────────────────────
+
+    async def run_monitor_phase(self, symbols: list[str] | None = None) -> dict:
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        watchlist = symbols or self._today_watchlist or self._load_watchlist()
+
+        if not watchlist:
+            console.print("[yellow]No watchlist. Run research phase first.[/yellow]")
+            return {"run_id": run_id, "phase": "monitor", "error": "no watchlist"}
+
+        self._print_header(run_id, f"Monitor ({', '.join(watchlist[:5])})")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "monitor"}
+        morning_context = self._morning_research or self._load_morning_context()
+
+        # Step 1: Refresh market data
+        market_data = {}
+        data_agent = self._agents.get("data")
+        if data_agent:
+            console.print("  [cyan]Refreshing[/cyan] prices...")
+            response = await data_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={"symbols": watchlist})
+            )
+            if response and response.type == MessageType.RESULT:
+                market_data = response.data.get("market_data", {})
+                results["data"] = {"status": "ok", "data": response.data}
+                console.print("  [green]Done[/green] prices")
+
+        # Step 2: Check for new news
+        news_data = {}
+        market_context = {}
+        news_agent = self._agents.get("news")
+        if news_agent:
+            console.print("  [cyan]Checking[/cyan] news...")
+            response = await news_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator",
+                        data={"symbols": watchlist, "market_data": market_data})
+            )
+            if response and response.type == MessageType.RESULT:
+                news_data = response.data.get("news", {})
+                market_context = response.data.get("market_context", {})
+
+        # Step 3: Light Claude Haiku check
+        research_data = {}
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Claude check[/cyan]...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "symbols": watchlist,
+                    "market_data": market_data,
+                    "phase": "monitor",
+                    "morning_context": morning_context,
+                    "news": news_data,
+                    "market_context": market_context,
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                research_data = response.data.get("research", {})
+                results["research"] = {"status": "ok", "data": response.data}
+                console.print("  [green]Done[/green] Claude check")
+
+        # Step 4: Strategy signals
+        strategy_data = {}
+        strategy_agent = self._agents.get("strategy")
+        if strategy_agent:
+            console.print("  [cyan]Evaluating[/cyan] strategies...")
+            response = await strategy_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "symbols": watchlist,
+                    "market_data": market_data,
+                    "research": research_data,
+                    "news": news_data,
+                    "market_context": market_context,
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                strategy_data = response.data
+                signals = strategy_data.get("signals", [])
+                results["strategy"] = {"status": "ok", "data": strategy_data}
+                console.print(f"  [green]Done[/green] {len(signals)} signal(s)")
+
+        # Step 5: Risk check
+        risk_data = {}
+        risk_agent = self._agents.get("risk")
+        if risk_agent and strategy_data.get("signals"):
+            console.print("  [cyan]Risk check[/cyan]...")
+            response = await risk_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "signals": strategy_data.get("signals", []),
+                    "market_data": market_data,
+                    "symbols": watchlist,
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                risk_data = response.data
+                approved = len(risk_data.get("approved_trades", []))
+                rejected = len(risk_data.get("rejected_trades", []))
+                results["risk"] = {"status": "ok", "data": risk_data}
+                console.print(f"  [green]Done[/green] {approved} approved, {rejected} rejected")
+
+        # Step 6: Execute
+        execution_data = {}
+        execution_agent = self._agents.get("execution")
+        if execution_agent:
+            exec_input = risk_data if risk_data else {"approved_trades": [], "symbols": watchlist, "market_data": market_data}
+            console.print("  [cyan]Executing[/cyan]...")
+            response = await execution_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data=exec_input)
+            )
+            if response and response.type == MessageType.RESULT:
+                execution_data = response.data
+                executed = execution_data.get("executed", [])
+                results["execution"] = {"status": "ok", "data": execution_data}
+                console.print(f"  [green]Done[/green] {len(executed)} trade(s)")
+
+        # Step 7: Portfolio update
+        portfolio_agent = self._agents.get("portfolio")
+        if portfolio_agent:
+            console.print("  [cyan]Updating[/cyan] portfolio...")
+            response = await portfolio_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "executed": execution_data.get("executed", []),
+                    "market_data": market_data,
+                    "symbols": watchlist,
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                results["portfolio"] = {"status": "ok", "data": response.data}
+                val = response.data.get("portfolio_value", 0)
+                console.print(f"  [green]Done[/green] portfolio ${val:,.0f}")
+
+        self._write_journal(run_id, "monitor", results)
+        self._print_monitor_summary(results)
+
+        return results
+
+    # ── Full Pipeline ────────────────────────────────────────────
+
+    async def run_pipeline(self, symbols: list[str]) -> dict:
+        self._today_watchlist = symbols
+        research = await self.run_research_phase(fallback_symbols=symbols)
+        monitor = await self.run_monitor_phase(symbols)
+        return {"research": research, "monitor": monitor}
+
+    async def run_single(self, role: AgentRole, data: Any = None) -> Message | None:
+        agent = self._agents.get(role.value)
+        if not agent:
+            return None
+        return await agent.receive(
+            Message(type=MessageType.COMMAND, source="orchestrator", data=data or {})
+        )
+
+    # ── Journal ──────────────────────────────────────────────────
+
+    def _write_journal(self, run_id, phase, results, screener_results=None):
+        try:
+            from agent_trader.utils.journal import create_journal_entry
+
+            research_data = results.get("research", {}).get("data", {})
+            strategy_data = results.get("strategy", {}).get("data", {})
+            risk_data = results.get("risk", {}).get("data", {})
+            execution_data = results.get("execution", {}).get("data", {})
+            portfolio_data = results.get("portfolio", {}).get("data", {})
+
+            filepath = create_journal_entry(
+                run_id=run_id, phase=phase,
+                screener_results=screener_results or results.get("screener"),
+                research_results=research_data,
+                signals=strategy_data.get("signals") if strategy_data else None,
+                risk_results=risk_data,
+                executed=execution_data.get("executed") if execution_data else None,
+                portfolio_snapshot=portfolio_data,
+                market_data=strategy_data.get("market_data") if strategy_data else None,
+            )
+            console.print(f"  [dim]Journal: {filepath}[/dim]")
+        except Exception as e:
+            console.print(f"  [yellow]Journal failed: {e}[/yellow]")
+
+    # ── Context Persistence ──────────────────────────────────────
+
+    def _save_morning_context(self):
+        if not self._morning_research:
+            return
+        ctx_dir = Path("data/cache")
+        ctx_dir.mkdir(parents=True, exist_ok=True)
+        (ctx_dir / "morning_research.json").write_text(
+            json.dumps(self._morning_research, indent=2, default=str))
+        (ctx_dir / "watchlist.json").write_text(json.dumps(self._today_watchlist))
+
+    def _load_morning_context(self) -> dict | None:
+        path = Path("data/cache/morning_research.json")
+        return json.loads(path.read_text()) if path.exists() else None
+
+    def _load_watchlist(self) -> list[str]:
+        path = Path("data/cache/watchlist.json")
+        return json.loads(path.read_text()) if path.exists() else []
+
+    # ── Display ──────────────────────────────────────────────────
+
+    def _print_header(self, run_id, phase):
+        console.print(f"\n[bold blue]{'='*60}[/bold blue]")
+        console.print(f"[bold blue]  {phase} — {run_id}[/bold blue]")
+        console.print(f"[bold blue]{'='*60}[/bold blue]\n")
+
+    def _print_research_summary(self, results):
+        console.print(f"\n[bold]Research Summary[/bold]")
+        research = results.get("research", {}).get("data", {}).get("research", {})
+        if not research:
+            console.print("  [yellow]No research results[/yellow]")
+            return
+        console.print(f"  Sentiment: {research.get('overall_sentiment', '?')}")
+        console.print(f"  Regime: {research.get('market_regime', '?')}")
+        console.print(f"  {research.get('market_summary', '')}")
+        best = research.get("best_opportunities", [])
+        if best:
+            console.print(f"  Best opportunities: [bold]{', '.join(best)}[/bold]")
+
+    def _print_monitor_summary(self, results):
+        console.print(f"\n[bold]Monitor Summary[/bold]")
+        table = Table(show_header=True)
+        table.add_column("Stage", style="cyan")
+        table.add_column("Status")
+        table.add_column("Details", max_width=50)
+
+        for key in ["data", "research", "strategy", "risk", "execution", "portfolio"]:
+            result = results.get(key)
+            if result is None:
+                table.add_row(key, "[dim]skipped[/dim]", "-")
+            elif result.get("status") == "error":
+                table.add_row(key, "[red]error[/red]", str(result.get("error", ""))[:50])
+            else:
+                data = result.get("data", {})
+                detail = ""
+                if key == "strategy":
+                    detail = f"{len(data.get('signals', []))} signals"
+                elif key == "risk":
+                    detail = f"{len(data.get('approved_trades', []))} approved, {len(data.get('rejected_trades', []))} rejected"
+                elif key == "execution":
+                    detail = f"{len(data.get('executed', []))} trades"
+                elif key == "portfolio":
+                    detail = f"${data.get('portfolio_value', 0):,.0f}"
+                table.add_row(key, "[green]ok[/green]", detail)
+
+        console.print(table)

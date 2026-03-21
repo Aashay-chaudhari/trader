@@ -1,0 +1,121 @@
+# Two-phase trading pipeline running on GitHub Actions (free tier).
+#
+# Phase 1 - Morning Research (9:00 AM ET = 14:00 UTC):
+#   Screens stocks, fetches data, runs Claude analysis.
+#   Produces today's watchlist and research insights.
+#
+# Phase 2 - Monitor & Trade (every 30 min from 9:30 AM - 4:00 PM ET):
+#   Refreshes prices, checks for signals, executes approved trades.
+#   Each run is logged to the trade journal.
+#
+# Budget: ~15 runs/day × ~1.5 min = ~22 min/day × 20 trading days = ~450 min/month
+# Well within GitHub's free 2000 min/month.
+
+name: Trading Pipeline
+
+on:
+  schedule:
+    # Phase 1: Morning research at 9:00 AM ET (14:00 UTC) weekdays
+    - cron: '0 14 * * 1-5'
+
+    # Phase 2: Monitor every 30 min from 9:30 AM - 4:00 PM ET
+    # (14:30 - 21:00 UTC) weekdays
+    - cron: '30 14 * * 1-5'
+    - cron: '0 15 * * 1-5'
+    - cron: '30 15 * * 1-5'
+    - cron: '0 16 * * 1-5'
+    - cron: '30 16 * * 1-5'
+    - cron: '0 17 * * 1-5'
+    - cron: '30 17 * * 1-5'
+    - cron: '0 18 * * 1-5'
+    - cron: '30 18 * * 1-5'
+    - cron: '0 19 * * 1-5'
+    - cron: '30 19 * * 1-5'
+    - cron: '0 20 * * 1-5'
+    - cron: '30 20 * * 1-5'
+
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: 'Which phase to run'
+        required: true
+        default: 'run'
+        type: choice
+        options:
+          - research
+          - monitor
+          - run
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Determine phase
+        id: phase
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "phase=${{ inputs.phase }}" >> $GITHUB_OUTPUT
+          else
+            # Check current UTC hour to determine phase
+            HOUR=$(date -u +%H)
+            MINUTE=$(date -u +%M)
+            if [ "$HOUR" = "14" ] && [ "$MINUTE" -lt "30" ]; then
+              echo "phase=research" >> $GITHUB_OUTPUT
+            else
+              echo "phase=monitor" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Run trading pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
+        run: python -m agent_trader ${{ steps.phase.outputs.phase }}
+
+      - name: Generate dashboard
+        run: python -m agent_trader dashboard
+
+      - name: Commit results
+        run: |
+          git config user.name "Agent Trader Bot"
+          git config user.email "bot@agent-trader"
+          git add data/ docs/
+          git diff --staged --quiet || git commit -m "[${{ steps.phase.outputs.phase }}] $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+          git push
+
+  deploy-dashboard:
+    needs: trade
+    runs-on: ubuntu-latest
+    # Only deploy dashboard on the last monitor run of the day (4:00 PM ET = 20:30 UTC)
+    # and on manual triggers
+    if: github.event_name == 'workflow_dispatch' || (github.event.schedule == '30 20 * * 1-5')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
