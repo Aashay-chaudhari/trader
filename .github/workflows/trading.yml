@@ -142,11 +142,14 @@ jobs:
   deploy-dashboard:
     needs: trade
     runs-on: ubuntu-latest
-    # Only deploy dashboard on the last monitor run of the day (4:00 PM ET = 20:30 UTC)
-    # and on manual triggers
+    # Deploy on every manual trigger and on the last monitor run of the day
     if: github.event_name == 'workflow_dispatch' || (github.event.schedule == '30 20 * * 1-5')
     permissions:
-      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -156,9 +159,11 @@ jobs:
       - name: Pull latest (trade job may have pushed)
         run: git pull --ff-only origin main || true
 
-      - name: Deploy dashboard to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: gh-pages
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
