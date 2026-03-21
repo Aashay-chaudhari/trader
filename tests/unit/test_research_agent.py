@@ -69,6 +69,38 @@ def test_research_agent_honors_provider_preference_when_both_keys_present(
     assert agent._get_research_model() == "gpt-4o-mini"
 
 
+def test_research_agent_claude_cli_limits_api_fallback_to_anthropic(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    assert agent._get_api_provider_sequence() == ["anthropic"]
+    assert agent._get_provider_name() == "anthropic"
+
+
+def test_research_agent_codex_cli_limits_api_fallback_to_openai(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("CLI_AGENT_PROVIDER", "codex")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    assert agent._get_api_provider_sequence() == ["openai"]
+    assert agent._get_provider_name() == "openai"
+
+
 class AnthropicErroringClient:
     class Messages:
         @staticmethod
@@ -184,7 +216,7 @@ async def test_research_agent_cli_path_falls_back_without_raising(
         },
     )
 
-    async def fake_call_llm(self, prompt: str, phase: str) -> dict:
+    async def fake_call_llm(self, prompt: str, phase: str, **kwargs) -> dict:
         return {
             "overall_sentiment": "neutral",
             "market_summary": "fallback ok",
@@ -225,3 +257,68 @@ async def test_research_agent_cli_path_falls_back_without_raising(
 
     assert result["research"]["market_summary"] == "fallback ok"
     assert result["research"]["_meta"]["provider"] == "openai"
+
+
+@pytest.mark.asyncio
+async def test_research_agent_records_cli_failure_before_api_fallback(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    monkeypatch.setattr(research_module, "is_cli_available", lambda provider: True)
+    monkeypatch.setattr(research_module, "write_staging_data", lambda **kwargs: None)
+    monkeypatch.setattr(research_module, "build_research_task", lambda symbols, **kwargs: "task")
+    monkeypatch.setattr(
+        research_module,
+        "run_cli_agent",
+        lambda *args, **kwargs: {
+            "_meta": {
+                "status": "error",
+                "provider": "cli:claude",
+                "model": "claude-sonnet-4-6",
+                "duration_ms": 123.4,
+                "error": "cli limit hit",
+            }
+        },
+    )
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+    captured = {}
+
+    async def fake_call_llm(self, prompt: str, phase: str, **kwargs) -> dict:
+        captured["providers"] = kwargs.get("providers")
+        captured["prior_attempts"] = kwargs.get("prior_attempts")
+        return {
+            "overall_sentiment": "neutral",
+            "market_summary": "anthropic fallback ok",
+            "stocks": {},
+            "_meta": {"status": "success", "provider": "anthropic", "model": "claude-sonnet-4-6"},
+        }
+
+    monkeypatch.setattr(ResearchAgent, "_call_llm", fake_call_llm)
+
+    result = await agent._call_analysis(
+        prompt="{}",
+        phase="research",
+        symbols=["AAPL"],
+        market_data={"AAPL": {"latest_price": 100}},
+        news_data={},
+        market_context={},
+        market_headlines=[],
+        screener_results=None,
+        news_discoveries=[],
+        hot_stocks=[],
+        finviz_data={},
+        performance_feedback="",
+        learned_rules="",
+        artifact_context="",
+    )
+
+    assert result["market_summary"] == "anthropic fallback ok"
+    assert captured["providers"] == ["anthropic"]
+    assert captured["prior_attempts"][0]["provider"] == "cli:claude"
+    assert captured["prior_attempts"][0]["quota_issue_detected"] is False

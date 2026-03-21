@@ -7,7 +7,7 @@ from agent_trader.dashboard.generator import generate_dashboard
 
 
 def test_generate_dashboard_writes_context_rich_bundle():
-    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path
 
         root = Path(temp_dir).resolve()
@@ -146,7 +146,8 @@ def test_generate_dashboard_writes_context_rich_bundle():
 
         assert "Decision board" in html
         assert "Strategist Arena" in html
-        assert "News influence explorer" in html
+        assert "News Influence" in html
+        assert "foldout" in html
         assert bundle["profiles"]["default"]["profile"]["id"] == "default"
         assert bundle["comparison"]["summary"][0]["profile"] == "default"
         assert bundle["context"]["prompt_sections"]["news_inputs"]["per_symbol"]["ABBV"]["news_headlines"][0]["title"] == (
@@ -158,7 +159,7 @@ def test_generate_dashboard_writes_context_rich_bundle():
 
 
 def test_generate_dashboard_backfills_legacy_news_context():
-    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path
 
         root = Path(temp_dir).resolve()
@@ -220,7 +221,7 @@ def test_generate_dashboard_backfills_legacy_news_context():
 
 
 def test_generate_dashboard_merges_multiple_profiles():
-    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path
 
         root = Path(temp_dir).resolve()
@@ -319,3 +320,112 @@ def test_generate_dashboard_merges_multiple_profiles():
         assert codex_bundle["profile"]["label"] == "Codex Strategist"
         assert (docs_dir / "data" / "profiles" / "claude" / "report_research.md").exists()
         assert (docs_dir / "data" / "profiles" / "codex" / "report_research.md").exists()
+
+
+def test_generate_dashboard_preserves_linkable_evidence():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        (data_dir / "snapshots").mkdir(parents=True)
+        (data_dir / "research").mkdir(parents=True)
+        (data_dir / "analytics").mkdir(parents=True)
+        (data_dir / "context").mkdir(parents=True)
+        (data_dir / "journal" / "2026-03-21").mkdir(parents=True)
+
+        (data_dir / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-21T17:53:18Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (data_dir / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (data_dir / "research" / "2026-03-21_research_1753.json").write_text(
+            json.dumps(
+                {
+                    "best_opportunities": ["ABBV"],
+                    "stocks": {
+                        "ABBV": {
+                            "recommendation": "buy",
+                            "catalysts": ["Pipeline deal remains a positive driver"],
+                            "risks": ["Broader market weakness could cap upside"],
+                            "supporting_articles": [
+                                {
+                                    "title": "AbbVie signs new antibody discovery deal",
+                                    "url": "https://example.com/abbv-deal",
+                                    "source": "ExampleWire",
+                                    "reason": "Confirms the catalyst behind the setup",
+                                }
+                            ],
+                        }
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (data_dir / "context" / "latest_research.json").write_text(
+            json.dumps(
+                {
+                    "prompt_sections": {
+                        "news_inputs": {
+                            "per_symbol": {
+                                "ABBV": {
+                                    "news_headlines": [
+                                        {
+                                            "title": "AbbVie signs new antibody discovery deal",
+                                            "publisher": "ExampleWire",
+                                            "url": "https://example.com/abbv-deal",
+                                        }
+                                    ]
+                                }
+                            },
+                            "market_headlines": [],
+                            "news_discoveries": [
+                                {
+                                    "symbol": "ABBV",
+                                    "top_headline": "AbbVie signs new antibody discovery deal",
+                                    "top_headline_url": "https://example.com/abbv-deal",
+                                }
+                            ],
+                            "hot_stocks": [
+                                {
+                                    "symbol": "ABBV",
+                                    "sentiment": "bullish",
+                                    "source_count": 2,
+                                    "reasons": ["ExampleWire: AbbVie signs new antibody discovery deal"],
+                                    "articles": [
+                                        {
+                                            "title": "AbbVie signs new antibody discovery deal",
+                                            "source": "ExampleWire",
+                                            "url": "https://example.com/abbv-deal",
+                                        }
+                                    ],
+                                }
+                            ],
+                            "finviz": {"analyst_changes": []},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "journal" / "2026-03-21" / "17-53-18Z_research_report.json").write_text(
+            json.dumps({"run_id": "20260321_175214", "phase": "research"}),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        html = (docs_dir / "index.html").read_text(encoding="utf-8")
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+
+        assert "link-chip" in html
+        assert bundle["profiles"]["default"]["research"]["stocks"]["ABBV"]["supporting_articles"][0]["url"] == (
+            "https://example.com/abbv-deal"
+        )
+        assert (
+            bundle["context"]["prompt_sections"]["news_inputs"]["news_discoveries"][0]["top_headline_url"]
+            == "https://example.com/abbv-deal"
+        )

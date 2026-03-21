@@ -2,6 +2,7 @@
 
 import json
 import os
+import tempfile
 
 import agent_trader.utils.cli_agent as cli_agent
 
@@ -173,3 +174,23 @@ def test_resolve_cli_binary_returns_none_when_not_found(monkeypatch):
     monkeypatch.setattr(cli_agent.os, "name", "posix")
 
     assert cli_agent.resolve_cli_binary("claude") is None
+
+
+def test_build_research_task_requires_live_web_checks():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        task = cli_agent.build_research_task(["AAPL", "MSFT"], data_dir=temp_dir)
+
+        assert "WebSearch / WebFetch" in task
+        assert "Verify at least 2 symbols with live web research" in task
+        assert '"supporting_articles"' in task
+        assert '"web_checks"' in task
+
+
+def test_build_monitor_task_requires_live_source_when_thesis_changes():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        task = cli_agent.build_monitor_task(["AAPL"], data_dir=temp_dir)
+
+        assert "mandatory live verification" in task
+        assert "verify at least 1 symbol with a live source" in task
+        assert '"supporting_articles"' in task
+        assert '"web_checks"' in task

@@ -143,6 +143,11 @@ def build_research_task(symbols: list[str], *, data_dir: str | None = None) -> s
     This tells the agent what to do. The agent will then autonomously
     read the staging data AND explore the repo for historical context.
     """
+    return _build_research_task_prompt(
+        symbols,
+        data_root=Path(data_dir or get_settings().data_dir),
+    )
+
     data_root = Path(data_dir or get_settings().data_dir)
     staging_dir = get_staging_dir(str(data_root)).as_posix()
     data_root_display = data_root.as_posix()
@@ -249,6 +254,11 @@ IMPORTANT:
 
 def build_monitor_task(symbols: list[str], *, data_dir: str | None = None) -> str:
     """Build the task prompt for the monitor phase."""
+    return _build_monitor_task_prompt(
+        symbols,
+        data_root=Path(data_dir or get_settings().data_dir),
+    )
+
     data_root = Path(data_dir or get_settings().data_dir)
     staging_dir = get_staging_dir(str(data_root)).as_posix()
     data_root_display = data_root.as_posix()
@@ -314,6 +324,233 @@ Output ONLY valid JSON:
 ```
 
 IMPORTANT: Output ONLY the JSON object, nothing else.
+"""
+
+
+def _build_research_task_prompt(symbols: list[str], *, data_root: Path) -> str:
+    staging_dir = get_staging_dir(str(data_root)).as_posix()
+    data_root_display = data_root.as_posix()
+    return f"""You are an expert stock market analyst running inside the agent-trader repository.
+
+## YOUR TASK
+Analyze today's shortlisted stocks and produce trading recommendations.
+You are CONSERVATIVE - only recommend trades with clear setups and defined risk.
+You manage a $100,000 paper portfolio. Every dollar counts.
+
+## STRATEGIST MEMORY ROOT
+All of your saved artifacts for this strategist are stored under `{data_root_display}`.
+Use this root when checking prior journals, trades, research, cache, and staging files.
+
+## TODAY'S STOCKS
+{', '.join(symbols)}
+
+## HOW TO WORK
+
+### Step 1: Read today's data
+All current market data is in `{staging_dir}`:
+- market_data.json - prices, RSI, MACD, Bollinger Bands, SMAs per stock
+- news_data.json - per-stock headlines, sentiment, analyst recs
+- market_context.json - VIX, S&P trend, yields, sector rotation
+- market_headlines.json - broad market news
+- screener_results.json - why these stocks were selected (if exists)
+- news_discoveries.json - stocks discovered via news (if exists)
+- hot_stocks.json - cross-source hot stocks (if exists)
+- finviz_data.json - analyst changes (if exists)
+- performance_feedback.md - your past trade outcomes and win rate
+- learned_rules.md - trading rules you've discovered from past performance
+- artifact_context.md - summaries of recent research runs
+
+### Step 2: Explore historical context (IMPORTANT - this is your edge)
+Look at past data to find patterns:
+- `{data_root_display}/journal/` - past trading journal entries (markdown + JSON). Check if any of today's stocks appeared recently and what happened.
+- `{data_root_display}/feedback/completed_trades.json` - full trade history with P&L. Look for patterns with today's stocks.
+- `{data_root_display}/feedback/learned_rules.json` - rules you generated from past reviews.
+- `{data_root_display}/research/` - past research outputs. Check if your previous analysis on these stocks was accurate.
+
+Spend time here. This historical context is what makes your analysis better than a single API call.
+
+### Step 3: Mandatory live verification (you have internet access)
+You MUST do targeted live research before finalizing the answer.
+Use WebSearch / WebFetch when possible, or Bash with curl / python when needed.
+
+Examples:
+- Get real-time quote: `curl -s "https://query1.finance.yahoo.com/v8/finance/chart/AAPL?interval=1d&range=5d"`
+- Get recent news: `curl -s "https://query1.finance.yahoo.com/v1/finance/search?q=AAPL&newsCount=5"`
+- Get earnings date: `curl -s "https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?modules=calendarEvents"`
+- Use WebSearch for breaking developments, filings, or major financial press coverage
+- Use WebFetch on the most relevant source URLs you find
+
+Required scope:
+1. Verify at least 2 symbols with live web research
+2. One verified symbol MUST end up in `best_opportunities`
+3. Prioritize the highest-impact names:
+   - symbols with the strongest move or heaviest news flow in staging
+   - the most expensive or largest-cap names
+   - any symbol where the staged narrative looks stale or incomplete
+
+What to verify:
+1. Breaking news that might not be captured in the staging data
+2. Key price / earnings / filing context
+3. Whether the narrative behind the move is confirmed by a reputable current source
+
+Do NOT get stuck in a loop - keep it tight and targeted.
+Use 1-3 focused web checks total, then move on.
+
+### Step 4: Produce your analysis
+Output ONLY valid JSON (no markdown, no explanation outside JSON) in this exact format:
+
+```json
+{{
+    "overall_sentiment": "bullish|bearish|neutral",
+    "market_summary": "2-3 sentence market overview",
+    "market_regime": "risk_on|risk_off|neutral",
+    "best_opportunities": ["SYMBOL1", "SYMBOL2"],
+    "stocks": {{
+        "<SYMBOL>": {{
+            "sentiment": "bullish|bearish|neutral",
+            "confidence": 0.0-1.0,
+            "key_observations": ["observation with specific numbers"],
+            "news_impact": "positive|negative|neutral|none",
+            "news_summary": "1 sentence on relevant news",
+            "technical_setup": "1-2 sentence technical summary",
+            "recommendation": "buy|sell|hold|watch",
+            "trade_plan": {{
+                "entry": 0.00,
+                "stop_loss": 0.00,
+                "target": 0.00,
+                "risk_reward_ratio": 0.0,
+                "position_size_pct": 0.0,
+                "timeframe": "intraday|swing_2_5_days|swing_1_2_weeks"
+            }},
+            "catalysts": ["what could drive this"],
+            "risks": ["what could go wrong"],
+            "earnings_warning": false,
+            "historical_context": "what you found in past journals/trades about this stock",
+            "supporting_articles": [
+                {{
+                    "title": "source headline or filing",
+                    "url": "https://...",
+                    "source": "publisher / website",
+                    "kind": "news|filing|analyst|web",
+                    "reason": "why this source matters to the trade"
+                }}
+            ]
+        }}
+    }},
+    "self_reflection": "1-2 sentences on your confidence calibration based on past performance",
+    "web_checks": [
+        {{
+            "symbol": "SYMBOL",
+            "query": "what you searched or fetched",
+            "source": "publisher / site",
+            "url": "https://...",
+            "finding": "what changed or what was confirmed"
+        }}
+    ]
+}}
+```
+
+IMPORTANT:
+- Output ONLY the JSON object, nothing else
+- Every stock in today's list must appear in "stocks"
+- Use specific numbers from the data (actual RSI values, actual price levels)
+- Reference historical patterns you found in the journal/feedback data
+- Be honest about confidence - if past trades on a stock went badly, lower your confidence
+- Include real source URLs for anything you validated on the open web
+"""
+
+
+def _build_monitor_task_prompt(symbols: list[str], *, data_root: Path) -> str:
+    staging_dir = get_staging_dir(str(data_root)).as_posix()
+    data_root_display = data_root.as_posix()
+    return f"""You are an expert stock market analyst running inside the agent-trader repository.
+
+## YOUR TASK
+Quick monitoring check on the watchlist. What changed since morning research?
+Focus on: price moves, new news, signals that changed.
+
+## STRATEGIST MEMORY ROOT
+All of your saved artifacts for this strategist are stored under `{data_root_display}`.
+Use this root when checking prior journals, trades, research, cache, and staging files.
+
+## WATCHLIST
+{', '.join(symbols)}
+
+## HOW TO WORK
+
+### Step 1: Read current data
+- `{staging_dir}/market_data.json` - fresh prices and technicals
+- `{staging_dir}/news_data.json` - any new headlines
+- `{staging_dir}/market_context.json` - current market regime
+
+### Step 2: Compare with morning research
+- `{data_root_display}/cache/morning_research.json` - this morning's analysis
+- `{data_root_display}/cache/watchlist.json` - the morning watchlist
+
+### Step 3: Check for changes and do mandatory live verification
+Look at what moved. Any stock hit entry/stop/target levels from morning research?
+You have internet access - use WebSearch / WebFetch or curl to check for breaking news if something looks off:
+- `curl -s "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?interval=5m&range=1d"` for intraday price action
+
+You MUST verify at least 1 symbol with a live source if:
+- price action sharply diverged from the morning thesis
+- a symbol is close to trade entry / stop / target
+- there is meaningful fresh headline risk
+
+Keep it tight - 1-2 focused checks max.
+
+### Step 4: Output JSON
+Output ONLY valid JSON:
+
+```json
+{{
+    "overall_sentiment": "bullish|bearish|neutral",
+    "market_summary": "what changed since morning",
+    "market_regime": "risk_on|risk_off|neutral",
+    "stocks": {{
+        "<SYMBOL>": {{
+            "sentiment": "bullish|bearish|neutral",
+            "confidence": 0.0-1.0,
+            "key_observations": ["what changed"],
+            "news_impact": "positive|negative|neutral|none",
+            "news_summary": "any new news",
+            "recommendation": "buy|sell|hold|watch",
+            "trade_plan": {{
+                "entry": 0.00,
+                "stop_loss": 0.00,
+                "target": 0.00,
+                "risk_reward_ratio": 0.0,
+                "position_size_pct": 0.0,
+                "timeframe": "intraday|swing_2_5_days|swing_1_2_weeks"
+            }},
+            "changed_since_morning": true|false,
+            "change_summary": "what specifically changed",
+            "supporting_articles": [
+                {{
+                    "title": "source headline or filing",
+                    "url": "https://...",
+                    "source": "publisher / website",
+                    "kind": "news|filing|analyst|web",
+                    "reason": "why this source matters to the update"
+                }}
+            ]
+        }}
+    }},
+    "web_checks": [
+        {{
+            "symbol": "SYMBOL",
+            "query": "what you searched or fetched",
+            "source": "publisher / site",
+            "url": "https://...",
+            "finding": "what changed or what was confirmed"
+        }}
+    ]
+}}
+```
+
+IMPORTANT:
+- Output ONLY the JSON object, nothing else
+- Include real source URLs for any live checks you used
 """
 
 

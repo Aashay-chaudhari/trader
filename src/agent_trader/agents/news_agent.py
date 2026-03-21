@@ -42,6 +42,7 @@ from agent_trader.utils.news_providers import (
     FREDProvider,
     FinnhubProvider,
     AlphaVantageProvider,
+    _parse_yfinance_news_item,
 )
 
 console = Console()
@@ -220,6 +221,8 @@ class NewsAgent(BaseAgent):
                                 "sentiment_label": "bullish" if item.sentiment > 0 else "bearish",
                                 "headline_count": 1,
                                 "top_headline": item.title,
+                                "top_headline_url": item.url,
+                                "source": item.source,
                                 "price_change_pct": 0,
                                 "price": 0,
                                 "discovery_reason": f"Marketaux: {item.title[:60]}",
@@ -279,6 +282,8 @@ class NewsAgent(BaseAgent):
                     "sentiment_label": "bullish" if item.sentiment > 0 else "bearish",
                     "headline_count": 1,
                     "top_headline": item.title,
+                    "top_headline_url": item.url,
+                    "source": item.source,
                     "price_change_pct": 0,
                     "price": 0,
                     "discovery_reason": f"{item.source}: {item.title[:60]}",
@@ -319,12 +324,15 @@ class NewsAgent(BaseAgent):
                         news[0].get("title")
                         or news[0].get("content", {}).get("title", "")
                     )
+                    parsed_first = _parse_yfinance_news_item(news[0])
                     discovered[symbol] = {
                         "symbol": symbol,
                         "news_sentiment": round(avg_sentiment, 2),
                         "sentiment_label": "bullish" if avg_sentiment > 0 else "bearish",
                         "headline_count": len(news),
                         "top_headline": first_title,
+                        "top_headline_url": parsed_first.get("url", ""),
+                        "source": "yfinance",
                         "price_change_pct": round(float(change_pct), 2),
                         "price": round(float(hist["Close"].iloc[-1]), 2),
                         "discovery_reason": _explain_discovery(avg_sentiment, change_pct, news),
@@ -361,12 +369,23 @@ class NewsAgent(BaseAgent):
                     "total_mentions": 0,
                     "sentiment_sum": 0.0,
                     "reasons": [],
+                    "articles": [],
                 })
                 mention_counts[symbol]["sources"].add(item.source)
                 mention_counts[symbol]["total_mentions"] += 1
                 mention_counts[symbol]["sentiment_sum"] += item.sentiment
                 mention_counts[symbol]["reasons"].append(
                     f"{item.source}: {item.title[:50]}"
+                )
+                mention_counts[symbol]["articles"].append(
+                    {
+                        "title": item.title,
+                        "url": item.url,
+                        "source": item.source,
+                        "publisher": item.publisher,
+                        "published": item.published,
+                        "sentiment": item.sentiment,
+                    }
                 )
 
         hot = []
@@ -385,6 +404,7 @@ class NewsAgent(BaseAgent):
                         "mixed"
                     ),
                     "reasons": data["reasons"][:5],
+                    "articles": _dedupe_article_refs(data["articles"])[:5],
                 })
 
         hot.sort(key=lambda x: (x["source_count"], abs(x["avg_sentiment"])), reverse=True)
@@ -535,3 +555,17 @@ def _explain_discovery(sentiment: float, change_pct: float, news: list) -> str:
     if len(news) > 3:
         reasons.append(f"high news volume ({len(news)} articles)")
     return " + ".join(reasons) if reasons else "notable news activity"
+
+
+def _dedupe_article_refs(items: list[dict]) -> list[dict]:
+    deduped: list[dict] = []
+    seen: set[str] = set()
+    for item in items:
+        title = str(item.get("title") or "").strip().lower()
+        url = str(item.get("url") or "").strip().lower()
+        key = url or title
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped

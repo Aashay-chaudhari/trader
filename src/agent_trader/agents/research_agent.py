@@ -124,10 +124,28 @@ Respond with ONLY valid JSON:
             }},
             "catalysts": ["what could drive this"],
             "risks": ["what could go wrong"],
-            "earnings_warning": true | false
+            "earnings_warning": true | false,
+            "supporting_articles": [
+                {{
+                    "title": "source headline or filing",
+                    "url": "https://...",
+                    "source": "publisher / website",
+                    "kind": "news" | "filing" | "analyst" | "web",
+                    "reason": "why this source matters"
+                }}
+            ]
         }}
     }},
-    "self_reflection": "1-2 sentences on how your confidence calibration should adjust based on your track record"
+    "self_reflection": "1-2 sentences on how your confidence calibration should adjust based on your track record",
+    "web_checks": [
+        {{
+            "symbol": "SYMBOL",
+            "query": "what was searched or fetched",
+            "source": "publisher / website",
+            "url": "https://...",
+            "finding": "what this confirmed"
+        }}
+    ]
 }}"""
 
 
@@ -170,9 +188,27 @@ Respond with ONLY valid JSON:
                 "entry": 0.00,
                 "stop_loss": 0.00,
                 "target": 0.00
-            }}
+            }},
+            "supporting_articles": [
+                {{
+                    "title": "source headline or filing",
+                    "url": "https://...",
+                    "source": "publisher / website",
+                    "kind": "news" | "filing" | "analyst" | "web",
+                    "reason": "why this source matters"
+                }}
+            ]
         }}
-    }}
+    }},
+    "web_checks": [
+        {{
+            "symbol": "SYMBOL",
+            "query": "what was searched or fetched",
+            "source": "publisher / website",
+            "url": "https://...",
+            "finding": "what this confirmed"
+        }}
+    ]
 }}"""
 
 
@@ -267,9 +303,26 @@ class ResearchAgent(BaseAgent):
             return [preference] + [provider for provider in available if provider != preference]
         return available
 
+    def _get_api_fallback_provider(self) -> str | None:
+        """Keep API fallback within the same strategist family when CLI mode is enabled."""
+        settings = get_settings()
+        if settings.use_cli_agent:
+            if settings.cli_agent_provider == "claude":
+                return "anthropic"
+            if settings.cli_agent_provider == "codex":
+                return "openai"
+        return None
+
+    def _get_api_provider_sequence(self) -> list[str]:
+        forced_provider = self._get_api_fallback_provider()
+        available = self._get_available_providers()
+        if forced_provider:
+            return [forced_provider] if forced_provider in available else []
+        return self._get_provider_sequence()
+
     def _get_provider_name(self) -> str:
         """Resolve the preferred provider based on config and available keys."""
-        providers = self._get_provider_sequence()
+        providers = self._get_api_provider_sequence()
         return providers[0] if providers else ""
 
     async def process(self, message: Message) -> Any:
@@ -531,7 +584,9 @@ class ResearchAgent(BaseAgent):
                     continue
                 sentiment = headline.get("sentiment", 0)
                 sent_tag = f" [{sentiment:+.1f}]" if sentiment else ""
-                market_lines.append(f"  - [{source}] {title}{sent_tag}")
+                url = headline.get("url", "")
+                url_tag = f" <{url}>" if url else ""
+                market_lines.append(f"  - [{source}] {title}{sent_tag}{url_tag}")
             if len(market_lines) > 1:
                 sections.append("\n".join(market_lines))
 
@@ -561,14 +616,18 @@ class ResearchAgent(BaseAgent):
                     else:
                         sent_tag = ""
                     h_source = h.get("source", h.get("publisher", ""))
+                    url = h.get("url", "")
+                    url_tag = f" <{url}>" if url else ""
                     stock_lines.append(
-                        f"  - [{h_source}] {h.get('title', '')}{sent_tag}"
+                        f"  - [{h_source}] {h.get('title', '')}{sent_tag}{url_tag}"
                     )
 
             if filings:
                 for f in filings[:3]:
+                    url = f.get("url", "")
+                    url_tag = f" <{url}>" if url else ""
                     stock_lines.append(
-                        f"  SEC FILING: {f.get('title', '')} ({f.get('published', '')})"
+                        f"  SEC FILING: {f.get('title', '')} ({f.get('published', '')}){url_tag}"
                     )
 
             if analyst:
@@ -813,6 +872,7 @@ class ResearchAgent(BaseAgent):
         """
         settings = get_settings()
         use_cli = settings.use_cli_agent
+        cli_attempts: list[dict[str, Any]] = []
 
         if use_cli:
             cli_provider = settings.cli_agent_provider
@@ -879,6 +939,18 @@ class ResearchAgent(BaseAgent):
                     "CLI agent failed (%s), falling back to direct API call",
                     meta.get("error", "unknown"),
                 )
+                cli_attempts.append(
+                    {
+                        "provider": meta.get("provider", f"cli:{cli_provider}"),
+                        "model": meta.get("model", cli_model or "default"),
+                        "status": meta.get("status", "error"),
+                        "duration_ms": meta.get("duration_ms"),
+                        "error": meta.get("error") or meta.get("stderr"),
+                        "quota_issue_detected": self._is_quota_error(
+                            str(meta.get("error") or meta.get("stderr") or "")
+                        ),
+                    }
+                )
             else:
                 self.logger.info(
                     "CLI agent enabled but '%s' not on PATH — using direct API",
@@ -886,29 +958,51 @@ class ResearchAgent(BaseAgent):
                 )
 
         # Default path: direct API call
-        return await self._call_llm(prompt, phase=phase)
+        return await self._call_llm(
+            prompt,
+            phase=phase,
+            providers=self._get_api_provider_sequence(),
+            prior_attempts=cli_attempts,
+        )
 
-    async def _call_llm(self, prompt: str, phase: str) -> dict:
-        providers = self._get_provider_sequence()
+    async def _call_llm(
+        self,
+        prompt: str,
+        phase: str,
+        *,
+        providers: list[str] | None = None,
+        prior_attempts: list[dict[str, Any]] | None = None,
+    ) -> dict:
+        providers = list(providers) if providers is not None else self._get_provider_sequence()
         runtime = build_runtime_metadata()
+        attempts = list(prior_attempts or [])
         if not providers:
+            fallback_provider = self._get_api_fallback_provider()
+            if fallback_provider and get_settings().use_cli_agent:
+                no_provider_message = (
+                    f"No {fallback_provider} API key configured for "
+                    f"{get_settings().cli_agent_provider} fallback"
+                )
+            else:
+                no_provider_message = "No LLM API key configured"
             return {
                 "overall_sentiment": "neutral",
-                "market_summary": "LLM analysis failed: No LLM API key configured",
+                "market_summary": f"LLM analysis failed: {no_provider_message}",
                 "stocks": {},
                 "_meta": {
                     "status": "error",
                     "provider_preference": self._get_provider_preference(),
                     "runtime": runtime,
-                    "quota_issue_detected": False,
-                    "quota_note": "No LLM API key configured",
-                    "attempts": [],
+                    "quota_issue_detected": any(
+                        attempt.get("quota_issue_detected", False) for attempt in attempts
+                    ),
+                    "quota_note": self._build_quota_note(attempts) or no_provider_message,
+                    "attempts": attempts,
                 },
             }
 
         raw_text = ""
         errors = []
-        attempts = []
 
         for provider in providers:
             model = self._get_model_for_phase(provider, phase)
