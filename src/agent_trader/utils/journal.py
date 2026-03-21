@@ -39,6 +39,7 @@ def create_journal_entry(
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%H:%M UTC")
+    time_slug = now.strftime("%H-%M-%SZ")
 
     lines = [
         f"# Trading Journal — {date_str}",
@@ -111,6 +112,64 @@ def create_journal_entry(
                 lines.append(f"- **Risks:** {', '.join(risks)}")
 
             lines.append("")
+
+        llm_meta = research.get("_meta", {})
+        if llm_meta:
+            lines.append("## LLM Telemetry")
+            lines.append("")
+            lines.append(
+                f"- **Platform:** {llm_meta.get('runtime', {}).get('platform', 'unknown')}"
+            )
+            lines.append(
+                f"- **Provider Preference:** {llm_meta.get('provider_preference', 'auto')}"
+            )
+            lines.append(f"- **Selected Provider:** {llm_meta.get('provider', 'unknown')}")
+            lines.append(f"- **Selected Model:** {llm_meta.get('model', 'unknown')}")
+
+            usage = llm_meta.get("usage", {})
+            if usage:
+                lines.append(
+                    "- **Token Usage:** "
+                    f"input={usage.get('input_tokens', 0)}, "
+                    f"output={usage.get('output_tokens', 0)}, "
+                    f"total={usage.get('total_tokens', 0)}"
+                )
+
+            estimates = llm_meta.get("rate_limits", {}).get("estimates", {})
+            before_tokens = (
+                estimates.get("tokens_remaining_before_request_estimate")
+                or estimates.get("input_tokens_remaining_before_request_estimate")
+            )
+            if before_tokens is not None:
+                lines.append(
+                    "- **Capacity Before First Request (estimate):** "
+                    f"{before_tokens:,} tokens remaining"
+                )
+
+            if llm_meta.get("request_id"):
+                lines.append(f"- **Request ID:** `{llm_meta['request_id']}`")
+            if llm_meta.get("duration_ms") is not None:
+                lines.append(f"- **LLM Latency:** {llm_meta['duration_ms']} ms")
+            if llm_meta.get("quota_note"):
+                lines.append(f"- **Quota Note:** {llm_meta['quota_note']}")
+
+            attempts = llm_meta.get("attempts", [])
+            if attempts:
+                lines.append("")
+                lines.append("### Provider Attempts")
+                lines.append("")
+                for attempt in attempts:
+                    pieces = [
+                        attempt.get("provider", "?"),
+                        attempt.get("model", "?"),
+                        attempt.get("status", "?"),
+                    ]
+                    if attempt.get("duration_ms") is not None:
+                        pieces.append(f"{attempt['duration_ms']} ms")
+                    if attempt.get("error"):
+                        pieces.append(str(attempt["error"])[:180])
+                    lines.append(f"- {' | '.join(pieces)}")
+                lines.append("")
 
     # ── Signals Section ──────────────────────────────────────────
     if signals:
@@ -219,7 +278,7 @@ def create_journal_entry(
     journal_dir = Path("data/journal") / date_str
     journal_dir.mkdir(parents=True, exist_ok=True)
 
-    filename = f"{run_id}_{phase}.md"
+    filename = f"{time_slug}_{phase}_report.md"
     filepath = journal_dir / filename
     filepath.write_text(content, encoding="utf-8")
 
@@ -229,12 +288,13 @@ def create_journal_entry(
         "phase": phase,
         "timestamp": now.isoformat(),
         "screener": screener_results,
+        "research": research_results,
         "signals": signals,
         "risk": risk_results,
         "executed": executed,
         "portfolio": portfolio_snapshot,
     }
-    json_path = journal_dir / f"{run_id}_{phase}.json"
+    json_path = journal_dir / f"{time_slug}_{phase}_report.json"
     json_path.write_text(json.dumps(raw_data, indent=2, default=str), encoding="utf-8")
 
     return str(filepath)

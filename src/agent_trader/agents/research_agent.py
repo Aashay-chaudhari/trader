@@ -21,11 +21,16 @@ from typing import Any
 import json
 from pathlib import Path
 from datetime import datetime, timezone
+from time import perf_counter
 
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message
 from agent_trader.config.settings import get_settings
 from agent_trader.utils.feedback import PerformanceTracker
+from agent_trader.utils.llm_analytics import (
+    build_runtime_metadata,
+    record_llm_analytics,
+)
 from agent_trader.utils.research_context import (
     build_recent_artifact_summary,
     save_prompt_context_snapshot,
@@ -335,17 +340,27 @@ class ResearchAgent(BaseAgent):
             )
             run_mode = "research"
 
-        model = self._get_model_for_phase(provider, run_mode)
+        analysis = await self._call_llm(prompt, phase=run_mode)
+        llm_meta = analysis.get("_meta", {})
+        selected_provider = llm_meta.get("provider", provider or "unresolved")
+        selected_model = llm_meta.get(
+            "model",
+            self._get_model_for_phase(selected_provider, run_mode) if selected_provider else "",
+        )
 
         save_prompt_context_snapshot(
             phase=phase,
-            provider=provider or "unresolved",
-            model=model,
+            provider=selected_provider or "unresolved",
+            model=selected_model,
             symbols=message.data.get("symbols", []),
             prompt_sections=prompt_sections,
+            llm_meta=llm_meta,
         )
-
-        analysis = await self._call_llm(prompt, phase=run_mode)
+        record_llm_analytics(
+            phase=phase,
+            symbols=message.data.get("symbols", []),
+            llm_meta=llm_meta,
+        )
 
         # If this is a weekly review, save the learned rules
         if phase == "weekly_review" and "new_rules" in analysis:
@@ -655,61 +670,284 @@ class ResearchAgent(BaseAgent):
 
     async def _call_llm(self, prompt: str, phase: str) -> dict:
         providers = self._get_provider_sequence()
+        runtime = build_runtime_metadata()
         if not providers:
             return {
                 "overall_sentiment": "neutral",
                 "market_summary": "LLM analysis failed: No LLM API key configured",
                 "stocks": {},
+                "_meta": {
+                    "status": "error",
+                    "provider_preference": self._get_provider_preference(),
+                    "runtime": runtime,
+                    "quota_issue_detected": False,
+                    "quota_note": "No LLM API key configured",
+                    "attempts": [],
+                },
             }
 
         raw_text = ""
         errors = []
+        attempts = []
 
         for provider in providers:
             model = self._get_model_for_phase(provider, phase)
             client = self._get_client(provider)
+            started = perf_counter()
 
             try:
-                raw_text = self._call_llm_once(client, provider, model, prompt)
+                raw_text, response_meta = self._call_llm_once(client, provider, model, prompt)
                 analysis = self._parse_llm_response(raw_text)
+                response_meta["duration_ms"] = round((perf_counter() - started) * 1000, 1)
+                attempts.append(
+                    {
+                        "provider": provider,
+                        "model": model,
+                        "status": "success",
+                        "duration_ms": response_meta["duration_ms"],
+                        "usage": response_meta.get("usage", {}),
+                    }
+                )
                 analysis.setdefault("_meta", {})
-                analysis["_meta"].update({"provider": provider, "model": model})
+                analysis["_meta"].update(
+                    {
+                        "status": "success",
+                        "provider_preference": self._get_provider_preference(),
+                        "provider": provider,
+                        "model": response_meta.get("model", model),
+                        "usage": response_meta.get("usage", {}),
+                        "service_tier": response_meta.get("service_tier"),
+                        "request_id": response_meta.get("request_id"),
+                        "rate_limits": response_meta.get("rate_limits", {}),
+                        "runtime": runtime,
+                        "duration_ms": response_meta.get("duration_ms"),
+                        "attempts": attempts,
+                        "quota_issue_detected": any(
+                            attempt.get("quota_issue_detected", False) for attempt in attempts
+                        ),
+                        "quota_note": self._build_quota_note(attempts),
+                    }
+                )
                 self._last_provider = provider
                 self._last_model = model
                 return analysis
             except json.JSONDecodeError as exc:
+                duration_ms = round((perf_counter() - started) * 1000, 1)
+                attempts.append(
+                    {
+                        "provider": provider,
+                        "model": model,
+                        "status": "parse_error",
+                        "duration_ms": duration_ms,
+                        "error": f"Could not parse JSON: {exc}",
+                        "quota_issue_detected": False,
+                    }
+                )
                 errors.append(f"{provider}/{model}: could not parse JSON ({exc})")
             except Exception as exc:
+                duration_ms = round((perf_counter() - started) * 1000, 1)
+                attempts.append(
+                    {
+                        "provider": provider,
+                        "model": model,
+                        "status": "error",
+                        "duration_ms": duration_ms,
+                        "error": str(exc),
+                        "quota_issue_detected": self._is_quota_error(str(exc)),
+                    }
+                )
                 errors.append(f"{provider}/{model}: {exc}")
 
         failure = {
             "overall_sentiment": "neutral",
             "market_summary": f"LLM analysis failed: {' | '.join(errors)}",
             "stocks": {},
+            "_meta": {
+                "status": "error",
+                "provider_preference": self._get_provider_preference(),
+                "provider": providers[0] if providers else "",
+                "model": self._get_model_for_phase(providers[0], phase) if providers else "",
+                "usage": {},
+                "service_tier": None,
+                "request_id": None,
+                "rate_limits": {},
+                "runtime": runtime,
+                "duration_ms": None,
+                "attempts": attempts,
+                "quota_issue_detected": any(
+                    attempt.get("quota_issue_detected", False) for attempt in attempts
+                ),
+                "quota_note": self._build_quota_note(attempts),
+            },
         }
         if raw_text:
             failure["raw_response"] = raw_text[:500]
         return failure
 
-    def _call_llm_once(self, client: Any, provider: str, model: str, prompt: str) -> str:
+    def _call_llm_once(
+        self, client: Any, provider: str, model: str, prompt: str
+    ) -> tuple[str, dict[str, Any]]:
         if provider == "anthropic":
-            response = client.messages.create(
+            raw_response = client.messages.with_raw_response.create(
                 model=model,
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return response.content[0].text
+            response = raw_response.parse()
+            usage = self._extract_usage(provider, response)
+            return response.content[0].text, {
+                "provider": provider,
+                "model": getattr(response, "model", model),
+                "usage": usage,
+                "request_id": getattr(raw_response, "request_id", None),
+                "rate_limits": self._extract_rate_limits(raw_response.headers, usage),
+            }
 
         if provider == "openai":
-            response = client.chat.completions.create(
+            raw_response = client.chat.completions.with_raw_response.create(
                 model=model,
                 max_tokens=4000,
                 response_format={"type": "json_object"},
                 messages=[{"role": "user", "content": prompt}],
             )
-            return response.choices[0].message.content or ""
+            response = raw_response.parse()
+            usage = self._extract_usage(provider, response)
+            return response.choices[0].message.content or "", {
+                "provider": provider,
+                "model": getattr(response, "model", model),
+                "usage": usage,
+                "service_tier": getattr(response, "service_tier", None),
+                "request_id": getattr(raw_response, "request_id", None),
+                "rate_limits": self._extract_rate_limits(raw_response.headers, usage),
+            }
 
         raise RuntimeError(f"Unsupported LLM provider '{provider}'")
+
+    def _extract_usage(self, provider: str, response: Any) -> dict[str, Any]:
+        usage = getattr(response, "usage", None)
+        if usage is None:
+            return {}
+
+        if provider == "anthropic":
+            input_tokens = getattr(usage, "input_tokens", None)
+            output_tokens = getattr(usage, "output_tokens", None)
+            cache_creation = getattr(usage, "cache_creation_input_tokens", None)
+            cache_read = getattr(usage, "cache_read_input_tokens", None)
+            total_tokens = (
+                (input_tokens or 0)
+                + (output_tokens or 0)
+                + (cache_creation or 0)
+                + (cache_read or 0)
+            )
+            payload = {
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+                "cache_creation_input_tokens": cache_creation,
+                "cache_read_input_tokens": cache_read,
+                "total_tokens": total_tokens,
+            }
+            return {key: value for key, value in payload.items() if value is not None}
+
+        prompt_details = getattr(usage, "prompt_tokens_details", None)
+        completion_details = getattr(usage, "completion_tokens_details", None)
+        payload = {
+            "input_tokens": getattr(usage, "prompt_tokens", None),
+            "output_tokens": getattr(usage, "completion_tokens", None),
+            "total_tokens": getattr(usage, "total_tokens", None),
+            "cached_input_tokens": getattr(prompt_details, "cached_tokens", None),
+            "reasoning_output_tokens": getattr(completion_details, "reasoning_tokens", None),
+        }
+        return {key: value for key, value in payload.items() if value is not None}
+
+    def _extract_rate_limits(self, headers: Any, usage: dict[str, Any]) -> dict[str, Any]:
+        if headers is None:
+            return {}
+
+        header_map = {str(key).lower(): str(value) for key, value in headers.items()}
+        selected = {
+            key: value
+            for key, value in header_map.items()
+            if "ratelimit" in key or key in {"retry-after", "anthropic-organization-id"}
+        }
+
+        tokens_used = (
+            usage.get("total_tokens")
+            or (usage.get("input_tokens") or 0) + (usage.get("output_tokens") or 0)
+        )
+        requests_after = self._safe_int(
+            header_map.get("x-ratelimit-remaining-requests")
+            or header_map.get("anthropic-ratelimit-requests-remaining")
+        )
+        tokens_after = self._safe_int(
+            header_map.get("x-ratelimit-remaining-tokens")
+            or header_map.get("anthropic-ratelimit-tokens-remaining")
+        )
+        input_tokens_after = self._safe_int(
+            header_map.get("anthropic-ratelimit-input-tokens-remaining")
+        )
+        output_tokens_after = self._safe_int(
+            header_map.get("anthropic-ratelimit-output-tokens-remaining")
+        )
+
+        estimates = {}
+        if requests_after is not None:
+            estimates["requests_remaining_after_request"] = requests_after
+            estimates["requests_remaining_before_request_estimate"] = requests_after + 1
+        if tokens_after is not None:
+            estimates["tokens_remaining_after_request"] = tokens_after
+            estimates["tokens_remaining_before_request_estimate"] = tokens_after + tokens_used
+        if input_tokens_after is not None:
+            estimates["input_tokens_remaining_after_request"] = input_tokens_after
+            estimates["input_tokens_remaining_before_request_estimate"] = (
+                input_tokens_after + (usage.get("input_tokens") or 0)
+            )
+        if output_tokens_after is not None:
+            estimates["output_tokens_remaining_after_request"] = output_tokens_after
+            estimates["output_tokens_remaining_before_request_estimate"] = (
+                output_tokens_after + (usage.get("output_tokens") or 0)
+            )
+
+        return {
+            "headers": selected,
+            "estimates": estimates,
+            "billing_balance_before_workflow": {
+                "available": False,
+                "reason": (
+                    "Rate-limit headers are available, but billing/credit balance is not "
+                    "available from these request responses."
+                ),
+            },
+        }
+
+    def _build_quota_note(self, attempts: list[dict[str, Any]]) -> str | None:
+        for attempt in attempts:
+            if attempt.get("quota_issue_detected") and attempt.get("error"):
+                return attempt["error"]
+        if attempts:
+            return (
+                "Billing balance is not exposed by normal request responses. "
+                "This repo records token usage and any quota errors returned by the provider."
+            )
+        return None
+
+    def _is_quota_error(self, message: str) -> bool:
+        lowered = message.lower()
+        markers = [
+            "credit balance is too low",
+            "insufficient_quota",
+            "billing",
+            "quota",
+            "rate limit",
+        ]
+        return any(marker in lowered for marker in markers)
+
+    def _safe_int(self, value: Any) -> int | None:
+        if value is None:
+            return None
+        try:
+            return int(str(value).replace(",", "").strip())
+        except ValueError:
+            return None
 
     def _parse_llm_response(self, raw_text: str) -> dict:
         raw_text = raw_text.strip()

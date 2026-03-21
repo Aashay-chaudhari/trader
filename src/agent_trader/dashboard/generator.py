@@ -420,6 +420,12 @@ def generate_dashboard():
     research = _get_latest_research()
     (data_dir / "research.json").write_text(json.dumps(research, indent=2, default=str))
 
+    analytics_path = Path("data/analytics/latest_llm.json")
+    if analytics_path.exists():
+        (data_dir / "llm.json").write_text(analytics_path.read_text())
+    else:
+        (data_dir / "llm.json").write_text("{}")
+
     # Copy feedback/performance data
     feedback_dir = Path("data/feedback")
     if (feedback_dir / "completed_trades.json").exists():

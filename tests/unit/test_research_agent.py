@@ -71,27 +71,61 @@ class AnthropicErroringClient:
         def create(**kwargs):
             raise RuntimeError("Your credit balance is too low to access the Anthropic API")
 
-    messages = Messages()
+    class MessagesWithRawResponse:
+        @staticmethod
+        def create(**kwargs):
+            raise RuntimeError("Your credit balance is too low to access the Anthropic API")
+
+    class WrappedMessages(Messages):
+        pass
+
+    WrappedMessages.with_raw_response = MessagesWithRawResponse()
+    messages = WrappedMessages()
 
 
 class OpenAIJsonClient:
+    class RawResponse:
+        headers = {
+            "x-ratelimit-remaining-requests": "4999",
+            "x-ratelimit-remaining-tokens": "9990",
+        }
+        request_id = "req_test"
+
+        @staticmethod
+        def parse():
+            class Usage:
+                prompt_tokens = 10
+                completion_tokens = 5
+                total_tokens = 15
+                prompt_tokens_details = None
+                completion_tokens_details = None
+
+            class Message:
+                content = (
+                    '{"overall_sentiment":"bullish","market_summary":"fallback ok",'
+                    '"stocks":{}}'
+                )
+
+            class Choice:
+                message = Message()
+
+            class Response:
+                model = "gpt-4o-mini"
+                service_tier = "default"
+                choices = [Choice()]
+                usage = Usage()
+
+            return Response()
+
     class Chat:
         class Completions:
             @staticmethod
             def create(**kwargs):
-                class Message:
-                    content = (
-                        '{"overall_sentiment":"bullish","market_summary":"fallback ok",'
-                        '"stocks":{}}'
-                    )
+                return OpenAIJsonClient.RawResponse()
 
-                class Choice:
-                    message = Message()
+            with_raw_response = None
 
-                class Response:
-                    choices = [Choice()]
-
-                return Response()
+        Completions.with_raw_response = Completions()
 
         completions = Completions()
 

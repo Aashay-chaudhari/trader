@@ -79,6 +79,7 @@ def save_prompt_context_snapshot(
     model: str,
     symbols: list[str],
     prompt_sections: dict[str, Any],
+    llm_meta: dict[str, Any] | None = None,
     data_dir: str = "data",
 ) -> str:
     """Persist the structured prompt inputs for auditability and reuse."""
@@ -93,6 +94,7 @@ def save_prompt_context_snapshot(
         "model": model,
         "symbols": symbols,
         "prompt_sections": prompt_sections,
+        "llm_meta": llm_meta or {},
     }
 
     filename = f"{now.strftime('%Y-%m-%d')}_{phase}_{now.strftime('%H%M%S')}.json"
