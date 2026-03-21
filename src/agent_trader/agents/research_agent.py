@@ -269,6 +269,7 @@ class ResearchAgent(BaseAgent):
         screener_results = message.data.get("screener_results")
         morning_context = message.data.get("morning_context")
         news_data = message.data.get("news", {})
+        market_headlines = message.data.get("market_headlines", [])
         market_context = message.data.get("market_context", {})
         news_discoveries = message.data.get("news_discoveries", [])
         hot_stocks = message.data.get("hot_stocks", [])
@@ -316,8 +317,19 @@ class ResearchAgent(BaseAgent):
             performance_feedback = self._tracker.get_recent_trades_for_prompt()
             learned_rules = self._tracker.get_learned_rules()
             market_context_text = self._format_market_context(market_context)
+            news_inputs = self._build_news_inputs_snapshot(
+                news_data,
+                market_headlines=market_headlines,
+                news_discoveries=news_discoveries,
+                hot_stocks=hot_stocks,
+                finviz_data=finviz_data,
+            )
             news_context = self._format_news(
-                news_data, news_discoveries, hot_stocks, finviz_data
+                news_data,
+                market_headlines=market_headlines,
+                news_discoveries=news_discoveries,
+                hot_stocks=hot_stocks,
+                finviz_data=finviz_data,
             )
             screener_context = self._format_screener_context(screener_results)
             prompt_sections = {
@@ -327,6 +339,7 @@ class ResearchAgent(BaseAgent):
                 "market_context": market_context,
                 "market_data": summary,
                 "news_context": news_context,
+                "news_inputs": news_inputs,
                 "screener_context": screener_results or {},
             }
             prompt = RESEARCH_PROMPT.format(
@@ -374,6 +387,11 @@ class ResearchAgent(BaseAgent):
             "research": analysis,
             "phase": phase,
             "news": news_data,
+            "market_headlines": market_headlines,
+            "news_discoveries": news_discoveries,
+            "hot_stocks": hot_stocks,
+            "finviz": finviz_data,
+            "screener_results": screener_results,
             "market_context": market_context,
         }
 
@@ -469,6 +487,7 @@ class ResearchAgent(BaseAgent):
 
     def _format_news(
         self, news_data: dict,
+        market_headlines: list | None = None,
         news_discoveries: list | None = None,
         hot_stocks: list | None = None,
         finviz_data: dict | None = None,
@@ -476,26 +495,53 @@ class ResearchAgent(BaseAgent):
         """Format all news context for Claude's prompt."""
         sections = []
 
-        # Per-stock headlines, analyst recs, earnings, insider activity
+        if market_headlines:
+            market_lines = ["MARKET HEADLINES:"]
+            for headline in market_headlines[:6]:
+                source = headline.get("source", "market")
+                title = headline.get("title", "")
+                if not title:
+                    continue
+                sentiment = headline.get("sentiment", 0)
+                sent_tag = f" [{sentiment:+.1f}]" if sentiment else ""
+                market_lines.append(f"  - [{source}] {title}{sent_tag}")
+            if len(market_lines) > 1:
+                sections.append("\n".join(market_lines))
+
+        # Per-stock headlines, analyst recs, earnings, insider activity, filings
         stock_lines = []
         for symbol, data in news_data.items():
             headlines = data.get("news_headlines", [])
             analyst = data.get("analyst_recommendations")
             events = data.get("upcoming_events", [])
             insider = data.get("insider_signal")
+            filings = data.get("filing_catalysts", [])
             sentiment = data.get("sentiment", "neutral")
             score = data.get("sentiment_score", 0)
+            source_count = data.get("source_count", 0)
 
-            if not headlines and not analyst and not events:
+            if not headlines and not analyst and not events and not filings:
                 continue
 
-            stock_lines.append(f"\n{symbol} (sentiment: {sentiment}, score: {score:+.2f}):")
+            source_tag = f", {source_count} sources" if source_count >= 2 else ""
+            stock_lines.append(f"\n{symbol} (sentiment: {sentiment}, score: {score:+.2f}{source_tag}):")
 
             if headlines:
                 for h in headlines[:4]:
-                    sent_tag = f" [{h.get('sentiment', 0):+.1f}]" if h.get("sentiment") else ""
+                    h_sentiment = h.get("sentiment", 0)
+                    if isinstance(h_sentiment, (int, float)):
+                        sent_tag = f" [{h_sentiment:+.1f}]"
+                    else:
+                        sent_tag = ""
+                    h_source = h.get("source", h.get("publisher", ""))
                     stock_lines.append(
-                        f"  - [{h.get('publisher', '')}] {h.get('title', '')}{sent_tag}"
+                        f"  - [{h_source}] {h.get('title', '')}{sent_tag}"
+                    )
+
+            if filings:
+                for f in filings[:3]:
+                    stock_lines.append(
+                        f"  SEC FILING: {f.get('title', '')} ({f.get('published', '')})"
                     )
 
             if analyst:
@@ -518,8 +564,11 @@ class ResearchAgent(BaseAgent):
 
             if events:
                 for e in events:
+                    days = e.get("days_until")
+                    days_tag = f" ({days}d away)" if days is not None else ""
+                    warning = " *** IMMINENT ***" if e.get("warning") else ""
                     stock_lines.append(
-                        f"  ⚠ UPCOMING: {e['type']} on {e.get('date', 'TBD')}"
+                        f"  UPCOMING: {e.get('type', 'event')} on {e.get('date', 'TBD')}{days_tag}{warning}"
                     )
 
         if stock_lines:
@@ -565,6 +614,24 @@ class ResearchAgent(BaseAgent):
             sections.append("\n".join(analyst_lines))
 
         return "\n\n".join(sections) if sections else "No significant news for watched stocks."
+
+    def _build_news_inputs_snapshot(
+        self,
+        news_data: dict[str, Any],
+        *,
+        market_headlines: list | None = None,
+        news_discoveries: list | None = None,
+        hot_stocks: list | None = None,
+        finviz_data: dict | None = None,
+    ) -> dict[str, Any]:
+        """Persist the structured news inputs that fed the LLM prompt."""
+        return {
+            "per_symbol": news_data or {},
+            "market_headlines": market_headlines or [],
+            "news_discoveries": news_discoveries or [],
+            "hot_stocks": hot_stocks or [],
+            "finviz": finviz_data or {},
+        }
 
     def _format_market_context(self, ctx: dict) -> str:
         """Format market-wide context with full regime assessment."""
@@ -622,6 +689,26 @@ class ResearchAgent(BaseAgent):
             lines.append("Sector laggards: " + ", ".join(
                 fmt_sector(s, v) for s, v in sorted_sectors[-3:]
             ))
+
+        # FRED macro regime signals (when available)
+        fred_regime = ctx.get("fred_regime", {})
+        if fred_regime:
+            lines.append("\nFRED MACRO SIGNALS:")
+            vol = fred_regime.get("volatility")
+            if vol:
+                lines.append(
+                    f"  VIX (FRED): {vol['value']} ({vol['level'].upper()}) — {vol['action']}"
+                )
+            yc = fred_regime.get("yield_curve")
+            if yc:
+                lines.append(
+                    f"  Yield curve: {yc['value']:+.2f}% ({yc['status']}) — {yc['implication']}"
+                )
+            credit = fred_regime.get("credit_stress")
+            if credit:
+                lines.append(
+                    f"  HY spread: {credit['value']:.2f}% ({credit['level']}) — {credit['action']}"
+                )
 
         return "\n".join(lines) if lines else "Market context unavailable."
 

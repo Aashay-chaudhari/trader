@@ -22,6 +22,13 @@ class Settings(BaseSettings):
     alpaca_api_key: str = ""
     alpaca_secret_key: str = ""
 
+    # --- News & Data API Keys ---
+    marketaux_api_key: str = ""       # Free tier: 100 req/day, entity-linked news
+    fred_api_key: str = ""            # Free: macro data (VIX, yields, spreads)
+    sec_edgar_user_agent: str = ""    # Required by SEC: "Name email@example.com"
+    finnhub_api_key: str = ""         # Free: 60 req/min, social sentiment, insider trades
+    alpha_vantage_api_key: str = ""   # Free: 25 req/day, NLP news sentiment
+
     # --- LLM Models ---
     # Sonnet for deep morning research (worth the $0.01-0.03)
     # Haiku for periodic monitoring checks ($0.001)

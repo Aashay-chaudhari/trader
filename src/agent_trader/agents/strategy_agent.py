@@ -487,17 +487,21 @@ class StrategyAgent(BaseAgent):
         return None
 
     def _news_catalyst_strategy(self, symbol, data, indicators, history, news, mkt_ctx):
-        """Only trade when there's a news catalyst confirming the move.
+        """Trade when news sentiment CONFIRMS the price direction.
 
-        A technical breakout WITH news is more reliable than one without.
-        This strategy fires when there are news headlines + price movement
-        in the same direction.
+        Key improvement: sentiment direction must align with price move.
+        A stock dropping on bullish news is NOT a buy signal — it's a warning.
+        A stock rising on bearish news is NOT a sell signal — it shows strength.
+
+        Fires when: headlines exist + price move > 1% + sentiment aligns with direction.
         """
         if not news:
             return None
 
         headlines = news.get("news_headlines", [])
         analyst = news.get("analyst_recommendations")
+        news_sentiment = news.get("sentiment_score", 0)
+        source_count = news.get("source_count", 0)
 
         if not headlines and not analyst:
             return None
@@ -508,41 +512,79 @@ class StrategyAgent(BaseAgent):
         if abs(change_pct) < 1.0:
             return None
 
-        # Analyst consensus adds weight
+        # Compute headline sentiment if not pre-aggregated
+        if news_sentiment == 0 and headlines:
+            sentiments = [
+                h.get("sentiment", 0) if isinstance(h.get("sentiment"), (int, float))
+                else 0
+                for h in headlines
+            ]
+            news_sentiment = sum(sentiments) / len(sentiments) if sentiments else 0
+
+        # Analyst consensus
         analyst_signal = 0
         if analyst:
             buys = analyst.get("strong_buy", 0) + analyst.get("buy", 0)
             sells = analyst.get("sell", 0) + analyst.get("strong_sell", 0)
             if buys > sells * 2:
-                analyst_signal = 1  # Strong buy consensus
+                analyst_signal = 1
             elif sells > buys * 2:
-                analyst_signal = -1  # Strong sell consensus
+                analyst_signal = -1
 
-        # Has news + price movement + (optionally) analyst consensus
-        has_news = len(headlines) > 0
-        if has_news and change_pct > 1.0:
-            strength = 0.4
+        # CRITICAL: Sentiment must align with price direction
+        # Bullish news + price up = confirmed buy signal
+        # Bearish news + price down = confirmed sell signal
+        # Mismatch = no signal (conflicting information)
+        sentiment_bullish = news_sentiment > 0.1 or analyst_signal > 0
+        sentiment_bearish = news_sentiment < -0.1 or analyst_signal < 0
+
+        # Multi-source confirmation bonus
+        multi_source_bonus = 0.1 if source_count >= 2 else 0
+        # Filing catalyst bonus (SEC filings add conviction)
+        filing_bonus = 0.1 if news.get("filing_catalysts") else 0
+
+        if change_pct > 1.0 and sentiment_bullish:
+            strength = 0.4 + multi_source_bonus + filing_bonus
             if analyst_signal > 0:
                 strength += 0.2
+            # Stronger sentiment = stronger signal
+            strength += min(0.2, abs(news_sentiment) * 0.3)
+
+            parts = [f"{len(headlines)} news items (sentiment {news_sentiment:+.2f})"]
+            parts.append(f"{change_pct:+.1f}% move confirms bullish news")
+            if analyst_signal > 0:
+                parts.append("analyst buy consensus")
+            if source_count >= 2:
+                parts.append(f"{source_count} sources agree")
+            if news.get("filing_catalysts"):
+                parts.append("SEC filing catalyst")
+
             return TradeSignal(
                 symbol=symbol, action="buy",
-                strength=min(1.0, strength + abs(change_pct) / 10 * 0.3),
+                strength=min(1.0, strength + abs(change_pct) / 10 * 0.2),
                 strategy="news_catalyst",
-                reasoning=f"{len(headlines)} news items + {change_pct:+.1f}% move"
-                          + (" + analyst buy consensus" if analyst_signal > 0 else ""),
+                reasoning=" | ".join(parts),
                 suggested_size_pct=0,
             )
 
-        if has_news and change_pct < -1.0:
-            strength = 0.4
+        if change_pct < -1.0 and sentiment_bearish:
+            strength = 0.4 + multi_source_bonus + filing_bonus
             if analyst_signal < 0:
                 strength += 0.2
+            strength += min(0.2, abs(news_sentiment) * 0.3)
+
+            parts = [f"{len(headlines)} news items (sentiment {news_sentiment:+.2f})"]
+            parts.append(f"{change_pct:+.1f}% move confirms bearish news")
+            if analyst_signal < 0:
+                parts.append("analyst sell consensus")
+            if source_count >= 2:
+                parts.append(f"{source_count} sources agree")
+
             return TradeSignal(
                 symbol=symbol, action="sell",
-                strength=min(1.0, strength + abs(change_pct) / 10 * 0.3),
+                strength=min(1.0, strength + abs(change_pct) / 10 * 0.2),
                 strategy="news_catalyst",
-                reasoning=f"{len(headlines)} news items + {change_pct:+.1f}% move"
-                          + (" + analyst sell consensus" if analyst_signal < 0 else ""),
+                reasoning=" | ".join(parts),
                 suggested_size_pct=0,
             )
 
