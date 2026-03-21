@@ -197,12 +197,17 @@ jobs:
           rm -rf data/profiles/claude data/profiles/codex docs/data/profiles
           mkdir -p data/profiles docs/data
 
-      - name: Download strategist artifacts
+      - name: Download Claude strategist artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: strategist-*-${{ needs.determine-phase.outputs.phase }}
-          path: .
-          merge-multiple: true
+          name: strategist-claude-${{ needs.determine-phase.outputs.phase }}
+          path: data/profiles/claude
+
+      - name: Download Codex strategist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: strategist-codex-${{ needs.determine-phase.outputs.phase }}
+          path: data/profiles/codex
 
       - name: Generate merged dashboard
         run: python -m agent_trader dashboard
