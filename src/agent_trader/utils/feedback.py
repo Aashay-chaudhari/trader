@@ -16,8 +16,6 @@ so Claude sees its own track record every time it makes a recommendation.
 
 import json
 from pathlib import Path
-from datetime import datetime, timezone, timedelta
-from typing import Any
 
 
 class PerformanceTracker:

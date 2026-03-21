@@ -103,8 +103,6 @@ class DataAgent(BaseAgent):
     def _add_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """Add standard technical indicators to price data."""
         close = df["Close"]
-        high = df["High"]
-        low = df["Low"]
 
         # RSI
         df["rsi_14"] = ta.momentum.RSIIndicator(close, window=14).rsi()

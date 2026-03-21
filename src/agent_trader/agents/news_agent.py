@@ -402,16 +402,12 @@ class NewsAgent(BaseAgent):
             "analyst_changes": [],
         }
 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (compatible; AgentTrader/1.0)"
-        }
 
         # Top gainers/losers from Yahoo Finance (more reliable than scraping Finviz)
         try:
             import yfinance as yf
 
             # Use yfinance screener for top movers
-            gainers_tickers = ["SPY"]  # Placeholder — we use individual stock data instead
             # We'll populate this from our own screener data
         except Exception:
             pass
@@ -805,7 +801,6 @@ class NewsAgent(BaseAgent):
             if isinstance(earnings_date, list):
                 earnings_date = earnings_date[0]
 
-            from datetime import datetime as dt
             now = datetime.now(timezone.utc)
 
             if hasattr(earnings_date, 'timestamp'):

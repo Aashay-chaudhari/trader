@@ -76,7 +76,6 @@ class ExecutionAgent(BaseAgent):
         """Execute a single trade. Returns execution result."""
         symbol = trade["symbol"]
         action = trade["action"]
-        strength = trade["strength"]
 
         # Calculate quantity based on position size and portfolio value
         portfolio_value = settings.paper_portfolio_value

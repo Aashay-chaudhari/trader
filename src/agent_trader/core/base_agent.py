@@ -13,7 +13,7 @@ from enum import Enum
 from datetime import datetime, timezone
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
 

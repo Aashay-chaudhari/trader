@@ -498,7 +498,6 @@ class StrategyAgent(BaseAgent):
             return None
 
         change_pct = data.get("price_change_pct", 0)
-        volume = data.get("volume", 0)
 
         # Need meaningful price move + news
         if abs(change_pct) < 1.0:
@@ -525,7 +524,7 @@ class StrategyAgent(BaseAgent):
                 strength=min(1.0, strength + abs(change_pct) / 10 * 0.3),
                 strategy="news_catalyst",
                 reasoning=f"{len(headlines)} news items + {change_pct:+.1f}% move"
-                          + (f" + analyst buy consensus" if analyst_signal > 0 else ""),
+                          + (" + analyst buy consensus" if analyst_signal > 0 else ""),
                 suggested_size_pct=0,
             )
 
@@ -538,7 +537,7 @@ class StrategyAgent(BaseAgent):
                 strength=min(1.0, strength + abs(change_pct) / 10 * 0.3),
                 strategy="news_catalyst",
                 reasoning=f"{len(headlines)} news items + {change_pct:+.1f}% move"
-                          + (f" + analyst sell consensus" if analyst_signal < 0 else ""),
+                          + (" + analyst sell consensus" if analyst_signal < 0 else ""),
                 suggested_size_pct=0,
             )
 

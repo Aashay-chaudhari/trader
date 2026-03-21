@@ -383,7 +383,7 @@ class Orchestrator:
         console.print(f"[bold blue]{'='*60}[/bold blue]\n")
 
     def _print_research_summary(self, results):
-        console.print(f"\n[bold]Research Summary[/bold]")
+        console.print("\n[bold]Research Summary[/bold]")
         research = results.get("research", {}).get("data", {}).get("research", {})
         if not research:
             console.print("  [yellow]No research results[/yellow]")
@@ -396,7 +396,7 @@ class Orchestrator:
             console.print(f"  Best opportunities: [bold]{', '.join(best)}[/bold]")
 
     def _print_monitor_summary(self, results):
-        console.print(f"\n[bold]Monitor Summary[/bold]")
+        console.print("\n[bold]Monitor Summary[/bold]")
         table = Table(show_header=True)
         table.add_column("Stage", style="cyan")
         table.add_column("Status")

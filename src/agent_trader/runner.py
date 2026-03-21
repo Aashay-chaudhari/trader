@@ -31,13 +31,13 @@ def build_system(settings: Settings | None = None) -> tuple[Orchestrator, Settin
     # Register all agents — orchestrator looks them up by key name
     screener = ScreenerAgent(bus)
     orchestrator._agents["screener"] = screener
-    console.print(f"  [green]Registered[/green] screener_agent")
+    console.print("  [green]Registered[/green] screener_agent")
 
     orchestrator.register(DataAgent(bus))
 
     news = NewsAgent(bus)
     orchestrator._agents["news"] = news
-    console.print(f"  [green]Registered[/green] news_agent")
+    console.print("  [green]Registered[/green] news_agent")
 
     orchestrator.register(ResearchAgent(bus))
     orchestrator.register(StrategyAgent(bus))
