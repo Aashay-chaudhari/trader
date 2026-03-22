@@ -1447,6 +1447,31 @@ class ResearchAgent(BaseAgent):
                         "CLI agent succeeded in %.1fs",
                         meta.get("duration_ms", 0) / 1000,
                     )
+                    analysis.setdefault("_meta", {})
+                    analysis["_meta"].update(
+                        {
+                            "execution_mode": "cli",
+                            "provider": meta.get("provider", f"cli:{cli_provider}"),
+                            "model": meta.get("model", cli_model or "default"),
+                            "selected_provider": meta.get("provider", f"cli:{cli_provider}"),
+                            "selected_model": meta.get("model", cli_model or "default"),
+                            "attempts": [
+                                {
+                                    "execution_mode": "cli",
+                                    "provider": meta.get("provider", f"cli:{cli_provider}"),
+                                    "model": meta.get("model", cli_model or "default"),
+                                    "status": "success",
+                                    "duration_ms": meta.get("duration_ms"),
+                                    "usage": meta.get("usage", {}),
+                                }
+                            ],
+                        }
+                    )
+                    self.logger.info(
+                        "Execution mode selected: CLI (provider=%s, model=%s)",
+                        analysis["_meta"].get("provider"),
+                        analysis["_meta"].get("model"),
+                    )
                     self._last_provider = f"cli:{cli_provider}"
                     self._last_model = cli_model or "default"
                     return analysis
@@ -1458,6 +1483,7 @@ class ResearchAgent(BaseAgent):
                 )
                 cli_attempts.append(
                     {
+                        "execution_mode": "cli",
                         "provider": meta.get("provider", f"cli:{cli_provider}"),
                         "model": meta.get("model", cli_model or "default"),
                         "status": meta.get("status", "error"),
@@ -1475,10 +1501,15 @@ class ResearchAgent(BaseAgent):
                 )
 
         # Default path: direct API call
+        api_providers = self._get_api_provider_sequence()
+        self.logger.info(
+            "Execution mode selected: API (providers=%s)",
+            ",".join(api_providers) if api_providers else "none",
+        )
         return await self._call_llm(
             prompt,
             phase=phase,
-            providers=self._get_api_provider_sequence(),
+            providers=api_providers,
             prior_attempts=cli_attempts,
         )
 
@@ -1508,6 +1539,7 @@ class ResearchAgent(BaseAgent):
                 "stocks": {},
                 "_meta": {
                     "status": "error",
+                    "execution_mode": "none",
                     "provider_preference": self._get_provider_preference(),
                     "runtime": runtime,
                     "quota_issue_detected": any(
@@ -1532,6 +1564,7 @@ class ResearchAgent(BaseAgent):
                 response_meta["duration_ms"] = round((perf_counter() - started) * 1000, 1)
                 attempts.append(
                     {
+                        "execution_mode": "api",
                         "provider": provider,
                         "model": model,
                         "status": "success",
@@ -1543,9 +1576,12 @@ class ResearchAgent(BaseAgent):
                 analysis["_meta"].update(
                     {
                         "status": "success",
+                        "execution_mode": "api",
                         "provider_preference": self._get_provider_preference(),
                         "provider": provider,
                         "model": response_meta.get("model", model),
+                        "selected_provider": provider,
+                        "selected_model": response_meta.get("model", model),
                         "usage": response_meta.get("usage", {}),
                         "service_tier": response_meta.get("service_tier"),
                         "request_id": response_meta.get("request_id"),
@@ -1566,6 +1602,7 @@ class ResearchAgent(BaseAgent):
                 duration_ms = round((perf_counter() - started) * 1000, 1)
                 attempts.append(
                     {
+                        "execution_mode": "api",
                         "provider": provider,
                         "model": model,
                         "status": "parse_error",
@@ -1579,6 +1616,7 @@ class ResearchAgent(BaseAgent):
                 duration_ms = round((perf_counter() - started) * 1000, 1)
                 attempts.append(
                     {
+                        "execution_mode": "api",
                         "provider": provider,
                         "model": model,
                         "status": "error",
@@ -1595,9 +1633,14 @@ class ResearchAgent(BaseAgent):
             "stocks": {},
             "_meta": {
                 "status": "error",
+                "execution_mode": "api" if any(
+                    attempt.get("execution_mode") == "api" for attempt in attempts
+                ) else "cli",
                 "provider_preference": self._get_provider_preference(),
                 "provider": providers[0] if providers else "",
                 "model": self._get_model_for_phase(providers[0], phase) if providers else "",
+                "selected_provider": providers[0] if providers else "",
+                "selected_model": self._get_model_for_phase(providers[0], phase) if providers else "",
                 "usage": {},
                 "service_tier": None,
                 "request_id": None,
@@ -1618,11 +1661,15 @@ class ResearchAgent(BaseAgent):
     def _call_llm_once(
         self, client: Any, provider: str, model: str, prompt: str
     ) -> tuple[str, dict[str, Any]]:
+        settings = get_settings()
+        max_output_tokens = max(64, int(settings.llm_max_output_tokens))
+        prompt_to_send = self._truncate_prompt(prompt, settings.llm_max_prompt_chars)
+
         if provider == "anthropic":
             raw_response = client.messages.with_raw_response.create(
                 model=model,
-                max_tokens=4000,
-                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_output_tokens,
+                messages=[{"role": "user", "content": prompt_to_send}],
             )
             response = raw_response.parse()
             usage = self._extract_usage(provider, response)
@@ -1632,14 +1679,16 @@ class ResearchAgent(BaseAgent):
                 "usage": usage,
                 "request_id": getattr(raw_response, "request_id", None),
                 "rate_limits": self._extract_rate_limits(raw_response.headers, usage),
+                "max_output_tokens": max_output_tokens,
+                "prompt_chars": len(prompt_to_send),
             }
 
         if provider == "openai":
             raw_response = client.chat.completions.with_raw_response.create(
                 model=model,
-                max_tokens=4000,
+                max_tokens=max_output_tokens,
                 response_format={"type": "json_object"},
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": prompt_to_send}],
             )
             response = raw_response.parse()
             usage = self._extract_usage(provider, response)
@@ -1650,9 +1699,21 @@ class ResearchAgent(BaseAgent):
                 "service_tier": getattr(response, "service_tier", None),
                 "request_id": getattr(raw_response, "request_id", None),
                 "rate_limits": self._extract_rate_limits(raw_response.headers, usage),
+                "max_output_tokens": max_output_tokens,
+                "prompt_chars": len(prompt_to_send),
             }
 
         raise RuntimeError(f"Unsupported LLM provider '{provider}'")
+
+    def _truncate_prompt(self, prompt: str, max_chars: int) -> str:
+        if max_chars <= 0 or len(prompt) <= max_chars:
+            return prompt
+        self.logger.warning(
+            "Prompt exceeded max chars (%d > %d). Truncating for low-cost safety.",
+            len(prompt),
+            max_chars,
+        )
+        return prompt[:max_chars]
 
     def _extract_usage(self, provider: str, response: Any) -> dict[str, Any]:
         usage = getattr(response, "usage", None)

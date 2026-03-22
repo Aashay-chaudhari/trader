@@ -51,6 +51,7 @@ on:
           - monitor
           - run
           - cycle
+          - seed
           - reflect
           - weekly
           - monthly
@@ -63,6 +64,11 @@ on:
           - both
           - claude
           - codex
+      low_cost_mode:
+        description: "Use cheap models + tight token/turn limits (recommended for tests)"
+        required: true
+        default: true
+        type: boolean
       reset_state:
         description: "Reset stored runtime state before running"
         required: true
@@ -84,7 +90,13 @@ jobs:
         id: phase
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "phase=${{ inputs.phase }}" >> "$GITHUB_OUTPUT"
+            SELECTED_PHASE="${{ inputs.phase }}"
+            if [ "$SELECTED_PHASE" = "seed" ]; then
+              # Seed mode runs the full daily + reflection + weekly + monthly loop.
+              echo "phase=cycle" >> "$GITHUB_OUTPUT"
+            else
+              echo "phase=$SELECTED_PHASE" >> "$GITHUB_OUTPUT"
+            fi
           else
             HOUR=$(date -u +%H)
             MINUTE=$(date -u +%M)
@@ -105,6 +117,13 @@ jobs:
 
   strategist-run:
     needs: determine-phase
+    if: >
+      needs.determine-phase.result == 'success' &&
+      (
+        github.event_name != 'workflow_dispatch' ||
+        inputs.strategists == 'both' ||
+        inputs.strategists == matrix.profile_id
+      )
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -163,6 +182,28 @@ jobs:
           AGENT_LABEL: ${{ matrix.profile_label }}
         run: python -m agent_trader reset
 
+      - name: Configure low-cost test mode
+        if: github.event_name == 'workflow_dispatch' && inputs.low_cost_mode == true
+        run: |
+          echo "DEBUG_MODE=true" >> "$GITHUB_ENV"
+          echo "DEBUG_MAX_STOCKS=2" >> "$GITHUB_ENV"
+          echo "DEBUG_SKIP_WEB=true" >> "$GITHUB_ENV"
+          echo "CLI_AGENT_MAX_TURNS=1" >> "$GITHUB_ENV"
+          echo "CLI_AGENT_TIMEOUT=120" >> "$GITHUB_ENV"
+          echo "LLM_MAX_OUTPUT_TOKENS=700" >> "$GITHUB_ENV"
+          echo "LLM_MAX_PROMPT_CHARS=16000" >> "$GITHUB_ENV"
+          echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
+          echo "MONITOR_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
+          echo "RESEARCH_MODEL_OPENAI=gpt-4o-mini" >> "$GITHUB_ENV"
+
+      - name: Print strategist runtime config
+        run: |
+          echo "profile=${{ matrix.profile_id }}"
+          echo "phase=${{ needs.determine-phase.outputs.phase }}"
+          echo "cli_provider=${{ matrix.cli_provider }}"
+          echo "api_provider=${{ matrix.llm_provider }}"
+          echo "low_cost_mode=${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode || false }}"
+
       - name: Run strategist pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -180,10 +221,17 @@ jobs:
           DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
           USE_CLI_AGENT: "true"
           CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
-          CLI_AGENT_MAX_TURNS: ${{ vars.CLI_AGENT_MAX_TURNS || '5' }}
-          CLI_AGENT_TIMEOUT: ${{ vars.CLI_AGENT_TIMEOUT || '300' }}
           LLM_PROVIDER: ${{ matrix.llm_provider }}
         run: |
+          : "${CLI_AGENT_MAX_TURNS:=${{ vars.CLI_AGENT_MAX_TURNS || '5' }}}"
+          : "${CLI_AGENT_TIMEOUT:=${{ vars.CLI_AGENT_TIMEOUT || '300' }}}"
+          export CLI_AGENT_MAX_TURNS
+          export CLI_AGENT_TIMEOUT
+          echo "effective_cli_max_turns=$CLI_AGENT_MAX_TURNS"
+          echo "effective_cli_timeout=$CLI_AGENT_TIMEOUT"
+          echo "effective_debug_mode=${DEBUG_MODE:-false}"
+          echo "effective_llm_max_output_tokens=${LLM_MAX_OUTPUT_TOKENS:-unset}"
+          echo "effective_llm_max_prompt_chars=${LLM_MAX_PROMPT_CHARS:-unset}"
           PHASE="${{ needs.determine-phase.outputs.phase }}"
           if [ "$PHASE" = "cycle" ]; then
             python -m agent_trader cycle
@@ -242,12 +290,16 @@ jobs:
           mkdir -p data/profiles docs/data
 
       - name: Download Claude strategist artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == 'claude'
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: strategist-claude-${{ needs.determine-phase.outputs.phase }}
           path: data/profiles/claude
 
       - name: Download Codex strategist artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == 'codex'
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: strategist-codex-${{ needs.determine-phase.outputs.phase }}
@@ -267,7 +319,7 @@ jobs:
   deploy-dashboard:
     needs: publish-results
     runs-on: ubuntu-latest
-    if: needs.publish-results.result == 'success' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '30 20 * * 1-5')
+    if: needs.publish-results.result == 'success'
     permissions:
       pages: write
       id-token: write

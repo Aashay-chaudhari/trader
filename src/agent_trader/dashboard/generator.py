@@ -52,12 +52,19 @@ DASHBOARD_HTML = dedent(
         .brand{display:flex;align-items:center;gap:12px;font-weight:800;color:var(--text)}
         .brand-mark{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#0f766e,#2563eb);color:#fff;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
         .brand-copy{display:grid;gap:2px}.brand-copy strong{font-size:.96rem}.brand-copy span{font-size:.8rem;color:var(--muted)}
-        .nav-links{display:flex;flex-wrap:wrap;gap:8px}.nav-links a{padding:10px 12px;border-radius:999px;color:var(--muted);font-weight:700}.nav-links a:hover{background:rgba(15,118,110,.08);color:var(--text)}
+        .nav-links{display:flex;flex-wrap:wrap;gap:8px}
+        .tab-link{padding:10px 12px;border-radius:999px;color:var(--muted);font-weight:700;border:1px solid transparent;background:transparent;cursor:pointer;font:inherit}
+        .tab-link:hover{background:rgba(15,118,110,.08);color:var(--text)}
+        .tab-link.active{background:var(--accent);color:#fff;border-color:var(--accent)}
         .status-chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(15,118,110,.16);background:rgba(15,118,110,.08);color:var(--accent);font-weight:800;min-height:42px}
         .page{padding-top:18px}
+        .content-pane{display:none}
+        .content-pane.active{display:block}
         .hero,.panel,.card,.stage,.decision,.tile{background:rgba(255,252,247,.94);border:1px solid var(--line);box-shadow:0 16px 34px rgba(72,55,25,.06)}
         .hero{background:linear-gradient(135deg,rgba(255,252,247,.98),rgba(246,241,231,.98))}
         .card,.stage,.decision,.tile,.article a,.article div.body,.headline-row,.reason-item,.mono,.src-chip{background:#fbf7f0}
+        .pill{background:#ecf8f6;border-color:rgba(15,118,110,.24);color:var(--accent)}
+        .mini .tile{background:#fff;border-color:var(--line)}
         .btn{background:#fff;color:var(--text);border-color:rgba(44,70,67,.14);box-shadow:0 8px 20px rgba(72,55,25,.05)}
         .btn:hover{border-color:rgba(15,118,110,.28)}
         .btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -68,6 +75,12 @@ DASHBOARD_HTML = dedent(
         .mono{font-family:"IBM Plex Mono",monospace;color:var(--muted)}
         .link-chip{background:#fff;color:var(--accent);border-color:rgba(15,118,110,.16)}
         .link-chip:hover{border-color:rgba(15,118,110,.34)}
+        .hover{background:#fffaf2;border:1px solid var(--line);box-shadow:0 14px 28px rgba(72,55,25,.12)}
+        .decision summary{list-style:none;cursor:pointer}
+        .decision summary::-webkit-details-marker{display:none}
+        .decision summary .top{margin-bottom:0}
+        .decision details{border:1px solid var(--line);border-radius:16px;background:#fbf7f0;padding:12px}
+        .decision-body{margin-top:12px;display:grid;gap:12px}
         .knowledge-list,.proposal-list,.observation-list,.pattern-list,.regime-list{display:grid;gap:10px}
         .knowledge-item,.proposal-item,.observation-item,.pattern-item,.regime-item{padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#fbf7f0}
         .knowledge-item strong,.proposal-item strong,.observation-item strong,.pattern-item strong,.regime-item strong{display:block;margin-bottom:6px}
@@ -88,18 +101,19 @@ DASHBOARD_HTML = dedent(
               <span>Two strategist books, one calmer control surface</span>
             </span>
           </a>
-          <div class="nav-links">
-            <a href="#overview">Overview</a>
-            <a href="#decisions">Decisions</a>
-            <a href="#knowledge">Knowledge</a>
-            <a href="#news">News</a>
-            <a href="#activity">Activity</a>
+          <div class="nav-links" id="sectionTabs">
+            <button type="button" class="tab-link active" data-section="overview">Overview</button>
+            <button type="button" class="tab-link" data-section="decisions">Decisions</button>
+            <button type="button" class="tab-link" data-section="knowledge">Knowledge</button>
+            <button type="button" class="tab-link" data-section="news">News</button>
+            <button type="button" class="tab-link" data-section="activity">Activity</button>
           </div>
           <div class="status-chip" id="navStatus">Loading latest strategist...</div>
         </div>
       </nav>
 
       <div class="page">
+        <div class="content-pane active" data-pane="overview">
         <header class="hero" id="overview">
           <div class="hero-grid">
             <div>
@@ -111,6 +125,8 @@ DASHBOARD_HTML = dedent(
               <a class="btn" id="resetLink" href="https://github.com/Aashay-chaudhari/trader/actions/workflows/trading.yml" target="_blank" rel="noreferrer">Reset project state</a>
               <a class="btn" id="researchLink" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
               <a class="btn" id="monitorLink" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
+              <a class="btn" id="weeklyLink" href="data/report_weekly.json" target="_blank" rel="noreferrer">Weekly review</a>
+              <a class="btn" id="monthlyLink" href="data/report_monthly.json" target="_blank" rel="noreferrer">Monthly review</a>
               </div>
             </div>
             <div class="hero-side">
@@ -171,12 +187,16 @@ DASHBOARD_HTML = dedent(
             </div>
           </div>
         </details>
+        </div>
 
+        <div class="content-pane" data-pane="decisions">
         <section class="panel" id="decisions">
           <div class="section"><div><h2>Decision board</h2><p>Top setups first, with the rationale and linked evidence sitting right beside each trade idea.</p></div></div>
           <div class="decisions" id="decisionBoard"></div>
         </section>
+        </div>
 
+        <div class="content-pane" data-pane="knowledge">
         <section class="panel" id="knowledge">
           <div class="section"><div><h2>Knowledge Store</h2><p>The accumulated lessons, pattern edges, review summaries, and improvement ideas that feed back into future prompts.</p></div></div>
           <div class="compact-grid" style="margin-bottom:14px">
@@ -203,7 +223,9 @@ DASHBOARD_HTML = dedent(
             </div>
           </div>
         </section>
+        </div>
 
+        <div class="content-pane" data-pane="news">
         <details class="panel foldout" id="news">
           <summary><div><h2>News Influence</h2><p>Linked evidence behind discoveries, headlines, and cross-source movers.</p></div><span>Expand</span></summary>
           <div class="foldout-body">
@@ -223,7 +245,9 @@ DASHBOARD_HTML = dedent(
             </div>
           </div>
         </details>
+        </div>
 
+        <div class="content-pane" data-pane="activity">
         <details class="panel foldout" id="activity">
           <summary><div><h2>Context & Telemetry</h2><p>Saved memory, provider attempts, and open positions.</p></div><span>Expand</span></summary>
           <div class="foldout-body">
@@ -239,6 +263,7 @@ DASHBOARD_HTML = dedent(
             </div>
           </div>
         </details>
+        </div>
       </div>
 
       <script>
@@ -281,6 +306,7 @@ DASHBOARD_HTML = dedent(
 
         let dashboardBundle=null;
         let selectedProfile=null;
+        let selectedSection="overview";
         let valueChartInstance=null;
 
         function bundleProfiles(bundle){
@@ -313,6 +339,18 @@ DASHBOARD_HTML = dedent(
         function initialProfile(bundle,profiles){
           if(bundle.active_profile&&profiles[bundle.active_profile])return bundle.active_profile;
           return Object.keys(profiles)[0]||"default";
+        }
+
+        function renderSectionTabs(){
+          const sectionTabs=document.querySelectorAll("#sectionTabs [data-section]");
+          sectionTabs.forEach(node=>{
+            const section=node.getAttribute("data-section")||"overview";
+            node.classList.toggle("active",section===selectedSection);
+          });
+          document.querySelectorAll(".content-pane[data-pane]").forEach(node=>{
+            const pane=node.getAttribute("data-pane")||"overview";
+            node.classList.toggle("active",pane===selectedSection);
+          });
         }
 
         function renderKnowledge(profileBundle){
@@ -399,8 +437,12 @@ DASHBOARD_HTML = dedent(
           const artifacts=obj(profileBundle.artifacts);
           const researchPath=artifacts.research_report_md||"data/report_research.md";
           const monitorPath=artifacts.monitor_report_md||"data/report_monitor.md";
+          const weeklyPath=artifacts.weekly_report_json||"data/report_weekly.json";
+          const monthlyPath=artifacts.monthly_report_json||"data/report_monthly.json";
           document.getElementById("researchLink").href=researchPath;
           document.getElementById("monitorLink").href=monitorPath;
+          document.getElementById("weeklyLink").href=weeklyPath;
+          document.getElementById("monthlyLink").href=monthlyPath;
           document.getElementById("contextLink").href=artifacts.context_json||"data/context.json";
           document.getElementById("llmLink").href=artifacts.llm_json||"data/llm.json";
           document.getElementById("knowledgeLink").href=artifacts.knowledge_json||"data/knowledge.json";
@@ -441,10 +483,17 @@ DASHBOARD_HTML = dedent(
             {title:"Monitor / Execution",summary:"Signals, approvals, and trades were archived for follow-up.",metric:String(executed.length),lines:[`${signals.length} signals`,`${approved.length} approved trades`,`${rejected.length} rejected trades`,...executed.slice(0,3).map(x=>`${x.symbol||"?"} ${String((x.action||"").toUpperCase())} ${x.quantity||0}`)]}
           ].map(x=>`<article class="stage"><div class="top"><div><div class="label">${esc(x.title)}</div><p>${esc(x.summary)}</p></div><div class="metric">${esc(x.metric)}</div></div>${hover(x.title+" details",x.lines)}</article>`).join("");
 
-          document.getElementById("runSummary").innerHTML=[["Research Run",reportResearch.run_id||"-"],["Research Time",dateText(reportResearch.timestamp||context.timestamp)],["Monitor Time",dateText(reportMonitor.timestamp)],["Signals",String(signals.length)],["Approved",String(approved.length)],["Executed",String(executed.length)],["Web Checks",String(webChecks)],["Quota Note",llm.quota_note||"No quota note recorded"],["Platform",llm.runtime?.platform||"-"]].map(([l,v])=>miniCard(l,String(v))).join("");
+          document.getElementById("runSummary").innerHTML=[["Research Run",reportResearch.run_id||"-"],["Research Time",dateText(reportResearch.timestamp||context.timestamp)],["Monitor Time",dateText(reportMonitor.timestamp)],["Execution Mode",llm.execution_mode||"-"],["Signals",String(signals.length)],["Approved",String(approved.length)],["Executed",String(executed.length)],["Web Checks",String(webChecks)],["Quota Note",llm.quota_note||"No quota note recorded"],["Platform",llm.runtime?.platform||"-"]].map(([l,v])=>miniCard(l,String(v))).join("");
 
           const researchStocks=obj(research.stocks), shortlistMap=Object.fromEntries(shortlist.map(x=>[x.symbol,x])), symbols=[]; [...best,...Object.keys(researchStocks),...Object.keys(perSymbol),...shortlist.map(x=>x.symbol)].forEach(s=>{if(s&&!symbols.includes(s))symbols.push(s)});
-          document.getElementById("decisionBoard").innerHTML=symbols.length?symbols.map(symbol=>{const analysis=obj(researchStocks[symbol]), news=obj(perSymbol[symbol]), pick=obj(shortlistMap[symbol]), plan=obj(analysis.trade_plan), rec=analysis.recommendation||"watch", headlines=arr(news.news_headlines), webArticles=arr(webArticlesBySymbol[symbol]), supporting=supportingArticlesForSymbol(analysis,headlines,webArticles), uniqueSources=new Set(supporting.map(a=>a.source||a.publisher).filter(Boolean)); const srcCount=Math.max(news.source_count||0,uniqueSources.size); return `<article class="decision"><div class="top"><div><h3>${esc(symbol)}</h3><p>${esc(analysis.technical_setup||analysis.news_summary||pick.discovery_reason||"No narrative stored for this symbol.")}</p></div><span class="pill ${rec==="buy"?"good":rec==="sell"?"bad":"warn"}">${esc(rec)}</span></div><div class="mini">${miniCard("Sentiment",analysis.sentiment||news.sentiment||"neutral")}${miniCard("Confidence",analysis.confidence!==undefined?Math.round(Number(analysis.confidence)*100)+"%":"-")}${miniCard("News Impact",analysis.news_impact||"none")}${miniCard("Sources",String(srcCount)+" provider"+(srcCount!==1?"s":""))}${miniCard("Headlines",String(headlines.length))}${miniCard("Web Evidence",String(webArticles.length))}${miniCard("Entry",fmtMoney(plan.entry))}${miniCard("Stop",fmtMoney(plan.stop_loss))}${miniCard("Target",fmtMoney(plan.target))}${miniCard("R / R",plan.risk_reward_ratio!==undefined?Number(plan.risk_reward_ratio).toFixed(2):"-")}${miniCard("Shortlist",pick.source||"research")}</div>${sourceBreakdown(supporting.length?supporting:headlines)}<div class="list"><strong>Why it was interesting</strong>${linkedReasonList([pick.discovery_reason||pick.top_headline||analysis.news_summary||"No shortlist rationale captured.",`Score: ${pick.score!==undefined?Number(pick.score).toFixed(3):"n/a"} | Source: ${pick.source||"n/a"}`],supporting,"No shortlist rationale captured.")}</div><div class="list"><strong>Key observations</strong>${listBlock(analysis.key_observations,"No observations were returned.")}</div><div class="list"><strong>Catalysts</strong>${linkedReasonList(analysis.catalysts,supporting,"No catalysts were listed.")}</div><div class="list"><strong>Risks</strong>${linkedReasonList(analysis.risks,supporting,"No explicit risks were listed.")}</div><div class="list"><strong>Linked evidence</strong>${articleGrid(supporting.slice(0,4),"No linked evidence was stored for this decision.")}</div><div class="list"><strong>All headlines that influenced this decision (${headlines.length})</strong>${headlineList(headlines,"No symbol-specific articles were captured for this decision.")}</div></article>`}).join(""):empty("No research decisions available yet.");
+          document.getElementById("decisionBoard").innerHTML=symbols.length
+            ? symbols.map((symbol,index)=>{
+                const analysis=obj(researchStocks[symbol]), news=obj(perSymbol[symbol]), pick=obj(shortlistMap[symbol]), plan=obj(analysis.trade_plan), rec=analysis.recommendation||"watch", headlines=arr(news.news_headlines), webArticles=arr(webArticlesBySymbol[symbol]), supporting=supportingArticlesForSymbol(analysis,headlines,webArticles), uniqueSources=new Set(supporting.map(a=>a.source||a.publisher).filter(Boolean));
+                const srcCount=Math.max(news.source_count||0,uniqueSources.size);
+                const confidence=analysis.confidence!==undefined?Math.round(Number(analysis.confidence)*100)+"%":"-";
+                return `<article class="decision"><details ${index===0?"open":""}><summary><div class="top"><div><h3>${esc(symbol)}</h3><p>${esc(analysis.technical_setup||analysis.news_summary||pick.discovery_reason||"No narrative stored for this symbol.")}</p><div class="sub">${esc(`${confidence} confidence | ${srcCount} source${srcCount===1?"":"s"} | ${headlines.length} headline${headlines.length===1?"":"s"}`)}</div></div><span class="pill ${rec==="buy"?"good":rec==="sell"?"bad":"warn"}">${esc(rec)}</span></div></summary><div class="decision-body"><div class="mini">${miniCard("Sentiment",analysis.sentiment||news.sentiment||"neutral")}${miniCard("Confidence",confidence)}${miniCard("News Impact",analysis.news_impact||"none")}${miniCard("Sources",String(srcCount)+" provider"+(srcCount!==1?"s":""))}${miniCard("Headlines",String(headlines.length))}${miniCard("Web Evidence",String(webArticles.length))}${miniCard("Entry",fmtMoney(plan.entry))}${miniCard("Stop",fmtMoney(plan.stop_loss))}${miniCard("Target",fmtMoney(plan.target))}${miniCard("R / R",plan.risk_reward_ratio!==undefined?Number(plan.risk_reward_ratio).toFixed(2):"-")}${miniCard("Shortlist",pick.source||"research")}</div>${sourceBreakdown(supporting.length?supporting:headlines)}<div class="list"><strong>Why it was interesting</strong>${linkedReasonList([pick.discovery_reason||pick.top_headline||analysis.news_summary||"No shortlist rationale captured.",`Score: ${pick.score!==undefined?Number(pick.score).toFixed(3):"n/a"} | Source: ${pick.source||"n/a"}`],supporting,"No shortlist rationale captured.")}</div><div class="list"><strong>Key observations</strong>${listBlock(analysis.key_observations,"No observations were returned.")}</div><div class="list"><strong>Catalysts</strong>${linkedReasonList(analysis.catalysts,supporting,"No catalysts were listed.")}</div><div class="list"><strong>Risks</strong>${linkedReasonList(analysis.risks,supporting,"No explicit risks were listed.")}</div><div class="list"><strong>Linked evidence</strong>${articleGrid(supporting.slice(0,4),"No linked evidence was stored for this decision.")}</div><div class="list"><strong>All headlines that influenced this decision (${headlines.length})</strong>${headlineList(headlines,"No symbol-specific articles were captured for this decision.")}</div></div></details></article>`;
+              }).join("")
+            : empty("No research decisions available yet.");
 
           document.getElementById("marketHeadlines").innerHTML=articleGrid(marketHeadlines,"No market headlines were captured in the latest run.");
           document.getElementById("discoveries").innerHTML=stackCards(discoveries.map(discoveryCard),"No news-driven discoveries were stored for the latest run.");
@@ -455,8 +504,9 @@ DASHBOARD_HTML = dedent(
           const marketCards=[]; if(market.market_regime)marketCards.push(["Regime",market.market_regime]); if(market.sp500?.change_pct!==undefined)marketCards.push(["SPY",fmtPct(market.sp500.change_pct)]); if(market.nasdaq?.change_pct!==undefined)marketCards.push(["QQQ",fmtPct(market.nasdaq.change_pct)]); if(market.vix?.value!==undefined)marketCards.push(["VIX",String(market.vix.value)]); if(market.treasury_10y?.yield_pct!==undefined)marketCards.push(["10Y Yield",market.treasury_10y.yield_pct+"%"]); if(arr(market.sector_leaders).length)marketCards.push(["Leaders",arr(market.sector_leaders).map(x=>`${x.sector} ${fmtPct(x.daily_pct)}`).join(", ")]); if(arr(market.sector_laggards).length)marketCards.push(["Laggards",arr(market.sector_laggards).map(x=>`${x.sector} ${fmtPct(x.daily_pct)}`).join(", ")]);
           document.getElementById("marketCards").innerHTML=marketCards.length?marketCards.map(([l,v])=>miniCard(l,v)).join(""):empty("No market regime cards were captured.");
           document.getElementById("artifactMemory").textContent=prompt.artifact_context||"No saved artifacts yet.";
-          document.getElementById("llmSummary").innerHTML=[["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Input Tokens",llm.usage?.input_tokens??"-"],["Output Tokens",llm.usage?.output_tokens??"-"],["Total Tokens",llm.usage?.total_tokens??"-"],["Capacity Before Request",String(llm.rate_limits?.estimates?.tokens_remaining_before_request_estimate??llm.rate_limits?.estimates?.input_tokens_remaining_before_request_estimate??"n/a")],["Latency",llm.duration_ms?`${Math.round(Number(llm.duration_ms))} ms`:"-"],["Run ID",llm.runtime?.github?.run_id||"-"],["Request ID",llm.request_id||"-"],["Quota Note",llm.quota_note||"No quota note recorded"]].map(([l,v])=>miniCard(l,String(v))).join("");
-          document.getElementById("providerAttempts").innerHTML=arr(llm.attempts).length?arr(llm.attempts).map(x=>`<div class="tile"><strong>${esc((x.provider||"?")+" / "+(x.model||"?"))}</strong><span>${esc("Status: "+(x.status||"unknown"))}</span><div class="sub">${esc(x.duration_ms!==undefined?`${x.duration_ms} ms`:"duration n/a")}${x.error?` | ${esc(truncate(String(x.error),90))}`:""}</div></div>`).join(""):empty("No provider attempts were recorded.");
+          const selectedMode=llm.execution_mode||(String(llm.selected_provider||llm.provider||"").startsWith("cli:")?"cli":"api");
+          document.getElementById("llmSummary").innerHTML=[["Execution Mode",selectedMode||"-"],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Input Tokens",llm.usage?.input_tokens??"-"],["Output Tokens",llm.usage?.output_tokens??"-"],["Total Tokens",llm.usage?.total_tokens??"-"],["Capacity Before Request",String(llm.rate_limits?.estimates?.tokens_remaining_before_request_estimate??llm.rate_limits?.estimates?.input_tokens_remaining_before_request_estimate??"n/a")],["Latency",llm.duration_ms?`${Math.round(Number(llm.duration_ms))} ms`:"-"],["Run ID",llm.runtime?.github?.run_id||"-"],["Request ID",llm.request_id||"-"],["Quota Note",llm.quota_note||"No quota note recorded"]].map(([l,v])=>miniCard(l,String(v))).join("");
+          document.getElementById("providerAttempts").innerHTML=arr(llm.attempts).length?arr(llm.attempts).map(x=>{const mode=x.execution_mode||(String(x.provider||"").startsWith("cli:")?"cli":"api");return `<div class="tile"><strong>${esc((x.provider||"?")+" / "+(x.model||"?"))}</strong><span>${esc(`Mode: ${mode} | Status: ${x.status||"unknown"}`)}</span><div class="sub">${esc(x.duration_ms!==undefined?`${x.duration_ms} ms`:"duration n/a")}${x.error?` | ${esc(truncate(String(x.error),90))}`:""}</div></div>`;}).join(""):empty("No provider attempts were recorded.");
 
           document.getElementById("shortlistTable").innerHTML=shortlist.length?shortlist.map(x=>`<tr><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(x.source||"")}</td><td>${x.score!==undefined?Number(x.score).toFixed(3):"-"}</td><td>${safeUrl(x.top_headline_url||x.url)?`<a href="${esc(safeUrl(x.top_headline_url||x.url))}" target="_blank" rel="noreferrer">${esc(x.discovery_reason||x.top_headline||"Technical move only")}</a>`:esc(x.discovery_reason||x.top_headline||"Technical move only")}</td></tr>`).join(""):`<tr><td colspan="4">${empty("No shortlist stored in latest context.")}</td></tr>`;
           document.getElementById("positionsTable").innerHTML=positions.length?positions.map(x=>`<tr><td><strong>${esc(x.symbol)}</strong></td><td>${esc(x.shares)}</td><td>${fmtMoney(x.avg_cost)}</td><td>${fmtMoney(x.current_price)}</td><td class="${cls(x.unrealized_pnl)}">${signMoney(x.unrealized_pnl)}</td></tr>`).join(""):`<tr><td colspan="5">${empty("No positions yet.")}</td></tr>`;
@@ -469,12 +519,28 @@ DASHBOARD_HTML = dedent(
         function renderDashboard(){
           const profiles=bundleProfiles(dashboardBundle||{});
           if(!selectedProfile||!profiles[selectedProfile])selectedProfile=initialProfile(dashboardBundle||{},profiles);
+          renderSectionTabs();
           renderComparison(dashboardBundle||{},profiles);
           renderProfile(profiles[selectedProfile]||Object.values(profiles)[0]||{},dashboardBundle||{});
         }
 
+        window.selectSection=section=>{
+          selectedSection=section||"overview";
+          renderSectionTabs();
+        };
         window.selectProfile=profileId=>{selectedProfile=profileId;renderDashboard();};
 
+        document.querySelectorAll("#sectionTabs [data-section]").forEach(node=>{
+          node.addEventListener("click",()=>window.selectSection(node.getAttribute("data-section")||"overview"));
+        });
+        const brandLink=document.querySelector(".brand");
+        if(brandLink){
+          brandLink.addEventListener("click",event=>{
+            event.preventDefault();
+            window.selectSection("overview");
+          });
+        }
+        renderSectionTabs();
         fetch("data/dashboard.json").then(r=>r.json()).then(bundle=>{dashboardBundle=bundle;renderDashboard();}).catch(err=>console.error("Dashboard load error",err));
       </script>
     </body>
@@ -504,6 +570,14 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
+    _write_json(
+        data_out / "report_weekly.json",
+        bundle["knowledge"].get("latest_weekly_review", {}),
+    )
+    _write_json(
+        data_out / "report_monthly.json",
+        bundle["knowledge"].get("latest_monthly_review", {}),
+    )
     active_root = profile_roots.get(bundle["active_profile"], data_root)
     _copy_latest_report_artifact(active_root, data_out / "report_research.md", phase="research", suffix=".md")
     _copy_latest_report_artifact(active_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
@@ -524,6 +598,14 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
         _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
         _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
+        _write_json(
+            profile_out / "report_weekly.json",
+            profile_bundle["knowledge"].get("latest_weekly_review", {}),
+        )
+        _write_json(
+            profile_out / "report_monthly.json",
+            profile_bundle["knowledge"].get("latest_monthly_review", {}),
+        )
         _copy_latest_report_artifact(profile_root, profile_out / "report_research.md", phase="research", suffix=".md")
         _copy_latest_report_artifact(profile_root, profile_out / "report_monitor.md", phase="monitor", suffix=".md")
         _copy_if_exists(
@@ -876,6 +958,8 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "improvement_md": f"{base}/IMPROVEMENT_PROPOSALS.md",
         "research_report_json": f"{base}/report_research.json",
         "monitor_report_json": f"{base}/report_monitor.json",
+        "weekly_report_json": f"{base}/report_weekly.json",
+        "monthly_report_json": f"{base}/report_monthly.json",
         "research_report_md": f"{base}/report_research.md",
         "monitor_report_md": f"{base}/report_monitor.md",
     }

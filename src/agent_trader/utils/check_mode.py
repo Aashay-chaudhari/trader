@@ -3,78 +3,143 @@
 Run as: python -m agent_trader.utils.check_mode
 """
 
+from __future__ import annotations
+
 import json
 import os
 from glob import glob
 from pathlib import Path
+from typing import Any
 
 from agent_trader.config.settings import get_settings
 
 
-def main():
+def _mode_from_meta(meta: dict[str, Any]) -> str:
+    execution_mode = str(meta.get("execution_mode", "")).strip().lower()
+    if execution_mode in {"cli", "api", "none"}:
+        return execution_mode
+    provider = str(meta.get("provider", "")).strip().lower()
+    if provider.startswith("cli:"):
+        return "cli"
+    if provider:
+        return "api"
+    return "unknown"
+
+
+def _format_attempt(attempt: dict[str, Any], index: int) -> str:
+    mode = str(attempt.get("execution_mode", "")).strip().lower() or "unknown"
+    provider = str(attempt.get("provider", "?"))
+    model = str(attempt.get("model", "?"))
+    status = str(attempt.get("status", "unknown"))
+    duration = attempt.get("duration_ms")
+    duration_text = f"{duration}ms" if duration is not None else "n/a"
+    error = str(attempt.get("error", "")).strip()
+    suffix = f" | {error[:140]}" if error else ""
+    return (
+        f"Attempt {index}: mode={mode} provider={provider} model={model} "
+        f"status={status} duration={duration_text}{suffix}"
+    )
+
+
+def _write_github_summary(
+    *,
+    data_file: str,
+    mode: str,
+    provider: str,
+    model: str,
+    status: str,
+    attempts: list[dict[str, Any]],
+) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
+    if not summary_path:
+        return
+
+    lines = [
+        "## Analysis Mode Report",
+        "",
+        f"- Data file: `{data_file}`",
+        f"- Execution mode: `{mode}`",
+        f"- Provider: `{provider}`",
+        f"- Model: `{model}`",
+        f"- Status: `{status}`",
+    ]
+    if attempts:
+        lines.append("- Attempts:")
+        for index, attempt in enumerate(attempts, start=1):
+            lines.append(f"  - `{_format_attempt(attempt, index)}`")
+    lines.append("")
+
+    Path(summary_path).write_text("\n".join(lines), encoding="utf-8", errors="replace")
+
+
+def main() -> None:
     settings = get_settings()
     data_root = Path(settings.data_dir)
-    print("=" * 50)
-    print("  ANALYSIS MODE REPORT")
-    print("=" * 50)
-
-    use_cli = os.environ.get("USE_CLI_AGENT", "false")
-    print(f"USE_CLI_AGENT={use_cli}")
+    print("=" * 60)
+    print("ANALYSIS MODE REPORT")
+    print("=" * 60)
+    print(f"USE_CLI_AGENT={os.environ.get('USE_CLI_AGENT', 'false')}")
+    print(f"CLI_AGENT_PROVIDER={os.environ.get('CLI_AGENT_PROVIDER', 'unset')}")
     print(f"DATA_DIR={settings.data_dir}")
 
-    staging = data_root / "staging" / "current"
-    if staging.is_dir():
-        files = list(staging.iterdir())
-        print(f"[OK] Staging directory exists ({len(files)} files) — CLI agent mode was attempted")
-        for f in sorted(files):
-            print(f"     {f.name} ({f.stat().st_size:,} bytes)")
-    else:
-        print("[--] No staging directory — direct API call mode was used")
-
-    # Find latest research output
     research_files = sorted(glob(str(data_root / "research" / "*.json")), reverse=True)
     if not research_files:
-        print("[--] No research output files found")
-        print("=" * 50)
+        print("No research output files found.")
+        print("=" * 60)
         return
 
     latest = research_files[0]
-    print(f"\nLatest research: {latest}")
+    print(f"Latest research: {latest}")
 
     try:
-        with open(latest) as f:
-            data = json.load(f)
+        payload = json.loads(Path(latest).read_text(encoding="utf-8"))
     except Exception as exc:
-        print(f"[ERR] Could not parse: {exc}")
-        print("=" * 50)
+        print(f"Could not parse latest research JSON: {exc}")
+        print("=" * 60)
         return
 
-    meta = data.get("_meta", {})
-    provider = meta.get("provider", "unknown")
-    model = meta.get("model", "unknown")
-    status = meta.get("status", "unknown")
-    duration = meta.get("duration_ms", "N/A")
+    meta = payload.get("_meta", {}) if isinstance(payload, dict) else {}
+    mode = _mode_from_meta(meta)
+    provider = str(meta.get("provider", "unknown"))
+    model = str(meta.get("model", "unknown"))
+    status = str(meta.get("status", "unknown"))
+    duration = meta.get("duration_ms")
 
-    print(f"Provider : {provider}")
-    print(f"Model    : {model}")
-    print(f"Status   : {status}")
-    print(f"Duration : {duration}ms" if duration != "N/A" else "Duration : N/A")
+    print(f"Execution Mode : {mode}")
+    print(f"Provider       : {provider}")
+    print(f"Model          : {model}")
+    print(f"Status         : {status}")
+    print(f"Duration       : {duration}ms" if duration is not None else "Duration       : n/a")
 
-    if "cli:" in str(provider):
-        print(f"CLI Turns: {meta.get('num_turns', 'N/A')}")
-        cost = meta.get("cost_usd", 0) or 0
-        print(f"CLI Cost : ${cost:.4f}")
-        print(f"Session  : {meta.get('session_id', 'N/A')}")
-        print("\n>>> CLI AGENT MODE CONFIRMED <<<")
+    attempts = meta.get("attempts", [])
+    attempts_list = attempts if isinstance(attempts, list) else []
+    if attempts_list:
+        print("")
+        print("Attempts:")
+        for index, attempt in enumerate(attempts_list, start=1):
+            if isinstance(attempt, dict):
+                print(f"- {_format_attempt(attempt, index)}")
+
+    if mode == "cli":
+        print("")
+        print("CLI AGENT MODE CONFIRMED")
+    elif mode == "api":
+        print("")
+        print("DIRECT API MODE CONFIRMED")
     else:
-        attempts = meta.get("attempts", [])
-        if attempts:
-            for i, a in enumerate(attempts):
-                print(f"Attempt {i + 1}: {a.get('provider')}/{a.get('model')} "
-                      f"-> {a.get('status')} ({a.get('duration_ms', '?')}ms)")
-        print("\n>>> DIRECT API MODE CONFIRMED <<<")
+        print("")
+        print("MODE COULD NOT BE DETERMINED")
 
-    print("=" * 50)
+    _write_github_summary(
+        data_file=latest,
+        mode=mode,
+        provider=provider,
+        model=model,
+        status=status,
+        attempts=[a for a in attempts_list if isinstance(a, dict)],
+    )
+
+    print("=" * 60)
 
 
 if __name__ == "__main__":

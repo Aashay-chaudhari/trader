@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     research_model: str = "claude-sonnet-4-6"
     monitor_model: str = "claude-haiku-4-5-20251001"
     research_model_openai: str = "gpt-4o-mini"
+    llm_max_output_tokens: int = 4000  # Cap output tokens for API calls
+    llm_max_prompt_chars: int = 80000  # Soft cap input prompt size before API call
 
     # --- CLI Agent Mode ---
     # When True, use Claude Code CLI (claude -p) instead of direct API calls.

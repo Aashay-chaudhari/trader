@@ -6,14 +6,14 @@ PHASE 1 — Morning Research (9:00 AM ET):
   1. ScreenerAgent scans universe for today's opportunities
   2. DataAgent fetches detailed data for shortlisted stocks
   3. NewsAgent gathers headlines, analyst recs, earnings calendar
-  4. ResearchAgent does deep Claude Sonnet analysis with full context
+  4. ResearchAgent runs deep strategist analysis with full context
   → Output: today's watchlist + research insights + trade plans
   → Saved to journal
 
 PHASE 2 — Monitor & Trade (every 30 min during market hours):
   1. DataAgent refreshes prices for the watchlist
   2. NewsAgent checks for new headlines
-  3. ResearchAgent does light Claude Haiku check
+  3. ResearchAgent runs a light strategist check
   4. StrategyAgent checks 8 strategies for entry/exit signals
   5. RiskAgent validates proposed trades
   6. ExecutionAgent places approved trades (or dry-run logs)
@@ -53,6 +53,24 @@ class Orchestrator:
 
     def get_agent(self, key: str) -> BaseAgent | None:
         return self._agents.get(key)
+
+    def _analysis_engine_label(self, *, phase: str) -> str:
+        settings = get_settings()
+        if settings.use_cli_agent:
+            provider = settings.cli_agent_provider.strip().lower() or "cli"
+            if phase == "research":
+                model = settings.research_model if provider == "claude" else settings.research_model_openai
+            else:
+                model = settings.monitor_model if provider == "claude" else settings.research_model_openai
+            return f"{provider} CLI ({model})"
+
+        provider_preference = settings.llm_provider.strip().lower()
+        if provider_preference == "anthropic":
+            model = settings.research_model if phase == "research" else settings.monitor_model
+            return f"anthropic API ({model})"
+        if provider_preference == "openai":
+            return f"openai API ({settings.research_model_openai})"
+        return "auto provider"
 
     # ── Phase 1: Morning Research ────────────────────────────────
 
@@ -154,10 +172,12 @@ class Orchestrator:
                 console.print(f"  [green]Done[/green] news ({headline_count} headlines"
                               + (f" | {sources_msg}" if sources_msg else "") + ")")
 
-        # Step 5: Claude Sonnet deep research (with everything)
+        # Step 5: Strategist research analysis (with everything)
         research_agent = self._agents.get("research")
         if research_agent:
-            console.print("  [cyan]Analyzing[/cyan] with Claude Sonnet...")
+            console.print(
+                f"  [cyan]Analyzing[/cyan] with {self._analysis_engine_label(phase='research')}..."
+            )
             response = await research_agent.receive(
                 Message(type=MessageType.COMMAND, source="orchestrator", data={
                     "symbols": self._today_watchlist,
@@ -230,11 +250,13 @@ class Orchestrator:
                 market_context = response.data.get("market_context", {})
                 market_headlines = response.data.get("market_headlines", [])
 
-        # Step 3: Light Claude Haiku check
+        # Step 3: Monitor-time strategist check
         research_data = {}
         research_agent = self._agents.get("research")
         if research_agent:
-            console.print("  [cyan]Claude check[/cyan]...")
+            console.print(
+                f"  [cyan]Model check[/cyan] via {self._analysis_engine_label(phase='monitor')}..."
+            )
             response = await research_agent.receive(
                 Message(type=MessageType.COMMAND, source="orchestrator", data={
                     "symbols": watchlist,
@@ -249,7 +271,7 @@ class Orchestrator:
             if response and response.type == MessageType.RESULT:
                 research_data = response.data.get("research", {})
                 results["research"] = {"status": "ok", "data": response.data}
-                console.print("  [green]Done[/green] Claude check")
+                console.print("  [green]Done[/green] model check")
 
         # Step 4: Strategy signals
         strategy_data = {}
