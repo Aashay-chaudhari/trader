@@ -1,0 +1,160 @@
+{
+  "sp500": {
+    "price": 648.57,
+    "change_pct": -1.43,
+    "five_day_pct": -2.79,
+    "trend": "down"
+  },
+  "nasdaq": {
+    "price": 582.06,
+    "change_pct": -1.85
+  },
+  "vix": {
+    "value": 26.78,
+    "change": 3.27,
+    "level": "high",
+    "interpretation": "Fear \u2014 avoid new longs unless strong conviction",
+    "fred_value": 24.06
+  },
+  "treasury_10y": {
+    "yield_pct": 4.39
+  },
+  "sector_performance": {
+    "Technology": {
+      "daily_pct": -2.27,
+      "weekly_pct": -2.51
+    },
+    "Healthcare": {
+      "daily_pct": -0.87,
+      "weekly_pct": -3.76
+    },
+    "Financial": {
+      "daily_pct": 0.18,
+      "weekly_pct": -0.45
+    },
+    "Energy": {
+      "daily_pct": -0.08,
+      "weekly_pct": 2.44
+    },
+    "Consumer Disc.": {
+      "daily_pct": -1.79,
+      "weekly_pct": -3.98
+    },
+    "Consumer Staples": {
+      "daily_pct": -0.83,
+      "weekly_pct": -4.34
+    },
+    "Industrial": {
+      "daily_pct": -1.46,
+      "weekly_pct": -2.64
+    },
+    "Communication": {
+      "daily_pct": -0.8,
+      "weekly_pct": -2.69
+    },
+    "Materials": {
+      "daily_pct": -1.59,
+      "weekly_pct": -4.9
+    },
+    "Utilities": {
+      "daily_pct": -4.06,
+      "weekly_pct": -5.52
+    },
+    "Real Estate": {
+      "daily_pct": -3.17,
+      "weekly_pct": -4.67
+    }
+  },
+  "sector_leaders": [
+    {
+      "sector": "Financial",
+      "daily_pct": 0.18,
+      "weekly_pct": -0.45
+    },
+    {
+      "sector": "Energy",
+      "daily_pct": -0.08,
+      "weekly_pct": 2.44
+    },
+    {
+      "sector": "Communication",
+      "daily_pct": -0.8,
+      "weekly_pct": -2.69
+    }
+  ],
+  "sector_laggards": [
+    {
+      "sector": "Technology",
+      "daily_pct": -2.27,
+      "weekly_pct": -2.51
+    },
+    {
+      "sector": "Real Estate",
+      "daily_pct": -3.17,
+      "weekly_pct": -4.67
+    },
+    {
+      "sector": "Utilities",
+      "daily_pct": -4.06,
+      "weekly_pct": -5.52
+    }
+  ],
+  "market_regime": "risk_off",
+  "breadth": null,
+  "fred": {
+    "VIXCLS": {
+      "value": 24.06,
+      "description": "VIX (CBOE Volatility Index)"
+    },
+    "DGS10": {
+      "value": 4.25,
+      "description": "10-Year Treasury Yield"
+    },
+    "DFF": {
+      "value": 3.64,
+      "description": "Federal Funds Effective Rate"
+    },
+    "T10Y2Y": {
+      "value": 0.51,
+      "description": "10Y-2Y Treasury Spread (inversion signal)"
+    },
+    "BAMLH0A0HYM2": {
+      "value": 3.27,
+      "description": "High-Yield Bond Spread (credit stress)"
+    },
+    "regime_signals": {
+      "volatility": {
+        "value": 24.06,
+        "level": "elevated",
+        "action": "Reduce position sizes 25%"
+      },
+      "yield_curve": {
+        "value": 0.51,
+        "status": "normal",
+        "implication": "Normal growth expected"
+      },
+      "credit_stress": {
+        "value": 3.27,
+        "level": "calm",
+        "action": "Risk-on environment"
+      }
+    }
+  },
+  "fred_regime": {
+    "volatility": {
+      "value": 24.06,
+      "level": "elevated",
+      "action": "Reduce position sizes 25%"
+    },
+    "yield_curve": {
+      "value": 0.51,
+      "status": "normal",
+      "implication": "Normal growth expected"
+    },
+    "credit_stress": {
+      "value": 3.27,
+      "level": "calm",
+      "action": "Risk-on environment"
+    }
+  }
+}
