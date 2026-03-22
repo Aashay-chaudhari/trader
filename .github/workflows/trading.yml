@@ -188,9 +188,11 @@ jobs:
           echo "CLI_AGENT_TIMEOUT=120" >> "$GITHUB_ENV"
           echo "LLM_MAX_OUTPUT_TOKENS=700" >> "$GITHUB_ENV"
           echo "LLM_MAX_PROMPT_CHARS=16000" >> "$GITHUB_ENV"
-          echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
-          echo "MONITOR_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
           echo "RESEARCH_MODEL_OPENAI=gpt-4o-mini" >> "$GITHUB_ENV"
+          if [ "${{ matrix.cli_provider }}" = "claude" ]; then
+            echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
+            echo "MONITOR_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
+          fi
 
       - name: Print strategist runtime config
         run: |
