@@ -42,7 +42,7 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: "Which phase to run"
+        description: "Which phase to run. 'seed' = full cycle (use with reset_state=true for first run)"
         required: true
         default: "run"
         type: choice
@@ -65,7 +65,7 @@ on:
           - claude
           - codex
       low_cost_mode:
-        description: "Use cheap models + tight token/turn limits (recommended for tests)"
+        description: "Downgrade to Haiku/mini + tighter limits (does NOT change template/dry-run — that is PRODUCTION_MODE)"
         required: true
         default: true
         type: boolean
@@ -205,20 +205,49 @@ jobs:
           AGENT_LABEL: ${{ matrix.profile_label }}
         run: python -m agent_trader reset
 
-      - name: Configure low-cost test mode
+      # ── Master production switch ──────────────────────────────────────────
+      # PRODUCTION_MODE is a single repo variable (Settings → Variables → Actions)
+      # that controls both LLM calls and trading behaviour:
+      #
+      #   PRODUCTION_MODE unset / false  →  DEBUG_MODE=true  + DRY_RUN=true
+      #     Use this while developing. Template responses, zero API cost,
+      #     no Alpaca orders. Safe to run as often as you like.
+      #
+      #   PRODUCTION_MODE=true           →  DEBUG_MODE=false + DRY_RUN=false
+      #     Real Claude/Codex LLM calls + real Alpaca paper orders.
+      #     Flip this when you're ready to go live.
+      #
+      # low_cost_mode (workflow_dispatch input) is separate: it downgrades
+      # models to Haiku/mini and tightens token limits, but does NOT change
+      # the template/paper-trading switch — that is always PRODUCTION_MODE.
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Apply PRODUCTION_MODE defaults
+        run: |
+          if [ "${{ vars.PRODUCTION_MODE }}" = "true" ]; then
+            echo "PRODUCTION_MODE=true → real LLMs + real paper orders"
+            echo "DEBUG_MODE=false" >> "$GITHUB_ENV"
+            echo "DRY_RUN=false"    >> "$GITHUB_ENV"
+          else
+            echo "PRODUCTION_MODE unset/false → dev mode (templates + dry run)"
+            echo "DEBUG_MODE=true" >> "$GITHUB_ENV"
+            echo "DRY_RUN=true"    >> "$GITHUB_ENV"
+          fi
+
+      - name: Configure low-cost model mode
+        # Reduces LLM cost: Haiku instead of Sonnet, fewer stocks, tighter limits.
+        # Does NOT change DEBUG_MODE or DRY_RUN — those are set by PRODUCTION_MODE.
         if: github.event_name == 'workflow_dispatch' && inputs.low_cost_mode == true
         run: |
-          echo "DEBUG_MODE=true" >> "$GITHUB_ENV"
-          echo "DEBUG_MAX_STOCKS=2" >> "$GITHUB_ENV"
-          echo "DEBUG_SKIP_WEB=true" >> "$GITHUB_ENV"
-          echo "CLI_AGENT_MAX_TURNS=1" >> "$GITHUB_ENV"
-          echo "CLI_AGENT_TIMEOUT=120" >> "$GITHUB_ENV"
-          echo "LLM_MAX_OUTPUT_TOKENS=700" >> "$GITHUB_ENV"
-          echo "LLM_MAX_PROMPT_CHARS=16000" >> "$GITHUB_ENV"
+          echo "DEBUG_MAX_STOCKS=2"          >> "$GITHUB_ENV"
+          echo "DEBUG_SKIP_WEB=true"         >> "$GITHUB_ENV"
+          echo "CLI_AGENT_MAX_TURNS=1"       >> "$GITHUB_ENV"
+          echo "CLI_AGENT_TIMEOUT=120"       >> "$GITHUB_ENV"
+          echo "LLM_MAX_OUTPUT_TOKENS=700"   >> "$GITHUB_ENV"
+          echo "LLM_MAX_PROMPT_CHARS=16000"  >> "$GITHUB_ENV"
           echo "RESEARCH_MODEL_OPENAI=gpt-4o-mini" >> "$GITHUB_ENV"
           if [ "${{ matrix.cli_provider }}" = "claude" ]; then
             echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
-            echo "MONITOR_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
+            echo "MONITOR_MODEL=claude-haiku-4-5-20251001"  >> "$GITHUB_ENV"
           fi
 
       - name: Print strategist runtime config
@@ -227,6 +256,9 @@ jobs:
           echo "phase=${{ needs.determine-phase.outputs.phase }}"
           echo "cli_provider=${{ matrix.cli_provider }}"
           echo "api_provider=${{ matrix.llm_provider }}"
+          echo "production_mode=${{ vars.PRODUCTION_MODE || 'false' }}"
+          echo "effective_debug_mode=${DEBUG_MODE:-true}"
+          echo "effective_dry_run=${DRY_RUN:-true}"
           echo "low_cost_mode=${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode || false }}"
 
       - name: Run strategist pipeline
@@ -245,7 +277,7 @@ jobs:
           DATA_DIR: data/profiles/${{ matrix.profile_id }}
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
-          DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
+          DRY_RUN: ${{ env.DRY_RUN || 'true' }}
           USE_CLI_AGENT: "true"
           CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
           LLM_PROVIDER: ${{ matrix.llm_provider }}
