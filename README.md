@@ -112,16 +112,40 @@ pytest tests/unit -v                      # Run 99 unit tests
 
 ## Daily Workflow
 
-### Morning (~8:30 AM ET)
-Open Claude Code in this repo and say:
-> Follow the instructions in scripts/prompts/morning_research.md
+Each strategist (Claude + Codex) runs **independently** — different stock picks,
+different lessons, different portfolios. They share the same seed knowledge but
+diverge from day 1.
 
-Claude will:
-- Do 6+ web searches (market regime, movers, earnings, sectors)
-- Read your portfolio state and knowledge base
-- Pick 5-10 stocks with entry/stop/target prices
-- Write `data/cache/morning_research.json` and `data/cache/watchlist.json`
-- Commit and push
+### Option A: Bundled script (recommended)
+
+```bash
+# Morning — runs Claude CLI then Codex CLI, commits and pushes
+./scripts/run_both.sh morning
+
+# Evening
+./scripts/run_both.sh evening
+
+# Weekly (Sunday)
+./scripts/run_both.sh weekly
+
+# Monthly (last business day)
+./scripts/run_both.sh monthly
+```
+
+### Option B: Run each manually in Claude Code / Codex
+
+**Morning (~8:30 AM ET)** — run each separately:
+
+In Claude Code:
+> Follow the instructions in scripts/prompts/morning_research.md — replace {{PROFILE}} with "claude"
+
+In Codex CLI:
+> Follow the instructions in scripts/prompts/morning_research.md — replace {{PROFILE}} with "codex"
+
+Then commit and push:
+```bash
+git add data/profiles/ && git commit -m "[research] $(date +%Y-%m-%d) dual-strategist" && git push
+```
 
 ### Monitor (automated, every 30 min)
 GitHub Actions runs automatically:
@@ -132,14 +156,10 @@ GitHub Actions runs automatically:
 - Updates dashboard on GitHub Pages
 
 ### Evening (~4:30 PM ET)
-Open Claude Code and say:
-> Follow the instructions in scripts/prompts/evening_reflection.md
+Same pattern — `./scripts/run_both.sh evening` or run each CLI separately.
 
-### Weekly (Sunday)
-> Follow the instructions in scripts/prompts/weekly_review.md
-
-### Monthly (last business day)
-> Follow the instructions in scripts/prompts/monthly_retrospective.md
+### Weekly / Monthly
+Same pattern — `./scripts/run_both.sh weekly` or `./scripts/run_both.sh monthly`.
 
 ## Commands
 

@@ -1,10 +1,12 @@
-# Evening Reflection — Claude Code Local Workflow
+# Evening Reflection — Per-Strategist Workflow
 
-You are reviewing today's trading session. Your job is to **think deeply**
-about what happened, **research** the market close, and **extract real lessons**
-that make the system smarter tomorrow.
+You are the **{{PROFILE}}** trading strategist reviewing today's session. Your
+job is to **think deeply** about what happened, **research** the market close,
+and **extract real lessons** that make YOUR system smarter tomorrow.
 
-Write to BOTH profiles (`claude` and `codex`) — same content, same schemas.
+**IMPORTANT**: Read and write ONLY your own profile: `data/profiles/{{PROFILE}}/`.
+Your counterpart has their own reflection process. Your lessons, patterns, and
+observations must come from YOUR OWN trades and knowledge.
 
 > Take your time. This is where the system learns.
 
@@ -14,18 +16,15 @@ Write to BOTH profiles (`claude` and `codex`) — same content, same schemas.
 
 Read ALL of these. Understand the full picture before writing anything.
 
-**For each profile** (`codex` first, then `claude`):
-1. `data/profiles/<PROFILE>/journal/<TODAY>/` — every journal entry from today
-2. `data/profiles/<PROFILE>/portfolio_state.json` — positions after today's trades
-3. `data/profiles/<PROFILE>/snapshots/latest.json` — end-of-day portfolio
-4. `data/profiles/<PROFILE>/snapshots/history.json` — portfolio value curve
-5. `data/profiles/<PROFILE>/knowledge/lessons_learned.json` — current lessons
-6. `data/profiles/<PROFILE>/knowledge/patterns_library.json` — known patterns
-7. `data/profiles/<PROFILE>/observations/daily/` — last 3 daily observations
-
-**Shared context:**
-8. `data/cache/morning_research.json` — what we planned this morning
-9. `data/cache/watchlist.json` — the stocks we were watching
+1. `data/profiles/{{PROFILE}}/journal/<TODAY>/` — every journal entry from today
+2. `data/profiles/{{PROFILE}}/portfolio_state.json` — positions after today's trades
+3. `data/profiles/{{PROFILE}}/snapshots/latest.json` — end-of-day portfolio
+4. `data/profiles/{{PROFILE}}/snapshots/history.json` — portfolio value curve
+5. `data/profiles/{{PROFILE}}/knowledge/lessons_learned.json` — current lessons
+6. `data/profiles/{{PROFILE}}/knowledge/patterns_library.json` — known patterns
+7. `data/profiles/{{PROFILE}}/observations/daily/` — last 3 daily observations
+8. `data/profiles/{{PROFILE}}/cache/morning_research.json` — what you planned this morning
+9. `data/profiles/{{PROFILE}}/cache/watchlist.json` — the stocks you were watching
 
 If any files don't exist (early days), note what's missing and work with what's there.
 
@@ -33,14 +32,14 @@ If any files don't exist (early days), note what's missing and work with what's 
 
 ## Step 2 — Web research: what happened today?
 
-Don't just look at our trades — understand the MARKET context.
+Don't just look at your trades — understand the MARKET context.
 
 **Search for** (at least 4 searches):
 - "stock market close today" — how did the broad market finish?
 - "S&P 500 VIX close today" — where did fear/greed land?
 - "top stock movers today" — what moved big and why?
 - "market news after hours" — anything that changes tomorrow's thesis?
-- Search for any stocks we traded or watched — what's the post-close narrative?
+- Search for any stocks you traded or watched — what's the post-close narrative?
 
 **Synthesize**: Form an opinion. Was today a trend day or a chop day?
 Did the morning thesis play out? What surprised you?
@@ -51,7 +50,7 @@ Did the morning thesis play out? What surprised you?
 
 Work through these questions honestly. Don't rush to write files.
 
-1. **Plan vs reality**: Look at `morning_research.json`. Which calls were right?
+1. **Plan vs reality**: Look at your `morning_research.json`. Which calls were right?
    Which were wrong? WHY were they wrong — was it the thesis, the timing,
    or the market regime?
 
@@ -77,8 +76,7 @@ Work through these questions honestly. Don't rush to write files.
 
 ## Step 4 — Write daily observation
 
-File: `data/profiles/<PROFILE>/observations/daily/obs_YYYY-MM-DD.json`
-(Write to BOTH claude and codex profiles.)
+File: `data/profiles/{{PROFILE}}/observations/daily/obs_YYYY-MM-DD.json`
 
 **Schema** (strict — do not add or remove fields):
 ```json
@@ -143,8 +141,8 @@ Think about what would concretely improve the system. Be specific.
 **Priorities**: `high` (would have changed today's outcome), `medium` (would help
 this week), `low` (nice to have)
 
-File: `data/profiles/<PROFILE>/IMPROVEMENT_PROPOSALS.md`
-(Append a new date section at the TOP of the existing file. Write to BOTH profiles.)
+File: `data/profiles/{{PROFILE}}/IMPROVEMENT_PROPOSALS.md`
+(Append a new date section at the TOP of the existing file.)
 
 ```markdown
 ## YYYY-MM-DD — Evening Reflection
@@ -154,7 +152,7 @@ Description of what to improve and why, grounded in today's experience.
 **Expected impact:** What would change if this were implemented.
 ```
 
-Also write structured JSON to `data/profiles/<PROFILE>/improvement_proposals.json`.
+Also write structured JSON to `data/profiles/{{PROFILE}}/improvement_proposals.json`.
 If the file exists, read it, append new entries, write back.
 If it doesn't exist, create it.
 
@@ -175,8 +173,7 @@ If it doesn't exist, create it.
 
 ## Step 6 — Update knowledge base
 
-Based on your analysis, update the knowledge files.
-Write to BOTH profiles.
+Based on your analysis, update YOUR knowledge files only.
 
 ### 6a. Lessons learned
 Read `knowledge/lessons_learned.json`. Add new lessons from today.
@@ -198,16 +195,16 @@ Write back.
 
 ---
 
-## Step 7 — Commit and push
+## Step 7 — Stage files (DO NOT commit or push)
 
 ```bash
-git add data/profiles/claude/observations/ data/profiles/claude/knowledge/ \
-        data/profiles/claude/IMPROVEMENT_PROPOSALS.md data/profiles/claude/improvement_proposals.json \
-        data/profiles/codex/observations/ data/profiles/codex/knowledge/ \
-        data/profiles/codex/IMPROVEMENT_PROPOSALS.md data/profiles/codex/improvement_proposals.json
-git commit -m "[reflection] $(date +%Y-%m-%d) evening reflection"
-git push origin main
+git add data/profiles/{{PROFILE}}/observations/ \
+        data/profiles/{{PROFILE}}/knowledge/ \
+        data/profiles/{{PROFILE}}/IMPROVEMENT_PROPOSALS.md \
+        data/profiles/{{PROFILE}}/improvement_proposals.json
 ```
+
+**Do NOT commit or push.** The runner script handles that after both strategists finish.
 
 ---
 
@@ -220,4 +217,4 @@ git push origin main
 - [ ] Confidence calibration is honest (if we have data)
 - [ ] Forward outlook references specific catalysts from research
 - [ ] JSON files are valid (no trailing commas, no comments)
-- [ ] Same content written to BOTH claude and codex profiles
+- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/ — not the other profile

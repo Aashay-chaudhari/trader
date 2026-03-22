@@ -1,10 +1,11 @@
-# Weekly Review — Claude Code Local Workflow
+# Weekly Review — Per-Strategist Workflow
 
-You are conducting the weekly trading review. Your job is to **consolidate
-the week's observations**, **research the week in review**, and **update the
-knowledge base** so the system performs better next week.
+You are the **{{PROFILE}}** trading strategist conducting your weekly review.
+Your job is to **consolidate your week's observations**, **research the week
+in review**, and **update your knowledge base** so you perform better next week.
 
-Write to BOTH profiles (`claude` and `codex`) — same content.
+**IMPORTANT**: Read and write ONLY your own profile: `data/profiles/{{PROFILE}}/`.
+Your counterpart does their own independent review.
 
 > This is where patterns emerge. Take time to find the signal in the noise.
 
@@ -12,13 +13,14 @@ Write to BOTH profiles (`claude` and `codex`) — same content.
 
 ## Step 1 — Read the week's data
 
-**For each profile** (`codex`, then `claude`):
-1. `data/profiles/<PROFILE>/observations/daily/` — all daily observations this week
-2. `data/profiles/<PROFILE>/journal/` — journal entries from each trading day
-3. `data/profiles/<PROFILE>/portfolio_state.json` — current positions
-4. `data/profiles/<PROFILE>/snapshots/history.json` — portfolio value history
-5. `data/profiles/<PROFILE>/knowledge/` — all 4 knowledge files
-6. `data/profiles/<PROFILE>/IMPROVEMENT_PROPOSALS.md` — pending proposals
+Read ONLY your profile's data:
+
+1. `data/profiles/{{PROFILE}}/observations/daily/` — all daily observations this week
+2. `data/profiles/{{PROFILE}}/journal/` — journal entries from each trading day
+3. `data/profiles/{{PROFILE}}/portfolio_state.json` — current positions
+4. `data/profiles/{{PROFILE}}/snapshots/history.json` — portfolio value history
+5. `data/profiles/{{PROFILE}}/knowledge/` — all 4 knowledge files
+6. `data/profiles/{{PROFILE}}/IMPROVEMENT_PROPOSALS.md` — pending proposals
 
 ---
 
@@ -31,31 +33,31 @@ Write to BOTH profiles (`claude` and `codex`) — same content.
 - "market outlook next week" — upcoming catalysts, events, earnings?
 - "trading strategy performance this week" — what worked for other traders?
 
-**Synthesize**: Compare what you find with our daily observations.
-Were our regime calls correct? Did the strategies we expected to work actually work?
+**Synthesize**: Compare what you find with your daily observations.
+Were your regime calls correct? Did the strategies you expected to work actually work?
 
 ---
 
 ## Step 3 — Deep analysis (THINK BEFORE WRITING)
 
-1. **Win rate**: How many trades won vs lost this week? Calculate actual numbers.
-2. **Strategy breakdown**: For each of our 8 strategies — did it fire? Did it win?
+1. **Win rate**: How many of your trades won vs lost this week? Calculate actual numbers.
+2. **Strategy breakdown**: For each of your 8 strategies — did it fire? Did it win?
    Grade each: A (consistent wins), B (mostly good), C (mixed), D (mostly bad), F (avoid).
 3. **Best/worst trades**: What made the best ones work? What went wrong on the worst?
    Be specific — "entry too late" is better than "bad trade."
-4. **Regime accuracy**: Was our daily regime call correct each day?
+4. **Regime accuracy**: Was your daily regime call correct each day?
 5. **Pattern detection**: Do you see any setups that repeated across multiple days?
 6. **Confidence calibration**: Aggregate the week's confidence data.
    High-confidence trades should win more often. Do they?
-7. **Knowledge quality**: Are our lessons_learned actually helping?
-   Any lesson that led us astray this week?
+7. **Knowledge quality**: Are your lessons_learned actually helping?
+   Any lesson that led you astray this week?
 
 ---
 
 ## Step 4 — Write weekly observation
 
-File: `data/profiles/<PROFILE>/observations/weekly/week_YYYY-MM-DD.json`
-(Write to BOTH profiles. Use the Sunday date or the last trading day.)
+File: `data/profiles/{{PROFILE}}/observations/weekly/week_YYYY-MM-DD.json`
+(Use the Sunday date or the last trading day.)
 
 **Schema** (strict):
 ```json
@@ -110,9 +112,7 @@ File: `data/profiles/<PROFILE>/observations/weekly/week_YYYY-MM-DD.json`
 
 ---
 
-## Step 5 — Update knowledge base
-
-Write to BOTH profiles.
+## Step 5 — Update your knowledge base
 
 ### 5a. Lessons learned
 Read `knowledge/lessons_learned.json`.
@@ -136,20 +136,20 @@ Read `knowledge/strategy_effectiveness.json`.
 
 ### 5d. Regime library
 Read `knowledge/regime_library.json`.
-- If this week taught us something new about a regime, update the rules
+- If this week taught you something new about a regime, update the rules
 - If indicators need calibrating (e.g., VIX threshold), adjust
 - Write back
 
 ---
 
-## Step 6 — Commit and push
+## Step 6 — Stage files (DO NOT commit or push)
 
 ```bash
-git add data/profiles/claude/observations/weekly/ data/profiles/claude/knowledge/ \
-        data/profiles/codex/observations/weekly/ data/profiles/codex/knowledge/
-git commit -m "[weekly] week ending $(date +%Y-%m-%d) review"
-git push origin main
+git add data/profiles/{{PROFILE}}/observations/weekly/ \
+        data/profiles/{{PROFILE}}/knowledge/
 ```
+
+**Do NOT commit or push.** The runner script handles that after both strategists finish.
 
 ---
 
@@ -160,5 +160,5 @@ git push origin main
 - [ ] Strategy grades have evidence, not just letters
 - [ ] Knowledge base files are UPDATED, not overwritten from scratch
 - [ ] New rules are specific enough to be testable next week
-- [ ] JSON is valid in both profiles
-- [ ] Same content in both claude and codex profiles
+- [ ] JSON is valid
+- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/ — not the other profile

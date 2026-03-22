@@ -1,10 +1,12 @@
-# Monthly Retrospective — Claude Code Local Workflow
+# Monthly Retrospective — Per-Strategist Workflow
 
-You are conducting the monthly deep retrospective. This is the **highest-level
-review** — analyzing an entire month of trading to identify systemic patterns,
-validate or invalidate strategies, and set the plan for next month.
+You are the **{{PROFILE}}** trading strategist conducting your monthly deep
+retrospective. This is the **highest-level review** — analyzing an entire month
+of trading to identify systemic patterns, validate or invalidate strategies,
+and set your plan for next month.
 
-Write to BOTH profiles (`claude` and `codex`) — same content.
+**IMPORTANT**: Read and write ONLY your own profile: `data/profiles/{{PROFILE}}/`.
+Your counterpart does their own independent retrospective.
 
 > This is the most important review. Be thorough, be honest, be strategic.
 
@@ -12,13 +14,12 @@ Write to BOTH profiles (`claude` and `codex`) — same content.
 
 ## Step 1 — Read the month's data
 
-**For each profile** (`codex`, then `claude`):
-1. `data/profiles/<PROFILE>/observations/weekly/` — all weekly reviews this month
-2. `data/profiles/<PROFILE>/observations/daily/` — daily observations for detail
-3. `data/profiles/<PROFILE>/snapshots/history.json` — full portfolio value curve
-4. `data/profiles/<PROFILE>/portfolio_state.json` — current positions
-5. `data/profiles/<PROFILE>/knowledge/` — all 4 knowledge files
-6. `data/profiles/<PROFILE>/IMPROVEMENT_PROPOSALS.md` — month's proposals
+1. `data/profiles/{{PROFILE}}/observations/weekly/` — all weekly reviews this month
+2. `data/profiles/{{PROFILE}}/observations/daily/` — daily observations for detail
+3. `data/profiles/{{PROFILE}}/snapshots/history.json` — full portfolio value curve
+4. `data/profiles/{{PROFILE}}/portfolio_state.json` — current positions
+5. `data/profiles/{{PROFILE}}/knowledge/` — all 4 knowledge files
+6. `data/profiles/{{PROFILE}}/IMPROVEMENT_PROPOSALS.md` — month's proposals
 
 ---
 
@@ -48,15 +49,15 @@ This is strategy-level thinking, not trade-level.
 2. **Monthly P&L**: Total return, biggest drawdown, win rate, profit factor.
    Compare to benchmark (S&P 500 performance this month).
 
-3. **Strategy meta-analysis**: Across ALL trades this month:
+3. **Strategy meta-analysis**: Across ALL your trades this month:
    - Which strategies contributed the most to P&L?
    - Which strategies DESTROYED value? (net negative)
    - Rank all 8 strategies by actual contribution.
 
 4. **Regime transitions**: Did the regime change during the month?
-   Did we catch the transition in time?
+   Did you catch the transition in time?
 
-5. **Knowledge audit**: Read through lessons_learned.json.
+5. **Knowledge audit**: Read through your lessons_learned.json.
    - Which lessons actually influenced trades for the better?
    - Which lessons are dead weight (never triggered or always wrong)?
    - Are there NEW lessons that should have been there from day 1?
@@ -66,15 +67,14 @@ This is strategy-level thinking, not trade-level.
    - Prioritize the top 3 for next month.
 
 7. **Risk management**: Were position sizes appropriate?
-   Did we ever risk more than intended? Any near-catastrophic events?
-   Did our stops work?
+   Did you ever risk more than intended? Any near-catastrophic events?
+   Did your stops work?
 
 ---
 
 ## Step 4 — Write monthly retrospective
 
-File: `data/profiles/<PROFILE>/observations/monthly/month_YYYY-MM.json`
-(Write to BOTH profiles.)
+File: `data/profiles/{{PROFILE}}/observations/monthly/month_YYYY-MM.json`
 
 **Schema** (strict):
 ```json
@@ -151,7 +151,7 @@ File: `data/profiles/<PROFILE>/observations/monthly/month_YYYY-MM.json`
 
 ## Step 5 — Update knowledge base
 
-Write to BOTH profiles. This is the most impactful update of the month.
+This is the most impactful update of the month.
 
 ### 5a. Lessons learned
 Read `knowledge/lessons_learned.json`.
@@ -184,14 +184,14 @@ Read `knowledge/patterns_library.json`.
 
 ---
 
-## Step 6 — Commit and push
+## Step 6 — Stage files (DO NOT commit or push)
 
 ```bash
-git add data/profiles/claude/observations/monthly/ data/profiles/claude/knowledge/ \
-        data/profiles/codex/observations/monthly/ data/profiles/codex/knowledge/
-git commit -m "[monthly] $(date +%Y-%m) retrospective"
-git push origin main
+git add data/profiles/{{PROFILE}}/observations/monthly/ \
+        data/profiles/{{PROFILE}}/knowledge/
 ```
+
+**Do NOT commit or push.** The runner script handles that after both strategists finish.
 
 ---
 
@@ -203,5 +203,5 @@ git push origin main
 - [ ] Knowledge audit identified at least 1 dead-weight lesson to remove
 - [ ] Next month plan has specific key_dates from research
 - [ ] All knowledge files were READ before updating (don't overwrite from scratch)
-- [ ] JSON is valid in both profiles
-- [ ] Same content in both claude and codex profiles
+- [ ] JSON is valid
+- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/ — not the other profile

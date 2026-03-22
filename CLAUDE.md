@@ -98,25 +98,37 @@ python -m agent_trader research --debug
 python -m agent_trader reflect --debug
 ```
 
-## Local Workflow (Claude Code as Strategist)
+## Local Workflow (Dual-Strategist, Independent Analysis)
 
-The most cost-effective way to run this system: use your Claude Code subscription for the expensive analysis phases, and let GitHub Actions handle the cheap Python-only monitoring.
+Each strategist (Claude + Codex) runs independently — same seed knowledge, but divergent analysis, stock picks, and accumulated lessons from day 1. This is the whole point of the comparison.
 
-**Daily workflow:**
-1. **Morning (~8:30 AM ET)**: Open Claude Code, say "Follow the instructions in scripts/prompts/morning_research.md". Claude Code does web research, reads your portfolio, picks stocks, writes trade plans, and pushes to GitHub.
-2. **Monitor (automated, every 30 min)**: GitHub Actions crons run the Python pipeline — refreshes prices, runs 8 strategies, validates risk, executes trades on Alpaca. Ultra-lean LLM call (~500 tokens) for final trade/skip decisions. Cost: ~$0.04/month.
-3. **Evening (~4:30 PM ET)**: Open Claude Code, say "Follow the instructions in scripts/prompts/evening_reflection.md". Claude Code reviews the day's trades, extracts patterns/lessons, writes observations, and pushes.
+**Bundled workflow (recommended):**
+```bash
+./scripts/run_both.sh morning   # Both strategists do morning research
+./scripts/run_both.sh evening   # Both strategists do evening reflection
+./scripts/run_both.sh weekly    # Both strategists do weekly review
+./scripts/run_both.sh monthly   # Both strategists do monthly retrospective
+```
+The script runs Claude CLI first, then Codex CLI, then commits and pushes.
 
-**Weekly/Monthly**: Same pattern — "Follow the instructions in scripts/prompts/weekly_review.md" or "monthly_retrospective.md".
+**Manual workflow (run each separately):**
+1. **Morning (~8:30 AM ET)**: Run the prompt for each strategist independently:
+   - Claude: "Follow scripts/prompts/morning_research.md with {{PROFILE}}=claude"
+   - Codex: "Follow scripts/prompts/morning_research.md with {{PROFILE}}=codex"
+   - Then `git add data/profiles/ && git commit -m "[research] date" && git push`
+2. **Monitor (automated, every 30 min)**: GitHub Actions runs Python pipeline per strategist.
+3. **Evening (~4:30 PM ET)**: Same pattern with evening_reflection.md.
 
-**First time setup**: "Follow the instructions in scripts/prompts/seed_knowledge.md" to bootstrap the knowledge base.
+**First time setup**: "Follow the instructions in scripts/prompts/seed_knowledge.md" to bootstrap both profiles with identical starting knowledge.
 
-**Prompt files:**
-- `scripts/prompts/morning_research.md` — morning analysis + trade plans
-- `scripts/prompts/evening_reflection.md` — daily review + lessons
-- `scripts/prompts/weekly_review.md` — weekly consolidation
-- `scripts/prompts/monthly_retrospective.md` — monthly deep retrospective
-- `scripts/prompts/seed_knowledge.md` — first-time knowledge bootstrap
+**Prompt files** (all use `{{PROFILE}}` placeholder — replace with `claude` or `codex`):
+- `scripts/prompts/seed_knowledge.md` — first-time knowledge bootstrap (seeds BOTH profiles)
+- `scripts/prompts/morning_research.md` — morning analysis + trade plans (per-profile)
+- `scripts/prompts/evening_reflection.md` — daily review + lessons (per-profile)
+- `scripts/prompts/weekly_review.md` — weekly consolidation (per-profile)
+- `scripts/prompts/monthly_retrospective.md` — monthly deep retrospective (per-profile)
+
+**Runner script**: `scripts/run_both.sh` — invokes both CLIs, commits, pushes
 
 ## Configuration
 
