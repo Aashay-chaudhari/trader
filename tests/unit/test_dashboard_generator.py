@@ -144,11 +144,11 @@ def test_generate_dashboard_writes_context_rich_bundle():
         html = (docs_dir / "index.html").read_text(encoding="utf-8")
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
-        assert "Decision board" in html
-        assert "Strategist Arena" in html
-        assert "News Influence" in html
+        assert "Today's Decisions" in html
+        assert "Strategist Comparison" in html
+        assert "Market Intelligence" in html
         assert "foldout" in html
-        assert "Reset project state" in html
+        assert "Actions" in html
         assert bundle["profiles"]["default"]["profile"]["id"] == "default"
         assert bundle["comparison"]["summary"][0]["profile"] == "default"
         assert bundle["context"]["prompt_sections"]["news_inputs"]["per_symbol"]["ABBV"]["news_headlines"][0]["title"] == (
@@ -422,8 +422,8 @@ def test_generate_dashboard_preserves_linkable_evidence():
         html = (docs_dir / "index.html").read_text(encoding="utf-8")
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
-        assert "link-chip" in html
-        assert "Web Evidence" in html
+        assert "trade-row" in html
+        assert "Trade History" in html
         assert bundle["profiles"]["default"]["research"]["stocks"]["ABBV"]["supporting_articles"][0]["url"] == (
             "https://example.com/abbv-deal"
         )
@@ -563,8 +563,8 @@ def test_generate_dashboard_includes_knowledge_store_bundle():
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
         knowledge = bundle["profiles"]["default"]["knowledge"]
 
-        assert "Knowledge Store" in html
-        assert "Knowledge bundle" in html
+        assert "System Intelligence" in html
+        assert "kbTabs" in html
         assert knowledge["counts"]["daily_observations"] == 1
         assert knowledge["counts"]["patterns"] == 1
         assert knowledge["latest_weekly_review"]["week_start"] == "2026-03-17"

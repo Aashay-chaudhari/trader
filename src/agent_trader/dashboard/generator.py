@@ -11,7 +11,19 @@ from typing import Any
 
 from agent_trader.utils.profiles import DEFAULT_PROFILE_LABELS
 
+_TEMPLATE_PATH = Path(__file__).parent / "template.html"
 
+
+def _load_dashboard_html() -> str:
+    """Load the dashboard HTML template from file."""
+    if _TEMPLATE_PATH.exists():
+        return _TEMPLATE_PATH.read_text(encoding="utf-8")
+    # Fallback: bare-bones page pointing to the data file
+    return "<!doctype html><html><body><p>Dashboard template not found. Run the pipeline first.</p></body></html>\n"
+
+
+# Keep DASHBOARD_HTML as a property-like callable for backward compat —
+# generator.py writes it via _load_dashboard_html() in generate_dashboard().
 DASHBOARD_HTML = dedent(
     """
     <!doctype html>
@@ -567,7 +579,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
 
     profile_roots = _discover_profile_roots(data_root)
     bundle = _build_dashboard_bundle(data_root, profile_roots=profile_roots)
-    (docs_root / "index.html").write_text(DASHBOARD_HTML, encoding="utf-8")
+    (docs_root / "index.html").write_text(_load_dashboard_html(), encoding="utf-8")
     _write_json(data_out / "dashboard.json", bundle)
     _write_json(data_out / "latest.json", bundle["latest"])
     _write_json(data_out / "history.json", bundle["history"])
