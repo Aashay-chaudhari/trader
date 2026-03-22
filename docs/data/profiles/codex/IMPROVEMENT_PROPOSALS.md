@@ -8,23 +8,23 @@ Review these periodically and implement the high-priority ones.
 
 ## 2026-03-22 — Evening Reflection Proposals
 
-### [HIGH] [infrastructure] Add preflight filesystem-read health check
+### [HIGH] [infrastructure] Add reflection preflight checks
 
-Run a startup check that verifies read access to journal, positions, and observations paths before analysis, and fail fast with actionable diagnostics.
+Run a preflight step that validates filesystem and command execution access before analysis; fail fast with actionable diagnostics.
 
-**Expected impact:** Prevents silent analysis gaps and reduces missed daily reviews.
-
-
-### [HIGH] [knowledge] Create fallback reflection mode
-
-When files are unavailable, automatically emit a structured incident reflection template and queue a retry once access is restored.
-
-**Expected impact:** Maintains continuity in the review cycle and preserves accountability.
+**Expected impact:** Prevents silent analysis gaps and ensures daily review runs are dependable.
 
 
-### [MED] [data] Cache end-of-day snapshot artifacts
+### [HIGH] [knowledge] Persist compact daily snapshot artifact
 
-Persist a compact daily snapshot (positions, realized/unrealized PnL, sector attribution) in a single resilient file for reflection use.
+Write a single end-of-day snapshot JSON (trades, active positions, PnL, sector context, key events) that can be parsed without multiple file reads.
 
-**Expected impact:** Improves robustness and speeds up daily synthesis even during partial outages.
+**Expected impact:** Improves robustness of reflection workflows and reduces dependency on directory traversal.
+
+
+### [MED] [risk] Add no-data risk protocol
+
+When review data is unavailable, automatically reduce new risk-taking (smaller size or no new entries) until observability is restored.
+
+**Expected impact:** Limits exposure during periods of degraded monitoring and decision support.
 

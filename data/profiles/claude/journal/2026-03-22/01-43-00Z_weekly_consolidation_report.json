@@ -1,0 +1,98 @@
+{
+  "run_id": "20260322_014259",
+  "phase": "weekly_consolidation",
+  "profile": {
+    "id": "claude",
+    "label": "Claude Strategist",
+    "data_dir": "data/profiles/claude",
+    "llm_provider": "anthropic",
+    "use_cli_agent": true,
+    "cli_agent_provider": "claude",
+    "cli_agent_max_turns": 1,
+    "cli_agent_timeout": 120,
+    "dry_run": true,
+    "paper_portfolio_value": 100000.0
+  },
+  "timestamp": "2026-03-22T01:43:00.485313+00:00",
+  "screener": null,
+  "research": {
+    "research": {
+      "overall_sentiment": "neutral",
+      "market_summary": "LLM analysis failed: anthropic/claude-haiku-4-5-20251001: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZHGczCzEwk7gZ2F4Tuch'}",
+      "stocks": {},
+      "_meta": {
+        "status": "error",
+        "execution_mode": "api",
+        "provider_preference": "anthropic",
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "selected_provider": "anthropic",
+        "selected_model": "claude-haiku-4-5-20251001",
+        "usage": {},
+        "service_tier": null,
+        "request_id": null,
+        "rate_limits": {},
+        "runtime": {
+          "platform": "github_actions",
+          "python_version": "3.12.13",
+          "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+          "agent_profile": "claude",
+          "agent_label": "Claude Strategist",
+          "github": {
+            "repository": "Aashay-chaudhari/trader",
+            "workflow": "Trading Pipeline",
+            "event_name": "workflow_dispatch",
+            "actor": "Aashay-chaudhari",
+            "run_id": "23393209680",
+            "run_attempt": "1",
+            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23393209680",
+            "sha": "93491539b09114a36b71c7f4dd852c889c6c5717",
+            "ref": "refs/heads/main"
+          }
+        },
+        "duration_ms": null,
+        "attempts": [
+          {
+            "execution_mode": "cli",
+            "provider": "cli:claude",
+            "model": "gpt-4o-mini",
+            "status": "error",
+            "duration_ms": 1255.0,
+            "error": "Credit balance is too low",
+            "quota_issue_detected": true
+          },
+          {
+            "execution_mode": "api",
+            "provider": "anthropic",
+            "model": "claude-haiku-4-5-20251001",
+            "status": "error",
+            "duration_ms": 56.1,
+            "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZHGczCzEwk7gZ2F4Tuch'}",
+            "quota_issue_detected": true
+          }
+        ],
+        "quota_issue_detected": true,
+        "quota_note": "Credit balance is too low"
+      }
+    },
+    "phase": "weekly_consolidation",
+    "symbols": [
+      "MU",
+      "INTC",
+      "PANW",
+      "UNH",
+      "ABT",
+      "HON",
+      "LMT",
+      "HD",
+      "MA",
+      "V"
+    ],
+    "market_data": {}
+  },
+  "market_data": null,
+  "signals": null,
+  "risk": {},
+  "executed": null,
+  "portfolio": {}
+}

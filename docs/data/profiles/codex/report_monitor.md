@@ -1,69 +1,75 @@
 # Trading Journal — 2026-03-22
 
-**Run ID:** `20260322_011639`  
+**Run ID:** `20260322_014452`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 01:17 UTC  
+**Time:** 01:46 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Unable to complete a true morning-vs-now delta because local strategist artifacts could not be read in this session (sandbox execution failure on all filesystem commands). Limited live verification suggests mixed tape: MU weak intraday and PANW under pressure with negative guidance-related narrative.
+> Unable to load local morning baseline files (`data/profiles/codex/...`) in this run due environment command restrictions, so true morning-vs-now deltas and level-hit checks are partially unavailable. Live tape/news checks show a short-term risk-off tone with broad index weakness into March 20, 2026 and notable pressure in MU (post-earnings fade), PANW (guidance/integration-cost pressure), ABT, V, and LMT.
 
-### MU [~]
-- **Sentiment:** neutral | **Confidence:** 33% | **Recommendation:** watch
+### MU [-]
+- **Sentiment:** bearish | **Confidence:** 72% | **Recommendation:** watch
 - **Observations:**
-  - Live quote page showed MU down intraday with elevated volatility.
-  - AI-memory long-term narrative still present, but short-term tape was risk-off in the sampled check.
-  - Could not verify against morning entry/stop/target levels from local cache due read failure.
+  - Post-earnings price action remained weak despite strong reported numbers.
+  - Narrative shifted from growth surprise to cycle-peak concerns.
 
 ### INTC [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 44% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - No clearly new high-impact headline in the latest check window.
+  - Quote context still indicates elevated volatility.
 
 ### PANW [-]
-- **Sentiment:** bearish | **Confidence:** 58% | **Recommendation:** watch
+- **Sentiment:** bearish | **Confidence:** 68% | **Recommendation:** watch
 - **Observations:**
-  - Live quote page showed a sharp down day (~6%+ in sampled view).
-  - Headline feed referenced lowered profit outlook and integration-cost pressure.
-  - This is a meaningful change signal versus a neutral-to-bullish baseline scenario, but baseline file could not be read.
+  - Recent sharp downside move tied to reduced profit outlook/integration-cost concerns.
+  - Risk remains for follow-through weakness after guidance reset.
 
 ### UNH [~]
-- **Sentiment:** neutral | **Confidence:** 24% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 51% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - Still in recovery attempts after extended drawdown context.
+  - No new same-day high-severity headline confirmed in this pass.
 
-### ABT [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+### ABT [-]
+- **Sentiment:** bearish | **Confidence:** 74% | **Recommendation:** watch
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - Stock fell again into March 20 with elevated volume versus average.
+  - Recent deal/debt financing cycle adds event-risk sensitivity.
 
 ### HON [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 46% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - No high-urgency new negative catalyst detected in this pass.
+  - Industrial tape likely influenced by broader macro risk sentiment.
 
 ### LMT [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 62% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - Recent session decline occurred with above-average volume.
+  - Defense complex still trades with geopolitical headline sensitivity.
 
 ### HD [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 47% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - No fresh high-impact company-specific headline in this pass.
+  - Macro-sensitive consumer/discretionary tone remains mixed.
 
 ### MA [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+- **Sentiment:** neutral | **Confidence:** 49% | **Recommendation:** hold
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - Payments complex remains tied to macro/risk appetite rather than a new idiosyncratic shock.
+  - No fresh severe headline identified in this pass.
 
-### V [~]
-- **Sentiment:** neutral | **Confidence:** 20% | **Recommendation:** watch
+### V [-]
+- **Sentiment:** bearish | **Confidence:** 66% | **Recommendation:** watch
 - **Observations:**
-  - No validated morning-vs-current delta computed due local data access failure.
+  - Recent daily move showed notable downside in a weak tape.
+  - Payments beta to broader risk-off day appears active.
 
 ## LLM Telemetry
 
@@ -71,8 +77,13 @@
 - **Provider Preference:** auto
 - **Selected Provider:** cli:codex
 - **Selected Model:** default
-- **Token Usage:** input=56875, output=4256, total=0
-- **LLM Latency:** 51395.8 ms
+- **Token Usage:** input=88383, output=6697, total=0
+- **LLM Latency:** 94905.0 ms
+
+### Provider Attempts
+
+- cli:codex | default | success | 94905.0 ms
+
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
@@ -157,25 +168,20 @@
 
 | Symbol | Action | Strength | Strategy | Reasoning |
 |--------|--------|----------|----------|-----------|
-| **INTC** | SELL | 0.35 | combined(trend+volume_breakout+relative_strength) | Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move  |
-| **PANW** | SELL | 0.42 | combined(volume_breakout+relative_strength) | Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs S |
-| **UNH** | SELL | 0.47 | combined(trend+volume_breakout) | Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% mov |
-| **ABT** | BUY | 0.34 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
-| **HON** | BUY | 0.35 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
-| **LMT** | BUY | 0.25 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
-| **HD** | BUY | 0.39 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
-| **MA** | BUY | 0.41 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
-| **V** | BUY | 0.27 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
+| **INTC** | SELL | 0.42 | combined(trend+volume_breakout+relative_strength) | Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move  |
+| **PANW** | SELL | 0.45 | combined(volume_breakout+relative_strength) | Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs S |
+| **UNH** | SELL | 0.57 | combined(trend+volume_breakout) | Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% mov |
+| **ABT** | BUY | 0.49 | combined(mean_reversion+support_resistance+vwap) | Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Pri |
+| **HON** | BUY | 0.43 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
+| **LMT** | BUY | 0.34 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
+| **HD** | BUY | 0.48 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
+| **MA** | BUY | 0.51 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
+| **V** | BUY | 0.38 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
 
 ## Risk Assessment
 
-- **Approved:** 7 trades
-- **Rejected:** 2 trades
-
-### Rejected Trades
-
-- **LMT** (buy): Signal strength 0.25 below minimum 0.3
-- **V** (buy): Signal strength 0.27 below minimum 0.3
+- **Approved:** 9 trades
+- **Rejected:** 0 trades
 
 ## Execution
 
@@ -189,9 +195,13 @@
   - _Dry run mode — no order placed_
 - **HON** BUY 22 shares @ ~$221.50 = $4,873.00 [DRY RUN]
   - _Dry run mode — no order placed_
+- **LMT** BUY 7 shares @ ~$627.43 = $4,392.01 [DRY RUN]
+  - _Dry run mode — no order placed_
 - **HD** BUY 15 shares @ ~$320.75 = $4,811.25 [DRY RUN]
   - _Dry run mode — no order placed_
 - **MA** BUY 10 shares @ ~$496.32 = $4,963.20 [DRY RUN]
+  - _Dry run mode — no order placed_
+- **V** BUY 16 shares @ ~$301.62 = $4,825.92 [DRY RUN]
   - _Dry run mode — no order placed_
 
 ## Portfolio Snapshot
@@ -199,10 +209,10 @@
 | Metric | Value |
 |--------|------:|
 | **Total Value** | $100,000.00 |
-| **Cash** | $80,395.93 |
-| **Invested** | $19,604.07 |
+| **Cash** | $71,178.00 |
+| **Invested** | $28,822.00 |
 | **Total P&L** | $+0.00 (+0.00%) |
-| **Positions** | 4 |
+| **Positions** | 6 |
 
 ### Open Positions
 
@@ -210,8 +220,10 @@
 |--------|-------:|---------:|--------:|------:|----:|
 | ABT | 47 | $105.46 | $105.46 | $4,956.62 | +$0.00 (+0.00%) |
 | HON | 22 | $221.50 | $221.50 | $4,873.00 | +$0.00 (+0.00%) |
+| LMT | 7 | $627.43 | $627.43 | $4,392.01 | +$0.00 (+0.00%) |
 | HD | 15 | $320.75 | $320.75 | $4,811.25 | +$0.00 (+0.00%) |
 | MA | 10 | $496.32 | $496.32 | $4,963.20 | +$0.00 (+0.00%) |
+| V | 16 | $301.62 | $301.62 | $4,825.92 | +$0.00 (+0.00%) |
 
 ---
 *Generated by Agent Trader v0.1.0*

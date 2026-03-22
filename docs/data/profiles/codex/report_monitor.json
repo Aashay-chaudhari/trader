@@ -1,5 +1,5 @@
 {
-  "run_id": "20260322_011639",
+  "run_id": "20260322_014452",
   "phase": "monitor",
   "profile": {
     "id": "codex",
@@ -8,12 +8,12 @@
     "llm_provider": "openai",
     "use_cli_agent": true,
     "cli_agent_provider": "codex",
-    "cli_agent_max_turns": 5,
-    "cli_agent_timeout": 300,
+    "cli_agent_max_turns": 1,
+    "cli_agent_timeout": 120,
     "dry_run": true,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-03-22T01:17:46.323280+00:00",
+  "timestamp": "2026-03-22T01:46:58.822696+00:00",
   "screener": null,
   "research": {
     "symbols": [
@@ -2682,267 +2682,375 @@
     },
     "research": {
       "overall_sentiment": "neutral",
-      "market_summary": "Unable to complete a true morning-vs-now delta because local strategist artifacts could not be read in this session (sandbox execution failure on all filesystem commands). Limited live verification suggests mixed tape: MU weak intraday and PANW under pressure with negative guidance-related narrative.",
-      "market_regime": "neutral",
+      "market_summary": "Unable to load local morning baseline files (`data/profiles/codex/...`) in this run due environment command restrictions, so true morning-vs-now deltas and level-hit checks are partially unavailable. Live tape/news checks show a short-term risk-off tone with broad index weakness into March 20, 2026 and notable pressure in MU (post-earnings fade), PANW (guidance/integration-cost pressure), ABT, V, and LMT.",
+      "market_regime": "risk_off",
       "stocks": {
         "MU": {
-          "sentiment": "neutral",
-          "confidence": 0.33,
+          "sentiment": "bearish",
+          "confidence": 0.72,
           "key_observations": [
-            "Live quote page showed MU down intraday with elevated volatility.",
-            "AI-memory long-term narrative still present, but short-term tape was risk-off in the sampled check.",
-            "Could not verify against morning entry/stop/target levels from local cache due read failure."
+            "Post-earnings price action remained weak despite strong reported numbers.",
+            "Narrative shifted from growth surprise to cycle-peak concerns."
           ],
-          "news_impact": "neutral",
-          "news_summary": "Yahoo Finance page highlighted momentum/AI-memory demand framing, but price action in sampled snapshot was negative on the day.",
+          "news_impact": "negative",
+          "news_summary": "Recent coverage highlights stock weakness after earnings as investors question durability of peak memory-cycle margins.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "intraday"
+            "entry": 380.0,
+            "stop_loss": 366.0,
+            "target": 405.0,
+            "risk_reward_ratio": 1.79,
+            "position_size_pct": 0.75,
+            "timeframe": "swing_2_5_days"
           },
-          "changed_since_morning": false,
-          "change_summary": "Morning baseline unavailable in-session; only live spot check captured.",
+          "changed_since_morning": true,
+          "change_summary": "Fresh post-earnings sentiment turned more cautious; short-term tone deteriorated.",
           "supporting_articles": [
             {
-              "title": "Micron Technology, Inc. (MU) Stock Price, News, Quote & History",
+              "title": "Micron Technology, Inc. (MU) Stock Price, News, Quote & History - Yahoo Finance",
               "url": "https://finance.yahoo.com/quote/MU/",
               "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Used as live spot verification of intraday move and headline panel."
+              "reason": "Live quote snapshot and intraday context for post-earnings reaction."
+            },
+            {
+              "title": "Why Micron's stock is sliding despite Nvidia-like earnings performance",
+              "url": "https://www.marketwatch.com/story/why-microns-stock-is-sliding-despite-nvidia-like-earnings-performance-fa9729f7",
+              "source": "MarketWatch",
+              "kind": "news",
+              "reason": "Explains bearish reaction despite strong fundamentals."
             }
           ]
         },
         "INTC": {
           "sentiment": "neutral",
-          "confidence": 0.2,
+          "confidence": 0.44,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "No clearly new high-impact headline in the latest check window.",
+            "Quote context still indicates elevated volatility."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "No material fresh catalyst confirmed in this pass beyond ongoing AI/turnaround narrative.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
+            "entry": 45.0,
+            "stop_loss": 41.5,
+            "target": 49.5,
+            "risk_reward_ratio": 1.29,
+            "position_size_pct": 0.6,
             "timeframe": "swing_1_2_weeks"
           },
           "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "change_summary": "Morning comparison not fully available; no confirmed new regime change detected.",
+          "supporting_articles": [
+            {
+              "title": "Intel Corporation (INTC) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/INTC/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Reference quote and current tape context."
+            }
+          ]
         },
         "PANW": {
           "sentiment": "bearish",
-          "confidence": 0.58,
+          "confidence": 0.68,
           "key_observations": [
-            "Live quote page showed a sharp down day (~6%+ in sampled view).",
-            "Headline feed referenced lowered profit outlook and integration-cost pressure.",
-            "This is a meaningful change signal versus a neutral-to-bullish baseline scenario, but baseline file could not be read."
+            "Recent sharp downside move tied to reduced profit outlook/integration-cost concerns.",
+            "Risk remains for follow-through weakness after guidance reset."
           ],
           "news_impact": "negative",
-          "news_summary": "Yahoo Finance summary flagged guidance/profit-outlook pressure tied to integration costs after acquisitions.",
+          "news_summary": "Latest quote-page context still references downside pressure from outlook and acquisition integration costs.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "intraday"
+            "entry": 149.0,
+            "stop_loss": 143.0,
+            "target": 162.0,
+            "risk_reward_ratio": 2.17,
+            "position_size_pct": 0.7,
+            "timeframe": "swing_2_5_days"
           },
           "changed_since_morning": true,
-          "change_summary": "Negative headline-risk signal and sharp downside move observed in live check.",
+          "change_summary": "Short-term tone worsened after guidance-related pressure.",
           "supporting_articles": [
             {
-              "title": "Palo Alto Networks, Inc. (PANW) Stock Price, News, Quote & History",
+              "title": "Palo Alto Networks, Inc. (PANW) Stock Price, News, Quote & History - Yahoo Finance",
               "url": "https://finance.yahoo.com/quote/PANW/",
               "source": "Yahoo Finance",
               "kind": "web",
-              "reason": "Used as live spot verification of sharp price move and associated headline context."
+              "reason": "Contains recent price shock context and forward expectation reset."
             }
           ]
         },
         "UNH": {
           "sentiment": "neutral",
-          "confidence": 0.24,
+          "confidence": 0.51,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "Still in recovery attempts after extended drawdown context.",
+            "No new same-day high-severity headline confirmed in this pass."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "Recent narrative remains centered on margin pressure and cost trends; no confirmed fresh break from that theme.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "swing_2_5_days"
-          },
-          "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
-        },
-        "ABT": {
-          "sentiment": "neutral",
-          "confidence": 0.2,
-          "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
-          ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
-          "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
+            "entry": 288.0,
+            "stop_loss": 276.0,
+            "target": 308.0,
+            "risk_reward_ratio": 1.67,
+            "position_size_pct": 0.8,
             "timeframe": "swing_1_2_weeks"
           },
           "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "change_summary": "No decisive new catalyst confirmed versus existing healthcare-cost narrative.",
+          "supporting_articles": [
+            {
+              "title": "UnitedHealth Group Incorporated (UNH) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/UNH/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Current quote context and valuation backdrop."
+            }
+          ]
+        },
+        "ABT": {
+          "sentiment": "bearish",
+          "confidence": 0.74,
+          "key_observations": [
+            "Stock fell again into March 20 with elevated volume versus average.",
+            "Recent deal/debt financing cycle adds event-risk sensitivity."
+          ],
+          "news_impact": "negative",
+          "news_summary": "MarketWatch reports additional downside on March 20, 2026 with unusually high volume; sentiment remains pressured.",
+          "recommendation": "watch",
+          "trade_plan": {
+            "entry": 106.5,
+            "stop_loss": 102.0,
+            "target": 114.0,
+            "risk_reward_ratio": 1.67,
+            "position_size_pct": 0.65,
+            "timeframe": "swing_2_5_days"
+          },
+          "changed_since_morning": true,
+          "change_summary": "Short-term momentum weakened and volume spiked, increasing downside-risk signal.",
+          "supporting_articles": [
+            {
+              "title": "Abbott Laboratories stock underperforms Friday when compared to competitors",
+              "url": "https://www.marketwatch.com/data-news/abbott-laboratories-stock-underperforms-friday-when-compared-to-competitors-d7ab244b-6415486b528f",
+              "source": "MarketWatch",
+              "kind": "news",
+              "reason": "Fresh daily performance update with notable volume anomaly."
+            },
+            {
+              "title": "Abbott Laboratories Prices $20 Billion Senior Notes Offering",
+              "url": "https://www.tipranks.com/news/company-announcements/abbott-laboratories-prices-20-billion-senior-notes-offering",
+              "source": "TipRanks",
+              "kind": "news",
+              "reason": "Capital structure event tied to M&A funding risk."
+            }
+          ]
         },
         "HON": {
           "sentiment": "neutral",
-          "confidence": 0.2,
+          "confidence": 0.46,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "No high-urgency new negative catalyst detected in this pass.",
+            "Industrial tape likely influenced by broader macro risk sentiment."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "No major fresh company-specific shock identified in the latest pull.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
+            "entry": 221.0,
+            "stop_loss": 214.0,
+            "target": 232.0,
+            "risk_reward_ratio": 1.57,
+            "position_size_pct": 0.6,
             "timeframe": "swing_1_2_weeks"
           },
           "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "change_summary": "No confirmed thesis break from available live checks.",
+          "supporting_articles": [
+            {
+              "title": "Honeywell International Inc. (HON) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/HON/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Reference pricing and near-term narrative context."
+            }
+          ]
         },
         "LMT": {
           "sentiment": "neutral",
-          "confidence": 0.2,
+          "confidence": 0.62,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "Recent session decline occurred with above-average volume.",
+            "Defense complex still trades with geopolitical headline sensitivity."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "negative",
+          "news_summary": "MarketWatch shows LMT down on March 20, 2026 in broad risk-off trading, with volume above 50-day average.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "entry": 622.0,
+            "stop_loss": 602.0,
+            "target": 655.0,
+            "risk_reward_ratio": 1.65,
+            "position_size_pct": 0.7,
+            "timeframe": "swing_2_5_days"
           },
-          "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "changed_since_morning": true,
+          "change_summary": "Latest session added downside pressure and volume expansion, signaling weaker near-term tape.",
+          "supporting_articles": [
+            {
+              "title": "Lockheed Martin Corp. stock underperforms Friday when compared to competitors",
+              "url": "https://www.marketwatch.com/data-news/lockheed-martin-corp-stock-underperforms-friday-when-compared-to-competitors-8a69a58f-8d43c6599c87",
+              "source": "MarketWatch",
+              "kind": "news",
+              "reason": "Fresh daily performance and volume context."
+            }
+          ]
         },
         "HD": {
           "sentiment": "neutral",
-          "confidence": 0.2,
+          "confidence": 0.47,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "No fresh high-impact company-specific headline in this pass.",
+            "Macro-sensitive consumer/discretionary tone remains mixed."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "Latest accessible quote context shows modest pressure but no new material thesis shift.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
+            "entry": 368.0,
+            "stop_loss": 356.0,
+            "target": 385.0,
+            "risk_reward_ratio": 1.42,
+            "position_size_pct": 0.6,
             "timeframe": "swing_1_2_weeks"
           },
           "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "change_summary": "No confirmed change versus morning thesis from available checks.",
+          "supporting_articles": [
+            {
+              "title": "The Home Depot, Inc. (HD) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/HD/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Quote reference and current operating narrative."
+            }
+          ]
         },
         "MA": {
           "sentiment": "neutral",
-          "confidence": 0.2,
+          "confidence": 0.49,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "Payments complex remains tied to macro/risk appetite rather than a new idiosyncratic shock.",
+            "No fresh severe headline identified in this pass."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "Recent coverage emphasizes ongoing digital-payment expansion; no immediate negative event confirmed.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
+            "entry": 510.0,
+            "stop_loss": 495.0,
+            "target": 535.0,
+            "risk_reward_ratio": 1.67,
+            "position_size_pct": 0.65,
             "timeframe": "swing_1_2_weeks"
           },
           "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "change_summary": "No clear new catalyst vs baseline identified from available live sources.",
+          "supporting_articles": [
+            {
+              "title": "Mastercard Incorporated (MA) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/MA/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Current quote context and analyst/valuation snapshot."
+            }
+          ]
         },
         "V": {
-          "sentiment": "neutral",
-          "confidence": 0.2,
+          "sentiment": "bearish",
+          "confidence": 0.66,
           "key_observations": [
-            "No validated morning-vs-current delta computed due local data access failure."
+            "Recent daily move showed notable downside in a weak tape.",
+            "Payments beta to broader risk-off day appears active."
           ],
-          "news_impact": "none",
-          "news_summary": "No in-session verified update.",
+          "news_impact": "negative",
+          "news_summary": "MarketWatch reports V down on March 18, 2026 during broad market weakness, with MA also weak.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 0.0,
-            "stop_loss": 0.0,
-            "target": 0.0,
-            "risk_reward_ratio": 0.0,
-            "position_size_pct": 0.0,
-            "timeframe": "swing_1_2_weeks"
+            "entry": 306.0,
+            "stop_loss": 296.0,
+            "target": 321.0,
+            "risk_reward_ratio": 1.5,
+            "position_size_pct": 0.65,
+            "timeframe": "swing_2_5_days"
           },
-          "changed_since_morning": false,
-          "change_summary": "Comparison not available (could not read morning_research.json).",
-          "supporting_articles": []
+          "changed_since_morning": true,
+          "change_summary": "Short-term momentum weakened alongside broader risk-off rotation.",
+          "supporting_articles": [
+            {
+              "title": "Visa Inc. Cl A stock underperforms Wednesday when compared to competitors",
+              "url": "https://www.marketwatch.com/data-news/visa-inc-cl-a-stock-underperforms-wednesday-when-compared-to-competitors-d228525e-f2904cbcdcee",
+              "source": "MarketWatch",
+              "kind": "news",
+              "reason": "Fresh daily downside and peer-relative weakness."
+            },
+            {
+              "title": "Visa Inc. (V) Stock Price, News, Quote & History - Yahoo Finance",
+              "url": "https://finance.yahoo.com/quote/V/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Current pricing context and trend metrics."
+            }
+          ]
         }
       },
       "web_checks": [
         {
           "symbol": "MU",
-          "query": "MU Yahoo Finance quote live spot check",
+          "query": "MU live quote/tape and post-earnings reaction",
           "source": "Yahoo Finance",
           "url": "https://finance.yahoo.com/quote/MU/",
-          "finding": "Sampled view showed MU trading lower intraday with elevated volatility."
+          "finding": "MU showed clear post-earnings weakness despite strong fundamentals, confirming sentiment deterioration."
         },
         {
-          "symbol": "PANW",
-          "query": "PANW Yahoo Finance quote live spot check",
-          "source": "Yahoo Finance",
-          "url": "https://finance.yahoo.com/quote/PANW/",
-          "finding": "Sampled view showed sharp downside move with negative outlook/integration-cost headline context."
+          "symbol": "ABT",
+          "query": "ABT most recent daily move and volume anomaly",
+          "source": "MarketWatch",
+          "url": "https://www.marketwatch.com/data-news/abbott-laboratories-stock-underperforms-friday-when-compared-to-competitors-d7ab244b-6415486b528f",
+          "finding": "ABT fell again on March 20, 2026 with materially elevated volume vs 50-day average, confirming rising downside pressure."
         }
       ],
       "_meta": {
         "status": "success",
         "provider": "cli:codex",
         "model": "default",
-        "duration_ms": 51395.8,
+        "duration_ms": 94905.0,
         "session_id": null,
         "usage": {
-          "input_tokens": 56875,
-          "cached_input_tokens": 36096,
-          "output_tokens": 4256
-        }
+          "input_tokens": 88383,
+          "cached_input_tokens": 46720,
+          "output_tokens": 6697
+        },
+        "execution_mode": "cli",
+        "selected_provider": "cli:codex",
+        "selected_model": "default",
+        "attempts": [
+          {
+            "execution_mode": "cli",
+            "provider": "cli:codex",
+            "model": "default",
+            "status": "success",
+            "duration_ms": 94905.0,
+            "usage": {
+              "input_tokens": 88383,
+              "cached_input_tokens": 46720,
+              "output_tokens": 6697
+            }
+          }
+        ]
       }
     },
     "phase": "monitor",
@@ -3208,33 +3316,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.428,
+            "sentiment": 0.447,
             "category": "headline",
             "url": "https://www.trefis.com/stock/txn/articles2/594360/mu-looks-smarter-buy-than-texas-instruments-stock-2/2026-03-21",
             "summary": "This article argues that Micron Technology (MU) is a smarter investment than Texas Instruments (TXN) due to MU's lower valuation and higher revenue and operating income growth. It provides a comparative analysis of key metrics for both companies, both currently and a year ago, to support its claim. The article suggests that while valuation is attractive, a multi-factor analysis is crucial for investment decisions.",
             "publisher": "Trefis",
             "metadata": {
-              "overall_sentiment": 0.206689,
+              "overall_sentiment": 0.220687,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "TXN": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.0659,
+                  "sentiment_score": 0.0973,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.9731,
-                  "sentiment_score": 0.4276,
+                  "relevance": 0.9581,
+                  "sentiment_score": 0.4474,
                   "sentiment_label": "Bullish"
                 },
                 "FSLR": {
-                  "relevance": 0.6184,
-                  "sentiment_score": 0.2,
+                  "relevance": 0.6183,
+                  "sentiment_score": 0.201,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "DRI": {
-                  "relevance": 0.5807,
-                  "sentiment_score": 0.212,
+                  "relevance": 0.5963,
+                  "sentiment_score": 0.1911,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3252,38 +3360,38 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.101,
+            "sentiment": 0.14,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/itau-unibanco-holding-sa-nyseitub-announces-special-dividend-of-007-2026-03-21/",
             "summary": "Itau Unibanco Holding S.A. (NYSE:ITUB) has declared a special dividend of $0.068 per share, with the ex-dividend date set for March 23rd, and payment scheduled for September 8th. The company maintains a dividend payout ratio of 74.4%, which is expected to be 70.1% next year based on projected EPS of $0.87. Despite recent quarterly results missing analyst estimates, the stock has a market capitalization of approximately $86.9 billion.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.100239,
+              "overall_sentiment": 0.129393,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "ITUB": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.1195,
+                  "sentiment_score": 0.1303,
                   "sentiment_label": "Neutral"
                 },
                 "DLTR": {
-                  "relevance": 0.6156,
-                  "sentiment_score": 0.1352,
+                  "relevance": 0.6092,
+                  "sentiment_score": 0.1175,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.6014,
-                  "sentiment_score": 0.1012,
+                  "relevance": 0.6112,
+                  "sentiment_score": 0.1399,
                   "sentiment_label": "Neutral"
                 },
                 "AIZ": {
-                  "relevance": 0.6172,
-                  "sentiment_score": 0.1364,
+                  "relevance": 0.6205,
+                  "sentiment_score": 0.1369,
                   "sentiment_label": "Neutral"
                 },
                 "KEYS": {
-                  "relevance": 0.6186,
-                  "sentiment_score": 0.1453,
+                  "relevance": 0.6303,
+                  "sentiment_score": 0.1131,
                   "sentiment_label": "Neutral"
                 }
               },
@@ -3300,33 +3408,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.183,
+            "sentiment": 0.202,
             "category": "headline",
             "url": "https://nationaltoday.com/us/mo/st-louis/news/2026/03/21/st-louis-asset-manager-acquires-3-6m-stake-in-procter-gamble/",
             "summary": "St. Louis Financial Planners Asset Management LLC has acquired a new stake in Procter & Gamble Co (NYSE:PG), purchasing 25,413 shares valued at approximately $3.6 million during Q4 2025. This acquisition makes Procter & Gamble the 15th largest holding in the firm's portfolio, representing 2.2% of its total holdings. The move signifies confidence in the consumer goods giant's long-term prospects.",
             "publisher": "National Today",
             "metadata": {
-              "overall_sentiment": 0.273662,
+              "overall_sentiment": 0.245802,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "PG": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.4284,
+                  "sentiment_score": 0.3818,
                   "sentiment_label": "Bullish"
                 },
                 "MU": {
-                  "relevance": 0.6003,
-                  "sentiment_score": 0.1832,
+                  "relevance": 0.6493,
+                  "sentiment_score": 0.2017,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "CRM": {
-                  "relevance": 0.6262,
-                  "sentiment_score": 0.2166,
+                  "relevance": 0.6322,
+                  "sentiment_score": 0.1858,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MS": {
-                  "relevance": 0.5934,
-                  "sentiment_score": 0.1866,
+                  "relevance": 0.5682,
+                  "sentiment_score": 0.2008,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3349,22 +3457,22 @@
             "summary": "Rollins, Inc. (NYSE:ROL) has received an average rating of \"Moderate Buy\" from analysts, with eleven buy recommendations and four hold ratings, and a mean 12-month price target of $66.08. Despite missing last quarter's earnings and revenue consensus, the company reported 9.7% year-over-year revenue growth and pays a quarterly dividend. Insider selling was noted, with Chairman Gary W. Rollins and Elizabeth B. Chandler disposing of shares recently.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.093201,
+              "overall_sentiment": 0.087221,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "ROL": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.094,
+                  "sentiment_score": 0.0697,
                   "sentiment_label": "Neutral"
                 },
                 "DLTR": {
-                  "relevance": 0.6458,
-                  "sentiment_score": 0.1414,
+                  "relevance": 0.6186,
+                  "sentiment_score": 0.1462,
                   "sentiment_label": "Neutral"
                 },
                 "MU": {
-                  "relevance": 0.6411,
-                  "sentiment_score": 0.1045,
+                  "relevance": 0.6365,
+                  "sentiment_score": 0.1039,
                   "sentiment_label": "Neutral"
                 }
               },
@@ -3381,38 +3489,38 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.332,
+            "sentiment": 0.305,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/filing-new-mexico-educational-retirement-board-invests-2-million-in-elanco-animal-health-incorporated-elan-2026-03-21/",
             "summary": "The New Mexico Educational Retirement Board recently acquired 99,200 shares, valued at approximately $1.998 million, of Elanco Animal Health Incorporated ($ELAN) in the third quarter, indicating renewed institutional interest. Several analysts have upgraded their ratings for Elanco, resulting in a \"Moderate Buy\" consensus and an average target price of $27.67. Elanco also reported strong Q3 earnings, beating analyst estimates with an EPS of $0.13 and revenue of $1.14 billion, and provided positive FY2026 guidance.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.261989,
+              "overall_sentiment": 0.250615,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "ELAN": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.4279,
+                  "sentiment_score": 0.4107,
                   "sentiment_label": "Bullish"
                 },
                 "ZTS": {
-                  "relevance": 0.6353,
-                  "sentiment_score": 0.1276,
+                  "relevance": 0.6431,
+                  "sentiment_score": 0.1055,
                   "sentiment_label": "Neutral"
                 },
                 "FITB": {
-                  "relevance": 0.7078,
-                  "sentiment_score": 0.2134,
+                  "relevance": 0.7189,
+                  "sentiment_score": 0.1861,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "DLTR": {
-                  "relevance": 0.6078,
+                  "relevance": 0.6379,
                   "sentiment_score": 0.2539,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.6171,
-                  "sentiment_score": 0.3316,
+                  "relevance": 0.6208,
+                  "sentiment_score": 0.3049,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3430,23 +3538,23 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.235,
+            "sentiment": 0.216,
             "category": "headline",
             "url": "https://www.marketbeat.com/instant-alerts/filing-aventura-private-wealth-llc-buys-shares-of-12571-texas-instruments-incorporated-txn-2026-03-21/",
             "summary": "Aventura Private Wealth LLC has acquired 12,571 shares of Texas Instruments, valued at approximately $2.18 million, making it their 22nd largest holding. This comes amidst significant insider selling of TXN stock and a slight earnings miss in the last quarter, though the company maintains a 3.0% dividend yield and a \"Hold\" consensus analyst rating.",
             "publisher": "MarketBeat",
             "metadata": {
-              "overall_sentiment": 0.002117,
+              "overall_sentiment": 0.045442,
               "overall_label": "Neutral",
               "ticker_sentiments": {
                 "TXN": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.2319,
+                  "sentiment_score": -0.2347,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "MU": {
-                  "relevance": 0.6313,
-                  "sentiment_score": 0.235,
+                  "relevance": 0.6026,
+                  "sentiment_score": 0.2162,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3464,33 +3572,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.316,
+            "sentiment": 0.348,
             "category": "headline",
             "url": "https://www.msn.com/en-us/money/topstocks/western-digital-corp-stock-underperforms-friday-when-compared-to-competitors/ar-AA1Z5qmj",
             "summary": "Western Digital Corp. (WDC) stock fell on Friday, underperforming its competitors. The stock closed at $68.04, a 0.28% loss for the day, while its rivals saw gains.",
             "publisher": "MSN",
             "metadata": {
-              "overall_sentiment": 0.148792,
-              "overall_label": "Neutral",
+              "overall_sentiment": 0.180026,
+              "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "WDC": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.3542,
+                  "sentiment_score": -0.3903,
                   "sentiment_label": "Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.7094,
-                  "sentiment_score": 0.3494,
+                  "relevance": 0.7075,
+                  "sentiment_score": 0.3316,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "AVGO": {
-                  "relevance": 0.743,
-                  "sentiment_score": 0.3411,
+                  "relevance": 0.7273,
+                  "sentiment_score": 0.313,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.7317,
-                  "sentiment_score": 0.3157,
+                  "relevance": 0.7236,
+                  "sentiment_score": 0.3478,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -3507,28 +3615,28 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": -0.317,
+            "sentiment": -0.34,
             "category": "headline",
             "url": "https://www.tradingkey.com/news/Market-Movers/261705428-market-movers-avgo-20260320",
             "summary": "Broadcom Inc (AVGO) stock fell by 3.05% on March 20, 2026, influenced by broad market pressures, an EU antitrust probe regarding VMware licensing, and an analyst downgrade citing weak non-AI business performance. The decline was also exacerbated by significant selling from both company insiders and institutional investors, despite recent strong quarterly earnings driven by AI. Technical indicators suggest a sell signal, and media coverage for AVGO is low.",
             "publisher": "TradingKey",
             "metadata": {
-              "overall_sentiment": -0.374644,
+              "overall_sentiment": -0.369909,
               "overall_label": "Bearish",
               "ticker_sentiments": {
                 "AVGO": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.4167,
+                  "sentiment_score": -0.3811,
                   "sentiment_label": "Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.623,
-                  "sentiment_score": -0.3391,
+                  "relevance": 0.6306,
+                  "sentiment_score": -0.3171,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "MU": {
-                  "relevance": 0.6222,
-                  "sentiment_score": -0.3172,
+                  "relevance": 0.6134,
+                  "sentiment_score": -0.3399,
                   "sentiment_label": "Somewhat-Bearish"
                 }
               },
@@ -3548,28 +3656,28 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": -0.323,
+            "sentiment": -0.341,
             "category": "headline",
             "url": "https://www.tradingkey.com/news/Market-Movers/261705210-market-movers-stx-20260320",
             "summary": "Seagate Technology Holdings PLC (STX) saw its stock decline by 4.31% on March 20, influenced by institutional investor adjustments, insider selling, and broader market downturns. Despite a positive long-term outlook driven by AI and data center demand, profit-taking and cautionary sentiment contributed to intraday volatility. The article also provides technical and fundamental analyses, highlighting specific risks the company faces.",
             "publisher": "TradingKey",
             "metadata": {
-              "overall_sentiment": -0.308051,
+              "overall_sentiment": -0.334866,
               "overall_label": "Somewhat-Bearish",
               "ticker_sentiments": {
                 "STX": {
                   "relevance": 1.0,
-                  "sentiment_score": -0.4024,
+                  "sentiment_score": -0.4218,
                   "sentiment_label": "Bearish"
                 },
                 "MU": {
-                  "relevance": 0.5868,
-                  "sentiment_score": -0.3227,
+                  "relevance": 0.5972,
+                  "sentiment_score": -0.3408,
                   "sentiment_label": "Somewhat-Bearish"
                 },
                 "NVDA": {
-                  "relevance": 0.5618,
-                  "sentiment_score": -0.2059,
+                  "relevance": 0.5237,
+                  "sentiment_score": -0.238,
                   "sentiment_label": "Somewhat-Bearish"
                 }
               },
@@ -3587,33 +3695,33 @@
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.239,
+            "sentiment": 0.229,
             "category": "headline",
             "url": "https://www.tikr.com/blog/teradyne-stock-analysts-see-more-upside-in-2026-after-soaring-242-last-year?",
             "summary": "Teradyne (TER) saw its stock surge by 242% last year, driven by significant AI-related revenue growth which reached over 60% in Q4 2025 and is projected at 70% for Q1 2026. The company, a major player in automated chip-testing, particularly for AI accelerators, expects continued strong momentum in 2026, with a long-term target of $6 billion in revenue and EPS of $9.50 to $11.00. While analysts predict modest short-term upside, the TIKR model projects a 43.6% total return through December 2030, anchored by AI demand and strategic ventures.",
             "publisher": "TIKR.com",
             "metadata": {
-              "overall_sentiment": 0.303134,
+              "overall_sentiment": 0.302042,
               "overall_label": "Somewhat-Bullish",
               "ticker_sentiments": {
                 "TER": {
                   "relevance": 1.0,
-                  "sentiment_score": 0.4933,
+                  "sentiment_score": 0.4845,
                   "sentiment_label": "Bullish"
                 },
                 "NVDA": {
-                  "relevance": 0.7486,
-                  "sentiment_score": 0.3027,
+                  "relevance": 0.7032,
+                  "sentiment_score": 0.3366,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "MU": {
-                  "relevance": 0.5987,
-                  "sentiment_score": 0.2391,
+                  "relevance": 0.5903,
+                  "sentiment_score": 0.2291,
                   "sentiment_label": "Somewhat-Bullish"
                 },
                 "JCI": {
-                  "relevance": 0.5881,
-                  "sentiment_score": 0.2548,
+                  "relevance": 0.5994,
+                  "sentiment_score": 0.2935,
                   "sentiment_label": "Somewhat-Bullish"
                 }
               },
@@ -9673,89 +9781,110 @@
     {
       "symbol": "INTC",
       "action": "sell",
-      "strength": 0.348,
+      "strength": 0.417,
       "strategy": "combined(trend+volume_breakout+relative_strength)",
-      "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: watch (20% confidence)",
+      "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: hold (44% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 43.869998931884766
+      "latest_price": 43.869998931884766,
+      "entry": 45.0,
+      "stop_loss": 41.5,
+      "target": 49.5
     },
     {
       "symbol": "PANW",
       "action": "sell",
-      "strength": 0.424,
+      "strength": 0.451,
       "strategy": "combined(volume_breakout+relative_strength)",
-      "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (58% confidence)",
+      "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (68% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 162.9499969482422
+      "latest_price": 162.9499969482422,
+      "entry": 149.0,
+      "stop_loss": 143.0,
+      "target": 162.0
     },
     {
       "symbol": "UNH",
       "action": "sell",
-      "strength": 0.465,
+      "strength": 0.566,
       "strategy": "combined(trend+volume_breakout)",
-      "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (24% confidence)",
+      "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: hold (51% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 275.5899963378906
+      "latest_price": 275.5899963378906,
+      "entry": 288.0,
+      "stop_loss": 276.0,
+      "target": 308.0
     },
     {
       "symbol": "ABT",
       "action": "buy",
-      "strength": 0.339,
+      "strength": 0.492,
       "strategy": "combined(mean_reversion+support_resistance+vwap)",
-      "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (20% confidence)",
+      "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (74% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 105.45999908447266
+      "latest_price": 105.45999908447266,
+      "entry": 106.5,
+      "stop_loss": 102.0,
+      "target": 114.0
     },
     {
       "symbol": "HON",
       "action": "buy",
-      "strength": 0.355,
+      "strength": 0.432,
       "strategy": "combined(mean_reversion+vwap)",
-      "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: watch (20% confidence)",
+      "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: hold (46% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 221.5
+      "latest_price": 221.5,
+      "entry": 221.0,
+      "stop_loss": 214.0,
+      "target": 232.0
     },
     {
       "symbol": "LMT",
       "action": "buy",
-      "strength": 0.253,
+      "strength": 0.341,
       "strategy": "combined(mean_reversion+vwap)",
-      "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: watch (20% confidence)",
-      "suggested_size_pct": 2.0,
+      "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: hold (62% confidence)",
+      "suggested_size_pct": 5.0,
       "latest_price": 627.4299926757812,
-      "rejection_reasons": [
-        "Signal strength 0.25 below minimum 0.3"
-      ]
+      "entry": 622.0,
+      "stop_loss": 602.0,
+      "target": 655.0
     },
     {
       "symbol": "HD",
       "action": "buy",
-      "strength": 0.392,
+      "strength": 0.48,
       "strategy": "combined(mean_reversion+support_resistance+vwap)",
-      "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: watch (20% confidence)",
+      "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: hold (47% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 320.75
+      "latest_price": 320.75,
+      "entry": 368.0,
+      "stop_loss": 356.0,
+      "target": 385.0
     },
     {
       "symbol": "MA",
       "action": "buy",
-      "strength": 0.407,
+      "strength": 0.505,
       "strategy": "combined(relative_strength+news_catalyst)",
-      "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: watch (20% confidence)",
+      "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: hold (49% confidence)",
       "suggested_size_pct": 5.0,
-      "latest_price": 496.32000732421875
+      "latest_price": 496.32000732421875,
+      "entry": 510.0,
+      "stop_loss": 495.0,
+      "target": 535.0
     },
     {
       "symbol": "V",
       "action": "buy",
-      "strength": 0.271,
+      "strength": 0.375,
       "strategy": "combined(mean_reversion+relative_strength)",
-      "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (20% confidence)",
-      "suggested_size_pct": 2.0,
+      "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (66% confidence)",
+      "suggested_size_pct": 5.0,
       "latest_price": 301.6199951171875,
-      "rejection_reasons": [
-        "Signal strength 0.27 below minimum 0.3"
-      ]
+      "entry": 306.0,
+      "stop_loss": 296.0,
+      "target": 321.0
     }
   ],
   "risk": {
@@ -9763,93 +9892,113 @@
       {
         "symbol": "INTC",
         "action": "sell",
-        "strength": 0.348,
+        "strength": 0.417,
         "strategy": "combined(trend+volume_breakout+relative_strength)",
-        "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: watch (20% confidence)",
+        "reasoning": "Downtrend: price < SMA20 (45.38) < SMA50 (46.54) | Vol 1.7x avg with -5.0% move | Underperforming market by -3.6% (stock -5.0% vs SPY -1.4%) | Research: hold (44% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 43.869998931884766
+        "latest_price": 43.869998931884766,
+        "entry": 45.0,
+        "stop_loss": 41.5,
+        "target": 49.5
       },
       {
         "symbol": "PANW",
         "action": "sell",
-        "strength": 0.424,
+        "strength": 0.451,
         "strategy": "combined(volume_breakout+relative_strength)",
-        "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (58% confidence)",
+        "reasoning": "Vol 2.0x avg with -4.0% move | Underperforming market by -2.6% (stock -4.0% vs SPY -1.4%) | Research: watch (68% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 162.9499969482422
+        "latest_price": 162.9499969482422,
+        "entry": 149.0,
+        "stop_loss": 143.0,
+        "target": 162.0
       },
       {
         "symbol": "UNH",
         "action": "sell",
-        "strength": 0.465,
+        "strength": 0.566,
         "strategy": "combined(trend+volume_breakout)",
-        "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: watch (24% confidence)",
+        "reasoning": "Downtrend: price < SMA20 (283.75) < SMA50 (296.64) | Vol 4.0x avg with -1.7% move | Research: hold (51% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 275.5899963378906
+        "latest_price": 275.5899963378906,
+        "entry": 288.0,
+        "stop_loss": 276.0,
+        "target": 308.0
       },
       {
         "symbol": "ABT",
         "action": "buy",
-        "strength": 0.339,
+        "strength": 0.492,
         "strategy": "combined(mean_reversion+support_resistance+vwap)",
-        "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (20% confidence)",
+        "reasoning": "Price (105.46) at lower BB (105.30) | Price (105.46) near support (105.40) | Price (105.46) is -2.4% below VWAP (108.05) | Research: watch (74% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 105.45999908447266
+        "latest_price": 105.45999908447266,
+        "entry": 106.5,
+        "stop_loss": 102.0,
+        "target": 114.0
       },
       {
         "symbol": "HON",
         "action": "buy",
-        "strength": 0.355,
+        "strength": 0.432,
         "strategy": "combined(mean_reversion+vwap)",
-        "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: watch (20% confidence)",
+        "reasoning": "Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83) | Research: hold (46% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 221.5
+        "latest_price": 221.5,
+        "entry": 221.0,
+        "stop_loss": 214.0,
+        "target": 232.0
+      },
+      {
+        "symbol": "LMT",
+        "action": "buy",
+        "strength": 0.341,
+        "strategy": "combined(mean_reversion+vwap)",
+        "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: hold (62% confidence)",
+        "suggested_size_pct": 5.0,
+        "latest_price": 627.4299926757812,
+        "entry": 622.0,
+        "stop_loss": 602.0,
+        "target": 655.0
       },
       {
         "symbol": "HD",
         "action": "buy",
-        "strength": 0.392,
+        "strength": 0.48,
         "strategy": "combined(mean_reversion+support_resistance+vwap)",
-        "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: watch (20% confidence)",
+        "reasoning": "Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Price (320.75) is -5.2% below VWAP (338.25) | Research: hold (47% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 320.75
+        "latest_price": 320.75,
+        "entry": 368.0,
+        "stop_loss": 356.0,
+        "target": 385.0
       },
       {
         "symbol": "MA",
         "action": "buy",
-        "strength": 0.407,
+        "strength": 0.505,
         "strategy": "combined(relative_strength+news_catalyst)",
-        "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: watch (20% confidence)",
+        "reasoning": "Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentiment +0.29) | +1.1% move confirms bullish news | analyst buy consensus | 2 sources agree | Research: hold (49% confidence)",
         "suggested_size_pct": 5.0,
-        "latest_price": 496.32000732421875
-      }
-    ],
-    "rejected_trades": [
-      {
-        "symbol": "LMT",
-        "action": "buy",
-        "strength": 0.253,
-        "strategy": "combined(mean_reversion+vwap)",
-        "reasoning": "Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64) | Research: watch (20% confidence)",
-        "suggested_size_pct": 2.0,
-        "latest_price": 627.4299926757812,
-        "rejection_reasons": [
-          "Signal strength 0.25 below minimum 0.3"
-        ]
+        "latest_price": 496.32000732421875,
+        "entry": 510.0,
+        "stop_loss": 495.0,
+        "target": 535.0
       },
       {
         "symbol": "V",
         "action": "buy",
-        "strength": 0.271,
+        "strength": 0.375,
         "strategy": "combined(mean_reversion+relative_strength)",
-        "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (20% confidence)",
-        "suggested_size_pct": 2.0,
+        "reasoning": "Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% vs SPY -1.4%) | Research: watch (66% confidence)",
+        "suggested_size_pct": 5.0,
         "latest_price": 301.6199951171875,
-        "rejection_reasons": [
-          "Signal strength 0.27 below minimum 0.3"
-        ]
+        "entry": 306.0,
+        "stop_loss": 296.0,
+        "target": 321.0
       }
     ],
+    "rejected_trades": [],
     "symbols": [
       "MU",
       "INTC",
@@ -12572,6 +12721,17 @@
       "reason": "Dry run mode \u2014 no order placed"
     },
     {
+      "symbol": "LMT",
+      "action": "buy",
+      "quantity": 7,
+      "estimated_price": 627.4299926757812,
+      "estimated_value": 4392.009948730469,
+      "profile": "codex",
+      "profile_label": "Codex Strategist",
+      "status": "dry_run",
+      "reason": "Dry run mode \u2014 no order placed"
+    },
+    {
       "symbol": "HD",
       "action": "buy",
       "quantity": 15,
@@ -12592,15 +12752,26 @@
       "profile_label": "Codex Strategist",
       "status": "dry_run",
       "reason": "Dry run mode \u2014 no order placed"
+    },
+    {
+      "symbol": "V",
+      "action": "buy",
+      "quantity": 16,
+      "estimated_price": 301.6199951171875,
+      "estimated_value": 4825.919921875,
+      "profile": "codex",
+      "profile_label": "Codex Strategist",
+      "status": "dry_run",
+      "reason": "Dry run mode \u2014 no order placed"
     }
   ],
   "portfolio": {
-    "timestamp": "2026-03-22T01:17:46.322241+00:00",
+    "timestamp": "2026-03-22T01:46:58.821771+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
-    "cash": 80395.93,
-    "invested": 19604.07,
+    "cash": 71178.0,
+    "invested": 28822.0,
     "total_pnl": 0.0,
     "total_pnl_pct": 0.0,
     "positions": [
@@ -12623,6 +12794,15 @@
         "unrealized_pnl_pct": 0.0
       },
       {
+        "symbol": "LMT",
+        "shares": 7,
+        "avg_cost": 627.43,
+        "current_price": 627.43,
+        "current_value": 4392.01,
+        "unrealized_pnl": 0.0,
+        "unrealized_pnl_pct": 0.0
+      },
+      {
         "symbol": "HD",
         "shares": 15,
         "avg_cost": 320.75,
@@ -12639,8 +12819,17 @@
         "current_value": 4963.2,
         "unrealized_pnl": 0.0,
         "unrealized_pnl_pct": 0.0
+      },
+      {
+        "symbol": "V",
+        "shares": 16,
+        "avg_cost": 301.62,
+        "current_price": 301.62,
+        "current_value": 4825.92,
+        "unrealized_pnl": 0.0,
+        "unrealized_pnl_pct": 0.0
       }
     ],
-    "position_count": 4
+    "position_count": 6
   }
 }

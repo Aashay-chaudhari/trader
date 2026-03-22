@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-03-22T01:44:52.908508+00:00",
+  "phase": "research",
+  "symbols": [
+    "MU",
+    "INTC",
+    "PANW",
+    "UNH",
+    "ABT",
+    "HON",
+    "LMT",
+    "HD",
+    "MA",
+    "V"
+  ],
+  "provider_preference": "openai",
+  "selected_provider": "openai",
+  "selected_model": "gpt-4o-mini",
+  "status": "error",
+  "quota_issue_detected": false,
+  "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
+  "usage": {},
+  "rate_limits": {},
+  "service_tier": null,
+  "request_id": null,
+  "duration_ms": null,
+  "attempts": [
+    {
+      "execution_mode": "cli",
+      "provider": "cli:codex",
+      "model": "default",
+      "status": "error",
+      "duration_ms": 120020.8,
+      "error": "CLI timed out after 120s",
+      "quota_issue_detected": false
+    },
+    {
+      "execution_mode": "api",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "status": "error",
+      "duration_ms": 1678.7,
+      "error": "Error code: 400 - {'error': {'message': \"'messages' must contain the word 'json' in some form, to use 'response_format' of type 'json_object'.\", 'type': 'invalid_request_error', 'param': 'messages', 'code': None}}",
+      "quota_issue_detected": false
+    }
+  ],
+  "runtime": {
+    "platform": "github_actions",
+    "python_version": "3.12.13",
+    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+    "agent_profile": "codex",
+    "agent_label": "Codex Strategist",
+    "github": {
+      "repository": "Aashay-chaudhari/trader",
+      "workflow": "Trading Pipeline",
+      "event_name": "workflow_dispatch",
+      "actor": "Aashay-chaudhari",
+      "run_id": "23393209680",
+      "run_attempt": "1",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23393209680",
+      "sha": "93491539b09114a36b71c7f4dd852c889c6c5717",
+      "ref": "refs/heads/main"
+    }
+  }
+}

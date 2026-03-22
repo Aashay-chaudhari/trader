@@ -5,23 +5,23 @@
       {
         "category": "infrastructure",
         "priority": "high",
-        "title": "Add preflight filesystem-read health check",
-        "description": "Run a startup check that verifies read access to journal, positions, and observations paths before analysis, and fail fast with actionable diagnostics.",
-        "expected_impact": "Prevents silent analysis gaps and reduces missed daily reviews."
+        "title": "Add reflection preflight checks",
+        "description": "Run a preflight step that validates filesystem and command execution access before analysis; fail fast with actionable diagnostics.",
+        "expected_impact": "Prevents silent analysis gaps and ensures daily review runs are dependable."
       },
       {
         "category": "knowledge",
         "priority": "high",
-        "title": "Create fallback reflection mode",
-        "description": "When files are unavailable, automatically emit a structured incident reflection template and queue a retry once access is restored.",
-        "expected_impact": "Maintains continuity in the review cycle and preserves accountability."
+        "title": "Persist compact daily snapshot artifact",
+        "description": "Write a single end-of-day snapshot JSON (trades, active positions, PnL, sector context, key events) that can be parsed without multiple file reads.",
+        "expected_impact": "Improves robustness of reflection workflows and reduces dependency on directory traversal."
       },
       {
-        "category": "data",
+        "category": "risk",
         "priority": "medium",
-        "title": "Cache end-of-day snapshot artifacts",
-        "description": "Persist a compact daily snapshot (positions, realized/unrealized PnL, sector attribution) in a single resilient file for reflection use.",
-        "expected_impact": "Improves robustness and speeds up daily synthesis even during partial outages."
+        "title": "Add no-data risk protocol",
+        "description": "When review data is unavailable, automatically reduce new risk-taking (smaller size or no new entries) until observability is restored.",
+        "expected_impact": "Limits exposure during periods of degraded monitoring and decision support."
       }
     ]
   }

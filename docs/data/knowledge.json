@@ -2,7 +2,7 @@
   "counts": {
     "daily_observations": 1,
     "weekly_reviews": 1,
-    "monthly_reviews": 0,
+    "monthly_reviews": 1,
     "patterns": 0,
     "lessons": 0,
     "strategies": 0,
@@ -13,16 +13,16 @@
     {
       "date": "2026-03-22",
       "market_regime": "neutral",
-      "market_summary": "Unable to access local journal/position/observation files in this run due a sandbox execution failure, so no evidence-based session summary can be produced.",
+      "market_summary": "Unable to read today's journal, positions, or prior observation files due local execution sandbox failure, so this reflection is data-incomplete. No reliable session-level market conclusion can be drawn from repository state.",
       "sector_leaders": [],
       "sector_laggards": [],
       "trades_review": [],
       "patterns_detected": [
         {
-          "name": "data_unavailable",
+          "name": "missing_session_data",
           "symbol": "N/A",
           "outcome": "pending",
-          "notes": "Local file reads for today's reports and active positions were blocked by environment error: bwrap loopback RTM_NEWADDR permission failure."
+          "notes": "Repository files could not be accessed in this runtime (sandbox command execution blocked), preventing trade-level analysis."
         }
       ],
       "confidence_calibration": {
@@ -30,139 +30,342 @@
         "high_conf_win_rate": 0.0,
         "medium_conf_count": 0,
         "medium_conf_win_rate": 0.0,
-        "assessment": "No trade-level evidence could be evaluated from source files in this run."
+        "assessment": "No calibratable sample was available because today's reports and active positions could not be read."
       },
       "swing_updates": [],
-      "forward_outlook": "Re-run reflection after restoring local shell access; then validate active swing symbols and one end-of-day close check.",
+      "forward_outlook": "Re-run this reflection after restoring local file access; prioritize reviewing journal execution quality, active risk, and sector context before next session.",
       "lessons": [
-        "Reflection quality is only as good as journal and position data availability.",
-        "Operational reliability checks should run before analysis steps."
+        "Reflection quality depends on reliable access to structured journal and position data.",
+        "A blocked execution environment is itself an operational risk for end-of-day decision support."
       ],
       "self_improvement_proposals": [
         {
           "category": "infrastructure",
           "priority": "high",
-          "title": "Add preflight filesystem-read health check",
-          "description": "Run a startup check that verifies read access to journal, positions, and observations paths before analysis, and fail fast with actionable diagnostics.",
-          "expected_impact": "Prevents silent analysis gaps and reduces missed daily reviews."
+          "title": "Add reflection preflight checks",
+          "description": "Run a preflight step that validates filesystem and command execution access before analysis; fail fast with actionable diagnostics.",
+          "expected_impact": "Prevents silent analysis gaps and ensures daily review runs are dependable."
         },
         {
           "category": "knowledge",
           "priority": "high",
-          "title": "Create fallback reflection mode",
-          "description": "When files are unavailable, automatically emit a structured incident reflection template and queue a retry once access is restored.",
-          "expected_impact": "Maintains continuity in the review cycle and preserves accountability."
+          "title": "Persist compact daily snapshot artifact",
+          "description": "Write a single end-of-day snapshot JSON (trades, active positions, PnL, sector context, key events) that can be parsed without multiple file reads.",
+          "expected_impact": "Improves robustness of reflection workflows and reduces dependency on directory traversal."
         },
         {
-          "category": "data",
+          "category": "risk",
           "priority": "medium",
-          "title": "Cache end-of-day snapshot artifacts",
-          "description": "Persist a compact daily snapshot (positions, realized/unrealized PnL, sector attribution) in a single resilient file for reflection use.",
-          "expected_impact": "Improves robustness and speeds up daily synthesis even during partial outages."
+          "title": "Add no-data risk protocol",
+          "description": "When review data is unavailable, automatically reduce new risk-taking (smaller size or no new entries) until observability is restored.",
+          "expected_impact": "Limits exposure during periods of degraded monitoring and decision support."
         }
       ],
       "_meta": {
         "status": "success",
         "provider": "cli:codex",
         "model": "default",
-        "duration_ms": 21217.6,
+        "duration_ms": 14974.1,
         "session_id": null,
         "usage": {
-          "input_tokens": 46082,
-          "cached_input_tokens": 34304,
-          "output_tokens": 1323
-        }
+          "input_tokens": 33582,
+          "cached_input_tokens": 22272,
+          "output_tokens": 1015
+        },
+        "execution_mode": "cli",
+        "selected_provider": "cli:codex",
+        "selected_model": "default",
+        "attempts": [
+          {
+            "execution_mode": "cli",
+            "provider": "cli:codex",
+            "model": "default",
+            "status": "success",
+            "duration_ms": 14974.1,
+            "usage": {
+              "input_tokens": 33582,
+              "cached_input_tokens": 22272,
+              "output_tokens": 1015
+            }
+          }
+        ]
       }
     }
   ],
   "weekly_reviews": [
     {
-      "week_end_date": "2026-03-22",
+      "week_ending": "2026-03-22",
       "status": "blocked",
-      "blockers": [
-        "Unable to read repository files due sandbox execution error: bwrap loopback RTM_NEWADDR operation not permitted."
-      ],
-      "weekly_summary": {
-        "observations_reviewed": 0,
-        "trades_reviewed": 0,
-        "rules_reviewed": 0,
-        "knowledge_files_reviewed": 0,
-        "key_takeaways": []
+      "blocker": "Unable to access repository files due sandbox execution error: `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`.",
+      "sources": {
+        "daily_observations_reviewed": [],
+        "completed_trades_path": "data/profiles/codex/feedback/completed_trades.json",
+        "learned_rules_path": "data/profiles/codex/feedback/learned_rules.json",
+        "knowledge_paths": [
+          "data/profiles/codex/knowledge/patterns_library.json",
+          "data/profiles/codex/knowledge/strategy_effectiveness.json",
+          "data/profiles/codex/knowledge/regime_library.json",
+          "data/profiles/codex/knowledge/lessons_learned.json"
+        ]
       },
-      "performance_review": {
-        "total_trades": 0,
-        "win_rate": null,
-        "net_pnl": null,
-        "avg_win": null,
-        "avg_loss": null,
-        "largest_win": null,
-        "largest_loss": null,
-        "notes": []
+      "weekly_review": {
+        "summary": "No consolidation performed because required files could not be read.",
+        "key_observations": [],
+        "trade_performance": {
+          "total_trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate": null,
+          "net_pnl": null
+        },
+        "patterns": {
+          "best": [],
+          "worst": [],
+          "regime_notes": []
+        }
       },
       "knowledge_base_updates": {
-        "patterns_library_updates": [],
-        "strategy_effectiveness_updates": [],
-        "regime_library_updates": [],
-        "lessons_learned_updates": []
+        "patterns_library": [],
+        "strategy_effectiveness": [],
+        "regime_library": [],
+        "lessons_learned": [],
+        "learned_rules": {
+          "add": [],
+          "modify": [],
+          "deprecate": []
+        }
       },
       "_meta": {
         "status": "success",
         "provider": "cli:codex",
         "model": "default",
-        "duration_ms": 18237.0,
+        "duration_ms": 13712.7,
         "session_id": null,
         "usage": {
-          "input_tokens": 44153,
-          "cached_input_tokens": 32896,
-          "output_tokens": 1146
-        }
+          "input_tokens": 32579,
+          "cached_input_tokens": 31232,
+          "output_tokens": 908
+        },
+        "execution_mode": "cli",
+        "selected_provider": "cli:codex",
+        "selected_model": "default",
+        "attempts": [
+          {
+            "execution_mode": "cli",
+            "provider": "cli:codex",
+            "model": "default",
+            "status": "success",
+            "duration_ms": 13712.7,
+            "usage": {
+              "input_tokens": 32579,
+              "cached_input_tokens": 31232,
+              "output_tokens": 908
+            }
+          }
+        ]
       }
     }
   ],
-  "monthly_reviews": [],
+  "monthly_reviews": [
+    {
+      "month": "2026-03",
+      "profile": "codex",
+      "status": "blocked",
+      "error": {
+        "type": "sandbox_execution_failure",
+        "message": "Unable to read repository files due runtime sandbox error: 'bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted'."
+      },
+      "data_sources": {
+        "weekly_reviews": {
+          "path": "data/profiles/codex/observations/weekly/",
+          "last_4": []
+        },
+        "completed_trades": {
+          "path": "data/profiles/codex/feedback/completed_trades.json",
+          "loaded": false
+        },
+        "knowledge_files": {
+          "path": "data/profiles/codex/knowledge/",
+          "loaded_files": []
+        }
+      },
+      "strategy_regime_matrix": [],
+      "confidence_accuracy": {
+        "calibration_score": null,
+        "brier_score": null,
+        "notes": "Not computed because source files could not be read."
+      },
+      "top_lessons": [],
+      "vs_last_month": {
+        "summary": "Unavailable due missing inputs.",
+        "delta_metrics": {}
+      },
+      "_meta": {
+        "status": "success",
+        "provider": "cli:codex",
+        "model": "default",
+        "duration_ms": 12595.4,
+        "session_id": null,
+        "usage": {
+          "input_tokens": 31800,
+          "cached_input_tokens": 30848,
+          "output_tokens": 789
+        },
+        "execution_mode": "cli",
+        "selected_provider": "cli:codex",
+        "selected_model": "default",
+        "attempts": [
+          {
+            "execution_mode": "cli",
+            "provider": "cli:codex",
+            "model": "default",
+            "status": "success",
+            "duration_ms": 12595.4,
+            "usage": {
+              "input_tokens": 31800,
+              "cached_input_tokens": 30848,
+              "output_tokens": 789
+            }
+          }
+        ]
+      }
+    }
+  ],
   "latest_weekly_review": {
-    "week_end_date": "2026-03-22",
+    "week_ending": "2026-03-22",
     "status": "blocked",
-    "blockers": [
-      "Unable to read repository files due sandbox execution error: bwrap loopback RTM_NEWADDR operation not permitted."
-    ],
-    "weekly_summary": {
-      "observations_reviewed": 0,
-      "trades_reviewed": 0,
-      "rules_reviewed": 0,
-      "knowledge_files_reviewed": 0,
-      "key_takeaways": []
+    "blocker": "Unable to access repository files due sandbox execution error: `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`.",
+    "sources": {
+      "daily_observations_reviewed": [],
+      "completed_trades_path": "data/profiles/codex/feedback/completed_trades.json",
+      "learned_rules_path": "data/profiles/codex/feedback/learned_rules.json",
+      "knowledge_paths": [
+        "data/profiles/codex/knowledge/patterns_library.json",
+        "data/profiles/codex/knowledge/strategy_effectiveness.json",
+        "data/profiles/codex/knowledge/regime_library.json",
+        "data/profiles/codex/knowledge/lessons_learned.json"
+      ]
     },
-    "performance_review": {
-      "total_trades": 0,
-      "win_rate": null,
-      "net_pnl": null,
-      "avg_win": null,
-      "avg_loss": null,
-      "largest_win": null,
-      "largest_loss": null,
-      "notes": []
+    "weekly_review": {
+      "summary": "No consolidation performed because required files could not be read.",
+      "key_observations": [],
+      "trade_performance": {
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": null,
+        "net_pnl": null
+      },
+      "patterns": {
+        "best": [],
+        "worst": [],
+        "regime_notes": []
+      }
     },
     "knowledge_base_updates": {
-      "patterns_library_updates": [],
-      "strategy_effectiveness_updates": [],
-      "regime_library_updates": [],
-      "lessons_learned_updates": []
+      "patterns_library": [],
+      "strategy_effectiveness": [],
+      "regime_library": [],
+      "lessons_learned": [],
+      "learned_rules": {
+        "add": [],
+        "modify": [],
+        "deprecate": []
+      }
     },
     "_meta": {
       "status": "success",
       "provider": "cli:codex",
       "model": "default",
-      "duration_ms": 18237.0,
+      "duration_ms": 13712.7,
       "session_id": null,
       "usage": {
-        "input_tokens": 44153,
-        "cached_input_tokens": 32896,
-        "output_tokens": 1146
-      }
+        "input_tokens": 32579,
+        "cached_input_tokens": 31232,
+        "output_tokens": 908
+      },
+      "execution_mode": "cli",
+      "selected_provider": "cli:codex",
+      "selected_model": "default",
+      "attempts": [
+        {
+          "execution_mode": "cli",
+          "provider": "cli:codex",
+          "model": "default",
+          "status": "success",
+          "duration_ms": 13712.7,
+          "usage": {
+            "input_tokens": 32579,
+            "cached_input_tokens": 31232,
+            "output_tokens": 908
+          }
+        }
+      ]
     }
   },
-  "latest_monthly_review": {},
+  "latest_monthly_review": {
+    "month": "2026-03",
+    "profile": "codex",
+    "status": "blocked",
+    "error": {
+      "type": "sandbox_execution_failure",
+      "message": "Unable to read repository files due runtime sandbox error: 'bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted'."
+    },
+    "data_sources": {
+      "weekly_reviews": {
+        "path": "data/profiles/codex/observations/weekly/",
+        "last_4": []
+      },
+      "completed_trades": {
+        "path": "data/profiles/codex/feedback/completed_trades.json",
+        "loaded": false
+      },
+      "knowledge_files": {
+        "path": "data/profiles/codex/knowledge/",
+        "loaded_files": []
+      }
+    },
+    "strategy_regime_matrix": [],
+    "confidence_accuracy": {
+      "calibration_score": null,
+      "brier_score": null,
+      "notes": "Not computed because source files could not be read."
+    },
+    "top_lessons": [],
+    "vs_last_month": {
+      "summary": "Unavailable due missing inputs.",
+      "delta_metrics": {}
+    },
+    "_meta": {
+      "status": "success",
+      "provider": "cli:codex",
+      "model": "default",
+      "duration_ms": 12595.4,
+      "session_id": null,
+      "usage": {
+        "input_tokens": 31800,
+        "cached_input_tokens": 30848,
+        "output_tokens": 789
+      },
+      "execution_mode": "cli",
+      "selected_provider": "cli:codex",
+      "selected_model": "default",
+      "attempts": [
+        {
+          "execution_mode": "cli",
+          "provider": "cli:codex",
+          "model": "default",
+          "status": "success",
+          "duration_ms": 12595.4,
+          "usage": {
+            "input_tokens": 31800,
+            "cached_input_tokens": 30848,
+            "output_tokens": 789
+          }
+        }
+      ]
+    }
+  },
   "lessons": [],
   "patterns": [],
   "strategies": [],
@@ -172,30 +375,30 @@
       "date": "2026-03-22",
       "priority": "high",
       "category": "infrastructure",
-      "title": "Add preflight filesystem-read health check",
-      "description": "Run a startup check that verifies read access to journal, positions, and observations paths before analysis, and fail fast with actionable diagnostics.",
-      "expected_impact": "Prevents silent analysis gaps and reduces missed daily reviews."
+      "title": "Add reflection preflight checks",
+      "description": "Run a preflight step that validates filesystem and command execution access before analysis; fail fast with actionable diagnostics.",
+      "expected_impact": "Prevents silent analysis gaps and ensures daily review runs are dependable."
     },
     {
       "date": "2026-03-22",
       "priority": "high",
       "category": "knowledge",
-      "title": "Create fallback reflection mode",
-      "description": "When files are unavailable, automatically emit a structured incident reflection template and queue a retry once access is restored.",
-      "expected_impact": "Maintains continuity in the review cycle and preserves accountability."
+      "title": "Persist compact daily snapshot artifact",
+      "description": "Write a single end-of-day snapshot JSON (trades, active positions, PnL, sector context, key events) that can be parsed without multiple file reads.",
+      "expected_impact": "Improves robustness of reflection workflows and reduces dependency on directory traversal."
     },
     {
       "date": "2026-03-22",
       "priority": "medium",
-      "category": "data",
-      "title": "Cache end-of-day snapshot artifacts",
-      "description": "Persist a compact daily snapshot (positions, realized/unrealized PnL, sector attribution) in a single resilient file for reflection use.",
-      "expected_impact": "Improves robustness and speeds up daily synthesis even during partial outages."
+      "category": "risk",
+      "title": "Add no-data risk protocol",
+      "description": "When review data is unavailable, automatically reduce new risk-taking (smaller size or no new entries) until observability is restored.",
+      "expected_impact": "Limits exposure during periods of degraded monitoring and decision support."
     }
   ],
   "prompt_preview": {
     "knowledge_context": "",
-    "observations_context": "RECENT DAILY OBSERVATIONS:\n  2026-03-22 (neutral): Unable to access local journal/position/observation files in this run due a sandbox execution failure, so no evidence-based session summary can be produced. | Learned: Reflection quality is only as good as journal and position data availability.; Operational reliability checks should run before analysis steps."
+    "observations_context": "RECENT DAILY OBSERVATIONS:\n  2026-03-22 (neutral): Unable to read today's journal, positions, or prior observation files due local execution sandbox failure, so this reflection is data-incomplete. No reliable session-level market conclusion can be drawn from repository state. | Learned: Reflection quality depends on reliable access to structured journal and position data.; A blocked execution environment is itself an operational risk for end-of-day decision support."
   },
   "improvement_log_present": true
 }
