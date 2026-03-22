@@ -85,6 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       phase: ${{ steps.phase.outputs.phase }}
+      strategist_matrix: ${{ steps.phase.outputs.strategist_matrix }}
     steps:
       - name: Determine phase
         id: phase
@@ -115,32 +116,27 @@ jobs:
             fi
           fi
 
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SELECTED_STRATEGISTS="${{ inputs.strategists }}"
+          else
+            SELECTED_STRATEGISTS="both"
+          fi
+
+          if [ "$SELECTED_STRATEGISTS" = "claude" ]; then
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic","npm_package":"@anthropic-ai/claude-code@latest","version_command":"claude --version"}]' >> "$GITHUB_OUTPUT"
+          elif [ "$SELECTED_STRATEGISTS" = "codex" ]; then
+            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai","npm_package":"@openai/codex@latest","version_command":"codex --version"}]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic","npm_package":"@anthropic-ai/claude-code@latest","version_command":"claude --version"},{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai","npm_package":"@openai/codex@latest","version_command":"codex --version"}]' >> "$GITHUB_OUTPUT"
+          fi
+
   strategist-run:
     needs: determine-phase
-    if: >
-      needs.determine-phase.result == 'success' &&
-      (
-        github.event_name != 'workflow_dispatch' ||
-        inputs.strategists == 'both' ||
-        inputs.strategists == matrix.profile_id
-      )
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - profile_id: claude
-            profile_label: Claude Strategist
-            cli_provider: claude
-            llm_provider: anthropic
-            npm_package: "@anthropic-ai/claude-code@latest"
-            version_command: "claude --version"
-          - profile_id: codex
-            profile_label: Codex Strategist
-            cli_provider: codex
-            llm_provider: openai
-            npm_package: "@openai/codex@latest"
-            version_command: "codex --version"
+        include: ${{ fromJSON(needs.determine-phase.outputs.strategist_matrix) }}
     steps:
       - uses: actions/checkout@v4
         with:
