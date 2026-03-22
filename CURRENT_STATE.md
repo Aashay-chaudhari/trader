@@ -35,6 +35,19 @@ The repo is now stabilized around a two-layer architecture:
   - strategy execution is blocked unless the monitor gate marks a setup `ready_to_trade=true`
   - active positions are always kept in the monitor loop
 
+## Reset To Template State
+
+After stabilization, the generated runtime state was reset so the repo now starts from a clean cold-start template:
+
+- `data/` contains only `data/profiles/`
+- each profile has:
+  - `profile.json`
+  - empty cold-start knowledge JSON files
+  - empty `cache/`, `observations/`, and `positions/` directories
+- generated dashboard output under `docs/data/` and `docs/index.html` was cleared
+
+This means the next production run will validate real shape creation from a fresh baseline rather than relying on old artifacts.
+
 ## Monitor Gate Design
 
 Morning research remains the heavy-thinking phase.
@@ -63,6 +76,11 @@ This keeps some intelligence intraday without paying for repeated deep reasoning
   - `USE_CLI_AGENT=false`
   - API-only monitor path
 - Local CLI workflows remain available for manual strategist sessions.
+- Repo Actions config verified:
+  - required secrets exist by name
+  - `PRODUCTION_MODE=true`
+  - `MONITOR_MODEL_OPENAI=gpt-4o-mini`
+  - `USE_CLI_AGENT=false`
 
 ## Key New Config Knobs
 
