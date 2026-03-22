@@ -11,6 +11,34 @@ your OWN thesis independently.
 
 > Spend time on web research. The quality of today's trades depends on it.
 
+## Operating mode (important for CLI runs)
+
+- Run autonomously. Do not ask the user permission or "how should I proceed?" questions unless you are completely blocked from reading/writing required files.
+- If web tools are unavailable or denied, continue with best-effort analysis using available local data and clearly lower confidence where appropriate.
+- Put constraints/unknowns into `market_summary`, per-stock `risks`, and your normal improvement logging workflow later. Do not pause this run to request permission changes.
+- Make output verbose and transparent: include a visible research log in your response so the CLI user can see what you did.
+- Work within explicit budgets if provided by the runner. If a runtime/search budget is injected, treat it as a hard constraint and finalize best-effort output within that budget.
+
+---
+
+## Step 0 — Quick idempotency check (skip if already done today)
+
+Before doing full research, check:
+
+1. `data/profiles/{{PROFILE}}/cache/morning_research.json` exists
+2. `data/profiles/{{PROFILE}}/cache/watchlist.json` exists
+3. Both files were last modified **today** (local market date)
+4. `morning_research.json` is valid JSON and has non-empty `stocks`
+5. `watchlist.json` is valid JSON with at least 5 symbols
+
+If ALL 5 checks pass:
+- Skip full web research and stock re-selection.
+- Print a short section titled `SKIP_REASON` explaining that today's morning research is already ingested.
+- Re-stage the two cache files and finish.
+- Do not ask the user whether to continue; make the skip decision automatically.
+
+If any check fails, continue with the full workflow below.
+
 ---
 
 ## Step 1 — Read your current state
@@ -52,10 +80,23 @@ The goal is to develop a **thesis for today** grounded in real data.
 - Look at your `patterns_library.json` — are any of your known patterns setting up today?
 - "stock market technical setup today" — any widely-discussed setups?
 
+**Budget discipline**:
+- Target 6-8 total web searches in normal runs.
+- Hard maximum is 10 web searches unless the runner explicitly provides a different cap.
+- Prioritize highest-signal searches first (index regime, macro driver, movers, catalysts) before lower-priority exploration.
+
 **Synthesize**: After searching, form a clear thesis:
 - What is today's regime? (risk_on / risk_off / neutral)
 - What's the primary narrative driving markets?
 - Where are the opportunities given this regime + your strategy effectiveness data?
+
+### Required visible research log (for terminal transparency)
+
+Before writing files, print a section titled `RESEARCH LOG` with:
+- `Search #` and exact query used
+- 2-4 bullet takeaways from that search
+- source URLs you actually used
+- how that search changed (or confirmed) your market thesis
 
 ---
 
