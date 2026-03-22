@@ -30,6 +30,15 @@ on:
     - cron: "0 20 * * 1-5"
     - cron: "30 20 * * 1-5"
 
+    # Phase 3: Evening reflection at 4:15 PM ET (21:15 UTC) weekdays
+    - cron: "15 21 * * 1-5"
+
+    # Phase 4: Weekly review Sunday 8 PM ET (Monday 01:00 UTC)
+    - cron: "0 1 * * 1"
+
+    # Phase 5: Monthly retrospective — last business days, 5 PM ET (22:00 UTC)
+    - cron: "0 22 28-31 * 1-5"
+
   workflow_dispatch:
     inputs:
       phase:
@@ -41,6 +50,10 @@ on:
           - research
           - monitor
           - run
+          - cycle
+          - reflect
+          - weekly
+          - monthly
       strategists:
         description: "Which strategist books to run"
         required: true
@@ -75,8 +88,16 @@ jobs:
           else
             HOUR=$(date -u +%H)
             MINUTE=$(date -u +%M)
+            DOW=$(date -u +%u)   # 1=Monday, 7=Sunday
+            DOM=$(date -u +%d)
             if [ "$HOUR" = "14" ] && [ "$MINUTE" -lt "30" ]; then
               echo "phase=research" >> "$GITHUB_OUTPUT"
+            elif [ "$HOUR" = "21" ] && [ "$MINUTE" = "15" ]; then
+              echo "phase=reflect" >> "$GITHUB_OUTPUT"
+            elif [ "$DOW" = "1" ] && [ "$HOUR" = "01" ]; then
+              echo "phase=weekly" >> "$GITHUB_OUTPUT"
+            elif [ "$HOUR" = "22" ] && [ "$DOM" -ge "28" ]; then
+              echo "phase=monthly" >> "$GITHUB_OUTPUT"
             else
               echo "phase=monitor" >> "$GITHUB_OUTPUT"
             fi
@@ -162,7 +183,13 @@ jobs:
           CLI_AGENT_MAX_TURNS: ${{ vars.CLI_AGENT_MAX_TURNS || '5' }}
           CLI_AGENT_TIMEOUT: ${{ vars.CLI_AGENT_TIMEOUT || '300' }}
           LLM_PROVIDER: ${{ matrix.llm_provider }}
-        run: python -m agent_trader ${{ needs.determine-phase.outputs.phase }}
+        run: |
+          PHASE="${{ needs.determine-phase.outputs.phase }}"
+          if [ "$PHASE" = "cycle" ]; then
+            python -m agent_trader cycle
+          else
+            python -m agent_trader "$PHASE"
+          fi
 
       - name: Check strategist analysis mode used
         if: always()

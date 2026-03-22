@@ -46,6 +46,22 @@ class Settings(BaseSettings):
     cli_agent_max_turns: int = 5         # Max agent iterations (controls cost)
     cli_agent_timeout: int = 300         # Max seconds before timeout
 
+    # --- Debug Mode ---
+    # When True: fewer stocks, cheaper model, skip web research, reduced context.
+    # Use for testing architecture without burning API credits.
+    debug_mode: bool = False
+    debug_max_stocks: int = 3             # Max stocks to analyze in debug mode
+    debug_skip_web: bool = True           # Skip live web research in debug mode
+
+    # --- Knowledge Accumulation ---
+    enable_knowledge_base: bool = True    # Load accumulated knowledge into prompts
+    knowledge_token_budget: int = 1500    # Token budget for knowledge context
+    observations_token_budget: int = 500  # Token budget for observations context
+    observation_retention_days: int = 90  # Archive daily observations after N days
+
+    # --- Swing Trading ---
+    enable_swing_tracking: bool = True    # Track multi-day positions
+
     # --- Trading Config ---
     watchlist: list[str] = Field(
         default=["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"],

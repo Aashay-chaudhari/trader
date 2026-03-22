@@ -554,6 +554,144 @@ IMPORTANT:
 """
 
 
+def build_reflection_task(*, data_dir: str | None = None) -> str:
+    """Build the task prompt for the evening reflection phase (CLI agent)."""
+    data_root = Path(data_dir or get_settings().data_dir)
+    d = data_root.as_posix()
+    today = __import__("datetime").datetime.now(
+        __import__("datetime").timezone.utc
+    ).strftime("%Y-%m-%d")
+    return f"""You are reflecting on today's trading session inside the agent-trader repository.
+
+## YOUR TASK
+Review today's activity and extract observations, patterns, and lessons learned.
+
+## HOW TO WORK
+
+### Step 1: Read today's journal entries
+- `{d}/journal/{today}/` — read all JSON report files from today
+
+### Step 2: Check active swing positions
+- `{d}/positions/active/` — read all active position files
+
+### Step 3: Read recent observations for continuity
+- `{d}/observations/daily/` — read the last 3 daily observation files
+
+### Step 4: Optionally verify end-of-day prices
+Use curl or WebFetch to check closing prices for active positions.
+Keep to 1 check max — this is a reflection, not research.
+
+### Step 5: Think about self-improvement
+Think about what would make the trading system better. Consider:
+- Data gaps: do you need more data sources, different indicators, sector data?
+- Strategy gaps: are there strategies that should be added or removed?
+- Risk management: should position sizing, stop logic, or exposure limits change?
+- Infrastructure: would more web searches, different scheduling, or better prompts help?
+- Knowledge: is the observation/review cycle capturing the right things?
+Write concrete, actionable proposals — you are this system's product manager.
+
+### Step 6: Output your reflection as JSON
+Output ONLY valid JSON:
+
+```json
+{{{{
+    "date": "{today}",
+    "market_regime": "risk_on|risk_off|neutral",
+    "market_summary": "1-2 sentence summary",
+    "sector_leaders": ["sector1"],
+    "sector_laggards": ["sector1"],
+    "trades_review": [
+        {{{{"symbol": "SYM", "action": "buy", "entry": 0.0, "exit": 0.0, "pnl_pct": 0.0, "confidence": 0.0, "assessment": "what happened"}}}}
+    ],
+    "patterns_detected": [
+        {{{{"name": "pattern", "symbol": "SYM", "outcome": "won|lost|pending", "notes": "detail"}}}}
+    ],
+    "confidence_calibration": {{{{
+        "high_conf_count": 0, "high_conf_win_rate": 0.0,
+        "medium_conf_count": 0, "medium_conf_win_rate": 0.0,
+        "assessment": "calibration note"
+    }}}},
+    "swing_updates": [
+        {{{{"symbol": "SYM", "action": "hold|close|tighten_stop", "current_pnl_pct": 0.0, "reason": "why"}}}}
+    ],
+    "forward_outlook": "what to watch tomorrow",
+    "lessons": ["lesson1", "lesson2"],
+    "self_improvement_proposals": [
+        {{{{
+            "category": "data|strategy|risk|infrastructure|knowledge",
+            "priority": "high|medium|low",
+            "title": "Short title",
+            "description": "What to change and why",
+            "expected_impact": "How this improves trading performance"
+        }}}}
+    ]
+}}}}
+```
+
+IMPORTANT: Output ONLY the JSON object, nothing else.
+"""
+
+
+def build_weekly_consolidation_task(*, data_dir: str | None = None) -> str:
+    """Build the task prompt for the weekly consolidation review (CLI agent)."""
+    data_root = Path(data_dir or get_settings().data_dir)
+    d = data_root.as_posix()
+    return f"""You are consolidating this week's trading observations inside the agent-trader repository.
+
+## YOUR TASK
+Review the week's daily observations, trades, and patterns. Update the knowledge base.
+
+## HOW TO WORK
+
+### Step 1: Read this week's daily observations
+- `{d}/observations/daily/` — read the last 5-7 observation files
+
+### Step 2: Read trade history and performance
+- `{d}/feedback/completed_trades.json` — all trades with P&L
+- `{d}/feedback/learned_rules.json` — current rules
+
+### Step 3: Read current knowledge base
+- `{d}/knowledge/patterns_library.json` — pattern win rates
+- `{d}/knowledge/strategy_effectiveness.json` — strategy scores
+- `{d}/knowledge/regime_library.json` — regime-specific rules
+- `{d}/knowledge/lessons_learned.json` — accumulated lessons
+
+### Step 4: Output your weekly consolidation as JSON
+Include knowledge base updates in the output so the system can merge them.
+Output ONLY valid JSON with the weekly review schema.
+
+IMPORTANT: Output ONLY the JSON object, nothing else.
+"""
+
+
+def build_monthly_retrospective_task(*, data_dir: str | None = None) -> str:
+    """Build the task prompt for the monthly retrospective (CLI agent)."""
+    data_root = Path(data_dir or get_settings().data_dir)
+    d = data_root.as_posix()
+    return f"""You are conducting a monthly retrospective inside the agent-trader repository.
+
+## YOUR TASK
+Deep review of this month's performance, strategy effectiveness, and confidence calibration.
+
+## HOW TO WORK
+
+### Step 1: Read weekly reviews
+- `{d}/observations/weekly/` — read the last 4 weekly reviews
+
+### Step 2: Read monthly performance
+- `{d}/feedback/completed_trades.json` — full trade history
+
+### Step 3: Read current knowledge base
+- `{d}/knowledge/` — all knowledge files
+
+### Step 4: Output your monthly retrospective as JSON
+Include strategy × regime matrix, confidence accuracy, top lessons, vs last month.
+Output ONLY valid JSON with the monthly review schema.
+
+IMPORTANT: Output ONLY the JSON object, nothing else.
+"""
+
+
 def _extract_cli_usage(outer: dict[str, Any]) -> dict[str, Any]:
     usage = outer.get("usage")
     if isinstance(usage, dict):

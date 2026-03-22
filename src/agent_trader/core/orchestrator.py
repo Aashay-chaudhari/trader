@@ -328,6 +328,153 @@ class Orchestrator:
 
     # ── Full Pipeline ────────────────────────────────────────────
 
+    # ── Phase 3: Evening Reflection ──────────────────────────────
+
+    async def run_evening_reflection(self) -> dict:
+        """Evening reflection: review the day and extract observations."""
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        self._print_header(run_id, "Evening Reflection")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "evening_reflection"}
+
+        # Gather context for reflection
+        from agent_trader.utils.knowledge_base import KnowledgeBase
+        from agent_trader.utils.swing_tracker import SwingTracker
+        from agent_trader.utils.improvement_log import append_improvement_proposals
+
+        settings = get_settings()
+        kb = KnowledgeBase(settings.data_dir)
+        st = SwingTracker(settings.data_dir)
+
+        # Today's trades from journal
+        todays_trades = self._load_todays_journal_summary()
+
+        # Market regime from morning research
+        morning = self._morning_research or self._load_morning_context()
+        market_regime_summary = "No regime data."
+        if morning:
+            regime = morning.get("market_regime", "unknown")
+            summary = morning.get("market_summary", "")
+            market_regime_summary = f"Regime: {regime}. {summary}"
+
+        # Active swing positions
+        active_positions = st.get_summary_for_prompt(token_budget=300)
+        if not active_positions:
+            active_positions = "No active swing positions."
+
+        # Recent observations
+        recent_obs = kb.get_recent_observations(days=3)
+        recent_observations = "No prior observations."
+        if recent_obs:
+            lines = []
+            for obs in recent_obs:
+                lines.append(f"  {obs.get('date', '?')}: {obs.get('market_summary', '')}")
+            recent_observations = "Recent observations:\n" + "\n".join(lines)
+
+        # Call research agent with reflection phase
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Reflecting[/cyan] on today's session...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "phase": "evening_reflection",
+                    "market_data": {},  # Required by research agent
+                    "todays_trades": todays_trades,
+                    "market_regime_summary": market_regime_summary,
+                    "active_positions": active_positions,
+                    "recent_observations": recent_observations,
+                    "symbols": self._today_watchlist or self._load_watchlist(),
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                results["research"] = response.data
+                reflection = response.data.get("research", {})
+                lessons = reflection.get("lessons", [])
+                console.print(f"  [green]Done[/green] reflection — {len(lessons)} lessons extracted")
+
+                # Persist self-improvement proposals
+                proposals = reflection.get("self_improvement_proposals", [])
+                if proposals:
+                    profile_id = settings.agent_profile or "default"
+                    append_improvement_proposals(
+                        proposals,
+                        data_dir=settings.data_dir,
+                        profile_id=profile_id,
+                    )
+                    console.print(f"  [green]Saved[/green] {len(proposals)} improvement proposals")
+
+        self._write_journal(run_id, "evening_reflection", results)
+        return results
+
+    # ── Phase 4: Weekly Consolidation ─────────────────────────────
+
+    async def run_weekly_review(self) -> dict:
+        """Weekly review: consolidate observations and update knowledge base."""
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        self._print_header(run_id, "Weekly Review")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "weekly_consolidation"}
+
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Consolidating[/cyan] week's observations...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "phase": "weekly_consolidation",
+                    "market_data": {},  # Required
+                    "symbols": self._load_watchlist(),
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                results["research"] = response.data
+                review = response.data.get("research", {})
+                updates = review.get("knowledge_updates", {})
+                console.print(f"  [green]Done[/green] weekly review — "
+                              f"patterns: {len(updates.get('new_patterns', []))}, "
+                              f"lessons: {len(updates.get('new_lessons', []))}")
+
+        # Run archival pass
+        from agent_trader.utils.knowledge_base import KnowledgeBase
+        settings = get_settings()
+        kb = KnowledgeBase(settings.data_dir)
+        archived = kb.archive_old_observations(keep_days=settings.observation_retention_days)
+        if archived:
+            console.print(f"  [dim]Archived {archived} old observations[/dim]")
+
+        self._write_journal(run_id, "weekly_consolidation", results)
+        return results
+
+    # ── Phase 5: Monthly Retrospective ────────────────────────────
+
+    async def run_monthly_retrospective(self) -> dict:
+        """Monthly review: deep retrospective and strategic adjustments."""
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        self._print_header(run_id, "Monthly Retrospective")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "monthly_retrospective"}
+
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Conducting[/cyan] monthly retrospective...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "phase": "monthly_retrospective",
+                    "market_data": {},  # Required
+                    "symbols": [],
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                results["research"] = response.data
+                review = response.data.get("research", {})
+                lessons = review.get("top_lessons", [])
+                console.print(f"  [green]Done[/green] monthly retrospective — "
+                              f"{len(lessons)} top lessons")
+
+        self._write_journal(run_id, "monthly_retrospective", results)
+        return results
+
+    # ── Full Pipeline ─────────────────────────────────────────────
+
     async def run_pipeline(self, symbols: list[str]) -> dict:
         self._today_watchlist = symbols
         research = await self.run_research_phase(fallback_symbols=symbols)
@@ -396,6 +543,35 @@ class Orchestrator:
     def _load_watchlist(self) -> list[str]:
         path = Path(get_settings().data_dir) / "cache" / "watchlist.json"
         return json.loads(path.read_text()) if path.exists() else []
+
+    def _load_todays_journal_summary(self) -> str:
+        """Load a summary of today's journal entries for evening reflection."""
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        journal_dir = Path(get_settings().data_dir) / "journal" / today
+        if not journal_dir.exists():
+            return "No journal entries today."
+
+        lines = [f"TODAY'S JOURNAL ({today}):"]
+        for f in sorted(journal_dir.glob("*_report.json")):
+            try:
+                entry = json.loads(f.read_text())
+                research = entry.get("research", {})
+                sentiment = research.get("overall_sentiment", "?")
+                regime = research.get("market_regime", "?")
+                phase = entry.get("phase", f.stem)
+                lines.append(f"  {phase}: sentiment={sentiment}, regime={regime}")
+                # Include executed trades if any
+                executed = entry.get("executed", [])
+                if executed:
+                    for trade in executed[:5]:
+                        lines.append(
+                            f"    Trade: {trade.get('action', '?')} {trade.get('symbol', '?')} "
+                            f"@ ${trade.get('price', 0):.2f}"
+                        )
+            except (json.JSONDecodeError, OSError):
+                pass
+
+        return "\n".join(lines) if len(lines) > 1 else "No readable journal entries today."
 
     # ── Display ──────────────────────────────────────────────────
 

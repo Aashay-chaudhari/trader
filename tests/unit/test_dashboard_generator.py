@@ -431,3 +431,143 @@ def test_generate_dashboard_preserves_linkable_evidence():
             bundle["context"]["prompt_sections"]["news_inputs"]["news_discoveries"][0]["top_headline_url"]
             == "https://example.com/abbv-deal"
         )
+
+
+def test_generate_dashboard_includes_knowledge_store_bundle():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        (data_dir / "snapshots").mkdir(parents=True)
+        (data_dir / "research").mkdir(parents=True)
+        (data_dir / "analytics").mkdir(parents=True)
+        (data_dir / "context").mkdir(parents=True)
+        (data_dir / "journal" / "2026-03-21").mkdir(parents=True)
+        (data_dir / "observations" / "daily").mkdir(parents=True)
+        (data_dir / "observations" / "weekly").mkdir(parents=True)
+        (data_dir / "observations" / "monthly").mkdir(parents=True)
+        (data_dir / "knowledge").mkdir(parents=True)
+
+        (data_dir / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-21T23:00:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (data_dir / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (data_dir / "research" / "2026-03-21_research_2300.json").write_text(
+            json.dumps({"best_opportunities": ["NVDA"], "stocks": {}}),
+            encoding="utf-8",
+        )
+        (data_dir / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (data_dir / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+        (data_dir / "journal" / "2026-03-21" / "23-00-00Z_research_report.json").write_text(
+            json.dumps({"run_id": "20260321_230000", "phase": "research"}),
+            encoding="utf-8",
+        )
+        (data_dir / "observations" / "daily" / "obs_2026-03-21.json").write_text(
+            json.dumps(
+                {
+                    "date": "2026-03-21",
+                    "market_regime": "risk_on",
+                    "market_summary": "Tech leadership remained intact.",
+                    "lessons": ["Momentum still favored clean breakouts."],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "observations" / "weekly" / "week_2026-03-17.json").write_text(
+            json.dumps(
+                {
+                    "week_start": "2026-03-17",
+                    "summary": {"trades_count": 8, "win_rate": 0.75},
+                    "regime_analysis": {"dominant": "risk_on"},
+                    "forward_thesis": {
+                        "outlook": "Leadership remains concentrated in large-cap tech.",
+                        "confidence": 0.7,
+                        "key_risks": ["Rate volatility"],
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "observations" / "monthly" / "month_2026-03.json").write_text(
+            json.dumps({"month": "2026-03", "vs_last_month": {"improvement_areas": "Sharpen exits"}}),
+            encoding="utf-8",
+        )
+        (data_dir / "knowledge" / "lessons_learned.json").write_text(
+            json.dumps({"lessons": ["Trend strength matters more than valuation on squeeze days."]}),
+            encoding="utf-8",
+        )
+        (data_dir / "knowledge" / "patterns_library.json").write_text(
+            json.dumps(
+                {
+                    "patterns": [
+                        {
+                            "name": "gap_and_go",
+                            "description": "Gap continuation on strong volume.",
+                            "win_rate": 0.71,
+                            "total_occurrences": 14,
+                            "best_regime": "risk_on",
+                            "symbols_seen": ["NVDA", "TSLA"],
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "knowledge" / "strategy_effectiveness.json").write_text(
+            json.dumps({"momentum": {"win_rate": 0.8, "avg_return": 1.2, "best_regime": "risk_on"}}),
+            encoding="utf-8",
+        )
+        (data_dir / "knowledge" / "regime_library.json").write_text(
+            json.dumps(
+                {
+                    "regimes": {
+                        "risk_on": {
+                            "preferred_strategies": ["momentum"],
+                            "avoid_strategies": ["mean_reversion"],
+                            "rules": ["Favor continuation over dip buying."],
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_dir / "improvement_proposals.json").write_text(
+            json.dumps(
+                [
+                    {
+                        "date": "2026-03-21",
+                        "proposals": [
+                            {
+                                "priority": "high",
+                                "category": "data",
+                                "title": "Add earnings surprise context",
+                                "description": "Capture post-earnings drift more explicitly.",
+                            }
+                        ],
+                    }
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        html = (docs_dir / "index.html").read_text(encoding="utf-8")
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        knowledge = bundle["profiles"]["default"]["knowledge"]
+
+        assert "Knowledge Store" in html
+        assert "Knowledge bundle" in html
+        assert knowledge["counts"]["daily_observations"] == 1
+        assert knowledge["counts"]["patterns"] == 1
+        assert knowledge["latest_weekly_review"]["week_start"] == "2026-03-17"
+        assert knowledge["patterns"][0]["name"] == "gap_and_go"
+        assert knowledge["proposals"][0]["title"] == "Add earnings surprise context"
+        assert (docs_dir / "data" / "knowledge.json").exists()

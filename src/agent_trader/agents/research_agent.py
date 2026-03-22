@@ -48,6 +48,8 @@ from agent_trader.utils.cli_agent import (
     build_monitor_task,
     run_cli_agent,
 )
+from agent_trader.utils.knowledge_base import KnowledgeBase
+from agent_trader.utils.swing_tracker import SwingTracker
 
 
 RESEARCH_PROMPT = """You are an expert stock market analyst and trader. Your job is to find the best
@@ -62,6 +64,12 @@ You have a $100,000 paper portfolio. Every dollar counts.
 
 PREVIOUS RUN ARTIFACTS
 {artifact_context}
+
+{knowledge_context}
+
+{observations_context}
+
+{swing_context}
 
 ═══════════════════════════════════════════════════════════
 MARKET REGIME
@@ -253,6 +261,211 @@ Respond with ONLY valid JSON:
 }}"""
 
 
+EVENING_REFLECTION_PROMPT = """You are reflecting on today's trading session. Review what happened and extract learnings.
+
+{todays_trades}
+
+{market_regime_summary}
+
+{active_positions}
+
+{recent_observations}
+
+YOUR TASK:
+1. Review each trade: was the entry good? Did the thesis play out?
+2. Log patterns you observed today (gap_and_go, RSI bounce, breakout, etc.)
+3. Calibrate confidence: were high-confidence calls more accurate?
+4. Update swing position outlook
+5. Note anything forward-looking (events tomorrow, regime shifts)
+6. SELF-IMPROVEMENT: Think critically about your own system. What would make you better?
+   - Do you need access to more data sources? Which ones specifically?
+   - Are there strategies you wish you could run but can't? (e.g., pairs trading, options flow)
+   - Would more web searches during research help? How many, and for what?
+   - Is there information you keep wanting but don't have? (e.g., order flow, dark pool data, sector ETF correlations)
+   - Are there bugs or inefficiencies in how your data is presented?
+   - Should your risk rules change? Should position sizing be different?
+   - Any code changes that would make your analysis more effective?
+   Write these as concrete, actionable proposals — you are your own product manager.
+
+Respond with ONLY valid JSON:
+{{
+    "date": "{today_date}",
+    "market_regime": "risk_on" | "risk_off" | "neutral",
+    "market_summary": "1-2 sentence summary of today",
+    "sector_leaders": ["sector1", "sector2"],
+    "sector_laggards": ["sector1"],
+    "trades_review": [
+        {{
+            "symbol": "AAPL",
+            "action": "buy",
+            "entry": 185.50,
+            "exit": 187.20,
+            "pnl_pct": 0.92,
+            "confidence": 0.75,
+            "assessment": "Good entry at support, volume confirmed"
+        }}
+    ],
+    "patterns_detected": [
+        {{
+            "name": "pattern_name",
+            "symbol": "SYMBOL",
+            "outcome": "won" | "lost" | "pending",
+            "notes": "what happened"
+        }}
+    ],
+    "confidence_calibration": {{
+        "high_conf_count": 0,
+        "high_conf_win_rate": 0.0,
+        "medium_conf_count": 0,
+        "medium_conf_win_rate": 0.0,
+        "assessment": "description of calibration"
+    }},
+    "swing_updates": [
+        {{
+            "symbol": "SYMBOL",
+            "action": "hold" | "close" | "tighten_stop",
+            "current_pnl_pct": 0.0,
+            "reason": "why"
+        }}
+    ],
+    "forward_outlook": "what to watch for tomorrow",
+    "lessons": ["lesson 1", "lesson 2"],
+    "self_improvement_proposals": [
+        {{
+            "category": "data_source" | "strategy" | "risk_management" | "web_research" | "code_change" | "infrastructure" | "other",
+            "priority": "high" | "medium" | "low",
+            "title": "short title",
+            "description": "detailed description of what to change and why",
+            "expected_impact": "what this would improve (win rate, coverage, speed, etc.)"
+        }}
+    ]
+}}"""
+
+
+WEEKLY_CONSOLIDATION_PROMPT = """You are consolidating this week's trading observations and updating your knowledge base.
+
+WEEKLY PERFORMANCE:
+{performance_summary}
+
+THIS WEEK'S DAILY OBSERVATIONS:
+{daily_observations}
+
+CURRENT KNOWLEDGE BASE:
+{current_knowledge}
+
+COMPLETED TRADES THIS WEEK:
+{trade_details}
+
+YOUR TASK:
+1. Which patterns worked this week? Which failed? Update win rates.
+2. Which strategies were effective in this week's market regime?
+3. Is your confidence calibration accurate? (high conf = high win rate?)
+4. What sector dynamics are at play?
+5. What is your forward thesis for next week?
+6. Generate knowledge base updates: new patterns, strategy scores, regime rules, lessons.
+
+Respond with ONLY valid JSON:
+{{
+    "week_start": "{week_start}",
+    "week_end": "{week_end}",
+    "summary": {{
+        "trades_count": 0,
+        "win_rate": 0.0,
+        "total_pnl_pct": 0.0,
+        "swing_positions_held": 0,
+        "swing_win_rate": 0.0
+    }},
+    "pattern_effectiveness": [
+        {{
+            "pattern": "pattern_name",
+            "occurrences": 0,
+            "win_rate": 0.0,
+            "avg_return_pct": 0.0,
+            "best_regime": "risk_on",
+            "note": "context"
+        }}
+    ],
+    "strategy_effectiveness": {{
+        "strategy_name": {{
+            "win_rate": 0.0,
+            "avg_return": 0.0,
+            "best_regime": "risk_on"
+        }}
+    }},
+    "regime_analysis": {{
+        "dominant": "risk_on",
+        "shifts": 0,
+        "shift_description": ""
+    }},
+    "confidence_calibration": {{
+        "high": {{"expected": 0.80, "actual": 0.0}},
+        "medium": {{"expected": 0.60, "actual": 0.0}},
+        "low": {{"expected": 0.40, "actual": 0.0}}
+    }},
+    "forward_thesis": {{
+        "outlook": "thesis for next week",
+        "confidence": 0.0,
+        "key_risks": ["risk1"],
+        "opportunities": ["opportunity1"]
+    }},
+    "knowledge_updates": {{
+        "new_patterns": [],
+        "updated_strategies": [],
+        "new_lessons": ["lesson1"],
+        "regime_rules_updated": false
+    }}
+}}"""
+
+
+MONTHLY_RETROSPECTIVE_PROMPT = """You are conducting a monthly retrospective on your trading performance.
+
+MONTHLY PERFORMANCE:
+{performance_summary}
+
+WEEKLY REVIEWS THIS MONTH:
+{weekly_reviews}
+
+CURRENT KNOWLEDGE BASE:
+{current_knowledge}
+
+YOUR TASK:
+1. Build a strategy × regime effectiveness matrix
+2. Assess confidence accuracy at each level
+3. Identify top 5-10 lessons of the month
+4. Compare vs last month — what improved? What regressed?
+5. Recommend strategic adjustments for next month.
+
+Respond with ONLY valid JSON:
+{{
+    "month": "{month}",
+    "summary": {{
+        "trading_days": 0,
+        "total_trades": 0,
+        "win_rate": 0.0,
+        "total_pnl_pct": 0.0,
+        "best_week": "",
+        "worst_week": ""
+    }},
+    "strategy_regime_matrix": {{
+        "momentum": {{"risk_on": 0.0, "risk_off": 0.0, "range_bound": 0.0}},
+        "mean_reversion": {{"risk_on": 0.0, "risk_off": 0.0, "range_bound": 0.0}}
+    }},
+    "confidence_accuracy_curve": {{
+        "0.9+": {{"trades": 0, "actual_win_rate": 0.0}},
+        "0.7-0.9": {{"trades": 0, "actual_win_rate": 0.0}},
+        "0.5-0.7": {{"trades": 0, "actual_win_rate": 0.0}},
+        "<0.5": {{"trades": 0, "actual_win_rate": 0.0}}
+    }},
+    "top_lessons": ["lesson1", "lesson2"],
+    "vs_last_month": {{
+        "win_rate_change": "+0%",
+        "pnl_change": "+0%",
+        "improvement_areas": "",
+        "regression_areas": ""
+    }}
+}}"""
+
+
 class ResearchAgent(BaseAgent):
     """Analyzes market data using Claude with full context and feedback loop."""
 
@@ -381,14 +594,47 @@ class ResearchAgent(BaseAgent):
                 performance_summary=json.dumps(performance_summary, indent=2),
                 trade_details=trade_details,
             )
+        elif phase == "evening_reflection":
+            analysis = await self._handle_evening_reflection(message)
+            return analysis
+        elif phase == "weekly_consolidation":
+            analysis = await self._handle_weekly_consolidation(message)
+            return analysis
+        elif phase == "monthly_retrospective":
+            analysis = await self._handle_monthly_retrospective(message)
+            return analysis
         else:
             performance_feedback = self._tracker.get_recent_trades_for_prompt()
             learned_rules = self._tracker.get_learned_rules()
+
+            # Knowledge context (accumulated learnings)
+            settings = get_settings()
+            knowledge_context = ""
+            observations_context = ""
+            swing_context = ""
+            if settings.enable_knowledge_base:
+                kb = KnowledgeBase(settings.data_dir)
+                knowledge_context = kb.build_knowledge_context(
+                    token_budget=settings.knowledge_token_budget
+                    if not settings.debug_mode else settings.knowledge_token_budget // 2,
+                    watchlist=message.data.get("symbols", []),
+                    current_regime=market_context.get("market_regime", ""),
+                )
+                observations_context = kb.build_observations_context(
+                    token_budget=settings.observations_token_budget
+                    if not settings.debug_mode else settings.observations_token_budget // 2,
+                )
+            if settings.enable_swing_tracking:
+                st = SwingTracker(settings.data_dir)
+                swing_context = st.get_summary_for_prompt(
+                    token_budget=300 if not settings.debug_mode else 150,
+                )
+
             market_context_text = self._format_market_context(market_context)
             web_context = self._collect_web_context(
                 market_data,
                 news_data,
-                limit=2,
+                limit=0 if settings.debug_mode and settings.debug_skip_web else 2,
             )
             news_inputs = self._build_news_inputs_snapshot(
                 news_data,
@@ -411,6 +657,9 @@ class ResearchAgent(BaseAgent):
                 "performance_feedback": performance_feedback,
                 "learned_rules": learned_rules,
                 "artifact_context": artifact_context,
+                "knowledge_context": knowledge_context,
+                "observations_context": observations_context,
+                "swing_context": swing_context,
                 "market_context": market_context,
                 "market_data": summary,
                 "news_context": news_context,
@@ -421,6 +670,9 @@ class ResearchAgent(BaseAgent):
                 performance_feedback=performance_feedback,
                 learned_rules=learned_rules,
                 artifact_context=artifact_context,
+                knowledge_context=knowledge_context,
+                observations_context=observations_context,
+                swing_context=swing_context,
                 market_context=market_context_text,
                 market_data=json.dumps(summary, indent=2),
                 news_context=news_context,
@@ -1538,3 +1790,153 @@ class ResearchAgent(BaseAgent):
         now = datetime.now(timezone.utc)
         filepath = archive_dir / f"{now.strftime('%Y-%m-%d')}_{phase}_{now.strftime('%H%M')}.json"
         filepath.write_text(json.dumps(analysis, indent=2, default=str), encoding="utf-8")
+
+    # ── New Phase Handlers ─────────────────────────────────────────────
+
+    async def _handle_evening_reflection(self, message: Message) -> dict:
+        """Evening reflection: review the day and extract observations."""
+        settings = get_settings()
+        data = message.data
+
+        todays_trades = data.get("todays_trades", "No trades executed today.")
+        market_regime_summary = data.get("market_regime_summary", "No regime data.")
+        active_positions = data.get("active_positions", "No active swing positions.")
+        recent_observations = data.get("recent_observations", "No prior observations.")
+        today_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+        prompt = EVENING_REFLECTION_PROMPT.format(
+            todays_trades=todays_trades,
+            market_regime_summary=market_regime_summary,
+            active_positions=active_positions,
+            recent_observations=recent_observations,
+            today_date=today_date,
+        )
+
+        # Use Haiku for reflections (cheap)
+        model = settings.monitor_model
+        analysis = await self._call_api_for_phase(prompt, "evening_reflection", model)
+
+        # Save observation to knowledge base
+        if settings.enable_knowledge_base and isinstance(analysis, dict):
+            meta_status = analysis.get("_meta", {}).get("status", "")
+            if meta_status != "error":
+                kb = KnowledgeBase(settings.data_dir)
+                kb.save_daily_observation(analysis)
+
+        self._save_research(analysis, "evening_reflection")
+
+        return {
+            "research": analysis,
+            "phase": "evening_reflection",
+            "symbols": data.get("symbols", []),
+            "market_data": data.get("market_data", {}),
+        }
+
+    async def _handle_weekly_consolidation(self, message: Message) -> dict:
+        """Weekly review: consolidate observations and update knowledge base."""
+        settings = get_settings()
+        data = message.data
+        kb = KnowledgeBase(settings.data_dir)
+
+        # Gather inputs
+        observations = kb.get_recent_observations(days=7)
+        obs_text = json.dumps(observations, indent=2, default=str) if observations else "No observations this week."
+        performance_summary = json.dumps(self._tracker.get_performance_summary(), indent=2)
+        trade_details = self._tracker.get_recent_trades_for_prompt(20)
+        current_knowledge = kb.build_knowledge_context(token_budget=800)
+
+        today = datetime.now(timezone.utc)
+        week_start = (today - __import__("datetime").timedelta(days=today.weekday())).strftime("%Y-%m-%d")
+        week_end = today.strftime("%Y-%m-%d")
+
+        prompt = WEEKLY_CONSOLIDATION_PROMPT.format(
+            performance_summary=performance_summary,
+            daily_observations=obs_text,
+            current_knowledge=current_knowledge or "No accumulated knowledge yet.",
+            trade_details=trade_details,
+            week_start=week_start,
+            week_end=week_end,
+        )
+
+        model = settings.monitor_model  # Haiku for reviews
+        analysis = await self._call_api_for_phase(prompt, "weekly_consolidation", model)
+
+        # Save weekly review (this also updates knowledge base)
+        if isinstance(analysis, dict) and analysis.get("_meta", {}).get("status") != "error":
+            kb.save_weekly_review(analysis)
+
+        # Save learned rules if present
+        new_lessons = analysis.get("knowledge_updates", {}).get("new_lessons", [])
+        if new_lessons:
+            self._tracker.save_learned_rules(new_lessons)
+
+        self._save_research(analysis, "weekly_consolidation")
+
+        return {
+            "research": analysis,
+            "phase": "weekly_consolidation",
+            "symbols": data.get("symbols", []),
+            "market_data": data.get("market_data", {}),
+        }
+
+    async def _handle_monthly_retrospective(self, message: Message) -> dict:
+        """Monthly review: deep retrospective and strategic adjustments."""
+        settings = get_settings()
+        data = message.data
+        kb = KnowledgeBase(settings.data_dir)
+
+        weekly_reviews = kb.get_recent_weekly_reviews(count=4)
+        weekly_text = json.dumps(weekly_reviews, indent=2, default=str) if weekly_reviews else "No weekly reviews."
+        performance_summary = json.dumps(self._tracker.get_performance_summary(), indent=2)
+        current_knowledge = kb.build_knowledge_context(token_budget=800)
+        month = datetime.now(timezone.utc).strftime("%Y-%m")
+
+        prompt = MONTHLY_RETROSPECTIVE_PROMPT.format(
+            performance_summary=performance_summary,
+            weekly_reviews=weekly_text,
+            current_knowledge=current_knowledge or "No accumulated knowledge yet.",
+            month=month,
+        )
+
+        model = settings.monitor_model
+        analysis = await self._call_api_for_phase(prompt, "monthly_retrospective", model)
+
+        if isinstance(analysis, dict) and analysis.get("_meta", {}).get("status") != "error":
+            kb.save_monthly_review(analysis)
+
+        self._save_research(analysis, "monthly_retrospective")
+
+        return {
+            "research": analysis,
+            "phase": "monthly_retrospective",
+            "symbols": data.get("symbols", []),
+            "market_data": data.get("market_data", {}),
+        }
+
+    async def _call_api_for_phase(self, prompt: str, phase: str, model: str) -> dict:
+        """Simple API call for reflection/review phases (no CLI agent, no staging)."""
+        providers = self._get_api_provider_sequence()
+        if not providers:
+            return {
+                "_meta": {"status": "error", "error": "No LLM providers available"},
+            }
+
+        for provider in providers:
+            try:
+                client = self._get_client(provider)
+                raw_text, llm_meta = self._call_llm_once(client, provider, model, prompt)
+                analysis = self._parse_llm_response(raw_text)
+                analysis.setdefault("_meta", {}).update({
+                    "status": "success",
+                    "provider": provider,
+                    "model": model,
+                    **llm_meta,
+                })
+                return analysis
+            except Exception as exc:
+                self.logger.warning("%s/%s failed for %s: %s", provider, model, phase, exc)
+                continue
+
+        return {
+            "_meta": {"status": "error", "error": f"All providers failed for {phase}"},
+        }

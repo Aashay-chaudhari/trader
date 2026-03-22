@@ -16,7 +16,10 @@ import sys
 
 from rich.console import Console
 
-from agent_trader.runner import build_system, run_research, run_monitor, run_full
+from agent_trader.runner import (
+    build_system, run_research, run_monitor, run_full, run_cycle,
+    run_reflection, run_weekly, run_monthly,
+)
 
 console = Console()
 
@@ -39,6 +42,21 @@ def main():
     run_parser.add_argument("--dry-run", action="store_true", default=None,
                             help="Run without placing orders")
 
+    # Full cycle command
+    cycle_parser = subparsers.add_parser("cycle", help="Run research, monitor, reflection, weekly, and monthly")
+    cycle_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
+    cycle_parser.add_argument("--dry-run", action="store_true", default=None,
+                              help="Run without placing orders")
+
+    # Reflection command (Phase 3)
+    subparsers.add_parser("reflect", help="Evening reflection phase")
+
+    # Weekly review command (Phase 4)
+    subparsers.add_parser("weekly", help="Weekly consolidation review")
+
+    # Monthly retrospective command (Phase 5)
+    subparsers.add_parser("monthly", help="Monthly retrospective")
+
     # Status command
     subparsers.add_parser("status", help="Show portfolio status")
 
@@ -54,7 +72,18 @@ def main():
     # Dashboard command
     subparsers.add_parser("dashboard", help="Generate dashboard data")
 
+    # Add --debug flag to all action commands
+    for p in [research_parser, monitor_parser, run_parser, cycle_parser]:
+        p.add_argument("--debug", action="store_true", help="Debug mode (reduced tokens)")
+
     args = parser.parse_args()
+
+    # Apply debug mode if requested
+    if getattr(args, "debug", False):
+        import os
+        os.environ["DEBUG_MODE"] = "true"
+        from agent_trader.config.settings import reset_settings
+        reset_settings()
 
     if args.command == "research":
         asyncio.run(cmd_research(args))
@@ -62,6 +91,14 @@ def main():
         asyncio.run(cmd_monitor(args))
     elif args.command == "run":
         asyncio.run(cmd_run(args))
+    elif args.command == "cycle":
+        asyncio.run(cmd_cycle(args))
+    elif args.command == "reflect":
+        asyncio.run(cmd_reflect())
+    elif args.command == "weekly":
+        asyncio.run(cmd_weekly())
+    elif args.command == "monthly":
+        asyncio.run(cmd_monthly())
     elif args.command == "status":
         cmd_status()
     elif args.command == "reset":
@@ -99,6 +136,39 @@ async def cmd_run(args):
     mode = "DRY RUN" if settings.dry_run else "PAPER TRADING"
     console.print(f"Mode: [yellow]{mode}[/yellow]")
     return await run_full(orchestrator, symbols)
+
+
+async def cmd_cycle(args):
+    """Run the full end-to-end cycle, including knowledge phases."""
+    console.print("\n[bold]Agent Trader[/bold] - Full Cycle\n")
+    orchestrator, settings = build_system()
+    symbols = args.symbols or settings.watchlist
+    if args.dry_run is not None:
+        settings.dry_run = args.dry_run
+    mode = "DRY RUN" if settings.dry_run else "PAPER TRADING"
+    console.print(f"Mode: [yellow]{mode}[/yellow]")
+    return await run_cycle(orchestrator, symbols)
+
+
+async def cmd_reflect():
+    """Evening reflection phase."""
+    console.print("\n[bold]Agent Trader[/bold] — Evening Reflection\n")
+    orchestrator, settings = build_system()
+    return await run_reflection(orchestrator)
+
+
+async def cmd_weekly():
+    """Weekly consolidation review."""
+    console.print("\n[bold]Agent Trader[/bold] — Weekly Review\n")
+    orchestrator, settings = build_system()
+    return await run_weekly(orchestrator)
+
+
+async def cmd_monthly():
+    """Monthly retrospective."""
+    console.print("\n[bold]Agent Trader[/bold] — Monthly Retrospective\n")
+    orchestrator, settings = build_system()
+    return await run_monthly(orchestrator)
 
 
 def cmd_status():

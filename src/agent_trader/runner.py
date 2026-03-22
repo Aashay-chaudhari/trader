@@ -61,3 +61,25 @@ async def run_monitor(orchestrator: Orchestrator, symbols: list[str] | None = No
 
 async def run_full(orchestrator: Orchestrator, symbols: list[str]) -> dict:
     return await orchestrator.run_pipeline(symbols)
+
+
+async def run_cycle(orchestrator: Orchestrator, symbols: list[str]) -> dict:
+    results = {
+        "run": await orchestrator.run_pipeline(symbols),
+    }
+    results["reflect"] = await orchestrator.run_evening_reflection()
+    results["weekly"] = await orchestrator.run_weekly_review()
+    results["monthly"] = await orchestrator.run_monthly_retrospective()
+    return results
+
+
+async def run_reflection(orchestrator: Orchestrator) -> dict:
+    return await orchestrator.run_evening_reflection()
+
+
+async def run_weekly(orchestrator: Orchestrator) -> dict:
+    return await orchestrator.run_weekly_review()
+
+
+async def run_monthly(orchestrator: Orchestrator) -> dict:
+    return await orchestrator.run_monthly_retrospective()

@@ -20,6 +20,9 @@ DASHBOARD_HTML = dedent(
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <title>Agent Trader Control Center</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <style>
         :root{--bg:#07111f;--panel:#0f1d35;--panel2:#132746;--line:rgba(126,166,235,.16);--text:#eef5ff;--muted:#95a7ca;--accent:#7dd3fc;--good:#86efac;--bad:#fda4af;--warn:#fcd34d}
@@ -41,31 +44,102 @@ DASHBOARD_HTML = dedent(
         .headline-list{max-height:340px;overflow-y:auto;margin-top:8px;padding-right:4px}.headline-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(126,166,235,.08);background:#0a1628;margin-bottom:6px}.headline-row:hover{border-color:rgba(125,211,252,.28);background:#0d1c36}.hl-sent{flex-shrink:0;width:42px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.72rem;font-weight:800}.hl-sent.pos{background:rgba(134,239,172,.14);color:var(--good)}.hl-sent.neg{background:rgba(253,164,175,.14);color:var(--bad)}.hl-sent.neu{background:rgba(252,211,77,.1);color:var(--warn)}.hl-body{flex:1;min-width:0}.hl-title{font-size:.85rem;font-weight:600;line-height:1.4;margin-bottom:2px}.hl-meta{font-size:.72rem;color:var(--muted)}.source-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(125,211,252,.1);color:var(--accent);margin-right:4px}.source-breakdown{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.src-chip{padding:4px 8px;border-radius:8px;font-size:.72rem;font-weight:600;border:1px solid rgba(126,166,235,.14);background:#0a1628}
         .foldout{padding:0;overflow:hidden}.foldout summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;cursor:pointer;font-weight:700}.foldout summary::-webkit-details-marker{display:none}.foldout summary span{color:var(--muted);font-size:.84rem;font-weight:600}.foldout .foldout-body{padding:0 20px 20px}.link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.link-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(125,211,252,.22);background:#0b1830;font-size:.76rem;text-decoration:none;color:var(--accent)}.link-chip:hover{border-color:rgba(125,211,252,.45)}.reason-list{display:grid;gap:10px}.reason-item{padding:10px 12px;border-radius:14px;border:1px solid rgba(126,166,235,.12);background:#0b1730}.compact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.compact-grid .card{height:100%}
         @media (max-width:1080px){.hero-grid,.split,.newscols,.context{grid-template-columns:1fr}}@media (max-width:760px){.page{padding:16px 12px 28px}.hero{padding:20px}}
+        :root{--bg:#f4efe6;--panel:#fffdf8;--panel2:#f7f1e7;--line:rgba(44,70,67,.12);--text:#132321;--muted:#5e706b;--accent:#0f766e;--good:#1d7a47;--bad:#b14d4c;--warn:#9a6a00}
+        body{font-family:"Manrope",system-ui,sans-serif;background:radial-gradient(circle at top left,rgba(15,118,110,.11),transparent 28%),linear-gradient(180deg,#f8f5ee,#f2ede3 52%,#ece6db);color:var(--text)}
+        a{text-decoration:none}
+        .topbar{position:sticky;top:0;z-index:40;padding:14px 18px 0}
+        .topbar-inner{max-width:1460px;margin:0 auto;padding:12px 18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,251,244,.9);backdrop-filter:blur(18px);box-shadow:0 12px 30px rgba(63,48,24,.07);display:flex;justify-content:space-between;align-items:center;gap:16px}
+        .brand{display:flex;align-items:center;gap:12px;font-weight:800;color:var(--text)}
+        .brand-mark{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#0f766e,#2563eb);color:#fff;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+        .brand-copy{display:grid;gap:2px}.brand-copy strong{font-size:.96rem}.brand-copy span{font-size:.8rem;color:var(--muted)}
+        .nav-links{display:flex;flex-wrap:wrap;gap:8px}.nav-links a{padding:10px 12px;border-radius:999px;color:var(--muted);font-weight:700}.nav-links a:hover{background:rgba(15,118,110,.08);color:var(--text)}
+        .status-chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(15,118,110,.16);background:rgba(15,118,110,.08);color:var(--accent);font-weight:800;min-height:42px}
+        .page{padding-top:18px}
+        .hero,.panel,.card,.stage,.decision,.tile{background:rgba(255,252,247,.94);border:1px solid var(--line);box-shadow:0 16px 34px rgba(72,55,25,.06)}
+        .hero{background:linear-gradient(135deg,rgba(255,252,247,.98),rgba(246,241,231,.98))}
+        .card,.stage,.decision,.tile,.article a,.article div.body,.headline-row,.reason-item,.mono,.src-chip{background:#fbf7f0}
+        .btn{background:#fff;color:var(--text);border-color:rgba(44,70,67,.14);box-shadow:0 8px 20px rgba(72,55,25,.05)}
+        .btn:hover{border-color:rgba(15,118,110,.28)}
+        .btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+        .hero-grid{align-items:start}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hero-side{display:grid;gap:14px}.compact-meta{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+        .headline-value{font-size:1.6rem;font-weight:800;line-height:1.1}
+        .mini .tile,.stage,.decision{box-shadow:none}
+        .foldout{background:rgba(255,252,247,.95)}.foldout summary{padding:18px 22px}
+        .mono{font-family:"IBM Plex Mono",monospace;color:var(--muted)}
+        .link-chip{background:#fff;color:var(--accent);border-color:rgba(15,118,110,.16)}
+        .link-chip:hover{border-color:rgba(15,118,110,.34)}
+        .knowledge-list,.proposal-list,.observation-list,.pattern-list,.regime-list{display:grid;gap:10px}
+        .knowledge-item,.proposal-item,.observation-item,.pattern-item,.regime-item{padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#fbf7f0}
+        .knowledge-item strong,.proposal-item strong,.observation-item strong,.pattern-item strong,.regime-item strong{display:block;margin-bottom:6px}
+        .small-copy{font-size:.9rem;line-height:1.55;color:var(--muted)}
+        .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(44,70,67,.12);background:#fff;font-size:.76rem;font-weight:700;color:var(--muted)}
+        .subtle-table td,.subtle-table th{font-size:.86rem}
+        @media (max-width:1080px){.topbar-inner{flex-direction:column;align-items:stretch}.status-chip{width:100%}}
+        @media (max-width:760px){.topbar{padding:10px 12px 0}.nav-links{overflow:auto;flex-wrap:nowrap}.hero-actions .btn,.buttons .btn{min-height:46px}}
       </style>
     </head>
     <body>
+      <nav class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href="#overview">
+            <span class="brand-mark">AT</span>
+            <span class="brand-copy">
+              <strong>Agent Trader</strong>
+              <span>Two strategist books, one calmer control surface</span>
+            </span>
+          </a>
+          <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#decisions">Decisions</a>
+            <a href="#knowledge">Knowledge</a>
+            <a href="#news">News</a>
+            <a href="#activity">Activity</a>
+          </div>
+          <div class="status-chip" id="navStatus">Loading latest strategist...</div>
+        </div>
+      </nav>
+
       <div class="page">
-        <header class="hero">
+        <header class="hero" id="overview">
           <div class="hero-grid">
             <div>
               <div class="pill accent">Agent Trader Control Center</div>
-              <h1>What the system saw before it acted</h1>
+              <h1>See the story first, then dive as deep as you need.</h1>
               <p id="heroSummary">Latest research, workflow context, and article-level catalysts from the trading pipeline.</p>
-              <div class="meta" id="heroMeta"></div>
-            </div>
-            <div class="buttons">
+              <div class="hero-actions">
               <a class="btn" id="runLink" href="data/report_research.md" target="_blank" rel="noreferrer">Open latest report</a>
               <a class="btn" id="resetLink" href="https://github.com/Aashay-chaudhari/trader/actions/workflows/trading.yml" target="_blank" rel="noreferrer">Reset project state</a>
               <a class="btn" id="researchLink" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
               <a class="btn" id="monitorLink" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
-              <a class="btn" id="contextLink" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
-              <a class="btn" id="llmLink" href="data/llm.json" target="_blank" rel="noreferrer">LLM analytics JSON</a>
-              <a class="btn" id="dashboardLink" href="data/dashboard.json" target="_blank" rel="noreferrer">Dashboard bundle</a>
+              </div>
+            </div>
+            <div class="hero-side">
+              <div class="card">
+                <div class="label">Active strategist</div>
+                <div class="headline-value" id="heroProfile">-</div>
+                <p id="heroSubline">Strategy context, source-linked evidence, and portfolio state.</p>
+              </div>
+              <div class="meta compact-meta" id="heroMeta"></div>
             </div>
           </div>
         </header>
 
-        <section class="panel">
+        <details class="panel foldout">
+          <summary><div><h2>Quick Access</h2><p>Raw files, architecture docs, and exported artifacts.</p></div><span>Expand</span></summary>
+          <div class="foldout-body">
+            <div class="buttons">
+              <a class="btn" id="contextLink" href="data/context.json" target="_blank" rel="noreferrer">Prompt context JSON</a>
+              <a class="btn" id="llmLink" href="data/llm.json" target="_blank" rel="noreferrer">LLM analytics JSON</a>
+              <a class="btn" id="knowledgeLink" href="data/knowledge.json" target="_blank" rel="noreferrer">Knowledge bundle</a>
+              <a class="btn" id="improvementLink" href="data/improvement_proposals.json" target="_blank" rel="noreferrer">Improvement backlog</a>
+              <a class="btn" id="dashboardLink" href="data/dashboard.json" target="_blank" rel="noreferrer">Dashboard bundle</a>
+              <a class="btn" href="ARCHITECTURE.md" target="_blank" rel="noreferrer">System architecture</a>
+              <a class="btn" href="KNOWLEDGE_ARCHITECTURE.md" target="_blank" rel="noreferrer">Knowledge architecture</a>
+            </div>
+          </div>
+        </details>
+
+        <section class="panel" id="arena">
           <div class="section"><div><h2>Strategist Arena</h2><p>Toggle between the independent Claude and Codex books, then use the comparison board to see which one is compounding more effectively.</p></div></div>
           <div class="buttons" id="profileTabs"></div>
           <div class="mini" id="comparisonCards" style="margin-top:14px"></div>
@@ -98,12 +172,39 @@ DASHBOARD_HTML = dedent(
           </div>
         </details>
 
-        <section class="panel">
-          <div class="section"><div><h2>Decision board</h2><p>Recommendation, trade plan, shortlist rationale, and the articles the LLM had while making the call.</p></div></div>
+        <section class="panel" id="decisions">
+          <div class="section"><div><h2>Decision board</h2><p>Top setups first, with the rationale and linked evidence sitting right beside each trade idea.</p></div></div>
           <div class="decisions" id="decisionBoard"></div>
         </section>
 
-        <details class="panel foldout" open>
+        <section class="panel" id="knowledge">
+          <div class="section"><div><h2>Knowledge Store</h2><p>The accumulated lessons, pattern edges, review summaries, and improvement ideas that feed back into future prompts.</p></div></div>
+          <div class="compact-grid" style="margin-bottom:14px">
+            <div class="card">
+              <h3>Knowledge snapshot</h3>
+              <div class="mini" id="knowledgeSummary"></div>
+            </div>
+            <div class="card">
+              <h3>Prompt-ready memory</h3>
+              <p id="knowledgeBlurb">No accumulated knowledge has been summarized yet.</p>
+              <div class="link-row" id="knowledgeDocs"></div>
+            </div>
+          </div>
+          <div class="split">
+            <div class="stack">
+              <div class="card"><h3>Recent observations</h3><div id="knowledgeObservations"></div></div>
+              <div class="card"><h3>Latest weekly thesis</h3><div id="weeklyThesis"></div></div>
+              <div class="card"><h3>Lessons learned</h3><div id="knowledgeLessons"></div></div>
+            </div>
+            <div class="stack">
+              <div class="card"><h3>Patterns and strategy edges</h3><div id="knowledgePatterns"></div><div id="strategyEdges" style="margin-top:14px"></div></div>
+              <div class="card"><h3>Regime playbook</h3><div id="regimePlaybook"></div></div>
+              <div class="card"><h3>Improvement backlog</h3><div id="improvementBacklog"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <details class="panel foldout" id="news">
           <summary><div><h2>News Influence</h2><p>Linked evidence behind discoveries, headlines, and cross-source movers.</p></div><span>Expand</span></summary>
           <div class="foldout-body">
             <div class="compact-grid" style="margin-bottom:14px">
@@ -123,7 +224,7 @@ DASHBOARD_HTML = dedent(
           </div>
         </details>
 
-        <details class="panel foldout">
+        <details class="panel foldout" id="activity">
           <summary><div><h2>Context & Telemetry</h2><p>Saved memory, provider attempts, and open positions.</p></div><span>Expand</span></summary>
           <div class="foldout-body">
             <div class="context">
@@ -171,6 +272,12 @@ DASHBOARD_HTML = dedent(
         const discoveryCard=d=>{const url=safeUrl(d.top_headline_url||d.url);const title=d.top_headline||d.discovery_reason||"No discovery reason captured.";const heading=url?`<a href="${esc(url)}" target="_blank" rel="noreferrer" style="color:inherit;text-decoration:none">${esc(title)}</a>`:esc(title);return `<div class="tile"><strong>${esc(d.symbol||"?")}</strong><span>${heading}</span><div class="sub">${esc((d.sentiment_label||"mixed")+" | "+(d.news_sentiment!==undefined?Number(d.news_sentiment).toFixed(2):"n/a"))}</div></div>`};
         const hotStockCard=h=>{const articles=dedupeArticles(arr(h.articles));return `<div class="tile"><strong>${esc(h.symbol||"?")}</strong><span>${esc((h.sentiment||"mixed")+" across "+String(h.source_count||0)+" sources")}</span><div class="sub">${esc(truncate(arr(h.reasons).join(" | "),160)||"No reasons captured.")}</div><div class="link-row">${articles.slice(0,3).map(linkChip).join("")}</div></div>`};
         const labelFromId=id=>String(id||"default").replace(/[-_]+/g," ").replace(/\\b\\w/g,m=>m.toUpperCase());
+        const tagRow=items=>arr(items).filter(Boolean).map(item=>`<span class="tag">${esc(item)}</span>`).join("");
+        const cssVar=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        const observationCard=item=>`<div class="observation-item"><strong>${esc(item.date||"Observation")}</strong><div class="small-copy">${esc(item.market_summary||"No observation summary saved.")}</div><div class="tag-row">${tagRow([item.market_regime||"",arr(item.lessons).length?`${arr(item.lessons).length} lesson${arr(item.lessons).length===1?"":"s"}`:""])}</div></div>`;
+        const proposalCard=item=>`<div class="proposal-item"><strong>${esc(item.title||"Untitled proposal")}</strong><div class="small-copy">${esc(item.description||"No proposal description saved.")}</div><div class="tag-row">${tagRow([item.priority||"medium",item.category||"other",item.date||"",item.expected_impact?`Impact: ${item.expected_impact}`:""])}</div></div>`;
+        const strategyCard=item=>`<div class="pattern-item"><strong>${esc(item.name||"Strategy")}</strong><div class="small-copy">${esc(item.best_regime?`Best in ${item.best_regime}.`:"No best regime captured.")}</div><div class="tag-row">${tagRow([item.win_rate===null||item.win_rate===undefined?"":`Win ${Number(item.win_rate*100).toFixed(0)}%`,item.avg_return===null||item.avg_return===undefined?"":`Avg ${Number(item.avg_return).toFixed(2)}%`])}</div></div>`;
+        const regimeCard=item=>`<div class="regime-item"><strong>${esc(item.name||"Regime")}</strong><div class="small-copy">${esc(arr(item.rules).slice(0,2).join(" ")||"No regime rules captured.")}</div><div class="tag-row">${tagRow([arr(item.preferred_strategies).length?`Prefer: ${arr(item.preferred_strategies).join(", ")}`:"",arr(item.avoid_strategies).length?`Avoid: ${arr(item.avoid_strategies).join(", ")}`:"",item.position_size_modifier!==undefined?`Size x${item.position_size_modifier}`:"",item.stop_loss_modifier!==undefined?`Stop x${item.stop_loss_modifier}`:""])}</div></div>`;
 
         let dashboardBundle=null;
         let selectedProfile=null;
@@ -181,7 +288,7 @@ DASHBOARD_HTML = dedent(
           if(Object.keys(profiles).length)return profiles;
           const fallbackProfile=obj(bundle.profile);
           const profileId=fallbackProfile.id||bundle.active_profile||"default";
-          return {[profileId]:{profile:{id:profileId,label:fallbackProfile.label||labelFromId(profileId)},latest:obj(bundle.latest),history:arr(bundle.history),trades:arr(bundle.trades),research:obj(bundle.research),llm:obj(bundle.llm),context:obj(bundle.context),reports:obj(bundle.reports),artifacts:obj(bundle.artifacts)}};
+          return {[profileId]:{profile:{id:profileId,label:fallbackProfile.label||labelFromId(profileId)},latest:obj(bundle.latest),history:arr(bundle.history),trades:arr(bundle.trades),research:obj(bundle.research),llm:obj(bundle.llm),context:obj(bundle.context),knowledge:obj(bundle.knowledge),reports:obj(bundle.reports),artifacts:obj(bundle.artifacts)}};
         }
 
         function comparisonSummary(bundle,profiles){
@@ -208,6 +315,74 @@ DASHBOARD_HTML = dedent(
           return Object.keys(profiles)[0]||"default";
         }
 
+        function renderKnowledge(profileBundle){
+          const knowledge=obj(profileBundle.knowledge);
+          const counts=obj(knowledge.counts);
+          const observations=arr(knowledge.recent_observations);
+          const weekly=obj(knowledge.latest_weekly_review);
+          const monthly=obj(knowledge.latest_monthly_review);
+          const lessons=arr(knowledge.lessons);
+          const patterns=arr(knowledge.patterns);
+          const strategies=arr(knowledge.strategies);
+          const regimes=arr(knowledge.regimes);
+          const proposals=arr(knowledge.proposals);
+          const promptPreview=obj(knowledge.prompt_preview);
+
+          document.getElementById("knowledgeSummary").innerHTML=[
+            ["Daily Notes",String(counts.daily_observations??0)],
+            ["Weekly Reviews",String(counts.weekly_reviews??0)],
+            ["Lessons",String(counts.lessons??0)],
+            ["Patterns",String(counts.patterns??0)],
+            ["Regimes",String(counts.regimes??0)],
+            ["Open Proposals",String(counts.pending_proposals??0)]
+          ].map(([label,value])=>miniCard(label,value)).join("");
+
+          const previewText=promptPreview.knowledge_context||promptPreview.observations_context||"The knowledge store exists, but no prompt-ready summary has been written yet.";
+          document.getElementById("knowledgeBlurb").textContent=truncate(previewText,320);
+          document.getElementById("knowledgeDocs").innerHTML=[
+            `<a class="link-chip" href="ARCHITECTURE.md" target="_blank" rel="noreferrer">System architecture</a>`,
+            `<a class="link-chip" href="KNOWLEDGE_ARCHITECTURE.md" target="_blank" rel="noreferrer">Knowledge architecture</a>`,
+            document.getElementById("knowledgeLink").href?`<a class="link-chip" href="${esc(document.getElementById("knowledgeLink").href)}" target="_blank" rel="noreferrer">Knowledge JSON</a>`:"",
+            document.getElementById("improvementLink").href?`<a class="link-chip" href="${esc(document.getElementById("improvementLink").href)}" target="_blank" rel="noreferrer">Improvement backlog</a>`:""
+          ].filter(Boolean).join("");
+
+          document.getElementById("knowledgeObservations").innerHTML=observations.length
+            ? `<div class="observation-list">${observations.map(observationCard).join("")}</div>`
+            : empty("No daily observations have been saved yet.");
+
+          const weeklyTags=[
+            obj(weekly.summary).trades_count!==undefined?`${weekly.summary.trades_count} trades`:"",
+            obj(weekly.summary).win_rate!==undefined?`Win ${Number(obj(weekly.summary).win_rate*100).toFixed(0)}%`:"",
+            obj(weekly.forward_thesis).confidence!==undefined?`Confidence ${Number(obj(weekly.forward_thesis).confidence*100).toFixed(0)}%`:"",
+            obj(weekly.regime_analysis).dominant?`Regime: ${weekly.regime_analysis.dominant}`:""
+          ];
+          document.getElementById("weeklyThesis").innerHTML=Object.keys(weekly).length
+            ? `<div class="knowledge-item"><strong>${esc(weekly.week_start||"Latest weekly review")}</strong><div class="small-copy">${esc(obj(weekly.forward_thesis).outlook||obj(weekly.summary).summary||weekly.summary?.headline||"No weekly thesis saved.")}</div><div class="tag-row">${tagRow(weeklyTags)}</div>${arr(obj(weekly.forward_thesis).key_risks).length?`<div class="small-copy" style="margin-top:10px">Key risks: ${esc(arr(obj(weekly.forward_thesis).key_risks).slice(0,3).join(", "))}</div>`:""}</div>`
+            : empty("No weekly review has been written yet.");
+
+          document.getElementById("knowledgeLessons").innerHTML=lessons.length
+            ? `<div class="knowledge-list">${lessons.map(item=>`<div class="knowledge-item"><strong>Lesson</strong><div class="small-copy">${esc(item)}</div></div>`).join("")}</div>`
+            : empty("No lessons have been distilled yet.");
+
+          document.getElementById("knowledgePatterns").innerHTML=patterns.length
+            ? `<div class="pattern-list">${patterns.map(item=>`<div class="pattern-item"><strong>${esc(item.name||"Pattern")}</strong><div class="small-copy">${esc(item.description||item.notes||"No pattern notes stored.")}</div><div class="tag-row">${tagRow([item.win_rate!==undefined?`Win ${Number(item.win_rate*100).toFixed(0)}%`:"",item.total_occurrences!==undefined?`${item.total_occurrences} observations`:"",item.best_regime?`Best: ${item.best_regime}`:"",arr(item.symbols_seen).length?arr(item.symbols_seen).slice(0,4).join(", "):""])}</div></div>`).join("")}</div>`
+            : empty("No pattern library entries have been saved yet.");
+
+          document.getElementById("strategyEdges").innerHTML=strategies.length
+            ? `<div class="pattern-list">${strategies.map(strategyCard).join("")}</div>`
+            : empty("No strategy effectiveness summary has been saved yet.");
+
+          document.getElementById("regimePlaybook").innerHTML=regimes.length
+            ? `<div class="regime-list">${regimes.map(regimeCard).join("")}</div>`
+            : Object.keys(monthly).length
+              ? `<div class="knowledge-item"><strong>${esc(monthly.month||"Latest monthly review")}</strong><div class="small-copy">${esc(obj(monthly.vs_last_month).improvement_areas||"Monthly review available, but no explicit regime playbook was stored.")}</div></div>`
+              : empty("No regime playbook has been written yet.");
+
+          document.getElementById("improvementBacklog").innerHTML=proposals.length
+            ? `<div class="proposal-list">${proposals.map(proposalCard).join("")}</div>`
+            : empty("No improvement proposals have been captured yet.");
+        }
+
         function renderComparison(bundle,profiles){
           const summary=comparisonSummary(bundle,profiles).sort((a,b)=>(num(b.portfolio_value)||0)-(num(a.portfolio_value)||0));
           const byId=Object.fromEntries(summary.map(item=>[item.profile,item]));
@@ -228,6 +403,8 @@ DASHBOARD_HTML = dedent(
           document.getElementById("monitorLink").href=monitorPath;
           document.getElementById("contextLink").href=artifacts.context_json||"data/context.json";
           document.getElementById("llmLink").href=artifacts.llm_json||"data/llm.json";
+          document.getElementById("knowledgeLink").href=artifacts.knowledge_json||"data/knowledge.json";
+          document.getElementById("improvementLink").href=artifacts.improvement_json||"data/improvement_proposals.json";
           document.getElementById("dashboardLink").href=artifacts.dashboard_json||"data/dashboard.json";
           const runLink=document.getElementById("runLink");
           if(runUrl){runLink.href=runUrl;runLink.textContent="Open GitHub Actions run";}else{runLink.href=researchPath;runLink.textContent="Open latest report";}
@@ -248,10 +425,14 @@ DASHBOARD_HTML = dedent(
           const runtime=obj(llm.runtime)||obj(obj(context.llm_meta).runtime);
           const runUrl=runtime.github?.run_url||context.llm_meta?.runtime?.github?.run_url||"";
           updateLinks(profileBundle,runUrl,runtime);
+          document.getElementById("navStatus").textContent=`Viewing ${profile.label||labelFromId(profile.id)}`;
+          document.getElementById("heroProfile").textContent=profile.label||labelFromId(profile.id);
           document.getElementById("heroSummary").textContent=[`${profile.label||labelFromId(profile.id)} is active.`,research.market_summary,research.market_regime?`Regime: ${research.market_regime}`:"",best.length?`Top ideas: ${best.join(", ")}`:""].filter(Boolean).join(" | ")||"Latest research and workflow context loaded.";
-          document.getElementById("heroMeta").innerHTML=[["Strategist",profile.label||labelFromId(profile.id)],["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
+          document.getElementById("heroSubline").textContent=[`Provider: ${llm.selected_provider||llm.provider||context.provider||"-"}`,`Model: ${llm.selected_model||llm.model||context.model||"-"}`,best.length?`Watching ${best.join(", ")}`:"No standout opportunity saved yet"].join(" | ");
+          document.getElementById("heroMeta").innerHTML=[["Last Updated",dateText(latest.timestamp||bundle.generated_at)],["Provider",llm.selected_provider||llm.provider||context.provider||"-"],["Model",llm.selected_model||llm.model||context.model||"-"],["Symbols",String(arr(context.symbols).length||Object.keys(perSymbol).length||Object.keys(obj(research.stocks)).length)],["Prompt Articles",String(totalArticles)],["Best Opportunities",best.join(", ")||"None"]].map(([l,v])=>`<div class="card" style="padding:14px"><div class="label">${esc(l)}</div><div>${esc(v)}</div></div>`).join("");
           document.getElementById("portfolioValue").textContent=fmtMoney(latest.portfolio_value); document.getElementById("cashValue").textContent=fmtMoney(latest.cash); document.getElementById("positionCount").textContent=String(latest.position_count||positions.length); document.getElementById("tradeCount").textContent=String(trades.length); document.getElementById("articleCount").textContent=String(totalArticles); document.getElementById("modeNote").textContent=trades.some(t=>(t.status||"").toLowerCase()!=="dry_run")?"Live execution detected":"Dry-run history";
           const pnl=document.getElementById("totalPnl"); pnl.textContent=signMoney(latest.total_pnl); pnl.className="value "+cls(latest.total_pnl); const pnlPct=document.getElementById("totalPnlPct"); pnlPct.textContent=fmtPct(latest.total_pnl_pct); pnlPct.className="sub "+cls(latest.total_pnl_pct);
+          renderKnowledge(profileBundle);
 
           document.getElementById("workflow").innerHTML=[
             {title:"News",summary:"Headlines, filings, and analyst changes were gathered before research.",metric:String(totalArticles),lines:[`${marketHeadlines.length} market headlines`,`${discoveries.length} discoveries`,`${hotStocks.length} hot stocks`,...marketHeadlines.slice(0,3).map(x=>x.title||"")]},
@@ -282,7 +463,7 @@ DASHBOARD_HTML = dedent(
           document.getElementById("tradesTable").innerHTML=trades.length?trades.slice(-60).reverse().map(x=>`<tr><td>${esc(dateText(x.timestamp))}</td><td><strong>${esc(x.symbol||"")}</strong></td><td>${esc(String((x.action||"").toUpperCase()))}</td><td>${esc(x.quantity??"-")}</td><td>${fmtMoney(x.price)}</td><td>${fmtMoney(x.value)}</td><td>${esc(x.status||"-")}</td><td>${esc(x.reasoning||x.reason||"-")}</td></tr>`).join(""):`<tr><td colspan="8">${empty("No trades yet.")}</td></tr>`;
 
           if(valueChartInstance){valueChartInstance.destroy();valueChartInstance=null;}
-          const history=arr(profileBundle.history); if(history.length&&window.Chart){valueChartInstance=new Chart(document.getElementById("valueChart").getContext("2d"),{type:"line",data:{labels:history.map(x=>dateText(x.timestamp)),datasets:[{label:"Portfolio Value",data:history.map(x=>x.portfolio_value),borderColor:"#7dd3fc",backgroundColor:"rgba(125,211,252,.12)",fill:true,tension:.25,borderWidth:2,pointRadius:2}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:"#95a7ca"}}},scales:{x:{ticks:{color:"#95a7ca",maxTicksLimit:8},grid:{color:"rgba(126,166,235,.08)"}},y:{ticks:{color:"#95a7ca",callback:v=>"$"+Number(v).toLocaleString()},grid:{color:"rgba(126,166,235,.08)"}}}}});}
+          const history=arr(profileBundle.history); if(history.length&&window.Chart){const muted=cssVar("--muted")||"#5e706b";const accent=cssVar("--accent")||"#0f766e";valueChartInstance=new Chart(document.getElementById("valueChart").getContext("2d"),{type:"line",data:{labels:history.map(x=>dateText(x.timestamp)),datasets:[{label:"Portfolio Value",data:history.map(x=>x.portfolio_value),borderColor:accent,backgroundColor:"rgba(15,118,110,.10)",fill:true,tension:.25,borderWidth:2,pointRadius:2}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:muted}}},scales:{x:{ticks:{color:muted,maxTicksLimit:8},grid:{color:"rgba(44,70,67,.08)"}},y:{ticks:{color:muted,callback:v=>"$"+Number(v).toLocaleString()},grid:{color:"rgba(44,70,67,.08)"}}}}});}
         }
 
         function renderDashboard(){
@@ -320,11 +501,14 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "research.json", bundle["research"])
     _write_json(data_out / "llm.json", bundle["llm"])
     _write_json(data_out / "context.json", bundle["context"])
+    _write_json(data_out / "knowledge.json", bundle["knowledge"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
     active_root = profile_roots.get(bundle["active_profile"], data_root)
     _copy_latest_report_artifact(active_root, data_out / "report_research.md", phase="research", suffix=".md")
     _copy_latest_report_artifact(active_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
+    _copy_if_exists(active_root / "improvement_proposals.json", data_out / "improvement_proposals.json")
+    _copy_if_exists(active_root / "IMPROVEMENT_PROPOSALS.md", data_out / "IMPROVEMENT_PROPOSALS.md")
 
     for profile_id, profile_root in profile_roots.items():
         profile_bundle = bundle["profiles"][profile_id]
@@ -337,10 +521,19 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "research.json", profile_bundle["research"])
         _write_json(profile_out / "llm.json", profile_bundle["llm"])
         _write_json(profile_out / "context.json", profile_bundle["context"])
+        _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
         _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
         _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
         _copy_latest_report_artifact(profile_root, profile_out / "report_research.md", phase="research", suffix=".md")
         _copy_latest_report_artifact(profile_root, profile_out / "report_monitor.md", phase="monitor", suffix=".md")
+        _copy_if_exists(
+            profile_root / "improvement_proposals.json",
+            profile_out / "improvement_proposals.json",
+        )
+        _copy_if_exists(
+            profile_root / "IMPROVEMENT_PROPOSALS.md",
+            profile_out / "IMPROVEMENT_PROPOSALS.md",
+        )
 
     rules_path = active_root / "feedback" / "learned_rules.json"
     if rules_path.exists():
@@ -375,6 +568,7 @@ def _build_dashboard_bundle(
         "research": active_bundle["research"],
         "llm": active_bundle["llm"],
         "context": active_bundle["context"],
+        "knowledge": active_bundle["knowledge"],
         "reports": active_bundle["reports"],
     }
 
@@ -416,8 +610,133 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "research": research,
         "llm": llm,
         "context": context,
+        "knowledge": _load_knowledge_bundle(data_root),
         "reports": {"research": research_report, "monitor": monitor_report},
         "artifacts": _build_profile_artifacts(profile["id"], multi_profile=multi_profile),
+    }
+
+
+def _load_knowledge_bundle(data_root: Path) -> dict[str, Any]:
+    observations_root = data_root / "observations"
+    knowledge_root = data_root / "knowledge"
+
+    recent_daily = _load_recent_json_series(observations_root / "daily", "obs_*.json", limit=4)
+    recent_weekly = _load_recent_json_series(observations_root / "weekly", "week_*.json", limit=3)
+    recent_monthly = _load_recent_json_series(observations_root / "monthly", "month_*.json", limit=2)
+
+    lessons_payload = _read_json(knowledge_root / "lessons_learned.json", {"lessons": []})
+    patterns_payload = _read_json(knowledge_root / "patterns_library.json", {"patterns": []})
+    strategy_payload = _read_json(knowledge_root / "strategy_effectiveness.json", {})
+    regime_payload = _read_json(knowledge_root / "regime_library.json", {"regimes": {}})
+    proposal_entries = _read_json(data_root / "improvement_proposals.json", [])
+
+    lessons = [
+        str(item).strip()
+        for item in _safe_list(lessons_payload.get("lessons"))
+        if str(item).strip()
+    ][-10:]
+    lessons.reverse()
+
+    patterns = [
+        item
+        for item in _safe_list(patterns_payload.get("patterns"))
+        if isinstance(item, dict)
+    ]
+    patterns.sort(
+        key=lambda item: (
+            item.get("last_seen", ""),
+            _safe_float(str(item.get("win_rate", 0))),
+            int(item.get("total_occurrences", item.get("occurrences", 0)) or 0),
+        ),
+        reverse=True,
+    )
+    patterns = patterns[:8]
+
+    strategies = _flatten_strategy_effectiveness(strategy_payload)
+    regimes = _flatten_regime_library(regime_payload)
+    proposals = _flatten_improvement_proposals(proposal_entries)
+
+    current_regime = ""
+    latest_weekly = recent_weekly[0] if recent_weekly else {}
+    latest_monthly = recent_monthly[0] if recent_monthly else {}
+    if isinstance(latest_weekly.get("regime_analysis"), dict):
+        current_regime = str(latest_weekly["regime_analysis"].get("dominant", "")).strip()
+    if not current_regime and recent_daily:
+        current_regime = str(recent_daily[0].get("market_regime", "")).strip()
+
+    prompt_preview = {"knowledge_context": "", "observations_context": ""}
+    try:
+        from agent_trader.utils.knowledge_base import KnowledgeBase
+
+        watchlist = _read_json(data_root / "cache" / "watchlist.json", [])
+        kb = KnowledgeBase(str(data_root))
+        prompt_preview = {
+            "knowledge_context": kb.build_knowledge_context(
+                token_budget=600,
+                watchlist=watchlist if isinstance(watchlist, list) else None,
+                current_regime=current_regime,
+            ),
+            "observations_context": kb.build_observations_context(token_budget=280),
+        }
+    except Exception:
+        prompt_preview = {"knowledge_context": "", "observations_context": ""}
+
+    counts = {
+        "daily_observations": len(list((observations_root / "daily").glob("obs_*.json"))),
+        "weekly_reviews": len(list((observations_root / "weekly").glob("week_*.json"))),
+        "monthly_reviews": len(list((observations_root / "monthly").glob("month_*.json"))),
+        "patterns": len(
+            [item for item in _safe_list(patterns_payload.get("patterns")) if isinstance(item, dict)]
+        ),
+        "lessons": len(
+            [item for item in _safe_list(lessons_payload.get("lessons")) if str(item).strip()]
+        ),
+        "strategies": len(strategies),
+        "regimes": len(regimes),
+        "pending_proposals": len(proposals),
+    }
+
+    return {
+        "counts": counts,
+        "recent_observations": recent_daily,
+        "weekly_reviews": recent_weekly,
+        "monthly_reviews": recent_monthly,
+        "latest_weekly_review": latest_weekly,
+        "latest_monthly_review": latest_monthly,
+        "lessons": lessons,
+        "patterns": patterns,
+        "strategies": strategies,
+        "regimes": regimes,
+        "proposals": proposals,
+        "prompt_preview": prompt_preview,
+        "improvement_log_present": (data_root / "IMPROVEMENT_PROPOSALS.md").exists(),
+    }
+
+
+def _empty_knowledge_bundle() -> dict[str, Any]:
+    return {
+        "counts": {
+            "daily_observations": 0,
+            "weekly_reviews": 0,
+            "monthly_reviews": 0,
+            "patterns": 0,
+            "lessons": 0,
+            "strategies": 0,
+            "regimes": 0,
+            "pending_proposals": 0,
+        },
+        "recent_observations": [],
+        "weekly_reviews": [],
+        "monthly_reviews": [],
+        "latest_weekly_review": {},
+        "latest_monthly_review": {},
+        "lessons": [],
+        "patterns": [],
+        "strategies": [],
+        "regimes": [],
+        "proposals": [],
+        "prompt_preview": {"knowledge_context": "", "observations_context": ""},
+        "improvement_log_present": False,
     }
 
 
@@ -543,7 +862,7 @@ def _load_profile_metadata(data_root: Path, *, profile_id: str) -> dict[str, Any
 
 
 def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[str, str]:
-    base = f"data/profiles/{profile_id}"
+    base = f"data/profiles/{profile_id}" if multi_profile else "data"
     return {
         "dashboard_json": f"{base}/dashboard.json",
         "latest_json": f"{base}/latest.json",
@@ -552,6 +871,9 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "research_json": f"{base}/research.json",
         "llm_json": f"{base}/llm.json",
         "context_json": f"{base}/context.json",
+        "knowledge_json": f"{base}/knowledge.json",
+        "improvement_json": f"{base}/improvement_proposals.json",
+        "improvement_md": f"{base}/IMPROVEMENT_PROPOSALS.md",
         "research_report_json": f"{base}/report_research.json",
         "monitor_report_json": f"{base}/report_monitor.json",
         "research_report_md": f"{base}/report_research.md",
@@ -572,6 +894,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "research": {},
         "llm": {},
         "context": {},
+        "knowledge": _empty_knowledge_bundle(),
         "reports": {"research": {}, "monitor": {}},
         "artifacts": _build_profile_artifacts(profile_id, multi_profile=True),
     }
@@ -876,6 +1199,81 @@ def _extract_llm_meta(source: dict[str, Any]) -> dict[str, Any]:
     return meta if isinstance(meta, dict) else {}
 
 
+def _load_recent_json_series(directory: Path, pattern: str, *, limit: int) -> list[dict[str, Any]]:
+    if not directory.exists():
+        return []
+    records: list[dict[str, Any]] = []
+    for path in sorted(directory.glob(pattern), reverse=True)[:limit]:
+        payload = _read_json(path, {})
+        if isinstance(payload, dict):
+            records.append(payload)
+    return records
+
+
+def _flatten_strategy_effectiveness(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    strategies: list[dict[str, Any]] = []
+    for name, details in payload.items():
+        if name == "last_updated" or not isinstance(details, dict):
+            continue
+        strategies.append(
+            {
+                "name": name,
+                "win_rate": details.get("win_rate"),
+                "avg_return": details.get("avg_return"),
+                "best_regime": details.get("best_regime"),
+            }
+        )
+    strategies.sort(key=lambda item: num_or_zero(item.get("win_rate")), reverse=True)
+    return strategies[:8]
+
+
+def _flatten_regime_library(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    regimes_payload = payload.get("regimes", {})
+    if not isinstance(regimes_payload, dict):
+        return []
+
+    regimes: list[dict[str, Any]] = []
+    for name, details in sorted(regimes_payload.items()):
+        if not isinstance(details, dict):
+            continue
+        regimes.append(
+            {
+                "name": name,
+                "preferred_strategies": _safe_list(details.get("preferred_strategies")),
+                "avoid_strategies": _safe_list(details.get("avoid_strategies")),
+                "rules": _safe_list(details.get("rules")),
+                "position_size_modifier": details.get("position_size_modifier"),
+                "stop_loss_modifier": details.get("stop_loss_modifier"),
+            }
+        )
+    return regimes
+
+
+def _flatten_improvement_proposals(entries: Any) -> list[dict[str, Any]]:
+    flattened: list[dict[str, Any]] = []
+    if not isinstance(entries, list):
+        return flattened
+
+    for entry in reversed(entries[-8:]):
+        if not isinstance(entry, dict):
+            continue
+        date = str(entry.get("date", "")).strip()
+        for proposal in _safe_list(entry.get("proposals")):
+            if not isinstance(proposal, dict):
+                continue
+            flattened.append(
+                {
+                    "date": date,
+                    "priority": proposal.get("priority", "medium"),
+                    "category": proposal.get("category", "other"),
+                    "title": proposal.get("title", "Untitled proposal"),
+                    "description": proposal.get("description", ""),
+                    "expected_impact": proposal.get("expected_impact", ""),
+                }
+            )
+    return flattened[:10]
+
+
 def _copy_latest_report_artifact(
     data_root: Path,
     destination: Path,
@@ -901,8 +1299,20 @@ def _write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
 
 
+def _copy_if_exists(source: Path, destination: Path) -> None:
+    if source.exists():
+        destination.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+
+
 def _safe_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
+
+
+def num_or_zero(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def _deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
