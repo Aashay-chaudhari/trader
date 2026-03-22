@@ -66,6 +66,8 @@ def main():
                               help="Reset all strategist profile data under data/profiles")
     reset_parser.add_argument("--docs", action="store_true",
                               help="Also clear generated GitHub Pages output under docs/")
+    reset_parser.add_argument("--keep-knowledge", action="store_true",
+                              help="Preserve knowledge/ and observations/ dirs (reset only runtime)")
     reset_parser.add_argument("--data-dir", help="Override data directory to reset")
     reset_parser.add_argument("--docs-dir", help="Override docs directory to reset")
 
@@ -216,6 +218,7 @@ def cmd_reset(args):
         docs_dir=args.docs_dir,
         all_profiles=bool(args.all_profiles),
         include_docs=bool(args.docs),
+        keep_knowledge=bool(args.keep_knowledge),
     )
     console.print("[green]Project state reset complete.[/green]")
     console.print(f"  Data root: {summary['data_root']}")

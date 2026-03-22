@@ -22,9 +22,22 @@ TOP_LEVEL_DATA_DIRS = (
     "staging",
 )
 
+# Dirs preserved when --keep-knowledge is used.
+KNOWLEDGE_DIRS = (
+    "knowledge",
+    "observations",
+    "positions",
+)
+
 TOP_LEVEL_DATA_FILES = (
     "portfolio_state.json",
     "profile.json",
+)
+
+# Files preserved when --keep-knowledge is used.
+KNOWLEDGE_FILES = (
+    "IMPROVEMENT_PROPOSALS.md",
+    "improvement_proposals.json",
 )
 
 
@@ -34,8 +47,14 @@ def reset_project_state(
     docs_dir: str | None = None,
     all_profiles: bool = False,
     include_docs: bool = False,
+    keep_knowledge: bool = False,
 ) -> dict[str, Any]:
-    """Reset generated runtime state for one profile or the whole project."""
+    """Reset generated runtime state for one profile or the whole project.
+
+    When *keep_knowledge* is True, knowledge/, observations/, positions/,
+    and improvement-proposal files are preserved — only runtime artifacts
+    (cache, journal, analytics, staging, context, snapshots) are cleared.
+    """
     settings = get_settings()
     configured_root = Path(data_dir or settings.data_dir)
     base_data_root = _base_data_root(configured_root)
@@ -44,10 +63,18 @@ def reset_project_state(
     if all_profiles:
         _reset_top_level_data_root(base_data_root, removed)
         profiles_root = base_data_root / "profiles"
-        _remove_path(profiles_root, removed)
+        if keep_knowledge:
+            # Walk each profile and reset selectively.
+            if profiles_root.exists():
+                for profile_dir in profiles_root.iterdir():
+                    if profile_dir.is_dir():
+                        _reset_profile_root(profile_dir, removed, keep_knowledge=True)
+                        _write_profile_metadata(profile_dir)
+        else:
+            _remove_path(profiles_root, removed)
     else:
         if _is_profile_root(configured_root):
-            _reset_profile_root(configured_root, removed)
+            _reset_profile_root(configured_root, removed, keep_knowledge=keep_knowledge)
             _write_profile_metadata(configured_root)
         else:
             _reset_top_level_data_root(configured_root, removed)
@@ -59,6 +86,7 @@ def reset_project_state(
     return {
         "data_root": str(configured_root),
         "all_profiles": all_profiles,
+        "keep_knowledge": keep_knowledge,
         "include_docs": include_docs,
         "removed": removed,
     }
@@ -76,9 +104,16 @@ def _is_profile_root(root: Path) -> bool:
     return root.parent.name == "profiles"
 
 
-def _reset_profile_root(root: Path, removed: list[str]) -> None:
+def _reset_profile_root(
+    root: Path, removed: list[str], *, keep_knowledge: bool = False,
+) -> None:
     if root.exists():
+        preserved = set(KNOWLEDGE_DIRS) | {f.split(".")[0] for f in KNOWLEDGE_FILES}
         for child in root.iterdir():
+            if keep_knowledge and child.name in KNOWLEDGE_DIRS:
+                continue
+            if keep_knowledge and child.name in KNOWLEDGE_FILES:
+                continue
             _remove_path(child, removed)
     root.mkdir(parents=True, exist_ok=True)
 
