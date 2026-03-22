@@ -51,6 +51,9 @@ def test_research_agent_falls_back_to_openai_when_only_openai_key_present(
     assert agent._get_provider_name() == "openai"
     assert agent._get_research_model() == "gpt-4o-mini"
     assert agent._get_monitor_model() == "gpt-4o-mini"
+    assert agent._get_model_for_phase("openai", "evening_reflection") == "gpt-4o-mini"
+    assert agent._get_model_for_phase("openai", "weekly_consolidation") == "gpt-4o-mini"
+    assert agent._get_model_for_phase("openai", "monthly_retrospective") == "gpt-4o-mini"
 
 
 def test_research_agent_honors_provider_preference_when_both_keys_present(
@@ -339,6 +342,56 @@ async def test_research_agent_cli_path_falls_back_without_raising(
 
     assert result["research"]["market_summary"] == "fallback ok"
     assert result["research"]["_meta"]["provider"] == "openai"
+
+
+@pytest.mark.asyncio
+async def test_research_agent_reflection_phase_does_not_require_market_data(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "false")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    monkeypatch.setattr(
+        research_module,
+        "build_recent_artifact_summary",
+        lambda **kwargs: "recent artifacts",
+    )
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    async def fake_call_analysis(self, prompt: str, phase: str, **kwargs) -> dict:
+        assert phase == "evening_reflection"
+        return {
+            "date": "2026-03-22",
+            "market_regime": "neutral",
+            "market_summary": "Reflection succeeded",
+            "lessons": ["Keep sizing tight after resets."],
+            "_meta": {"status": "success", "provider": "openai", "model": "gpt-4o-mini"},
+        }
+
+    monkeypatch.setattr(ResearchAgent, "_call_phase_analysis", fake_call_analysis)
+    monkeypatch.setattr(ResearchAgent, "_save_research", lambda self, analysis, phase: None)
+
+    result = await agent.process(
+        Message(
+            type=MessageType.COMMAND,
+            source="test",
+            data={
+                "phase": "evening_reflection",
+                "market_data": {},
+                "todays_trades": "No trades executed today.",
+                "market_regime_summary": "Flat tape.",
+                "active_positions": "No active swing positions.",
+                "recent_observations": "No prior observations.",
+                "symbols": ["AAPL"],
+            },
+        )
+    )
+
+    assert result["phase"] == "evening_reflection"
+    assert result["research"]["market_summary"] == "Reflection succeeded"
 
 
 @pytest.mark.asyncio

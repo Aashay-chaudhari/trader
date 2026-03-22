@@ -46,6 +46,9 @@ from agent_trader.utils.cli_agent import (
     write_staging_data,
     build_research_task,
     build_monitor_task,
+    build_reflection_task,
+    build_weekly_consolidation_task,
+    build_monthly_retrospective_task,
     run_cli_agent,
 )
 from agent_trader.utils.knowledge_base import KnowledgeBase
@@ -544,8 +547,15 @@ class ResearchAgent(BaseAgent):
         return providers[0] if providers else ""
 
     async def process(self, message: Message) -> Any:
-        market_data = message.data.get("market_data", {})
         phase = message.data.get("phase", "research")
+        if phase == "evening_reflection":
+            return await self._handle_evening_reflection(message)
+        if phase == "weekly_consolidation":
+            return await self._handle_weekly_consolidation(message)
+        if phase == "monthly_retrospective":
+            return await self._handle_monthly_retrospective(message)
+
+        market_data = message.data.get("market_data", {})
         screener_results = message.data.get("screener_results")
         morning_context = message.data.get("morning_context")
         news_data = message.data.get("news", {})
@@ -594,15 +604,6 @@ class ResearchAgent(BaseAgent):
                 performance_summary=json.dumps(performance_summary, indent=2),
                 trade_details=trade_details,
             )
-        elif phase == "evening_reflection":
-            analysis = await self._handle_evening_reflection(message)
-            return analysis
-        elif phase == "weekly_consolidation":
-            analysis = await self._handle_weekly_consolidation(message)
-            return analysis
-        elif phase == "monthly_retrospective":
-            analysis = await self._handle_monthly_retrospective(message)
-            return analysis
         else:
             performance_feedback = self._tracker.get_recent_trades_for_prompt()
             learned_rules = self._tracker.get_learned_rules()
@@ -758,7 +759,12 @@ class ResearchAgent(BaseAgent):
         return settings.research_model_openai
 
     def _get_model_for_phase(self, provider: str, phase: str) -> str:
-        if phase == "monitor":
+        if phase in {
+            "monitor",
+            "evening_reflection",
+            "weekly_consolidation",
+            "monthly_retrospective",
+        }:
             return self._get_monitor_model(provider)
         return self._get_research_model(provider)
 
@@ -1405,13 +1411,19 @@ class ResearchAgent(BaseAgent):
                 # Build the task prompt
                 if phase == "monitor":
                     task = build_monitor_task(symbols, data_dir=settings.data_dir)
+                elif phase == "evening_reflection":
+                    task = build_reflection_task(data_dir=settings.data_dir)
+                elif phase == "weekly_consolidation":
+                    task = build_weekly_consolidation_task(data_dir=settings.data_dir)
+                elif phase == "monthly_retrospective":
+                    task = build_monthly_retrospective_task(data_dir=settings.data_dir)
                 else:
                     task = build_research_task(symbols, data_dir=settings.data_dir)
 
                 # Determine model for the CLI agent
                 cli_model = None
                 if cli_provider == "claude":
-                    cli_model = settings.research_model if phase != "monitor" else settings.monitor_model
+                    cli_model = self._get_model_for_phase(cli_provider, phase)
 
                 self.logger.info(
                     "Running %s CLI agent (model=%s, max_turns=%d)...",
@@ -1812,9 +1824,7 @@ class ResearchAgent(BaseAgent):
             today_date=today_date,
         )
 
-        # Use Haiku for reflections (cheap)
-        model = settings.monitor_model
-        analysis = await self._call_api_for_phase(prompt, "evening_reflection", model)
+        analysis = await self._call_phase_analysis(prompt, "evening_reflection")
 
         # Save observation to knowledge base
         if settings.enable_knowledge_base and isinstance(analysis, dict):
@@ -1858,8 +1868,7 @@ class ResearchAgent(BaseAgent):
             week_end=week_end,
         )
 
-        model = settings.monitor_model  # Haiku for reviews
-        analysis = await self._call_api_for_phase(prompt, "weekly_consolidation", model)
+        analysis = await self._call_phase_analysis(prompt, "weekly_consolidation")
 
         # Save weekly review (this also updates knowledge base)
         if isinstance(analysis, dict) and analysis.get("_meta", {}).get("status") != "error":
@@ -1898,8 +1907,7 @@ class ResearchAgent(BaseAgent):
             month=month,
         )
 
-        model = settings.monitor_model
-        analysis = await self._call_api_for_phase(prompt, "monthly_retrospective", model)
+        analysis = await self._call_phase_analysis(prompt, "monthly_retrospective")
 
         if isinstance(analysis, dict) and analysis.get("_meta", {}).get("status") != "error":
             kb.save_monthly_review(analysis)
@@ -1913,30 +1921,22 @@ class ResearchAgent(BaseAgent):
             "market_data": data.get("market_data", {}),
         }
 
-    async def _call_api_for_phase(self, prompt: str, phase: str, model: str) -> dict:
-        """Simple API call for reflection/review phases (no CLI agent, no staging)."""
-        providers = self._get_api_provider_sequence()
-        if not providers:
-            return {
-                "_meta": {"status": "error", "error": "No LLM providers available"},
-            }
-
-        for provider in providers:
-            try:
-                client = self._get_client(provider)
-                raw_text, llm_meta = self._call_llm_once(client, provider, model, prompt)
-                analysis = self._parse_llm_response(raw_text)
-                analysis.setdefault("_meta", {}).update({
-                    "status": "success",
-                    "provider": provider,
-                    "model": model,
-                    **llm_meta,
-                })
-                return analysis
-            except Exception as exc:
-                self.logger.warning("%s/%s failed for %s: %s", provider, model, phase, exc)
-                continue
-
-        return {
-            "_meta": {"status": "error", "error": f"All providers failed for {phase}"},
-        }
+    async def _call_phase_analysis(self, prompt: str, phase: str) -> dict:
+        """Run reflection/review phases through the same resilient path as research."""
+        settings = get_settings()
+        return await self._call_analysis(
+            prompt=prompt,
+            phase=phase,
+            symbols=[],
+            market_data={},
+            news_data={},
+            market_context={},
+            market_headlines=[],
+            screener_results=None,
+            news_discoveries=[],
+            hot_stocks=[],
+            finviz_data={},
+            performance_feedback="",
+            learned_rules="",
+            artifact_context=build_recent_artifact_summary(data_dir=settings.data_dir),
+        )
