@@ -1,17 +1,13 @@
 {
-  "status": "success",
-  "execution_mode": "template",
+  "status": "error",
+  "execution_mode": "api",
   "provider_preference": "openai",
-  "provider": "template:codex",
-  "model": "template-v1",
-  "selected_provider": "template:codex",
-  "selected_model": "template-v1",
-  "usage": {
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "total_tokens": 0
-  },
-  "service_tier": "debug-template",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "selected_provider": "openai",
+  "selected_model": "gpt-4o-mini",
+  "usage": {},
+  "service_tier": null,
   "request_id": null,
   "rate_limits": {},
   "runtime": {
@@ -25,33 +21,37 @@
       "workflow": "Trading Pipeline",
       "event_name": "workflow_dispatch",
       "actor": "Aashay-chaudhari",
-      "run_id": "23394172174",
+      "run_id": "23395061105",
       "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23394172174",
-      "sha": "c58aba8d5cc2a9a7094aaf023de5d308f3f7056e",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23395061105",
+      "sha": "9eb050010a2ec2496d6167dfb255eac954697c02",
       "ref": "refs/heads/main"
     }
   },
-  "duration_ms": 0.0,
+  "duration_ms": null,
   "attempts": [
     {
-      "execution_mode": "template",
-      "provider": "template:codex",
-      "model": "template-v1",
-      "status": "success",
-      "duration_ms": 0.0,
-      "usage": {
-        "input_tokens": 0,
-        "output_tokens": 0,
-        "total_tokens": 0
-      }
+      "execution_mode": "cli",
+      "provider": "cli:codex",
+      "model": "default",
+      "status": "error",
+      "duration_ms": 1395.3,
+      "error": "Quota exceeded. Check your plan and billing details.",
+      "quota_issue_detected": true
+    },
+    {
+      "execution_mode": "api",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "status": "error",
+      "duration_ms": 5103.1,
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "quota_issue_detected": true
     }
   ],
-  "quota_issue_detected": false,
-  "quota_note": "Template mode active; no model usage was attempted.",
-  "template_note": "Template response generated in DEBUG_MODE for phase 'research'. No CLI/API model call was made and zero tokens were consumed.",
-  "generated_at": "2026-03-22T02:46:25.416994+00:00",
-  "timestamp": "2026-03-22T02:46:40.801439+00:00",
+  "quota_issue_detected": true,
+  "quota_note": "Quota exceeded. Check your plan and billing details.",
+  "timestamp": "2026-03-22T03:50:15.374050+00:00",
   "phase": "monitor",
   "symbols": [
     "MU",

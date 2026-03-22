@@ -1,109 +1,28 @@
 # Trading Journal — 2026-03-22
 
-**Run ID:** `20260322_024625`  
+**Run ID:** `20260322_034954`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 02:46 UTC  
+**Time:** 03:50 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Template response generated in DEBUG_MODE for phase 'monitor'. No CLI/API model call was made and zero tokens were consumed.
-
-### MU [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for MU: price 422.90, change -4.81%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### INTC [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for INTC: price 43.87, change -5.00%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### PANW [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for PANW: price 162.95, change -4.00%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### UNH [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for UNH: price 275.59, change -1.73%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### ABT [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for ABT: price 105.46, change -1.61%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### HON [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for HON: price 221.50, change -3.29%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### LMT [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for LMT: price 627.43, change -1.58%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### HD [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for HD: price 320.75, change -2.27%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### MA [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for MA: price 496.32, change +1.05%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
-
-### V [~]
-- **Sentiment:** neutral | **Confidence:** 50% | **Recommendation:** hold
-- **Observations:**
-  - Template baseline for V: price 301.62, change +0.64%.
-  - Deterministic debug output used to validate workflow plumbing.
-- **Catalysts:** Disable DEBUG_MODE to enable real catalyst ranking.
-- **Risks:** Template output may not reflect live market conditions.
+> LLM analysis failed: openai/gpt-4o-mini: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
 
 ## LLM Telemetry
 
 - **Platform:** github_actions
 - **Provider Preference:** openai
-- **Selected Provider:** template:codex
-- **Selected Model:** template-v1
-- **Token Usage:** input=0, output=0, total=0
-- **LLM Latency:** 0.0 ms
-- **Quota Note:** Template mode active; no model usage was attempted.
+- **Selected Provider:** openai
+- **Selected Model:** gpt-4o-mini
+- **Quota Note:** Quota exceeded. Check your plan and billing details.
 
 ### Provider Attempts
 
-- template:codex | template-v1 | success | 0.0 ms
+- cli:codex | default | error | 1395.3 ms | Quota exceeded. Check your plan and billing details.
+- openai | gpt-4o-mini | error | 5103.1 ms | Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://pla
 
 ## News Inputs Seen By The LLM
 
@@ -124,10 +43,10 @@
 
 ### INTC Headlines
 
+- **The Tech Stock With More Potential Than Any Cryptocurrency** [Motley Fool]
+- **Could Buying $10,000 of Sandisk Make You a Millionaire?** [Motley Fool]
+- **Better Cybersecurity Stock: Okta vs. Zscaler** [Motley Fool]
 - **2 Financial Stocks That Could Double Over the Next 5 Years** [Motley Fool]
-- **If You Invested $10,000 in Tesla Stock 10 Years Ago, Here's How Much You'd Have Today** [Motley Fool]
-- **1 Cryptocurrency to Buy Before It Soars Over 1,300%, According to an Expert Analyst** [Yahoo]
-- **Prediction: 2 Things That Will Happen to Alibaba in 2026** [Yahoo]
 
 ### PANW Headlines
 
@@ -196,7 +115,7 @@
 | **HON** | BUY | 0.44 | combined(mean_reversion+vwap) | Price (221.50) at lower BB (224.98) | Price (221.50) is -4.9% below VWAP (232.83 |
 | **LMT** | BUY | 0.32 | combined(mean_reversion+vwap) | Price (627.43) at lower BB (626.98) | Price (627.43) is -2.4% below VWAP (642.64 |
 | **HD** | BUY | 0.49 | combined(mean_reversion+support_resistance+vwap) | Price (320.75) at lower BB (319.69) | Price (320.75) near support (320.26) | Pri |
-| **MA** | BUY | 0.52 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 11 news items (sentim |
+| **MA** | BUY | 0.51 | combined(relative_strength+news_catalyst) | Outperforming market by +2.5% (stock +1.1% vs SPY -1.4%) | 16 news items (sentim |
 | **V** | BUY | 0.34 | combined(mean_reversion+relative_strength) | Price (301.62) at lower BB (297.72) | Outperforming market by +2.1% (stock +0.6% |
 
 ## Risk Assessment
@@ -206,45 +125,36 @@
 
 ## Execution
 
-- **INTC** SELL 113 shares @ ~$43.87 = $4,957.31 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **PANW** SELL 30 shares @ ~$162.95 = $4,888.50 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **UNH** SELL 18 shares @ ~$275.59 = $4,960.62 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **ABT** BUY 47 shares @ ~$105.46 = $4,956.62 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **HON** BUY 22 shares @ ~$221.50 = $4,873.00 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **LMT** BUY 7 shares @ ~$627.43 = $4,392.01 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **HD** BUY 15 shares @ ~$320.75 = $4,811.25 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **MA** BUY 10 shares @ ~$496.32 = $4,963.20 [DRY RUN]
-  - _Dry run mode — no order placed_
-- **V** BUY 16 shares @ ~$301.62 = $4,825.92 [DRY RUN]
-  - _Dry run mode — no order placed_
+- **INTC** SELL 113 shares @ ~$0.00 = $4,957.31 [SUBMITTED]
+- **PANW** SELL 30 shares @ ~$0.00 = $4,888.50 [SUBMITTED]
+- **UNH** SELL 18 shares @ ~$0.00 = $4,960.62 [SUBMITTED]
+- **ABT** BUY 47 shares @ ~$0.00 = $4,956.62 [SUBMITTED]
+- **HON** BUY 22 shares @ ~$0.00 = $4,873.00 [SUBMITTED]
+- **LMT** BUY 7 shares @ ~$0.00 = $4,392.01 [SUBMITTED]
+- **HD** BUY 15 shares @ ~$0.00 = $4,811.25 [SUBMITTED]
+- **MA** BUY 10 shares @ ~$0.00 = $4,963.20 [SUBMITTED]
+- **V** BUY 16 shares @ ~$0.00 = $4,825.92 [SUBMITTED]
 
 ## Portfolio Snapshot
 
 | Metric | Value |
 |--------|------:|
-| **Total Value** | $100,000.00 |
-| **Cash** | $71,178.00 |
-| **Invested** | $28,822.00 |
-| **Total P&L** | $+0.00 (+0.00%) |
+| **Total Value** | $128,822.00 |
+| **Cash** | $100,000.00 |
+| **Invested** | $0.00 |
+| **Total P&L** | $+28,822.00 (+28.82%) |
 | **Positions** | 6 |
 
 ### Open Positions
 
 | Symbol | Shares | Avg Cost | Current | Value | P&L |
 |--------|-------:|---------:|--------:|------:|----:|
-| ABT | 47 | $105.46 | $105.46 | $4,956.62 | +$0.00 (+0.00%) |
-| HON | 22 | $221.50 | $221.50 | $4,873.00 | +$0.00 (+0.00%) |
-| LMT | 7 | $627.43 | $627.43 | $4,392.01 | +$0.00 (+0.00%) |
-| HD | 15 | $320.75 | $320.75 | $4,811.25 | +$0.00 (+0.00%) |
-| MA | 10 | $496.32 | $496.32 | $4,963.20 | +$0.00 (+0.00%) |
-| V | 16 | $301.62 | $301.62 | $4,825.92 | +$0.00 (+0.00%) |
+| ABT | 47 | $0.00 | $105.46 | $4,956.62 | +$4,956.62 (+0.00%) |
+| HON | 22 | $0.00 | $221.50 | $4,873.00 | +$4,873.00 (+0.00%) |
+| LMT | 7 | $0.00 | $627.43 | $4,392.01 | +$4,392.01 (+0.00%) |
+| HD | 15 | $0.00 | $320.75 | $4,811.25 | +$4,811.25 (+0.00%) |
+| MA | 10 | $0.00 | $496.32 | $4,963.20 | +$4,963.20 (+0.00%) |
+| V | 16 | $0.00 | $301.62 | $4,825.92 | +$4,825.92 (+0.00%) |
 
 ---
 *Generated by Agent Trader v0.1.0*

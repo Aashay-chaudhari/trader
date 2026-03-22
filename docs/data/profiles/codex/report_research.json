@@ -1,5 +1,5 @@
 {
-  "run_id": "20260322_024540",
+  "run_id": "20260322_034711",
   "phase": "research",
   "profile": {
     "id": "codex",
@@ -8,12 +8,12 @@
     "llm_provider": "openai",
     "use_cli_agent": true,
     "cli_agent_provider": "codex",
-    "cli_agent_max_turns": 1,
-    "cli_agent_timeout": 120,
-    "dry_run": true,
+    "cli_agent_max_turns": 5,
+    "cli_agent_timeout": 300,
+    "dry_run": false,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-03-22T02:46:25.431610+00:00",
+  "timestamp": "2026-03-22T03:49:54.695470+00:00",
   "screener": {
     "shortlist": [
       {
@@ -159,8 +159,8 @@
       "V"
     ],
     "total_scanned": 70,
-    "candidates_found": 76,
-    "news_discovered": 9,
+    "candidates_found": 78,
+    "news_discovered": 11,
     "hot_stocks_count": 0
   },
   "research": {
@@ -2830,349 +2830,554 @@
     },
     "research": {
       "overall_sentiment": "neutral",
-      "market_summary": "Template response generated in DEBUG_MODE for phase 'research'. No CLI/API model call was made and zero tokens were consumed.",
-      "market_regime": "neutral",
+      "market_summary": "Broad risk appetite is mixed: the S&P 500 was recently around 6,816 with notable day-to-day volatility, while volatility metrics stayed elevated in March. Geopolitical and energy-driven headline risk is still influencing sector rotation, favoring selective defensives over broad beta. In this tape, capital preservation and tight risk controls matter more than aggressive position sizing.",
+      "market_regime": "risk_off",
       "best_opportunities": [
         "MU",
-        "INTC"
+        "PANW"
       ],
       "stocks": {
         "MU": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bullish",
+          "confidence": 0.72,
           "key_observations": [
-            "Template baseline for MU: price 422.90, change -4.81%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 385.92 with a day range of 377.35-391.18 and 52-week range of 61.54-455.50.",
+            "YTD return was 35.22% versus S&P 500 1.36%, showing strong relative strength despite a -2.80% down day.",
+            "Earnings date listed as March 18, 2026, with market cap about $434.36B."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "positive",
+          "news_summary": "Recent reporting shows a major earnings beat and strong AI-memory demand backdrop, supporting the medium-term bull case despite short-term post-earnings volatility.",
+          "technical_setup": "Momentum remains strong on a multi-month basis, but near-term pullback risk is high after an extended run. Prefer entry only on controlled dip/reclaim, not chasing intraday spikes.",
+          "recommendation": "buy",
           "trade_plan": {
-            "entry": 422.9,
-            "stop_loss": 414.44,
-            "target": 435.59,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 392.0,
+            "stop_loss": 377.0,
+            "target": 425.0,
+            "risk_reward_ratio": 2.2,
+            "position_size_pct": 4.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "AI memory demand persistence and favorable pricing",
+            "Follow-through analyst target upgrades after earnings"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Post-earnings profit taking after large multi-quarter run",
+            "Semiconductor beta drawdown if macro risk-off accelerates"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no prior MU trade-outcome pattern could be confirmed.",
+          "supporting_articles": [
+            {
+              "title": "Micron Technology, Inc. (MU) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/MU/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided current price context, range, volume, and earnings date used in setup levels."
+            },
+            {
+              "title": "Micron Sales Nearly Triple Amid Tight Memory Supply",
+              "url": "https://www.wsj.com/business/earnings/micron-sales-nearly-triple-amid-tight-memory-supply-e46ddd64",
+              "source": "The Wall Street Journal",
+              "kind": "news",
+              "reason": "Confirms fundamental driver behind momentum and validates staged bullish narrative."
+            },
+            {
+              "title": "Micron Technology And Its Real Value (NASDAQ:MU)",
+              "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQMlFjQWFEc2UwUndmbUhFX25uQlQ0ZHo4V3dFOWVoSE1Bb2xMNENwcklETTBuTXo1WGdtSEhxWFpiMTVTY2FNQUVEbjFpVktjZGllcDMta3ozcG43eDJ3T0FNSVJsUGlrX1RKdmZEcjJSRExpNGlMRW1ydUxGZ3NOSGZKcw?oc=5",
+              "source": "Seeking Alpha",
+              "publisher": "Seeking Alpha",
+              "published": "Sat, 21 Mar 2026 05:03:23 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for MU",
+              "summary": "Micron Technology And Its Real Value (NASDAQ:MU) Seeking Alpha"
+            },
+            {
+              "title": "Micron Technology (NASDAQ:MU) Stock Price Down 4.8% on Analyst Downgrade",
+              "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQYllUcDZ5bUllLUR5MDM1WlpuZWc2TzlXUzU1Y2VOT2YwZlhHSlBUOWh1S0JGNElGd1NmclNWeDYyT0tqTEpEZ2JwdlR4OEhXV1JHOVc4dnJTWFJqZ1MzUHV2cXJDZGtvTmxtUTVPaTVJbU0xZ01KUG54QzBqWUdvSVdJS09rTldBWEkzanQweWVHbFQtWFNncFNxZGNtbl9DV2xTZE1wNXB0ZDNtQjBVd2VQb2NHd1UtczBzal9B?oc=5",
+              "source": "MarketBeat",
+              "publisher": "MarketBeat",
+              "published": "Fri, 20 Mar 2026 20:55:48 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for MU",
+              "summary": "Micron Technology (NASDAQ:MU) Stock Price Down 4.8% on Analyst Downgrade MarketBeat"
+            },
+            {
+              "title": "Micron says AI demand pushed sales to $23.86B and points to bigger Q3",
+              "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNeU53YXFtMHd1ZU5IREpvSGdlSWNwQkhNWWZrVy1yOUpWM1VCMWdXWEQxTzdKNFhWUk1XNTJNcGJOZS1Td3pFcXVUSTdOUjdObWRQck1tUFFYS2FxcmZxcU9RTjBCZFp5TmhhOWRnUzJ3a1pwWks5ZXhSS01ZR2daSy1UM2pPMEVKUWx1dW56Mk9pSHNvUGNva0NfU0xZeFdybEpvaFh0aHJ4NGxUaGNWTlFvXzJTazg?oc=5",
+              "source": "Stock Titan",
+              "publisher": "Stock Titan",
+              "published": "Wed, 18 Mar 2026 20:01:00 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for MU",
+              "summary": "Micron says AI demand pushed sales to $23.86B and points to bigger Q3 Stock Titan"
+            }
+          ]
         },
         "INTC": {
           "sentiment": "neutral",
-          "confidence": 0.5,
+          "confidence": 0.57,
           "key_observations": [
-            "Template baseline for INTC: price 43.87, change -5.00%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 45.95 at close with 44.70-46.48 day range and 17.67-54.60 52-week range.",
+            "YTD gain of 24.53% remains strong, but 1-month change was -4.75%.",
+            "Earnings date listed as April 23, 2026."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
+          "news_impact": "neutral",
+          "news_summary": "AI/data-center CPU narrative remains constructive, but volatility and mixed execution history keep conviction moderate.",
+          "technical_setup": "Stock is off highs and consolidating in a broad range. No high-quality low-risk trigger yet; wait for either breakout above 46.5-47 or pullback stabilization.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 43.87,
-            "stop_loss": 42.99,
-            "target": 45.19,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 46.8,
+            "stop_loss": 44.4,
+            "target": 51.0,
+            "risk_reward_ratio": 1.75,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "AI product ramp execution",
+            "Pre-earnings estimate revisions"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Headline-driven semiconductor derisking",
+            "Execution slippage versus peers"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no prior INTC-specific performance pattern could be extracted.",
+          "supporting_articles": [
+            {
+              "title": "Intel Corporation (INTC) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/INTC/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for current levels, performance windows, and earnings calendar context."
+            }
+          ]
         },
         "PANW": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bearish",
+          "confidence": 0.74,
           "key_observations": [
-            "Template baseline for PANW: price 162.95, change -4.00%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 152.35 after a -6.82% session; day range 147.15-155.28 with elevated volume near 26.24M.",
+            "1-month performance was -18.82% and YTD -17.29%, showing trend damage.",
+            "Reuters-cited reports indicate FY26 profit outlook cut while integration costs rose."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "negative",
+          "news_summary": "Recent earnings commentary and Reuters-covered reports point to margin pressure from acquisition integration costs, weighing on near-term sentiment.",
+          "technical_setup": "Breakdown behavior after guidance/margin reset suggests rallies are sellable until a base forms. Conservative setup is tactical short on weak bounces rather than aggressive long mean-reversion.",
+          "recommendation": "sell",
           "trade_plan": {
-            "entry": 162.95,
-            "stop_loss": 159.69,
-            "target": 167.84,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
+            "entry": 153.0,
+            "stop_loss": 160.0,
+            "target": 139.0,
+            "risk_reward_ratio": 2.0,
+            "position_size_pct": 2.5,
             "timeframe": "swing_2_5_days"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Additional estimate cuts after reduced profit outlook",
+            "Risk-off rotation out of high-multiple software"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Fast short-covering on any positive integration update",
+            "Cybersecurity sector beta rebound"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no prior PANW trade-review pattern could be validated.",
+          "supporting_articles": [
+            {
+              "title": "Palo Alto Networks cuts annual profit forecast as deal costs bite, shares fall",
+              "url": "https://www.investing.com/news/stock-market-news/palo-alto-networks-cuts-annual-profit-forecast-as-deal-costs-bite-shares-fall-4509861",
+              "source": "Reuters via Investing.com",
+              "kind": "news",
+              "reason": "Directly confirms the margin/guidance pressure driving current downside setup."
+            },
+            {
+              "title": "Palo Alto Networks, Inc. (PANW) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/PANW/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided current price action and volume context for entry/stop placement."
+            }
+          ]
         },
         "UNH": {
           "sentiment": "neutral",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "key_observations": [
-            "Template baseline for UNH: price 275.59, change -1.73%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 293.27 close with 283.85-294.13 day range and 52-week range 234.60-606.36.",
+            "YTD was -11.16% and 1-year was -37.41%, indicating deep damage versus broader market.",
+            "Earnings date listed as April 16, 2026."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
+          "news_impact": "neutral",
+          "news_summary": "Narrative remains mixed: valuation and dividend support exist, but cost and policy risk keep the stock headline-sensitive.",
+          "technical_setup": "Potential base attempt after a long drawdown, but confirmation is incomplete. Better treated as watchlist until it holds above short-term support through earnings setup window.",
           "recommendation": "watch",
           "trade_plan": {
-            "entry": 275.59,
-            "stop_loss": 270.08,
-            "target": 283.86,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 296.0,
+            "stop_loss": 282.0,
+            "target": 320.0,
+            "risk_reward_ratio": 1.71,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Earnings commentary on medical cost trend normalization",
+            "Regulatory overhang easing"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Policy or reimbursement headlines",
+            "Negative pre-earnings revisions"
           ],
-          "earnings_warning": false,
-          "supporting_articles": []
+          "earnings_warning": true,
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no prior UNH post-trade behavior pattern was available.",
+          "supporting_articles": [
+            {
+              "title": "UnitedHealth Group Incorporated (UNH) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/UNH/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for current valuation context, drawdown profile, and upcoming earnings timing."
+            }
+          ]
         },
         "ABT": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bearish",
+          "confidence": 0.64,
           "key_observations": [
-            "Template baseline for ABT: price 105.46, change -1.61%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 107.44 with day range 106.08-110.05 and 52-week range 105.78-141.23.",
+            "1-month return was -13.73% and YTD -14.25%, reflecting persistent relative weakness.",
+            "Volume around 15.76M was above average near 6.86M, suggesting active distribution."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "negative",
+          "news_summary": "Recent earnings-related commentary flagged weaker nutrition segment dynamics, keeping near-term pressure on sentiment.",
+          "technical_setup": "Stock is near 52-week lows with weak momentum and high-volume downside sessions. Trend bias remains down unless it reclaims and holds above the 110-112 zone.",
+          "recommendation": "sell",
           "trade_plan": {
-            "entry": 105.46,
-            "stop_loss": 103.35,
-            "target": 108.62,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
+            "entry": 107.0,
+            "stop_loss": 110.5,
+            "target": 100.0,
+            "risk_reward_ratio": 2.0,
+            "position_size_pct": 2.0,
             "timeframe": "swing_2_5_days"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Further estimate cuts into earnings",
+            "Defensive healthcare rotation favoring other groups over medtech"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Relief bounce from oversold levels",
+            "Positive management update ahead of earnings"
           ],
-          "earnings_warning": false,
-          "supporting_articles": []
+          "earnings_warning": true,
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so ABT-specific prior win/loss tendencies were unavailable.",
+          "supporting_articles": [
+            {
+              "title": "Abbott Laboratories (ABT) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/ABT/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided the recent trend deterioration and price/volume levels used in risk setup."
+            }
+          ]
         },
         "HON": {
           "sentiment": "neutral",
-          "confidence": 0.5,
+          "confidence": 0.58,
           "key_observations": [
-            "Template baseline for HON: price 221.50, change -3.29%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 222.64 with day range 219.69-222.76 and 52-week range 169.05-227.82.",
+            "YTD performance was +14.12%, showing better resilience than many cyclicals.",
+            "1-month gain of 13.62% implies momentum but also short-term extension risk."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "Industrial/aerospace tone is supportive, though much of the near-term move appears priced after strong month-to-date gains.",
+          "technical_setup": "Trend is constructive, but entry quality is weaker after rapid upside. Prefer pullback toward support before considering new risk.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 221.5,
-            "stop_loss": 217.07,
-            "target": 228.15,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 220.0,
+            "stop_loss": 214.0,
+            "target": 231.0,
+            "risk_reward_ratio": 1.83,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Aerospace demand and portfolio actions",
+            "Stable industrial spending signal"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Mean reversion after sharp monthly advance",
+            "Macro slowdown pressure on industrials"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no HON-specific historical edge could be applied.",
+          "supporting_articles": [
+            {
+              "title": "Honeywell International Inc. (HON) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/HON/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for trend, valuation, and level-setting in a conservative hold stance."
+            }
+          ]
         },
         "LMT": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bullish",
+          "confidence": 0.68,
           "key_observations": [
-            "Template baseline for LMT: price 627.43, change -1.58%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price printed around 664.48 with 652.54-671.00 day range and 52-week range 410.11-692.00.",
+            "6-month gain was 45.45% and YTD 37.38%, indicating strong defense leadership.",
+            "Beta near 0.20 supports lower-volatility profile relative to broad market risk."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "positive",
+          "news_summary": "Defense demand and geopolitical backdrop continue to support order visibility and relative strength in the name.",
+          "technical_setup": "Primary trend remains up; setup favors buy-the-dip rather than breakout chasing near highs. Use tight invalidation below recent swing support.",
+          "recommendation": "buy",
           "trade_plan": {
-            "entry": 627.43,
-            "stop_loss": 614.88,
-            "target": 646.25,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 658.0,
+            "stop_loss": 642.0,
+            "target": 692.0,
+            "risk_reward_ratio": 2.13,
+            "position_size_pct": 3.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Defense budget and contract flow resilience",
+            "Continued rotation into lower-beta quality defensives"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Fast de-escalation of geopolitical risk premium",
+            "Profit-taking near prior highs"
           ],
-          "earnings_warning": false,
-          "supporting_articles": []
+          "earnings_warning": true,
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so prior LMT trade outcomes could not be referenced.",
+          "supporting_articles": [
+            {
+              "title": "Lockheed Martin Corporation (LMT) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/LMT/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided trend statistics and event timing used in the conservative long setup."
+            }
+          ]
         },
         "HD": {
           "sentiment": "neutral",
-          "confidence": 0.5,
+          "confidence": 0.56,
           "key_observations": [
-            "Template baseline for HD: price 320.75, change -2.27%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price was 370.81 with day range 369.00-375.11 and 52-week range 326.31-426.75.",
+            "6-month return was -8.74% and 1-year -6.50%, indicating muted momentum.",
+            "Earnings estimate date listed as May 19, 2026."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "neutral",
+          "news_summary": "Fundamentals are stable but growth expectations remain modest, keeping upside more incremental than explosive.",
+          "technical_setup": "Range-bound behavior persists; no clean high-conviction directional edge. Better to wait for either support test near lower range or breakout confirmation.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 320.75,
-            "stop_loss": 314.33,
-            "target": 330.37,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 371.0,
+            "stop_loss": 362.0,
+            "target": 387.0,
+            "risk_reward_ratio": 1.78,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Housing turnover rebound",
+            "Professional contractor demand resilience"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Rate sensitivity and consumer slowdown",
+            "Margin pressure from promotions"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so prior HD-specific setups could not be validated.",
+          "supporting_articles": [
+            {
+              "title": "The Home Depot, Inc. (HD) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/HD/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for current range/momentum assessment and earnings timing."
+            }
+          ]
         },
         "MA": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bullish",
+          "confidence": 0.65,
           "key_observations": [
-            "Template baseline for MA: price 496.32, change +1.05%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price context showed around 514.77 with day range 509.01-519.88 and 52-week range 465.59-601.77.",
+            "YTD return near 9.69% with 1-year target estimate around 662.06 implies upside skew.",
+            "EPS (TTM) listed as 16.52 with market cap around $459.4B."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "positive",
+          "news_summary": "Payments volumes and value-added services narrative remains constructive, supporting medium-term earnings resilience.",
+          "technical_setup": "After a pullback from highs, MA is stabilizing in the low-500s. Conservative approach is measured entry above local support, not full-size at once.",
+          "recommendation": "buy",
           "trade_plan": {
-            "entry": 496.32,
-            "stop_loss": 486.39,
-            "target": 511.21,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 516.0,
+            "stop_loss": 505.0,
+            "target": 540.0,
+            "risk_reward_ratio": 2.18,
+            "position_size_pct": 3.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Cross-border and services growth",
+            "Positive pre-earnings estimate drift"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Broad consumer spending slowdown",
+            "Regulatory or pricing pressure in payments"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so no prior MA journaling edge was available.",
+          "supporting_articles": [
+            {
+              "title": "Mastercard Incorporated (MA) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/MA/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Provided valuation/performance context and current tradeable levels."
+            }
+          ]
         },
         "V": {
-          "sentiment": "neutral",
-          "confidence": 0.5,
+          "sentiment": "bullish",
+          "confidence": 0.64,
           "key_observations": [
-            "Template baseline for V: price 301.62, change +0.64%.",
-            "Deterministic debug output used to validate workflow plumbing."
+            "Price context showed around 308.96-322.26 with day range 308.39-315.08 and 52-week range 299.00-375.51.",
+            "YTD return around 11.72% with market cap near $595.69B-$620.50B keeps it a core large-cap quality name.",
+            "Average volume near 7.77M with earnings estimate date April 28, 2026."
           ],
-          "news_impact": "none",
-          "news_summary": "Template mode active; no model-driven news synthesis executed.",
-          "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
-          "recommendation": "watch",
+          "news_impact": "positive",
+          "news_summary": "Recent commentary indicates solid revenue trajectory and continued cross-border/payment ecosystem strength.",
+          "technical_setup": "V is below prior highs but holding above key longer-term support; setup favors gradual accumulation on weakness with strict downside limits.",
+          "recommendation": "hold",
           "trade_plan": {
-            "entry": 301.62,
-            "stop_loss": 295.59,
-            "target": 310.67,
-            "risk_reward_ratio": 1.5,
-            "position_size_pct": 1.0,
-            "timeframe": "swing_2_5_days"
+            "entry": 312.0,
+            "stop_loss": 304.0,
+            "target": 329.0,
+            "risk_reward_ratio": 2.13,
+            "position_size_pct": 0.0,
+            "timeframe": "swing_1_2_weeks"
           },
           "catalysts": [
-            "Disable DEBUG_MODE to enable real catalyst ranking."
+            "Cross-border recovery and travel spend",
+            "Multiple support from high-quality cash generation"
           ],
           "risks": [
-            "Template output may not reflect live market conditions."
+            "Macro-led market de-rating in mega-cap financials",
+            "Unexpected regulatory developments"
           ],
           "earnings_warning": false,
-          "supporting_articles": []
+          "historical_context": "Local strategist journal/feedback artifacts were not accessible in this execution, so V-specific prior performance learnings were unavailable.",
+          "supporting_articles": [
+            {
+              "title": "Visa Inc. (V) Stock Price, News, Quote & History",
+              "url": "https://finance.yahoo.com/quote/V/",
+              "source": "Yahoo Finance",
+              "kind": "web",
+              "reason": "Used for current range, valuation, and event-calendar checks."
+            },
+            {
+              "title": "Visa Inc. (V) Announces Launch of Visa Agentic Ready",
+              "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNQnQ5cjZwakJoRHNZVHowcjBfVFltQ1RZUzhjYU1zWXdnaURBRVQ0T0hhTVdHNkpFR3MwckxaUEptZFMwYTBLX3ZDVDBGVi0xbHBxN0lWSlFWeUhXcTZVNFhPQUJyRnEzUnFxVVEwSC10b0lUWElJOV9HYWd1VjNnWWF2bjgxbUMxLXdvRUZfUUFtQ2pWaG13?oc=5",
+              "source": "Yahoo Finance",
+              "publisher": "Yahoo Finance",
+              "published": "Sat, 21 Mar 2026 18:24:43 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for V",
+              "summary": "Visa Inc. (V) Announces Launch of Visa Agentic Ready Yahoo Finance"
+            },
+            {
+              "title": "Visa Inc. (V) Announces Launch of Visa Agentic Ready",
+              "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNdW5uQ0M3NkIxTk5QdHFoclVvd3dEUnlzOUNDYkZ5NXYxaDNGVE5SdFAzWko3YnB6ZVQ0VmxDQWt3ZTVEbktmcmNTckRtS1p2MGhFWWZpeUQxbFo5Y2pHM3BjMEkyNWVWMkhHM3FKVDVqSGl5b19fcXNKNWt4emhnZkhrZjJPaDl4VFBJTXRZWmNFREVPSmszMdIBoAFBVV95cUxON01yUjVJaWsycnFXaG05bUF3V0JjS2VDaFpBcWdYNE5fSU1Lc2JReUd5aUpncFJkR001OU5xYUNMa0owSVEyMmtBNk9HNXR2eEFYaDBxVkhIYmdQNDYwNmpSN1MzTjg3SUd4YXBpV0ZvMndzWEZ5S0JZX1FVUDY4dGF1UU9FOVdUanRoSnFvZ3RGWFBvZ3NmdWtpdmhkcEhu?oc=5",
+              "source": "Insider Monkey",
+              "publisher": "Insider Monkey",
+              "published": "Sat, 21 Mar 2026 18:30:25 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for V",
+              "summary": "Visa Inc. (V) Announces Launch of Visa Agentic Ready Insider Monkey"
+            },
+            {
+              "title": "VISA INC. (V)",
+              "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPMHE0MThfMlk0dGJNa3MyalVLZlNIaE9PU2E4U0pZTG5qaUI2My05WVNjM0ZsdkdjbnF4VGNhYlVvUnAyVWtwRGJEVDMybkFleWtfeFVET2k3ak1nMFZVR0hnUXFxV3RHUUhacFJVOFRQdnQxN25VVkVVeTBOTHo3cDJn?oc=5",
+              "source": "MSN",
+              "publisher": "MSN",
+              "published": "Wed, 18 Mar 2026 21:05:48 GMT",
+              "kind": "web",
+              "reason": "Live Google News verification for V",
+              "summary": "VISA INC. (V) MSN"
+            }
+          ]
         }
       },
-      "self_reflection": "Debug template mode is active. This run validates wiring, not model quality.",
-      "web_checks": [],
+      "self_reflection": "Confidence is intentionally capped because local journal and completed-trade artifacts were not readable in this run, so historical edge calibration could not be fully applied. I reduced position sizing and favored only higher reward-to-risk setups with explicit invalidation levels.",
+      "web_checks": [
+        {
+          "symbol": "MU",
+          "query": "Micron latest earnings and demand confirmation",
+          "source": "The Wall Street Journal",
+          "url": "https://www.wsj.com/business/earnings/micron-sales-nearly-triple-amid-tight-memory-supply-e46ddd64",
+          "finding": "Confirmed very strong earnings growth and AI-memory demand tailwinds; supports MU remaining in best opportunities despite pullback risk."
+        },
+        {
+          "symbol": "PANW",
+          "query": "Palo Alto Networks recent guidance and margin context",
+          "source": "Reuters via Investing.com",
+          "url": "https://www.investing.com/news/stock-market-news/palo-alto-networks-cuts-annual-profit-forecast-as-deal-costs-bite-shares-fall-4509861",
+          "finding": "Confirmed annual profit forecast cut tied to acquisition integration costs; validates bearish near-term setup and tactical short bias."
+        },
+        {
+          "symbol": "^VIX",
+          "query": "Recent volatility regime context",
+          "source": "Investing.com",
+          "url": "https://www.investing.com/indices/volatility-s-p-500-historical-data",
+          "finding": "Recent VIX readings in the mid-20s with spikes near 35 in March indicate an unstable risk backdrop, reinforcing conservative position sizing."
+        },
+        {
+          "symbol": "V",
+          "query": "Visa Inc. V stock",
+          "source": "Google News",
+          "url": "https://news.google.com/rss/search?q=Visa+Inc.+V+stock&hl=en-US&gl=US&ceid=US:en",
+          "finding": "Verified recent coverage for V via Yahoo Finance, Insider Monkey; captured 3 current article links."
+        },
+        {
+          "symbol": "MU",
+          "query": "Micron Technology, Inc. MU stock",
+          "source": "Google News",
+          "url": "https://news.google.com/rss/search?q=Micron+Technology%2C+Inc.+MU+stock&hl=en-US&gl=US&ceid=US:en",
+          "finding": "Verified recent coverage for MU via Seeking Alpha, MarketBeat; captured 3 current article links."
+        }
+      ],
       "_meta": {
         "status": "success",
-        "execution_mode": "template",
-        "provider_preference": "openai",
-        "provider": "template:codex",
-        "model": "template-v1",
-        "selected_provider": "template:codex",
-        "selected_model": "template-v1",
+        "provider": "cli:codex",
+        "model": "default",
+        "duration_ms": 123285.6,
+        "session_id": null,
         "usage": {
-          "input_tokens": 0,
-          "output_tokens": 0,
-          "total_tokens": 0
+          "input_tokens": 68323,
+          "cached_input_tokens": 23552,
+          "output_tokens": 8573
         },
-        "service_tier": "debug-template",
-        "request_id": null,
-        "rate_limits": {},
-        "runtime": {
-          "platform": "github_actions",
-          "python_version": "3.12.13",
-          "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
-          "agent_profile": "codex",
-          "agent_label": "Codex Strategist",
-          "github": {
-            "repository": "Aashay-chaudhari/trader",
-            "workflow": "Trading Pipeline",
-            "event_name": "workflow_dispatch",
-            "actor": "Aashay-chaudhari",
-            "run_id": "23394172174",
-            "run_attempt": "1",
-            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23394172174",
-            "sha": "c58aba8d5cc2a9a7094aaf023de5d308f3f7056e",
-            "ref": "refs/heads/main"
-          }
-        },
-        "duration_ms": 0.0,
+        "execution_mode": "cli",
+        "selected_provider": "cli:codex",
+        "selected_model": "default",
         "attempts": [
           {
-            "execution_mode": "template",
-            "provider": "template:codex",
-            "model": "template-v1",
+            "execution_mode": "cli",
+            "provider": "cli:codex",
+            "model": "default",
             "status": "success",
-            "duration_ms": 0.0,
+            "duration_ms": 123285.6,
             "usage": {
-              "input_tokens": 0,
-              "output_tokens": 0,
-              "total_tokens": 0
+              "input_tokens": 68323,
+              "cached_input_tokens": 23552,
+              "output_tokens": 8573
             }
           }
-        ],
-        "quota_issue_detected": false,
-        "quota_note": "Template mode active; no model usage was attempted.",
-        "template_note": "Template response generated in DEBUG_MODE for phase 'research'. No CLI/API model call was made and zero tokens were consumed.",
-        "generated_at": "2026-03-22T02:46:25.416994+00:00"
+        ]
       }
     },
     "phase": "research",
@@ -3471,6 +3676,40 @@
               "topics": [
                 "financial_markets",
                 "technology",
+                "earnings"
+              ]
+            }
+          },
+          {
+            "title": "Ameren Corporation Shares Purchased by Tudor Investment Corp ET AL",
+            "source": "alpha_vantage",
+            "published": "20260321T114400",
+            "symbols": [
+              "MU"
+            ],
+            "sentiment": 0.113,
+            "category": "headline",
+            "url": "https://nationaltoday.com/us/mo/st-louis/news/2026/03/21/ameren-corporation-shares-purchased-by-tudor-investment-corp-et-al/",
+            "summary": "Tudor Investment Corp ET AL increased its stake in Ameren Corporation (NYSE:AEE) by 23.7% during the third quarter, acquiring an additional 29,807 shares to reach a total of 155,836 shares valued at approximately $16.3 million. This move suggests confidence from the investment firm in the utility provider's business model and future growth prospects. Ameren is an integrated energy company providing electric and natural gas services in Missouri and Illinois.",
+            "publisher": "National Today",
+            "metadata": {
+              "overall_sentiment": 0.318521,
+              "overall_label": "Somewhat-Bullish",
+              "ticker_sentiments": {
+                "AEE": {
+                  "relevance": 1.0,
+                  "sentiment_score": 0.4946,
+                  "sentiment_label": "Bullish"
+                },
+                "MU": {
+                  "relevance": 0.602,
+                  "sentiment_score": 0.1129,
+                  "sentiment_label": "Neutral"
+                }
+              },
+              "topics": [
+                "financial_markets",
+                "finance",
                 "earnings"
               ]
             }
@@ -3809,53 +4048,9 @@
                 "earnings"
               ]
             }
-          },
-          {
-            "title": "Teradyne Stock: Analysts See More Upside in 2026 After Soaring 242% Last Year",
-            "source": "alpha_vantage",
-            "published": "20260320T175833",
-            "symbols": [
-              "MU"
-            ],
-            "sentiment": 0.213,
-            "category": "headline",
-            "url": "https://www.tikr.com/blog/teradyne-stock-analysts-see-more-upside-in-2026-after-soaring-242-last-year?",
-            "summary": "Teradyne (TER) saw its stock surge by 242% last year, driven by significant AI-related revenue growth which reached over 60% in Q4 2025 and is projected at 70% for Q1 2026. The company, a major player in automated chip-testing, particularly for AI accelerators, expects continued strong momentum in 2026, with a long-term target of $6 billion in revenue and EPS of $9.50 to $11.00. While analysts predict modest short-term upside, the TIKR model projects a 43.6% total return through December 2030, anchored by AI demand and strategic ventures.",
-            "publisher": "TIKR.com",
-            "metadata": {
-              "overall_sentiment": 0.307234,
-              "overall_label": "Somewhat-Bullish",
-              "ticker_sentiments": {
-                "TER": {
-                  "relevance": 1.0,
-                  "sentiment_score": 0.4843,
-                  "sentiment_label": "Bullish"
-                },
-                "NVDA": {
-                  "relevance": 0.7406,
-                  "sentiment_score": 0.3476,
-                  "sentiment_label": "Somewhat-Bullish"
-                },
-                "MU": {
-                  "relevance": 0.5994,
-                  "sentiment_score": 0.2135,
-                  "sentiment_label": "Somewhat-Bullish"
-                },
-                "JCI": {
-                  "relevance": 0.5991,
-                  "sentiment_score": 0.29,
-                  "sentiment_label": "Somewhat-Bullish"
-                }
-              },
-              "topics": [
-                "earnings",
-                "financial_markets",
-                "technology"
-              ]
-            }
           }
         ],
-        "sentiment_score": 0.19,
+        "sentiment_score": 0.18,
         "sentiment": "neutral",
         "source_count": 5,
         "analyst_recommendations": {
@@ -3895,6 +4090,54 @@
       "INTC": {
         "symbol": "INTC",
         "news_headlines": [
+          {
+            "title": "The Tech Stock With More Potential Than Any Cryptocurrency",
+            "source": "yfinance",
+            "published": "2026-03-22T03:20:00Z",
+            "symbols": [
+              "INTC"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.fool.com/investing/2026/03/21/the-tech-stock-with-more-potential-than-any-crypto/",
+            "summary": "Bitcoin has potential, so do Ethereum, Monero, and all the others, but ASML has even more as the monopoly underpinning the whole tech industry.",
+            "publisher": "Motley Fool",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Could Buying $10,000 of Sandisk Make You a Millionaire?",
+            "source": "yfinance",
+            "published": "2026-03-22T03:05:00Z",
+            "symbols": [
+              "INTC"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.fool.com/investing/2026/03/21/could-buying-10000-of-sandisk-make-you-a-millionai/",
+            "summary": "Sandisk has been the hottest stock in the market since its debut. Can it keep climbing?",
+            "publisher": "Motley Fool",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Better Cybersecurity Stock: Okta vs. Zscaler",
+            "source": "yfinance",
+            "published": "2026-03-22T02:41:00Z",
+            "symbols": [
+              "INTC"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.fool.com/investing/2026/03/21/better-cybersecurity-stock-okta-vs-zscaler/",
+            "summary": "Both companies are leaders in their industry, but face a fast-changing landscape.",
+            "publisher": "Motley Fool",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
           {
             "title": "2 Financial Stocks That Could Double Over the Next 5 Years",
             "source": "yfinance",
@@ -4183,7 +4426,7 @@
             }
           }
         ],
-        "sentiment_score": -0.06,
+        "sentiment_score": -0.01,
         "sentiment": "neutral",
         "source_count": 2,
         "analyst_recommendations": {
@@ -7196,6 +7439,30 @@
         "discovery_reason": "strong bullish news sentiment (+0.60) + high news volume (10 articles)"
       },
       {
+        "symbol": "BPCL.NS",
+        "news_sentiment": -0.46,
+        "sentiment_label": "bearish",
+        "headline_count": 1,
+        "top_headline": "Petrol, diesel prices on 22 March: Check fuel rates in your city today \u2014 Delhi, Mumbai, Bengaluru, others",
+        "top_headline_url": "https://www.livemint.com/news/india/petrol-diesel-prices-on-22-march-check-fuel-rates-in-your-city-today-delhi-mumbai-bengaluru-others-11774146237918.html",
+        "source": "marketaux",
+        "price_change_pct": 0,
+        "price": 0,
+        "discovery_reason": "Marketaux: Petrol, diesel prices on 22 March: Check fuel rates in your "
+      },
+      {
+        "symbol": "HINDPETRO.NS",
+        "news_sentiment": -0.46,
+        "sentiment_label": "bearish",
+        "headline_count": 1,
+        "top_headline": "Petrol, diesel prices on 22 March: Check fuel rates in your city today \u2014 Delhi, Mumbai, Bengaluru, others",
+        "top_headline_url": "https://www.livemint.com/news/india/petrol-diesel-prices-on-22-march-check-fuel-rates-in-your-city-today-delhi-mumbai-bengaluru-others-11774146237918.html",
+        "source": "marketaux",
+        "price_change_pct": 0,
+        "price": 0,
+        "discovery_reason": "Marketaux: Petrol, diesel prices on 22 March: Check fuel rates in your "
+      },
+      {
         "symbol": "COH.AX",
         "news_sentiment": 0.45,
         "sentiment_label": "bullish",
@@ -7357,8 +7624,8 @@
         "V"
       ],
       "total_scanned": 70,
-      "candidates_found": 76,
-      "news_discovered": 9,
+      "candidates_found": 78,
+      "news_discovered": 11,
       "hot_stocks_count": 0
     },
     "market_context": {
