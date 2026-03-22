@@ -94,6 +94,7 @@ REQUIRED_PROFILE_SUBDIRS = [
     "positions/active",
     "positions/closed",
     "cache",
+    "voice",
 ]
 
 AGENT_MODULES = [

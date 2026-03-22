@@ -115,6 +115,8 @@ What this contributes to the repo:
 - writes the day into durable memory
 - creates:
   - `observations/daily/obs_YYYY-MM-DD.json`
+  - `voice/voice_YYYY-MM-DD.json`
+  - `voice/latest_voice.json`
   - updated `knowledge/` files
   - `IMPROVEMENT_PROPOSALS.md`
   - `improvement_proposals.json`
@@ -198,6 +200,7 @@ Look for these to grow naturally:
 - `data/profiles/<profile>/cache/`
 - `data/profiles/<profile>/observations/daily/`
 - `data/profiles/<profile>/knowledge/`
+- `data/profiles/<profile>/voice/`
 - `data/profiles/<profile>/interactions/`
 - `docs/data/`
 
@@ -213,6 +216,7 @@ Look for:
 Look for:
 - the latest strategist state
 - the `Session Log` button
+- the strategist voice summary
 - the `Strategist Interactions` section
 - updated reports and knowledge summaries
 

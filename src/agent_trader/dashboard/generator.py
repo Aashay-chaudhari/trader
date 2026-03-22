@@ -579,6 +579,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     data_out.mkdir(parents=True, exist_ok=True)
     shutil.rmtree(data_out / "profiles", ignore_errors=True)
     shutil.rmtree(data_out / "interactions", ignore_errors=True)
+    shutil.rmtree(data_out / "voice", ignore_errors=True)
 
     profile_roots = _discover_profile_roots(data_root)
     bundle = _build_dashboard_bundle(data_root, profile_roots=profile_roots)
@@ -592,6 +593,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "context.json", bundle["context"])
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
     _write_json(data_out / "interactions.json", bundle["interactions"])
+    _write_json(data_out / "voice.json", bundle["voice"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
     _write_json(
@@ -608,6 +610,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _copy_if_exists(active_root / "improvement_proposals.json", data_out / "improvement_proposals.json")
     _copy_if_exists(active_root / "IMPROVEMENT_PROPOSALS.md", data_out / "IMPROVEMENT_PROPOSALS.md")
     _copy_interaction_files(active_root, data_out / "interactions", bundle["interactions"])
+    _copy_voice_files(active_root, data_out / "voice")
 
     for profile_id, profile_root in profile_roots.items():
         profile_bundle = bundle["profiles"][profile_id]
@@ -622,6 +625,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "context.json", profile_bundle["context"])
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
         _write_json(profile_out / "interactions.json", profile_bundle["interactions"])
+        _write_json(profile_out / "voice.json", profile_bundle["voice"])
         _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
         _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
         _write_json(
@@ -643,6 +647,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
             profile_out / "IMPROVEMENT_PROPOSALS.md",
         )
         _copy_interaction_files(profile_root, profile_out / "interactions", profile_bundle["interactions"])
+        _copy_voice_files(profile_root, profile_out / "voice")
 
     rules_path = active_root / "feedback" / "learned_rules.json"
     if rules_path.exists():
@@ -679,6 +684,7 @@ def _build_dashboard_bundle(
         "context": active_bundle["context"],
         "knowledge": active_bundle["knowledge"],
         "interactions": active_bundle["interactions"],
+        "voice": active_bundle["voice"],
         "reports": active_bundle["reports"],
     }
 
@@ -724,6 +730,7 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "context": context,
         "knowledge": _load_knowledge_bundle(data_root),
         "interactions": _load_interaction_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
+        "voice": _load_voice_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "reports": {"research": research_report, "monitor": monitor_report},
         "artifacts": _build_profile_artifacts(profile["id"], multi_profile=multi_profile),
     }
@@ -895,6 +902,77 @@ def _empty_interaction_bundle() -> dict[str, Any]:
     }
 
 
+def _load_voice_bundle(data_root: Path, *, profile_id: str, multi_profile: bool) -> dict[str, Any]:
+    voice_root = data_root / "voice"
+    if not voice_root.exists():
+        return _empty_voice_bundle()
+
+    history_files = sorted(
+        [
+            path
+            for path in voice_root.glob("voice_*.json")
+            if path.is_file()
+        ],
+        key=lambda path: (path.stem, path.stat().st_mtime),
+        reverse=True,
+    )
+
+    latest_payload = _read_json(voice_root / "latest_voice.json", {})
+    latest_item = _normalize_voice_entry(
+        latest_payload,
+        raw_path=(voice_root / "latest_voice.json").as_posix(),
+        profile_id=profile_id,
+        multi_profile=multi_profile,
+    )
+
+    recent: list[dict[str, Any]] = []
+    for path in history_files[:6]:
+        payload = _read_json(path, {})
+        item = _normalize_voice_entry(
+            payload,
+            raw_path=path.as_posix(),
+            profile_id=profile_id,
+            multi_profile=multi_profile,
+        )
+        if item:
+            recent.append(item)
+
+    if not latest_item and recent:
+        latest_item = recent[0]
+
+    return {
+        "counts": {
+            "total": len(history_files),
+            "recent": len(recent),
+        },
+        "latest": latest_item,
+        "recent": recent,
+    }
+
+
+def _normalize_voice_entry(
+    payload: Any,
+    *,
+    raw_path: str,
+    profile_id: str,
+    multi_profile: bool,
+) -> dict[str, Any]:
+    if not isinstance(payload, dict) or not payload:
+        return {}
+    item = dict(payload)
+    item["json_file"] = raw_path.replace("\\", "/")
+    item["json_url"] = _public_voice_path(raw_path, profile_id=profile_id, multi_profile=multi_profile)
+    return item
+
+
+def _empty_voice_bundle() -> dict[str, Any]:
+    return {
+        "counts": {"total": 0, "recent": 0},
+        "latest": {},
+        "recent": [],
+    }
+
+
 def _empty_knowledge_bundle() -> dict[str, Any]:
     return {
         "counts": {
@@ -1036,6 +1114,14 @@ def _copy_interaction_files(data_root: Path, destination_root: Path, interaction
             copied.add(pair)
 
 
+def _copy_voice_files(data_root: Path, destination_root: Path) -> None:
+    source_root = data_root / "voice"
+    if not source_root.exists():
+        return
+    destination_root.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source_root, destination_root, dirs_exist_ok=True)
+
+
 def _get_latest_report(data_root: Path, phase: str) -> dict[str, Any]:
     path = _get_latest_report_path(data_root, phase=phase, suffix=".json")
     return _read_json(path, {}) if path else {}
@@ -1106,6 +1192,8 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "context_json": f"{base}/context.json",
         "knowledge_json": f"{base}/knowledge.json",
         "interactions_json": f"{base}/interactions.json",
+        "voice_json": f"{base}/voice.json",
+        "latest_voice_json": f"{base}/voice/latest_voice.json",
         "improvement_json": f"{base}/improvement_proposals.json",
         "improvement_md": f"{base}/IMPROVEMENT_PROPOSALS.md",
         "research_report_json": f"{base}/report_research.json",
@@ -1130,6 +1218,19 @@ def _public_interaction_path(raw_path: str, *, profile_id: str, multi_profile: b
     return path_text
 
 
+def _public_voice_path(raw_path: str, *, profile_id: str, multi_profile: bool) -> str:
+    path_text = str(raw_path or "").replace("\\", "/").strip()
+    if not path_text:
+        return ""
+    if path_text.startswith("data/profiles/"):
+        return path_text
+    if "voice/" in path_text:
+        suffix = path_text.split("voice/", 1)[1]
+        base = f"data/profiles/{profile_id}" if multi_profile else "data"
+        return f"{base}/voice/{suffix}".replace("//", "/")
+    return path_text
+
+
 def _public_repo_path(raw_path: str) -> str:
     return ""
 
@@ -1149,6 +1250,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "context": {},
         "knowledge": _empty_knowledge_bundle(),
         "interactions": _empty_interaction_bundle(),
+        "voice": _empty_voice_bundle(),
         "reports": {"research": {}, "monitor": {}},
         "artifacts": _build_profile_artifacts(profile_id, multi_profile=True),
     }

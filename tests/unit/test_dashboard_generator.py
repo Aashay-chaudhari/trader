@@ -671,6 +671,75 @@ def test_generate_dashboard_exports_interaction_logs():
         ).exists()
 
 
+def test_generate_dashboard_exports_strategist_voice_bundle():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        profile_root = data_dir / "profiles" / "claude"
+        (profile_root / "snapshots").mkdir(parents=True)
+        (profile_root / "research").mkdir(parents=True)
+        (profile_root / "analytics").mkdir(parents=True)
+        (profile_root / "context").mkdir(parents=True)
+        (profile_root / "voice").mkdir(parents=True)
+
+        (profile_root / "profile.json").write_text(
+            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-22T21:00:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (profile_root / "research" / "2026-03-22_research.json").write_text(
+            json.dumps({"best_opportunities": [], "stocks": {}}),
+            encoding="utf-8",
+        )
+        (profile_root / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (profile_root / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+
+        voice_payload = {
+            "date": "2026-03-22",
+            "profile": "claude",
+            "state": "building",
+            "summary": "Process quality is improving, but trade evidence is still thin.",
+            "since_last_time": ["First voice entry - no prior baseline yet."],
+            "working_well": ["Morning research is producing clear trade plans."],
+            "struggles": ["Not enough executed trades yet to trust confidence calibration."],
+            "needs_from_operator": ["None"],
+            "next_focus": "Watch whether tomorrow's entries respect the planned zones.",
+            "confidence_score": 0.52,
+        }
+        (profile_root / "voice" / "voice_2026-03-22.json").write_text(
+            json.dumps(voice_payload),
+            encoding="utf-8",
+        )
+        (profile_root / "voice" / "latest_voice.json").write_text(
+            json.dumps(voice_payload),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        html = (docs_dir / "index.html").read_text(encoding="utf-8")
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        voice = bundle["profiles"]["claude"]["voice"]
+
+        assert "Strategist Voice" in html
+        assert voice["counts"]["total"] == 1
+        assert voice["latest"]["state"] == "building"
+        assert voice["recent"][0]["json_url"] == "data/profiles/claude/voice/voice_2026-03-22.json"
+        assert (docs_dir / "data" / "profiles" / "claude" / "voice.json").exists()
+        assert (docs_dir / "data" / "profiles" / "claude" / "voice" / "latest_voice.json").exists()
+
+
 def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
     with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path

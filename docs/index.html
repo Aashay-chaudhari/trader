@@ -270,6 +270,30 @@
     .prop-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
     .prop-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
     .prop-impact { font-size: 11px; color: var(--accent); margin-top: 8px; }
+    .voice-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px; }
+    .voice-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .voice-date { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .voice-summary { font-size: 13px; line-height: 1.6; color: var(--text); }
+    .voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .voice-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; }
+    .voice-block strong { display: block; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .voice-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .voice-list li { font-size: 12px; line-height: 1.45; padding-left: 12px; position: relative; color: var(--text); }
+    .voice-list li::before { content: '-'; position: absolute; left: 0; color: var(--faint); }
+    .voice-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .voice-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; font-weight: 700; color: var(--accent); }
+    .voice-link:hover { border-color: var(--accent); }
+    .state-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--border); background: var(--surface); color: var(--muted); }
+    .state-badge.confident { color: var(--good); background: var(--good-bg); border-color: rgba(54,217,138,.28); }
+    .state-badge.steady { color: var(--accent); background: var(--accent-dim); border-color: rgba(74,168,248,.28); }
+    .state-badge.building { color: var(--warn); background: var(--warn-bg); border-color: rgba(245,181,62,.28); }
+    .state-badge.cautious { color: var(--warn); background: var(--warn-bg); border-color: rgba(245,181,62,.28); }
+    .state-badge.strained { color: var(--bad); background: var(--bad-bg); border-color: rgba(249,104,112,.28); }
+    .state-badge.needs-support { color: var(--bad); background: var(--bad-bg); border-color: rgba(249,104,112,.28); }
+    .voice-history { display: grid; gap: 10px; }
+    .voice-history-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 14px 16px; }
+    .voice-history-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    .voice-history-summary { font-size: 12px; color: var(--muted); line-height: 1.55; }
     .interaction-list { display: grid; gap: 10px; }
     .interaction-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 14px 16px; }
     .interaction-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -297,7 +321,7 @@
       .kpi-strip { grid-template-columns: 1fr 1fr; }
       .pipeline-grid { grid-template-columns: 1fr 1fr; }
       .dec-plan { grid-template-columns: 1fr 1fr; }
-      .lesson-grid, .proposal-grid { grid-template-columns: 1fr; }
+      .lesson-grid, .proposal-grid, .voice-grid { grid-template-columns: 1fr; }
       .pos-telem-grid { grid-template-columns: 1fr !important; }
     }
     @media (max-width: 480px) {
@@ -464,6 +488,7 @@
         <button class="kb-tab" data-tab="patterns">Patterns <span class="kb-count" id="patternCount">0</span></button>
         <button class="kb-tab" data-tab="observations">Observations <span class="kb-count" id="obsCount">0</span></button>
         <button class="kb-tab" data-tab="proposals">Proposals <span class="kb-count" id="propCount">0</span></button>
+        <button class="kb-tab" data-tab="voice">Voice <span class="kb-count" id="voiceCount">0</span></button>
         <button class="kb-tab" data-tab="positions">Positions &amp; Telemetry</button>
       </div>
     </div>
@@ -479,6 +504,27 @@
     </div>
     <div id="kbProposals" class="kb-panel">
       <div class="proposal-grid" id="proposalCards"></div>
+    </div>
+    <div id="kbVoice" class="kb-panel">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd">
+          <div>
+            <h3>Strategist Voice</h3>
+            <p>Honest end-of-day state check written after reflection.</p>
+          </div>
+        </div>
+        <div class="mini-grid" id="voiceSummary" style="margin-bottom:12px"></div>
+        <div id="voiceLatest"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <h3>Voice History</h3>
+            <p>Recent operator-facing self-assessments for this strategist.</p>
+          </div>
+        </div>
+        <div id="voiceHistory"></div>
+      </div>
     </div>
     <div id="kbPositions" class="kb-panel">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="pos-telem-grid">
@@ -528,6 +574,8 @@
   const sentC = v => { const n = num(v); return n === null ? "neu" : n > 0.1 ? "pos" : n < -0.1 ? "neg" : "neu"; };
   const sentL = v => { const n = num(v); return n === null ? "?" : (n > 0 ? "+" : "") + n.toFixed(1); };
   const miniTile = (l, v, c = "") => `<div class="mini-tile"><strong>${esc(l)}</strong><span class="${c}">${esc(String(v ?? "–"))}</span></div>`;
+  const voiceStateClass = v => String(v || "").toLowerCase().replace(/_/g, "-");
+  const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
 
   let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all";
 
@@ -535,7 +583,7 @@
     const ps = obj(b.profiles);
     if (Object.keys(ps).length) return ps;
     const fp = obj(b.profile), pid = fp.id || b.active_profile || "default";
-    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions) } };
+    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice) } };
   }
 
   function getComparison(b, ps) {
@@ -807,13 +855,60 @@
       : emptyEl("No local strategist interaction logs yet. They will appear after the next morning or evening CLI run.");
   }
 
+  function renderVoice(voice, interactions) {
+    const latest = obj(voice.latest);
+    const recent = arr(voice.recent);
+    const counts = obj(voice.counts);
+    const voiceInteraction = obj(obj(interactions.latest_by_phase).voice);
+    const confidence = num(latest.confidence_score);
+    document.getElementById("voiceCount").textContent = counts.total || recent.length;
+    document.getElementById("voiceSummary").innerHTML = [
+      ["Entries", String(counts.total ?? recent.length)],
+      ["Latest State", latest.state || "-"],
+      ["As Of", latest.date || "-"],
+      ["Process Confidence", confidence !== null ? Math.round(confidence * 100) + "%" : "-"],
+    ].map(([l, v]) => miniTile(l, v)).join("");
+
+    if (Object.keys(latest).length) {
+      const links = [
+        latest.json_url ? `<a class="voice-link" href="${esc(latest.json_url)}" target="_blank" rel="noreferrer">Voice JSON</a>` : "",
+        voiceInteraction.prompt_url ? `<a class="voice-link" href="${esc(voiceInteraction.prompt_url)}" target="_blank" rel="noreferrer">Voice Prompt</a>` : "",
+        voiceInteraction.transcript_url ? `<a class="voice-link" href="${esc(voiceInteraction.transcript_url)}" target="_blank" rel="noreferrer">Voice Transcript</a>` : "",
+      ].filter(Boolean).join("");
+      document.getElementById("voiceLatest").innerHTML = `<div class="voice-card">
+        <div class="voice-top">
+          <div>
+            <h3 style="font-size:16px;font-weight:800">${esc(latest.profile || "Strategist")}</h3>
+            <div class="voice-date">${esc(latest.date || "No date")}</div>
+          </div>
+          <span class="state-badge ${esc(voiceStateClass(latest.state))}">${esc(latest.state || "unknown")}</span>
+        </div>
+        <div class="voice-summary">${esc(latest.summary || "No summary recorded.")}</div>
+        <div class="voice-grid">
+          <div class="voice-block"><strong>Since Last Time</strong>${renderVoiceList(latest.since_last_time)}</div>
+          <div class="voice-block"><strong>Working Well</strong>${renderVoiceList(latest.working_well)}</div>
+          <div class="voice-block"><strong>Struggles</strong>${renderVoiceList(latest.struggles)}</div>
+          <div class="voice-block"><strong>Needs From Operator</strong>${renderVoiceList(latest.needs_from_operator)}</div>
+        </div>
+        <div class="voice-block" style="margin-top:10px"><strong>Next Focus</strong><div class="voice-summary">${esc(latest.next_focus || "No next focus recorded.")}</div></div>
+        ${links ? `<div class="voice-links">${links}</div>` : ""}
+      </div>`;
+    } else {
+      document.getElementById("voiceLatest").innerHTML = emptyEl("No strategist voice summary yet. It will appear after the next evening local run.");
+    }
+
+    document.getElementById("voiceHistory").innerHTML = recent.length
+      ? `<div class="voice-history">${recent.map(item => `<div class="voice-history-item"><div class="voice-history-top"><div><strong style="display:block">${esc(item.date || "Unknown date")}</strong><div class="voice-date">${esc(item.next_focus || "No next focus recorded.")}</div></div><span class="state-badge ${esc(voiceStateClass(item.state))}">${esc(item.state || "unknown")}</span></div><div class="voice-history-summary">${esc(item.summary || "No summary.")}</div>${item.json_url ? `<div class="voice-links"><a class="voice-link" href="${esc(item.json_url)}" target="_blank" rel="noreferrer">Open JSON</a></div>` : ""}</div>`).join("")}</div>`
+      : emptyEl("Voice history will build after a few evening sessions.");
+  }
+
   function renderAll() {
     const profiles = getProfiles(BUNDLE);
     if (!ACTIVE || !profiles[ACTIVE]) ACTIVE = BUNDLE.active_profile && profiles[BUNDLE.active_profile] ? BUNDLE.active_profile : Object.keys(profiles)[0] || "default";
     const pb = profiles[ACTIVE] || Object.values(profiles)[0] || {};
     const latest = obj(pb.latest), trades = arr(pb.trades);
     const reports = obj(pb.reports), rm = obj(reports.monitor), rr = obj(reports.research);
-    const llm = obj(pb.llm), kb = obj(pb.knowledge), interactions = obj(pb.interactions);
+    const llm = obj(pb.llm), kb = obj(pb.knowledge), interactions = obj(pb.interactions), voice = obj(pb.voice);
     const res = Object.keys(obj(pb.research)).length ? obj(pb.research) : obj(obj(rr.research));
     const ctx = obj(pb.context), prompt = obj(ctx.prompt_sections), ni = obj(prompt.news_inputs);
     const perSym = obj(ni.per_symbol), webInf = obj(ni.web_influence), webBySym = obj(webInf.articles_by_symbol);
@@ -844,6 +939,7 @@
     renderTrades(trades);
     renderNews(pb);
     renderKnowledge(kb);
+    renderVoice(voice, interactions);
     renderPositions(latest, llm);
     renderInteractions(interactions);
     document.getElementById("artifactMemory").textContent = prompt.artifact_context || "No saved artifacts yet.";

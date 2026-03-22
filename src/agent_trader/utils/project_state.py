@@ -27,6 +27,7 @@ KNOWLEDGE_DIRS = (
     "knowledge",
     "observations",
     "positions",
+    "voice",
 )
 
 TOP_LEVEL_DATA_FILES = (

@@ -121,7 +121,7 @@ def test_check_profile_structure_pass():
     with tempfile.TemporaryDirectory() as tmpdir:
         from agent_trader.utils.knowledge_base import KnowledgeBase
         kb = KnowledgeBase(tmpdir)
-        for subdir in ["positions/active", "positions/closed", "cache", "journal"]:
+        for subdir in ["positions/active", "positions/closed", "cache", "voice", "journal"]:
             (Path(tmpdir) / subdir).mkdir(parents=True, exist_ok=True)
 
         results = check_profile_structure(tmpdir)

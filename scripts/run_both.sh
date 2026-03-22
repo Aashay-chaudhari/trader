@@ -41,18 +41,22 @@ fi
 case "$PHASE" in
   morning)
     PROMPT_FILE="scripts/prompts/morning_research.md"
+    EXTRA_PROMPT_FILE=""
     COMMIT_TAG="research"
     ;;
   evening)
     PROMPT_FILE="scripts/prompts/evening_reflection.md"
+    EXTRA_PROMPT_FILE="scripts/prompts/strategist_voice.md"
     COMMIT_TAG="reflection"
     ;;
   weekly)
     PROMPT_FILE="scripts/prompts/weekly_review.md"
+    EXTRA_PROMPT_FILE=""
     COMMIT_TAG="weekly"
     ;;
   monthly)
     PROMPT_FILE="scripts/prompts/monthly_retrospective.md"
+    EXTRA_PROMPT_FILE=""
     COMMIT_TAG="monthly"
     ;;
   *)
@@ -68,6 +72,14 @@ if [[ ! -f "$PROMPT_FILE" ]]; then
 fi
 
 PROMPT_TEMPLATE="$(cat "$PROMPT_FILE")"
+EXTRA_PROMPT_TEMPLATE=""
+if [[ -n "$EXTRA_PROMPT_FILE" ]]; then
+  if [[ ! -f "$EXTRA_PROMPT_FILE" ]]; then
+    echo "Error: Extra prompt file not found: $EXTRA_PROMPT_FILE"
+    exit 1
+  fi
+  EXTRA_PROMPT_TEMPLATE="$(cat "$EXTRA_PROMPT_FILE")"
+fi
 
 mkdir -p .tmp/cli_logs
 
@@ -83,6 +95,7 @@ echo ""
 # Ensure required cache directories exist before agents run.
 mkdir -p data/profiles/claude/cache data/profiles/codex/cache
 mkdir -p data/profiles/claude/interactions data/profiles/codex/interactions
+mkdir -p data/profiles/claude/voice data/profiles/codex/voice
 
 write_interaction_metadata() {
   local metadata_path="$1"
@@ -206,25 +219,25 @@ strip_ps_encoding_warning() {
     -e '/^[[:space:]]*\+ FullyQualifiedErrorId : PropertySetterNotSupportedInConstrainedLanguage$/d'
 }
 
-run_claude() {
-  echo "--------------------------------------------"
-  echo "Running Claude strategist"
-  echo "--------------------------------------------"
-
+run_claude_once() {
+  local phase_label="$1"
+  local prompt_source="$2"
+  local prompt_template="$3"
   local prompt allowed ts log status
   local interaction_dir prompt_file transcript_file metadata_file
-  prompt="${PROMPT_TEMPLATE//\{\{PROFILE\}\}/claude}"
+
+  prompt="${prompt_template//\{\{PROFILE\}\}/claude}"
   allowed="Read,Write,Edit,Glob,Grep,Bash,WebSearch,WebFetch"
   ts="$(date '+%H%M%S')"
-  log=".tmp/cli_logs/claude_${PHASE}_${DATE}_${ts}.ndjson"
+  log=".tmp/cli_logs/claude_${phase_label}_${DATE}_${ts}.ndjson"
   interaction_dir="data/profiles/claude/interactions/${DATE}"
   mkdir -p "$interaction_dir"
-  prompt_file="${interaction_dir}/${ts}_${PHASE}_prompt.md"
-  transcript_file="${interaction_dir}/${ts}_${PHASE}_transcript.txt"
-  metadata_file="${interaction_dir}/${ts}_${PHASE}_interaction.json"
+  prompt_file="${interaction_dir}/${ts}_${phase_label}_prompt.md"
+  transcript_file="${interaction_dir}/${ts}_${phase_label}_transcript.txt"
+  metadata_file="${interaction_dir}/${ts}_${phase_label}_interaction.json"
   printf "%s\n" "$prompt" > "$prompt_file"
 
-  echo "Streaming Claude events (JSONL) - log: $log"
+  echo "Streaming Claude events (${phase_label}) - log: $log"
   set +e
   echo "$prompt" | claude \
     --print \
@@ -238,11 +251,26 @@ run_claude() {
   status=$?
   set -e
   write_interaction_metadata \
-    "$metadata_file" "claude" "$PHASE" "claude" \
-    "$prompt_file" "$transcript_file" "$log" "$status" "$PROMPT_FILE"
+    "$metadata_file" "claude" "$phase_label" "claude" \
+    "$prompt_file" "$transcript_file" "$log" "$status" "$prompt_source"
   if [[ "$status" -ne 0 ]]; then
     echo "Error: Claude exited with status $status."
     return "$status"
+  fi
+}
+
+run_claude() {
+  echo "--------------------------------------------"
+  echo "Running Claude strategist"
+  echo "--------------------------------------------"
+
+  run_claude_once "$PHASE" "$PROMPT_FILE" "$PROMPT_TEMPLATE"
+
+  if [[ -n "$EXTRA_PROMPT_TEMPLATE" ]]; then
+    echo ""
+    echo "Running Claude strategist voice check"
+    echo ""
+    run_claude_once "voice" "$EXTRA_PROMPT_FILE" "$EXTRA_PROMPT_TEMPLATE"
   fi
 
   echo ""
@@ -250,15 +278,14 @@ run_claude() {
   echo ""
 }
 
-run_codex() {
-  echo "--------------------------------------------"
-  echo "Running Codex strategist"
-  echo "--------------------------------------------"
-
+run_codex_once() {
+  local phase_label="$1"
+  local prompt_source="$2"
+  local prompt_template="$3"
   local prompt ts log status
   local interaction_dir prompt_file transcript_file metadata_file
   local -a codex_cmd
-  prompt="${PROMPT_TEMPLATE//\{\{PROFILE\}\}/codex}"
+  prompt="${prompt_template//\{\{PROFILE\}\}/codex}"
   prompt="$prompt
 
 ---
@@ -277,12 +304,12 @@ Behavior under limits:
 - If limits materially reduce quality, state that briefly in your output (do not ask for permission).
 "
   ts="$(date '+%H%M%S')"
-  log=".tmp/cli_logs/codex_${PHASE}_${DATE}_${ts}.log"
+  log=".tmp/cli_logs/codex_${phase_label}_${DATE}_${ts}.log"
   interaction_dir="data/profiles/codex/interactions/${DATE}"
   mkdir -p "$interaction_dir"
-  prompt_file="${interaction_dir}/${ts}_${PHASE}_prompt.md"
-  transcript_file="${interaction_dir}/${ts}_${PHASE}_transcript.txt"
-  metadata_file="${interaction_dir}/${ts}_${PHASE}_interaction.json"
+  prompt_file="${interaction_dir}/${ts}_${phase_label}_prompt.md"
+  transcript_file="${interaction_dir}/${ts}_${phase_label}_transcript.txt"
+  metadata_file="${interaction_dir}/${ts}_${phase_label}_interaction.json"
   printf "%s\n" "$prompt" > "$prompt_file"
 
   if ! codex exec --help >/dev/null 2>&1; then
@@ -315,15 +342,15 @@ Behavior under limits:
     )
   fi
 
-  echo "Streaming Codex output - log: $log"
+  echo "Streaming Codex output (${phase_label}) - log: $log"
   echo "Codex limits: timeout=${CODEX_MAX_SECONDS}s, max_web_searches=${CODEX_MAX_WEB_SEARCHES}, max_loops=${CODEX_MAX_AGENT_LOOPS}, effort=${CODEX_REASONING_EFFORT}, host_write=${CODEX_HOST_WRITE}, sandbox=${CODEX_SANDBOX_MODE}, approval=${CODEX_APPROVAL_POLICY}"
   set +e
   echo "$prompt" | timeout "$CODEX_MAX_SECONDS" "${codex_cmd[@]}" | tee "$log" | strip_ps_encoding_warning | tee "$transcript_file"
   status=$?
   set -e
   write_interaction_metadata \
-    "$metadata_file" "codex" "$PHASE" "codex" \
-    "$prompt_file" "$transcript_file" "$log" "$status" "$PROMPT_FILE"
+    "$metadata_file" "codex" "$phase_label" "codex" \
+    "$prompt_file" "$transcript_file" "$log" "$status" "$prompt_source"
   if [[ "$status" -eq 124 ]]; then
     echo "Error: Codex timed out after ${CODEX_MAX_SECONDS}s (guardrail triggered)."
     echo "Increase CODEX_MAX_SECONDS if you want a longer run."
@@ -332,6 +359,21 @@ Behavior under limits:
   if [[ "$status" -ne 0 ]]; then
     echo "Error: Codex exited with status $status."
     return "$status"
+  fi
+}
+
+run_codex() {
+  echo "--------------------------------------------"
+  echo "Running Codex strategist"
+  echo "--------------------------------------------"
+
+  run_codex_once "$PHASE" "$PROMPT_FILE" "$PROMPT_TEMPLATE"
+
+  if [[ -n "$EXTRA_PROMPT_TEMPLATE" ]]; then
+    echo ""
+    echo "Running Codex strategist voice check"
+    echo ""
+    run_codex_once "voice" "$EXTRA_PROMPT_FILE" "$EXTRA_PROMPT_TEMPLATE"
   fi
 
   echo ""

@@ -77,8 +77,11 @@ What should happen:
 
 - latest remote state is pulled first
 - both strategists review the day
+- both strategists then run a short local "voice" check that summarizes their current state honestly
 - each profile writes:
   - `observations/daily/obs_YYYY-MM-DD.json`
+  - `voice/voice_YYYY-MM-DD.json`
+  - `voice/latest_voice.json`
   - updated `knowledge/` files
   - `IMPROVEMENT_PROPOSALS.md`
   - `improvement_proposals.json`
@@ -178,6 +181,7 @@ Per profile, you should have:
 - `observations/daily/`
 - `observations/weekly/`
 - `knowledge/` with more meaningful content than day 1
+- `voice/` with short strategist state summaries
 - `interactions/` with readable prompt and transcript archives
 
 On GitHub Pages, you should be able to browse:
@@ -185,6 +189,7 @@ On GitHub Pages, you should be able to browse:
 - latest portfolio and comparison view
 - research and monitor reports
 - knowledge summaries
+- strategist voice summaries
 - local strategist interaction logs
 
 ## If Something Looks Wrong
