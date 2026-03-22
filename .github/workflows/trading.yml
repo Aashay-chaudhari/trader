@@ -278,6 +278,7 @@ jobs:
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
           DRY_RUN: ${{ env.DRY_RUN || 'true' }}
+          RESEARCH_MODEL_OPENAI: ${{ env.RESEARCH_MODEL_OPENAI || vars.RESEARCH_MODEL_OPENAI || 'gpt-4o-mini' }}
           USE_CLI_AGENT: "true"
           CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
           LLM_PROVIDER: ${{ matrix.llm_provider }}

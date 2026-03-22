@@ -98,12 +98,37 @@ python -m agent_trader research --debug
 python -m agent_trader reflect --debug
 ```
 
+## Local Workflow (Claude Code as Strategist)
+
+The most cost-effective way to run this system: use your Claude Code subscription for the expensive analysis phases, and let GitHub Actions handle the cheap Python-only monitoring.
+
+**Daily workflow:**
+1. **Morning (~8:30 AM ET)**: Open Claude Code, say "Follow the instructions in scripts/prompts/morning_research.md". Claude Code does web research, reads your portfolio, picks stocks, writes trade plans, and pushes to GitHub.
+2. **Monitor (automated, every 30 min)**: GitHub Actions crons run the Python pipeline — refreshes prices, runs 8 strategies, validates risk, executes trades on Alpaca. Ultra-lean LLM call (~500 tokens) for final trade/skip decisions. Cost: ~$0.04/month.
+3. **Evening (~4:30 PM ET)**: Open Claude Code, say "Follow the instructions in scripts/prompts/evening_reflection.md". Claude Code reviews the day's trades, extracts patterns/lessons, writes observations, and pushes.
+
+**Weekly/Monthly**: Same pattern — "Follow the instructions in scripts/prompts/weekly_review.md" or "monthly_retrospective.md".
+
+**First time setup**: "Follow the instructions in scripts/prompts/seed_knowledge.md" to bootstrap the knowledge base.
+
+**Prompt files:**
+- `scripts/prompts/morning_research.md` — morning analysis + trade plans
+- `scripts/prompts/evening_reflection.md` — daily review + lessons
+- `scripts/prompts/weekly_review.md` — weekly consolidation
+- `scripts/prompts/monthly_retrospective.md` — monthly deep retrospective
+- `scripts/prompts/seed_knowledge.md` — first-time knowledge bootstrap
+
 ## Configuration
 
 All config via `.env` (locally) or GitHub Secrets + Variables (CI). See `.env.example`.
 
-**Critical settings for production:**
-- `DEBUG_MODE=false` — must be set in GitHub repository variables to enable real LLM calls
-- `DRY_RUN=false` — set to enable actual Alpaca paper orders (otherwise just logs)
+**Critical settings:**
+- `PRODUCTION_MODE=true` — single GitHub variable that controls everything: sets `DEBUG_MODE=false` + `DRY_RUN=false`
+- `PRODUCTION_MODE=false` (default) — development mode: templates + dry-run logging
 - `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` — in GitHub Secrets
-- `ALPACA_API_KEY_CLAUDE` / `ALPACA_API_KEY_CODEX` — separate paper accounts per strategist
+- `ALPACA_API_KEY_CLAUDE` / `ALPACA_API_KEY_CODEX` — separate Alpaca paper accounts per strategist
+- `RESEARCH_MODEL_OPENAI` — GitHub variable, default `gpt-4o-mini`, set to `gpt-4o` for quality
+
+**Alpaca paper trading:**
+- Free accounts at alpaca.markets — create 2 accounts (one per strategist)
+- Paper trading is 100% free, resets available via dashboard (Paper Trading → Account → Reset)

@@ -1,0 +1,22 @@
+{
+    "last_updated": "2026-03-22-seed",
+    "by_regime": {
+        "risk_on": {
+            "momentum": {"win_rate": 0.65, "avg_pnl": 2.1, "sample_size": 0, "notes": "Best in uptrends"},
+            "trend": {"win_rate": 0.60, "avg_pnl": 1.8, "sample_size": 0, "notes": "Follow the SMA stack"},
+            "volume_breakout": {"win_rate": 0.55, "avg_pnl": 2.5, "sample_size": 0, "notes": "High reward but noisy"},
+            "news_catalyst": {"win_rate": 0.60, "avg_pnl": 2.0, "sample_size": 0, "notes": "Best with earnings/upgrades"}
+        },
+        "risk_off": {
+            "mean_reversion": {"win_rate": 0.60, "avg_pnl": 1.5, "sample_size": 0, "notes": "Oversold bounces in quality names"},
+            "support_resistance": {"win_rate": 0.55, "avg_pnl": 1.2, "sample_size": 0, "notes": "Key levels hold better in fear"},
+            "vwap": {"win_rate": 0.50, "avg_pnl": 0.8, "sample_size": 0, "notes": "Less reliable in high vol"}
+        },
+        "neutral": {
+            "vwap": {"win_rate": 0.55, "avg_pnl": 1.0, "sample_size": 0, "notes": "Best range-bound strategy"},
+            "support_resistance": {"win_rate": 0.55, "avg_pnl": 0.9, "sample_size": 0, "notes": "Key levels respected in chop"},
+            "mean_reversion": {"win_rate": 0.50, "avg_pnl": 0.7, "sample_size": 0, "notes": "Moderate in neutral"}
+        }
+    },
+    "note": "Initial estimates from general trading research. Sample_size=0 means no real data yet. Will be updated after first weekly review."
+}

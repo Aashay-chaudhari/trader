@@ -165,66 +165,38 @@ Respond with ONLY valid JSON:
 }}"""
 
 
-MONITOR_PROMPT = """You are monitoring your watchlist during market hours. Be brief and actionable.
+MONITOR_PROMPT = """You are a trading monitor making quick decisions. Be decisive and concise.
 
-{performance_feedback}
+MORNING TRADE PLANS:
+{morning_plans}
 
-PREVIOUS RUN ARTIFACTS
-{artifact_context}
+CURRENT MARKET STATE:
+{current_state}
 
-CURRENT MARKET DATA:
-{market_data}
+ACTIVE POSITIONS:
+{active_positions}
 
-MORNING RESEARCH (your earlier analysis):
-{morning_context}
+DETERMINISTIC STRATEGY SIGNALS:
+{strategy_signals}
 
-What has changed since the morning? Check:
-1. Has price moved to any of your morning entry zones?
-2. Any new news catalysts?
-3. Has volume picked up confirming a move?
-4. Should any stop losses be adjusted?
-
-If an entry point has been hit, flag it clearly as READY TO TRADE.
-If nothing actionable, just confirm "holding analysis" for each stock.
+For each watchlist stock: should we TRADE (buy/sell) or SKIP?
+For each active position: HOLD, ADD, or CLOSE?
+Consider: has price hit entry zone? Volume confirming? Any regime change?
+One-line reason per decision. Keep trade_plan from morning unless you have reason to adjust.
 
 Respond with ONLY valid JSON:
 {{
     "overall_sentiment": "bullish" | "bearish" | "neutral",
-    "market_summary": "1 sentence update",
+    "market_summary": "1 sentence",
     "stocks": {{
         "<SYMBOL>": {{
-            "sentiment": "bullish" | "bearish" | "neutral",
-            "confidence": 0.0-1.0,
-            "key_observations": ["what changed"],
             "recommendation": "buy" | "sell" | "hold" | "watch",
+            "confidence": 0.0-1.0,
             "ready_to_trade": true | false,
-            "catalysts": [],
-            "risks": [],
-            "trade_plan": {{
-                "entry": 0.00,
-                "stop_loss": 0.00,
-                "target": 0.00
-            }},
-            "supporting_articles": [
-                {{
-                    "title": "source headline or filing",
-                    "url": "https://...",
-                    "source": "publisher / website",
-                    "kind": "news" | "filing" | "analyst" | "web",
-                    "reason": "why this source matters"
-                }}
-            ]
+            "key_observations": ["1 concise observation"],
+            "trade_plan": {{"entry": 0.00, "stop_loss": 0.00, "target": 0.00}}
         }}
-    }},
-    "web_checks": [
-        {{
-            "symbol": "SYMBOL",
-            "query": "what was searched or fetched",
-            "source": "publisher / website",
-            "url": "https://...",
-            "finding": "what this confirmed"
-        }}
-    ]
+    }}
 }}"""
 
 
@@ -578,19 +550,11 @@ class ResearchAgent(BaseAgent):
 
         # Build the prompt based on phase
         if phase == "monitor" and morning_context:
-            performance_feedback = self._tracker.get_recent_trades_for_prompt(5)
-            prompt_sections = {
-                "performance_feedback": performance_feedback,
-                "artifact_context": artifact_context,
-                "market_data": summary,
-                "morning_context": morning_context,
-            }
-            prompt = MONITOR_PROMPT.format(
-                performance_feedback=performance_feedback,
-                artifact_context=artifact_context,
-                market_data=json.dumps(summary, indent=2),
-                morning_context=json.dumps(morning_context, indent=2),
+            lean = self._build_lean_monitor_context(
+                summary, morning_context, news_data, market_context,
             )
+            prompt_sections = lean
+            prompt = MONITOR_PROMPT.format(**lean)
             run_mode = "monitor"
         elif phase == "weekly_review":
             performance_summary = self._tracker.get_performance_summary()
@@ -767,6 +731,93 @@ class ResearchAgent(BaseAgent):
         }:
             return self._get_monitor_model(provider)
         return self._get_research_model(provider)
+
+    def _build_lean_monitor_context(
+        self, market_summary: dict, morning_context: dict,
+        news_data: dict, market_context: dict,
+    ) -> dict:
+        """Build ultra-concise monitor context (~400-600 tokens total).
+
+        Packs only what the LLM needs to make trade/skip decisions:
+        morning trade plans as a compact table, current prices + indicators,
+        active positions, and deterministic strategy signals.
+        """
+        morning_stocks = morning_context.get("stocks", {})
+
+        # Morning plans: 1 line per stock
+        plan_lines = []
+        for sym, info in morning_stocks.items():
+            rec = info.get("recommendation", "watch")
+            tp = info.get("trade_plan", {})
+            entry = tp.get("entry", "—")
+            stop = tp.get("stop_loss", "—")
+            target = tp.get("target", "—")
+            reason = (info.get("reasoning") or "")[:80]
+            plan_lines.append(
+                f"  {sym}: {rec} | entry=${entry} stop=${stop} target=${target} | {reason}"
+            )
+        if not plan_lines:
+            plan_lines.append("  (no morning plans available)")
+
+        # Current state: compact table
+        state_lines = ["| Stock | Price | Chg% | RSI | VolRatio | Near Entry? |",
+                        "|-------|-------|------|-----|----------|-------------|"]
+        for sym, data in market_summary.items():
+            price = data.get("latest_price", 0)
+            change = data.get("price_change_pct", 0)
+            indicators = data.get("indicators", {}) if isinstance(data.get("indicators"), dict) else {}
+            rsi = indicators.get("rsi_14", "—")
+            if isinstance(rsi, (int, float)):
+                rsi = f"{rsi:.0f}"
+
+            # Volume ratio
+            history = data.get("price_history", [])
+            vol = data.get("volume", 0)
+            vol_ratio = "—"
+            if history and len(history) >= 5:
+                avg_vol = sum(b.get("volume", 0) for b in history[-10:]) / max(len(history[-10:]), 1)
+                if avg_vol > 0:
+                    vol_ratio = f"{vol / avg_vol:.1f}x"
+
+            # Check proximity to morning entry
+            plan_entry = morning_stocks.get(sym, {}).get("trade_plan", {}).get("entry")
+            near = ""
+            if plan_entry and price and plan_entry > 0:
+                if abs(price - plan_entry) / plan_entry < 0.02:
+                    near = "YES"
+
+            state_lines.append(
+                f"| {sym:5s} | ${price:>8.2f} | {change:+5.1f}% | {rsi:>3s} | {vol_ratio:>8s} | {near:>5s} |"
+            )
+
+        # Active positions (from portfolio state)
+        pos_lines = ["  (none)"]
+        try:
+            portfolio_path = Path(get_settings().data_dir) / "portfolio_state.json"
+            if portfolio_path.exists():
+                portfolio = json.loads(portfolio_path.read_text())
+                active = []
+                for sym, pos in portfolio.items():
+                    if isinstance(pos, dict) and pos.get("shares", 0) > 0:
+                        shares = pos["shares"]
+                        avg = pos.get("avg_cost", 0)
+                        cur = pos.get("last_price", 0)
+                        pnl = ((cur - avg) / avg * 100) if avg else 0
+                        active.append(f"  {sym}: {shares} shares @ ${avg:.2f}, now ${cur:.2f} ({pnl:+.1f}%)")
+                if active:
+                    pos_lines = active
+        except (OSError, json.JSONDecodeError):
+            pass
+
+        # Strategy signals placeholder (filled by orchestrator if available)
+        sig_lines = ["  (will be computed by strategy engine)"]
+
+        return {
+            "morning_plans": "\n".join(plan_lines),
+            "current_state": "\n".join(state_lines),
+            "active_positions": "\n".join(pos_lines),
+            "strategy_signals": "\n".join(sig_lines),
+        }
 
     def _prepare_rich_summary(self, market_data: dict) -> dict:
         """Build comprehensive but token-efficient summary for Claude."""
