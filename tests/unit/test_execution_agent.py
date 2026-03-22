@@ -8,7 +8,7 @@ from agent_trader.core.message_bus import Message, MessageType
 
 @pytest.mark.asyncio
 async def test_execution_agent_uses_market_data_price_for_dry_run(message_bus, monkeypatch):
-    monkeypatch.setenv("DRY_RUN", "true")
+    monkeypatch.setenv("RUN_MODE", "debug")
     agent = ExecutionAgent(message_bus)
 
     result = await agent.process(

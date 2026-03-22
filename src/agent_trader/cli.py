@@ -4,7 +4,6 @@ Usage:
   python -m agent_trader research              # Morning research phase
   python -m agent_trader monitor               # Monitor & trade phase
   python -m agent_trader run                   # Both phases back-to-back
-  python -m agent_trader run --dry-run         # Full run, no orders
   python -m agent_trader reset                 # Reset generated runtime state
   python -m agent_trader status                # Show portfolio
   python -m agent_trader dashboard             # Generate dashboard HTML
@@ -39,14 +38,10 @@ def main():
     # Full run command
     run_parser = subparsers.add_parser("run", help="Run both phases")
     run_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
-    run_parser.add_argument("--dry-run", action="store_true", default=None,
-                            help="Run without placing orders")
 
     # Full cycle command
     cycle_parser = subparsers.add_parser("cycle", help="Run research, monitor, reflection, weekly, monthly, and evolution")
     cycle_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
-    cycle_parser.add_argument("--dry-run", action="store_true", default=None,
-                              help="Run without placing orders")
 
     # Reflection command (Phase 3)
     reflect_parser = subparsers.add_parser("reflect", help="Evening reflection phase")
@@ -100,7 +95,6 @@ def main():
     if getattr(args, "debug", False):
         import os
         os.environ["RUN_MODE"] = "debug"
-        os.environ["DEBUG_MODE"] = "true"  # backward compat
         from agent_trader.config.settings import reset_settings
         reset_settings()
 
@@ -156,9 +150,6 @@ async def cmd_run(args):
     console.print("\n[bold]Agent Trader[/bold] — Full Pipeline\n")
     orchestrator, settings = build_system()
     symbols = args.symbols or settings.watchlist
-    if args.dry_run is not None and args.dry_run:
-        settings.run_mode = "paper"
-        settings.dry_run = True
     mode_label = {"debug": "DEBUG", "paper": "PAPER TRADING", "live": "LIVE"}
     console.print(f"Mode: [yellow]{mode_label.get(settings.run_mode, settings.run_mode)}[/yellow]")
     return await run_full(orchestrator, symbols)
@@ -169,9 +160,6 @@ async def cmd_cycle(args):
     console.print("\n[bold]Agent Trader[/bold] - Full Cycle\n")
     orchestrator, settings = build_system()
     symbols = args.symbols or settings.watchlist
-    if args.dry_run is not None and args.dry_run:
-        settings.run_mode = "paper"
-        settings.dry_run = True
     mode_label = {"debug": "DEBUG", "paper": "PAPER TRADING", "live": "LIVE"}
     console.print(f"Mode: [yellow]{mode_label.get(settings.run_mode, settings.run_mode)}[/yellow]")
     return await run_cycle(orchestrator, symbols)

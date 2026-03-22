@@ -1,117 +1,113 @@
-# Current State
+﻿# Current State
 
 Date: 2026-03-22
 
-## Stable Baseline
+## Operating Model
 
-The repo is now stabilized around a two-layer architecture:
+Agent Trader now uses a streamlined two-layer workflow:
 
-1. Local strategist layer
-   - `scripts/run_both.sh` runs Claude + Codex locally for rich morning/evening/weekly/monthly work.
-   - Outputs are isolated under `data/profiles/claude/` and `data/profiles/codex/`.
+1. Local strategist sessions
+   - Run with `scripts/run_both.sh`
+   - Heavy research and reflection happen locally through CLI subscriptions
+   - Supported phases: `morning`, `evening`, `weekly`, `monthly`
 
-2. Python runtime layer
-   - `python -m agent_trader ...` powers research, monitor, reflection, weekly, monthly, and evolution phases.
-   - GitHub Actions is configured to use the Python runtime for automated monitor runs.
+2. Remote monitor automation
+   - GitHub Actions runs the monitor workflow every 30 minutes on weekdays
+   - Monitor uses cheap API models only
+   - Remote workflow is intentionally limited to the intraday monitor path
 
-## What Changed In This Stabilization Pass
+## Source Of Truth
 
-- Fixed paper-mode behavior so `RUN_MODE=paper` now means:
-  - real LLM analysis
-  - real Alpaca paper orders
-- Unified knowledge-file compatibility so the runtime can read both:
-  - prompt-managed profile JSON
-  - app-managed cold-start JSON
-- Added BOM-safe JSON loading across the runtime.
-- Wired `evolution` into the full cycle.
-- Added [SYSTEM_GUIDE.md](SYSTEM_GUIDE.md) as the operator manual.
-- Switched GitHub Actions monitor flow to API-only operation:
-  - no CLI auth dependency in Actions
-  - no CLI execution requirement in Actions
-- Refactored monitor into a lightweight execution gate:
-  - morning research writes `execution_condition` per stock
-  - monitor only considers a tiny candidate set
-  - monitor can skip the LLM entirely when nothing is near a trigger
-  - strategy execution is blocked unless the monitor gate marks a setup `ready_to_trade=true`
-  - active positions are always kept in the monitor loop
+Durable strategist state lives under:
 
-## Reset To Template State
+- `data/profiles/claude/`
+- `data/profiles/codex/`
 
-After stabilization, the generated runtime state was reset so the repo now starts from a clean cold-start template:
+Tracked long-term memory includes:
 
-- `data/` contains only `data/profiles/`
-- each profile has:
-  - `profile.json`
-  - empty cold-start knowledge JSON files
-  - empty `cache/`, `observations/`, and `positions/` directories
-- generated dashboard output under `docs/data/` and `docs/index.html` was cleared
+- `knowledge/`
+- `observations/`
+- `positions/`
+- `cache/`
+- `profile.json`
 
-This means the next production run will validate real shape creation from a fresh baseline rather than relying on old artifacts.
+Legacy top-level runtime folders are no longer part of the supported architecture.
 
-## Monitor Gate Design
+## Monitor Model Defaults
 
-Morning research remains the heavy-thinking phase.
+- Claude strategist monitor: `claude-haiku-4-5-20251001`
+- Codex strategist monitor: `gpt-4o-mini`
 
-Intraday monitor is now intentionally small:
+## Current Workflow
 
-1. Load watchlist + active positions
-2. Refresh prices and news
-3. Build candidate list:
-   - near entry
-   - near stop
-   - near target
-   - fresh headlines
-   - active positions
-4. Run a cheap LLM gate only on those candidates
-5. Let strategy/risk/execution proceed only when the gate approves
+Morning:
 
-This keeps some intelligence intraday without paying for repeated deep reasoning.
+```bash
+./scripts/run_both.sh morning parallel
+```
 
-## Current GitHub Actions Model
+Evening:
 
-- Strategist family remains dual-profile:
-  - `claude` profile uses Anthropic API in Actions
-  - `codex` profile uses OpenAI API in Actions
-- Actions currently uses:
-  - `USE_CLI_AGENT=false`
-  - API-only monitor path
-- Local CLI workflows remain available for manual strategist sessions.
-- Repo Actions config verified:
-  - required secrets exist by name
-  - `PRODUCTION_MODE=true`
-  - `MONITOR_MODEL_OPENAI=gpt-4o-mini`
-  - `USE_CLI_AGENT=false`
+```bash
+./scripts/run_both.sh evening parallel
+```
 
-## Key New Config Knobs
+Weekly:
 
-Available in settings / `.env`:
+```bash
+./scripts/run_both.sh weekly parallel
+```
 
+Monthly:
+
+```bash
+./scripts/run_both.sh monthly parallel
+```
+
+Remote automation:
+
+- GitHub Actions `Trading Pipeline`
+- monitor only
+- weekday schedule during market hours
+
+## Configuration Direction
+
+Supported control variables:
+
+- `RUN_MODE`
+- `LLM_PROVIDER`
+- `DATA_DIR`
+- `AGENT_PROFILE`
+- `AGENT_LABEL`
+- `RESEARCH_MODEL`
+- `MONITOR_MODEL`
+- `RESEARCH_MODEL_OPENAI`
 - `MONITOR_MODEL_OPENAI`
-- `USE_CLI_AGENT_FOR_MONITOR`
 - `MONITOR_CANDIDATE_LIMIT`
 - `MONITOR_ENTRY_PROXIMITY_PCT`
 
-## Verification Status
+Removed from the supported workflow:
 
-Verified on 2026-03-22:
+- `PRODUCTION_MODE`
+- `DEBUG_MODE`
+- `DRY_RUN`
+- `USE_CLI_AGENT`
+- `USE_CLI_AGENT_FOR_MONITOR`
+- `CLI_AGENT_PROVIDER`
+- `CLI_AGENT_MAX_TURNS`
+- `CLI_AGENT_TIMEOUT`
+- `debug_max_stocks`
+- `debug_skip_web`
 
-- `pytest -q` -> passing
-- `python -m agent_trader validate --data-dir data/profiles/claude` -> passing
-- `python -m agent_trader validate --data-dir data/profiles/codex` -> passing
+## Verification Snapshot
 
-## Repo Truths To Remember
+Most recent migration state before final cleanup:
 
-- `run_both.sh` is the local strategist orchestration tool, not the intraday engine.
-- GitHub Actions monitor now relies on cheap API calls, not CLI sessions.
-- `SYSTEM_GUIDE.md` is the best current operator reference.
-- `data/profiles/*` is the source of truth for strategist state.
+- code cleanup for legacy variables and internal CLI-agent path: done
+- remote workflow narrowed to monitor-only: done
+- docs rewrite to match the new architecture: in progress
+- one test path expectation caused by `data/profiles/default`: being fixed during cleanup
 
-## Next Intended Step
+## Next Step
 
-Prepare a demo production run by adding repo-level GitHub Actions secrets and variables, then trigger a manual workflow run to validate:
-
-- schema shapes
-- journal artifacts
-- dashboard output
-- monitor gating behavior
-- Alpaca paper execution path
+Finish cleanup, rerun tests and validations, then commit the streamlined architecture as the new baseline.

@@ -44,10 +44,6 @@ def build_profile_metadata(settings: Settings | None = None) -> dict[str, Any]:
         "label": get_profile_label(settings),
         "data_dir": settings.data_dir,
         "llm_provider": settings.llm_provider,
-        "use_cli_agent": settings.use_cli_agent,
-        "cli_agent_provider": settings.cli_agent_provider,
-        "cli_agent_max_turns": settings.cli_agent_max_turns,
-        "cli_agent_timeout": settings.cli_agent_timeout,
         "dry_run": settings.is_dry_run,
         "paper_portfolio_value": settings.paper_portfolio_value,
     }

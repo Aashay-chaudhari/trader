@@ -1,4 +1,4 @@
-"""Post-run check: report which analysis mode was used (CLI agent vs API).
+"""Post-run check: report which analysis mode was used (template vs API).
 
 Run as: python -m agent_trader.utils.check_mode
 """
@@ -80,8 +80,8 @@ def main() -> None:
     print("=" * 60)
     print("ANALYSIS MODE REPORT")
     print("=" * 60)
-    print(f"USE_CLI_AGENT={os.environ.get('USE_CLI_AGENT', 'false')}")
-    print(f"CLI_AGENT_PROVIDER={os.environ.get('CLI_AGENT_PROVIDER', 'unset')}")
+    print(f"RUN_MODE={os.environ.get('RUN_MODE', 'unset')}")
+    print(f"LLM_PROVIDER={os.environ.get('LLM_PROVIDER', 'unset')}")
     print(f"DATA_DIR={settings.data_dir}")
 
     research_files = [Path(path) for path in glob(str(data_root / "research" / "*.json"))]
@@ -123,10 +123,7 @@ def main() -> None:
             if isinstance(attempt, dict):
                 print(f"- {_format_attempt(attempt, index)}")
 
-    if mode == "cli":
-        print("")
-        print("CLI AGENT MODE CONFIRMED")
-    elif mode == "template":
+    if mode == "template":
         print("")
         print("TEMPLATE MODE CONFIRMED (NO MODEL TOKENS USED)")
     elif mode == "api":

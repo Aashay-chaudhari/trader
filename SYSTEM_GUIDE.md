@@ -1,463 +1,383 @@
-# System Guide
+﻿# System Guide
 
-This repo is a two-layer trading system:
+This guide describes the streamlined operating model for Agent Trader.
 
-1. A strategist layer that uses Claude and Codex to think, research, reflect, and write profile artifacts.
-2. A Python runtime layer that gathers market data, evaluates strategies, applies risk rules, executes paper trades, tracks portfolio state, and accumulates knowledge over time.
+## Mental Model
 
-The most important mental model is:
+There are two systems working together:
 
-`strategists think -> files are written -> Python runtime consumes them -> trades are monitored and logged -> observations become knowledge -> future strategist prompts get better`
+1. Local strategist sessions for deep thinking.
+2. Python runtime automation for intraday monitoring and execution.
 
-## The Two Layers
+Think of it like this:
 
-### 1. Strategist Layer
+`strategists think locally -> profile files are updated -> GitHub monitor reads them -> trades are checked and executed -> observations and knowledge accumulate`
 
-This is the `scripts/run_both.sh` workflow.
+## What Runs Where
 
-It directly launches:
+### Local machine
 
-- `claude`
-- `codex`
+You run the heavy phases locally with `scripts/run_both.sh`.
 
-using the prompt files in `scripts/prompts/`.
+These phases are:
 
-Its job is to produce higher-level market thinking and structured artifacts such as:
+- `morning`
+- `evening`
+- `weekly`
+- `monthly`
 
-- `cache/morning_research.json`
-- `cache/watchlist.json`
-- daily / weekly / monthly observations
-- knowledge files
+Why local:
 
-Each strategist writes only into its own profile:
+- you already pay for CLI subscriptions
+- strategist output is more visible
+- no need to pay for heavy API research in GitHub Actions
 
-- `data/profiles/claude/`
-- `data/profiles/codex/`
+### GitHub Actions
 
-This layer is best when you want:
+GitHub Actions runs only the lightweight intraday monitor.
 
-- richer visible reasoning
-- deep web research
-- side-by-side strategist comparison
-- manual supervision
+Why remote:
 
-### 2. Python Runtime Layer
+- it is cheap enough to call a small model periodically
+- it can run on a fixed schedule
+- it keeps the dashboard and portfolio state moving during market hours
 
-This is the `python -m agent_trader ...` workflow.
+## Supported Architecture
 
-It wires together agents for:
+### Strategist layer
 
-- screening
-- market data
-- news
-- research
-- strategy generation
-- risk checks
-- execution
-- portfolio tracking
-- reflection and knowledge accumulation
+Driven by:
 
-This layer is best when you want:
+- `scripts/run_both.sh`
+- prompts in `scripts/prompts/`
+- local `claude` CLI
+- local `codex` CLI
 
-- structured execution
-- repeatable automation
-- GitHub Actions runs
-- validation and testability
-
-## What Uses an LLM
-
-Not every part of the repo is an LLM call.
-
-### LLM-heavy component
-
-The main LLM user is `ResearchAgent`.
-
-It is used in these phases:
+Responsibilities:
 
 - morning research
-- monitor-time model check
+- trade plans
+- explicit execution conditions
 - evening reflection
 - weekly review
-- monthly retrospective
-- evolution
+- monthly review
+- knowledge updates written by the prompts
 
-### Mostly deterministic components
+### Python runtime layer
 
-These are code-driven, not free-form LLM reasoning:
+Driven by:
 
-- `ScreenerAgent`
-- `DataAgent`
-- `NewsAgent`
-- `StrategyAgent`
-- `RiskAgent`
-- `ExecutionAgent`
-- `PortfolioAgent`
-- `KnowledgeBase`
+- `python -m agent_trader ...`
+- `.github/workflows/trading.yml`
 
-They can call external market/news APIs, but they do not behave like chat agents.
+Responsibilities:
 
-## CLI vs API
+- screening
+- data refresh
+- news refresh
+- monitor-time approval gate
+- strategy signals
+- risk validation
+- Alpaca paper execution
+- journaling
+- dashboard generation
 
-There are three practical ways the system can use a model.
+## LLM Usage
 
-### A. External CLI mode
+### Heavy LLM work
 
-This is `./scripts/run_both.sh`.
+Heavy research happens locally through the strategist CLIs.
 
-The script calls the Claude CLI and Codex CLI directly. Those tools handle model interaction themselves. The Python app is not in the middle.
+That includes:
 
-Use this when you want visible strategist sessions.
+- market thesis building
+- stock selection
+- detailed plans
+- end-of-day reflection
+- weekly and monthly synthesis
 
-### B. Internal CLI-agent mode
+### Light LLM work
 
-This is inside the Python runtime.
+The intraday monitor uses a small API call.
 
-If these are set:
+It is not redoing the morning research.
 
-- `USE_CLI_AGENT=true`
-- `CLI_AGENT_PROVIDER=claude` or `codex`
+Its job is narrower:
 
-then `ResearchAgent` stages current context into files and launches the selected CLI as a subprocess.
+- check if a planned setup still matches live conditions
+- approve or reject a small set of candidates
 
-That means the Python app is still running the phase, but the model work happens through the CLI tool rather than direct Anthropic/OpenAI API calls from Python.
+The monitor should feel like a thin layer of judgment, not a full analyst.
 
-### C. Direct API mode
+## Monitor Design
 
-If CLI-agent mode is disabled, unavailable, or fails, `ResearchAgent` falls back to direct provider API calls.
+The monitor loop is:
 
-That fallback is controlled by:
+1. load latest profile state from `main`
+2. refresh market data and headlines
+3. build a small candidate set
+4. call the cheap model only for those candidates
+5. let Python strategy and risk logic decide whether to trade
+6. send paper orders through Alpaca when approved
 
-- `LLM_PROVIDER`
-- `RESEARCH_MODEL`
-- `MONITOR_MODEL`
-- `RESEARCH_MODEL_OPENAI`
+Candidates are limited to symbols that are:
 
-## Direct Answer: “If CLI always works, will I have no API calls?”
+- near entry
+- near stop
+- near target
+- active positions
+- showing fresh headlines
 
-If by “API calls” you mean direct LLM API calls from your Python app to Anthropic or OpenAI, then mostly yes:
+## Which Models Are Used
 
-- if `USE_CLI_AGENT=true`
-- and the selected CLI is available
-- and it succeeds
+### Morning and reflection phases
 
-then `ResearchAgent` uses the CLI path and does not need to fall back to direct LLM API calls.
+These are local CLI sessions, so the subscription-backed CLI decides how the model is accessed.
 
-But there are two important caveats:
+### Monitor phase
 
-1. The CLI itself still talks to a model backend. So model usage still exists; it is just happening through the CLI tool rather than through your Python code calling the API directly.
-2. You will still have non-LLM API usage, including:
-   - Alpaca
-   - Market data/news providers
-   - macro/economic data providers
+These are API-based in GitHub Actions.
 
-So the accurate statement is:
+Default cheap monitor models:
 
-`If CLI works, you can avoid direct Python LLM API calls, but you do not avoid model usage or external APIs in general.`
+- Claude strategist: `claude-haiku-4-5-20251001`
+- Codex strategist: `gpt-4o-mini`
 
-## Direct Answer: “Does GitHub Actions monitoring have LLM calls?”
+That is the current cost-optimized path.
 
-Yes, in the current system it does.
+## What Is Tracked In Git
 
-The monitor phase is not purely deterministic. It does:
-
-1. refresh prices
-2. refresh news
-3. run a lighter `ResearchAgent` check
-4. generate strategy signals
-5. run risk checks
-6. execute approved trades
-7. update portfolio state
-
-So the monitoring path still includes a model step.
-
-In GitHub Actions, the workflow is now configured for API-only analysis.
-
-That means:
-
-- no CLI authentication requirement in Actions
-- monitor-time analysis uses a small direct API call
-- the strategist family still determines which provider is used
-
-## Run Modes
-
-The system now uses a single run-mode model.
-
-### `debug`
-
-- template responses
-- no real LLM call
-- no broker orders
-- reduced scope
-
-### `paper`
-
-- real LLM analysis
-- Alpaca paper orders
-- full pipeline
-
-### `live`
-
-- intended future path for real-money execution
-
-Today, `paper` is the correct mode for real paper trading.
-
-## What the Python Runtime Actually Does
-
-### Morning research
-
-Command:
-
-```bash
-python -m agent_trader research
-```
-
-Flow:
-
-1. News discovery
-2. Screener pass
-3. Detailed market data
-4. Detailed stock news
-5. ResearchAgent analysis
-6. Save watchlist and context
-
-### Monitor and trade
-
-Command:
-
-```bash
-python -m agent_trader monitor
-```
-
-Flow:
-
-1. Load watchlist
-2. Add any active positions so open swings remain supervised
-2. Refresh market data
-3. Refresh news
-4. Build a tiny candidate set only for symbols near entry/stop/target or with fresh headlines
-5. Run a lightweight monitor LLM gate against those candidates
-6. Generate strategy signals only for gate-approved entries and active positions
-7. Filter through risk rules
-8. Submit paper orders
-9. Update local portfolio state
-
-### Reflection and learning phases
-
-Commands:
-
-```bash
-python -m agent_trader reflect
-python -m agent_trader weekly
-python -m agent_trader monthly
-python -m agent_trader evolve
-```
-
-These phases are how the system learns from its own behavior rather than just producing daily output.
-
-## Where Learning Lives
-
-Each profile has its own memory root:
+Tracked long-term memory:
 
 - `data/profiles/claude/`
 - `data/profiles/codex/`
+- `docs/`
 
-Important subdirectories:
+Within each profile, the durable memory is:
 
-- `cache/` for current working artifacts
-- `observations/` for daily, weekly, monthly reflections
-- `knowledge/` for distilled lessons, patterns, regime rules, and strategy effectiveness
-- `positions/` for active and closed position tracking
-- `snapshots/` and runtime files for portfolio/dashboard state
+- `knowledge/`
+- `observations/`
+- `positions/`
+- `cache/`
+- `profile.json`
 
-The knowledge loop is:
+## What Is Not Part Of The Durable Memory Model
 
-1. Observe what happened
-2. Store it
-3. Distill it into compact knowledge
-4. Feed that compact knowledge back into future prompts
-5. Measure outcomes
-6. Propose improvements
+Legacy top-level single-root runtime paths are not part of the supported architecture anymore.
+
+Examples:
+
+- `data/journal/`
+- `data/knowledge/`
+- `data/observations/`
+- `data/positions/`
+- `data/cache/`
+- `data/research/`
+- `data/snapshots/`
+
+The source of truth is profile-first.
 
 ## How Context Is Limited
 
-This matters a lot because unlimited memory would become expensive and noisy.
+The system keeps context small in a few ways.
 
-The system limits context in several ways.
+### 1. Profile knowledge is distilled
 
-### Knowledge is summarized
+The app summarizes prior lessons, patterns, regime rules, and observations before sending them into prompts.
 
-The app does not dump entire history files into prompts. It builds compressed context from:
+### 2. Prompt budgets are capped
 
-- lessons learned
-- regime library
-- strategy effectiveness
-- recent patterns
-- recent observations
-
-### Token and size budgets
-
-Key limits in settings include:
+Important settings:
 
 - `KNOWLEDGE_TOKEN_BUDGET`
 - `OBSERVATIONS_TOKEN_BUDGET`
 - `LLM_MAX_PROMPT_CHARS`
 - `LLM_MAX_OUTPUT_TOKENS`
-- `CLI_AGENT_MAX_TURNS`
-- `CLI_AGENT_TIMEOUT`
 
-### External CLI runner budgets
+### 3. The monitor sees only a small candidate set
 
-`scripts/run_both.sh` adds extra operational limits for Codex such as:
+This is the biggest operational cost control.
 
-- max runtime
-- max web searches
-- max loop/tool cycles
-- reasoning effort
+Instead of evaluating every symbol every 30 minutes, the system only checks the few names that are near action.
 
-That keeps the strategist sessions from wandering indefinitely.
+## How To Use The System
 
-## How to Use It Day to Day
+### Every weekday morning
 
-### Local strategist workflow
+Run:
 
-Use:
+```bash
+./scripts/run_both.sh morning parallel
+```
+
+Expected result:
+
+- strategist cache files are refreshed
+- a commit is made
+- state is pushed to `main`
+
+Generated files:
+
+- `data/profiles/claude/cache/morning_research.json`
+- `data/profiles/claude/cache/watchlist.json`
+- `data/profiles/codex/cache/morning_research.json`
+- `data/profiles/codex/cache/watchlist.json`
+
+### During the trading day
+
+Let GitHub Actions run the scheduled monitor workflow.
+
+You only need to step in if:
+
+- a workflow fails
+- you want to inspect logs
+- you want to manually dispatch a monitor run
+
+### Every weekday evening
+
+Run:
+
+```bash
+./scripts/run_both.sh evening parallel
+```
+
+This will pull the latest remote state first, then write reflections and push again.
+
+### Weekly
+
+Run:
+
+```bash
+./scripts/run_both.sh weekly parallel
+```
+
+### Monthly
+
+Run:
+
+```bash
+./scripts/run_both.sh monthly parallel
+```
+
+## Core Commands
+
+### Supported production workflow
 
 ```bash
 ./scripts/run_both.sh morning parallel
 ./scripts/run_both.sh evening parallel
 ./scripts/run_both.sh weekly parallel
 ./scripts/run_both.sh monthly parallel
-```
-
-This is your best “visible brain” workflow.
-
-### Local Python runtime workflow
-
-For Claude profile:
-
-```powershell
-$env:RUN_MODE="paper"
-$env:DATA_DIR="data/profiles/claude"
-$env:AGENT_PROFILE="claude"
-$env:AGENT_LABEL="Claude Strategist"
-$env:USE_CLI_AGENT="true"
-$env:CLI_AGENT_PROVIDER="claude"
-python -m agent_trader research
 python -m agent_trader monitor
-```
-
-For Codex profile:
-
-```powershell
-$env:RUN_MODE="paper"
-$env:DATA_DIR="data/profiles/codex"
-$env:AGENT_PROFILE="codex"
-$env:AGENT_LABEL="Codex Strategist"
-$env:USE_CLI_AGENT="true"
-$env:CLI_AGENT_PROVIDER="codex"
-python -m agent_trader research
-python -m agent_trader monitor
-```
-
-### Validation
-
-Use:
-
-```bash
 python -m agent_trader validate --data-dir data/profiles/claude
 python -m agent_trader validate --data-dir data/profiles/codex
 pytest -q
 ```
 
-## Important Operational Truths
+### Secondary developer utilities
 
-### 1. `run_both.sh` is not the intraday execution engine
+These remain available, but they are not the normal production path:
 
-It is a strategist orchestration script.
+```bash
+python -m agent_trader research
+python -m agent_trader run
+python -m agent_trader reflect
+python -m agent_trader weekly
+python -m agent_trader monthly
+python -m agent_trader evolve
+python -m agent_trader cycle
+python -m agent_trader reset
+python -m agent_trader dashboard
+```
 
-It is excellent for:
+## Configuration You Still Need
 
-- research
-- reflection
-- side-by-side outputs
-- commit/push workflow
+### Local `.env`
 
-It is not the same thing as the Python monitor/execution engine.
+Important keys:
 
-### 2. `DATA_DIR` matters
-
-If you run the Python app without setting `DATA_DIR`, it defaults to top-level `data/`.
-
-For profile-specific work, you should set:
-
+- `RUN_MODE`
+- `LLM_PROVIDER`
 - `DATA_DIR`
 - `AGENT_PROFILE`
 - `AGENT_LABEL`
+- `ALPACA_API_KEY`
+- `ALPACA_SECRET_KEY`
+- data/news provider keys
 
-Otherwise you can accidentally write outside the strategist roots.
+### GitHub Secrets
 
-### 3. GitHub Actions uses API-only monitoring
+Required for the monitor workflow:
 
-This is intentional.
+- `ANTHROPIC_API_KEY`
+- `OPENAI_API_KEY`
+- `ALPACA_API_KEY_CLAUDE`
+- `ALPACA_SECRET_KEY_CLAUDE`
+- `ALPACA_API_KEY_CODEX`
+- `ALPACA_SECRET_KEY_CODEX`
 
-The monitor pass is designed to be a small, cheap API call rather than a full CLI session.
-That keeps the intraday loop reliable in GitHub Actions and avoids CLI auth complexity.
+### GitHub Variables
 
-### 4. Paper mode is now real paper execution
+Useful but optional:
 
-In the current code, `RUN_MODE=paper` is the correct path for real Alpaca paper trading.
+- `MONITOR_MODEL`
+- `MONITOR_MODEL_OPENAI`
+- `MONITOR_CANDIDATE_LIMIT`
 
-That was not reliably true before the recent fix.
+## Variables That Are No Longer Part Of The Design
 
-## Is the Python System Good Enough to Execute Trades Right Now?
+These should be considered removed from the supported workflow:
 
-For paper trading: yes, with caution.
+- `PRODUCTION_MODE`
+- `DEBUG_MODE`
+- `DRY_RUN`
+- `USE_CLI_AGENT`
+- `USE_CLI_AGENT_FOR_MONITOR`
+- `CLI_AGENT_PROVIDER`
+- `CLI_AGENT_MAX_TURNS`
+- `CLI_AGENT_TIMEOUT`
+- `debug_max_stocks`
+- `debug_skip_web`
 
-For live trading: no, not yet.
+The streamlined model is:
 
-### Why I’m comfortable saying “yes” for paper
+- local CLI for heavy strategist work
+- API-only monitor in Actions
+- `RUN_MODE` as the single execution control
 
-The current Python system can:
+## What Paper Mode Means
 
-- collect market/news context
-- run strategist analysis
-- generate signals
-- apply basic risk checks
-- submit paper orders to Alpaca
-- track portfolio state locally
-- persist observations and knowledge
+`RUN_MODE=paper` now means:
 
-That makes it good enough to start learning in paper mode.
+- real model calls where the runtime uses a model
+- real Alpaca paper order submission
+- full Python execution path
 
-### Why I would still keep expectations grounded
+`RUN_MODE=debug` means:
 
-The current execution stack is still early-stage in a few important ways:
+- template responses
+- no broker orders
+- reduced-cost testing
 
-1. Orders are simple market orders.
-2. Portfolio state is tracked locally and is not yet a full broker-reconciled ledger.
-3. Risk controls are solid as a baseline, but still basic compared with a production trading system.
-4. There is not yet full duplicate-order prevention, broker-state reconciliation, or sophisticated execution handling.
-5. The system is strong as a learning and paper-trading platform, but not yet hardened enough for unattended live trading.
+## Current Readiness
 
-So my honest recommendation is:
+The system is ready for paper-trading tests.
 
-`Use it in paper mode now to build evidence and tighten the system. Do not treat it as live-ready yet.`
+It is not live-trading ready.
 
-## Recommended Operating Pattern
+Why paper-ready:
 
-For now, the cleanest operating pattern is:
+- monitor is lightweight and bounded
+- strategy, risk, and execution are code-driven
+- profile state is separated by strategist
+- validation and tests exist
 
-1. Run strategist research with `run_both.sh`
-2. Let GitHub Actions or local Python monitor handle the intraday loop
-3. Run evening reflection
-4. Run weekly/monthly reviews
-5. Review evolution proposals before changing logic
-6. Validate after changes
+Why not live-ready:
 
-## What To Remember Most
+- execution handling is still basic
+- reconciliation is still light
+- safeguards are not yet at true production-trading depth
 
-- The system has two layers, not one.
-- Monitoring still uses a model step.
-- CLI success can avoid direct Python LLM API calls, but not model usage entirely.
-- External data APIs and Alpaca still remain in the loop.
-- The Python runtime is ready for paper-trading learning, not live deployment.
+## One Sentence Summary
+
+Use local CLI sessions for the thinking, GitHub Actions for the cheap intraday checks, and treat `data/profiles/...` as the durable memory of the system.

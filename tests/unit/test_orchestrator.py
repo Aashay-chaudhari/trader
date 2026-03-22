@@ -243,7 +243,7 @@ def test_write_journal_preserves_research_phase_payload(monkeypatch):
             screener_results={"shortlist": []},
         )
 
-        report = next((Path("data") / "journal").rglob("*_research_report.json"))
+        report = next((Path("data") / "profiles" / "default" / "journal").rglob("*_research_report.json"))
         raw = json.loads(report.read_text(encoding="utf-8"))
         monkeypatch.chdir(original_cwd)
 

@@ -75,14 +75,6 @@ class Orchestrator:
 
     def _analysis_engine_label(self, *, phase: str) -> str:
         settings = get_settings()
-        if settings.use_cli_agent:
-            provider = settings.cli_agent_provider.strip().lower() or "cli"
-            if phase == "research":
-                model = settings.research_model if provider == "claude" else settings.research_model_openai
-            else:
-                model = settings.monitor_model if provider == "claude" else settings.monitor_model_openai
-            return f"{provider} CLI ({model})"
-
         provider_preference = settings.llm_provider.strip().lower()
         if provider_preference == "anthropic":
             model = settings.research_model if phase == "research" else settings.monitor_model

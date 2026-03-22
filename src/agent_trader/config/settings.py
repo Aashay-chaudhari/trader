@@ -1,16 +1,9 @@
-"""Configuration management — all settings in one place.
+"""Configuration management — all settings in one place."""
 
-Settings are loaded from environment variables (via .env file).
-This makes it easy to:
-  - Run locally with a .env file
-  - Deploy to GitHub Actions with secrets
-  - Switch between paper and live trading (eventually)
-"""
-
-import os
 from functools import lru_cache
+from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -41,59 +34,11 @@ class Settings(BaseSettings):
     llm_max_output_tokens: int = 4000  # Cap output tokens for API calls
     llm_max_prompt_chars: int = 80000  # Soft cap input prompt size before API call
 
-    # --- CLI Agent Mode ---
-    # When True, use Claude Code CLI (claude -p) instead of direct API calls.
-    # The CLI agent can explore the full repo for historical context.
-    # Falls back to direct API call if CLI is not available.
-    use_cli_agent: bool = False             # Set to True to enable CLI agent mode
-    use_cli_agent_for_monitor: bool = False  # Monitor defaults to direct API even if research uses CLI
-    cli_agent_provider: str = "claude"      # "claude" or "codex"
-    cli_agent_max_turns: int = 5            # Max agent iterations (controls cost)
-    cli_agent_timeout: int = 300            # Max seconds before timeout
-
     # --- Run Mode (single control variable) ---
-    # "debug"  — template responses, no LLM calls, no orders, 3 stocks, skip web
-    # "paper"  — real LLM calls, Alpaca paper orders, full pipeline
-    # "live"   — real LLM calls, Alpaca live orders (future)
-    run_mode: str = "debug"
-
-    # Legacy fields — still read from .env for backward compatibility.
-    # The model_validator below resolves them into run_mode.
-    debug_mode: bool = True
-    dry_run: bool = True
-    debug_max_stocks: int = 3
-    debug_skip_web: bool = True
-
-    @model_validator(mode="after")
-    def _resolve_run_mode(self) -> "Settings":
-        """Derive run_mode from legacy env vars when RUN_MODE is not explicitly set.
-
-        Priority: RUN_MODE env var > PRODUCTION_MODE > DEBUG_MODE/DRY_RUN.
-        """
-        env_run_mode = os.environ.get("RUN_MODE", "").strip().lower()
-        if env_run_mode in ("debug", "paper", "live"):
-            self.run_mode = env_run_mode
-            # Sync legacy fields to match
-            self.debug_mode = (env_run_mode == "debug")
-            self.dry_run = (env_run_mode == "debug")
-            return self
-
-        # PRODUCTION_MODE (GitHub Actions master switch)
-        prod = os.environ.get("PRODUCTION_MODE", "").strip().lower()
-        if prod == "true":
-            self.run_mode = "paper"
-            self.debug_mode = False
-            self.dry_run = False
-            return self
-
-        # Fall back to legacy debug_mode / dry_run fields
-        if not self.debug_mode and not self.dry_run:
-            self.run_mode = "paper"
-        elif not self.debug_mode:
-            self.run_mode = "paper"  # real LLM + dry-run = still paper mode
-        else:
-            self.run_mode = "debug"
-        return self
+    # "debug" — template responses, no LLM calls, no orders, 3 stocks, skip web
+    # "paper" — real LLM calls, Alpaca paper orders, full pipeline
+    # "live"  — real LLM calls, Alpaca live orders (future)
+    run_mode: Literal["debug", "paper", "live"] = "debug"
 
     # --- Computed properties (use these instead of legacy fields) ---
 
@@ -105,12 +50,12 @@ class Settings(BaseSettings):
     @property
     def is_dry_run(self) -> bool:
         """No broker orders placed."""
-        return bool(self.dry_run)
+        return self.run_mode == "debug"
 
     @property
     def max_stocks(self) -> int:
         """Max stocks to analyze (capped in debug mode)."""
-        return self.debug_max_stocks if self.is_debug else 0  # 0 = unlimited
+        return 3 if self.is_debug else 0  # 0 = unlimited
 
     @property
     def skip_web(self) -> bool:
@@ -157,7 +102,7 @@ class Settings(BaseSettings):
     enable_error_alerts: bool = True   # Notify on pipeline errors
 
     # --- Paths ---
-    data_dir: str = "data"
+    data_dir: str = "data/profiles/default"
     log_dir: str = "logs"
     agent_profile: str = "default"
     agent_label: str = ""
@@ -166,6 +111,7 @@ class Settings(BaseSettings):
         "env_file": ".env",
         "env_file_encoding": "utf-8",
         "case_sensitive": False,
+        "extra": "ignore",
     }
 
 

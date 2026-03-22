@@ -1,58 +1,27 @@
-# Dual-strategist trading pipeline running on GitHub Actions.
-#
-# Each scheduled/manual run executes two independent strategist books:
-#   1. Claude strategist via Anthropic API
-#   2. Codex strategist via OpenAI API
-#
-# Their artifacts are stored separately under data/profiles/<strategist>/ and
-# then merged into one dashboard deployment for GitHub Pages comparison.
-
 name: Trading Pipeline
 
 on:
   schedule:
-    # Phase 2: Monitor & Trade — every 30 min, 9:30 AM – 4:00 PM ET weekdays
-    # This is the ONLY automated phase. Morning research, evening reflection,
-    # weekly reviews, and monthly retrospectives are done locally via Claude Code
-    # (see scripts/prompts/ for the workflow prompts).
-    #
-    # DST note: GitHub Actions cron is always UTC. These times cover the
-    # US market window in BOTH Eastern Standard (UTC-5) and Eastern Daylight
-    # (UTC-4). The Python-side market-hours guard (_is_market_hours) handles
-    # the precise check, so an extra cron firing outside hours is harmless.
-    - cron: "30 13 * * 1-5"   #  9:30 AM EDT / 8:30 AM EST (caught by guard in winter)
-    - cron: "0 14 * * 1-5"    # 10:00 AM EDT / 9:00 AM EST
-    - cron: "30 14 * * 1-5"   # 10:30 AM EDT / 9:30 AM EST
-    - cron: "0 15 * * 1-5"    # 11:00 AM EDT / 10:00 AM EST
-    - cron: "30 15 * * 1-5"   # 11:30 AM EDT / 10:30 AM EST
-    - cron: "0 16 * * 1-5"    # 12:00 PM EDT / 11:00 AM EST
-    - cron: "30 16 * * 1-5"   # 12:30 PM EDT / 11:30 AM EST
-    - cron: "0 17 * * 1-5"    #  1:00 PM EDT / 12:00 PM EST
-    - cron: "30 17 * * 1-5"   #  1:30 PM EDT / 12:30 PM EST
-    - cron: "0 18 * * 1-5"    #  2:00 PM EDT /  1:00 PM EST
-    - cron: "30 18 * * 1-5"   #  2:30 PM EDT /  1:30 PM EST
-    - cron: "0 19 * * 1-5"    #  3:00 PM EDT /  2:00 PM EST
-    - cron: "30 19 * * 1-5"   #  3:30 PM EDT /  2:30 PM EST
-    - cron: "0 20 * * 1-5"    #  4:00 PM EDT /  3:00 PM EST
-    - cron: "30 20 * * 1-5"   #  4:30 PM EDT /  3:30 PM EST
-    - cron: "0 21 * * 1-5"    #  5:00 PM EDT /  4:00 PM EST (catches 4PM close in winter)
+    # Monitor & trade � every 30 min during US market hours (weekday cron; Python guard handles exact open/close)
+    - cron: "30 13 * * 1-5"
+    - cron: "0 14 * * 1-5"
+    - cron: "30 14 * * 1-5"
+    - cron: "0 15 * * 1-5"
+    - cron: "30 15 * * 1-5"
+    - cron: "0 16 * * 1-5"
+    - cron: "30 16 * * 1-5"
+    - cron: "0 17 * * 1-5"
+    - cron: "30 17 * * 1-5"
+    - cron: "0 18 * * 1-5"
+    - cron: "30 18 * * 1-5"
+    - cron: "0 19 * * 1-5"
+    - cron: "30 19 * * 1-5"
+    - cron: "0 20 * * 1-5"
+    - cron: "30 20 * * 1-5"
+    - cron: "0 21 * * 1-5"
 
   workflow_dispatch:
     inputs:
-      phase:
-        description: "Which phase to run. 'seed' = full cycle (use with reset_state=true for first run)"
-        required: true
-        default: "run"
-        type: choice
-        options:
-          - research
-          - monitor
-          - run
-          - cycle
-          - seed
-          - reflect
-          - weekly
-          - monthly
       strategists:
         description: "Which strategist books to run"
         required: true
@@ -63,7 +32,7 @@ on:
           - claude
           - codex
       low_cost_mode:
-        description: "Downgrade to Haiku/mini + tighter limits (does NOT change template/dry-run — that is PRODUCTION_MODE)"
+        description: "Use cheapest monitor models plus tighter monitor budgets"
         required: true
         default: true
         type: boolean
@@ -79,28 +48,14 @@ permissions:
   id-token: write
 
 jobs:
-  determine-phase:
+  determine-strategists:
     runs-on: ubuntu-latest
     outputs:
-      phase: ${{ steps.phase.outputs.phase }}
-      strategist_matrix: ${{ steps.phase.outputs.strategist_matrix }}
+      strategist_matrix: ${{ steps.matrix.outputs.strategist_matrix }}
     steps:
-      - name: Determine phase
-        id: phase
+      - name: Determine strategist matrix
+        id: matrix
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SELECTED_PHASE="${{ inputs.phase }}"
-            if [ "$SELECTED_PHASE" = "seed" ]; then
-              # Seed mode runs the full daily + reflection + weekly + monthly loop.
-              echo "phase=cycle" >> "$GITHUB_OUTPUT"
-            else
-              echo "phase=$SELECTED_PHASE" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            # Only monitor crons are scheduled — all other phases run locally
-            echo "phase=monitor" >> "$GITHUB_OUTPUT"
-          fi
-
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             SELECTED_STRATEGISTS="${{ inputs.strategists }}"
           else
@@ -108,21 +63,21 @@ jobs:
           fi
 
           if [ "$SELECTED_STRATEGISTS" = "claude" ]; then
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","llm_provider":"anthropic"}]' >> "$GITHUB_OUTPUT"
           elif [ "$SELECTED_STRATEGISTS" = "codex" ]; then
-            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
           else
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic"},{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","llm_provider":"anthropic"},{"profile_id":"codex","profile_label":"Codex Strategist","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
           fi
 
   strategist-run:
-    name: Strategist Run (${{ matrix.profile_id }})
-    needs: determine-phase
+    name: Monitor (${{ matrix.profile_id }})
+    needs: determine-strategists
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.determine-phase.outputs.strategist_matrix) }}
+        include: ${{ fromJSON(needs.determine-strategists.outputs.strategist_matrix) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -145,73 +100,25 @@ jobs:
           AGENT_LABEL: ${{ matrix.profile_label }}
         run: python -m agent_trader reset
 
-      # ── Master production switch ──────────────────────────────────────────
-      # PRODUCTION_MODE is a single repo variable (Settings → Variables → Actions)
-      # that controls both LLM calls and trading behaviour:
-      #
-      #   PRODUCTION_MODE unset / false  →  RUN_MODE=debug
-      #     Use this while developing. Template responses, zero API cost,
-      #     no Alpaca orders. Safe to run as often as you like.
-      #
-      #   PRODUCTION_MODE=true           →  RUN_MODE=paper
-      #     Real Claude/Codex LLM calls + real Alpaca paper orders.
-      #     Flip this when you're ready to go live.
-      #
-      # low_cost_mode (workflow_dispatch input) is separate: it downgrades
-      # models to Haiku/mini and tightens token limits, but does NOT change
-      # the template/paper-trading switch — that is always PRODUCTION_MODE.
-      # ─────────────────────────────────────────────────────────────────────
-      - name: Apply PRODUCTION_MODE defaults
-        run: |
-          if [ "${{ vars.PRODUCTION_MODE }}" = "true" ]; then
-            echo "PRODUCTION_MODE=true → real LLMs + real paper orders"
-            echo "RUN_MODE=paper"   >> "$GITHUB_ENV"
-            echo "DEBUG_MODE=false" >> "$GITHUB_ENV"
-            echo "DRY_RUN=false"    >> "$GITHUB_ENV"
-          else
-            echo "PRODUCTION_MODE unset/false → dev mode (templates + dry run)"
-            echo "RUN_MODE=debug"  >> "$GITHUB_ENV"
-            echo "DEBUG_MODE=true" >> "$GITHUB_ENV"
-            echo "DRY_RUN=true"    >> "$GITHUB_ENV"
-          fi
-
-      - name: Configure low-cost model mode
-        # Reduces LLM cost: cheaper models, fewer stocks, tighter limits.
-        # Does NOT change DEBUG_MODE or DRY_RUN — those are set by PRODUCTION_MODE.
-        if: github.event_name == 'workflow_dispatch' && inputs.low_cost_mode == true
-        run: |
-          echo "DEBUG_MAX_STOCKS=2"          >> "$GITHUB_ENV"
-          echo "DEBUG_SKIP_WEB=true"         >> "$GITHUB_ENV"
-          echo "CLI_AGENT_MAX_TURNS=1"       >> "$GITHUB_ENV"
-          echo "CLI_AGENT_TIMEOUT=120"       >> "$GITHUB_ENV"
-          echo "LLM_MAX_OUTPUT_TOKENS=700"   >> "$GITHUB_ENV"
-          echo "LLM_MAX_PROMPT_CHARS=16000"  >> "$GITHUB_ENV"
-          echo "RESEARCH_MODEL_OPENAI=gpt-4o-mini" >> "$GITHUB_ENV"
-          echo "MONITOR_MODEL_OPENAI=gpt-4o-mini"  >> "$GITHUB_ENV"
-          if [ "${{ matrix.cli_provider }}" = "claude" ]; then
-            echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
-            echo "MONITOR_MODEL=claude-haiku-4-5-20251001"  >> "$GITHUB_ENV"
-          fi
-
       - name: Print strategist runtime config
+        env:
+          RUN_MODE: paper
+          LLM_PROVIDER: ${{ matrix.llm_provider }}
+          MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
+          MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
         run: |
           echo "profile=${{ matrix.profile_id }}"
-          echo "phase=${{ needs.determine-phase.outputs.phase }}"
-          echo "strategist_family=${{ matrix.cli_provider }}"
-          echo "api_provider=${{ matrix.llm_provider }}"
-          echo "analysis_mode=api_only"
-          echo "production_mode=${{ vars.PRODUCTION_MODE || 'false' }}"
-          echo "effective_run_mode=${RUN_MODE:-debug}"
-          echo "effective_debug_mode=${DEBUG_MODE:-true}"
-          echo "effective_dry_run=${DRY_RUN:-true}"
+          echo "phase=monitor"
+          echo "api_provider=${LLM_PROVIDER}"
+          echo "run_mode=${RUN_MODE}"
+          echo "monitor_model_claude=${MONITOR_MODEL}"
+          echo "monitor_model_openai=${MONITOR_MODEL_OPENAI}"
           echo "low_cost_mode=${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode || false }}"
 
-      - name: Run strategist pipeline
+      - name: Run strategist monitor pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ matrix.cli_provider == 'claude' && secrets.ANTHROPIC_API_KEY || '' }}
-          OPENAI_API_KEY: ${{ matrix.cli_provider == 'codex' && secrets.OPENAI_API_KEY || '' }}
-          # Per-strategist Alpaca keys allow separate paper accounts for each book.
-          # Falls back to shared ALPACA_API_KEY if per-strategist keys aren't set.
+          ANTHROPIC_API_KEY: ${{ matrix.llm_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY || '' }}
+          OPENAI_API_KEY: ${{ matrix.llm_provider == 'openai' && secrets.OPENAI_API_KEY || '' }}
           ALPACA_API_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_API_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_SECRET_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
           MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
@@ -222,28 +129,14 @@ jobs:
           DATA_DIR: data/profiles/${{ matrix.profile_id }}
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
-          DRY_RUN: ${{ env.DRY_RUN || 'true' }}
-          RESEARCH_MODEL_OPENAI: ${{ env.RESEARCH_MODEL_OPENAI || vars.RESEARCH_MODEL_OPENAI || 'gpt-4o-mini' }}
-          MONITOR_MODEL_OPENAI: ${{ env.MONITOR_MODEL_OPENAI || vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
-          USE_CLI_AGENT: "false"
-          CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
+          RUN_MODE: paper
           LLM_PROVIDER: ${{ matrix.llm_provider }}
-        run: |
-          : "${CLI_AGENT_MAX_TURNS:=${{ vars.CLI_AGENT_MAX_TURNS || '5' }}}"
-          : "${CLI_AGENT_TIMEOUT:=${{ vars.CLI_AGENT_TIMEOUT || '300' }}}"
-          export CLI_AGENT_MAX_TURNS
-          export CLI_AGENT_TIMEOUT
-          echo "effective_cli_max_turns=$CLI_AGENT_MAX_TURNS"
-          echo "effective_cli_timeout=$CLI_AGENT_TIMEOUT"
-          echo "effective_debug_mode=${DEBUG_MODE:-false}"
-          echo "effective_llm_max_output_tokens=${LLM_MAX_OUTPUT_TOKENS:-unset}"
-          echo "effective_llm_max_prompt_chars=${LLM_MAX_PROMPT_CHARS:-unset}"
-          PHASE="${{ needs.determine-phase.outputs.phase }}"
-          if [ "$PHASE" = "cycle" ]; then
-            python -m agent_trader cycle
-          else
-            python -m agent_trader "$PHASE"
-          fi
+          MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
+          MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
+          LLM_MAX_OUTPUT_TOKENS: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '700' || '4000' }}
+          LLM_MAX_PROMPT_CHARS: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '16000' || '80000' }}
+          MONITOR_CANDIDATE_LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '2' || vars.MONITOR_CANDIDATE_LIMIT || '3' }}
+        run: python -m agent_trader monitor
 
       - name: Check strategist analysis mode used
         if: always()
@@ -251,22 +144,24 @@ jobs:
           DATA_DIR: data/profiles/${{ matrix.profile_id }}
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
+          RUN_MODE: paper
+          LLM_PROVIDER: ${{ matrix.llm_provider }}
         run: python -m agent_trader.utils.check_mode
 
       - name: Upload strategist artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: strategist-${{ matrix.profile_id }}-${{ needs.determine-phase.outputs.phase }}
+          name: strategist-${{ matrix.profile_id }}-monitor
           path: data/profiles/${{ matrix.profile_id }}/
           if-no-files-found: warn
           retention-days: 30
 
   publish-results:
     needs:
-      - determine-phase
+      - determine-strategists
       - strategist-run
-    if: always() && needs.determine-phase.result == 'success'
+    if: always() && needs.determine-strategists.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -300,7 +195,7 @@ jobs:
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
-          name: strategist-claude-${{ needs.determine-phase.outputs.phase }}
+          name: strategist-claude-monitor
           path: data/profiles/claude
 
       - name: Download Codex strategist artifacts
@@ -308,7 +203,7 @@ jobs:
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
-          name: strategist-codex-${{ needs.determine-phase.outputs.phase }}
+          name: strategist-codex-monitor
           path: data/profiles/codex
 
       - name: Generate merged dashboard
@@ -319,7 +214,7 @@ jobs:
           git config user.name "Agent Trader Bot"
           git config user.email "bot@agent-trader"
           git add -A data/profiles docs/
-          git diff --staged --quiet || git commit -m "[${{ needs.determine-phase.outputs.phase }}] $(date -u +%Y-%m-%d\ %H:%M\ UTC) dual-strategist update"
+          git diff --staged --quiet || git commit -m "[monitor] $(date -u +%Y-%m-%d\ %H:%M\ UTC) dual-strategist update"
           git push
 
   deploy-dashboard:

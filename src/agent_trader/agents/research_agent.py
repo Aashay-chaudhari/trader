@@ -41,16 +41,6 @@ from agent_trader.utils.research_context import (
     build_recent_artifact_summary,
     save_prompt_context_snapshot,
 )
-from agent_trader.utils.cli_agent import (
-    is_cli_available,
-    write_staging_data,
-    build_research_task,
-    build_monitor_task,
-    build_reflection_task,
-    build_weekly_consolidation_task,
-    build_monthly_retrospective_task,
-    run_cli_agent,
-)
 from agent_trader.utils.knowledge_base import KnowledgeBase
 from agent_trader.utils.swing_tracker import SwingTracker
 
@@ -579,26 +569,9 @@ class ResearchAgent(BaseAgent):
             return [preference] + [provider for provider in available if provider != preference]
         return available
 
-    def _get_api_fallback_provider(self) -> str | None:
-        """Keep API fallback within the same strategist family when CLI mode is enabled."""
-        settings = get_settings()
-        if settings.use_cli_agent:
-            if settings.cli_agent_provider == "claude":
-                return "anthropic"
-            if settings.cli_agent_provider == "codex":
-                return "openai"
-        return None
-
-    def _get_api_provider_sequence(self) -> list[str]:
-        forced_provider = self._get_api_fallback_provider()
-        available = self._get_available_providers()
-        if forced_provider:
-            return [forced_provider] if forced_provider in available else []
-        return self._get_provider_sequence()
-
     def _get_provider_name(self) -> str:
         """Resolve the preferred provider based on config and available keys."""
-        providers = self._get_api_provider_sequence()
+        providers = self._get_provider_sequence()
         return providers[0] if providers else ""
 
     async def process(self, message: Message) -> Any:
@@ -839,14 +812,6 @@ class ResearchAgent(BaseAgent):
         if provider == "anthropic":
             return settings.monitor_model
         return settings.monitor_model_openai
-
-    def _should_use_cli_for_phase(self, phase: str) -> bool:
-        settings = get_settings()
-        if not settings.use_cli_agent:
-            return False
-        if phase == "monitor":
-            return settings.use_cli_agent_for_monitor
-        return True
 
     def _get_model_for_phase(self, provider: str, phase: str) -> str:
         if phase in {
@@ -1744,150 +1709,20 @@ class ResearchAgent(BaseAgent):
         learned_rules: str,
         artifact_context: str,
     ) -> dict:
-        """Route analysis to CLI agent or direct API call.
-
-        When CLI agent mode is enabled and available:
-          1. Write all data to staging directory
-          2. Build a task prompt for the agent
-          3. Run the agent (it can explore the repo for historical context)
-          4. If agent fails, fall back to direct API call
-
-        When CLI agent mode is disabled or unavailable:
-          Uses the traditional direct API call path.
-        """
-        settings = get_settings()
-        cli_attempts: list[dict[str, Any]] = []
-        if settings.is_debug:
+        """Route analysis to a template response or direct API call."""
+        if get_settings().is_debug:
             self.logger.info(
-                "Debug mode enabled: returning template analysis for phase '%s' (no CLI/API call).",
+                "Debug mode enabled: returning template analysis for phase '%s' (no API call).",
                 phase,
             )
             return self._build_template_analysis(
                 phase=phase,
                 symbols=symbols,
                 market_data=market_data,
-                prior_attempts=cli_attempts,
+                prior_attempts=[],
             )
 
-        use_cli = self._should_use_cli_for_phase(phase)
-
-        if use_cli:
-            cli_provider = settings.cli_agent_provider
-            if is_cli_available(cli_provider):
-                self.logger.info("CLI agent mode: writing staging data...")
-
-                write_staging_data(
-                    market_data=market_data,
-                    news_data=news_data,
-                    market_context=market_context,
-                    market_headlines=market_headlines,
-                    screener_results=screener_results,
-                    performance_feedback=performance_feedback
-                    if isinstance(performance_feedback, str) else str(performance_feedback),
-                    learned_rules=learned_rules
-                    if isinstance(learned_rules, str) else str(learned_rules),
-                    artifact_context=artifact_context
-                    if isinstance(artifact_context, str) else str(artifact_context),
-                    news_discoveries=news_discoveries,
-                    hot_stocks=hot_stocks,
-                    finviz_data=finviz_data,
-                    data_dir=settings.data_dir,
-                )
-
-                # Build the task prompt
-                if phase == "monitor":
-                    task = build_monitor_task(symbols, data_dir=settings.data_dir)
-                elif phase == "evening_reflection":
-                    task = build_reflection_task(data_dir=settings.data_dir)
-                elif phase == "weekly_consolidation":
-                    task = build_weekly_consolidation_task(data_dir=settings.data_dir)
-                elif phase == "monthly_retrospective":
-                    task = build_monthly_retrospective_task(data_dir=settings.data_dir)
-                else:
-                    task = build_research_task(symbols, data_dir=settings.data_dir)
-
-                # Determine model for the CLI agent
-                cli_model = None
-                if cli_provider == "claude":
-                    cli_model = self._get_model_for_phase(cli_provider, phase)
-
-                self.logger.info(
-                    "Running %s CLI agent (model=%s, max_turns=%d)...",
-                    cli_provider,
-                    cli_model or "default",
-                    settings.cli_agent_max_turns,
-                )
-
-                analysis = run_cli_agent(
-                    task,
-                    provider=cli_provider,
-                    max_turns=settings.cli_agent_max_turns,
-                    model=cli_model,
-                    timeout_seconds=settings.cli_agent_timeout,
-                    allowed_tools=["Read", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"],
-                )
-
-                meta = analysis.get("_meta", {})
-                if meta.get("status") == "success":
-                    self.logger.info(
-                        "CLI agent succeeded in %.1fs",
-                        meta.get("duration_ms", 0) / 1000,
-                    )
-                    analysis.setdefault("_meta", {})
-                    analysis["_meta"].update(
-                        {
-                            "execution_mode": "cli",
-                            "provider": meta.get("provider", f"cli:{cli_provider}"),
-                            "model": meta.get("model", cli_model or "default"),
-                            "selected_provider": meta.get("provider", f"cli:{cli_provider}"),
-                            "selected_model": meta.get("model", cli_model or "default"),
-                            "attempts": [
-                                {
-                                    "execution_mode": "cli",
-                                    "provider": meta.get("provider", f"cli:{cli_provider}"),
-                                    "model": meta.get("model", cli_model or "default"),
-                                    "status": "success",
-                                    "duration_ms": meta.get("duration_ms"),
-                                    "usage": meta.get("usage", {}),
-                                }
-                            ],
-                        }
-                    )
-                    self.logger.info(
-                        "Execution mode selected: CLI (provider=%s, model=%s)",
-                        analysis["_meta"].get("provider"),
-                        analysis["_meta"].get("model"),
-                    )
-                    self._last_provider = f"cli:{cli_provider}"
-                    self._last_model = cli_model or "default"
-                    return analysis
-
-                # CLI failed — fall through to API
-                self.logger.warning(
-                    "CLI agent failed (%s), falling back to direct API call",
-                    meta.get("error", "unknown"),
-                )
-                cli_attempts.append(
-                    {
-                        "execution_mode": "cli",
-                        "provider": meta.get("provider", f"cli:{cli_provider}"),
-                        "model": meta.get("model", cli_model or "default"),
-                        "status": meta.get("status", "error"),
-                        "duration_ms": meta.get("duration_ms"),
-                        "error": meta.get("error") or meta.get("stderr"),
-                        "quota_issue_detected": self._is_quota_error(
-                            str(meta.get("error") or meta.get("stderr") or "")
-                        ),
-                    }
-                )
-            else:
-                self.logger.info(
-                    "CLI agent enabled but '%s' not on PATH — using direct API",
-                    cli_provider,
-                )
-
-        # Default path: direct API call
-        api_providers = self._get_api_provider_sequence()
+        api_providers = self._get_provider_sequence()
         self.logger.info(
             "Execution mode selected: API (providers=%s)",
             ",".join(api_providers) if api_providers else "none",
@@ -1896,7 +1731,7 @@ class ResearchAgent(BaseAgent):
             prompt,
             phase=phase,
             providers=api_providers,
-            prior_attempts=cli_attempts,
+            prior_attempts=[],
         )
 
     def _build_template_analysis(
@@ -1911,14 +1746,10 @@ class ResearchAgent(BaseAgent):
         settings = get_settings()
         runtime = build_runtime_metadata()
         now = datetime.now(timezone.utc)
-        active_provider = (
-            f"template:{settings.cli_agent_provider}"
-            if settings.use_cli_agent
-            else "template:debug"
-        )
+        active_provider = "template:debug"
         template_note = (
-            f"Template response generated in DEBUG_MODE for phase '{phase}'. "
-            "No CLI/API model call was made and zero tokens were consumed."
+            f"Template response generated in RUN_MODE=debug for phase '{phase}'. "
+            "No API model call was made and zero tokens were consumed."
         )
 
         attempts = list(prior_attempts or [])
@@ -2015,7 +1846,7 @@ class ResearchAgent(BaseAgent):
                         "priority": "high",
                         "title": "Switch off debug mode for live model validation",
                         "description": (
-                            "Set DEBUG_MODE=false to re-enable CLI/API model calls once "
+                            "Set RUN_MODE=paper to re-enable API model calls once "
                             "token budget and provider access are ready."
                         ),
                         "expected_impact": (
@@ -2082,7 +1913,7 @@ class ResearchAgent(BaseAgent):
                 "strategy_regime_matrix": {},
                 "confidence_accuracy_curve": {},
                 "top_lessons": [
-                    "Template monthly retrospective generated while DEBUG_MODE=true."
+                    "Template monthly retrospective generated while RUN_MODE=debug."
                 ],
                 "vs_last_month": {
                     "win_rate_change": "0%",
@@ -2157,7 +1988,7 @@ class ResearchAgent(BaseAgent):
             ],
             "news_impact": "none",
             "news_summary": "Template mode active; no model-driven news synthesis executed.",
-            "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
+            "technical_setup": "Template setup only; no live inference in RUN_MODE=debug.",
             "recommendation": "watch",
             "execution_condition": (
                 f"Only trade {symbol} if price revisits the planned entry and the live tape confirms it."
@@ -2170,7 +2001,7 @@ class ResearchAgent(BaseAgent):
                 "position_size_pct": 1.0,
                 "timeframe": "swing_2_5_days",
             },
-            "catalysts": ["Disable DEBUG_MODE to enable real catalyst ranking."],
+            "catalysts": ["Switch to RUN_MODE=paper to enable real catalyst ranking."],
             "risks": ["Template output may not reflect live market conditions."],
             "earnings_warning": False,
             "supporting_articles": [],
@@ -2188,14 +2019,7 @@ class ResearchAgent(BaseAgent):
         runtime = build_runtime_metadata()
         attempts = list(prior_attempts or [])
         if not providers:
-            fallback_provider = self._get_api_fallback_provider()
-            if fallback_provider and get_settings().use_cli_agent:
-                no_provider_message = (
-                    f"No {fallback_provider} API key configured for "
-                    f"{get_settings().cli_agent_provider} fallback"
-                )
-            else:
-                no_provider_message = "No LLM API key configured"
+            no_provider_message = "No LLM API key configured"
             return {
                 "overall_sentiment": "neutral",
                 "market_summary": f"LLM analysis failed: {no_provider_message}",
@@ -2720,3 +2544,5 @@ class ResearchAgent(BaseAgent):
             learned_rules="",
             artifact_context=build_recent_artifact_summary(data_dir=settings.data_dir),
         )
+
+

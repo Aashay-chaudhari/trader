@@ -206,7 +206,7 @@ async def _smoke_phase(phase_cmd: list[str]) -> tuple[bool, str]:
     """Run a single CLI phase in debug mode and check for errors."""
     import subprocess
     import sys
-    env_patch = {"RUN_MODE": "debug", "DEBUG_MODE": "true"}
+    env_patch = {"RUN_MODE": "debug"}
     import os
     env = {**os.environ, **env_patch}
     try:

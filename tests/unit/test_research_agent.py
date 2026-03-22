@@ -74,55 +74,6 @@ def test_research_agent_honors_provider_preference_when_both_keys_present(
     assert agent._get_provider_sequence() == ["openai", "anthropic"]
     assert agent._get_research_model() == "gpt-4o-mini"
 
-
-def test_research_agent_claude_cli_limits_api_fallback_to_anthropic(
-    message_bus, monkeypatch
-):
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
-    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
-    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
-    reset_settings()
-
-    agent = ResearchAgent(message_bus)
-
-    assert agent._get_api_provider_sequence() == ["anthropic"]
-    assert agent._get_provider_name() == "anthropic"
-
-
-def test_research_agent_codex_cli_limits_api_fallback_to_openai(
-    message_bus, monkeypatch
-):
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("CLI_AGENT_PROVIDER", "codex")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
-    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
-    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
-    reset_settings()
-
-    agent = ResearchAgent(message_bus)
-
-    assert agent._get_api_provider_sequence() == ["openai"]
-    assert agent._get_provider_name() == "openai"
-
-
-def test_research_agent_monitor_can_force_api_even_when_cli_enabled(
-    message_bus, monkeypatch
-):
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("USE_CLI_AGENT_FOR_MONITOR", "false")
-    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
-    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
-    reset_settings()
-
-    agent = ResearchAgent(message_bus)
-
-    assert agent._should_use_cli_for_phase("research") is True
-    assert agent._should_use_cli_for_phase("monitor") is False
-
-
 def test_select_monitor_candidates_prefers_active_and_near_entry_symbols(
     message_bus, monkeypatch
 ):
@@ -330,81 +281,9 @@ async def test_research_agent_retries_with_openai_when_primary_provider_fails(
 
 
 @pytest.mark.asyncio
-async def test_research_agent_cli_path_falls_back_without_raising(
-    message_bus, monkeypatch
-):
-    monkeypatch.setenv("DEBUG_MODE", "false")
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
-    monkeypatch.setenv("OPENAI_API_KEY", "")
-    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
-    monkeypatch.setattr(research_module, "build_recent_artifact_summary", lambda **kwargs: "")
-    monkeypatch.setattr(research_module, "save_prompt_context_snapshot", lambda **kwargs: None)
-    monkeypatch.setattr(research_module, "record_llm_analytics", lambda **kwargs: None)
-    monkeypatch.setattr(ResearchAgent, "_save_research", lambda self, analysis, phase: None)
-    monkeypatch.setattr(research_module, "is_cli_available", lambda provider: True)
-    monkeypatch.setattr(research_module, "write_staging_data", lambda **kwargs: None)
-    monkeypatch.setattr(research_module, "build_research_task", lambda symbols, **kwargs: "task")
-    monkeypatch.setattr(
-        research_module,
-        "run_cli_agent",
-        lambda *args, **kwargs: {
-            "_meta": {
-                "status": "error",
-                "error": "cli failed",
-                "provider": "cli:claude",
-            }
-        },
-    )
-
-    async def fake_call_llm(self, prompt: str, phase: str, **kwargs) -> dict:
-        return {
-            "overall_sentiment": "neutral",
-            "market_summary": "fallback ok",
-            "stocks": {},
-            "_meta": {"status": "success", "provider": "openai", "model": "gpt-4o-mini"},
-        }
-
-    monkeypatch.setattr(ResearchAgent, "_call_llm", fake_call_llm)
-    reset_settings()
-
-    agent = ResearchAgent(message_bus)
-    result = await agent.process(
-        Message(
-            type=MessageType.COMMAND,
-            source="test",
-            data={
-                "symbols": ["AAPL"],
-                "market_data": {
-                    "AAPL": {
-                        "latest_price": 100.0,
-                        "price_change_pct": 1.0,
-                        "volume": 1000,
-                        "indicators": {},
-                        "price_history": [],
-                        "info": {},
-                    }
-                },
-                "phase": "research",
-                "news": {},
-                "market_headlines": [],
-                "market_context": {},
-                "news_discoveries": [],
-                "hot_stocks": [],
-                "finviz": {},
-            },
-        )
-    )
-
-    assert result["research"]["market_summary"] == "fallback ok"
-    assert result["research"]["_meta"]["provider"] == "openai"
-
-
-@pytest.mark.asyncio
 async def test_research_agent_reflection_phase_does_not_require_market_data(
     message_bus, monkeypatch
 ):
-    monkeypatch.setenv("USE_CLI_AGENT", "false")
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "")
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
@@ -451,78 +330,10 @@ async def test_research_agent_reflection_phase_does_not_require_market_data(
 
 
 @pytest.mark.asyncio
-async def test_research_agent_records_cli_failure_before_api_fallback(
-    message_bus, monkeypatch
-):
-    monkeypatch.setenv("DEBUG_MODE", "false")
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
-    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
-    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
-    monkeypatch.setattr(research_module, "is_cli_available", lambda provider: True)
-    monkeypatch.setattr(research_module, "write_staging_data", lambda **kwargs: None)
-    monkeypatch.setattr(research_module, "build_research_task", lambda symbols, **kwargs: "task")
-    monkeypatch.setattr(
-        research_module,
-        "run_cli_agent",
-        lambda *args, **kwargs: {
-            "_meta": {
-                "status": "error",
-                "provider": "cli:claude",
-                "model": "claude-sonnet-4-6",
-                "duration_ms": 123.4,
-                "error": "cli limit hit",
-            }
-        },
-    )
-    reset_settings()
-
-    agent = ResearchAgent(message_bus)
-    captured = {}
-
-    async def fake_call_llm(self, prompt: str, phase: str, **kwargs) -> dict:
-        captured["providers"] = kwargs.get("providers")
-        captured["prior_attempts"] = kwargs.get("prior_attempts")
-        return {
-            "overall_sentiment": "neutral",
-            "market_summary": "anthropic fallback ok",
-            "stocks": {},
-            "_meta": {"status": "success", "provider": "anthropic", "model": "claude-sonnet-4-6"},
-        }
-
-    monkeypatch.setattr(ResearchAgent, "_call_llm", fake_call_llm)
-
-    result = await agent._call_analysis(
-        prompt="{}",
-        phase="research",
-        symbols=["AAPL"],
-        market_data={"AAPL": {"latest_price": 100}},
-        news_data={},
-        market_context={},
-        market_headlines=[],
-        screener_results=None,
-        news_discoveries=[],
-        hot_stocks=[],
-        finviz_data={},
-        performance_feedback="",
-        learned_rules="",
-        artifact_context="",
-    )
-
-    assert result["market_summary"] == "anthropic fallback ok"
-    assert captured["providers"] == ["anthropic"]
-    assert captured["prior_attempts"][0]["provider"] == "cli:claude"
-    assert captured["prior_attempts"][0]["quota_issue_detected"] is False
-
-
-@pytest.mark.asyncio
 async def test_research_agent_debug_mode_returns_template_without_model_calls(
     message_bus, monkeypatch
 ):
-    monkeypatch.setenv("DEBUG_MODE", "true")
-    monkeypatch.setenv("USE_CLI_AGENT", "true")
-    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
+    monkeypatch.setenv("RUN_MODE", "debug")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)

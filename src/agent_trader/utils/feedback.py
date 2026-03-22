@@ -1,17 +1,18 @@
-"""Performance Feedback — lets Claude learn from its own trades.
+"""Performance Feedback — lets a strategist learn from its own trades.
 
 After each trade closes (or at end of week), this module:
   1. Loads all completed trades from the journal
   2. Calculates actual P&L for each
-  3. Builds a "performance review" prompt for Claude
-  4. Claude analyzes what it got right and wrong
+  3. Builds a performance review prompt
+  4. The strategist analyzes what it got right and wrong
   5. Generates updated trading rules/biases for future sessions
 
 This creates a feedback loop:
-  Claude's analysis → trades → outcomes → Claude reviews → better analysis
+  analysis -> trades -> outcomes -> review -> better analysis
 
-The feedback is stored in data/feedback/ and loaded into the research prompt
-so Claude sees its own track record every time it makes a recommendation.
+The feedback is stored under the active profile root in `feedback/` and loaded
+into the research prompt so the strategist sees its own track record every time
+it makes a recommendation.
 """
 
 import json

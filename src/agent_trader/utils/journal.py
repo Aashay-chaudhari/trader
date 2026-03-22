@@ -1,6 +1,7 @@
 """Trade Journal — creates readable markdown logs of every trading decision.
 
-Every pipeline run produces a journal entry stored in data/journal/.
+Every pipeline run produces a journal entry under the active profile root,
+for example `data/profiles/claude/journal/`.
 These are committed to git by GitHub Actions, so you can browse them
 on GitHub like a trading diary.
 
