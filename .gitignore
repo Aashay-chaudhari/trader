@@ -32,13 +32,40 @@ Thumbs.db
 .claude/settings.local.json
 .tools/
 
-# Data and logs
-data/cache/
-logs/*.log
-*.db
+# Caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
 
-# Dashboard build artifacts
-# Keep docs/data tracked so GitHub Pages can load the latest report bundle.
+# Data — runtime artifacts (regenerated each run)
+data/cache/
+data/staging/
+data/context/
+data/analytics/
+data/feedback/
+data/research/
+data/snapshots/
+data/journal/
+data/observations/
+data/knowledge/
+data/positions/
+data/portfolio_state.json
+data/profile.json
+logs/*.log
+
+# Root-level log files from CI jobs
+*.log
+
+# Legacy / scratch
+gpt_research/
 
 # Local debug tooling
 .tmp/
+
+# Database files
+*.db
+
+# Keep tracked:
+# - data/profiles/  (knowledge, observations, positions — accumulated state)
+# - docs/           (GitHub Pages dashboard)
+# - scripts/        (Claude Code prompts)

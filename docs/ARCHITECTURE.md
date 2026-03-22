@@ -340,18 +340,18 @@
 
   Component                │ Cost     │ Notes
   ─────────────────────────┼──────────┼──────────────────────────────
-  GitHub Actions           │ FREE     │ ~500 min of 2000/month
+  GitHub Actions           │ FREE     │ ~200 min/month (monitor only)
   GitHub Pages             │ FREE     │ Static HTML dashboard
   yfinance / Finviz        │ FREE     │ All market data
-  Claude Sonnet (research) │ ~$0.40   │ 1 call/day × $0.02 × 20 days
-  Claude Haiku (monitor)   │ ~$0.30   │ 13 calls/day × $0.001
-  Claude Sonnet (reflect)  │ ~$0.40   │ 1 call/day × $0.02 × 20 days
-  Claude Sonnet (weekly)   │ ~$0.08   │ 4 calls/month × $0.02
-  Claude Sonnet (monthly)  │ ~$0.02   │ 1 call/month × $0.02
+  Morning research         │ $0       │ Runs locally via Claude Code sub
+  Evening reflection       │ $0       │ Runs locally via Claude Code sub
+  Weekly review            │ $0       │ Runs locally via Claude Code sub
+  Monthly retrospective    │ $0       │ Runs locally via Claude Code sub
+  Claude Haiku (monitor)   │ ~$0.04   │ 13 calls/day × $0.001 × 3 days*
   Alpaca paper trading     │ FREE     │ Paper trading API, no cost
   ─────────────────────────┼──────────┼──────────────────────────────
-  TOTAL (1 strategist)     │ ~$1.20   │ Per month
-  TOTAL (2 strategists)    │ ~$2.40   │ Claude + Codex running together
+  TOTAL                    │ ~$0.04   │ Per month
+  * Most monitor calls skip LLM entirely (Python strategies only)
 
 
 ═══════════════════════════════════════════════════════════════════════════
@@ -386,8 +386,8 @@
   └── Optional: FINNHUB_API_KEY, MARKETAUX_API_KEY, FRED_API_KEY
 
   GitHub Variables (Settings → Secrets and variables → Actions → Variables):
-  ├── DEBUG_MODE = false          ← CRITICAL: enables real LLM calls
-  └── DRY_RUN = false             ← enables actual Alpaca paper orders
+  └── PRODUCTION_MODE = true      ← Single switch: enables real LLM calls + Alpaca orders
+                                     (unset/false = dev mode with templates + dry-run)
 
   Alpaca setup (alpaca.markets — free):
   ├── Create 2 paper trading accounts (use 2 emails)

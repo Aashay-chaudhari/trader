@@ -11,11 +11,10 @@ name: Trading Pipeline
 
 on:
   schedule:
-    # Phase 1: Morning research at 9:00 AM ET (14:00 UTC) weekdays
-    - cron: "0 14 * * 1-5"
-
-    # Phase 2: Monitor every 30 min from 9:30 AM - 4:00 PM ET
-    # (14:30 - 21:00 UTC) weekdays
+    # Phase 2: Monitor & Trade — every 30 min, 9:30 AM – 4:00 PM ET weekdays
+    # This is the ONLY automated phase. Morning research, evening reflection,
+    # weekly reviews, and monthly retrospectives are done locally via Claude Code
+    # (see scripts/prompts/ for the workflow prompts).
     - cron: "30 14 * * 1-5"
     - cron: "0 15 * * 1-5"
     - cron: "30 15 * * 1-5"
@@ -29,15 +28,6 @@ on:
     - cron: "30 19 * * 1-5"
     - cron: "0 20 * * 1-5"
     - cron: "30 20 * * 1-5"
-
-    # Phase 3: Evening reflection at 4:15 PM ET (21:15 UTC) weekdays
-    - cron: "15 21 * * 1-5"
-
-    # Phase 4: Weekly review Sunday 8 PM ET (Monday 01:00 UTC)
-    - cron: "0 1 * * 1"
-
-    # Phase 5: Monthly retrospective — last business days, 5 PM ET (22:00 UTC)
-    - cron: "0 22 28-31 * 1-5"
 
   workflow_dispatch:
     inputs:
@@ -99,23 +89,8 @@ jobs:
               echo "phase=$SELECTED_PHASE" >> "$GITHUB_OUTPUT"
             fi
           else
-            HOUR=$(date -u +%H)
-            MINUTE=$(date -u +%M)
-            DOW=$(date -u +%u)   # 1=Monday, 7=Sunday
-            DOM=$(date -u +%d)
-            if [ "$HOUR" = "14" ] && [ "$MINUTE" -lt "30" ]; then
-              echo "phase=research" >> "$GITHUB_OUTPUT"
-            elif [ "$HOUR" = "21" ] && [ "$MINUTE" -ge "10" ] && [ "$MINUTE" -lt "30" ]; then
-              # Evening reflection window: 21:10-21:29 UTC (4:10-4:29 PM ET)
-              # Cron fires at 21:15 but GHA can start up to ~10 min late
-              echo "phase=reflect" >> "$GITHUB_OUTPUT"
-            elif [ "$DOW" = "1" ] && [ "$HOUR" = "01" ]; then
-              echo "phase=weekly" >> "$GITHUB_OUTPUT"
-            elif [ "$HOUR" = "22" ] && [ "$DOM" -ge "28" ]; then
-              echo "phase=monthly" >> "$GITHUB_OUTPUT"
-            else
-              echo "phase=monitor" >> "$GITHUB_OUTPUT"
-            fi
+            # Only monitor crons are scheduled — all other phases run locally
+            echo "phase=monitor" >> "$GITHUB_OUTPUT"
           fi
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
