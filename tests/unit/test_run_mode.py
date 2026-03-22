@@ -36,7 +36,7 @@ def test_run_mode_paper_via_env(monkeypatch):
     s = Settings()
     assert s.run_mode == "paper"
     assert s.is_debug is False
-    assert s.is_dry_run is True  # paper still no real money
+    assert s.is_dry_run is False  # paper places broker paper orders
 
 
 def test_run_mode_production_mode_true(monkeypatch):
@@ -46,7 +46,7 @@ def test_run_mode_production_mode_true(monkeypatch):
     s = Settings()
     assert s.run_mode == "paper"
     assert s.is_debug is False
-    assert s.is_dry_run is True
+    assert s.is_dry_run is False
 
 
 def test_run_mode_debug_mode_false_maps_to_paper(monkeypatch):
@@ -68,6 +68,17 @@ def test_run_mode_live(monkeypatch):
     assert s.run_mode == "live"
     assert s.is_debug is False
     assert s.is_dry_run is False  # live = real orders
+
+
+def test_legacy_dry_run_override_still_supported(monkeypatch):
+    monkeypatch.delenv("RUN_MODE", raising=False)
+    monkeypatch.delenv("PRODUCTION_MODE", raising=False)
+    monkeypatch.setenv("DEBUG_MODE", "false")
+    monkeypatch.setenv("DRY_RUN", "true")
+    reset_settings()
+    s = Settings()
+    assert s.run_mode == "paper"
+    assert s.is_dry_run is True
 
 
 def test_max_stocks_debug(monkeypatch):

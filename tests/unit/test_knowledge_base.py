@@ -87,7 +87,8 @@ class TestMonthlyReviews:
         path = kb.knowledge_dir / "lessons_learned.json"
         assert path.exists()
         data = json.loads(path.read_text())
-        assert "Lesson A" in data["lessons"]
+        lessons = data if isinstance(data, list) else data["lessons"]
+        assert "Lesson A" in lessons
 
 
 class TestPatternsLibrary:
@@ -100,8 +101,9 @@ class TestPatternsLibrary:
         }])
         path = kb.knowledge_dir / "patterns_library.json"
         data = json.loads(path.read_text())
-        assert len(data["patterns"]) == 1
-        assert data["patterns"][0]["name"] == "gap_and_go"
+        patterns = data if isinstance(data, list) else data["patterns"]
+        assert len(patterns) == 1
+        assert patterns[0]["name"] == "gap_and_go"
 
     def test_merge_existing_pattern(self, kb):
         kb.update_patterns_library([{
@@ -117,8 +119,9 @@ class TestPatternsLibrary:
             "symbols_seen": ["NVDA"],
         }])
         data = json.loads((kb.knowledge_dir / "patterns_library.json").read_text())
-        assert len(data["patterns"]) == 1
-        p = data["patterns"][0]
+        patterns = data if isinstance(data, list) else data["patterns"]
+        assert len(patterns) == 1
+        p = patterns[0]
         assert p["total_occurrences"] == 8
         assert 0.7 < p["win_rate"] < 0.75  # Weighted average
         assert "TSLA" in p["symbols_seen"]
@@ -129,26 +132,44 @@ class TestPatternsLibrary:
                     for i in range(120)]
         kb.update_patterns_library(patterns)
         data = json.loads((kb.knowledge_dir / "patterns_library.json").read_text())
-        assert len(data["patterns"]) == 100
+        stored = data if isinstance(data, list) else data["patterns"]
+        assert len(stored) == 100
+
+    def test_update_patterns_preserves_prompt_managed_list_shape(self, kb):
+        path = kb.knowledge_dir / "patterns_library.json"
+        path.write_text(json.dumps([]), encoding="utf-8")
+
+        kb.update_patterns_library([{
+            "name": "oil_shock_equity_drawdown",
+            "occurrences": 1,
+            "win_rate": 0.5,
+        }])
+
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert isinstance(data, list)
+        assert data[0]["name"] == "oil_shock_equity_drawdown"
 
 
 class TestLessonsLearned:
     def test_add_lessons(self, kb):
         kb.update_lessons_learned(["Lesson 1", "Lesson 2"])
         data = json.loads((kb.knowledge_dir / "lessons_learned.json").read_text())
-        assert len(data["lessons"]) == 2
+        lessons = data if isinstance(data, list) else data["lessons"]
+        assert len(lessons) == 2
 
     def test_deduplication(self, kb):
         kb.update_lessons_learned(["Same lesson"])
         kb.update_lessons_learned(["Same lesson"])
         data = json.loads((kb.knowledge_dir / "lessons_learned.json").read_text())
-        assert len(data["lessons"]) == 1
+        lessons = data if isinstance(data, list) else data["lessons"]
+        assert len(lessons) == 1
 
     def test_max_50_lessons(self, kb):
         for i in range(60):
             kb.update_lessons_learned([f"Lesson {i}"])
         data = json.loads((kb.knowledge_dir / "lessons_learned.json").read_text())
-        assert len(data["lessons"]) == 50
+        lessons = data if isinstance(data, list) else data["lessons"]
+        assert len(lessons) == 50
 
 
 class TestContextAssembly:
@@ -167,6 +188,46 @@ class TestContextAssembly:
         context = kb.build_knowledge_context(token_budget=500)
         assert "ACCUMULATED KNOWLEDGE" in context
         assert "LESSONS" in context
+
+    def test_knowledge_context_supports_by_regime_strategy_shape(self, kb):
+        (kb.knowledge_dir / "strategy_effectiveness.json").write_text(
+            json.dumps({
+                "last_updated": "2026-03-22",
+                "by_regime": {
+                    "risk_off": {
+                        "relative_strength": {"win_rate": 0.57},
+                        "mean_reversion": {"win_rate": 0.56},
+                    }
+                },
+            }),
+            encoding="utf-8",
+        )
+
+        context = kb.build_knowledge_context(
+            token_budget=500,
+            current_regime="risk_off",
+        )
+
+        assert "TOP STRATEGIES" in context
+        assert "relative_strength" in context
+
+    def test_knowledge_context_supports_flat_regime_library_shape(self, kb):
+        (kb.knowledge_dir / "regime_library.json").write_text(
+            json.dumps({
+                "risk_on": {"rules": ["Ride trend"]},
+                "risk_off": {"rules": ["Cut exposure fast"]},
+                "neutral": {"rules": ["Trade smaller"]},
+            }),
+            encoding="utf-8",
+        )
+
+        context = kb.build_knowledge_context(
+            token_budget=500,
+            current_regime="risk_off",
+        )
+
+        assert "CURRENT REGIME RULES (risk_off)" in context
+        assert "Cut exposure fast" in context
 
     def test_observations_context_with_data(self, kb):
         kb.save_daily_observation({

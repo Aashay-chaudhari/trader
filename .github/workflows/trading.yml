@@ -1,8 +1,8 @@
 # Dual-strategist trading pipeline running on GitHub Actions.
 #
 # Each scheduled/manual run executes two independent strategist books:
-#   1. Claude CLI primary, Anthropic API fallback
-#   2. Codex CLI primary, OpenAI API fallback
+#   1. Claude strategist via Anthropic API
+#   2. Codex strategist via OpenAI API
 #
 # Their artifacts are stored separately under data/profiles/<strategist>/ and
 # then merged into one dashboard deployment for GitHub Pages comparison.
@@ -108,11 +108,11 @@ jobs:
           fi
 
           if [ "$SELECTED_STRATEGISTS" = "claude" ]; then
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic","npm_package":"@anthropic-ai/claude-code@latest","version_command":"claude --version"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic"}]' >> "$GITHUB_OUTPUT"
           elif [ "$SELECTED_STRATEGISTS" = "codex" ]; then
-            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai","npm_package":"@openai/codex@latest","version_command":"codex --version"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
           else
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic","npm_package":"@anthropic-ai/claude-code@latest","version_command":"claude --version"},{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai","npm_package":"@openai/codex@latest","version_command":"codex --version"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","cli_provider":"claude","llm_provider":"anthropic"},{"profile_id":"codex","profile_label":"Codex Strategist","cli_provider":"codex","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
           fi
 
   strategist-run:
@@ -134,51 +134,8 @@ jobs:
           python-version: "3.12"
           cache: "pip"
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
       - name: Install dependencies
         run: pip install -e .
-
-      - name: Install strategist CLI
-        run: |
-          npm install -g "${{ matrix.npm_package }}"
-          ${{ matrix.version_command }}
-
-      - name: Print strategist auth plan
-        run: |
-          echo "Strategist profile: ${{ matrix.profile_id }}"
-          echo "CLI provider: ${{ matrix.cli_provider }}"
-          echo "API fallback provider: ${{ matrix.llm_provider }}"
-          if [ "${{ matrix.cli_provider }}" = "claude" ]; then
-            echo "Auth path: claude CLI first, anthropic API fallback."
-            echo "No codex login step will run for this strategist."
-          else
-            echo "Auth path: codex CLI first, openai API fallback."
-            echo "Codex CLI login via OPENAI_API_KEY is required."
-          fi
-
-      - name: Verify Claude auth mode (Claude strategist only)
-        if: matrix.cli_provider == 'claude'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          if [ -n "$ANTHROPIC_API_KEY" ]; then
-            echo "ANTHROPIC_API_KEY detected for Claude API fallback."
-          else
-            echo "ANTHROPIC_API_KEY missing. Claude CLI-only mode is expected."
-          fi
-
-      - name: Authenticate Codex CLI with OPENAI_API_KEY (Codex strategist only)
-        if: matrix.cli_provider == 'codex'
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          test -n "$OPENAI_API_KEY"
-          printf '%s' "$OPENAI_API_KEY" | codex login --with-api-key
-          codex login status
 
       - name: Reset strategist state
         if: github.event_name == 'workflow_dispatch' && inputs.reset_state == true
@@ -192,11 +149,11 @@ jobs:
       # PRODUCTION_MODE is a single repo variable (Settings → Variables → Actions)
       # that controls both LLM calls and trading behaviour:
       #
-      #   PRODUCTION_MODE unset / false  →  DEBUG_MODE=true  + DRY_RUN=true
+      #   PRODUCTION_MODE unset / false  →  RUN_MODE=debug
       #     Use this while developing. Template responses, zero API cost,
       #     no Alpaca orders. Safe to run as often as you like.
       #
-      #   PRODUCTION_MODE=true           →  DEBUG_MODE=false + DRY_RUN=false
+      #   PRODUCTION_MODE=true           →  RUN_MODE=paper
       #     Real Claude/Codex LLM calls + real Alpaca paper orders.
       #     Flip this when you're ready to go live.
       #
@@ -208,16 +165,18 @@ jobs:
         run: |
           if [ "${{ vars.PRODUCTION_MODE }}" = "true" ]; then
             echo "PRODUCTION_MODE=true → real LLMs + real paper orders"
+            echo "RUN_MODE=paper"   >> "$GITHUB_ENV"
             echo "DEBUG_MODE=false" >> "$GITHUB_ENV"
             echo "DRY_RUN=false"    >> "$GITHUB_ENV"
           else
             echo "PRODUCTION_MODE unset/false → dev mode (templates + dry run)"
+            echo "RUN_MODE=debug"  >> "$GITHUB_ENV"
             echo "DEBUG_MODE=true" >> "$GITHUB_ENV"
             echo "DRY_RUN=true"    >> "$GITHUB_ENV"
           fi
 
       - name: Configure low-cost model mode
-        # Reduces LLM cost: Haiku instead of Sonnet, fewer stocks, tighter limits.
+        # Reduces LLM cost: cheaper models, fewer stocks, tighter limits.
         # Does NOT change DEBUG_MODE or DRY_RUN — those are set by PRODUCTION_MODE.
         if: github.event_name == 'workflow_dispatch' && inputs.low_cost_mode == true
         run: |
@@ -228,6 +187,7 @@ jobs:
           echo "LLM_MAX_OUTPUT_TOKENS=700"   >> "$GITHUB_ENV"
           echo "LLM_MAX_PROMPT_CHARS=16000"  >> "$GITHUB_ENV"
           echo "RESEARCH_MODEL_OPENAI=gpt-4o-mini" >> "$GITHUB_ENV"
+          echo "MONITOR_MODEL_OPENAI=gpt-4o-mini"  >> "$GITHUB_ENV"
           if [ "${{ matrix.cli_provider }}" = "claude" ]; then
             echo "RESEARCH_MODEL=claude-haiku-4-5-20251001" >> "$GITHUB_ENV"
             echo "MONITOR_MODEL=claude-haiku-4-5-20251001"  >> "$GITHUB_ENV"
@@ -237,9 +197,11 @@ jobs:
         run: |
           echo "profile=${{ matrix.profile_id }}"
           echo "phase=${{ needs.determine-phase.outputs.phase }}"
-          echo "cli_provider=${{ matrix.cli_provider }}"
+          echo "strategist_family=${{ matrix.cli_provider }}"
           echo "api_provider=${{ matrix.llm_provider }}"
+          echo "analysis_mode=api_only"
           echo "production_mode=${{ vars.PRODUCTION_MODE || 'false' }}"
+          echo "effective_run_mode=${RUN_MODE:-debug}"
           echo "effective_debug_mode=${DEBUG_MODE:-true}"
           echo "effective_dry_run=${DRY_RUN:-true}"
           echo "low_cost_mode=${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode || false }}"
@@ -262,7 +224,8 @@ jobs:
           AGENT_LABEL: ${{ matrix.profile_label }}
           DRY_RUN: ${{ env.DRY_RUN || 'true' }}
           RESEARCH_MODEL_OPENAI: ${{ env.RESEARCH_MODEL_OPENAI || vars.RESEARCH_MODEL_OPENAI || 'gpt-4o-mini' }}
-          USE_CLI_AGENT: "true"
+          MONITOR_MODEL_OPENAI: ${{ env.MONITOR_MODEL_OPENAI || vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
+          USE_CLI_AGENT: "false"
           CLI_AGENT_PROVIDER: ${{ matrix.cli_provider }}
           LLM_PROVIDER: ${{ matrix.llm_provider }}
         run: |

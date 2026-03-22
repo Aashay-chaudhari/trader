@@ -133,6 +133,7 @@ Respond with ONLY valid JSON:
             "news_summary": "1 sentence on relevant news if any",
             "technical_setup": "1-2 sentence summary",
             "recommendation": "buy" | "sell" | "hold" | "watch",
+            "execution_condition": "natural-language trigger that must still be true before intraday execution",
             "trade_plan": {{
                 "entry": 0.00,
                 "stop_loss": 0.00,
@@ -168,35 +169,49 @@ Respond with ONLY valid JSON:
 }}"""
 
 
-MONITOR_PROMPT = """You are a trading monitor making quick decisions. Be decisive and concise.
+MONITOR_PROMPT = """You are an intraday execution gate.
 
-MORNING TRADE PLANS:
+Your job is not to re-research the market. Your job is to decide whether a small set
+of preselected symbols still match their morning execution conditions.
+
+ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say no.
+
+MONITOR CANDIDATES:
 {morning_plans}
 
-CURRENT MARKET STATE:
+LIVE MARKET SNAPSHOT:
 {current_state}
 
 ACTIVE POSITIONS:
 {active_positions}
 
-DETERMINISTIC STRATEGY SIGNALS:
+DETERMINISTIC STRATEGY SIGNAL SNAPSHOT:
 {strategy_signals}
 
-For each watchlist stock: should we TRADE (buy/sell) or SKIP?
-For each active position: HOLD, ADD, or CLOSE?
-Consider: has price hit entry zone? Volume confirming? Any regime change?
-One-line reason per decision. Keep trade_plan from morning unless you have reason to adjust.
+DECISION RULES:
+{decision_rules}
+
+For each candidate symbol:
+1. Check whether the natural-language execution condition still matches the live data.
+2. If the setup is confirmed right now, set `ready_to_trade=true`.
+3. If the setup is not confirmed, set `ready_to_trade=false` and explain what is missing.
+4. Keep the morning trade plan unless live evidence clearly invalidates it.
+
+Do not invent new trades. Do not broaden the watchlist. Do not do fresh discovery.
 
 Respond with ONLY valid JSON:
 {{
     "overall_sentiment": "bullish" | "bearish" | "neutral",
-    "market_summary": "1 sentence",
+    "market_summary": "1 sentence on whether live conditions are confirming or weakening the morning thesis",
     "stocks": {{
         "<SYMBOL>": {{
             "recommendation": "buy" | "sell" | "hold" | "watch",
             "confidence": 0.0-1.0,
             "ready_to_trade": true | false,
-            "key_observations": ["1 concise observation"],
+            "matched_conditions": ["condition currently satisfied"],
+            "failed_conditions": ["condition still missing"],
+            "monitor_reason": "1 concise sentence",
+            "execution_condition": "repeat the condition you evaluated",
             "trade_plan": {{"entry": 0.00, "stop_loss": 0.00, "target": 0.00}}
         }}
     }}
@@ -624,6 +639,33 @@ class ResearchAgent(BaseAgent):
                 summary, morning_context, news_data, market_context,
             )
             prompt_sections = lean
+            candidate_symbols = list(lean.get("candidate_symbols") or [])
+            if not candidate_symbols:
+                analysis = self._build_monitor_skip_analysis(
+                    "No symbols are near execution triggers or active-position checkpoints."
+                )
+                save_prompt_context_snapshot(
+                    phase=phase,
+                    provider="monitor-skip",
+                    model="none",
+                    symbols=message.data.get("symbols", []),
+                    prompt_sections=prompt_sections,
+                    llm_meta=analysis.get("_meta", {}),
+                    data_dir=get_settings().data_dir,
+                )
+                record_llm_analytics(
+                    phase=phase,
+                    symbols=message.data.get("symbols", []),
+                    llm_meta=analysis.get("_meta", {}),
+                    data_dir=get_settings().data_dir,
+                )
+                self._save_research(analysis, phase)
+                return {
+                    "research": analysis,
+                    "phase": phase,
+                    "symbols": message.data.get("symbols", []),
+                    "market_data": market_data,
+                }
             prompt = MONITOR_PROMPT.format(**lean)
             run_mode = "monitor"
         elif phase == "weekly_review":
@@ -732,6 +774,12 @@ class ResearchAgent(BaseAgent):
             learned_rules=prompt_sections.get("learned_rules", ""),
             artifact_context=artifact_context,
         )
+        if phase == "monitor" and morning_context:
+            analysis = self._normalize_monitor_analysis(
+                analysis,
+                morning_context=morning_context,
+                candidate_symbols=list(prompt_sections.get("candidate_symbols") or []),
+            )
         analysis = self._merge_web_context_into_analysis(analysis, web_context)
         llm_meta = analysis.get("_meta", {})
         selected_provider = llm_meta.get("provider", provider or "unresolved")
@@ -790,7 +838,15 @@ class ResearchAgent(BaseAgent):
         provider = provider or self._get_provider_name()
         if provider == "anthropic":
             return settings.monitor_model
-        return settings.research_model_openai
+        return settings.monitor_model_openai
+
+    def _should_use_cli_for_phase(self, phase: str) -> bool:
+        settings = get_settings()
+        if not settings.use_cli_agent:
+            return False
+        if phase == "monitor":
+            return settings.use_cli_agent_for_monitor
+        return True
 
     def _get_model_for_phase(self, provider: str, phase: str) -> str:
         if phase in {
@@ -802,76 +858,265 @@ class ResearchAgent(BaseAgent):
             return self._get_monitor_model(provider)
         return self._get_research_model(provider)
 
+    def _get_active_position_symbols(self) -> set[str]:
+        active_symbols: set[str] = set()
+        try:
+            portfolio_path = Path(get_settings().data_dir) / "portfolio_state.json"
+            if portfolio_path.exists():
+                portfolio = json.loads(portfolio_path.read_text(encoding="utf-8-sig"))
+                if isinstance(portfolio, dict):
+                    for sym, pos in portfolio.items():
+                        if isinstance(pos, dict) and pos.get("shares", 0) > 0:
+                            active_symbols.add(str(sym).upper())
+        except (OSError, json.JSONDecodeError):
+            pass
+        return active_symbols
+
+    def _select_monitor_candidates(
+        self,
+        market_summary: dict[str, Any],
+        morning_context: dict[str, Any],
+        news_data: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        settings = get_settings()
+        morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
+        active_positions = self._get_active_position_symbols()
+        proximity_threshold = max(0.0, settings.monitor_entry_proximity_pct) / 100.0
+        candidates: list[dict[str, Any]] = []
+
+        review_symbols = {str(sym).upper() for sym in morning_stocks.keys()}
+        review_symbols.update(active_positions)
+
+        for symbol in sorted(review_symbols):
+            info = morning_stocks.get(symbol, {}) if isinstance(morning_stocks, dict) else {}
+            data = market_summary.get(symbol, {}) if isinstance(market_summary, dict) else {}
+            if not isinstance(data, dict) or "error" in data:
+                continue
+
+            trade_plan = info.get("trade_plan", {}) if isinstance(info, dict) else {}
+            price = self._safe_float(data.get("latest_price")) or 0.0
+            entry = self._safe_float(trade_plan.get("entry")) or 0.0
+            stop_loss = self._safe_float(trade_plan.get("stop_loss")) or 0.0
+            target = self._safe_float(trade_plan.get("target")) or 0.0
+            recommendation = str(info.get("recommendation", "watch")).lower()
+            headlines = news_data.get(symbol, {}) if isinstance(news_data, dict) else {}
+            headline_count = len(headlines.get("news_headlines", [])) if isinstance(headlines, dict) else 0
+
+            reasons: list[str] = []
+            score = 0.0
+
+            if symbol in active_positions:
+                reasons.append("active position needs supervision")
+                score += 100.0
+
+            if entry > 0 and price > 0:
+                distance_to_entry = abs(price - entry) / entry
+                if distance_to_entry <= proximity_threshold:
+                    reasons.append(f"price is within {distance_to_entry * 100:.1f}% of entry")
+                    score += 50.0 - distance_to_entry * 100
+
+            if stop_loss > 0 and price > 0:
+                if recommendation in {"buy", "watch", "hold"} and price <= stop_loss * 1.01:
+                    reasons.append("price is near stop loss")
+                    score += 40.0
+                if recommendation == "sell" and price >= stop_loss * 0.99:
+                    reasons.append("price is near short stop")
+                    score += 40.0
+
+            if target > 0 and price > 0:
+                if recommendation in {"buy", "watch", "hold"} and price >= target * 0.99:
+                    reasons.append("price is near target")
+                    score += 30.0
+                if recommendation == "sell" and price <= target * 1.01:
+                    reasons.append("price is near short target")
+                    score += 30.0
+
+            if headline_count > 0:
+                reasons.append(f"{headline_count} fresh headline(s)")
+                score += min(headline_count, 3) * 10.0
+
+            if not reasons:
+                continue
+
+            candidates.append(
+                {
+                    "symbol": symbol,
+                    "score": score,
+                    "reasons": reasons,
+                    "active_position": symbol in active_positions,
+                }
+            )
+
+        candidates.sort(
+            key=lambda item: (
+                item.get("active_position", False),
+                item.get("score", 0.0),
+                item.get("symbol", ""),
+            ),
+            reverse=True,
+        )
+        return candidates[: max(settings.monitor_candidate_limit, 1)]
+
+    def _build_monitor_skip_analysis(self, reason: str) -> dict[str, Any]:
+        return {
+            "overall_sentiment": "neutral",
+            "market_summary": reason,
+            "stocks": {},
+            "_meta": {
+                "status": "success",
+                "execution_mode": "none",
+                "provider": "monitor-skip",
+                "model": "none",
+                "duration_ms": 0.0,
+                "attempts": [],
+                "quota_issue_detected": False,
+                "quota_note": None,
+            },
+        }
+
+    def _normalize_monitor_analysis(
+        self,
+        analysis: dict[str, Any],
+        *,
+        morning_context: dict[str, Any],
+        candidate_symbols: list[str],
+    ) -> dict[str, Any]:
+        normalized = dict(analysis) if isinstance(analysis, dict) else {}
+        morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
+        source_stocks = normalized.get("stocks", {})
+        if not isinstance(source_stocks, dict):
+            source_stocks = {}
+
+        cleaned_stocks: dict[str, Any] = {}
+        for symbol in candidate_symbols:
+            morning_info = morning_stocks.get(symbol, {}) if isinstance(morning_stocks, dict) else {}
+            payload = source_stocks.get(symbol, {})
+            if not isinstance(payload, dict):
+                payload = {}
+
+            plan = payload.get("trade_plan", {})
+            if not isinstance(plan, dict):
+                plan = {}
+            morning_plan = morning_info.get("trade_plan", {})
+            if not isinstance(morning_plan, dict):
+                morning_plan = {}
+
+            recommendation = str(payload.get("recommendation") or morning_info.get("recommendation") or "watch").lower()
+            if recommendation not in {"buy", "sell", "hold", "watch"}:
+                recommendation = "watch"
+
+            confidence = self._safe_float(payload.get("confidence"))
+            if confidence is None:
+                confidence = self._safe_float(morning_info.get("confidence"))
+            confidence = max(0.0, min(1.0, confidence if confidence is not None else 0.5))
+
+            cleaned_stocks[symbol] = {
+                "recommendation": recommendation,
+                "confidence": round(confidence, 3),
+                "ready_to_trade": bool(payload.get("ready_to_trade", False)),
+                "matched_conditions": list(payload.get("matched_conditions") or []),
+                "failed_conditions": list(payload.get("failed_conditions") or []),
+                "monitor_reason": str(
+                    payload.get("monitor_reason")
+                    or payload.get("reason")
+                    or "Monitor gate returned no explanation."
+                ),
+                "execution_condition": str(
+                    payload.get("execution_condition")
+                    or morning_info.get("execution_condition")
+                    or ""
+                ),
+                "trade_plan": {
+                    "entry": self._safe_float(plan.get("entry"))
+                    or self._safe_float(morning_plan.get("entry"))
+                    or 0.0,
+                    "stop_loss": self._safe_float(plan.get("stop_loss"))
+                    or self._safe_float(morning_plan.get("stop_loss"))
+                    or 0.0,
+                    "target": self._safe_float(plan.get("target"))
+                    or self._safe_float(morning_plan.get("target"))
+                    or 0.0,
+                },
+            }
+
+        normalized["overall_sentiment"] = str(normalized.get("overall_sentiment") or "neutral").lower()
+        if normalized["overall_sentiment"] not in {"bullish", "bearish", "neutral"}:
+            normalized["overall_sentiment"] = "neutral"
+        normalized["market_summary"] = str(
+            normalized.get("market_summary") or "Monitor gate completed without a summary."
+        )
+        normalized["stocks"] = cleaned_stocks
+        return normalized
+
     def _build_lean_monitor_context(
         self, market_summary: dict, morning_context: dict,
         news_data: dict, market_context: dict,
     ) -> dict:
-        """Build ultra-concise monitor context (~400-600 tokens total).
+        """Build ultra-concise monitor context for a candidate-only execution gate."""
+        morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
+        candidates = self._select_monitor_candidates(market_summary, morning_context, news_data)
+        candidate_symbols = [c["symbol"] for c in candidates]
 
-        Packs only what the LLM needs to make trade/skip decisions:
-        morning trade plans as a compact table, current prices + indicators,
-        active positions, and deterministic strategy signals.
-        """
-        morning_stocks = morning_context.get("stocks", {})
-
-        # Morning plans: 1 line per stock
         plan_lines = []
-        for sym, info in morning_stocks.items():
+        for candidate in candidates:
+            sym = candidate["symbol"]
+            info = morning_stocks.get(sym, {})
             rec = info.get("recommendation", "watch")
-            tp = info.get("trade_plan", {})
+            tp = info.get("trade_plan", {}) if isinstance(info, dict) else {}
             entry = tp.get("entry", "—")
             stop = tp.get("stop_loss", "—")
             target = tp.get("target", "—")
-            reason = (info.get("reasoning") or "")[:80]
+            condition = (
+                info.get("execution_condition")
+                or f"Only act if {sym} is near the planned level and the thesis is still intact."
+            )
+            trigger_summary = "; ".join(candidate.get("reasons", []))
             plan_lines.append(
-                f"  {sym}: {rec} | entry=${entry} stop=${stop} target=${target} | {reason}"
+                f"  {sym}: {rec} | entry=${entry} stop=${stop} target=${target}\n"
+                f"    Execution condition: {condition}\n"
+                f"    Why it is being checked now: {trigger_summary}"
             )
         if not plan_lines:
-            plan_lines.append("  (no morning plans available)")
+            plan_lines.append("  (no symbols are near execution triggers right now)")
 
-        # Current state: compact table
-        state_lines = ["| Stock | Price | Chg% | RSI | VolRatio | Near Entry? |",
-                        "|-------|-------|------|-----|----------|-------------|"]
-        for sym, data in market_summary.items():
-            price = data.get("latest_price", 0)
-            change = data.get("price_change_pct", 0)
+        state_lines = [
+            "| Stock | Price | Chg% | RSI | VolRatio | Headlines |",
+            "|-------|-------|------|-----|----------|-----------|",
+        ]
+        for sym in candidate_symbols:
+            data = market_summary.get(sym, {}) if isinstance(market_summary, dict) else {}
+            price = self._safe_float(data.get("latest_price")) or 0.0
+            change = self._safe_float(data.get("price_change_pct")) or 0.0
             indicators = data.get("indicators", {}) if isinstance(data.get("indicators"), dict) else {}
             rsi = indicators.get("rsi_14", "—")
             if isinstance(rsi, (int, float)):
                 rsi = f"{rsi:.0f}"
 
-            # Volume ratio
             history = data.get("price_history", [])
-            vol = data.get("volume", 0)
+            vol = self._safe_float(data.get("volume")) or 0.0
             vol_ratio = "—"
             if history and len(history) >= 5:
-                avg_vol = sum(b.get("volume", 0) for b in history[-10:]) / max(len(history[-10:]), 1)
+                avg_vol = sum(self._safe_float(b.get("volume")) or 0.0 for b in history[-10:]) / max(len(history[-10:]), 1)
                 if avg_vol > 0:
                     vol_ratio = f"{vol / avg_vol:.1f}x"
 
-            # Check proximity to morning entry
-            plan_entry = morning_stocks.get(sym, {}).get("trade_plan", {}).get("entry")
-            near = ""
-            if plan_entry and price and plan_entry > 0:
-                if abs(price - plan_entry) / plan_entry < 0.02:
-                    near = "YES"
-
+            headlines = news_data.get(sym, {}) if isinstance(news_data, dict) else {}
+            headline_count = len(headlines.get("news_headlines", [])) if isinstance(headlines, dict) else 0
             state_lines.append(
-                f"| {sym:5s} | ${price:>8.2f} | {change:+5.1f}% | {rsi:>3s} | {vol_ratio:>8s} | {near:>5s} |"
+                f"| {sym:5s} | ${price:>8.2f} | {change:+5.1f}% | {rsi:>3s} | {vol_ratio:>8s} | {headline_count:>9d} |"
             )
 
-        # Active positions (from portfolio state)
         pos_lines = ["  (none)"]
         try:
             portfolio_path = Path(get_settings().data_dir) / "portfolio_state.json"
             if portfolio_path.exists():
-                portfolio = json.loads(portfolio_path.read_text())
+                portfolio = json.loads(portfolio_path.read_text(encoding="utf-8-sig"))
                 active = []
                 for sym, pos in portfolio.items():
                     if isinstance(pos, dict) and pos.get("shares", 0) > 0:
                         shares = pos["shares"]
-                        avg = pos.get("avg_cost", 0)
-                        cur = pos.get("last_price", 0)
+                        avg = self._safe_float(pos.get("avg_cost")) or 0.0
+                        cur = self._safe_float(pos.get("last_price")) or 0.0
                         pnl = ((cur - avg) / avg * 100) if avg else 0
                         active.append(f"  {sym}: {shares} shares @ ${avg:.2f}, now ${cur:.2f} ({pnl:+.1f}%)")
                 if active:
@@ -879,14 +1124,22 @@ class ResearchAgent(BaseAgent):
         except (OSError, json.JSONDecodeError):
             pass
 
-        # Strategy signals placeholder (filled by orchestrator if available)
-        sig_lines = ["  (will be computed by strategy engine)"]
+        decision_rules = "\n".join(
+            [
+                "  - Approve only when the natural-language execution condition is clearly satisfied now.",
+                "  - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.",
+                "  - Never invent a new setup that was not part of the morning plan.",
+                f"  - Current market regime hint: {market_context.get('market_regime', 'unknown')}.",
+            ]
+        )
 
         return {
             "morning_plans": "\n".join(plan_lines),
             "current_state": "\n".join(state_lines),
             "active_positions": "\n".join(pos_lines),
-            "strategy_signals": "\n".join(sig_lines),
+            "strategy_signals": "  Gate runs before the deterministic strategy engine. Use this check only to approve or reject planned setups.",
+            "decision_rules": decision_rules,
+            "candidate_symbols": candidate_symbols,
         }
 
     def _prepare_rich_summary(self, market_data: dict) -> dict:
@@ -1516,7 +1769,7 @@ class ResearchAgent(BaseAgent):
                 prior_attempts=cli_attempts,
             )
 
-        use_cli = settings.use_cli_agent
+        use_cli = self._should_use_cli_for_phase(phase)
 
         if use_cli:
             cli_provider = settings.cli_agent_provider
@@ -1906,6 +2159,9 @@ class ResearchAgent(BaseAgent):
             "news_summary": "Template mode active; no model-driven news synthesis executed.",
             "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
             "recommendation": "watch",
+            "execution_condition": (
+                f"Only trade {symbol} if price revisits the planned entry and the live tape confirms it."
+            ),
             "trade_plan": {
                 "entry": entry,
                 "stop_loss": stop_loss,

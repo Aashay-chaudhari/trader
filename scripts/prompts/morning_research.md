@@ -116,6 +116,7 @@ Based on your research, pick stocks. Apply these filters:
 For each selected stock, determine:
 - **recommendation**: `buy`, `sell`, `hold`, or `watch`
 - **confidence**: 0.0 to 1.0 — be honest, reference your calibration history
+- **execution_condition**: 1 sentence in natural language describing what must still be true intraday before the trade should actually fire
 - **trade_plan**: specific entry, stop_loss, target
 - **reasoning**: 2-3 sentences explaining WHY, not just what
 - **catalysts**: what could move this today
@@ -142,6 +143,7 @@ File: `data/profiles/{{PROFILE}}/cache/morning_research.json`
             "sentiment": "bullish|neutral|bearish",
             "confidence": 0.75,
             "recommendation": "buy|sell|hold|watch",
+            "execution_condition": "Natural-language intraday trigger the monitor should verify before executing",
             "reasoning": "Why this is a good/bad setup today — be specific",
             "catalysts": ["Catalyst 1", "Catalyst 2"],
             "risks": ["Risk 1", "Risk 2"],

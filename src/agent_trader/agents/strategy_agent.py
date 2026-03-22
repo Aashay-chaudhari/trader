@@ -112,6 +112,10 @@ class StrategyAgent(BaseAgent):
         news = message.data.get("news", {})
         market_context = message.data.get("market_context", {})
         symbols = message.data.get("symbols", [])
+        phase = message.data.get("phase", "")
+        active_positions = {
+            str(symbol).upper() for symbol in message.data.get("active_positions", [])
+        }
         settings = get_settings()
 
         all_signals = []
@@ -121,6 +125,12 @@ class StrategyAgent(BaseAgent):
             stock_news = news.get(symbol, {})
 
             if "error" in stock_data:
+                continue
+            if phase == "monitor" and not self._monitor_gate_allows_symbol(
+                symbol,
+                stock_research,
+                active_positions,
+            ):
                 continue
 
             signal = self._evaluate(
@@ -133,7 +143,7 @@ class StrategyAgent(BaseAgent):
 
         # "Best available" mode: if no signals passed the strict filter,
         # take the single best one with a tiny position
-        if not all_signals and settings.guarantee_daily_trade:
+        if not all_signals and settings.guarantee_daily_trade and phase != "monitor":
             best = self._find_best_available(symbols, market_data, research, news, market_context)
             if best:
                 best.suggested_size_pct = 2.0  # Tiny position — learning trade
@@ -146,6 +156,22 @@ class StrategyAgent(BaseAgent):
             "signals": all_signals,
             "market_data": market_data,
         }
+
+    def _monitor_gate_allows_symbol(
+        self,
+        symbol: str,
+        stock_research: dict,
+        active_positions: set[str],
+    ) -> bool:
+        symbol = str(symbol).upper()
+        if symbol in active_positions:
+            return True
+        if not isinstance(stock_research, dict):
+            return False
+        if not stock_research.get("ready_to_trade", False):
+            return False
+        recommendation = str(stock_research.get("recommendation", "")).lower()
+        return recommendation in {"buy", "sell"}
 
     def _evaluate(
         self, symbol: str, data: dict, research: dict,

@@ -74,6 +74,7 @@ async def run_cycle(orchestrator: Orchestrator, symbols: list[str]) -> dict:
     results["reflect"] = await orchestrator.run_evening_reflection()
     results["weekly"] = await orchestrator.run_weekly_review()
     results["monthly"] = await orchestrator.run_monthly_retrospective()
+    results["evolution"] = await orchestrator.run_evolution()
     return results
 
 

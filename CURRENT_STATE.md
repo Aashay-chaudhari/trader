@@ -2,57 +2,98 @@
 
 Date: 2026-03-22
 
-## What We Completed
+## Stable Baseline
 
-- Bootstrapped seed knowledge + observations for both strategist profiles and pushed the seed baseline.
-- Upgraded `scripts/run_both.sh` to support:
-  - serial + parallel execution modes
-  - Claude live stream parsing (human-readable terminal output)
-  - Codex output logging + PowerShell warning cleanup
-  - Codex runtime guardrails (timeout, search/loop budget messaging)
-  - Codex host-write mode toggle (`CODEX_HOST_WRITE`) to persist file edits reliably
-  - pre-creation of `data/profiles/claude/cache` and `data/profiles/codex/cache`
-- Fixed Codex CLI invocation compatibility (`codex --search exec`, not `codex --print`).
-- Added stronger autonomy + budget behavior to `scripts/prompts/morning_research.md`:
-  - no unnecessary permission questions
-  - visible `RESEARCH LOG`
-  - idempotency skip check (`SKIP_REASON`) if same-day cache already exists
-  - search budget discipline guidance
-- Recovered misplaced Codex outputs from repo root and moved them to:
-  - `data/profiles/codex/cache/morning_research.json`
-  - `data/profiles/codex/cache/watchlist.json`
+The repo is now stabilized around a two-layer architecture:
 
-## Current Runner Defaults
+1. Local strategist layer
+   - `scripts/run_both.sh` runs Claude + Codex locally for rich morning/evening/weekly/monthly work.
+   - Outputs are isolated under `data/profiles/claude/` and `data/profiles/codex/`.
 
-- `RUN_MODE`: `serial` (or pass `parallel` as arg 2)
-- Codex limits:
-  - `CODEX_MAX_SECONDS=900`
-  - `CODEX_MAX_WEB_SEARCHES=10`
-  - `CODEX_MAX_AGENT_LOOPS=30` (instructional)
-  - `CODEX_REASONING_EFFORT=medium`
-- Codex write mode:
-  - `CODEX_HOST_WRITE=true` (default, uses bypass mode)
-  - set `CODEX_HOST_WRITE=false` to force sandbox mode
+2. Python runtime layer
+   - `python -m agent_trader ...` powers research, monitor, reflection, weekly, monthly, and evolution phases.
+   - GitHub Actions is configured to use the Python runtime for automated monitor runs.
 
-## Known Notes
+## What Changed In This Stabilization Pass
 
-- Codex may still print non-fatal local warnings about its state DB migration and PowerShell shell snapshot support; these are upstream CLI/runtime warnings.
-- For dual-profile workflow, `data/profiles/*` is the active source of truth.
+- Fixed paper-mode behavior so `RUN_MODE=paper` now means:
+  - real LLM analysis
+  - real Alpaca paper orders
+- Unified knowledge-file compatibility so the runtime can read both:
+  - prompt-managed profile JSON
+  - app-managed cold-start JSON
+- Added BOM-safe JSON loading across the runtime.
+- Wired `evolution` into the full cycle.
+- Added [SYSTEM_GUIDE.md](SYSTEM_GUIDE.md) as the operator manual.
+- Switched GitHub Actions monitor flow to API-only operation:
+  - no CLI auth dependency in Actions
+  - no CLI execution requirement in Actions
+- Refactored monitor into a lightweight execution gate:
+  - morning research writes `execution_condition` per stock
+  - monitor only considers a tiny candidate set
+  - monitor can skip the LLM entirely when nothing is near a trigger
+  - strategy execution is blocked unless the monitor gate marks a setup `ready_to_trade=true`
+  - active positions are always kept in the monitor loop
 
-## Tomorrow Quick Start
+## Monitor Gate Design
 
-1. Run:
-   - `./scripts/run_both.sh morning parallel`
-2. If you want stricter budgets:
-   - `CODEX_MAX_SECONDS=600 CODEX_MAX_WEB_SEARCHES=8 CODEX_REASONING_EFFORT=low ./scripts/run_both.sh morning parallel`
-3. Review outputs in:
-   - `data/profiles/claude/cache/`
-   - `data/profiles/codex/cache/`
+Morning research remains the heavy-thinking phase.
 
-## Files Intentionally Changed In This Session
+Intraday monitor is now intentionally small:
 
-- `scripts/run_both.sh`
-- `scripts/prompts/morning_research.md`
-- `data/profiles/codex/cache/morning_research.json`
-- `data/profiles/codex/cache/watchlist.json`
-- `CURRENT_STATE.md`
+1. Load watchlist + active positions
+2. Refresh prices and news
+3. Build candidate list:
+   - near entry
+   - near stop
+   - near target
+   - fresh headlines
+   - active positions
+4. Run a cheap LLM gate only on those candidates
+5. Let strategy/risk/execution proceed only when the gate approves
+
+This keeps some intelligence intraday without paying for repeated deep reasoning.
+
+## Current GitHub Actions Model
+
+- Strategist family remains dual-profile:
+  - `claude` profile uses Anthropic API in Actions
+  - `codex` profile uses OpenAI API in Actions
+- Actions currently uses:
+  - `USE_CLI_AGENT=false`
+  - API-only monitor path
+- Local CLI workflows remain available for manual strategist sessions.
+
+## Key New Config Knobs
+
+Available in settings / `.env`:
+
+- `MONITOR_MODEL_OPENAI`
+- `USE_CLI_AGENT_FOR_MONITOR`
+- `MONITOR_CANDIDATE_LIMIT`
+- `MONITOR_ENTRY_PROXIMITY_PCT`
+
+## Verification Status
+
+Verified on 2026-03-22:
+
+- `pytest -q` -> passing
+- `python -m agent_trader validate --data-dir data/profiles/claude` -> passing
+- `python -m agent_trader validate --data-dir data/profiles/codex` -> passing
+
+## Repo Truths To Remember
+
+- `run_both.sh` is the local strategist orchestration tool, not the intraday engine.
+- GitHub Actions monitor now relies on cheap API calls, not CLI sessions.
+- `SYSTEM_GUIDE.md` is the best current operator reference.
+- `data/profiles/*` is the source of truth for strategist state.
+
+## Next Intended Step
+
+Prepare a demo production run by adding repo-level GitHub Actions secrets and variables, then trigger a manual workflow run to validate:
+
+- schema shapes
+- journal artifacts
+- dashboard output
+- monitor gating behavior
+- Alpaca paper execution path

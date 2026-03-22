@@ -1,5 +1,7 @@
 """Tests for ResearchAgent configuration behavior."""
 
+import tempfile
+
 import pytest
 
 import agent_trader.agents.research_agent as research_module
@@ -43,6 +45,7 @@ def test_research_agent_falls_back_to_openai_when_only_openai_key_present(
 ):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "")
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setenv("MONITOR_MODEL_OPENAI", "gpt-4.1-mini")
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
     reset_settings()
 
@@ -50,10 +53,10 @@ def test_research_agent_falls_back_to_openai_when_only_openai_key_present(
 
     assert agent._get_provider_name() == "openai"
     assert agent._get_research_model() == "gpt-4o-mini"
-    assert agent._get_monitor_model() == "gpt-4o-mini"
-    assert agent._get_model_for_phase("openai", "evening_reflection") == "gpt-4o-mini"
-    assert agent._get_model_for_phase("openai", "weekly_consolidation") == "gpt-4o-mini"
-    assert agent._get_model_for_phase("openai", "monthly_retrospective") == "gpt-4o-mini"
+    assert agent._get_monitor_model() == "gpt-4.1-mini"
+    assert agent._get_model_for_phase("openai", "evening_reflection") == "gpt-4.1-mini"
+    assert agent._get_model_for_phase("openai", "weekly_consolidation") == "gpt-4.1-mini"
+    assert agent._get_model_for_phase("openai", "monthly_retrospective") == "gpt-4.1-mini"
 
 
 def test_research_agent_honors_provider_preference_when_both_keys_present(
@@ -102,6 +105,58 @@ def test_research_agent_codex_cli_limits_api_fallback_to_openai(
 
     assert agent._get_api_provider_sequence() == ["openai"]
     assert agent._get_provider_name() == "openai"
+
+
+def test_research_agent_monitor_can_force_api_even_when_cli_enabled(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("USE_CLI_AGENT_FOR_MONITOR", "false")
+    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    assert agent._should_use_cli_for_phase("research") is True
+    assert agent._should_use_cli_for_phase("monitor") is False
+
+
+def test_select_monitor_candidates_prefers_active_and_near_entry_symbols(
+    message_bus, monkeypatch
+):
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.setenv("DATA_DIR", temp_dir)
+        monkeypatch.setenv("MONITOR_CANDIDATE_LIMIT", "2")
+        monkeypatch.setenv("MONITOR_ENTRY_PROXIMITY_PCT", "2")
+        monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+        reset_settings()
+
+        portfolio_path = research_module.Path(temp_dir) / "portfolio_state.json"
+        portfolio_path.write_text(
+            '{"LMT":{"shares":10,"avg_cost":600,"last_price":625},"KO":{"shares":0}}',
+            encoding="utf-8",
+        )
+
+        agent = ResearchAgent(message_bus)
+        candidates = agent._select_monitor_candidates(
+            {
+                "LMT": {"latest_price": 625.0},
+                "CVX": {"latest_price": 203.5},
+                "KO": {"latest_price": 74.9},
+            },
+            {
+                "stocks": {
+                    "LMT": {"recommendation": "buy", "trade_plan": {"entry": 628.0, "stop_loss": 610.0, "target": 665.0}},
+                    "CVX": {"recommendation": "buy", "trade_plan": {"entry": 203.0, "stop_loss": 196.0, "target": 215.0}},
+                    "KO": {"recommendation": "watch", "trade_plan": {"entry": 70.0, "stop_loss": 68.0, "target": 75.0}},
+                }
+            },
+            {"CVX": {"news_headlines": [{"title": "fresh"}]}},
+        )
+
+        assert [item["symbol"] for item in candidates] == ["LMT", "CVX"]
 
 
 def test_research_agent_collects_web_context_for_high_value_symbols(

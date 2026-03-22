@@ -11,7 +11,7 @@ def strategy_agent():
     return StrategyAgent(bus)
 
 
-def _make_message(symbols, market_data, research=None):
+def _make_message(symbols, market_data, research=None, **extra):
     """Helper to create a command message with market data."""
     return Message(
         type=MessageType.COMMAND,
@@ -20,6 +20,7 @@ def _make_message(symbols, market_data, research=None):
             "symbols": symbols,
             "market_data": market_data,
             "research": research or {"stocks": {}},
+            **extra,
         },
     )
 
@@ -176,3 +177,62 @@ async def test_research_boosts_signal(strategy_agent):
     assert len(result_yes["signals"]) > 0
     # Research-boosted signal should be at least as strong
     assert result_yes["signals"][0]["strength"] >= result_no["signals"][0]["strength"]
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_requires_llm_gate_for_new_entries(strategy_agent):
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 107.0,
+                "price_change_pct": -2.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 25.0,
+                    "macd": 0.5,
+                    "macd_signal": 0.3,
+                    "sma_20": 105.0,
+                    "sma_50": 102.0,
+                    "bb_upper": 115.0,
+                    "bb_lower": 95.0,
+                },
+            }
+        },
+        phase="monitor",
+        research={"stocks": {"TEST": {"recommendation": "buy", "ready_to_trade": False}}},
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert result["signals"] == []
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_allows_ready_to_trade_signal(strategy_agent):
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 107.0,
+                "price_change_pct": -2.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 25.0,
+                    "macd": 0.5,
+                    "macd_signal": 0.3,
+                    "sma_20": 105.0,
+                    "sma_50": 102.0,
+                    "bb_upper": 115.0,
+                    "bb_lower": 95.0,
+                },
+            }
+        },
+        phase="monitor",
+        research={"stocks": {"TEST": {"recommendation": "buy", "ready_to_trade": True, "confidence": 0.8}}},
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert len(result["signals"]) >= 1
+    assert result["signals"][0]["action"] == "buy"

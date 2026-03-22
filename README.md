@@ -2,7 +2,7 @@
 
 Multi-agent stock trading system that runs autonomously, paper-trades on Alpaca, and displays results on GitHub Pages. Two independent AI strategists (Claude + Codex) run in parallel with separate paper accounts; their books merge into a single comparison dashboard.
 
-The agent accumulates knowledge across days through a structured 5-phase introspection loop — it gets smarter every trading day.
+The agent accumulates knowledge across days through a structured 6-phase introspection loop — it gets smarter every trading day.
 
 ## How It Works
 
@@ -40,7 +40,7 @@ Weekly (Sunday) / Monthly (last business day):
 Same pattern — follow the prompt, Claude does research + updates knowledge.
 ```
 
-## Architecture: 5-Phase Knowledge Loop
+## Architecture: 6-Phase Knowledge Loop
 
 | Phase | When | What | Powered By | Cost |
 |-------|------|------|-----------|------|
@@ -49,8 +49,9 @@ Same pattern — follow the prompt, Claude does research + updates knowledge.
 | 3. Reflect | 4:30 PM ET | Daily review, lessons, pattern extraction | Claude Code (you) | $0 (subscription) |
 | 4. Weekly | Sunday | Consolidate week, update knowledge base | Claude Code (you) | $0 (subscription) |
 | 5. Monthly | Last biz day | Deep retrospective, strategy audit | Claude Code (you) | $0 (subscription) |
+| 6. Evolve | Weekly / on demand | Evidence-backed improvement proposals | Python CLI + strategist LLM | Low |
 
-**Total running cost: ~$0.04/month** (monitor phase LLM calls only). Everything else uses your Claude Code subscription.
+**Total running cost: low**. Morning/evening strategist work is local CLI-driven; GitHub Actions uses small API calls for monitor-time checks.
 
 ## 9 Agents
 
@@ -87,13 +88,13 @@ cp .env.example .env
 # Edit .env: add your API keys (ANTHROPIC_API_KEY and/or OPENAI_API_KEY)
 # Add Alpaca paper trading keys (free)
 
-# Bootstrap knowledge base (first time only)
-# Open Claude Code and say:
-# "Follow the instructions in scripts/prompts/seed_knowledge.md"
+# Cold start is automatic on first run.
+# Optional: scripts/prompts/seed_knowledge_LEGACY.md exists if you want
+# to manually pre-seed knowledge with a one-time research pass.
 
 # Verify everything works
 python -m agent_trader research --debug   # Zero-cost test run
-pytest tests/unit -v                      # Run 99 unit tests
+pytest tests/unit -v                      # Run the unit suite
 ```
 
 ### GitHub Actions Setup
@@ -107,14 +108,15 @@ pytest tests/unit -v                      # Run 99 unit tests
 2. **Variables** (Settings → Secrets and variables → Actions → Variables):
    - `PRODUCTION_MODE=true` — enables real LLM calls + Alpaca orders
    - `RESEARCH_MODEL_OPENAI=gpt-4o-mini` — OpenAI model for Codex strategist
+   - `MONITOR_MODEL_OPENAI=gpt-4o-mini` — cheap monitor gate model for Codex strategist
 
 3. Enable GitHub Pages (Settings → Pages → Source: GitHub Actions)
 
 ## Daily Workflow
 
 Each strategist (Claude + Codex) runs **independently** — different stock picks,
-different lessons, different portfolios. They share the same seed knowledge but
-diverge from day 1.
+different lessons, different portfolios. With cold-start enabled, they can begin
+from empty schemas and earn their rules from live observations.
 
 ### Option A: Bundled script (recommended)
 
@@ -150,8 +152,9 @@ git add data/profiles/ && git commit -m "[research] $(date +%Y-%m-%d) dual-strat
 ### Monitor (automated, every 30 min)
 GitHub Actions runs automatically:
 - Refreshes prices, checks for news
-- 8 Python strategies vote on each stock
-- Ultra-lean LLM check (~500 tokens, $0.001/call)
+- Builds a tiny candidate set near entry / stop / target or with fresh headlines
+- Runs a cheap API-only LLM gate against those candidates
+- 8 Python strategies vote only after the gate approves entries
 - Executes trades on Alpaca if signals align
 - Updates dashboard on GitHub Pages
 
@@ -171,7 +174,10 @@ python -m agent_trader run                 # Phases 1 + 2
 python -m agent_trader reflect             # Phase 3: Evening reflection
 python -m agent_trader weekly              # Phase 4: Weekly review
 python -m agent_trader monthly             # Phase 5: Monthly retrospective
-python -m agent_trader cycle               # All 5 phases back-to-back
+python -m agent_trader evolve              # Phase 6: Improvement proposals
+python -m agent_trader cycle               # All 6 phases back-to-back
+python -m agent_trader validate            # Validate schemas and structure
+python -m agent_trader validate --data-dir data/profiles/claude
 
 # Utilities
 python -m agent_trader status              # Show portfolio
@@ -194,7 +200,7 @@ agent-trader/
 │   ├── utils/               # Knowledge base, swing tracker, journal, feedback
 │   └── dashboard/           # GitHub Pages generator
 ├── scripts/prompts/         # Claude Code workflow prompts
-│   ├── seed_knowledge.md    # First-time knowledge bootstrap
+│   ├── seed_knowledge_LEGACY.md # Optional one-time manual bootstrap
 │   ├── morning_research.md  # Daily morning analysis
 │   ├── evening_reflection.md# Daily evening review
 │   ├── weekly_review.md     # Weekly consolidation
@@ -203,7 +209,7 @@ agent-trader/
 │   ├── claude/              # Claude strategist (knowledge, observations, positions)
 │   └── codex/               # Codex strategist (same structure)
 ├── docs/                    # GitHub Pages dashboard
-├── tests/unit/              # 99 unit tests
+├── tests/unit/              # Unit tests
 └── .github/workflows/       # GitHub Actions pipeline
 ```
 
@@ -235,8 +241,8 @@ Two AI strategists run independently on GitHub Actions:
 
 | | Claude Strategist | Codex Strategist |
 |---|---|---|
-| CLI | Claude Code | OpenAI Codex |
-| API fallback | Anthropic (Sonnet) | OpenAI (GPT-4o) |
+| Local strategist workflow | Claude Code | OpenAI Codex |
+| GitHub Actions provider | Anthropic API | OpenAI API |
 | Data | `data/profiles/claude/` | `data/profiles/codex/` |
 | Alpaca | Paper account 1 | Paper account 2 |
 
@@ -244,7 +250,8 @@ Results merge into a single comparison dashboard on GitHub Pages.
 
 ## Documentation
 
-- [Architecture diagram](docs/ARCHITECTURE.md) — full 5-phase pipeline flow
+- [System guide](SYSTEM_GUIDE.md) — operator guide, runtime modes, CLI vs API, learning loop
+- [Architecture diagram](docs/ARCHITECTURE.md) — full pipeline flow
 - [Knowledge architecture](docs/KNOWLEDGE_ARCHITECTURE.md) — knowledge accumulation design
 - [.env.example](.env.example) — all configuration options
 

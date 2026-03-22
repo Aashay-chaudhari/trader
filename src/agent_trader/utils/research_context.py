@@ -16,7 +16,7 @@ def build_recent_artifact_summary(data_dir: str = "data", limit: int = 3) -> str
     watchlist_path = root / "cache" / "watchlist.json"
     if watchlist_path.exists():
         try:
-            watchlist = json.loads(watchlist_path.read_text(encoding="utf-8"))
+            watchlist = json.loads(watchlist_path.read_text(encoding="utf-8-sig"))
             if watchlist:
                 lines.append("CACHED WATCHLIST FROM PRIOR RUN:")
                 lines.append(f"  {', '.join(watchlist[:10])}")
@@ -30,7 +30,7 @@ def build_recent_artifact_summary(data_dir: str = "data", limit: int = 3) -> str
 
         for file in history_files:
             try:
-                payload = json.loads(file.read_text(encoding="utf-8"))
+                payload = json.loads(file.read_text(encoding="utf-8-sig"))
             except json.JSONDecodeError:
                 continue
 

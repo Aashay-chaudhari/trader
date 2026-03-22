@@ -43,26 +43,58 @@ async def test_pipeline_runs_agents_in_order():
 
 @pytest.mark.asyncio
 async def test_run_pipeline_uses_research_watchlist_for_monitor():
-    bus = MessageBus()
-    orch = Orchestrator(bus)
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        bus = MessageBus()
+        orch = Orchestrator(bus)
 
-    screener_agent = MockAgent(
-        AgentRole.DATA,
-        bus,
-        return_value={"symbols": ["ABBV", "UNH"], "shortlist": []},
-    )
-    screener_agent.role_name = "screener"
-    data_agent = MockAgent(AgentRole.DATA, bus, return_value={"market_data": {}})
-    strategy_agent = MockAgent(AgentRole.STRATEGY, bus, return_value={"signals": []})
+        screener_agent = MockAgent(
+            AgentRole.DATA,
+            bus,
+            return_value={"symbols": ["ABBV", "UNH"], "shortlist": []},
+        )
+        screener_agent.role_name = "screener"
+        data_agent = MockAgent(AgentRole.DATA, bus, return_value={"market_data": {}})
+        strategy_agent = MockAgent(AgentRole.STRATEGY, bus, return_value={"signals": []})
 
-    orch.register(screener_agent)
-    orch.register(data_agent)
-    orch.register(strategy_agent)
+        orch.register(screener_agent)
+        orch.register(data_agent)
+        orch.register(strategy_agent)
 
-    await orch.run_pipeline(["AAPL", "MSFT"])
+        monkeypatch = pytest.MonkeyPatch()
+        monkeypatch.setenv("DATA_DIR", temp_dir)
 
-    assert len(strategy_agent.received_messages) == 1
-    assert strategy_agent.received_messages[0].data["symbols"] == ["ABBV", "UNH"]
+        try:
+            await orch.run_pipeline(["AAPL", "MSFT"])
+        finally:
+            monkeypatch.undo()
+
+        assert len(strategy_agent.received_messages) == 1
+        assert strategy_agent.received_messages[0].data["symbols"] == ["ABBV", "UNH"]
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_includes_active_positions_from_portfolio(monkeypatch):
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.setenv("DATA_DIR", temp_dir)
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+
+        (Path(temp_dir) / "portfolio_state.json").write_text(
+            '{"LMT":{"shares":5,"avg_cost":600},"KO":{"shares":0}}',
+            encoding="utf-8",
+        )
+
+        data_agent = MockAgent(AgentRole.DATA, bus, return_value={"market_data": {}})
+        strategy_agent = MockAgent(AgentRole.STRATEGY, bus, return_value={"signals": []})
+
+        orch.register(data_agent)
+        orch.register(strategy_agent)
+        orch._today_watchlist = ["AAPL"]
+
+        await orch.run_monitor_phase()
+
+        assert strategy_agent.received_messages[0].data["symbols"] == ["AAPL", "LMT"]
+        assert strategy_agent.received_messages[0].data["active_positions"] == ["LMT"]
 
 
 @pytest.mark.asyncio

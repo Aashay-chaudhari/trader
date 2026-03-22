@@ -46,14 +46,13 @@ class KnowledgeBase:
         no seed data is pre-loaded.
         """
         defaults: dict[str, Any] = {
-            "lessons_learned.json": {"lessons": [], "last_updated": ""},
-            "patterns_library.json": {"patterns": [], "last_updated": ""},
+            "lessons_learned.json": [],
+            "patterns_library.json": [],
             "strategy_effectiveness.json": {"last_updated": "", "by_regime": {}},
             "regime_library.json": {
                 "risk_on":  {"description": "", "indicators": [], "rules": []},
                 "risk_off": {"description": "", "indicators": [], "rules": []},
                 "neutral":  {"description": "", "indicators": [], "rules": []},
-                "last_updated": "",
             },
         }
         for filename, empty_value in defaults.items():
@@ -86,7 +85,7 @@ class KnowledgeBase:
         results = []
         for f in files[:days]:
             try:
-                results.append(json.loads(f.read_text()))
+                results.append(json.loads(f.read_text(encoding="utf-8-sig")))
             except (json.JSONDecodeError, OSError) as exc:
                 logger.warning("Skipping corrupt observation %s: %s", f.name, exc)
         return results
@@ -110,7 +109,8 @@ class KnowledgeBase:
         if updates.get("updated_strategies"):
             strat_data = review.get("strategy_effectiveness", {})
             if strat_data:
-                self.update_strategy_effectiveness(strat_data)
+                dominant_regime = review.get("regime_analysis", {}).get("dominant", "")
+                self.update_strategy_effectiveness(strat_data, regime=dominant_regime)
         if updates.get("regime_rules_updated"):
             regime_data = review.get("regime_analysis", {})
             if regime_data:
@@ -124,7 +124,7 @@ class KnowledgeBase:
         if not files:
             return None
         try:
-            return json.loads(files[0].read_text())
+            return json.loads(files[0].read_text(encoding="utf-8-sig"))
         except (json.JSONDecodeError, OSError):
             return None
 
@@ -134,7 +134,7 @@ class KnowledgeBase:
         results = []
         for f in files[:count]:
             try:
-                results.append(json.loads(f.read_text()))
+                results.append(json.loads(f.read_text(encoding="utf-8-sig")))
             except (json.JSONDecodeError, OSError):
                 pass
         return results
@@ -161,7 +161,7 @@ class KnowledgeBase:
         if not files:
             return None
         try:
-            return json.loads(files[0].read_text())
+            return json.loads(files[0].read_text(encoding="utf-8-sig"))
         except (json.JSONDecodeError, OSError):
             return None
 
@@ -175,8 +175,12 @@ class KnowledgeBase:
         Max 100 entries (oldest/least effective removed).
         """
         lib_path = self.knowledge_dir / "patterns_library.json"
-        existing = _load_json(lib_path, {"patterns": [], "last_updated": ""})
-        patterns = {p["name"]: p for p in existing.get("patterns", [])}
+        existing = _load_json(lib_path, [])
+        existing_patterns = existing if isinstance(existing, list) else existing.get("patterns", [])
+        patterns = {
+            p["name"]: p for p in existing_patterns
+            if isinstance(p, dict) and p.get("name")
+        }
 
         for p in new_patterns:
             name = p.get("name", "")
@@ -222,41 +226,63 @@ class KnowledgeBase:
             key=lambda x: (x.get("last_seen", ""), x.get("win_rate", 0)),
             reverse=True,
         )
-        existing["patterns"] = all_patterns[:100]
-        existing["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        _atomic_write_json(lib_path, existing)
+        if isinstance(existing, list):
+            _atomic_write_json(lib_path, all_patterns[:100])
+        else:
+            existing["patterns"] = all_patterns[:100]
+            existing["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            _atomic_write_json(lib_path, existing)
 
-    def update_strategy_effectiveness(self, data: dict) -> None:
-        """Overwrite strategy effectiveness with latest weekly data."""
+    def update_strategy_effectiveness(self, data: dict, regime: str = "") -> None:
+        """Persist strategy effectiveness, supporting both flat and by-regime inputs."""
         path = self.knowledge_dir / "strategy_effectiveness.json"
-        data["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        _atomic_write_json(path, data)
+        existing = _load_json(path, {"last_updated": "", "by_regime": {}})
+        if not isinstance(existing, dict):
+            existing = {"last_updated": "", "by_regime": {}}
+
+        if "by_regime" in data and isinstance(data.get("by_regime"), dict):
+            payload = data
+        else:
+            by_regime = existing.get("by_regime", {})
+            by_regime[regime or "unknown"] = data
+            payload = {
+                **existing,
+                "by_regime": by_regime,
+            }
+
+        payload["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        _atomic_write_json(path, payload)
 
     def update_regime_library(self, regimes: dict) -> None:
         """Overwrite the regime library with updated rules."""
         path = self.knowledge_dir / "regime_library.json"
-        data = {"regimes": regimes,
-                "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
-        _atomic_write_json(path, data)
+        _atomic_write_json(path, {
+            "risk_on": regimes.get("risk_on", {}),
+            "risk_off": regimes.get("risk_off", {}),
+            "neutral": regimes.get("neutral", {}),
+        })
 
     def update_regime_library_from_review(self, regime_analysis: dict) -> None:
         """Update regime library based on weekly review regime analysis."""
         path = self.knowledge_dir / "regime_library.json"
-        existing = _load_json(path, {"regimes": {}, "last_updated": ""})
+        existing = _load_json(path, {})
+        regimes = _extract_regimes(existing)
         dominant = regime_analysis.get("dominant", "")
-        if dominant and dominant in existing.get("regimes", {}):
+        if dominant and dominant in regimes:
             # Update the dominant regime's notes
-            existing["regimes"][dominant]["last_observed"] = (
+            regimes[dominant]["last_observed"] = (
                 datetime.now(timezone.utc).strftime("%Y-%m-%d")
             )
-        existing["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        _atomic_write_json(path, existing)
+        _atomic_write_json(path, regimes)
 
     def update_lessons_learned(self, new_lessons: list[str]) -> None:
         """Append new lessons, keeping the most recent 50."""
         path = self.knowledge_dir / "lessons_learned.json"
-        existing = _load_json(path, {"lessons": [], "last_updated": ""})
-        lessons = existing.get("lessons", [])
+        existing = _load_json(path, [])
+        if isinstance(existing, list):
+            lessons = existing
+        else:
+            lessons = existing.get("lessons", [])
 
         # Deduplicate: don't add if very similar lesson exists
         for lesson in new_lessons:
@@ -264,9 +290,12 @@ class KnowledgeBase:
             if not any(normalized == existing_lesson.strip().lower() for existing_lesson in lessons):
                 lessons.append(lesson.strip())
 
-        existing["lessons"] = lessons[-50:]  # keep last 50
-        existing["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        _atomic_write_json(path, existing)
+        if isinstance(existing, list):
+            _atomic_write_json(path, lessons[-50:])
+        else:
+            existing["lessons"] = lessons[-50:]  # keep last 50
+            existing["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            _atomic_write_json(path, existing)
 
     # ── Context Assembly (Token-Budgeted) ──────────────────────────────
 
@@ -309,7 +338,7 @@ class KnowledgeBase:
 
         # 3. Strategy effectiveness (~200 tokens = 800 chars)
         strat_budget = min(800, char_budget // 5)
-        strat_text = self._summarize_strategies(strat_budget)
+        strat_text = self._summarize_strategies(strat_budget, current_regime=current_regime)
         if strat_text:
             sections.append(strat_text)
             used += len(strat_text)
@@ -407,7 +436,7 @@ class KnowledgeBase:
             observations = []
             for f in files:
                 try:
-                    observations.append(json.loads(f.read_text()))
+                    observations.append(json.loads(f.read_text(encoding="utf-8-sig")))
                 except (json.JSONDecodeError, OSError):
                     pass
 
@@ -433,7 +462,7 @@ class KnowledgeBase:
         if not trades_file.exists():
             return 0
         try:
-            return len(json.loads(trades_file.read_text()))
+            return len(json.loads(trades_file.read_text(encoding="utf-8-sig")))
         except (json.JSONDecodeError, OSError):
             return 0
 
@@ -463,8 +492,8 @@ class KnowledgeBase:
     def _summarize_regime_rules(self, regime: str, char_budget: int) -> str:
         """Summarize rules for the current market regime."""
         path = self.knowledge_dir / "regime_library.json"
-        data = _load_json(path, {"regimes": {}})
-        regimes = data.get("regimes", {})
+        data = _load_json(path, {})
+        regimes = _extract_regimes(data)
         info = regimes.get(regime)
         if not info:
             return ""
@@ -482,21 +511,44 @@ class KnowledgeBase:
 
         return text[:char_budget]
 
-    def _summarize_strategies(self, char_budget: int) -> str:
+    def _summarize_strategies(self, char_budget: int, current_regime: str = "") -> str:
         """Summarize strategy effectiveness into compact text."""
         path = self.knowledge_dir / "strategy_effectiveness.json"
         data = _load_json(path, {})
         if not data or "last_updated" not in data:
             return ""
 
-        # Collect strategy entries (skip metadata keys)
         strategies = []
-        for k, v in data.items():
-            if k in ("last_updated",) or not isinstance(v, dict):
-                continue
-            wr = v.get("win_rate", 0)
-            best = v.get("best_regime", "")
-            strategies.append((k, wr, best))
+        by_regime = data.get("by_regime", {})
+        if isinstance(by_regime, dict) and by_regime:
+            if current_regime and isinstance(by_regime.get(current_regime), dict):
+                for name, stats in by_regime[current_regime].items():
+                    if not isinstance(stats, dict):
+                        continue
+                    strategies.append((name, stats.get("win_rate", 0), current_regime))
+            else:
+                merged: dict[str, tuple[float, str]] = {}
+                for regime_name, regime_stats in by_regime.items():
+                    if not isinstance(regime_stats, dict):
+                        continue
+                    for name, stats in regime_stats.items():
+                        if not isinstance(stats, dict):
+                            continue
+                        wr = stats.get("win_rate", 0)
+                        current_best = merged.get(name)
+                        if current_best is None or wr > current_best[0]:
+                            merged[name] = (wr, regime_name)
+                strategies = [
+                    (name, wr, best_regime)
+                    for name, (wr, best_regime) in merged.items()
+                ]
+        else:
+            for k, v in data.items():
+                if k in ("last_updated", "by_regime") or not isinstance(v, dict):
+                    continue
+                wr = v.get("win_rate", 0)
+                best = v.get("best_regime", current_regime or "")
+                strategies.append((k, wr, best))
 
         if not strategies:
             return ""
@@ -512,8 +564,8 @@ class KnowledgeBase:
                             watchlist: list[str] | None = None) -> str:
         """Summarize patterns library, prioritizing today's watchlist."""
         path = self.knowledge_dir / "patterns_library.json"
-        data = _load_json(path, {"patterns": []})
-        patterns = data.get("patterns", [])
+        data = _load_json(path, [])
+        patterns = data if isinstance(data, list) else data.get("patterns", [])
         if not patterns:
             return ""
 
@@ -568,11 +620,11 @@ def _atomic_write_json(path: Path, data: Any) -> None:
     """Write JSON atomically: write to .tmp, then rename."""
     tmp = path.with_suffix(".tmp")
     try:
-        tmp.write_text(json.dumps(data, indent=2, default=str))
+        tmp.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
         tmp.replace(path)
     except OSError:
         # Fallback: direct write
-        path.write_text(json.dumps(data, indent=2, default=str))
+        path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
 
 
 def _load_json(path: Path, default: Any = None) -> Any:
@@ -580,6 +632,24 @@ def _load_json(path: Path, default: Any = None) -> Any:
     if not path.exists():
         return default if default is not None else {}
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8-sig"))
     except (json.JSONDecodeError, OSError):
         return default if default is not None else {}
+
+
+def _extract_regimes(data: Any) -> dict[str, dict[str, Any]]:
+    """Normalize regime-library shapes to top-level risk_on/risk_off/neutral keys."""
+    if not isinstance(data, dict):
+        return {}
+
+    nested = data.get("regimes")
+    if isinstance(nested, dict):
+        return {
+            key: value for key, value in nested.items()
+            if key in {"risk_on", "risk_off", "neutral"} and isinstance(value, dict)
+        }
+
+    return {
+        key: value for key, value in data.items()
+        if key in {"risk_on", "risk_off", "neutral"} and isinstance(value, dict)
+    }

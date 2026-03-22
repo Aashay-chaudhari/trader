@@ -80,7 +80,7 @@ class Orchestrator:
             if phase == "research":
                 model = settings.research_model if provider == "claude" else settings.research_model_openai
             else:
-                model = settings.monitor_model if provider == "claude" else settings.research_model_openai
+                model = settings.monitor_model if provider == "claude" else settings.monitor_model_openai
             return f"{provider} CLI ({model})"
 
         provider_preference = settings.llm_provider.strip().lower()
@@ -88,8 +88,25 @@ class Orchestrator:
             model = settings.research_model if phase == "research" else settings.monitor_model
             return f"anthropic API ({model})"
         if provider_preference == "openai":
-            return f"openai API ({settings.research_model_openai})"
+            model = settings.research_model_openai if phase == "research" else settings.monitor_model_openai
+            return f"openai API ({model})"
         return "auto provider"
+
+    def _load_active_position_symbols(self) -> list[str]:
+        try:
+            portfolio_path = Path(get_settings().data_dir) / "portfolio_state.json"
+            if not portfolio_path.exists():
+                return []
+            payload = json.loads(portfolio_path.read_text(encoding="utf-8-sig"))
+            if not isinstance(payload, dict):
+                return []
+            symbols = []
+            for symbol, position in payload.items():
+                if isinstance(position, dict) and position.get("shares", 0) > 0:
+                    symbols.append(str(symbol).upper())
+            return symbols
+        except (OSError, json.JSONDecodeError):
+            return []
 
     # ── Phase 1: Morning Research ────────────────────────────────
 
@@ -246,7 +263,14 @@ class Orchestrator:
             console.print("[yellow]Market is closed — skipping monitor phase.[/yellow]")
             return {"run_id": run_id, "phase": "monitor", "skipped": "market_closed"}
 
+        active_positions = self._load_active_position_symbols()
         watchlist = symbols or self._today_watchlist or self._load_watchlist()
+        if active_positions:
+            seen = {symbol.upper() for symbol in watchlist}
+            for symbol in active_positions:
+                if symbol not in seen:
+                    watchlist.append(symbol)
+                    seen.add(symbol)
 
         if not watchlist:
             console.print("[yellow]No watchlist. Run research phase first.[/yellow]")
@@ -303,6 +327,7 @@ class Orchestrator:
                     "news": news_data,
                     "market_headlines": market_headlines,
                     "market_context": market_context,
+                    "active_positions": active_positions,
                 })
             )
             if response and response.type == MessageType.RESULT:
@@ -322,6 +347,8 @@ class Orchestrator:
                     "research": research_data,
                     "news": news_data,
                     "market_context": market_context,
+                    "phase": "monitor",
+                    "active_positions": active_positions,
                 })
             )
             if response and response.type == MessageType.RESULT:
@@ -631,14 +658,14 @@ class Orchestrator:
         if not path.exists():
             return None
         try:
-            return json.loads(path.read_text())
+            return json.loads(path.read_text(encoding="utf-8-sig"))
         except (json.JSONDecodeError, OSError):
             console.print("  [yellow]Warning: morning context cache corrupted, ignoring[/yellow]")
             return None
 
     def _load_watchlist(self) -> list[str]:
         path = Path(get_settings().data_dir) / "cache" / "watchlist.json"
-        return json.loads(path.read_text()) if path.exists() else []
+        return json.loads(path.read_text(encoding="utf-8-sig")) if path.exists() else []
 
     def _load_todays_journal_summary(self) -> str:
         """Load a summary of today's journal entries for evening reflection."""
@@ -650,7 +677,7 @@ class Orchestrator:
         lines = [f"TODAY'S JOURNAL ({today}):"]
         for f in sorted(journal_dir.glob("*_report.json")):
             try:
-                entry = json.loads(f.read_text())
+                entry = json.loads(f.read_text(encoding="utf-8-sig"))
                 research = entry.get("research", {})
                 sentiment = research.get("overall_sentiment", "?")
                 regime = research.get("market_regime", "?")

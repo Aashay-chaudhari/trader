@@ -40,7 +40,7 @@ class ExecutionAgent(BaseAgent):
         self._client = TradingClient(
             api_key=settings.alpaca_api_key,
             secret_key=settings.alpaca_secret_key,
-            paper=True,  # ALWAYS paper trading
+            paper=settings.run_mode != "live",
         )
         return self._client
 

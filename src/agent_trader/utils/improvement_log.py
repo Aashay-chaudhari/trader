@@ -139,7 +139,7 @@ def _save_proposals_json(
     existing: list[dict] = []
     if json_path.exists():
         try:
-            existing = json.loads(json_path.read_text())
+            existing = json.loads(json_path.read_text(encoding="utf-8-sig"))
         except (json.JSONDecodeError, OSError):
             pass
 
@@ -267,7 +267,7 @@ def get_pending_proposals(
         return []
 
     try:
-        entries = json.loads(json_path.read_text())
+        entries = json.loads(json_path.read_text(encoding="utf-8-sig"))
     except (json.JSONDecodeError, OSError):
         return []
 

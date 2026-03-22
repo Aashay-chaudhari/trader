@@ -36,18 +36,16 @@ console = Console()
 
 KNOWLEDGE_SCHEMAS: dict[str, dict[str, Any]] = {
     "lessons_learned.json": {
-        "required_keys": ["lessons"],
-        "key_types": {"lessons": list},
+        "accepted_shapes": ("lessons_list", "lessons_dict"),
     },
     "patterns_library.json": {
-        "required_keys": ["patterns"],
-        "key_types": {"patterns": list},
+        "accepted_shapes": ("patterns_list", "patterns_dict"),
     },
     "strategy_effectiveness.json": {
-        "required_keys": ["last_updated"],
+        "accepted_shapes": ("strategy_effectiveness",),
     },
     "regime_library.json": {
-        "required_keys": ["risk_on", "risk_off", "neutral"],
+        "accepted_shapes": ("regime_library",),
     },
 }
 
@@ -96,7 +94,6 @@ REQUIRED_PROFILE_SUBDIRS = [
     "positions/active",
     "positions/closed",
     "cache",
-    "journal",
 ]
 
 AGENT_MODULES = [
@@ -128,22 +125,15 @@ def check_knowledge_schemas(data_dir: str) -> list[tuple[bool, str]]:
             results.append((False, f"Missing: {path}"))
             continue
         try:
-            data = json.loads(path.read_text())
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
         except (json.JSONDecodeError, OSError) as e:
             results.append((False, f"Invalid JSON in {filename}: {e}"))
             continue
 
-        # Check required keys
-        for key in schema.get("required_keys", []):
-            if key not in data:
-                results.append((False, f"{filename}: missing key '{key}'"))
-                break
-            kt = schema.get("key_types", {}).get(key)
-            if kt and not isinstance(data[key], kt):
-                results.append((False, f"{filename}: '{key}' should be {kt.__name__}"))
-                break
-        else:
+        if _matches_knowledge_schema(filename, data, schema):
             results.append((True, f"Schema OK: {filename}"))
+        else:
+            results.append((False, f"{filename}: schema mismatch"))
 
     return results
 
@@ -309,3 +299,52 @@ def run_validation(smoke: bool = False, data_dir: str | None = None) -> dict[str
     console.print(f"[dim]Report saved: {report_path}[/dim]\n")
 
     return report
+
+
+def _matches_knowledge_schema(filename: str, data: Any, schema: dict[str, Any]) -> bool:
+    """Accept both cold-start and prompt-managed knowledge-file shapes."""
+    shapes = schema.get("accepted_shapes", ())
+
+    if filename == "lessons_learned.json":
+        return (
+            "lessons_list" in shapes and isinstance(data, list)
+        ) or (
+            "lessons_dict" in shapes
+            and isinstance(data, dict)
+            and isinstance(data.get("lessons"), list)
+        )
+
+    if filename == "patterns_library.json":
+        return (
+            "patterns_list" in shapes and isinstance(data, list)
+        ) or (
+            "patterns_dict" in shapes
+            and isinstance(data, dict)
+            and isinstance(data.get("patterns"), list)
+        )
+
+    if filename == "strategy_effectiveness.json":
+        return (
+            isinstance(data, dict)
+            and "last_updated" in data
+            and (
+                isinstance(data.get("by_regime"), dict)
+                or any(
+                    isinstance(value, dict)
+                    for key, value in data.items()
+                    if key != "last_updated"
+                )
+            )
+        )
+
+    if filename == "regime_library.json":
+        if not isinstance(data, dict):
+            return False
+        if all(key in data for key in ("risk_on", "risk_off", "neutral")):
+            return True
+        regimes = data.get("regimes")
+        return isinstance(regimes, dict) and all(
+            key in regimes for key in ("risk_on", "risk_off", "neutral")
+        )
+
+    return False

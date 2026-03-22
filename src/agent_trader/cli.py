@@ -43,7 +43,7 @@ def main():
                             help="Run without placing orders")
 
     # Full cycle command
-    cycle_parser = subparsers.add_parser("cycle", help="Run research, monitor, reflection, weekly, and monthly")
+    cycle_parser = subparsers.add_parser("cycle", help="Run research, monitor, reflection, weekly, monthly, and evolution")
     cycle_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
     cycle_parser.add_argument("--dry-run", action="store_true", default=None,
                               help="Run without placing orders")
@@ -64,6 +64,7 @@ def main():
     validate_parser = subparsers.add_parser("validate", help="Validate system structure and schemas")
     validate_parser.add_argument("--smoke", action="store_true",
                                  help="Also run debug-mode smoke tests for each phase")
+    validate_parser.add_argument("--data-dir", help="Validate a specific data directory")
 
     # Status command
     subparsers.add_parser("status", help="Show portfolio status")
@@ -264,7 +265,10 @@ def cmd_validate(args):
     """Validate system structure and run optional smoke tests."""
     from agent_trader.utils.validator import run_validation
     import sys
-    report = run_validation(smoke=bool(getattr(args, "smoke", False)))
+    report = run_validation(
+        smoke=bool(getattr(args, "smoke", False)),
+        data_dir=getattr(args, "data_dir", None),
+    )
     if report["failed"] > 0:
         sys.exit(1)
 

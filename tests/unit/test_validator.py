@@ -33,6 +33,28 @@ def test_check_knowledge_schemas_all_valid():
         assert failures == [], f"Unexpected failures: {failures}"
 
 
+def test_check_knowledge_schemas_prompt_managed_shapes():
+    """Prompt-managed list/by-regime shapes are accepted."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        knowledge_dir = Path(tmpdir) / "knowledge"
+        knowledge_dir.mkdir()
+        (knowledge_dir / "lessons_learned.json").write_text(json.dumps(["lesson"]))
+        (knowledge_dir / "patterns_library.json").write_text(json.dumps([{"name": "pattern"}]))
+        (knowledge_dir / "strategy_effectiveness.json").write_text(json.dumps({
+            "last_updated": "2026-03-22",
+            "by_regime": {"risk_off": {"relative_strength": {"win_rate": 0.57}}},
+        }))
+        (knowledge_dir / "regime_library.json").write_text(json.dumps({
+            "risk_on": {},
+            "risk_off": {},
+            "neutral": {},
+        }))
+
+        results = check_knowledge_schemas(tmpdir)
+        failures = [(p, d) for p, d in results if not p]
+        assert failures == [], f"Unexpected failures: {failures}"
+
+
 def test_check_knowledge_schemas_invalid_json():
     """Corrupt JSON is detected and reported."""
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -44,6 +66,33 @@ def test_check_knowledge_schemas_invalid_json():
         lessons_result = next((r for r in results if "lessons_learned" in r[1]), None)
         assert lessons_result is not None
         assert not lessons_result[0]  # should fail
+
+
+def test_check_knowledge_schemas_handles_utf8_bom():
+    """UTF-8 BOM from CLI-written JSON should not fail validation."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        knowledge_dir = Path(tmpdir) / "knowledge"
+        knowledge_dir.mkdir()
+        (knowledge_dir / "lessons_learned.json").write_text(
+            json.dumps(["lesson"]),
+            encoding="utf-8-sig",
+        )
+        (knowledge_dir / "patterns_library.json").write_text(
+            json.dumps([]),
+            encoding="utf-8-sig",
+        )
+        (knowledge_dir / "strategy_effectiveness.json").write_text(
+            json.dumps({"last_updated": "2026-03-22", "by_regime": {}}),
+            encoding="utf-8-sig",
+        )
+        (knowledge_dir / "regime_library.json").write_text(
+            json.dumps({"risk_on": {}, "risk_off": {}, "neutral": {}}),
+            encoding="utf-8-sig",
+        )
+
+        results = check_knowledge_schemas(tmpdir)
+        failures = [(p, d) for p, d in results if not p]
+        assert failures == [], f"Unexpected failures: {failures}"
 
 
 def test_check_prompt_placeholders_pass():

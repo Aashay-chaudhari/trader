@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     research_model: str = "claude-sonnet-4-6"
     monitor_model: str = "claude-haiku-4-5-20251001"
     research_model_openai: str = "gpt-4o-mini"
+    monitor_model_openai: str = "gpt-4o-mini"
     llm_max_output_tokens: int = 4000  # Cap output tokens for API calls
     llm_max_prompt_chars: int = 80000  # Soft cap input prompt size before API call
 
@@ -44,10 +45,11 @@ class Settings(BaseSettings):
     # When True, use Claude Code CLI (claude -p) instead of direct API calls.
     # The CLI agent can explore the full repo for historical context.
     # Falls back to direct API call if CLI is not available.
-    use_cli_agent: bool = False          # Set to True to enable CLI agent mode
-    cli_agent_provider: str = "claude"   # "claude" or "codex"
-    cli_agent_max_turns: int = 5         # Max agent iterations (controls cost)
-    cli_agent_timeout: int = 300         # Max seconds before timeout
+    use_cli_agent: bool = False             # Set to True to enable CLI agent mode
+    use_cli_agent_for_monitor: bool = False  # Monitor defaults to direct API even if research uses CLI
+    cli_agent_provider: str = "claude"      # "claude" or "codex"
+    cli_agent_max_turns: int = 5            # Max agent iterations (controls cost)
+    cli_agent_timeout: int = 300            # Max seconds before timeout
 
     # --- Run Mode (single control variable) ---
     # "debug"  — template responses, no LLM calls, no orders, 3 stocks, skip web
@@ -73,7 +75,7 @@ class Settings(BaseSettings):
             self.run_mode = env_run_mode
             # Sync legacy fields to match
             self.debug_mode = (env_run_mode == "debug")
-            self.dry_run = (env_run_mode != "live")
+            self.dry_run = (env_run_mode == "debug")
             return self
 
         # PRODUCTION_MODE (GitHub Actions master switch)
@@ -102,8 +104,8 @@ class Settings(BaseSettings):
 
     @property
     def is_dry_run(self) -> bool:
-        """No real orders placed (debug and paper are both dry-run)."""
-        return self.run_mode != "live"
+        """No broker orders placed."""
+        return bool(self.dry_run)
 
     @property
     def max_stocks(self) -> int:
@@ -137,6 +139,8 @@ class Settings(BaseSettings):
     min_signal_strength: float = 0.3   # Minimum signal strength to trade
     min_strategies_agree: int = 2      # Min strategies that must agree for a trade
     guarantee_daily_trade: bool = True  # If True, take best available if no strong signal
+    monitor_candidate_limit: int = 3    # Max symbols to send to the monitor LLM gate
+    monitor_entry_proximity_pct: float = 2.0  # Trigger monitor review when within this % of plan
 
     # --- Push Notifications (ntfy.sh — free, no signup) ---
     # Install ntfy app on phone → subscribe to your topic → done.
