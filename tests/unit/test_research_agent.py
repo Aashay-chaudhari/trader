@@ -278,6 +278,7 @@ async def test_research_agent_retries_with_openai_when_primary_provider_fails(
 async def test_research_agent_cli_path_falls_back_without_raising(
     message_bus, monkeypatch
 ):
+    monkeypatch.setenv("DEBUG_MODE", "false")
     monkeypatch.setenv("USE_CLI_AGENT", "true")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "")
     monkeypatch.setenv("OPENAI_API_KEY", "")
@@ -398,6 +399,7 @@ async def test_research_agent_reflection_phase_does_not_require_market_data(
 async def test_research_agent_records_cli_failure_before_api_fallback(
     message_bus, monkeypatch
 ):
+    monkeypatch.setenv("DEBUG_MODE", "false")
     monkeypatch.setenv("USE_CLI_AGENT", "true")
     monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
@@ -457,3 +459,38 @@ async def test_research_agent_records_cli_failure_before_api_fallback(
     assert captured["providers"] == ["anthropic"]
     assert captured["prior_attempts"][0]["provider"] == "cli:claude"
     assert captured["prior_attempts"][0]["quota_issue_detected"] is False
+
+
+@pytest.mark.asyncio
+async def test_research_agent_debug_mode_returns_template_without_model_calls(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("DEBUG_MODE", "true")
+    monkeypatch.setenv("USE_CLI_AGENT", "true")
+    monkeypatch.setenv("CLI_AGENT_PROVIDER", "claude")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+    result = await agent._call_analysis(
+        prompt="{}",
+        phase="research",
+        symbols=["AAPL"],
+        market_data={"AAPL": {"latest_price": 200.0, "price_change_pct": 1.5}},
+        news_data={},
+        market_context={},
+        market_headlines=[],
+        screener_results=None,
+        news_discoveries=[],
+        hot_stocks=[],
+        finviz_data={},
+        performance_feedback="",
+        learned_rules="",
+        artifact_context="",
+    )
+
+    assert result["_meta"]["execution_mode"] == "template"
+    assert result["_meta"]["usage"]["total_tokens"] == 0
+    assert result["stocks"]["AAPL"]["recommendation"] == "watch"

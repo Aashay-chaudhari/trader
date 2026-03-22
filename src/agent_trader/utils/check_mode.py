@@ -16,11 +16,13 @@ from agent_trader.config.settings import get_settings
 
 def _mode_from_meta(meta: dict[str, Any]) -> str:
     execution_mode = str(meta.get("execution_mode", "")).strip().lower()
-    if execution_mode in {"cli", "api", "none"}:
+    if execution_mode in {"cli", "api", "none", "template"}:
         return execution_mode
     provider = str(meta.get("provider", "")).strip().lower()
     if provider.startswith("cli:"):
         return "cli"
+    if provider.startswith("template:"):
+        return "template"
     if provider:
         return "api"
     return "unknown"
@@ -123,6 +125,9 @@ def main() -> None:
     if mode == "cli":
         print("")
         print("CLI AGENT MODE CONFIRMED")
+    elif mode == "template":
+        print("")
+        print("TEMPLATE MODE CONFIRMED (NO MODEL TOKENS USED)")
     elif mode == "api":
         print("")
         print("DIRECT API MODE CONFIRMED")

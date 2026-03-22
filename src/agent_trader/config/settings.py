@@ -49,9 +49,10 @@ class Settings(BaseSettings):
     cli_agent_timeout: int = 300         # Max seconds before timeout
 
     # --- Debug Mode ---
-    # When True: fewer stocks, cheaper model, skip web research, reduced context.
-    # Use for testing architecture without burning API credits.
-    debug_mode: bool = False
+    # When True: use deterministic template responses (no CLI/API model calls),
+    # fewer stocks, optional web-skip, and reduced context.
+    # Keep this enabled by default while validating workflow plumbing.
+    debug_mode: bool = True
     debug_max_stocks: int = 3             # Max stocks to analyze in debug mode
     debug_skip_web: bool = True           # Skip live web research in debug mode
 

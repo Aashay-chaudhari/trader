@@ -237,7 +237,7 @@ class KnowledgeBase:
         # Deduplicate: don't add if very similar lesson exists
         for lesson in new_lessons:
             normalized = lesson.strip().lower()
-            if not any(normalized == l.strip().lower() for l in lessons):
+            if not any(normalized == existing_lesson.strip().lower() for existing_lesson in lessons):
                 lessons.append(lesson.strip())
 
         existing["lessons"] = lessons[-50:]  # keep last 50

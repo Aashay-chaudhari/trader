@@ -1382,8 +1382,20 @@ class ResearchAgent(BaseAgent):
           Uses the traditional direct API call path.
         """
         settings = get_settings()
-        use_cli = settings.use_cli_agent
         cli_attempts: list[dict[str, Any]] = []
+        if settings.debug_mode:
+            self.logger.info(
+                "Debug mode enabled: returning template analysis for phase '%s' (no CLI/API call).",
+                phase,
+            )
+            return self._build_template_analysis(
+                phase=phase,
+                symbols=symbols,
+                market_data=market_data,
+                prior_attempts=cli_attempts,
+            )
+
+        use_cli = settings.use_cli_agent
 
         if use_cli:
             cli_provider = settings.cli_agent_provider
@@ -1512,6 +1524,252 @@ class ResearchAgent(BaseAgent):
             providers=api_providers,
             prior_attempts=cli_attempts,
         )
+
+    def _build_template_analysis(
+        self,
+        *,
+        phase: str,
+        symbols: list[str],
+        market_data: dict[str, Any],
+        prior_attempts: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        """Build deterministic no-token responses for debug/test runs."""
+        settings = get_settings()
+        runtime = build_runtime_metadata()
+        now = datetime.now(timezone.utc)
+        active_provider = (
+            f"template:{settings.cli_agent_provider}"
+            if settings.use_cli_agent
+            else "template:debug"
+        )
+        template_note = (
+            f"Template response generated in DEBUG_MODE for phase '{phase}'. "
+            "No CLI/API model call was made and zero tokens were consumed."
+        )
+
+        attempts = list(prior_attempts or [])
+        attempts.append(
+            {
+                "execution_mode": "template",
+                "provider": active_provider,
+                "model": "template-v1",
+                "status": "success",
+                "duration_ms": 0.0,
+                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+            }
+        )
+
+        meta = {
+            "status": "success",
+            "execution_mode": "template",
+            "provider_preference": self._get_provider_preference(),
+            "provider": active_provider,
+            "model": "template-v1",
+            "selected_provider": active_provider,
+            "selected_model": "template-v1",
+            "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+            "service_tier": "debug-template",
+            "request_id": None,
+            "rate_limits": {},
+            "runtime": runtime,
+            "duration_ms": 0.0,
+            "attempts": attempts,
+            "quota_issue_detected": False,
+            "quota_note": "Template mode active; no model usage was attempted.",
+            "template_note": template_note,
+            "generated_at": now.isoformat(),
+        }
+
+        effective_symbols = symbols or sorted(market_data.keys())
+        stocks = {
+            symbol: self._build_template_stock_entry(symbol, market_data.get(symbol, {}))
+            for symbol in effective_symbols
+        }
+        best_opportunities = list(stocks.keys())[:2]
+
+        if phase == "monitor":
+            monitor_stocks = {}
+            for symbol, entry in stocks.items():
+                plan = entry.get("trade_plan", {})
+                monitor_stocks[symbol] = {
+                    "sentiment": entry.get("sentiment", "neutral"),
+                    "confidence": entry.get("confidence", 0.5),
+                    "key_observations": entry.get("key_observations", []),
+                    "recommendation": "hold",
+                    "ready_to_trade": False,
+                    "catalysts": entry.get("catalysts", []),
+                    "risks": entry.get("risks", []),
+                    "trade_plan": {
+                        "entry": plan.get("entry", 0.0),
+                        "stop_loss": plan.get("stop_loss", 0.0),
+                        "target": plan.get("target", 0.0),
+                    },
+                    "supporting_articles": [],
+                }
+            return {
+                "overall_sentiment": "neutral",
+                "market_summary": template_note,
+                "stocks": monitor_stocks,
+                "web_checks": [],
+                "_meta": meta,
+            }
+
+        if phase == "evening_reflection":
+            return {
+                "date": now.strftime("%Y-%m-%d"),
+                "market_regime": "neutral",
+                "market_summary": template_note,
+                "sector_leaders": [],
+                "sector_laggards": [],
+                "trades_review": [],
+                "patterns_detected": [],
+                "confidence_calibration": {
+                    "high_conf_count": 0,
+                    "high_conf_win_rate": 0.0,
+                    "medium_conf_count": 0,
+                    "medium_conf_win_rate": 0.0,
+                    "assessment": "Debug template mode; calibration skipped.",
+                },
+                "swing_updates": [],
+                "forward_outlook": "Debug template mode active; no model-generated outlook.",
+                "lessons": [
+                    "Debug template mode is enabled, so this reflection is deterministic."
+                ],
+                "self_improvement_proposals": [
+                    {
+                        "category": "infrastructure",
+                        "priority": "high",
+                        "title": "Switch off debug mode for live model validation",
+                        "description": (
+                            "Set DEBUG_MODE=false to re-enable CLI/API model calls once "
+                            "token budget and provider access are ready."
+                        ),
+                        "expected_impact": (
+                            "Restores full model reasoning and real confidence calibration."
+                        ),
+                    }
+                ],
+                "_meta": meta,
+            }
+
+        if phase == "weekly_consolidation":
+            today = now.strftime("%Y-%m-%d")
+            return {
+                "week_start": today,
+                "week_end": today,
+                "summary": {
+                    "trades_count": 0,
+                    "win_rate": 0.0,
+                    "total_pnl_pct": 0.0,
+                    "swing_positions_held": 0,
+                    "swing_win_rate": 0.0,
+                },
+                "pattern_effectiveness": [],
+                "strategy_effectiveness": {},
+                "regime_analysis": {
+                    "dominant": "neutral",
+                    "shifts": 0,
+                    "shift_description": "Debug template mode; no weekly consolidation computed.",
+                },
+                "confidence_calibration": {
+                    "high": {"expected": 0.8, "actual": 0.0},
+                    "medium": {"expected": 0.6, "actual": 0.0},
+                    "low": {"expected": 0.4, "actual": 0.0},
+                },
+                "forward_thesis": {
+                    "outlook": template_note,
+                    "confidence": 0.0,
+                    "key_risks": ["Debug template mode active."],
+                    "opportunities": [],
+                },
+                "knowledge_updates": {
+                    "new_patterns": [],
+                    "updated_strategies": [],
+                    "new_lessons": [
+                        "Template-only weekly review generated in debug mode."
+                    ],
+                    "regime_rules_updated": False,
+                },
+                "_meta": meta,
+            }
+
+        if phase == "monthly_retrospective":
+            month = now.strftime("%Y-%m")
+            return {
+                "month": month,
+                "summary": {
+                    "trading_days": 0,
+                    "total_trades": 0,
+                    "win_rate": 0.0,
+                    "total_pnl_pct": 0.0,
+                    "best_week": "",
+                    "worst_week": "",
+                },
+                "strategy_regime_matrix": {},
+                "confidence_accuracy_curve": {},
+                "top_lessons": [
+                    "Template monthly retrospective generated while DEBUG_MODE=true."
+                ],
+                "vs_last_month": {
+                    "win_rate_change": "0%",
+                    "pnl_change": "0%",
+                    "improvement_areas": "Enable real model mode to capture meaningful change.",
+                    "regression_areas": "N/A in template mode.",
+                },
+                "_meta": meta,
+            }
+
+        return {
+            "overall_sentiment": "neutral",
+            "market_summary": template_note,
+            "market_regime": "neutral",
+            "best_opportunities": best_opportunities,
+            "stocks": stocks,
+            "self_reflection": (
+                "Debug template mode is active. This run validates wiring, not model quality."
+            ),
+            "web_checks": [],
+            "_meta": meta,
+        }
+
+    def _build_template_stock_entry(self, symbol: str, stock_data: dict[str, Any]) -> dict[str, Any]:
+        """Generate a deterministic stock payload for template mode."""
+        price = self._safe_float(stock_data.get("latest_price")) or 0.0
+        change_pct = self._safe_float(stock_data.get("price_change_pct")) or 0.0
+        entry = round(price, 2) if price > 0 else 0.0
+        stop_loss = round(price * 0.98, 2) if price > 0 else 0.0
+        target = round(price * 1.03, 2) if price > 0 else 0.0
+        risk = max(entry - stop_loss, 0.0)
+        reward = max(target - entry, 0.0)
+        risk_reward = round((reward / risk), 2) if risk > 0 else 0.0
+
+        return {
+            "sentiment": "neutral",
+            "confidence": 0.5,
+            "key_observations": [
+                (
+                    f"Template baseline for {symbol}: price {price:.2f}, "
+                    f"change {change_pct:+.2f}%."
+                ),
+                "Deterministic debug output used to validate workflow plumbing.",
+            ],
+            "news_impact": "none",
+            "news_summary": "Template mode active; no model-driven news synthesis executed.",
+            "technical_setup": "Template setup only; no live inference in DEBUG_MODE.",
+            "recommendation": "watch",
+            "trade_plan": {
+                "entry": entry,
+                "stop_loss": stop_loss,
+                "target": target,
+                "risk_reward_ratio": risk_reward,
+                "position_size_pct": 1.0,
+                "timeframe": "swing_2_5_days",
+            },
+            "catalysts": ["Disable DEBUG_MODE to enable real catalyst ranking."],
+            "risks": ["Template output may not reflect live market conditions."],
+            "earnings_warning": False,
+            "supporting_articles": [],
+        }
 
     async def _call_llm(
         self,

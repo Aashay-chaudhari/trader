@@ -131,6 +131,7 @@ jobs:
           fi
 
   strategist-run:
+    name: Strategist Run (${{ matrix.profile_id }})
     needs: determine-phase
     runs-on: ubuntu-latest
     strategy:
@@ -161,7 +162,31 @@ jobs:
           npm install -g "${{ matrix.npm_package }}"
           ${{ matrix.version_command }}
 
-      - name: Authenticate Codex CLI with API key
+      - name: Print strategist auth plan
+        run: |
+          echo "Strategist profile: ${{ matrix.profile_id }}"
+          echo "CLI provider: ${{ matrix.cli_provider }}"
+          echo "API fallback provider: ${{ matrix.llm_provider }}"
+          if [ "${{ matrix.cli_provider }}" = "claude" ]; then
+            echo "Auth path: claude CLI first, anthropic API fallback."
+            echo "No codex login step will run for this strategist."
+          else
+            echo "Auth path: codex CLI first, openai API fallback."
+            echo "Codex CLI login via OPENAI_API_KEY is required."
+          fi
+
+      - name: Verify Claude auth mode (Claude strategist only)
+        if: matrix.cli_provider == 'claude'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY detected for Claude API fallback."
+          else
+            echo "ANTHROPIC_API_KEY missing. Claude CLI-only mode is expected."
+          fi
+
+      - name: Authenticate Codex CLI with OPENAI_API_KEY (Codex strategist only)
         if: matrix.cli_provider == 'codex'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -204,8 +229,8 @@ jobs:
 
       - name: Run strategist pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ matrix.cli_provider == 'claude' && secrets.ANTHROPIC_API_KEY || '' }}
+          OPENAI_API_KEY: ${{ matrix.cli_provider == 'codex' && secrets.OPENAI_API_KEY || '' }}
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
