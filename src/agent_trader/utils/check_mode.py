@@ -84,13 +84,14 @@ def main() -> None:
     print(f"CLI_AGENT_PROVIDER={os.environ.get('CLI_AGENT_PROVIDER', 'unset')}")
     print(f"DATA_DIR={settings.data_dir}")
 
-    research_files = sorted(glob(str(data_root / "research" / "*.json")), reverse=True)
+    research_files = [Path(path) for path in glob(str(data_root / "research" / "*.json"))]
+    research_files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
     if not research_files:
         print("No research output files found.")
         print("=" * 60)
         return
 
-    latest = research_files[0]
+    latest = str(research_files[0])
     print(f"Latest research: {latest}")
 
     try:
