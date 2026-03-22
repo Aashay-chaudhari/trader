@@ -669,3 +669,47 @@ def test_generate_dashboard_exports_interaction_logs():
             / "2026-03-22"
             / "083000_morning_transcript.txt"
         ).exists()
+
+
+def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+        stale_default = docs_dir / "data" / "profiles" / "default"
+        stale_default.mkdir(parents=True)
+        (stale_default / "stale.txt").write_text("stale", encoding="utf-8")
+
+        for profile_id in ("claude", "codex", "default"):
+            profile_root = data_dir / "profiles" / profile_id
+            (profile_root / "snapshots").mkdir(parents=True)
+            (profile_root / "research").mkdir(parents=True)
+            (profile_root / "analytics").mkdir(parents=True)
+            (profile_root / "context").mkdir(parents=True)
+            (profile_root / "snapshots" / "latest.json").write_text(
+                json.dumps({"timestamp": "2026-03-22T13:30:00Z", "positions": [], "position_count": 0}),
+                encoding="utf-8",
+            )
+            (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+            (profile_root / "research" / f"{profile_id}_research.json").write_text(
+                json.dumps({"best_opportunities": [], "stocks": {}}),
+                encoding="utf-8",
+            )
+            (profile_root / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+            (profile_root / "context" / "latest_research.json").write_text(
+                json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+                encoding="utf-8",
+            )
+            (profile_root / "profile.json").write_text(
+                json.dumps({"id": profile_id, "label": f"{profile_id.title()} Strategist"}),
+                encoding="utf-8",
+            )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+
+        assert set(bundle["profiles"]) == {"claude", "codex"}
+        assert not (docs_dir / "data" / "profiles" / "default").exists()

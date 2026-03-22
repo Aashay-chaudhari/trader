@@ -577,6 +577,8 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     data_out = docs_root / "data"
     docs_root.mkdir(parents=True, exist_ok=True)
     data_out.mkdir(parents=True, exist_ok=True)
+    shutil.rmtree(data_out / "profiles", ignore_errors=True)
+    shutil.rmtree(data_out / "interactions", ignore_errors=True)
 
     profile_roots = _discover_profile_roots(data_root)
     bundle = _build_dashboard_bundle(data_root, profile_roots=profile_roots)
@@ -689,6 +691,8 @@ def _discover_profile_roots(data_root: Path) -> dict[str, Path]:
             for path in sorted(profiles_root.iterdir())
             if path.is_dir()
         }
+        if len(discovered) > 1 and "default" in discovered:
+            discovered = {name: path for name, path in discovered.items() if name != "default"}
         if discovered:
             return discovered
     return {"default": data_root}
