@@ -37,6 +37,25 @@ from agent_trader.utils.profiles import build_profile_metadata
 console = Console()
 
 
+def _is_market_hours() -> bool:
+    """Check if US equity markets are currently open (approximate).
+
+    Returns True Mon-Fri 9:30 AM – 4:00 PM ET.
+    Does not account for holidays — use Alpaca calendar API for precision.
+    """
+    try:
+        from zoneinfo import ZoneInfo
+    except ImportError:
+        from backports.zoneinfo import ZoneInfo  # type: ignore[no-redef]
+    now_et = datetime.now(ZoneInfo("America/New_York"))
+    weekday = now_et.weekday()
+    if weekday >= 5:  # Saturday/Sunday
+        return False
+    market_open = now_et.replace(hour=9, minute=30, second=0, microsecond=0)
+    market_close = now_et.replace(hour=16, minute=0, second=0, microsecond=0)
+    return market_open <= now_et <= market_close
+
+
 class Orchestrator:
     """Coordinates all agents through research and trading pipelines."""
 
@@ -151,6 +170,9 @@ class Orchestrator:
                 results["data"] = response.data
                 market_data = response.data.get("market_data", {})
                 console.print("  [green]Done[/green] market data")
+                # Surface data freshness warnings
+                for warn in response.data.get("data_warnings", []):
+                    console.print(f"  [yellow]Warning:[/yellow] {warn}")
 
         # Step 4: Full news for the shortlisted stocks (per-stock detail)
         news_data = {}
@@ -171,6 +193,13 @@ class Orchestrator:
                 sources_msg = ", ".join(f"{k}:{v}" for k, v in source_stats.items() if v) if source_stats else ""
                 console.print(f"  [green]Done[/green] news ({headline_count} headlines"
                               + (f" | {sources_msg}" if sources_msg else "") + ")")
+                # Surface provider health and warnings
+                for warn in response.data.get("warnings", []):
+                    console.print(f"  [yellow]Warning:[/yellow] {warn}")
+                provider_health = response.data.get("provider_health", {})
+                failed = [n for n, h in provider_health.items() if h.get("status") == "error"]
+                if failed:
+                    console.print(f"  [yellow]Failed providers:[/yellow] {', '.join(failed)}")
 
         # Step 5: Strategist research analysis (with everything)
         research_agent = self._agents.get("research")
@@ -209,6 +238,14 @@ class Orchestrator:
 
     async def run_monitor_phase(self, symbols: list[str] | None = None) -> dict:
         run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+        # Market hours guard — skip monitoring when markets are closed.
+        # Bypass in debug/dry-run mode so tests and local runs always work.
+        settings = get_settings()
+        if not (settings.is_debug or settings.is_dry_run) and not _is_market_hours():
+            console.print("[yellow]Market is closed — skipping monitor phase.[/yellow]")
+            return {"run_id": run_id, "phase": "monitor", "skipped": "market_closed"}
+
         watchlist = symbols or self._today_watchlist or self._load_watchlist()
 
         if not watchlist:
@@ -345,6 +382,9 @@ class Orchestrator:
 
         self._write_journal(run_id, "monitor", results)
         self._print_monitor_summary(results)
+
+        # SMS alerts for trade executions
+        self._send_trade_alerts(execution_data)
 
         return results
 
@@ -495,6 +535,34 @@ class Orchestrator:
         self._write_journal(run_id, "monthly_retrospective", results)
         return results
 
+    async def run_evolution(self) -> dict:
+        """Evolution phase: analyze performance and propose concrete system improvements."""
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        self._print_header(run_id, "Evolution")
+
+        results: dict[str, Any] = {"run_id": run_id, "phase": "evolution"}
+
+        research_agent = self._agents.get("research")
+        if research_agent:
+            console.print("  [cyan]Running[/cyan] evolution analysis...")
+            response = await research_agent.receive(
+                Message(type=MessageType.COMMAND, source="orchestrator", data={
+                    "phase": "evolution",
+                    "market_data": {},
+                    "symbols": [],
+                })
+            )
+            if response and response.type == MessageType.RESULT:
+                results["research"] = response.data
+                review = response.data.get("research", {})
+                proposals = review.get("evolution_proposals", [])
+                top = review.get("top_priority", "")
+                console.print(f"  [green]Done[/green] evolution — "
+                              f"{len(proposals)} proposals. Top: {top[:80] if top else 'n/a'}")
+
+        self._write_journal(run_id, "evolution", results)
+        return results
+
     # ── Full Pipeline ─────────────────────────────────────────────
 
     async def run_pipeline(self, symbols: list[str]) -> dict:
@@ -600,6 +668,24 @@ class Orchestrator:
                 pass
 
         return "\n".join(lines) if len(lines) > 1 else "No readable journal entries today."
+
+    # ── SMS Alerts ─────────────────────────────────────────────────
+
+    def _send_trade_alerts(self, execution_data: dict):
+        """Send SMS when trades execute (if configured)."""
+        settings = get_settings()
+        if not settings.enable_trade_alerts or not settings.alert_phone_number:
+            return
+        executed = execution_data.get("executed", [])
+        if not executed:
+            return
+        try:
+            from agent_trader.utils.alerts import alert_trade_executed
+            result = alert_trade_executed(executed)
+            if result.get("status") not in ("skipped", "error"):
+                console.print(f"  [dim]SMS sent: {len(executed)} trade(s)[/dim]")
+        except Exception as e:
+            console.print(f"  [dim]SMS alert failed: {e}[/dim]")
 
     # ── Display ──────────────────────────────────────────────────
 

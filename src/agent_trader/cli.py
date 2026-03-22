@@ -18,7 +18,7 @@ from rich.console import Console
 
 from agent_trader.runner import (
     build_system, run_research, run_monitor, run_full, run_cycle,
-    run_reflection, run_weekly, run_monthly,
+    run_reflection, run_weekly, run_monthly, run_evolution,
 )
 
 console = Console()
@@ -57,6 +57,14 @@ def main():
     # Monthly retrospective command (Phase 5)
     monthly_parser = subparsers.add_parser("monthly", help="Monthly retrospective")
 
+    # Evolution command (Phase 6) — propose concrete system improvements
+    subparsers.add_parser("evolve", help="Analyze performance and propose system improvements")
+
+    # Validate command — structural integrity checks
+    validate_parser = subparsers.add_parser("validate", help="Validate system structure and schemas")
+    validate_parser.add_argument("--smoke", action="store_true",
+                                 help="Also run debug-mode smoke tests for each phase")
+
     # Status command
     subparsers.add_parser("status", help="Show portfolio status")
 
@@ -74,9 +82,15 @@ def main():
     # Dashboard command
     subparsers.add_parser("dashboard", help="Generate dashboard data")
 
+    # Alert command — send SMS manually
+    alert_parser = subparsers.add_parser("alert", help="Send SMS alert/reminder")
+    alert_parser.add_argument("type", choices=["morning", "evening", "weekly", "monthly", "test"],
+                              help="Which reminder to send")
+
     # Add --debug flag to all action commands
     for p in [research_parser, monitor_parser, run_parser, cycle_parser,
-              reflect_parser, weekly_parser, monthly_parser]:
+              reflect_parser, weekly_parser, monthly_parser,
+              subparsers._name_parser_map["evolve"]]:
         p.add_argument("--debug", action="store_true", help="Debug mode (reduced tokens)")
 
     args = parser.parse_args()
@@ -84,7 +98,8 @@ def main():
     # Apply debug mode if requested
     if getattr(args, "debug", False):
         import os
-        os.environ["DEBUG_MODE"] = "true"
+        os.environ["RUN_MODE"] = "debug"
+        os.environ["DEBUG_MODE"] = "true"  # backward compat
         from agent_trader.config.settings import reset_settings
         reset_settings()
 
@@ -102,12 +117,18 @@ def main():
         asyncio.run(cmd_weekly())
     elif args.command == "monthly":
         asyncio.run(cmd_monthly())
+    elif args.command == "evolve":
+        asyncio.run(cmd_evolve())
+    elif args.command == "validate":
+        cmd_validate(args)
     elif args.command == "status":
         cmd_status()
     elif args.command == "reset":
         cmd_reset(args)
     elif args.command == "dashboard":
         cmd_dashboard()
+    elif args.command == "alert":
+        cmd_alert(args)
     else:
         parser.print_help()
         sys.exit(1)
@@ -134,10 +155,11 @@ async def cmd_run(args):
     console.print("\n[bold]Agent Trader[/bold] — Full Pipeline\n")
     orchestrator, settings = build_system()
     symbols = args.symbols or settings.watchlist
-    if args.dry_run is not None:
-        settings.dry_run = args.dry_run
-    mode = "DRY RUN" if settings.dry_run else "PAPER TRADING"
-    console.print(f"Mode: [yellow]{mode}[/yellow]")
+    if args.dry_run is not None and args.dry_run:
+        settings.run_mode = "paper"
+        settings.dry_run = True
+    mode_label = {"debug": "DEBUG", "paper": "PAPER TRADING", "live": "LIVE"}
+    console.print(f"Mode: [yellow]{mode_label.get(settings.run_mode, settings.run_mode)}[/yellow]")
     return await run_full(orchestrator, symbols)
 
 
@@ -146,10 +168,11 @@ async def cmd_cycle(args):
     console.print("\n[bold]Agent Trader[/bold] - Full Cycle\n")
     orchestrator, settings = build_system()
     symbols = args.symbols or settings.watchlist
-    if args.dry_run is not None:
-        settings.dry_run = args.dry_run
-    mode = "DRY RUN" if settings.dry_run else "PAPER TRADING"
-    console.print(f"Mode: [yellow]{mode}[/yellow]")
+    if args.dry_run is not None and args.dry_run:
+        settings.run_mode = "paper"
+        settings.dry_run = True
+    mode_label = {"debug": "DEBUG", "paper": "PAPER TRADING", "live": "LIVE"}
+    console.print(f"Mode: [yellow]{mode_label.get(settings.run_mode, settings.run_mode)}[/yellow]")
     return await run_cycle(orchestrator, symbols)
 
 
@@ -172,6 +195,13 @@ async def cmd_monthly():
     console.print("\n[bold]Agent Trader[/bold] — Monthly Retrospective\n")
     orchestrator, settings = build_system()
     return await run_monthly(orchestrator)
+
+
+async def cmd_evolve():
+    """Evolution phase — propose concrete system improvements."""
+    console.print("\n[bold]Agent Trader[/bold] — Evolution\n")
+    orchestrator, settings = build_system()
+    return await run_evolution(orchestrator)
 
 
 def cmd_status():
@@ -228,6 +258,33 @@ def cmd_reset(args):
             console.print(f"    - {path}")
         if len(summary["removed"]) > 12:
             console.print(f"    ... and {len(summary['removed']) - 12} more")
+
+
+def cmd_validate(args):
+    """Validate system structure and run optional smoke tests."""
+    from agent_trader.utils.validator import run_validation
+    import sys
+    report = run_validation(smoke=bool(getattr(args, "smoke", False)))
+    if report["failed"] > 0:
+        sys.exit(1)
+
+
+def cmd_alert(args):
+    """Send a push notification / alert."""
+    from agent_trader.utils.alerts import alert_reminder, send_notification
+
+    if args.type == "test":
+        result = send_notification("Test alert working!", title="Agent Trader Test")
+    else:
+        result = alert_reminder(args.type)
+
+    status = result.get("status", "unknown")
+    if status == "skipped":
+        console.print(f"[yellow]Skipped:[/yellow] {result.get('reason', 'no phone configured')}")
+    elif status == "error":
+        console.print(f"[red]Error:[/red] {result.get('error', 'unknown')}")
+    else:
+        console.print(f"[green]SMS sent[/green] (status: {status})")
 
 
 if __name__ == "__main__":

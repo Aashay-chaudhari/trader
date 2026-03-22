@@ -61,6 +61,9 @@ RESEARCH_PROMPT = """You are an expert stock market analyst and trader. Your job
 You are CONSERVATIVE — you only recommend trades with clear setups and defined risk.
 You have a $100,000 paper portfolio. Every dollar counts.
 
+If you have limited historical data (few or no observations/patterns), this is normal early-stage
+behavior. Focus on building quality observations from today's data — your future self depends on them.
+
 {performance_feedback}
 
 {learned_rules}
@@ -237,6 +240,10 @@ Respond with ONLY valid JSON:
 
 
 EVENING_REFLECTION_PROMPT = """You are reflecting on today's trading session. Review what happened and extract learnings.
+
+If this is an early trading day with few or no prior observations, be extra thorough extracting
+patterns and lessons — your future self will rely on what you document today. Start from what
+you actually observed, not assumptions.
 
 {todays_trades}
 
@@ -441,6 +448,67 @@ Respond with ONLY valid JSON:
 }}"""
 
 
+EVOLUTION_PROMPT = """You are reviewing your trading system's performance and proposing concrete improvements.
+
+Only propose changes that are backed by evidence from your actual observations and performance data.
+If you have few observations (cold start), propose data-gathering and strategy-testing ideas only.
+
+PERFORMANCE DATA:
+{performance_summary}
+
+STRATEGY EFFECTIVENESS BY REGIME:
+{strategy_effectiveness}
+
+RECENT OBSERVATIONS (last 5 days):
+{recent_observations}
+
+AVAILABLE STRATEGIES:
+{strategy_list}
+
+PENDING PROPOSALS FROM PREVIOUS SESSIONS:
+{pending_proposals}
+
+YOUR TASK:
+1. Identify strategies consistently underperforming (win_rate < 40% with 5+ samples)
+2. Identify data gaps — what information would have changed your decisions?
+3. Propose threshold adjustments with specific current → proposed values
+4. If a new strategy type is needed, describe it precisely (name, signal, entry logic)
+5. Flag which single change would most improve your win rate
+
+For each proposal include:
+- The specific file and function to change (if applicable)
+- Current value and proposed value (for threshold changes)
+- Evidence: sample size and current win rate
+
+Respond with ONLY valid JSON:
+{{
+    "evolution_proposals": [
+        {{
+            "category": "strategy|threshold|data_source|risk_rule|infrastructure",
+            "priority": "high|medium|low",
+            "title": "short title",
+            "description": "what to change and why",
+            "expected_impact": "how this improves trading",
+            "implementation_hint": {{
+                "file": "src/agent_trader/agents/strategy_agent.py",
+                "function": "_check_momentum",
+                "current_value": "rsi < 35",
+                "proposed_value": "rsi < 25",
+                "type": "threshold_adjustment"
+            }},
+            "evidence": {{
+                "sample_size": 0,
+                "win_rate_current": 0.0,
+                "dates": []
+            }}
+        }}
+    ],
+    "strategy_gaps": ["what strategy types are missing"],
+    "data_gaps": ["what data sources would improve decisions"],
+    "top_priority": "single most impactful change described in one sentence"
+}}"""
+
+
 class ResearchAgent(BaseAgent):
     """Analyzes market data using Claude with full context and feedback loop."""
 
@@ -526,6 +594,8 @@ class ResearchAgent(BaseAgent):
             return await self._handle_weekly_consolidation(message)
         if phase == "monthly_retrospective":
             return await self._handle_monthly_retrospective(message)
+        if phase == "evolution":
+            return await self._handle_evolution(message)
 
         market_data = message.data.get("market_data", {})
         screener_results = message.data.get("screener_results")
@@ -581,25 +651,25 @@ class ResearchAgent(BaseAgent):
                 kb = KnowledgeBase(settings.data_dir)
                 knowledge_context = kb.build_knowledge_context(
                     token_budget=settings.knowledge_token_budget
-                    if not settings.debug_mode else settings.knowledge_token_budget // 2,
+                    if not settings.is_debug else settings.knowledge_token_budget // 2,
                     watchlist=message.data.get("symbols", []),
                     current_regime=market_context.get("market_regime", ""),
                 )
                 observations_context = kb.build_observations_context(
                     token_budget=settings.observations_token_budget
-                    if not settings.debug_mode else settings.observations_token_budget // 2,
+                    if not settings.is_debug else settings.observations_token_budget // 2,
                 )
             if settings.enable_swing_tracking:
                 st = SwingTracker(settings.data_dir)
                 swing_context = st.get_summary_for_prompt(
-                    token_budget=300 if not settings.debug_mode else 150,
+                    token_budget=300 if not settings.is_debug else 150,
                 )
 
             market_context_text = self._format_market_context(market_context)
             web_context = self._collect_web_context(
                 market_data,
                 news_data,
-                limit=0 if settings.debug_mode and settings.debug_skip_web else 2,
+                limit=0 if settings.skip_web else 2,
             )
             news_inputs = self._build_news_inputs_snapshot(
                 news_data,
@@ -1434,7 +1504,7 @@ class ResearchAgent(BaseAgent):
         """
         settings = get_settings()
         cli_attempts: list[dict[str, Any]] = []
-        if settings.debug_mode:
+        if settings.is_debug:
             self.logger.info(
                 "Debug mode enabled: returning template analysis for phase '%s' (no CLI/API call).",
                 phase,
@@ -1767,6 +1837,34 @@ class ResearchAgent(BaseAgent):
                     "improvement_areas": "Enable real model mode to capture meaningful change.",
                     "regression_areas": "N/A in template mode.",
                 },
+                "_meta": meta,
+            }
+
+        if phase == "evolution":
+            return {
+                "evolution_proposals": [
+                    {
+                        "category": "infrastructure",
+                        "priority": "high",
+                        "title": "Enable paper mode to start accumulating real observations",
+                        "description": (
+                            "Set RUN_MODE=paper to begin real LLM analysis and build evidence "
+                            "for strategy improvement proposals."
+                        ),
+                        "expected_impact": "Enables evidence-based evolution after first few trading days.",
+                        "implementation_hint": {
+                            "file": ".env",
+                            "function": "RUN_MODE",
+                            "current_value": "debug",
+                            "proposed_value": "paper",
+                            "type": "config_change",
+                        },
+                        "evidence": {"sample_size": 0, "win_rate_current": 0.0, "dates": []},
+                    }
+                ],
+                "strategy_gaps": ["Insufficient data to identify gaps — run in paper mode first"],
+                "data_gaps": ["Need real market observation data before data gaps can be assessed"],
+                "top_priority": "Switch RUN_MODE=paper to begin accumulating real trading observations",
                 "_meta": meta,
             }
 
@@ -2289,6 +2387,62 @@ class ResearchAgent(BaseAgent):
             "phase": "monthly_retrospective",
             "symbols": data.get("symbols", []),
             "market_data": data.get("market_data", {}),
+        }
+
+    async def _handle_evolution(self, message: Message) -> dict:
+        """Evolution phase: analyze performance and propose concrete system improvements."""
+        from agent_trader.utils.improvement_log import (
+            get_evolution_summary, save_evolution_proposals
+        )
+        settings = get_settings()
+        kb = KnowledgeBase(settings.data_dir)
+
+        performance_summary = json.dumps(self._tracker.get_performance_summary(), indent=2)
+        strategy_effectiveness = kb.build_knowledge_context(
+            token_budget=600
+        ) or "No strategy effectiveness data yet."
+        recent_observations = kb.build_observations_context(token_budget=600) or "No observations yet."
+
+        # List available strategies from the strategy names in knowledge
+        strategy_list = [
+            "momentum", "mean_reversion", "trend", "volume_breakout",
+            "support_resistance", "vwap", "relative_strength", "news_catalyst",
+        ]
+
+        pending_summary = get_evolution_summary(settings.data_dir)
+        pending_text = (
+            f"{pending_summary['total']} pending proposals "
+            f"({pending_summary['high_priority_count']} high priority). "
+            f"Recent titles: {', '.join(pending_summary['recent_titles'][-5:]) or 'none'}"
+        )
+
+        prompt = EVOLUTION_PROMPT.format(
+            performance_summary=performance_summary,
+            strategy_effectiveness=strategy_effectiveness,
+            recent_observations=recent_observations,
+            strategy_list=json.dumps(strategy_list),
+            pending_proposals=pending_text,
+        )
+
+        analysis = await self._call_phase_analysis(prompt, "evolution")
+
+        if isinstance(analysis, dict) and analysis.get("_meta", {}).get("status") != "error":
+            proposals = analysis.get("evolution_proposals", [])
+            if proposals:
+                from agent_trader.utils.profiles import get_profile_id
+                save_evolution_proposals(
+                    proposals,
+                    data_dir=settings.data_dir,
+                    profile_id=get_profile_id(settings),
+                )
+
+        self._save_research(analysis, "evolution")
+
+        return {
+            "research": analysis,
+            "phase": "evolution",
+            "symbols": [],
+            "market_data": {},
         }
 
     async def _call_phase_analysis(self, prompt: str, phase: str) -> dict:

@@ -38,6 +38,30 @@ class KnowledgeBase:
                   self.archive_dir, self.knowledge_dir]:
             d.mkdir(parents=True, exist_ok=True)
 
+    def ensure_cold_start_schemas(self) -> None:
+        """Create empty-but-valid knowledge files if they don't exist.
+
+        Called at startup so the pipeline always has something to read.
+        Knowledge accumulates naturally through the reflection loop —
+        no seed data is pre-loaded.
+        """
+        defaults: dict[str, Any] = {
+            "lessons_learned.json": {"lessons": [], "last_updated": ""},
+            "patterns_library.json": {"patterns": [], "last_updated": ""},
+            "strategy_effectiveness.json": {"last_updated": "", "by_regime": {}},
+            "regime_library.json": {
+                "risk_on":  {"description": "", "indicators": [], "rules": []},
+                "risk_off": {"description": "", "indicators": [], "rules": []},
+                "neutral":  {"description": "", "indicators": [], "rules": []},
+                "last_updated": "",
+            },
+        }
+        for filename, empty_value in defaults.items():
+            path = self.knowledge_dir / filename
+            if not path.exists():
+                _atomic_write_json(path, empty_value)
+                logger.info("Cold-start: created empty %s", filename)
+
     # ── Daily Observations ─────────────────────────────────────────────
 
     def save_daily_observation(self, observation: dict) -> Path:
@@ -417,7 +441,11 @@ class KnowledgeBase:
         """Summarize lessons_learned.json into compact text."""
         path = self.knowledge_dir / "lessons_learned.json"
         data = _load_json(path, {"lessons": []})
-        lessons = data.get("lessons", [])
+        # Support both formats: bare list (legacy) and {"lessons": [...]} dict
+        if isinstance(data, list):
+            lessons = data
+        else:
+            lessons = data.get("lessons", [])
         if not lessons:
             return ""
 

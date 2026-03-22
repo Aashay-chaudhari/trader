@@ -19,6 +19,7 @@ Market context (SPY/VIX/sectors) is gathered separately since it's
 regime data, not per-stock news.
 """
 
+import time
 from typing import Any
 
 import yfinance as yf
@@ -92,6 +93,22 @@ class NewsAgent(BaseAgent):
         """Expand the known-tickers set (called by orchestrator after screening)."""
         self._known_tickers |= tickers
 
+    def _timed_fetch(self, name: str, fn, *args, **kwargs) -> tuple[list[NewsItem], dict]:
+        """Run a provider fetch with timing and error capture.
+
+        Returns (items, health_entry) where health_entry has:
+          status, item_count, latency_ms, and optional error.
+        """
+        t0 = time.monotonic()
+        try:
+            items = fn(*args, **kwargs)
+            elapsed = int((time.monotonic() - t0) * 1000)
+            return items, {"status": "ok", "items": len(items), "latency_ms": elapsed}
+        except Exception as exc:
+            elapsed = int((time.monotonic() - t0) * 1000)
+            return [], {"status": "error", "items": 0, "latency_ms": elapsed,
+                        "error": f"{type(exc).__name__}: {exc}"}
+
     async def process(self, message: Message) -> Any:
         symbols = message.data.get("symbols", [])
         market_data = message.data.get("market_data", {})
@@ -103,43 +120,51 @@ class NewsAgent(BaseAgent):
         # ── Gather all news items from all sources ────────────
         all_items: list[NewsItem] = []
         source_stats: dict[str, int] = {}
+        provider_health: dict[str, dict] = {}  # latency + error tracking
+        warnings: list[str] = []
 
         # 1. yfinance per-stock headlines
-        yf_items = self._yfinance.fetch(symbols)
+        yf_items, health = self._timed_fetch("yfinance", self._yfinance.fetch, symbols)
         all_items.extend(yf_items)
         source_stats["yfinance"] = len(yf_items)
+        provider_health["yfinance"] = health
 
         # 2. yfinance analyst upgrades/downgrades (for all symbols + key stocks)
         upgrade_symbols = list(set(symbols) | {
             "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA",
             "JPM", "BAC", "UNH", "XOM", "LLY", "AMD", "CRM",
         })
-        analyst_items = self._yfinance.fetch_upgrades_downgrades(upgrade_symbols)
+        analyst_items, health = self._timed_fetch("analyst", self._yfinance.fetch_upgrades_downgrades, upgrade_symbols)
         all_items.extend(analyst_items)
         source_stats["analyst"] = len(analyst_items)
+        provider_health["analyst"] = health
 
         # 3. RSS headlines
-        rss_items = self._rss.fetch(symbols, known_tickers=self._known_tickers)
+        rss_items, health = self._timed_fetch("rss", self._rss.fetch, symbols, known_tickers=self._known_tickers)
         all_items.extend(rss_items)
         source_stats["rss"] = len(rss_items)
+        provider_health["rss"] = health
 
         # 4. Marketaux (if configured)
         if self._marketaux.is_available():
-            mx_items = self._marketaux.fetch(symbols)
+            mx_items, health = self._timed_fetch("marketaux", self._marketaux.fetch, symbols)
             all_items.extend(mx_items)
             source_stats["marketaux"] = len(mx_items)
+            provider_health["marketaux"] = health
 
         # 5. SEC EDGAR filings (8-K and Form 4)
         if symbols:
-            sec_items = self._sec_edgar.fetch(symbols, form_types=["8-K", "4"])
+            sec_items, health = self._timed_fetch("sec_edgar", self._sec_edgar.fetch, symbols, form_types=["8-K", "4"])
             all_items.extend(sec_items)
             source_stats["sec_edgar"] = len(sec_items)
+            provider_health["sec_edgar"] = health
 
         # 6. Finnhub company news + insider transactions
         if self._finnhub.is_available():
-            fh_items = self._finnhub.fetch(symbols)
+            fh_items, health = self._timed_fetch("finnhub", self._finnhub.fetch, symbols)
             all_items.extend(fh_items)
             source_stats["finnhub"] = len(fh_items)
+            provider_health["finnhub"] = health
 
             # Also pull insider transactions from Finnhub
             for symbol in symbols:
@@ -149,10 +174,17 @@ class NewsAgent(BaseAgent):
 
         # 7. Alpha Vantage NLP news (sparingly — 25 req/day)
         if self._alpha_vantage.is_available() and symbols:
-            # Only use for watchlist symbols to conserve quota
-            av_items = self._alpha_vantage.fetch(symbols[:10])
+            av_items, health = self._timed_fetch("alpha_vantage", self._alpha_vantage.fetch, symbols[:10])
             all_items.extend(av_items)
             source_stats["alpha_vantage"] = len(av_items)
+            provider_health["alpha_vantage"] = health
+
+        # ── Provider health summary ─────────────────────────────
+        failed_providers = [name for name, h in provider_health.items() if h["status"] == "error"]
+        if failed_providers:
+            warnings.append(f"Providers failed: {', '.join(failed_providers)}")
+        if not all_items:
+            warnings.append("ALL news providers returned zero items — research quality degraded")
 
         # ── Aggregate into per-stock summaries ────────────────
         stock_summaries = aggregate_stock_news(all_items, symbols)
@@ -255,6 +287,8 @@ class NewsAgent(BaseAgent):
             "finviz": finviz_data,
             "hot_stocks": hot_stocks,
             "source_stats": source_stats,
+            "provider_health": provider_health,
+            "warnings": warnings,
         }
 
     # ── News-Driven Stock Discovery ──────────────────────────

@@ -15,19 +15,27 @@ on:
     # This is the ONLY automated phase. Morning research, evening reflection,
     # weekly reviews, and monthly retrospectives are done locally via Claude Code
     # (see scripts/prompts/ for the workflow prompts).
-    - cron: "30 14 * * 1-5"
-    - cron: "0 15 * * 1-5"
-    - cron: "30 15 * * 1-5"
-    - cron: "0 16 * * 1-5"
-    - cron: "30 16 * * 1-5"
-    - cron: "0 17 * * 1-5"
-    - cron: "30 17 * * 1-5"
-    - cron: "0 18 * * 1-5"
-    - cron: "30 18 * * 1-5"
-    - cron: "0 19 * * 1-5"
-    - cron: "30 19 * * 1-5"
-    - cron: "0 20 * * 1-5"
-    - cron: "30 20 * * 1-5"
+    #
+    # DST note: GitHub Actions cron is always UTC. These times cover the
+    # US market window in BOTH Eastern Standard (UTC-5) and Eastern Daylight
+    # (UTC-4). The Python-side market-hours guard (_is_market_hours) handles
+    # the precise check, so an extra cron firing outside hours is harmless.
+    - cron: "30 13 * * 1-5"   #  9:30 AM EDT / 8:30 AM EST (caught by guard in winter)
+    - cron: "0 14 * * 1-5"    # 10:00 AM EDT / 9:00 AM EST
+    - cron: "30 14 * * 1-5"   # 10:30 AM EDT / 9:30 AM EST
+    - cron: "0 15 * * 1-5"    # 11:00 AM EDT / 10:00 AM EST
+    - cron: "30 15 * * 1-5"   # 11:30 AM EDT / 10:30 AM EST
+    - cron: "0 16 * * 1-5"    # 12:00 PM EDT / 11:00 AM EST
+    - cron: "30 16 * * 1-5"   # 12:30 PM EDT / 11:30 AM EST
+    - cron: "0 17 * * 1-5"    #  1:00 PM EDT / 12:00 PM EST
+    - cron: "30 17 * * 1-5"   #  1:30 PM EDT / 12:30 PM EST
+    - cron: "0 18 * * 1-5"    #  2:00 PM EDT /  1:00 PM EST
+    - cron: "30 18 * * 1-5"   #  2:30 PM EDT /  1:30 PM EST
+    - cron: "0 19 * * 1-5"    #  3:00 PM EDT /  2:00 PM EST
+    - cron: "30 19 * * 1-5"   #  3:30 PM EDT /  2:30 PM EST
+    - cron: "0 20 * * 1-5"    #  4:00 PM EDT /  3:00 PM EST
+    - cron: "30 20 * * 1-5"   #  4:30 PM EDT /  3:30 PM EST
+    - cron: "0 21 * * 1-5"    #  5:00 PM EDT /  4:00 PM EST (catches 4PM close in winter)
 
   workflow_dispatch:
     inputs:

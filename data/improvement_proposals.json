@@ -1,0 +1,56 @@
+[
+  {
+    "date": "2026-03-22",
+    "proposals": [
+      {
+        "status": "pending",
+        "created_date": "2026-03-22",
+        "category": "infrastructure",
+        "priority": "high",
+        "title": "Switch off debug mode for live model validation",
+        "description": "Set DEBUG_MODE=false to re-enable CLI/API model calls once token budget and provider access are ready.",
+        "expected_impact": "Restores full model reasoning and real confidence calibration."
+      }
+    ]
+  },
+  {
+    "date": "2026-03-22",
+    "proposals": [
+      {
+        "status": "pending",
+        "created_date": "2026-03-22",
+        "category": "infrastructure",
+        "priority": "high",
+        "title": "Enable paper mode to start accumulating real observations",
+        "description": "Set RUN_MODE=paper to begin real LLM analysis and build evidence for strategy improvement proposals.",
+        "expected_impact": "Enables evidence-based evolution after first few trading days.",
+        "implementation_hint": {
+          "file": ".env",
+          "function": "RUN_MODE",
+          "current_value": "debug",
+          "proposed_value": "paper",
+          "type": "config_change"
+        },
+        "evidence": {
+          "sample_size": 0,
+          "win_rate_current": 0.0,
+          "dates": []
+        }
+      }
+    ]
+  },
+  {
+    "date": "2026-03-22",
+    "proposals": [
+      {
+        "status": "pending",
+        "created_date": "2026-03-22",
+        "category": "infrastructure",
+        "priority": "high",
+        "title": "Switch off debug mode for live model validation",
+        "description": "Set DEBUG_MODE=false to re-enable CLI/API model calls once token budget and provider access are ready.",
+        "expected_impact": "Restores full model reasoning and real confidence calibration."
+      }
+    ]
+  }
+]

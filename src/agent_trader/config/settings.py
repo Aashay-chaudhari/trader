@@ -7,9 +7,10 @@ This makes it easy to:
   - Switch between paper and live trading (eventually)
 """
 
+import os
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -48,13 +49,71 @@ class Settings(BaseSettings):
     cli_agent_max_turns: int = 5         # Max agent iterations (controls cost)
     cli_agent_timeout: int = 300         # Max seconds before timeout
 
-    # --- Debug Mode ---
-    # When True: use deterministic template responses (no CLI/API model calls),
-    # fewer stocks, optional web-skip, and reduced context.
-    # Keep this enabled by default while validating workflow plumbing.
+    # --- Run Mode (single control variable) ---
+    # "debug"  — template responses, no LLM calls, no orders, 3 stocks, skip web
+    # "paper"  — real LLM calls, Alpaca paper orders, full pipeline
+    # "live"   — real LLM calls, Alpaca live orders (future)
+    run_mode: str = "debug"
+
+    # Legacy fields — still read from .env for backward compatibility.
+    # The model_validator below resolves them into run_mode.
     debug_mode: bool = True
-    debug_max_stocks: int = 3             # Max stocks to analyze in debug mode
-    debug_skip_web: bool = True           # Skip live web research in debug mode
+    dry_run: bool = True
+    debug_max_stocks: int = 3
+    debug_skip_web: bool = True
+
+    @model_validator(mode="after")
+    def _resolve_run_mode(self) -> "Settings":
+        """Derive run_mode from legacy env vars when RUN_MODE is not explicitly set.
+
+        Priority: RUN_MODE env var > PRODUCTION_MODE > DEBUG_MODE/DRY_RUN.
+        """
+        env_run_mode = os.environ.get("RUN_MODE", "").strip().lower()
+        if env_run_mode in ("debug", "paper", "live"):
+            self.run_mode = env_run_mode
+            # Sync legacy fields to match
+            self.debug_mode = (env_run_mode == "debug")
+            self.dry_run = (env_run_mode != "live")
+            return self
+
+        # PRODUCTION_MODE (GitHub Actions master switch)
+        prod = os.environ.get("PRODUCTION_MODE", "").strip().lower()
+        if prod == "true":
+            self.run_mode = "paper"
+            self.debug_mode = False
+            self.dry_run = False
+            return self
+
+        # Fall back to legacy debug_mode / dry_run fields
+        if not self.debug_mode and not self.dry_run:
+            self.run_mode = "paper"
+        elif not self.debug_mode:
+            self.run_mode = "paper"  # real LLM + dry-run = still paper mode
+        else:
+            self.run_mode = "debug"
+        return self
+
+    # --- Computed properties (use these instead of legacy fields) ---
+
+    @property
+    def is_debug(self) -> bool:
+        """Template mode — no LLM/API calls, deterministic responses."""
+        return self.run_mode == "debug"
+
+    @property
+    def is_dry_run(self) -> bool:
+        """No real orders placed (debug and paper are both dry-run)."""
+        return self.run_mode != "live"
+
+    @property
+    def max_stocks(self) -> int:
+        """Max stocks to analyze (capped in debug mode)."""
+        return self.debug_max_stocks if self.is_debug else 0  # 0 = unlimited
+
+    @property
+    def skip_web(self) -> bool:
+        """Skip live web research."""
+        return self.is_debug
 
     # --- Knowledge Accumulation ---
     enable_knowledge_base: bool = True    # Load accumulated knowledge into prompts
@@ -70,7 +129,6 @@ class Settings(BaseSettings):
         default=["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"],
         description="Fallback stocks if screener doesn't run",
     )
-    dry_run: bool = True               # True = no real orders placed
     paper_portfolio_value: float = 100_000.0  # Starting paper portfolio value
 
     # --- Risk Limits ---
@@ -79,6 +137,20 @@ class Settings(BaseSettings):
     min_signal_strength: float = 0.3   # Minimum signal strength to trade
     min_strategies_agree: int = 2      # Min strategies that must agree for a trade
     guarantee_daily_trade: bool = True  # If True, take best available if no strong signal
+
+    # --- Push Notifications (ntfy.sh — free, no signup) ---
+    # Install ntfy app on phone → subscribe to your topic → done.
+    ntfy_topic: str = ""               # e.g., "agent-trader-yourname" (pick anything unique)
+    ntfy_server: str = "https://ntfy.sh"  # Self-host or use public server
+    # Optional Twilio SMS fallback (paid, requires signup)
+    twilio_account_sid: str = ""
+    twilio_auth_token: str = ""
+    twilio_from_number: str = ""
+    alert_phone_number: str = ""
+    # Alert toggles
+    enable_trade_alerts: bool = True   # Notify on trade execution
+    enable_daily_summary: bool = True  # End-of-day P&L notification
+    enable_error_alerts: bool = True   # Notify on pipeline errors
 
     # --- Paths ---
     data_dir: str = "data"

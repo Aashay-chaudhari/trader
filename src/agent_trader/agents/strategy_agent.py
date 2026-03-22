@@ -25,6 +25,8 @@ Strategies (from simple to sophisticated):
   - Claude's trade_plan (entry/stop/target) overrides if provided
 """
 
+import json
+from pathlib import Path
 from typing import Any
 from dataclasses import dataclass
 
@@ -71,6 +73,38 @@ class StrategyAgent(BaseAgent):
 
     def __init__(self, message_bus: MessageBus):
         super().__init__(AgentRole.STRATEGY, message_bus)
+        self._effectiveness_cache: dict | None = None
+
+    def _load_strategy_effectiveness(self) -> dict:
+        """Load strategy_effectiveness.json for confidence weighting."""
+        if self._effectiveness_cache is not None:
+            return self._effectiveness_cache
+        settings = get_settings()
+        path = Path(settings.data_dir) / "knowledge" / "strategy_effectiveness.json"
+        try:
+            if path.exists():
+                data = json.loads(path.read_text())
+                self._effectiveness_cache = data.get("by_regime", {})
+                return self._effectiveness_cache
+        except (json.JSONDecodeError, OSError):
+            pass
+        self._effectiveness_cache = {}
+        return self._effectiveness_cache
+
+    def _get_strategy_weight(self, strategy_name: str, regime: str) -> float:
+        """Get a weight multiplier for a strategy based on historical effectiveness.
+
+        Returns a value 0.5–1.5 based on win_rate in the current regime.
+        Strategies with no data (sample_size=0) get a neutral 1.0.
+        """
+        effectiveness = self._load_strategy_effectiveness()
+        regime_data = effectiveness.get(regime, effectiveness.get("neutral", {}))
+        stats = regime_data.get(strategy_name, {})
+        win_rate = stats.get("win_rate", 0.5)
+        sample_size = stats.get("sample_size", 0)
+        # With no real trade data yet, use the seed win_rate but dampen the effect
+        dampening = min(1.0, sample_size / 20) if sample_size > 0 else 0.5
+        return 0.5 + win_rate * dampening
 
     async def process(self, message: Message) -> Any:
         market_data = message.data.get("market_data", {})
@@ -123,6 +157,9 @@ class StrategyAgent(BaseAgent):
         if not indicators:
             return None
 
+        # Determine current regime for strategy weighting
+        regime = (market_ctx or {}).get("market_regime", "neutral")
+
         # Run all strategy checks
         sub_signals = []
         for strategy_fn in [
@@ -137,6 +174,9 @@ class StrategyAgent(BaseAgent):
         ]:
             result = strategy_fn(symbol, data, indicators, price_history, news, market_ctx)
             if result is not None:
+                # Apply historical effectiveness weight to signal strength
+                weight = self._get_strategy_weight(result.strategy, regime)
+                result.strength = min(1.0, result.strength * weight)
                 sub_signals.append(result)
 
         if not sub_signals:

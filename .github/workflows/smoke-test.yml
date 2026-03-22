@@ -1,0 +1,51 @@
+# Smoke test — runs the full pipeline in debug mode (zero API cost)
+# to verify the workflow plumbing still works end-to-end.
+name: Smoke Test
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: pytest tests/unit -v --tb=short
+
+      - name: Lint
+        run: ruff check src/
+
+      - name: Smoke-test research pipeline (debug mode, zero cost)
+        env:
+          DEBUG_MODE: "true"
+          DRY_RUN: "true"
+          DATA_DIR: data/profiles/smoke
+          AGENT_PROFILE: smoke
+        run: python -m agent_trader research --debug
+
+      - name: Smoke-test monitor pipeline (debug mode)
+        env:
+          DEBUG_MODE: "true"
+          DRY_RUN: "true"
+          DATA_DIR: data/profiles/smoke
+          AGENT_PROFILE: smoke
+        run: python -m agent_trader monitor --debug
+
+      - name: Smoke-test dashboard generation
+        run: python -m agent_trader dashboard

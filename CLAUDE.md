@@ -77,69 +77,114 @@ Output: monthly retrospective + updated top lessons
 - **Full audit trail**: every decision logged as markdown journal entries (viewable on GitHub)
 - **Debug mode**: zero-cost template responses for testing workflow plumbing (DEBUG_MODE=true)
 
-## Commands
+## Command Reference
 
-```bash
-pip install -e ".[dev]"                    # Install
-python -m agent_trader research            # Phase 1: Morning research
-python -m agent_trader monitor             # Phase 2: Monitor & trade
-python -m agent_trader run                 # Phases 1 + 2
-python -m agent_trader reflect             # Phase 3: Evening reflection
-python -m agent_trader weekly              # Phase 4: Weekly review
-python -m agent_trader monthly             # Phase 5: Monthly retrospective
-python -m agent_trader cycle               # All 5 phases back-to-back
-python -m agent_trader status              # Show portfolio
-python -m agent_trader dashboard           # Generate dashboard
-python -m agent_trader reset               # Clear runtime state
-pytest tests/unit -v                       # Run 99 unit tests
+### Pipeline Commands
+| Command | What it does | When to use |
+|---------|-------------|-------------|
+| `python -m agent_trader research` | Phase 1: screen stocks, fetch data, run deep AI analysis | Every morning ~8:30 AM ET |
+| `python -m agent_trader monitor` | Phase 2: refresh prices, check signals, execute trades | Automated via GitHub Actions |
+| `python -m agent_trader run` | Phases 1 + 2 back-to-back | Quick local test |
+| `python -m agent_trader reflect` | Phase 3: review the day, extract lessons | Every evening ~4:30 PM ET |
+| `python -m agent_trader weekly` | Phase 4: consolidate 5 daily observations | Sunday ~8:00 PM ET |
+| `python -m agent_trader monthly` | Phase 5: deep retrospective + strategic adjustments | Last business day ~5:00 PM ET |
+| `python -m agent_trader evolve` | Phase 6: evidence-backed system improvement proposals | After weekly/monthly (optional) |
+| `python -m agent_trader cycle` | All 5 phases back-to-back | First-time seeding or testing |
 
-# Add --debug to any command for zero-cost test run (Haiku/template, 3 stocks)
-python -m agent_trader research --debug
-python -m agent_trader reflect --debug
-```
+### Utility Commands
+| Command | What it does |
+|---------|-------------|
+| `python -m agent_trader status` | Show current portfolio: value, P&L, positions |
+| `python -m agent_trader dashboard` | Generate merged dashboard HTML → `docs/index.html` |
+| `python -m agent_trader validate` | Validate system structure (schemas, prompts, strategies) |
+| `python -m agent_trader validate --smoke` | + debug-mode smoke tests for all phases |
+| `python -m agent_trader reset` | Clear runtime state (cache, journal, snapshots) |
+| `python -m agent_trader reset --keep-knowledge` | Reset but preserve accumulated knowledge |
+| `python -m agent_trader reset --all-profiles --docs` | Full reset of all strategist data + dashboard |
+| `python -m agent_trader alert test` | Send a test push notification to verify ntfy/Twilio |
+| `python -m agent_trader alert morning` | Manually trigger a morning reminder notification |
 
-## Local Workflow (Dual-Strategist, Independent Analysis)
+### Dual-Strategist Commands (both Claude + Codex)
+| Command | What it does |
+|---------|-------------|
+| `./scripts/run_both.sh morning` | Both strategists do morning research, then commit + push |
+| `./scripts/run_both.sh evening` | Both strategists do evening reflection |
+| `./scripts/run_both.sh weekly` | Both strategists do weekly review |
+| `./scripts/run_both.sh monthly` | Both strategists do monthly retrospective |
+| `./scripts/run_both.sh morning parallel` | Run both in parallel (faster but more resource-heavy) |
 
-Each strategist (Claude + Codex) runs independently — same seed knowledge, but divergent analysis, stock picks, and accumulated lessons from day 1. This is the whole point of the comparison.
+### Dev Commands
+| Command | What it does |
+|---------|-------------|
+| `pip install -e ".[dev]"` | Install with test/lint dependencies |
+| `pip install -e ".[dev]"` | Install with SMS alert support (Twilio) |
+| `pip install -e ".[dev]"` | Install everything |
+| `pytest tests/unit -v` | Run unit tests |
+| `ruff check src/` | Lint source code |
+| `python -m agent_trader research --debug` | Zero-cost debug run (template responses, 3 stocks) |
 
-**Bundled workflow (recommended):**
-```bash
-./scripts/run_both.sh morning   # Both strategists do morning research
-./scripts/run_both.sh evening   # Both strategists do evening reflection
-./scripts/run_both.sh weekly    # Both strategists do weekly review
-./scripts/run_both.sh monthly   # Both strategists do monthly retrospective
-```
-The script runs Claude CLI first, then Codex CLI, then commits and pushes.
+### Flags (add to any pipeline command)
+| Flag | What it does |
+|------|-------------|
+| `--debug` | Debug mode: template responses, 3 stocks, zero API cost |
+| `--symbols AAPL MSFT` | Override the stock watchlist |
+| `--dry-run` | Log trades without placing Alpaca orders |
 
-**Manual workflow (run each separately):**
-1. **Morning (~8:30 AM ET)**: Run the prompt for each strategist independently:
-   - Claude: "Follow scripts/prompts/morning_research.md with {{PROFILE}}=claude"
-   - Codex: "Follow scripts/prompts/morning_research.md with {{PROFILE}}=codex"
-   - Then `git add data/profiles/ && git commit -m "[research] date" && git push`
-2. **Monitor (automated, every 30 min)**: GitHub Actions runs Python pipeline per strategist.
-3. **Evening (~4:30 PM ET)**: Same pattern with evening_reflection.md.
+## How This System Works — Your Daily Workflow
 
-**First time setup**: "Follow the instructions in scripts/prompts/seed_knowledge.md" to bootstrap both profiles with identical starting knowledge.
+### What's automated (you do nothing)
+- **Monitoring & trading** (9:30 AM – 4:00 PM ET, every 30 min) — GitHub Actions runs both strategists, checks signals, executes trades, updates dashboard
+- **SMS reminders** — you'll get a text message when it's time to run local phases
+- **Dashboard deployment** — GitHub Pages auto-updates after every pipeline run
 
-**Prompt files** (all use `{{PROFILE}}` placeholder — replace with `claude` or `codex`):
-- `scripts/prompts/seed_knowledge.md` — first-time knowledge bootstrap (seeds BOTH profiles)
-- `scripts/prompts/morning_research.md` — morning analysis + trade plans (per-profile)
-- `scripts/prompts/evening_reflection.md` — daily review + lessons (per-profile)
-- `scripts/prompts/weekly_review.md` — weekly consolidation (per-profile)
-- `scripts/prompts/monthly_retrospective.md` — monthly deep retrospective (per-profile)
+### What you do manually (with SMS reminders)
 
-**Runner script**: `scripts/run_both.sh` — invokes both CLIs, commits, pushes
+**Weekday mornings (~8:30 AM ET):**
+1. Get SMS: "Time for morning research!"
+2. `cd agent-trader && git pull && ./scripts/run_both.sh morning`
+3. Takes ~5 min. Both Claude and Codex analyze the market independently.
+4. Auto-commits and pushes. GitHub Actions takes over for the rest of the day.
+
+**Weekday evenings (~4:30 PM ET):**
+1. Get SMS: "Market closed — time for evening reflection."
+2. `cd agent-trader && git pull && ./scripts/run_both.sh evening`
+3. Both strategists review their day, extract lessons, update knowledge.
+
+**Sunday evening (~8:00 PM ET):**
+1. Get SMS: "Weekly review time!"
+2. `cd agent-trader && git pull && ./scripts/run_both.sh weekly`
+
+**Last business day of month (~5:00 PM ET):**
+1. Get SMS: "Monthly retrospective due."
+2. `cd agent-trader && git pull && ./scripts/run_both.sh monthly`
+
+### First-time setup
+1. Copy `.env.example` → `.env`, fill in API keys
+2. `pip install -e ".[dev]"`
+3. Install ntfy app on phone, subscribe to your topic, set `NTFY_TOPIC` in `.env`
+4. `python -m agent_trader alert test` — verify notification arrives on your phone
+5. Run `python -m agent_trader cycle --debug` to verify all phases work (no API calls)
+6. Set `PRODUCTION_MODE=true` as a GitHub repo variable when ready to go live
 
 ## Configuration
 
 All config via `.env` (locally) or GitHub Secrets + Variables (CI). See `.env.example`.
 
 **Critical settings:**
-- `PRODUCTION_MODE=true` — single GitHub variable that controls everything: sets `DEBUG_MODE=false` + `DRY_RUN=false`
-- `PRODUCTION_MODE=false` (default) — development mode: templates + dry-run logging
+- `RUN_MODE` — the single control variable: `debug` (default, templates + no orders), `paper` (real LLM + Alpaca paper), `live` (real everything)
+- `PRODUCTION_MODE=true` (GitHub Actions) — maps to `RUN_MODE=paper`: real LLM calls + paper orders
+- `PRODUCTION_MODE=false` (default) — maps to `RUN_MODE=debug`: template responses + dry-run logging
+- Legacy vars (`DEBUG_MODE`, `DRY_RUN`) still work for backward compatibility
 - `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` — in GitHub Secrets
 - `ALPACA_API_KEY_CLAUDE` / `ALPACA_API_KEY_CODEX` — separate Alpaca paper accounts per strategist
 - `RESEARCH_MODEL_OPENAI` — GitHub variable, default `gpt-4o-mini`, set to `gpt-4o` for quality
+
+**Push notifications (optional but recommended — FREE, no signup):**
+- Install the ntfy app on your phone (iOS / Android)
+- Pick a unique topic name (e.g., `agent-trader-yourname`)
+- Subscribe to that topic in the app
+- Set `NTFY_TOPIC=agent-trader-yourname` in `.env` and as a GitHub Secret
+- That's it — push notifications to your phone, zero cost
 
 **Alpaca paper trading:**
 - Free accounts at alpaca.markets — create 2 accounts (one per strategist)

@@ -8,6 +8,9 @@ This agent runs first in the pipeline. Its output (price data + indicators)
 feeds into the Research and Strategy agents.
 """
 
+import math
+import time
+from datetime import datetime, timezone
 from typing import Any
 
 import yfinance as yf
@@ -17,6 +20,19 @@ import ta
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message
 from agent_trader.utils.runtime import configure_yfinance_cache
+
+# yfinance calls can hang on poor network — cap each call
+_YFINANCE_TIMEOUT = 30  # seconds
+
+
+def _safe_float(value) -> float | None:
+    """Convert to float, returning None for NaN/Inf."""
+    if value is None:
+        return None
+    f = float(value)
+    if math.isnan(f) or math.isinf(f):
+        return None
+    return f
 
 
 class DataAgent(BaseAgent):
@@ -32,20 +48,31 @@ class DataAgent(BaseAgent):
             raise ValueError("No symbols provided to DataAgent")
 
         results = {}
+        data_warnings: list[str] = []
         for symbol in symbols:
+            t0 = time.monotonic()
             data = self._fetch_stock_data(symbol)
+            elapsed_ms = int((time.monotonic() - t0) * 1000)
+            data["fetch_time_ms"] = elapsed_ms
             results[symbol] = data
+
+            # Check data freshness — flag stale weekend/holiday data
+            freshness = self._check_freshness(data)
+            if freshness:
+                data["freshness_warning"] = freshness
+                data_warnings.append(f"{symbol}: {freshness}")
 
         return {
             "symbols": symbols,
             "market_data": results,
+            "data_warnings": data_warnings,
             "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
         }
 
     def _fetch_stock_data(self, symbol: str, period: str = "3mo") -> dict:
         """Fetch price history and compute technical indicators."""
         ticker = yf.Ticker(symbol)
-        hist = ticker.history(period=period)
+        hist = ticker.history(period=period, timeout=_YFINANCE_TIMEOUT)
 
         if hist.empty:
             return {"error": f"No data found for {symbol}"}
@@ -71,21 +98,25 @@ class DataAgent(BaseAgent):
 
         # Convert to serializable format (last 30 days for the pipeline)
         recent = hist.tail(30)
+
+        # Sanitize indicators — replace NaN/Inf with None so downstream
+        # agents (StrategyAgent) don't silently compute on garbage values.
         return {
             "info": info,
             "latest_price": float(hist["Close"].iloc[-1]),
+            "last_trade_date": hist.index[-1].isoformat(),
             "price_change_pct": float(
                 (hist["Close"].iloc[-1] - hist["Close"].iloc[-2]) / hist["Close"].iloc[-2] * 100
             ),
             "volume": int(hist["Volume"].iloc[-1]),
             "indicators": {
-                "rsi_14": float(hist["rsi_14"].iloc[-1]) if "rsi_14" in hist else None,
-                "sma_20": float(hist["sma_20"].iloc[-1]) if "sma_20" in hist else None,
-                "sma_50": float(hist["sma_50"].iloc[-1]) if "sma_50" in hist else None,
-                "macd": float(hist["macd"].iloc[-1]) if "macd" in hist else None,
-                "macd_signal": float(hist["macd_signal"].iloc[-1]) if "macd_signal" in hist else None,
-                "bb_upper": float(hist["bb_upper"].iloc[-1]) if "bb_upper" in hist else None,
-                "bb_lower": float(hist["bb_lower"].iloc[-1]) if "bb_lower" in hist else None,
+                "rsi_14": _safe_float(hist["rsi_14"].iloc[-1]) if "rsi_14" in hist else None,
+                "sma_20": _safe_float(hist["sma_20"].iloc[-1]) if "sma_20" in hist else None,
+                "sma_50": _safe_float(hist["sma_50"].iloc[-1]) if "sma_50" in hist else None,
+                "macd": _safe_float(hist["macd"].iloc[-1]) if "macd" in hist else None,
+                "macd_signal": _safe_float(hist["macd_signal"].iloc[-1]) if "macd_signal" in hist else None,
+                "bb_upper": _safe_float(hist["bb_upper"].iloc[-1]) if "bb_upper" in hist else None,
+                "bb_lower": _safe_float(hist["bb_lower"].iloc[-1]) if "bb_lower" in hist else None,
             },
             "price_history": [
                 {
@@ -99,6 +130,26 @@ class DataAgent(BaseAgent):
                 for idx, row in recent.iterrows()
             ],
         }
+
+    def _check_freshness(self, data: dict) -> str | None:
+        """Return a warning string if the data looks stale."""
+        if "error" in data:
+            return None
+        last_trade = data.get("last_trade_date")
+        if not last_trade:
+            return None
+        try:
+            last_dt = pd.Timestamp(last_trade)
+            now = pd.Timestamp.now(tz="UTC")
+            # If last trade date is >2 calendar days old (covers weekends),
+            # check if today is a weekday — if so, data might be stale.
+            gap = (now - last_dt).days
+            today_weekday = datetime.now(timezone.utc).weekday()  # 0=Mon
+            if gap > 2 or (gap > 1 and today_weekday < 5):
+                return f"last trade {gap}d ago ({last_trade[:10]}) — data may be stale"
+        except Exception:
+            pass
+        return None
 
     def _add_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """Add standard technical indicators to price data."""

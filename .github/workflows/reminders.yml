@@ -1,0 +1,98 @@
+# Sends push notification reminders for phases that require local execution.
+# These fire once at the scheduled time — you then pull and run locally.
+#
+# Uses ntfy.sh (free, no signup). Set NTFY_TOPIC as a GitHub Secret.
+# Optional Twilio SMS fallback if you prefer texts.
+
+name: Reminders
+
+on:
+  schedule:
+    # Morning research reminder — 8:45 AM ET (Mon-Fri)
+    # 12:45 UTC (EDT) / 13:45 UTC (EST) — both scheduled, dedup in script
+    - cron: "45 12 * * 1-5"
+    - cron: "45 13 * * 1-5"
+
+    # Evening reflection reminder — 4:15 PM ET (Mon-Fri)
+    - cron: "15 20 * * 1-5"
+    - cron: "15 21 * * 1-5"
+
+    # Weekly review reminder — Sunday 7:45 PM ET
+    - cron: "45 23 * * 0"
+    - cron: "45 0 * * 1"   # Monday 00:45 UTC = Sunday 8:45 PM EDT
+
+    # Monthly retrospective reminder — last weekday, 4:45 PM ET
+    - cron: "45 20 28-31 * 1-5"
+    - cron: "45 21 28-31 * 1-5"
+
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "Which reminder to send"
+        required: true
+        type: choice
+        options:
+          - morning
+          - evening
+          - weekly
+          - monthly
+          - test
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Determine phase and send reminder
+        env:
+          # ntfy.sh (free — just set the topic)
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          # Optional Twilio fallback
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          ALERT_PHONE_NUMBER: ${{ secrets.ALERT_PHONE_NUMBER }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PHASE="${{ inputs.phase }}"
+          else
+            HOUR=$(date -u +%H)
+            DOW=$(date -u +%u)  # 1=Monday, 7=Sunday
+            DAY=$(date -u +%d)
+            DAYS_IN_MONTH=$(date -u -d "$(date -u +%Y-%m-01) + 1 month - 1 day" +%d 2>/dev/null || echo 31)
+
+            if [ "$HOUR" -le "14" ] && [ "$DOW" -le "5" ]; then
+              PHASE="morning"
+            elif [ "$HOUR" -le "22" ] && [ "$DOW" -le "5" ] && [ "$DAY" -ge "28" ]; then
+              if [ "$DAY" = "$DAYS_IN_MONTH" ] || \
+                 ([ "$DOW" = "5" ] && [ "$((DAY + 2))" -gt "$DAYS_IN_MONTH" ]); then
+                PHASE="monthly"
+              else
+                PHASE="evening"
+              fi
+            elif [ "$HOUR" -le "22" ] && [ "$DOW" -le "5" ]; then
+              PHASE="evening"
+            elif [ "$DOW" = "7" ] || [ "$DOW" = "1" ]; then
+              PHASE="weekly"
+            else
+              echo "No matching phase — skipping"
+              exit 0
+            fi
+          fi
+
+          echo "Sending $PHASE reminder..."
+          python -c "
+          from agent_trader.utils.alerts import alert_reminder
+          result = alert_reminder('$PHASE')
+          print(f'Result: {result}')
+          "

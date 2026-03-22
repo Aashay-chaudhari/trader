@@ -48,7 +48,7 @@ def build_profile_metadata(settings: Settings | None = None) -> dict[str, Any]:
         "cli_agent_provider": settings.cli_agent_provider,
         "cli_agent_max_turns": settings.cli_agent_max_turns,
         "cli_agent_timeout": settings.cli_agent_timeout,
-        "dry_run": settings.dry_run,
+        "dry_run": settings.is_dry_run,
         "paper_portfolio_value": settings.paper_portfolio_value,
     }
 

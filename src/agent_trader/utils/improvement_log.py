@@ -6,6 +6,29 @@ per strategist profile that a human developer can review and action.
 
 The agent is its own product manager: it identifies gaps in its data,
 strategies, risk rules, and infrastructure — then proposes fixes.
+
+Proposal schema (all fields optional except category/priority/title):
+{
+    "category": "strategy|threshold|data_source|risk_rule|infrastructure|other",
+    "priority": "high|medium|low",
+    "title": "Short title",
+    "description": "What to change and why",
+    "expected_impact": "How this improves trading",
+    "implementation_hint": {            # Optional — added by evolve phase
+        "file": "src/.../strategy_agent.py",
+        "function": "_check_momentum",
+        "current_value": "rsi < 35",
+        "proposed_value": "rsi < 25",
+        "type": "threshold_adjustment|new_function|new_data_source|config_change"
+    },
+    "evidence": {                       # Optional — added by evolve phase
+        "sample_size": 12,
+        "win_rate_current": 0.33,
+        "dates": ["2026-03-19", "2026-03-20"]
+    },
+    "status": "pending|accepted|rejected|implemented",
+    "created_date": "YYYY-MM-DD"
+}
 """
 
 from __future__ import annotations
@@ -120,15 +143,113 @@ def _save_proposals_json(
         except (json.JSONDecodeError, OSError):
             pass
 
+    # Stamp status and created_date on proposals that don't have them
+    stamped = []
+    for p in proposals:
+        stamped.append({
+            "status": "pending",
+            "created_date": date,
+            **p,  # proposal fields override defaults
+        })
+
     entry = {
         "date": date,
-        "proposals": proposals,
+        "proposals": stamped,
     }
     existing.append(entry)
 
     # Keep last 90 days of proposals
     existing = existing[-90:]
     json_path.write_text(json.dumps(existing, indent=2, default=str))
+
+
+def save_evolution_proposals(
+    proposals: list[dict[str, Any]],
+    *,
+    data_dir: str = "data",
+    profile_id: str = "default",
+    date: str | None = None,
+) -> Path:
+    """Save enriched evolution proposals (with implementation_hint and evidence).
+
+    These come from the evolve phase and are richer than evening reflection proposals.
+    Also generates EVOLUTION_REPORT.md as a human-readable action list.
+    """
+    if not proposals:
+        return Path(data_dir) / "EVOLUTION_REPORT.md"
+
+    today = date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    root = Path(data_dir)
+    root.mkdir(parents=True, exist_ok=True)
+
+    # Save to the same JSON log (backward compatible)
+    append_improvement_proposals(proposals, data_dir=data_dir, profile_id=profile_id, date=today)
+
+    # Generate EVOLUTION_REPORT.md
+    report_path = root / "EVOLUTION_REPORT.md"
+    lines = [
+        f"# Evolution Report — {profile_id} Strategist\n",
+        f"Generated: {today}\n\n",
+        "This report contains evidence-backed proposals from the evolution phase.\n"
+        "Each proposal includes the specific file and change needed.\n\n",
+        "---\n",
+    ]
+
+    high = [p for p in proposals if p.get("priority") == "high"]
+    medium = [p for p in proposals if p.get("priority") == "medium"]
+    low = [p for p in proposals if p.get("priority") == "low"]
+
+    for section_label, section_proposals in [("HIGH PRIORITY", high), ("MEDIUM PRIORITY", medium), ("LOW PRIORITY", low)]:
+        if not section_proposals:
+            continue
+        lines.append(f"\n## {section_label}\n")
+        for p in section_proposals:
+            lines.append(f"### [{p.get('category', 'other')}] {p.get('title', 'Untitled')}\n")
+            if p.get("description"):
+                lines.append(f"{p['description']}\n\n")
+            hint = p.get("implementation_hint", {})
+            if hint:
+                lines.append("**Implementation:**\n")
+                if hint.get("file"):
+                    lines.append(f"- File: `{hint['file']}`\n")
+                if hint.get("function"):
+                    lines.append(f"- Function: `{hint['function']}`\n")
+                if hint.get("current_value") and hint.get("proposed_value"):
+                    lines.append(f"- Change: `{hint['current_value']}` → `{hint['proposed_value']}`\n")
+                lines.append("\n")
+            ev = p.get("evidence", {})
+            if ev:
+                lines.append("**Evidence:**\n")
+                if ev.get("sample_size"):
+                    lines.append(f"- Sample size: {ev['sample_size']} trades\n")
+                if ev.get("win_rate_current") is not None:
+                    lines.append(f"- Current win rate: {ev['win_rate_current']:.0%}\n")
+                lines.append("\n")
+            if p.get("expected_impact"):
+                lines.append(f"**Expected impact:** {p['expected_impact']}\n\n")
+            lines.append("---\n")
+
+    report_path.write_text("".join(lines), encoding="utf-8")
+    logger.info("Saved evolution report: %s (%d proposals)", report_path, len(proposals))
+    return report_path
+
+
+def get_evolution_summary(data_dir: str = "data") -> dict[str, Any]:
+    """Return a summary of pending proposals for injection into the evolution prompt."""
+    pending = get_pending_proposals(data_dir, min_priority="low")
+    by_category: dict[str, list[dict]] = {}
+    for p in pending:
+        cat = p.get("category", "other")
+        by_category.setdefault(cat, []).append(p)
+
+    high_priority = [p for p in pending if p.get("priority") == "high"]
+    return {
+        "total": len(pending),
+        "by_category": {cat: len(items) for cat, items in by_category.items()},
+        "high_priority_count": len(high_priority),
+        "top_high_priority": high_priority[:3],  # Top 3 for prompt injection
+        "recent_titles": [p.get("title", "") for p in pending[-10:]],
+    }
 
 
 def get_pending_proposals(

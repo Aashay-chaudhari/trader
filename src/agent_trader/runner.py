@@ -14,6 +14,7 @@ from agent_trader.agents import (
 )
 from agent_trader.agents.news_agent import NewsAgent
 from agent_trader.config.settings import Settings, get_settings, reset_settings
+from agent_trader.utils.knowledge_base import KnowledgeBase
 from agent_trader.utils.profiles import ensure_profile_metadata
 
 console = Console()
@@ -24,6 +25,9 @@ def build_system(settings: Settings | None = None) -> tuple[Orchestrator, Settin
     reset_settings()
     settings = settings or get_settings()
     ensure_profile_metadata(settings)
+
+    # Initialize empty knowledge schema files if this is a fresh profile
+    KnowledgeBase(settings.data_dir).ensure_cold_start_schemas()
 
     console.print("[bold]Building trading system...[/bold]")
 
@@ -83,3 +87,7 @@ async def run_weekly(orchestrator: Orchestrator) -> dict:
 
 async def run_monthly(orchestrator: Orchestrator) -> dict:
     return await orchestrator.run_monthly_retrospective()
+
+
+async def run_evolution(orchestrator: Orchestrator) -> dict:
+    return await orchestrator.run_evolution()

@@ -104,7 +104,7 @@ class ExecutionAgent(BaseAgent):
         qty = max(1, int(allocation / price))
 
         # Dry run mode — log what would happen without calling the API
-        if settings.dry_run or client is None:
+        if settings.is_dry_run or client is None:
             return {
                 "symbol": symbol,
                 "action": action,
