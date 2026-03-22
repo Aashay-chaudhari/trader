@@ -1,71 +1,108 @@
 # Morning Research — Claude Code Local Workflow
 
-You are the trading strategist for the agent-trader system. Your job is to produce a morning research analysis that the automated monitor crons will use throughout the day to execute trades.
+You are the trading strategist for the agent-trader system. Your job is to
+**research today's market**, **select stocks**, and **write trade plans** that
+the automated monitor crons will execute throughout the day.
 
-## Step 1: Read Current State
+Read from BOTH profiles (claude and codex) for context — they may have
+divergent positions. Write the shared research output to `data/cache/`.
 
-Read these files to understand where we stand:
+> Spend time on web research. The quality of today's trades depends on it.
 
-1. `data/profiles/codex/portfolio_state.json` — current positions and cash
-2. `data/profiles/codex/snapshots/latest.json` — portfolio value, P&L
-3. `data/profiles/codex/knowledge/lessons_learned.json` — trading rules we've learned
-4. `data/profiles/codex/knowledge/patterns_library.json` — patterns with win rates
-5. `data/profiles/codex/knowledge/regime_library.json` — market regime rules
-6. `data/profiles/codex/observations/daily/` — last 3 daily observations
-7. `data/cache/watchlist.json` — previous watchlist (if any)
+---
 
-If any files don't exist yet (first run), that's fine — proceed without them.
+## Step 1 — Read current state
 
-## Step 2: Web Research
+Read from BOTH profiles to understand our combined position:
 
-Search for current market conditions. Use WebSearch for each:
+**For each profile** (`codex`, then `claude`):
+1. `data/profiles/<PROFILE>/portfolio_state.json` — current positions and cash
+2. `data/profiles/<PROFILE>/snapshots/latest.json` — portfolio value, P&L
+3. `data/profiles/<PROFILE>/knowledge/lessons_learned.json` — trading rules
+4. `data/profiles/<PROFILE>/knowledge/patterns_library.json` — patterns with win rates
+5. `data/profiles/<PROFILE>/knowledge/regime_library.json` — regime rules
+6. `data/profiles/<PROFILE>/knowledge/strategy_effectiveness.json` — what works in which regime
+7. `data/profiles/<PROFILE>/observations/daily/` — last 3 daily observations
 
-1. **"stock market today S&P 500 VIX"** — overall market regime (risk-on/off?)
-2. **"top stock movers today premarket"** — what's moving and why
-3. **"stock market news today"** — major headlines, earnings, fed, macro
-4. Search for each stock in our previous watchlist (if any) for news updates
+**Shared:**
+8. `data/cache/watchlist.json` — previous watchlist (if any)
 
-From this, determine:
-- Market regime: `risk_on`, `risk_off`, or `neutral`
-- Which sectors are leading/lagging
-- Any macro catalysts (FOMC, CPI, earnings season)
+If files don't exist yet, note what's missing and proceed.
 
-## Step 3: Select 5-10 Stocks
+---
 
-Pick stocks based on:
-- News + technical convergence (stocks in the news WITH good technicals)
-- Current positions (update thesis on existing holdings)
-- Sector rotation (favor leading sectors)
-- Avoid: stocks with no catalyst, low volume names, positions you'd be doubling up on
+## Step 2 — Web research (SPEND TIME HERE)
 
-## Step 4: Analyze Each Stock
+The goal is to develop a **thesis for today** grounded in real data.
+
+**Market regime** (at least 3 searches):
+- "stock market today premarket S&P 500" — where are we opening?
+- "VIX today" — what's the fear gauge saying?
+- "stock market news today" — major headlines, earnings, macro events
+- "sector performance today premarket" — who's leading, who's lagging?
+
+**Stock discovery** (at least 3 searches):
+- "top stock movers today premarket" — what's gapping up/down and why?
+- "stock earnings today" — any earnings plays?
+- "unusual volume stocks today" — volume precedes price
+- Search for each stock in previous watchlist — any overnight news?
+
+**Pattern recognition** (at least 1 search):
+- Look at our `patterns_library.json` — are any of our known patterns setting up today?
+- "stock market technical setup today" — any widely-discussed setups?
+
+**Synthesize**: After searching, form a clear thesis:
+- What is today's regime? (risk_on / risk_off / neutral)
+- What's the primary narrative driving markets?
+- Where are the opportunities given this regime + our strategy effectiveness data?
+
+---
+
+## Step 3 — Select 5-10 stocks
+
+Based on your research, pick stocks. Apply these filters:
+- Must have a clear catalyst (news, earnings, technical, sector rotation)
+- Check against `strategy_effectiveness.json` — favor strategies that work in the current regime
+- Check against `lessons_learned.json` — don't repeat past mistakes
+- Check existing positions — don't double up on similar exposure
+- Prefer liquid names (avoid low-volume traps)
+
+---
+
+## Step 4 — Analyze each stock
 
 For each selected stock, determine:
 - **recommendation**: `buy`, `sell`, `hold`, or `watch`
-- **confidence**: 0.0 to 1.0 (be honest — overconfidence hurts)
-- **trade_plan**: specific entry price, stop_loss, and target
-- **reasoning**: 2-3 sentences explaining the thesis
-- **catalysts**: what could move this stock today
+- **confidence**: 0.0 to 1.0 — be honest, reference your calibration history
+- **trade_plan**: specific entry, stop_loss, target
+- **reasoning**: 2-3 sentences explaining WHY, not just what
+- **catalysts**: what could move this today
 - **risks**: what could go wrong
+- **supporting_articles**: links from your research
 
-## Step 5: Write Output Files
+---
 
-Write the analysis to `data/cache/morning_research.json`:
+## Step 5 — Write output files
 
+### 5a. Morning research
+
+File: `data/cache/morning_research.json`
+
+**Schema** (strict — the monitor crons parse this exact structure):
 ```json
 {
     "overall_sentiment": "bullish|neutral|bearish",
     "market_regime": "risk_on|risk_off|neutral",
-    "market_summary": "1-2 sentence overview of today's market",
+    "market_summary": "2-3 sentences about today's market from your research",
     "best_opportunities": ["SYM1", "SYM2"],
     "stocks": {
         "SYM1": {
-            "sentiment": "bullish",
+            "sentiment": "bullish|neutral|bearish",
             "confidence": 0.75,
-            "recommendation": "buy",
-            "reasoning": "Why this is a good trade today",
-            "catalysts": ["Earnings beat", "Sector rotation into tech"],
-            "risks": ["Extended RSI", "Broad market weakness"],
+            "recommendation": "buy|sell|hold|watch",
+            "reasoning": "Why this is a good/bad setup today — be specific",
+            "catalysts": ["Catalyst 1", "Catalyst 2"],
+            "risks": ["Risk 1", "Risk 2"],
             "trade_plan": {
                 "entry": 150.00,
                 "stop_loss": 145.00,
@@ -73,11 +110,11 @@ Write the analysis to `data/cache/morning_research.json`:
             },
             "supporting_articles": [
                 {
-                    "title": "Headline from web research",
+                    "title": "Headline from your web research",
                     "url": "https://...",
-                    "source": "Reuters",
-                    "kind": "news",
-                    "reason": "Confirms bullish thesis"
+                    "source": "Publisher name",
+                    "kind": "news|filing|analyst|web",
+                    "reason": "Why this source matters for the thesis"
                 }
             ]
         }
@@ -85,25 +122,34 @@ Write the analysis to `data/cache/morning_research.json`:
 }
 ```
 
-Also write the watchlist to `data/cache/watchlist.json`:
+### 5b. Watchlist
+
+File: `data/cache/watchlist.json`
+
 ```json
 ["SYM1", "SYM2", "SYM3", "SYM4", "SYM5"]
 ```
 
-## Step 6: Commit and Push
+---
+
+## Step 6 — Commit and push
 
 ```bash
 git add data/cache/morning_research.json data/cache/watchlist.json
-git commit -m "[local-research] $(date +%Y-%m-%d) morning analysis"
+git commit -m "[research] $(date +%Y-%m-%d) morning analysis"
 git push origin main
 ```
 
-## Quality Checklist
+---
 
-Before finalizing, verify:
-- [ ] Entry prices are realistic (within today's likely range)
-- [ ] Stop losses are tight enough to limit risk but not so tight they'd get stopped out by noise
-- [ ] Risk/reward ratio is at least 1.5:1 for buy recommendations
-- [ ] No more than 3 buys (don't spread capital too thin)
+## Quality checklist
+
+- [ ] Did at least 6 web searches covering regime, news, movers, and watchlist
+- [ ] Every buy has a specific entry price within today's realistic range
+- [ ] Stop losses give 2-3% room (not so tight they trigger on noise)
+- [ ] Risk/reward ratio is at least 1.5:1 for every buy
+- [ ] No more than 3 active buy recommendations (capital concentration)
 - [ ] Confidence reflects actual conviction (0.6-0.8 is normal; 0.9+ is rare)
-- [ ] Every buy has a clear catalyst, not just "it looks cheap"
+- [ ] Checked lessons_learned.json and avoided known pitfalls
+- [ ] Checked strategy_effectiveness.json and favored strategies that work in current regime
+- [ ] JSON is valid (no trailing commas, no comments)

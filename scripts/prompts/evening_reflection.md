@@ -1,103 +1,223 @@
 # Evening Reflection — Claude Code Local Workflow
 
-You are reviewing today's trading session for the agent-trader system. Your job is to extract lessons, update patterns, and generate self-improvement proposals.
+You are reviewing today's trading session. Your job is to **think deeply**
+about what happened, **research** the market close, and **extract real lessons**
+that make the system smarter tomorrow.
 
-## Step 1: Read Today's Activity
+Write to BOTH profiles (`claude` and `codex`) — same content, same schemas.
 
-Read these files:
+> Take your time. This is where the system learns.
 
-1. `data/profiles/codex/journal/$(date +%Y-%m-%d)/` — all journal entries from today
-2. `data/profiles/codex/portfolio_state.json` — current positions after today's trades
-3. `data/profiles/codex/snapshots/latest.json` — end-of-day portfolio value
-4. `data/cache/morning_research.json` — what we planned this morning
-5. `data/profiles/codex/observations/daily/` — last 3 observations for continuity
-6. `data/profiles/codex/knowledge/lessons_learned.json` — current lessons
+---
 
-## Step 2: Analyze the Day
+## Step 1 — Read today's activity
 
-Think through:
-1. **What trades executed today?** Were they good entries? Did the thesis play out?
-2. **What did we plan vs what happened?** Any morning picks that moved but we missed?
-3. **Confidence calibration**: Were high-confidence calls actually better than low?
-4. **Patterns**: Any recurring setups you noticed (gap-and-go, reversal at support, etc.)?
-5. **Market regime**: Was the regime assessment correct? How did it affect trades?
-6. **What would you do differently?** Be specific.
+Read ALL of these. Understand the full picture before writing anything.
 
-## Step 3: Write Daily Observation
+**For each profile** (`codex` first, then `claude`):
+1. `data/profiles/<PROFILE>/journal/<TODAY>/` — every journal entry from today
+2. `data/profiles/<PROFILE>/portfolio_state.json` — positions after today's trades
+3. `data/profiles/<PROFILE>/snapshots/latest.json` — end-of-day portfolio
+4. `data/profiles/<PROFILE>/snapshots/history.json` — portfolio value curve
+5. `data/profiles/<PROFILE>/knowledge/lessons_learned.json` — current lessons
+6. `data/profiles/<PROFILE>/knowledge/patterns_library.json` — known patterns
+7. `data/profiles/<PROFILE>/observations/daily/` — last 3 daily observations
 
-Write to `data/profiles/codex/observations/daily/obs_$(date +%Y-%m-%d).json`:
+**Shared context:**
+8. `data/cache/morning_research.json` — what we planned this morning
+9. `data/cache/watchlist.json` — the stocks we were watching
 
+If any files don't exist (early days), note what's missing and work with what's there.
+
+---
+
+## Step 2 — Web research: what happened today?
+
+Don't just look at our trades — understand the MARKET context.
+
+**Search for** (at least 4 searches):
+- "stock market close today" — how did the broad market finish?
+- "S&P 500 VIX close today" — where did fear/greed land?
+- "top stock movers today" — what moved big and why?
+- "market news after hours" — anything that changes tomorrow's thesis?
+- Search for any stocks we traded or watched — what's the post-close narrative?
+
+**Synthesize**: Form an opinion. Was today a trend day or a chop day?
+Did the morning thesis play out? What surprised you?
+
+---
+
+## Step 3 — Think deeply (DO THIS BEFORE WRITING)
+
+Work through these questions honestly. Don't rush to write files.
+
+1. **Plan vs reality**: Look at `morning_research.json`. Which calls were right?
+   Which were wrong? WHY were they wrong — was it the thesis, the timing,
+   or the market regime?
+
+2. **Trade quality**: For each trade that executed:
+   - Was the entry good? (Did we buy near support or chase?)
+   - Was the sizing appropriate for our conviction?
+   - Did we respect stops or did we let losers run?
+   - What was the catalyst and did it play out?
+
+3. **Regime accuracy**: Did our morning regime call match what actually happened?
+   If the market moved 2%+ in either direction, was our positioning correct?
+
+4. **Patterns**: Did you see any setups repeat? (e.g., "every time VIX spikes above 25,
+   oversold tech bounces within 2 days" — is that a pattern we should track?)
+
+5. **Missed opportunities**: From the "top movers" search — did we miss any obvious
+   setups? Could our screening have caught them?
+
+6. **Confidence calibration**: Were our high-confidence calls (>0.7) actually better
+   than low-confidence (<0.5)? Be honest.
+
+---
+
+## Step 4 — Write daily observation
+
+File: `data/profiles/<PROFILE>/observations/daily/obs_YYYY-MM-DD.json`
+(Write to BOTH claude and codex profiles.)
+
+**Schema** (strict — do not add or remove fields):
 ```json
 {
-    "date": "2026-03-22",
+    "date": "YYYY-MM-DD",
     "market_regime": "risk_on|risk_off|neutral",
-    "market_summary": "1-2 sentences about today's market",
-    "sector_leaders": ["Tech", "Energy"],
-    "sector_laggards": ["Utilities"],
+    "market_summary": "2-3 sentences synthesizing today's market from your research",
+    "sector_leaders": ["Sector1", "Sector2"],
+    "sector_laggards": ["Sector1", "Sector2"],
+    "key_drivers": [
+        "Major market driver from your research",
+        "Another driver"
+    ],
     "trades_review": [
         {
-            "symbol": "NVDA",
-            "action": "buy",
-            "pnl_pct": 2.1,
-            "assessment": "Good entry, thesis confirmed by volume"
+            "symbol": "TICKER",
+            "action": "buy|sell",
+            "entry_price": 0.00,
+            "current_price": 0.00,
+            "pnl_pct": 0.0,
+            "strategy": "which strategy triggered this",
+            "assessment": "Honest 1-sentence assessment of this trade"
         }
     ],
     "patterns_detected": [
         {
-            "name": "gap_and_go",
-            "symbol": "TSLA",
-            "outcome": "won",
-            "notes": "3% gap held, ran to target by 11am"
+            "name": "snake_case_pattern_name",
+            "symbol": "TICKER",
+            "outcome": "won|lost|pending",
+            "notes": "What you observed"
         }
     ],
     "confidence_calibration": {
-        "high_conf_actual": 0.80,
-        "medium_conf_actual": 0.55,
-        "assessment": "Slightly over-confident on medium calls"
+        "high_conf_win_rate": 0.0,
+        "medium_conf_win_rate": 0.0,
+        "low_conf_win_rate": 0.0,
+        "assessment": "Honest assessment of confidence accuracy"
     },
-    "forward_outlook": "Watch for FOMC minutes tomorrow, may shift regime",
+    "missed_opportunities": [
+        {
+            "symbol": "TICKER",
+            "move_pct": 0.0,
+            "why_missed": "Why our system didn't catch this"
+        }
+    ],
+    "forward_outlook": "What to watch for tomorrow based on your research and today's action",
     "lessons": [
-        "Gap-and-go works best in first 90 minutes of risk-on days",
-        "Mean reversion after 3%+ gap is risky in trending markets"
+        "Specific, actionable lesson from today — not generic advice"
     ]
 }
 ```
 
-## Step 4: Generate Improvement Proposals
+---
 
-Think about what would make the system better. Write proposals for:
-- **data_source**: Need more/different data?
-- **strategy**: New trading approaches to try?
-- **risk_management**: Position sizing adjustments?
-- **infrastructure**: System improvements?
+## Step 5 — Generate improvement proposals
 
-Write to `data/profiles/codex/IMPROVEMENT_PROPOSALS.md` (append new section at top):
+Think about what would concretely improve the system. Be specific.
+
+**Categories**: `data_source`, `strategy`, `risk_management`, `screening`,
+`execution`, `infrastructure`, `knowledge`, `other`
+
+**Priorities**: `high` (would have changed today's outcome), `medium` (would help
+this week), `low` (nice to have)
+
+File: `data/profiles/<PROFILE>/IMPROVEMENT_PROPOSALS.md`
+(Append a new date section at the TOP of the existing file. Write to BOTH profiles.)
 
 ```markdown
-## 2026-03-22 — Evening Reflection Proposals
+## YYYY-MM-DD — Evening Reflection
 
-### [HIGH] [strategy] Add gap-fade strategy for overextended opens
-Large gap-ups (>3%) in risk-off regimes tend to fade. We should track this pattern.
-**Expected impact:** Capture 2-3% moves on gap fades with 70%+ historical win rate.
-
-### [MED] [data_source] Add options flow data
-Unusual options activity often precedes moves by 1-2 days.
-**Expected impact:** Better timing on entries for swing trades.
+### [PRIORITY] [category] Title
+Description of what to improve and why, grounded in today's experience.
+**Expected impact:** What would change if this were implemented.
 ```
 
-Also write structured JSON to `data/profiles/codex/improvement_proposals.json` (append to existing array).
+Also write structured JSON to `data/profiles/<PROFILE>/improvement_proposals.json`.
+If the file exists, read it, append new entries, write back.
+If it doesn't exist, create it.
 
-## Step 5: Update Knowledge Base
+**Schema** for each entry in the array:
+```json
+{
+    "date": "YYYY-MM-DD",
+    "category": "strategy|data_source|risk_management|screening|execution|infrastructure|knowledge|other",
+    "priority": "high|medium|low",
+    "title": "Short title",
+    "description": "What to improve and why",
+    "expected_impact": "What would change",
+    "status": "proposed"
+}
+```
 
-If you identified new patterns or lessons:
+---
 
-1. **Update lessons**: Read `data/profiles/codex/knowledge/lessons_learned.json`, add new lessons, keep max 50, dedup.
-2. **Update patterns**: Read `data/profiles/codex/knowledge/patterns_library.json`, add/update patterns with win rates.
+## Step 6 — Update knowledge base
 
-## Step 6: Commit and Push
+Based on your analysis, update the knowledge files.
+Write to BOTH profiles.
+
+### 6a. Lessons learned
+Read `knowledge/lessons_learned.json`. Add new lessons from today.
+Remove any lesson that today's experience CONTRADICTS.
+Keep max 50 lessons. If over 50, remove the weakest/most generic.
+Write back.
+
+### 6b. Patterns library
+Read `knowledge/patterns_library.json`. For each pattern you detected today:
+- If it already exists: increment `occurrences`, update `win_rate`, add symbol to `symbols_seen`
+- If it's new: add it with `occurrences: 1`, `sample_size: 1`
+Write back.
+
+### 6c. Strategy effectiveness
+Read `knowledge/strategy_effectiveness.json`. If any strategy fired today,
+update its `win_rate` and `sample_size` for the current regime.
+Use the formula: `new_rate = (old_rate * old_size + outcome) / (old_size + 1)`
+Write back.
+
+---
+
+## Step 7 — Commit and push
 
 ```bash
-git add data/profiles/codex/observations/ data/profiles/codex/knowledge/ data/profiles/codex/IMPROVEMENT_PROPOSALS.md data/profiles/codex/improvement_proposals.json
-git commit -m "[local-reflection] $(date +%Y-%m-%d) evening reflection"
+git add data/profiles/claude/observations/ data/profiles/claude/knowledge/ \
+        data/profiles/claude/IMPROVEMENT_PROPOSALS.md data/profiles/claude/improvement_proposals.json \
+        data/profiles/codex/observations/ data/profiles/codex/knowledge/ \
+        data/profiles/codex/IMPROVEMENT_PROPOSALS.md data/profiles/codex/improvement_proposals.json
+git commit -m "[reflection] $(date +%Y-%m-%d) evening reflection"
 git push origin main
 ```
+
+---
+
+## Quality checklist
+
+- [ ] Read ALL journal entries before forming opinions
+- [ ] Did at least 4 web searches for post-close market context
+- [ ] Every lesson is specific to today, not generic trading advice
+- [ ] Trades review covers EVERY trade that executed, not just winners
+- [ ] Confidence calibration is honest (if we have data)
+- [ ] Forward outlook references specific catalysts from research
+- [ ] JSON files are valid (no trailing commas, no comments)
+- [ ] Same content written to BOTH claude and codex profiles

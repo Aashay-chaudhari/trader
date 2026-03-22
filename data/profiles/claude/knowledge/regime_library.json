@@ -1,0 +1,38 @@
+{
+    "risk_on": {
+        "description": "Bullish regime: VIX < 18, S&P trending up, growth sectors leading",
+        "indicators": ["VIX < 18", "S&P above 20-day SMA", "Tech/Growth outperforming", "Breadth expanding"],
+        "rules": [
+            "Prefer momentum and breakout strategies",
+            "Widen stops by 1.5x — trends run further than expected",
+            "Increase position sizes to 6-8%",
+            "Focus on growth, tech, and consumer discretionary",
+            "Mean reversion sells are lower probability — don't fade strength"
+        ]
+    },
+    "risk_off": {
+        "description": "Bearish regime: VIX > 25, S&P trending down, defensives leading. Current state as of March 2026: VIX 26.78, Middle East conflict, Fed hawkish at 3.50-3.75%",
+        "indicators": ["VIX > 25", "S&P below 50-day SMA", "Defensives outperforming", "4+ weekly losses"],
+        "rules": [
+            "Prefer mean reversion and defensive strategies",
+            "Tighten stops — reversals are violent in fear environments",
+            "Reduce position sizes to 3-5% max",
+            "Focus on energy (supply disruption), healthcare, consumer staples",
+            "Avoid catching falling knives in tech/growth names",
+            "Look for oversold bounces but take profits quickly",
+            "Cash is a position — 30-50% cash is appropriate in risk-off"
+        ]
+    },
+    "neutral": {
+        "description": "Choppy regime: VIX 18-25, no clear trend, sector rotation active",
+        "indicators": ["VIX 18-25", "S&P range-bound", "Sector rotation visible", "Mixed signals"],
+        "rules": [
+            "Prefer range-bound strategies: support/resistance, VWAP reversion",
+            "Keep positions small at 4-5%",
+            "Take profits quickly — moves don't follow through in chop",
+            "Look for sector rotation opportunities",
+            "Avoid trend-following strategies — false breakouts are common",
+            "Focus on stocks with specific catalysts, not broad market bets"
+        ]
+    }
+}
