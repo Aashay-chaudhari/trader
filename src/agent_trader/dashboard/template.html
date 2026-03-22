@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -123,7 +123,7 @@
     .stage-metric-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
     .stage-bullets { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; }
     .stage-bullet { font-size: 11px; color: var(--muted); padding-left: 12px; position: relative; }
-    .stage-bullet::before { content: '·'; position: absolute; left: 0; color: var(--faint); }
+    .stage-bullet::before { content: 'Â·'; position: absolute; left: 0; color: var(--faint); }
 
     /* FOLDOUT */
     .foldout { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 40px; }
@@ -167,7 +167,7 @@
     .dec-sec-lbl { font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
     .dec-bullets { list-style: none; display: flex; flex-direction: column; gap: 5px; }
     .dec-bullets li { font-size: 12px; padding-left: 14px; position: relative; line-height: 1.45; }
-    .dec-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--faint); font-weight: 700; }
+    .dec-bullets li::before { content: 'â€º'; position: absolute; left: 0; color: var(--faint); font-weight: 700; }
     .conf-bar { height: 3px; background: var(--surface2); border-radius: 99px; margin-top: 6px; overflow: hidden; }
     .conf-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--good)); }
     .news-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
@@ -187,7 +187,7 @@
     .td-block p { font-size: 12px; color: var(--muted); line-height: 1.55; }
     .td-block ul { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
     .td-block li { font-size: 12px; padding-left: 14px; position: relative; line-height: 1.45; }
-    .td-block li::before { content: '·'; position: absolute; left: 0; color: var(--faint); }
+    .td-block li::before { content: 'Â·'; position: absolute; left: 0; color: var(--faint); }
     .tp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
     .tp-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; }
     .tp-cell .l { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
@@ -254,7 +254,7 @@
     .obs-summary { font-size: 13px; line-height: 1.55; }
     .obs-lessons { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
     .obs-lesson { font-size: 12px; color: var(--muted); padding-left: 14px; position: relative; }
-    .obs-lesson::before { content: '·'; position: absolute; left: 0; color: var(--faint); }
+    .obs-lesson::before { content: 'Â·'; position: absolute; left: 0; color: var(--faint); }
 
     .proposal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
     .proposal-card { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: var(--r-sm); padding: 16px; }
@@ -334,7 +334,7 @@
 
 <nav id="topnav">
   <div class="nav-inner">
-    <div class="nav-brand">⬡ <span>Agent</span> Trader</div>
+    <div class="nav-brand">â¬¡ <span>Agent</span> Trader</div>
     <div class="nav-pills">
       <a href="#overview" class="nav-pill">Overview</a>
       <a href="#pipeline" class="nav-pill">Pipeline</a>
@@ -346,7 +346,8 @@
     <div class="nav-actions">
       <a class="nav-btn" id="navReport" href="data/report_research.md" target="_blank" rel="noreferrer">Report</a>
       <a class="nav-btn" id="navInteraction" href="data/context.json" target="_blank" rel="noreferrer">Session Log</a>
-      <a class="nav-btn" id="navActions" href="https://github.com" target="_blank" rel="noreferrer">Actions ↗</a>
+      <a class="nav-btn" id="navEvolution" href="data/EVOLUTION_REPORT.md" target="_blank" rel="noreferrer">Evolution</a>
+      <a class="nav-btn" id="navActions" href="https://github.com" target="_blank" rel="noreferrer">Actions â†—</a>
     </div>
   </div>
 </nav>
@@ -358,7 +359,7 @@
     <div class="section-hd">
       <div class="hd-left">
         <h2 id="activeLabel">Agent Trader</h2>
-        <p id="heroSummary">Loading latest data…</p>
+        <p id="heroSummary">Loading latest dataâ€¦</p>
       </div>
       <div id="profileTabs" class="profile-strip"></div>
     </div>
@@ -422,7 +423,7 @@
     <div class="section-hd">
       <div class="hd-left">
         <h2>Trade History</h2>
-        <p>Click any row to see what drove the decision — research narrative, news context, and trade plan</p>
+        <p>Click any row to see what drove the decision â€” research narrative, news context, and trade plan</p>
       </div>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
@@ -481,7 +482,7 @@
     <div class="section-hd">
       <div class="hd-left">
         <h2>System Intelligence</h2>
-        <p>Everything the agent has learned — accumulated across every evening reflection, weekly review, and monthly retrospective</p>
+        <p>Everything the agent has learned â€” accumulated across every evening reflection, weekly review, and monthly retrospective</p>
       </div>
       <div class="kb-tabs" id="kbTabs">
         <button class="kb-tab active" data-tab="lessons">Lessons <span class="kb-count" id="lessonCount">0</span></button>
@@ -503,6 +504,16 @@
       <div class="obs-list" id="obsCards"></div>
     </div>
     <div id="kbProposals" class="kb-panel">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd">
+          <div>
+            <h3>Evolution Review</h3>
+            <p>On-demand operator-facing review of what the strategist should improve next.</p>
+          </div>
+        </div>
+        <div class="mini-grid" id="evolutionSummary" style="margin-bottom:12px"></div>
+        <div id="evolutionCard"></div>
+      </div>
       <div class="proposal-grid" id="proposalCards"></div>
     </div>
     <div id="kbVoice" class="kb-panel">
@@ -561,19 +572,19 @@
   const num = v => { const n = Number(v); return Number.isFinite(n) ? n : null; };
   const esc = v => String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   const safeUrl = v => /^https?:\/\//i.test(String(v || "")) ? String(v) : "";
-  const trunc = (v, n = 120) => { const t = String(v || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
-  const dtFull = v => { if (!v) return "–"; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}); };
-  const dtShort = v => { if (!v) return "–"; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleDateString("en-US",{month:"short",day:"numeric"}); };
-  const fmtM = v => { const n = num(v); return n === null ? "–" : "$" + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
-  const signM = v => { const n = num(v); return n === null ? "–" : (n >= 0 ? "+" : "") + "$" + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
-  const fmtP = v => { const n = num(v); return n === null ? "–" : (n >= 0 ? "+" : "") + n.toFixed(2) + "%"; };
+  const trunc = (v, n = 120) => { const t = String(v || ""); return t.length > n ? t.slice(0, n - 1) + "â€¦" : t; };
+  const dtFull = v => { if (!v) return "â€“"; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}); };
+  const dtShort = v => { if (!v) return "â€“"; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleDateString("en-US",{month:"short",day:"numeric"}); };
+  const fmtM = v => { const n = num(v); return n === null ? "â€“" : "$" + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
+  const signM = v => { const n = num(v); return n === null ? "â€“" : (n >= 0 ? "+" : "") + "$" + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
+  const fmtP = v => { const n = num(v); return n === null ? "â€“" : (n >= 0 ? "+" : "") + n.toFixed(2) + "%"; };
   const pCls = v => { const n = num(v); return n === null ? "" : n >= 0 ? "good" : "bad"; };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const labelOf = id => String(id || "default").replace(/[-_]+/g," ").replace(/\b\w/g, m => m.toUpperCase());
   const emptyEl = msg => `<div class="empty">${esc(msg)}</div>`;
   const sentC = v => { const n = num(v); return n === null ? "neu" : n > 0.1 ? "pos" : n < -0.1 ? "neg" : "neu"; };
   const sentL = v => { const n = num(v); return n === null ? "?" : (n > 0 ? "+" : "") + n.toFixed(1); };
-  const miniTile = (l, v, c = "") => `<div class="mini-tile"><strong>${esc(l)}</strong><span class="${c}">${esc(String(v ?? "–"))}</span></div>`;
+  const miniTile = (l, v, c = "") => `<div class="mini-tile"><strong>${esc(l)}</strong><span class="${c}">${esc(String(v ?? "â€“"))}</span></div>`;
   const voiceStateClass = v => String(v || "").toLowerCase().replace(/_/g, "-");
   const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
 
@@ -583,7 +594,7 @@
     const ps = obj(b.profiles);
     if (Object.keys(ps).length) return ps;
     const fp = obj(b.profile), pid = fp.id || b.active_profile || "default";
-    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice) } };
+    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice), evolution: obj(b.evolution) } };
   }
 
   function getComparison(b, ps) {
@@ -623,7 +634,7 @@
       { l: "Total P&L", v: signM(pnl), s: fmtP(pct), c: pCls(pnl) },
       { l: "Cash Available", v: fmtM(latest.cash), s: "" },
       { l: "Open Positions", v: String(latest.position_count || arr(latest.positions).length || 0), s: "" },
-      { l: "Win Rate", v: wr !== null ? wr + "%" : "–", s: `${wins.length} / ${closed.length} closed`, c: wr !== null ? (+wr >= 50 ? "good" : "bad") : "" },
+      { l: "Win Rate", v: wr !== null ? wr + "%" : "â€“", s: `${wins.length} / ${closed.length} closed`, c: wr !== null ? (+wr >= 50 ? "good" : "bad") : "" },
     ].map(({ l, v, s, c = "" }) => `<div class="kpi"><div class="kpi-label">${esc(l)}</div><div class="kpi-value ${c}">${v}</div>${s ? `<div class="kpi-sub ${c}">${s}</div>` : ""}</div>`).join("");
   }
 
@@ -649,17 +660,17 @@
     document.getElementById("comparisonTable").innerHTML = sorted.length
       ? sorted.map(item => {
           const hl = item.profile === ACTIVE ? ' style="background:var(--surface2)"' : "";
-          return `<tr${hl}><td><strong>${esc(item.label || labelOf(item.profile))}</strong><br><span class="mono" style="color:var(--muted)">${esc(item.provider || "")} · ${esc(item.model || "")}</span></td><td>${fmtM(item.portfolio_value)}</td><td class="${pCls(item.total_pnl)}">${signM(item.total_pnl)}<br><small>${fmtP(item.total_pnl_pct)}</small></td><td>${esc(item.win_rate !== null ? item.win_rate.toFixed(1) + "%" : "–")}<br><small class="mono" style="color:var(--muted)">${item.trade_count || 0} trades</small></td><td class="mono" style="color:var(--muted)">${esc(dtShort(item.last_updated))}</td></tr>`;
+          return `<tr${hl}><td><strong>${esc(item.label || labelOf(item.profile))}</strong><br><span class="mono" style="color:var(--muted)">${esc(item.provider || "")} Â· ${esc(item.model || "")}</span></td><td>${fmtM(item.portfolio_value)}</td><td class="${pCls(item.total_pnl)}">${signM(item.total_pnl)}<br><small>${fmtP(item.total_pnl_pct)}</small></td><td>${esc(item.win_rate !== null ? item.win_rate.toFixed(1) + "%" : "â€“")}<br><small class="mono" style="color:var(--muted)">${item.trade_count || 0} trades</small></td><td class="mono" style="color:var(--muted)">${esc(dtShort(item.last_updated))}</td></tr>`;
         }).join("")
       : `<tr><td colspan="5">${emptyEl("No strategist data yet")}</td></tr>`;
 
     const byId = Object.fromEntries(sorted.map(s => [s.profile, s]));
     const leaders = obj(obj(BUNDLE.comparison).leaders);
-    const L = (key, fmt) => { const e = byId[leaders[key]]; return e ? `${e.label || e.profile}: ${fmt(e[key])}` : "–"; };
+    const L = (key, fmt) => { const e = byId[leaders[key]]; return e ? `${e.label || e.profile}: ${fmt(e[key])}` : "â€“"; };
     document.getElementById("comparisonCards").innerHTML = [
       ["Best Portfolio", L("portfolio_value", fmtM)],
       ["Best P&L", L("total_pnl", signM)],
-      ["Best Win Rate", L("win_rate", v => v === null ? "–" : v.toFixed(1) + "%")],
+      ["Best Win Rate", L("win_rate", v => v === null ? "â€“" : v.toFixed(1) + "%")],
       ["Most Trades", L("trade_count", v => String(v ?? 0))],
     ].map(([l, v]) => miniTile(l, v)).join("");
   }
@@ -672,16 +683,16 @@
     document.getElementById("pipelineGrid").innerHTML = [
       { n: "01", name: "News & Discovery", desc: "Market headlines, filings, stock discoveries", metric: String(disc.length + hl.length), unit: "inputs", bullets: [`${hl.length} market headlines`, `${disc.length} discoveries`, `${hot.length} cross-source movers`, ...disc.slice(0,2).map(d => d.symbol + ": " + trunc(d.top_headline || d.discovery_reason || "", 55))] },
       { n: "02", name: "Screener", desc: "News + technicals narrowed to today's shortlist", metric: String(sl.length), unit: "stocks", bullets: [`Universe: ${sc.total_scanned || 0} scanned`, `Candidates: ${sc.candidates_found || 0}`, `News-boosted: ${sc.news_discovered || 0}`, ...sl.slice(0,3).map(x => `${x.symbol || "?"} via ${x.source || "technicals"}`)] },
-      { n: "03", name: "Research", desc: "Deep Claude analysis with full context + feedback", metric: String(best.length), unit: "ideas", bullets: [`Regime: ${res.market_regime || mc.market_regime || "unknown"}`, `Sentiment: ${res.overall_sentiment || "unknown"}`, `Provider: ${llm.selected_provider || llm.provider || "–"}`, `Tokens: ${llm.usage?.total_tokens ?? "–"}`, ...best.slice(0,3).map(s => `${s}: ${obj(obj(res.stocks)[s]).recommendation || "watch"}`)] },
-      { n: "04", name: "Monitor & Execute", desc: "Strategy signals, risk check, trade execution", metric: String(exec.length), unit: "trades", bullets: [`${sigs.length} signals`, `${appr.length} approved`, `${rej.length} rejected`, ...exec.slice(0,3).map(x => `${(x.action||"?").toUpperCase()} ${x.symbol || "?"} ×${x.quantity || 0}`)] },
+      { n: "03", name: "Research", desc: "Deep Claude analysis with full context + feedback", metric: String(best.length), unit: "ideas", bullets: [`Regime: ${res.market_regime || mc.market_regime || "unknown"}`, `Sentiment: ${res.overall_sentiment || "unknown"}`, `Provider: ${llm.selected_provider || llm.provider || "â€“"}`, `Tokens: ${llm.usage?.total_tokens ?? "â€“"}`, ...best.slice(0,3).map(s => `${s}: ${obj(obj(res.stocks)[s]).recommendation || "watch"}`)] },
+      { n: "04", name: "Monitor & Execute", desc: "Strategy signals, risk check, trade execution", metric: String(exec.length), unit: "trades", bullets: [`${sigs.length} signals`, `${appr.length} approved`, `${rej.length} rejected`, ...exec.slice(0,3).map(x => `${(x.action||"?").toUpperCase()} ${x.symbol || "?"} Ã—${x.quantity || 0}`)] },
     ].map(s => `<div class="stage-card"><div class="stage-num">Stage ${s.n}</div><div class="stage-name">${esc(s.name)}</div><div class="stage-desc">${esc(s.desc)}</div><div class="stage-metric">${esc(s.metric)}</div><div class="stage-metric-lbl">${esc(s.unit)}</div><div class="stage-bullets">${s.bullets.filter(Boolean).map(b=>`<div class="stage-bullet">${esc(trunc(b,70))}</div>`).join("")}</div></div>`).join("");
 
     const rr = obj(obj(pb.reports).research);
     document.getElementById("runMeta").innerHTML = [
-      ["Run ID", rr.run_id || "–"], ["Research time", dtFull(rr.timestamp || ctx.timestamp)], ["Monitor time", dtFull(reportMonitor.timestamp)],
-      ["Input tokens", llm.usage?.input_tokens ?? "–"], ["Output tokens", llm.usage?.output_tokens ?? "–"],
-      ["Latency", llm.duration_ms ? Math.round(Number(llm.duration_ms)) + " ms" : "–"],
-      ["Platform", llm.runtime?.platform || "–"], ["Quota", llm.quota_note || "ok"],
+      ["Run ID", rr.run_id || "â€“"], ["Research time", dtFull(rr.timestamp || ctx.timestamp)], ["Monitor time", dtFull(reportMonitor.timestamp)],
+      ["Input tokens", llm.usage?.input_tokens ?? "â€“"], ["Output tokens", llm.usage?.output_tokens ?? "â€“"],
+      ["Latency", llm.duration_ms ? Math.round(Number(llm.duration_ms)) + " ms" : "â€“"],
+      ["Platform", llm.runtime?.platform || "â€“"], ["Quota", llm.quota_note || "ok"],
     ].map(([l, v]) => miniTile(l, v)).join("");
   }
 
@@ -697,7 +708,7 @@
           return `<div class="decision-card" data-rec="${esc(rec)}">
             <div class="dec-top"><div><div class="dec-sym">${esc(sym)}</div><div class="dec-desc">${esc(trunc(a.technical_setup || a.news_summary || "", 110))}</div></div><span class="rec-badge ${esc(rec)}">${esc(rec)}</span></div>
             ${confP !== null ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;color:var(--muted)">Confidence</span><div class="conf-bar" style="flex:1"><div class="conf-fill" style="width:${clamp(confP,0,100)}%"></div></div><span style="font-size:12px;font-weight:700">${confP}%</span></div>` : ""}
-            <div class="dec-plan">${[["Entry",fmtM(plan.entry)],["Stop",fmtM(plan.stop_loss)],["Target",fmtM(plan.target)],["R/R",plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"×":"–"]].map(([l,v])=>`<div class="plan-cell"><div class="lbl">${esc(l)}</div><div class="val">${v}</div></div>`).join("")}</div>
+            <div class="dec-plan">${[["Entry",fmtM(plan.entry)],["Stop",fmtM(plan.stop_loss)],["Target",fmtM(plan.target)],["R/R",plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"Ã—":"â€“"]].map(([l,v])=>`<div class="plan-cell"><div class="lbl">${esc(l)}</div><div class="val">${v}</div></div>`).join("")}</div>
             ${arr(a.key_observations).length ? `<div class="dec-sec"><div class="dec-sec-lbl">Key Observations</div><ul class="dec-bullets">${arr(a.key_observations).slice(0,3).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
             ${arr(a.catalysts).length ? `<div class="dec-sec"><div class="dec-sec-lbl">Catalysts</div><ul class="dec-bullets">${arr(a.catalysts).slice(0,2).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
             ${hl.length ? `<div class="dec-sec"><div class="dec-sec-lbl">Headlines (${hl.length})</div><div class="news-chips">${hl.slice(0,3).map(h=>`<div class="news-chip" title="${esc(h.title||"")}">${esc(trunc(h.title||"",80))}</div>`).join("")}</div></div>` : ""}
@@ -723,13 +734,13 @@
       <div class="td-block">
         <h4>News Context</h4>
         ${hl.length
-          ? `<div class="hl-list">${hl.map(h => { const url = safeUrl(h.url); return `<div class="hl-row"><div class="hl-sent ${sentC(h.sentiment)}">${sentL(h.sentiment)}</div><div class="hl-body"><div class="hl-title">${url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(trunc(h.title||"",90))}</a>` : esc(trunc(h.title||"",90))}</div><div class="hl-meta">${esc(h.publisher||h.source||"")} · ${esc(dtShort(h.published))}</div></div></div>`; }).join("")}</div>`
+          ? `<div class="hl-list">${hl.map(h => { const url = safeUrl(h.url); return `<div class="hl-row"><div class="hl-sent ${sentC(h.sentiment)}">${sentL(h.sentiment)}</div><div class="hl-body"><div class="hl-title">${url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(trunc(h.title||"",90))}</a>` : esc(trunc(h.title||"",90))}</div><div class="hl-meta">${esc(h.publisher||h.source||"")} Â· ${esc(dtShort(h.published))}</div></div></div>`; }).join("")}</div>`
           : `<p>No headlines captured for ${esc(sym)}.</p>`}
       </div>
       <div class="td-block">
         <h4>Trade Plan</h4>
         <div class="tp-grid">
-          ${[["Entry", fmtM(plan.entry || t.price)],["Stop Loss", fmtM(plan.stop_loss)],["Target", fmtM(plan.target)],["R / R", plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"×":"–"],["Size", plan.position_size_pct !== undefined ? Number(plan.position_size_pct).toFixed(1)+"%":"–"],["Timeframe", plan.timeframe || "intraday"]].map(([l,v])=>`<div class="tp-cell"><div class="l">${esc(l)}</div><div class="v">${v}</div></div>`).join("")}
+          ${[["Entry", fmtM(plan.entry || t.price)],["Stop Loss", fmtM(plan.stop_loss)],["Target", fmtM(plan.target)],["R / R", plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"Ã—":"â€“"],["Size", plan.position_size_pct !== undefined ? Number(plan.position_size_pct).toFixed(1)+"%":"â€“"],["Timeframe", plan.timeframe || "intraday"]].map(([l,v])=>`<div class="tp-cell"><div class="l">${esc(l)}</div><div class="v">${v}</div></div>`).join("")}
         </div>
         ${a.technical_setup ? `<div style="margin-top:12px"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Technical Setup</div><p style="font-size:12px;color:var(--muted);line-height:1.5">${esc(trunc(a.technical_setup, 200))}</p></div>` : ""}
       </div>
@@ -738,11 +749,11 @@
 
   function renderTrades(trades) {
     const list = arr(trades).slice().reverse().slice(0, 80);
-    if (!list.length) { document.getElementById("tradesBody").innerHTML = `<tr><td colspan="9">${emptyEl("No trades yet — run the pipeline to start trading.")}</td></tr>`; return; }
+    if (!list.length) { document.getElementById("tradesBody").innerHTML = `<tr><td colspan="9">${emptyEl("No trades yet â€” run the pipeline to start trading.")}</td></tr>`; return; }
     document.getElementById("tradesBody").innerHTML = list.map((t, i) => {
       const ac = { buy: "buy", sell: "sell", short: "sell" }[String(t.action || "").toLowerCase()] || "";
       const pnl = num(t.pnl);
-      return `<tr class="trade-row" data-idx="${i}" onclick="toggleTrade(${i})"><td><span class="expand-icon">›</span></td><td class="mono" style="color:var(--muted)">${esc(dtFull(t.timestamp))}</td><td><strong>${esc(t.symbol || "")}</strong></td><td><span class="badge ${ac}">${esc(String(t.action || "").toUpperCase())}</span></td><td>${esc(t.quantity ?? "–")}</td><td>${fmtM(t.price)}</td><td>${fmtM(t.value)}</td><td class="${pCls(pnl)}">${pnl !== null ? signM(pnl) : "–"}</td><td><span class="badge ${(t.status||"").toLowerCase().includes("dry")?"dry":""}">${esc(t.status || "–")}</span></td></tr>
+      return `<tr class="trade-row" data-idx="${i}" onclick="toggleTrade(${i})"><td><span class="expand-icon">â€º</span></td><td class="mono" style="color:var(--muted)">${esc(dtFull(t.timestamp))}</td><td><strong>${esc(t.symbol || "")}</strong></td><td><span class="badge ${ac}">${esc(String(t.action || "").toUpperCase())}</span></td><td>${esc(t.quantity ?? "â€“")}</td><td>${fmtM(t.price)}</td><td>${fmtM(t.value)}</td><td class="${pCls(pnl)}">${pnl !== null ? signM(pnl) : "â€“"}</td><td><span class="badge ${(t.status||"").toLowerCase().includes("dry")?"dry":""}">${esc(t.status || "â€“")}</span></td></tr>
       <tr class="trade-detail-row" id="td-${i}"><td class="trade-detail-cell" colspan="9">${buildDetail(t)}</td></tr>`;
     }).join("");
   }
@@ -777,11 +788,11 @@
     if (mc.treasury_10y?.yield_pct !== undefined) chips.push(["10Y", mc.treasury_10y.yield_pct + "%"]);
     document.getElementById("regimeChips").innerHTML = chips.map(([l,v]) => `<div class="regime-chip"><strong>${esc(l)}</strong>: ${esc(v)}</div>`).join("") || emptyEl("No regime data");
 
-    const hlRow = h => { const url = safeUrl(h.url); return `<div class="hl-row"><div class="hl-sent ${sentC(h.sentiment)}">${sentL(h.sentiment)}</div><div class="hl-body"><div class="hl-title">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(trunc(h.title||"",100))}</a>`:esc(trunc(h.title||"",100))}</div><div class="hl-meta">${esc(h.publisher||h.source||"")} · ${esc(dtShort(h.published))}</div></div></div>`; };
+    const hlRow = h => { const url = safeUrl(h.url); return `<div class="hl-row"><div class="hl-sent ${sentC(h.sentiment)}">${sentL(h.sentiment)}</div><div class="hl-body"><div class="hl-title">${url?`<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(trunc(h.title||"",100))}</a>`:esc(trunc(h.title||"",100))}</div><div class="hl-meta">${esc(h.publisher||h.source||"")} Â· ${esc(dtShort(h.published))}</div></div></div>`; };
     document.getElementById("marketHeadlines").innerHTML = hl.length ? hl.slice(0,8).map(hlRow).join("") : emptyEl("No market headlines captured");
     document.getElementById("discoveries").innerHTML = disc.length ? disc.map(d => `<div class="disc-tile"><div class="disc-sym">${esc(d.symbol||"?")}</div><div class="disc-reason">${esc(trunc(d.top_headline||d.discovery_reason||"",90))}</div></div>`).join("") : emptyEl("No discoveries");
-    document.getElementById("hotStocks").innerHTML = hot.length ? hot.map(h => `<div class="disc-tile"><div class="disc-sym">${esc(h.symbol||"?")}</div><div class="disc-reason">${esc((h.sentiment||"mixed") + " · " + (h.source_count||0) + " sources")}</div></div>`).join("") : emptyEl("No hot stocks");
-    document.getElementById("analystTape").innerHTML = analyst.length ? analyst.map(x => `<div class="analyst-row"><span style="font-weight:800">${esc(x.symbol||"?")}</span><span style="font-size:11px;color:var(--muted)">${esc(x.firm||"?")} — ${esc(x.action||"?")} (${esc(x.from_grade||"?")} → ${esc(x.to_grade||"?")})</span></div>`).join("") : emptyEl("No analyst changes");
+    document.getElementById("hotStocks").innerHTML = hot.length ? hot.map(h => `<div class="disc-tile"><div class="disc-sym">${esc(h.symbol||"?")}</div><div class="disc-reason">${esc((h.sentiment||"mixed") + " Â· " + (h.source_count||0) + " sources")}</div></div>`).join("") : emptyEl("No hot stocks");
+    document.getElementById("analystTape").innerHTML = analyst.length ? analyst.map(x => `<div class="analyst-row"><span style="font-weight:800">${esc(x.symbol||"?")}</span><span style="font-size:11px;color:var(--muted)">${esc(x.firm||"?")} â€” ${esc(x.action||"?")} (${esc(x.from_grade||"?")} â†’ ${esc(x.to_grade||"?")})</span></div>`).join("") : emptyEl("No analyst changes");
   }
 
   function renderKnowledge(kb) {
@@ -793,24 +804,24 @@
 
     document.getElementById("lessonCards").innerHTML = lessons.length
       ? lessons.map((l, i) => `<div class="lesson-card" data-n="${i + 1}">${esc(l)}</div>`).join("")
-      : emptyEl("No lessons yet — they accumulate after the first evening reflection.");
+      : emptyEl("No lessons yet â€” they accumulate after the first evening reflection.");
 
     document.getElementById("patternCards").innerHTML = patterns.length
       ? patterns.map(p => {
           const wr = num(p.win_rate), occ = p.total_occurrences || p.occurrences || 0;
           const fc = wr !== null ? (wr >= 0.6 ? "var(--good)" : wr >= 0.4 ? "var(--warn)" : "var(--bad)") : "var(--accent)";
           const wrc = wr !== null ? (wr >= 0.6 ? "good" : wr >= 0.4 ? "warn" : "bad") : "";
-          return `<div class="pattern-card"><div class="pattern-name">${esc(p.name || "Unnamed")}</div><div class="pattern-stats"><div class="pattern-stat"><div class="ps-lbl">Win Rate</div><div class="ps-val ${wrc}">${wr !== null ? (wr*100).toFixed(0)+"%" : "–"}</div></div><div class="pattern-stat"><div class="ps-lbl">Seen</div><div class="ps-val">${occ}</div></div><div class="pattern-stat"><div class="ps-lbl">Last</div><div class="ps-val mono" style="font-size:11px">${esc(p.last_seen || "–")}</div></div></div><div class="pat-bar"><div class="pat-fill" style="width:${wr !== null ? clamp(wr*100,0,100) : 50}%;background:${fc}"></div></div>${arr(p.symbols_seen).length ? `<div class="pat-syms">Seen in: ${esc(arr(p.symbols_seen).slice(0,6).join(", "))}</div>` : ""}</div>`;
+          return `<div class="pattern-card"><div class="pattern-name">${esc(p.name || "Unnamed")}</div><div class="pattern-stats"><div class="pattern-stat"><div class="ps-lbl">Win Rate</div><div class="ps-val ${wrc}">${wr !== null ? (wr*100).toFixed(0)+"%" : "â€“"}</div></div><div class="pattern-stat"><div class="ps-lbl">Seen</div><div class="ps-val">${occ}</div></div><div class="pattern-stat"><div class="ps-lbl">Last</div><div class="ps-val mono" style="font-size:11px">${esc(p.last_seen || "â€“")}</div></div></div><div class="pat-bar"><div class="pat-fill" style="width:${wr !== null ? clamp(wr*100,0,100) : 50}%;background:${fc}"></div></div>${arr(p.symbols_seen).length ? `<div class="pat-syms">Seen in: ${esc(arr(p.symbols_seen).slice(0,6).join(", "))}</div>` : ""}</div>`;
         }).join("")
-      : emptyEl("No patterns yet — they appear after weekly reviews.");
+      : emptyEl("No patterns yet â€” they appear after weekly reviews.");
 
     document.getElementById("obsCards").innerHTML = obs.length
       ? obs.map(o => `<div class="obs-card"><div class="obs-hd"><span class="obs-date">${esc(o.date || "?")}</span>${o.market_regime ? `<span class="obs-regime">${esc(o.market_regime)}</span>` : ""}</div><div class="obs-summary">${esc(o.market_summary || "No summary.")}</div>${arr(o.lessons).length ? `<div class="obs-lessons">${arr(o.lessons).slice(0,3).map(l=>`<div class="obs-lesson">${esc(l)}</div>`).join("")}</div>` : ""}</div>`).join("")
-      : emptyEl("No observations yet — run the evening reflection phase to start.");
+      : emptyEl("No observations yet â€” run the evening reflection phase to start.");
 
     document.getElementById("proposalCards").innerHTML = proposals.length
-      ? proposals.map(p => { const pri = (p.priority || "medium").toLowerCase(); return `<div class="proposal-card ${pri}"><div class="prop-top"><span class="prop-pri ${pri}">${esc(pri.toUpperCase())}</span><span class="prop-cat">${esc(p.category || "other")}</span></div><div class="prop-title">${esc(p.title || "Untitled")}</div><div class="prop-desc">${esc(p.description || "")}</div>${p.expected_impact ? `<div class="prop-impact">↑ ${esc(p.expected_impact)}</div>` : ""}</div>`; }).join("")
-      : emptyEl("No improvement proposals yet — they appear after the first evening reflection.");
+      ? proposals.map(p => { const pri = (p.priority || "medium").toLowerCase(); return `<div class="proposal-card ${pri}"><div class="prop-top"><span class="prop-pri ${pri}">${esc(pri.toUpperCase())}</span><span class="prop-cat">${esc(p.category || "other")}</span></div><div class="prop-title">${esc(p.title || "Untitled")}</div><div class="prop-desc">${esc(p.description || "")}</div>${p.expected_impact ? `<div class="prop-impact">â†‘ ${esc(p.expected_impact)}</div>` : ""}</div>`; }).join("")
+      : emptyEl("No improvement proposals yet â€” they appear after the first evening reflection.");
   }
 
   function renderPositions(latest, llm) {
@@ -819,15 +830,15 @@
       ? pos.map(x => `<tr><td><strong>${esc(x.symbol)}</strong></td><td>${esc(x.shares)}</td><td>${fmtM(x.avg_cost)}</td><td>${fmtM(x.current_price)}</td><td class="${pCls(x.unrealized_pnl)}">${signM(x.unrealized_pnl)}</td></tr>`).join("")
       : `<tr><td colspan="5">${emptyEl("No open positions")}</td></tr>`;
     document.getElementById("llmSummary").innerHTML = [
-      ["Provider", llm.selected_provider || llm.provider || "–"],
-      ["Model", llm.selected_model || llm.model || "–"],
-      ["Input tokens", llm.usage?.input_tokens ?? "–"],
-      ["Output tokens", llm.usage?.output_tokens ?? "–"],
-      ["Latency", llm.duration_ms ? Math.round(Number(llm.duration_ms)) + " ms" : "–"],
-      ["Run ID", llm.runtime?.github?.run_id || "–"],
+      ["Provider", llm.selected_provider || llm.provider || "â€“"],
+      ["Model", llm.selected_model || llm.model || "â€“"],
+      ["Input tokens", llm.usage?.input_tokens ?? "â€“"],
+      ["Output tokens", llm.usage?.output_tokens ?? "â€“"],
+      ["Latency", llm.duration_ms ? Math.round(Number(llm.duration_ms)) + " ms" : "â€“"],
+      ["Run ID", llm.runtime?.github?.run_id || "â€“"],
     ].map(([l,v]) => miniTile(l, v)).join("");
     document.getElementById("providerAttempts").innerHTML = arr(llm.attempts).map(x =>
-      `<div class="mini-tile" style="margin-bottom:6px"><strong>${esc((x.provider||"?") + " / " + (x.model||"?"))}</strong><span>${esc("Status: " + (x.status||"unknown"))} ${x.duration_ms !== undefined ? "· "+x.duration_ms+" ms" : ""}</span></div>`
+      `<div class="mini-tile" style="margin-bottom:6px"><strong>${esc((x.provider||"?") + " / " + (x.model||"?"))}</strong><span>${esc("Status: " + (x.status||"unknown"))} ${x.duration_ms !== undefined ? "Â· "+x.duration_ms+" ms" : ""}</span></div>`
     ).join("") || "";
   }
 
@@ -902,13 +913,55 @@
       : emptyEl("Voice history will build after a few evening sessions.");
   }
 
+  function renderEvolution(evolution) {
+    const top = obj(evolution.top_priority);
+    const queue = arr(evolution.priority_queue);
+    const summary = evolution.summary || "";
+    const reportUrl = evolution.report_url || "";
+    const reviewUrl = evolution.review_url || "";
+
+    document.getElementById("evolutionSummary").innerHTML = [
+      ["Status", evolution.status || "-"],
+      ["Queue Size", String(queue.length)],
+      ["Top Category", top.category || "-"],
+      ["As Of", evolution.date || "-"],
+    ].map(([l, v]) => miniTile(l, v)).join("");
+
+    if (!summary && !queue.length && !Object.keys(top).length) {
+      document.getElementById("evolutionCard").innerHTML = emptyEl("No evolution review yet. Run `./scripts/run_both.sh evolve parallel` when you want an explicit improvement pass.");
+      return;
+    }
+
+    const links = [
+      reportUrl ? `<a class="voice-link" href="${esc(reportUrl)}" target="_blank" rel="noreferrer">Open Evolution Report</a>` : "",
+      reviewUrl ? `<a class="voice-link" href="${esc(reviewUrl)}" target="_blank" rel="noreferrer">Open Evolution JSON</a>` : "",
+    ].filter(Boolean).join("");
+
+    document.getElementById("evolutionCard").innerHTML = `<div class="voice-card">
+      <div class="voice-top">
+        <div>
+          <h3 style="font-size:16px;font-weight:800">${esc(top.title || "No top priority selected")}</h3>
+          <div class="voice-date">${esc(evolution.date || "No date")}</div>
+        </div>
+        <span class="state-badge ${esc(voiceStateClass(evolution.status))}">${esc(evolution.status || "unknown")}</span>
+      </div>
+      <div class="voice-summary">${esc(summary || "No evolution summary recorded.")}</div>
+      <div class="voice-grid">
+        <div class="voice-block"><strong>Why Now</strong><div class="voice-summary">${esc(top.why_now || "No justification recorded.")}</div></div>
+        <div class="voice-block"><strong>Expected Impact</strong><div class="voice-summary">${esc(top.expected_impact || "No expected impact recorded.")}</div></div>
+      </div>
+      <div class="voice-block" style="margin-top:10px"><strong>Priority Queue</strong>${queue.length ? `<ul class="voice-list">${queue.slice(0, 5).map(item => `<li>${esc(`[${item.priority || "?"}] ${item.title || "Untitled"} - ${item.action_type || "review"}`)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">No queued changes.</div>`}</div>
+      ${links ? `<div class="voice-links">${links}</div>` : ""}
+    </div>`;
+  }
+
   function renderAll() {
     const profiles = getProfiles(BUNDLE);
     if (!ACTIVE || !profiles[ACTIVE]) ACTIVE = BUNDLE.active_profile && profiles[BUNDLE.active_profile] ? BUNDLE.active_profile : Object.keys(profiles)[0] || "default";
     const pb = profiles[ACTIVE] || Object.values(profiles)[0] || {};
     const latest = obj(pb.latest), trades = arr(pb.trades);
     const reports = obj(pb.reports), rm = obj(reports.monitor), rr = obj(reports.research);
-    const llm = obj(pb.llm), kb = obj(pb.knowledge), interactions = obj(pb.interactions), voice = obj(pb.voice);
+    const llm = obj(pb.llm), kb = obj(pb.knowledge), interactions = obj(pb.interactions), voice = obj(pb.voice), evolution = obj(pb.evolution);
     const res = Object.keys(obj(pb.research)).length ? obj(pb.research) : obj(obj(rr.research));
     const ctx = obj(pb.context), prompt = obj(ctx.prompt_sections), ni = obj(prompt.news_inputs);
     const perSym = obj(ni.per_symbol), webInf = obj(ni.web_influence), webBySym = obj(webInf.articles_by_symbol);
@@ -920,13 +973,14 @@
 
     const best = arr(res.best_opportunities);
     document.getElementById("activeLabel").textContent = profile.label || labelOf(profile.id || ACTIVE);
-    document.getElementById("heroSummary").textContent = [res.market_summary, res.market_regime ? "Regime: " + res.market_regime : "", best.length ? "Top picks: " + best.join(", ") : ""].filter(Boolean).join(" · ") || "No research data yet.";
+    document.getElementById("heroSummary").textContent = [res.market_summary, res.market_regime ? "Regime: " + res.market_regime : "", best.length ? "Top picks: " + best.join(", ") : ""].filter(Boolean).join(" Â· ") || "No research data yet.";
 
     const rt = obj(llm.runtime) || {};
     const runUrl = rt.github?.run_url || ctx.llm_meta?.runtime?.github?.run_url || "";
     const arts = obj(pb.artifacts);
     document.getElementById("navReport").href = arts.research_report_md || "data/report_research.md";
     document.getElementById("navInteraction").href = obj(interactions.latest).transcript_url || obj(interactions.latest).prompt_url || arts.interactions_json || "data/context.json";
+    document.getElementById("navEvolution").href = evolution.report_url || evolution.review_url || arts.evolution_report_md || arts.evolution_review_json || "data/EVOLUTION_REPORT.md";
     document.getElementById("navActions").href = wfUrl(rt, runUrl);
 
     const cmp = getComparison(BUNDLE, profiles);
@@ -939,6 +993,7 @@
     renderTrades(trades);
     renderNews(pb);
     renderKnowledge(kb);
+    renderEvolution(evolution);
     renderVoice(voice, interactions);
     renderPositions(latest, llm);
     renderInteractions(interactions);
@@ -974,7 +1029,7 @@
   ["overview","pipeline","decisions","trades","news","knowledge"].forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
 
   fetch("data/dashboard.json").then(r => r.json()).then(b => { BUNDLE = b; renderAll(); }).catch(() => {
-    document.getElementById("heroSummary").textContent = "Could not load dashboard.json — run the pipeline first.";
+    document.getElementById("heroSummary").textContent = "Could not load dashboard.json â€” run the pipeline first.";
   });
 </script>
 </body>

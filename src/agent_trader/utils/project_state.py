@@ -39,6 +39,8 @@ TOP_LEVEL_DATA_FILES = (
 KNOWLEDGE_FILES = (
     "IMPROVEMENT_PROPOSALS.md",
     "improvement_proposals.json",
+    "EVOLUTION_REPORT.md",
+    "evolution_review.json",
 )
 
 

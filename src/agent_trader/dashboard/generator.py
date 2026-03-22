@@ -580,6 +580,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     shutil.rmtree(data_out / "profiles", ignore_errors=True)
     shutil.rmtree(data_out / "interactions", ignore_errors=True)
     shutil.rmtree(data_out / "voice", ignore_errors=True)
+    shutil.rmtree(data_out / "evolution", ignore_errors=True)
 
     profile_roots = _discover_profile_roots(data_root)
     bundle = _build_dashboard_bundle(data_root, profile_roots=profile_roots)
@@ -594,6 +595,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
     _write_json(data_out / "interactions.json", bundle["interactions"])
     _write_json(data_out / "voice.json", bundle["voice"])
+    _write_json(data_out / "evolution.json", bundle["evolution"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
     _write_json(
@@ -609,8 +611,11 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _copy_latest_report_artifact(active_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
     _copy_if_exists(active_root / "improvement_proposals.json", data_out / "improvement_proposals.json")
     _copy_if_exists(active_root / "IMPROVEMENT_PROPOSALS.md", data_out / "IMPROVEMENT_PROPOSALS.md")
+    _copy_if_exists(active_root / "evolution_review.json", data_out / "evolution_review.json")
+    _copy_if_exists(active_root / "EVOLUTION_REPORT.md", data_out / "EVOLUTION_REPORT.md")
     _copy_interaction_files(active_root, data_out / "interactions", bundle["interactions"])
     _copy_voice_files(active_root, data_out / "voice")
+    _copy_evolution_files(active_root, data_out / "evolution")
 
     for profile_id, profile_root in profile_roots.items():
         profile_bundle = bundle["profiles"][profile_id]
@@ -626,6 +631,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
         _write_json(profile_out / "interactions.json", profile_bundle["interactions"])
         _write_json(profile_out / "voice.json", profile_bundle["voice"])
+        _write_json(profile_out / "evolution.json", profile_bundle["evolution"])
         _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
         _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
         _write_json(
@@ -646,8 +652,17 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
             profile_root / "IMPROVEMENT_PROPOSALS.md",
             profile_out / "IMPROVEMENT_PROPOSALS.md",
         )
+        _copy_if_exists(
+            profile_root / "evolution_review.json",
+            profile_out / "evolution_review.json",
+        )
+        _copy_if_exists(
+            profile_root / "EVOLUTION_REPORT.md",
+            profile_out / "EVOLUTION_REPORT.md",
+        )
         _copy_interaction_files(profile_root, profile_out / "interactions", profile_bundle["interactions"])
         _copy_voice_files(profile_root, profile_out / "voice")
+        _copy_evolution_files(profile_root, profile_out / "evolution")
 
     rules_path = active_root / "feedback" / "learned_rules.json"
     if rules_path.exists():
@@ -685,6 +700,7 @@ def _build_dashboard_bundle(
         "knowledge": active_bundle["knowledge"],
         "interactions": active_bundle["interactions"],
         "voice": active_bundle["voice"],
+        "evolution": active_bundle["evolution"],
         "reports": active_bundle["reports"],
     }
 
@@ -731,6 +747,7 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "knowledge": _load_knowledge_bundle(data_root),
         "interactions": _load_interaction_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "voice": _load_voice_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
+        "evolution": _load_evolution_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "reports": {"research": research_report, "monitor": monitor_report},
         "artifacts": _build_profile_artifacts(profile["id"], multi_profile=multi_profile),
     }
@@ -973,6 +990,35 @@ def _empty_voice_bundle() -> dict[str, Any]:
     }
 
 
+def _load_evolution_bundle(data_root: Path, *, profile_id: str, multi_profile: bool) -> dict[str, Any]:
+    review = _read_json(data_root / "evolution_review.json", {})
+    report_path = data_root / "EVOLUTION_REPORT.md"
+    report_exists = report_path.exists()
+    latest = review if isinstance(review, dict) else {}
+    return {
+        **latest,
+        "latest": latest,
+        "report_url": _public_evolution_path(report_path.as_posix(), profile_id=profile_id, multi_profile=multi_profile) if report_exists else "",
+        "review_url": _public_evolution_path((data_root / "evolution_review.json").as_posix(), profile_id=profile_id, multi_profile=multi_profile) if (data_root / "evolution_review.json").exists() else "",
+        "report_present": report_exists,
+    }
+
+
+def _empty_evolution_bundle() -> dict[str, Any]:
+    return {
+        "date": "",
+        "profile": "",
+        "status": "",
+        "summary": "",
+        "top_priority": {},
+        "priority_queue": [],
+        "latest": {},
+        "report_url": "",
+        "review_url": "",
+        "report_present": False,
+    }
+
+
 def _empty_knowledge_bundle() -> dict[str, Any]:
     return {
         "counts": {
@@ -1122,6 +1168,12 @@ def _copy_voice_files(data_root: Path, destination_root: Path) -> None:
     shutil.copytree(source_root, destination_root, dirs_exist_ok=True)
 
 
+def _copy_evolution_files(data_root: Path, destination_root: Path) -> None:
+    destination_root.mkdir(parents=True, exist_ok=True)
+    _copy_if_exists(data_root / "evolution_review.json", destination_root / "evolution_review.json")
+    _copy_if_exists(data_root / "EVOLUTION_REPORT.md", destination_root / "EVOLUTION_REPORT.md")
+
+
 def _get_latest_report(data_root: Path, phase: str) -> dict[str, Any]:
     path = _get_latest_report_path(data_root, phase=phase, suffix=".json")
     return _read_json(path, {}) if path else {}
@@ -1194,6 +1246,9 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "interactions_json": f"{base}/interactions.json",
         "voice_json": f"{base}/voice.json",
         "latest_voice_json": f"{base}/voice/latest_voice.json",
+        "evolution_json": f"{base}/evolution.json",
+        "evolution_review_json": f"{base}/evolution_review.json",
+        "evolution_report_md": f"{base}/EVOLUTION_REPORT.md",
         "improvement_json": f"{base}/improvement_proposals.json",
         "improvement_md": f"{base}/IMPROVEMENT_PROPOSALS.md",
         "research_report_json": f"{base}/report_research.json",
@@ -1231,6 +1286,23 @@ def _public_voice_path(raw_path: str, *, profile_id: str, multi_profile: bool) -
     return path_text
 
 
+def _public_evolution_path(raw_path: str, *, profile_id: str, multi_profile: bool) -> str:
+    path_text = str(raw_path or "").replace("\\", "/").strip()
+    if not path_text:
+        return ""
+    if path_text.startswith("data/profiles/"):
+        return path_text
+    base = f"data/profiles/{profile_id}" if multi_profile else "data"
+    if path_text.endswith("EVOLUTION_REPORT.md"):
+        return f"{base}/EVOLUTION_REPORT.md"
+    if path_text.endswith("evolution_review.json"):
+        return f"{base}/evolution_review.json"
+    if "evolution/" in path_text:
+        suffix = path_text.split("evolution/", 1)[1]
+        return f"{base}/evolution/{suffix}".replace("//", "/")
+    return path_text
+
+
 def _public_repo_path(raw_path: str) -> str:
     return ""
 
@@ -1251,6 +1323,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "knowledge": _empty_knowledge_bundle(),
         "interactions": _empty_interaction_bundle(),
         "voice": _empty_voice_bundle(),
+        "evolution": _empty_evolution_bundle(),
         "reports": {"research": {}, "monitor": {}},
         "artifacts": _build_profile_artifacts(profile_id, multi_profile=True),
     }

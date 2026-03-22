@@ -6,6 +6,7 @@
 #   ./scripts/run_both.sh evening
 #   ./scripts/run_both.sh weekly
 #   ./scripts/run_both.sh monthly
+#   ./scripts/run_both.sh evolve
 #   ./scripts/run_both.sh morning parallel
 #
 # Notes:
@@ -16,7 +17,7 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
-PHASE="${1:?Usage: $0 <morning|evening|weekly|monthly> [serial|parallel]}"
+PHASE="${1:?Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]}"
 RUN_MODE="${2:-serial}"
 DATE="$(date +%Y-%m-%d)"
 
@@ -34,7 +35,7 @@ if [[ "$RUN_MODE" == "--parallel" ]]; then
 fi
 if [[ "$RUN_MODE" != "serial" && "$RUN_MODE" != "parallel" ]]; then
   echo "Unknown run mode: $RUN_MODE"
-  echo "Usage: $0 <morning|evening|weekly|monthly> [serial|parallel]"
+  echo "Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]"
   exit 1
 fi
 
@@ -59,9 +60,14 @@ case "$PHASE" in
     EXTRA_PROMPT_FILE=""
     COMMIT_TAG="monthly"
     ;;
+  evolve)
+    PROMPT_FILE="scripts/prompts/evolution_review.md"
+    EXTRA_PROMPT_FILE=""
+    COMMIT_TAG="evolution"
+    ;;
   *)
     echo "Unknown phase: $PHASE"
-    echo "Usage: $0 <morning|evening|weekly|monthly> [serial|parallel]"
+    echo "Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]"
     exit 1
     ;;
 esac

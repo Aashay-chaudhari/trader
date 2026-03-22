@@ -5,6 +5,7 @@ import tempfile
 from pathlib import Path
 import pytest
 from agent_trader.core import MessageBus, Orchestrator, BaseAgent, AgentRole, MessageType
+from agent_trader.config.settings import reset_settings
 
 
 class MockAgent(BaseAgent):
@@ -21,6 +22,14 @@ class MockAgent(BaseAgent):
         if self.should_fail:
             raise RuntimeError("Mock failure")
         return self.return_value
+
+
+@pytest.fixture(autouse=True)
+def force_debug_runtime(monkeypatch):
+    monkeypatch.setenv("RUN_MODE", "debug")
+    reset_settings()
+    yield
+    reset_settings()
 
 
 @pytest.mark.asyncio

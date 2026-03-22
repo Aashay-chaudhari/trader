@@ -166,6 +166,29 @@ Why it matters:
 - daily reflections are noisy
 - weekly review is where the repo starts deciding what is worth remembering
 
+### 6. Optional Evolution Review
+
+Use this only if you want a deliberate improvement pass after a few trading
+days or after the weekly review.
+
+Run:
+
+```powershell
+& "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evolve parallel
+```
+
+What this contributes to the repo:
+- reads the existing improvement backlog instead of inventing a new one from scratch
+- creates:
+  - `EVOLUTION_REPORT.md`
+  - `evolution_review.json`
+  - interaction logs for the evolution session
+- pushes a clearer operator-facing priority queue back into the repo and dashboard
+
+Why it matters:
+- it separates real evidence-backed changes from noise
+- it gives you a cleaner place to decide what to implement next
+
 ## Command Checklist
 
 ### Every trading morning

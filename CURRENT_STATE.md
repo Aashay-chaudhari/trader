@@ -2,112 +2,87 @@
 
 Date: 2026-03-22
 
-## Operating Model
+## Status
 
-Agent Trader now uses a streamlined two-layer workflow:
+The repo is in a paper-trading-ready operator state.
 
-1. Local strategist sessions
-   - Run with `scripts/run_both.sh`
-   - Heavy research and reflection happen locally through CLI subscriptions
-   - Supported phases: `morning`, `evening`, `weekly`, `monthly`
+What that means:
 
-2. Remote monitor automation
-   - GitHub Actions runs the monitor workflow every 30 minutes on weekdays
-   - Monitor uses cheap API models only
-   - Remote workflow is intentionally limited to the intraday monitor path
+- local CLI research and reflection are the primary workflow
+- GitHub Actions runs only the lightweight monitor path
+- monitor uses cheap API models
+- Alpaca paper execution is wired through the Python runtime
+- dashboard output includes knowledge, interactions, strategist voice, and evolution artifacts
 
-## Source Of Truth
+## Primary Commands
 
-Durable strategist state lives under:
-
-- `data/profiles/claude/`
-- `data/profiles/codex/`
-
-Tracked long-term memory includes:
-
-- `knowledge/`
-- `observations/`
-- `positions/`
-- `cache/`
-- `profile.json`
-
-Legacy top-level runtime folders are no longer part of the supported architecture.
-
-## Monitor Model Defaults
-
-- Claude strategist monitor: `claude-haiku-4-5-20251001`
-- Codex strategist monitor: `gpt-4o-mini`
-
-## Current Workflow
-
-Morning:
+### Daily
 
 ```bash
 ./scripts/run_both.sh morning parallel
-```
-
-Evening:
-
-```bash
 ./scripts/run_both.sh evening parallel
 ```
 
-Weekly:
+### Periodic
 
 ```bash
 ./scripts/run_both.sh weekly parallel
+./scripts/run_both.sh monthly parallel
+./scripts/run_both.sh evolve parallel
 ```
 
-Monthly:
+### Validation
 
 ```bash
-./scripts/run_both.sh monthly parallel
+pytest -q
+python -m agent_trader validate --data-dir data/profiles/claude
+python -m agent_trader validate --data-dir data/profiles/codex
+python -m agent_trader dashboard
 ```
 
-Remote automation:
+## Current Frontend Surface
 
-- GitHub Actions `Trading Pipeline`
-- monitor only
-- weekday schedule during market hours
+GitHub Pages should now show:
 
-## Configuration Direction
+- strategist comparison
+- trade history and market intelligence
+- knowledge summaries
+- local session logs
+- strategist voice
+- evolution summary plus report link
 
-Supported control variables:
+## Current Remote Automation
 
-- `RUN_MODE`
-- `LLM_PROVIDER`
-- `DATA_DIR`
-- `AGENT_PROFILE`
-- `AGENT_LABEL`
-- `RESEARCH_MODEL`
-- `MONITOR_MODEL`
-- `RESEARCH_MODEL_OPENAI`
-- `MONITOR_MODEL_OPENAI`
-- `MONITOR_CANDIDATE_LIMIT`
-- `MONITOR_ENTRY_PROXIMITY_PCT`
+Workflow: `Trading Pipeline`
 
-Removed from the supported workflow:
+- schedule: every 30 minutes on weekday market hours
+- run mode: `paper`
+- normal production use: `monitor` only
+- publish path: commits updated runtime state and deploys GitHub Pages
 
-- `PRODUCTION_MODE`
-- `DEBUG_MODE`
-- `DRY_RUN`
-- `USE_CLI_AGENT`
-- `USE_CLI_AGENT_FOR_MONITOR`
-- `CLI_AGENT_PROVIDER`
-- `CLI_AGENT_MAX_TURNS`
-- `CLI_AGENT_TIMEOUT`
-- `debug_max_stocks`
-- `debug_skip_web`
+## Current Cheap Monitor Models
 
-## Verification Snapshot
+- Claude strategist: `claude-haiku-4-5-20251001`
+- Codex strategist: `gpt-4o-mini`
 
-Most recent migration state before final cleanup:
+## Evolution State
 
-- code cleanup for legacy variables and internal CLI-agent path: done
-- remote workflow narrowed to monitor-only: done
-- docs rewrite to match the new architecture: in progress
-- one test path expectation caused by `data/profiles/default`: being fixed during cleanup
+Evolution is now available in two forms:
 
-## Next Step
+1. ongoing evening proposal backlog
+   - `IMPROVEMENT_PROPOSALS.md`
+   - `improvement_proposals.json`
 
-Finish cleanup, rerun tests and validations, then commit the streamlined architecture as the new baseline.
+2. explicit on-demand local review
+   - `./scripts/run_both.sh evolve parallel`
+   - outputs `evolution_review.json` and `EVOLUTION_REPORT.md`
+
+## Operator Expectation
+
+From here, the normal week should only require:
+
+1. local morning research
+2. remote monitor automation
+3. local evening reflection
+4. weekly review on the weekend
+5. optional evolution review when you want a deliberate improvement pass

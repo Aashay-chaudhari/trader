@@ -740,6 +740,84 @@ def test_generate_dashboard_exports_strategist_voice_bundle():
         assert (docs_dir / "data" / "profiles" / "claude" / "voice" / "latest_voice.json").exists()
 
 
+def test_generate_dashboard_exports_evolution_bundle():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        profile_root = data_dir / "profiles" / "claude"
+        (profile_root / "snapshots").mkdir(parents=True)
+        (profile_root / "research").mkdir(parents=True)
+        (profile_root / "analytics").mkdir(parents=True)
+        (profile_root / "context").mkdir(parents=True)
+
+        (profile_root / "profile.json").write_text(
+            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-22T21:00:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (profile_root / "research" / "2026-03-22_research.json").write_text(
+            json.dumps({"best_opportunities": [], "stocks": {}}),
+            encoding="utf-8",
+        )
+        (profile_root / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (profile_root / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+
+        evolution_payload = {
+            "date": "2026-03-22",
+            "profile": "claude",
+            "status": "focused_upgrade_window",
+            "summary": "Execution conditions are usable, but the improvement queue needs tighter prioritization.",
+            "top_priority": {
+                "title": "Tighten execution-condition templates",
+                "category": "prompt",
+                "why_now": "The monitor gate is only as good as the morning plan quality.",
+                "expected_impact": "Cleaner approval decisions and fewer ambiguous entries.",
+            },
+            "priority_queue": [
+                {
+                    "title": "Standardize execution conditions",
+                    "category": "prompt",
+                    "priority": "high",
+                    "action_type": "implement_now",
+                    "reason": "This affects every monitor decision.",
+                }
+            ],
+        }
+        (profile_root / "evolution_review.json").write_text(
+            json.dumps(evolution_payload),
+            encoding="utf-8",
+        )
+        (profile_root / "EVOLUTION_REPORT.md").write_text(
+            "# Evolution Report - Claude Strategist\n\n## Top Priority\n\n- Tighten execution-condition templates\n",
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        html = (docs_dir / "index.html").read_text(encoding="utf-8")
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        evolution = bundle["profiles"]["claude"]["evolution"]
+
+        assert "Evolution Review" in html
+        assert evolution["status"] == "focused_upgrade_window"
+        assert evolution["top_priority"]["title"] == "Tighten execution-condition templates"
+        assert evolution["report_url"] == "data/profiles/claude/EVOLUTION_REPORT.md"
+        assert evolution["review_url"] == "data/profiles/claude/evolution_review.json"
+        assert (docs_dir / "data" / "profiles" / "claude" / "evolution.json").exists()
+        assert (docs_dir / "data" / "profiles" / "claude" / "EVOLUTION_REPORT.md").exists()
+
+
 def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
     with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path

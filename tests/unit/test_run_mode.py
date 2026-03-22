@@ -20,7 +20,7 @@ def make_settings(**env_overrides):
 def test_run_mode_debug_is_default(monkeypatch):
     monkeypatch.delenv("RUN_MODE", raising=False)
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.run_mode == "debug"
     assert s.is_debug is True
     assert s.is_dry_run is True
@@ -29,7 +29,7 @@ def test_run_mode_debug_is_default(monkeypatch):
 def test_run_mode_paper_via_env(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "paper")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.run_mode == "paper"
     assert s.is_debug is False
     assert s.is_dry_run is False  # paper places broker paper orders
@@ -38,7 +38,7 @@ def test_run_mode_paper_via_env(monkeypatch):
 def test_run_mode_live(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "live")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.run_mode == "live"
     assert s.is_debug is False
     assert s.is_dry_run is False  # live = real orders
@@ -47,26 +47,26 @@ def test_run_mode_live(monkeypatch):
 def test_max_stocks_debug(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "debug")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.max_stocks == 3
 
 
 def test_max_stocks_paper(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "paper")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.max_stocks == 0  # 0 = unlimited
 
 
 def test_skip_web_debug(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "debug")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.skip_web is True
 
 
 def test_skip_web_paper(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "paper")
     reset_settings()
-    s = Settings()
+    s = Settings(_env_file=None)
     assert s.skip_web is False

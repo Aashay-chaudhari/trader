@@ -1,237 +1,119 @@
 ﻿# Agent Trader
 
-Agent Trader is a dual-strategist paper-trading system.
+Agent Trader is a dual-strategist paper-trading system with a simple operating split:
 
-- Heavy research is done locally through `claude` and `codex` CLI subscriptions.
-- Intraday monitoring runs in GitHub Actions every 30 minutes during market hours.
-- Each strategist writes to its own profile root under `data/profiles/`.
-- The Python runtime handles screening, data collection, signal generation, risk checks, execution, journaling, and dashboard output.
+- Local CLI sessions do the heavy thinking.
+- GitHub Actions does lightweight intraday monitoring.
+- Alpaca paper accounts receive approved paper orders.
+- GitHub Pages shows the latest state, logs, knowledge, voice, and evolution artifacts.
 
-The supported operating model is:
+## At A Glance
 
-1. Run local strategist research in the morning.
-2. Push the updated profile files to GitHub.
-3. Let GitHub Actions run lightweight monitor checks during the day.
-4. Run local evening, weekly, and monthly reflection prompts.
-5. Push again so the remote monitor and dashboard keep using current state.
-
-## Architecture
-
-There are two layers.
-
-### 1. Strategist layer
-
-Use `scripts/run_both.sh` to run:
-
-- `claude`
-- `codex`
-
-against the prompt files in `scripts/prompts/`.
-
-These sessions do the expensive thinking:
-
-- morning market research
-- evening reflection
-- weekly review
-- monthly retrospective
-
-Outputs are written only to:
-
-- `data/profiles/claude/`
-- `data/profiles/codex/`
-
-### 2. Python runtime layer
-
-Use `python -m agent_trader ...` for the app runtime.
-
-This layer powers:
-
-- screening
-- market and news data collection
-- monitor-time LLM gate
-- strategy voting
-- risk validation
-- Alpaca paper execution
-- portfolio tracking
-- journaling
-- dashboard generation
-
-GitHub Actions runs only the monitor pipeline in normal production use.
-
-## Supported Workflow
-
-### Morning
-
-Run locally:
-
-```bash
-./scripts/run_both.sh morning parallel
+```mermaid
+flowchart LR
+    A[You run local morning research] --> B[Claude profile updated]
+    A --> C[Codex profile updated]
+    B --> D[Push to main]
+    C --> D
+    D --> E[GitHub Actions monitor every 30 min]
+    E --> F[Cheap API gate checks candidate setups]
+    F --> G[Strategy plus risk plus execution]
+    G --> H[Alpaca paper orders]
+    G --> I[Dashboard plus runtime artifacts]
+    I --> J[You run local evening reflection]
+    J --> K[Observations plus knowledge plus voice plus proposals]
+    K --> D
 ```
 
-This will:
+## Supported Operating Model
 
-- pull latest `main`
-- run Claude and Codex research locally
-- write fresh `morning_research.json` and `watchlist.json` for each profile
-- commit and push the updated profile state
-
-Generated files:
-
-- `data/profiles/claude/cache/morning_research.json`
-- `data/profiles/claude/cache/watchlist.json`
-- `data/profiles/codex/cache/morning_research.json`
-- `data/profiles/codex/cache/watchlist.json`
-
-### Intraday monitor
-
-GitHub Actions runs automatically every 30 minutes on weekdays.
-
-The monitor flow:
-
-1. loads the latest pushed profile state
-2. refreshes prices and news
-3. builds a small candidate set
-4. makes a cheap API call only for those candidates
-5. lets Python strategy, risk, and execution logic decide the trade
-
-The monitor model is intentionally cheap:
-
-- Claude strategist: `claude-haiku-4-5-20251001`
-- Codex strategist: `gpt-4o-mini`
-
-### Evening
-
-Run locally:
-
-```bash
-./scripts/run_both.sh evening parallel
-```
-
-This will:
-
-- pull the latest monitor updates from GitHub first
-- write daily observations and reflections for both profiles
-- commit and push the updated state
-
-### Weekly and monthly
-
-Run locally:
-
-```bash
-./scripts/run_both.sh weekly parallel
-./scripts/run_both.sh monthly parallel
-```
-
-These sessions update observations and knowledge files under each profile.
-
-## Data Layout
-
-Tracked long-term memory lives here:
-
-- `data/profiles/<profile>/knowledge/`
-- `data/profiles/<profile>/observations/`
-- `data/profiles/<profile>/positions/`
-- `data/profiles/<profile>/cache/`
-- `data/profiles/<profile>/profile.json`
-
-Ignored runtime clutter includes legacy top-level paths such as:
-
-- `data/journal/`
-- `data/knowledge/`
-- `data/observations/`
-- `data/positions/`
-- `data/cache/`
-- `data/research/`
-- `data/snapshots/`
-
-The source of truth is `data/profiles/...`, not top-level `data/...`.
-
-## Configuration
-
-Main settings live in `.env` locally and GitHub Secrets / Variables remotely.
-
-### Core variables
-
-- `RUN_MODE=debug|paper|live`
-- `LLM_PROVIDER=auto|anthropic|openai`
-- `DATA_DIR`
-- `AGENT_PROFILE`
-- `AGENT_LABEL`
-- `RESEARCH_MODEL`
-- `MONITOR_MODEL`
-- `RESEARCH_MODEL_OPENAI`
-- `MONITOR_MODEL_OPENAI`
-- `MONITOR_CANDIDATE_LIMIT`
-- `MONITOR_ENTRY_PROXIMITY_PCT`
-
-There is no supported legacy compatibility layer anymore.
-
-Do not use:
-
-- `PRODUCTION_MODE`
-- `DEBUG_MODE`
-- `DRY_RUN`
-- `USE_CLI_AGENT`
-- `CLI_AGENT_PROVIDER`
-- `CLI_AGENT_MAX_TURNS`
-- `CLI_AGENT_TIMEOUT`
-
-## Commands
-
-### Supported day-to-day commands
+### What you run locally
 
 ```bash
 ./scripts/run_both.sh morning parallel
 ./scripts/run_both.sh evening parallel
 ./scripts/run_both.sh weekly parallel
 ./scripts/run_both.sh monthly parallel
-python -m agent_trader monitor
-python -m agent_trader validate --data-dir data/profiles/claude
-python -m agent_trader validate --data-dir data/profiles/codex
-pytest -q
+./scripts/run_both.sh evolve parallel
 ```
 
-### Development utilities
+### What runs automatically
 
-These still exist, but they are not the primary production workflow:
+- GitHub Actions `Trading Pipeline`
+- Phase: `monitor` only
+- Schedule: every 30 minutes during US weekday market hours
+- Mode: `paper`
+- Models: cheapest monitor-capable API models
 
-```bash
-python -m agent_trader research
-python -m agent_trader run
-python -m agent_trader reflect
-python -m agent_trader weekly
-python -m agent_trader monthly
-python -m agent_trader evolve
-python -m agent_trader cycle
-python -m agent_trader reset
-python -m agent_trader dashboard
+### Why this split exists
+
+- Morning, weekly, and monthly research is much better done with your local CLI subscriptions.
+- Intraday monitor only needs a thin layer of judgment, so it can stay cheap.
+- Python remains the deterministic execution layer for strategy, risk, orders, journaling, and dashboard output.
+
+## Daily Workflow
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant LocalCLI as Local CLI strategists
+    participant Git as GitHub main
+    participant Actions as GitHub Actions monitor
+    participant Alpaca as Alpaca paper
+    participant Pages as GitHub Pages
+
+    You->>LocalCLI: run_both.sh morning parallel
+    LocalCLI->>Git: commit and push morning cache files
+    Actions->>Git: pull latest strategist state
+    loop Every 30 min while market is open
+        Actions->>Actions: refresh prices and news
+        Actions->>Actions: small monitor LLM gate
+        Actions->>Alpaca: submit approved paper orders
+        Actions->>Git: commit runtime state
+        Actions->>Pages: deploy dashboard updates
+    end
+    You->>LocalCLI: run_both.sh evening parallel
+    LocalCLI->>Git: commit and push observations, voice, knowledge
 ```
 
-## GitHub Actions
+## Prompt Surface
 
-The remote workflow now supports one normal job: `monitor`.
+| Prompt | Trigger | Purpose | Writes |
+|---|---|---|---|
+| `morning_research.md` | Local pre-market | Build thesis, watchlist, trade plans, execution conditions | `cache/morning_research.json`, `cache/watchlist.json` |
+| monitor prompt in Python | GitHub Actions intraday | Check if live conditions still satisfy the plan | runtime reports, trades, snapshots |
+| `evening_reflection.md` | Local after close | Turn the day into observations, lessons, and proposals | daily observations, knowledge updates, proposal backlog |
+| `strategist_voice.md` | Local after evening reflection | Give the strategist a short honest operator-facing summary | `voice/latest_voice.json` |
+| `weekly_review.md` | Local weekend | Consolidate the week into stronger memory | weekly observations, knowledge updates |
+| `monthly_retrospective.md` | Local month-end | Reweight lessons and strategy trust at a month horizon | monthly observations, knowledge updates |
+| `evolution_review.md` | Local on demand | Critically review backlog and recommend upgrades | `evolution_review.json`, `EVOLUTION_REPORT.md` |
 
-What it does:
+For the full prompt walkthrough, see [docs/PROMPT_FLOW.md](docs/PROMPT_FLOW.md).
 
-- runs per strategist profile
-- uses provider-specific API keys
-- reads the latest pushed profile state
-- writes updated runtime artifacts and dashboard data
-- commits and pushes the results back to `main`
+## Paper-Trading Configuration
 
-Heavy research is intentionally not run in Actions because local CLI subscriptions are the cheaper path.
+### Local `.env`
 
-## Setup
+Copy `.env.example` to `.env` and make sure these are set:
 
-1. Copy `.env.example` to `.env`
-2. Fill in market data and broker keys
-3. Install dependencies
-
-```bash
-pip install -e ".[dev]"
+```env
+RUN_MODE=paper
+LLM_PROVIDER=auto
+MONITOR_MODEL=claude-haiku-4-5-20251001
+MONITOR_MODEL_OPENAI=gpt-4o-mini
+DATA_DIR=data/profiles/default
+AGENT_PROFILE=default
 ```
 
-4. Add GitHub Secrets:
+Notes:
+
+- `run_both.sh` uses your local `claude` and `codex` CLI tools for research.
+- GitHub Actions monitor uses API keys and `RUN_MODE=paper`.
+- If you want local Python monitor runs to place paper orders too, your local `.env` also needs valid `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` values.
+
+### GitHub Secrets
+
+Required for remote monitor:
 
 - `ANTHROPIC_API_KEY`
 - `OPENAI_API_KEY`
@@ -240,29 +122,79 @@ pip install -e ".[dev]"
 - `ALPACA_API_KEY_CODEX`
 - `ALPACA_SECRET_KEY_CODEX`
 
-5. Add GitHub Variables if desired:
+Optional but useful:
 
-- `MONITOR_MODEL`
-- `MONITOR_MODEL_OPENAI`
-- `MONITOR_CANDIDATE_LIMIT`
+- `MARKETAUX_API_KEY`
+- `FRED_API_KEY`
+- `FINNHUB_API_KEY`
+- `ALPHA_VANTAGE_API_KEY`
+- `SEC_EDGAR_USER_AGENT`
 
-6. Validate locally:
+## Repository Layout
+
+```text
+data/profiles/
+  claude/
+    cache/
+    observations/
+    knowledge/
+    positions/
+    voice/
+    interactions/
+    IMPROVEMENT_PROPOSALS.md
+    improvement_proposals.json
+    EVOLUTION_REPORT.md
+    evolution_review.json
+  codex/
+    ...same layout...
+
+docs/
+  index.html
+  data/
+  ARCHITECTURE.md
+  KNOWLEDGE_ARCHITECTURE.md
+  PROMPT_FLOW.md
+```
+
+## Frontend / Dashboard
+
+GitHub Pages is generated from `docs/` and now exposes:
+
+- portfolio and strategist comparison
+- market intelligence and trade history
+- knowledge summaries
+- interaction logs from local CLI sessions
+- strategist voice summaries
+- evolution report links and structured evolution summary
+
+Regenerate locally with:
+
+```bash
+python -m agent_trader dashboard
+```
+
+## Week 1 Runbook
+
+- [WEEK1_PLAN.md](WEEK1_PLAN.md)
+- [WEEKBOOK.md](WEEKBOOK.md)
+
+## Validation
 
 ```bash
 pytest -q
 python -m agent_trader validate --data-dir data/profiles/claude
 python -m agent_trader validate --data-dir data/profiles/codex
+python -m agent_trader dashboard
 ```
 
-## Current Recommendation
+## Core Principle
 
-Use the system in `paper` mode to learn and validate behavior.
+Use local CLI sessions for the thinking, GitHub Actions for the cheap intraday checks, and `data/profiles/...` as the durable memory of the system.
 
-It is ready for paper-trading tests. It is not yet a live-trading system.
-
-## More Docs
+## More Documentation
 
 - [SYSTEM_GUIDE.md](SYSTEM_GUIDE.md)
 - [CURRENT_STATE.md](CURRENT_STATE.md)
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/KNOWLEDGE_ARCHITECTURE.md](docs/KNOWLEDGE_ARCHITECTURE.md)
+- [docs/PROMPT_FLOW.md](docs/PROMPT_FLOW.md)

@@ -132,6 +132,33 @@ What should happen:
   - interaction logs for the monthly session
 - the runner commits and pushes automatically
 
+## Optional Evolution Review
+
+Best use: after a few trading days, after a weekly review, or whenever you want
+an explicit sober review of what should change next.
+
+Run:
+
+```powershell
+& "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evolve parallel
+```
+
+What should happen:
+
+- each strategist reads its own proposal backlog, voice summary, observations,
+  knowledge, and portfolio history
+- each strategist writes:
+  - `EVOLUTION_REPORT.md`
+  - `evolution_review.json`
+  - interaction logs for the evolution session
+- the runner commits and pushes automatically
+
+What to check:
+
+- each profile now has an evolution report
+- GitHub Pages `System Intelligence -> Proposals` shows the evolution summary
+- the resulting priority queue feels selective, not noisy
+
 ## Monday Checklist
 
 ### Before market open
