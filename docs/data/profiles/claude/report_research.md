@@ -1,13 +1,13 @@
 # Trading Journal — 2026-03-22
 
-**Run ID:** `20260322_020944`  
+**Run ID:** `20260322_024541`  
 **Phase:** research  
 **Strategist:** Claude Strategist  
-**Time:** 02:10 UTC  
+**Time:** 02:46 UTC  
 
 ## Screener Results
 
-Scanned 70 stocks, found 75 candidates, selected top 10.
+Scanned 70 stocks, found 76 candidates, selected top 10.
 
 | Symbol | Price | Change | Volume | Vol Ratio | Score |
 |--------|------:|-------:|-------:|----------:|------:|
@@ -141,10 +141,10 @@ Scanned 70 stocks, found 75 candidates, selected top 10.
 
 ### INTC Headlines
 
+- **2 Financial Stocks That Could Double Over the Next 5 Years** [Motley Fool]
 - **If You Invested $10,000 in Tesla Stock 10 Years Ago, Here's How Much You'd Have Today** [Motley Fool]
 - **1 Cryptocurrency to Buy Before It Soars Over 1,300%, According to an Expert Analyst** [Yahoo]
 - **Prediction: 2 Things That Will Happen to Alibaba in 2026** [Yahoo]
-- **What Happens to Your Investments If the Stock Market Crashes?** [Yahoo]
 
 ### PANW Headlines
 
@@ -162,7 +162,7 @@ Scanned 70 stocks, found 75 candidates, selected top 10.
 
 ### ABT Headlines
 
-- **Is Abbott Laboratories (ABT) A Good Stock To Buy Now?** [insidermonkey.com]
+- **Is Abbott Laboratories (ABT) A Good Stock To Buy Now?** [Insider Monkey]
 - **Transformational Opportunities: UBS Suggests 2 Longevity Stocks to Buy as the $8T Aging Boom Accelerates** [Yahoo]
 - **Sector Update: Health Care Stocks Retreat Late Afternoon** [Yahoo]
 - **Abbott to close $21B Exact Sciences acquisition Monday** [Yahoo]

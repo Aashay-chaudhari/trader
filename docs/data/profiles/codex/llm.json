@@ -1,18 +1,38 @@
 {
   "status": "success",
-  "provider": "cli:codex",
-  "model": "default",
-  "duration_ms": 0.0,
-  "session_id": null,
+  "execution_mode": "template",
+  "provider_preference": "openai",
+  "provider": "template:codex",
+  "model": "template-v1",
+  "selected_provider": "template:codex",
+  "selected_model": "template-v1",
   "usage": {
     "input_tokens": 0,
-    "cached_input_tokens": 31232,
     "output_tokens": 0,
     "total_tokens": 0
   },
-  "execution_mode": "cli",
-  "selected_provider": "template:codex",
-  "selected_model": "template-v1",
+  "service_tier": "debug-template",
+  "request_id": null,
+  "rate_limits": {},
+  "runtime": {
+    "platform": "github_actions",
+    "python_version": "3.12.13",
+    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+    "agent_profile": "codex",
+    "agent_label": "Codex Strategist",
+    "github": {
+      "repository": "Aashay-chaudhari/trader",
+      "workflow": "Trading Pipeline",
+      "event_name": "workflow_dispatch",
+      "actor": "Aashay-chaudhari",
+      "run_id": "23394172174",
+      "run_attempt": "1",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23394172174",
+      "sha": "c58aba8d5cc2a9a7094aaf023de5d308f3f7056e",
+      "ref": "refs/heads/main"
+    }
+  },
+  "duration_ms": 0.0,
   "attempts": [
     {
       "execution_mode": "template",
@@ -27,8 +47,12 @@
       }
     }
   ],
-  "timestamp": "2026-03-22T02:10:24.067303+00:00",
-  "phase": "research",
+  "quota_issue_detected": false,
+  "quota_note": "Template mode active; no model usage was attempted.",
+  "template_note": "Template response generated in DEBUG_MODE for phase 'research'. No CLI/API model call was made and zero tokens were consumed.",
+  "generated_at": "2026-03-22T02:46:25.416994+00:00",
+  "timestamp": "2026-03-22T02:46:40.801439+00:00",
+  "phase": "monitor",
   "symbols": [
     "MU",
     "INTC",
@@ -40,29 +64,5 @@
     "HD",
     "MA",
     "V"
-  ],
-  "provider_preference": "openai",
-  "quota_issue_detected": false,
-  "quota_note": "Template mode active; no model usage was attempted.",
-  "rate_limits": {},
-  "service_tier": "debug-template",
-  "request_id": null,
-  "runtime": {
-    "platform": "github_actions",
-    "python_version": "3.12.13",
-    "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
-    "agent_profile": "codex",
-    "agent_label": "Codex Strategist",
-    "github": {
-      "repository": "Aashay-chaudhari/trader",
-      "workflow": "Trading Pipeline",
-      "event_name": "workflow_dispatch",
-      "actor": "Aashay-chaudhari",
-      "run_id": "23393628865",
-      "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23393628865",
-      "sha": "d274eb25bc36f6303c02f6e0fe7357ea07d6ed8b",
-      "ref": "refs/heads/main"
-    }
-  }
+  ]
 }
