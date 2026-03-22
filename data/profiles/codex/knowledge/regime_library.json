@@ -1,38 +1,60 @@
-{
-    "risk_on": {
-        "description": "Bullish regime: VIX < 18, S&P trending up, growth sectors leading",
-        "indicators": ["VIX < 18", "S&P above 20-day SMA", "Tech/Growth outperforming", "Breadth expanding"],
-        "rules": [
-            "Prefer momentum and breakout strategies",
-            "Widen stops by 1.5x — trends run further than expected",
-            "Increase position sizes to 6-8%",
-            "Focus on growth, tech, and consumer discretionary",
-            "Mean reversion sells are lower probability — don't fade strength"
-        ]
-    },
-    "risk_off": {
-        "description": "Bearish regime: VIX > 25, S&P trending down, defensives leading. Current state as of March 2026: VIX 26.78, Middle East conflict, Fed hawkish at 3.50-3.75%",
-        "indicators": ["VIX > 25", "S&P below 50-day SMA", "Defensives outperforming", "4+ weekly losses"],
-        "rules": [
-            "Prefer mean reversion and defensive strategies",
-            "Tighten stops — reversals are violent in fear environments",
-            "Reduce position sizes to 3-5% max",
-            "Focus on energy (supply disruption), healthcare, consumer staples",
-            "Avoid catching falling knives in tech/growth names",
-            "Look for oversold bounces but take profits quickly",
-            "Cash is a position — 30-50% cash is appropriate in risk-off"
-        ]
-    },
-    "neutral": {
-        "description": "Choppy regime: VIX 18-25, no clear trend, sector rotation active",
-        "indicators": ["VIX 18-25", "S&P range-bound", "Sector rotation visible", "Mixed signals"],
-        "rules": [
-            "Prefer range-bound strategies: support/resistance, VWAP reversion",
-            "Keep positions small at 4-5%",
-            "Take profits quickly — moves don't follow through in chop",
-            "Look for sector rotation opportunities",
-            "Avoid trend-following strategies — false breakouts are common",
-            "Focus on stocks with specific catalysts, not broad market bets"
-        ]
-    }
+﻿{
+  "risk_on": {
+    "description": "Risk-on means the March 2026 stress baseline has materially eased: S&P 500 decisively above 6,506.48 (March 20 close), VIX back to low-teens from the March spike, and oil/rates no longer repricing inflation shock.",
+    "indicators": [
+      "VIX < 18 and falling for at least 5 sessions",
+      "S&P 500 above 20-day and 50-day moving averages",
+      "10-year Treasury yield stable or falling below 4.10%",
+      "WTI crude below 90 and no fresh supply-shock headlines",
+      "Breadth improves: >55% of S&P constituents above 20-day average",
+      "Growth sectors (technology/communication services) regain relative strength"
+    ],
+    "rules": [
+      "Favor momentum, trend, and volume breakout setups over pure mean reversion.",
+      "Increase position size only after two consecutive sessions of breadth confirmation.",
+      "Allow winners more room using trailing stops instead of fixed quick exits.",
+      "Prioritize long exposure in sectors showing both earnings revisions and price leadership.",
+      "Reduce index hedges gradually rather than all at once to avoid false dawn reversals.",
+      "Still cap single-position risk at 0.75R to respect residual geopolitical headline risk."
+    ]
+  },
+  "risk_off": {
+    "description": "Risk-off is the active seed regime on 2026-03-22: S&P 500 closed 6,506.48 and is down 5.0% YTD, VIX is around mid-20s after a 29.49 spike on March 6, Fed policy is 3.50-3.75%, and oil shock has pushed WTI near 98.32 and Brent 112.19.",
+    "indicators": [
+      "VIX > 24 or recent spike above 28",
+      "S&P 500 below short-term trend and posting lower highs",
+      "10-year Treasury yield rising quickly (for example 4.25% to 4.38%)",
+      "WTI > 95 with persistent geopolitical risk premium",
+      "Fed cut expectations being repriced lower",
+      "Defensive/cyclical commodity sectors outperform growth beta"
+    ],
+    "rules": [
+      "Cut gross exposure and keep 30-40% cash available.",
+      "Reduce per-trade size to roughly half of normal and avoid oversized overnight risk.",
+      "Prefer relative-strength longs in energy/defensives and tactical mean reversion in oversold quality names.",
+      "Take profits faster (scale out at 1R) and avoid turning trades into investments.",
+      "Avoid first-breakout entries in weak breadth sessions; wait for retest confirmation.",
+      "Use hard stops and enforce a daily loss limit to prevent headline cascade losses.",
+      "If conflict headlines escalate late session, de-risk before the close rather than carry hope overnight."
+    ]
+  },
+  "neutral": {
+    "description": "Neutral is a transition state between the current risk-off backdrop and a full risk-on recovery: volatility cools but is not calm, cross-asset signals are mixed, and leadership rotates quickly.",
+    "indicators": [
+      "VIX between 18 and 24",
+      "S&P 500 oscillating around the 20-day moving average",
+      "10-year Treasury yield range-bound near 4.00-4.30%",
+      "Oil stabilizing roughly in the 85-95 zone",
+      "Sector leadership rotating week to week without broad confirmation",
+      "Fed communication interpreted as hold/wait rather than imminent easing"
+    ],
+    "rules": [
+      "Trade smaller and shorter: emphasize VWAP, support/resistance, and mean-reversion setups.",
+      "Take directional trades only near range extremes, not in the middle of the tape.",
+      "Favor liquid large caps where execution slippage is lower.",
+      "Demand multi-timeframe alignment before holding any swing position overnight.",
+      "Keep hedge overlays active until either breadth expansion or volatility compression confirms a new regime.",
+      "Review regime classification daily because neutral periods can flip quickly on one macro headline."
+    ]
+  }
 }

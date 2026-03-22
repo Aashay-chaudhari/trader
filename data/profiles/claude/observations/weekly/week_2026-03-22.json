@@ -1,36 +1,39 @@
-{
-    "week_ending": "2026-03-22",
-    "market_regime": "risk_off",
-    "market_summary": "Fourth consecutive weekly loss for major indexes — the longest losing streak in over a year. S&P 500 down roughly 7% from January ATH, now 5% below highs. VIX spiked to 26.78 driven by Middle East conflict (Iran war, Strait of Hormuz closure) and a hawkish Fed that raised its inflation forecast to 2.7%. Triple witching amplified volatility. Energy and defensives outperformed; tech and financials lagged.",
-    "performance": {
-        "trades_taken": 2,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "total_pnl_pct": 0.0,
-        "best_trade": {"symbol": "N/A", "pnl_pct": 0, "strategy": "seed run — no closed trades yet"},
-        "worst_trade": {"symbol": "N/A", "pnl_pct": 0, "lesson": "seed run — no closed trades yet"}
-    },
-    "strategy_grades": {
-        "momentum": {"grade": "N/A", "notes": "Not yet tested in live trading"},
-        "mean_reversion": {"grade": "N/A", "notes": "Should be primary strategy in current risk-off regime"},
-        "trend": {"grade": "N/A", "notes": "Downtrend following could work on short side"},
-        "news_catalyst": {"grade": "N/A", "notes": "Geopolitical news is the dominant driver right now"},
-        "support_resistance": {"grade": "N/A", "notes": "Key levels should be respected in fear-driven market"}
-    },
-    "patterns_confirmed": [],
-    "new_rules": [
-        "In VIX > 25 environment, reduce position sizes to 3-5% and favor defensive sectors",
-        "Geopolitical escalation trades (energy longs) are crowded — take profits quickly on spikes",
-        "Fed policy removes the rate-cut safety net — don't assume the 'Fed put' exists right now",
-        "Fourth consecutive weekly loss suggests possible oversold bounce incoming — watch for reversal signals",
-        "System just launched — prioritize small positions and data collection over alpha generation"
-    ],
-    "regime_forecast": "Risk-off likely continues into next week unless Middle East conflict de-escalation. Key data: Construction Spending, PMI, Michigan Sentiment. If PMI misses, could trigger further selloff. If conflict headlines improve, expect sharp relief rally — VIX mean reversion from 26 would lift broad market.",
-    "focus_areas": [
-        "Monitor energy sector for exhaustion signals (crowded long)",
-        "Watch for oversold bounces in quality tech names (MSFT, GOOGL, AAPL)",
-        "Track VIX — break below 22 would signal regime shift to neutral",
-        "Collect more data points before increasing position sizes"
-    ]
+﻿{
+  "week_ending": "2026-03-22",
+  "market_regime": "risk_off",
+  "market_summary": "This week extended the risk-off regime as equities absorbed higher oil prices, rising yields, and reduced odds of policy easing. By Friday, the S&P 500 closed at 6,506.48 after a 1.9% weekly drop and now sits 5.0% lower year to date, while the Nasdaq is down 6.9% year to date. The Federal Reserve held rates at 3.50-3.75% on March 18 and emphasized elevated uncertainty. Cross-asset conditions stayed defensive, with crude elevated and rates rising, keeping pressure on long-duration equity exposure.",
+  "performance": {
+    "trades_taken": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0.0,
+    "total_pnl_pct": 0.0,
+    "best_trade": {"symbol": "N/A", "pnl_pct": 0, "strategy": "seed - no trades yet"},
+    "worst_trade": {"symbol": "N/A", "pnl_pct": 0, "lesson": "seed - no trades yet"}
+  },
+  "strategy_grades": {
+    "momentum": {"grade": "N/A", "notes": "Long momentum likely struggled in headline-driven swings; downside momentum required fast execution."},
+    "mean_reversion": {"grade": "N/A", "notes": "Likely viable intraday after volatility spikes, but only with strict risk controls."},
+    "trend": {"grade": "N/A", "notes": "Short-biased trend setups probably worked better than long continuation setups this week."},
+    "volume_breakout": {"grade": "N/A", "notes": "Breakout quality likely degraded as macro headlines increased false follow-through."},
+    "support_resistance": {"grade": "N/A", "notes": "Key levels likely provided better structure than pure breakout entries in this tape."},
+    "vwap": {"grade": "N/A", "notes": "VWAP-based intraday discipline likely helped avoid overtrading in volatile sessions."},
+    "relative_strength": {"grade": "N/A", "notes": "Sector-relative trades (energy/defensives vs growth) were likely among the cleaner opportunities."},
+    "news_catalyst": {"grade": "N/A", "notes": "News catalysts were abundant but required smaller size due to reversal risk."}
+  },
+  "patterns_confirmed": [],
+  "new_rules": [
+    "Do not run full-size long breakout trades while VIX remains in the mid-20s.",
+    "Use rates and oil as hard risk filters before adding index beta.",
+    "Prioritize relative-strength rotation over broad-market direction calls.",
+    "Cut gross exposure before weekend headline risk when conflict escalation is unresolved.",
+    "Treat any relief rally as tactical until volatility and breadth both improve."
+  ],
+  "regime_forecast": "Next week starts risk-off unless we see simultaneous cooling in oil and yields. Baseline expectation is continued choppy downside pressure with intermittent sharp relief rallies around geopolitical headlines and policy repricing.",
+  "focus_areas": [
+    "Monitor VIX behavior versus recent highs for regime transition clues",
+    "Track 10-year yield sensitivity of high-multiple technology names",
+    "Watch energy leadership for exhaustion or continuation",
+    "Prepare scenario plans for the April 28-29 FOMC meeting path"
+  ]
 }
