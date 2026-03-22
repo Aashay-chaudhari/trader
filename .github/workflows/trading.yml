@@ -233,8 +233,10 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ matrix.cli_provider == 'claude' && secrets.ANTHROPIC_API_KEY || '' }}
           OPENAI_API_KEY: ${{ matrix.cli_provider == 'codex' && secrets.OPENAI_API_KEY || '' }}
-          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
-          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          # Per-strategist Alpaca keys allow separate paper accounts for each book.
+          # Falls back to shared ALPACA_API_KEY if per-strategist keys aren't set.
+          ALPACA_API_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_API_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_SECRET_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
           MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           SEC_EDGAR_USER_AGENT: ${{ secrets.SEC_EDGAR_USER_AGENT }}
