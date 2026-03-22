@@ -86,9 +86,6 @@ class Settings(BaseSettings):
     agent_profile: str = "default"
     agent_label: str = ""
 
-    # --- Schedule ---
-    run_frequency: str = "daily"       # "daily", "hourly", "manual"
-
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

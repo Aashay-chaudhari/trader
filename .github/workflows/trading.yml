@@ -105,7 +105,9 @@ jobs:
             DOM=$(date -u +%d)
             if [ "$HOUR" = "14" ] && [ "$MINUTE" -lt "30" ]; then
               echo "phase=research" >> "$GITHUB_OUTPUT"
-            elif [ "$HOUR" = "21" ] && [ "$MINUTE" = "15" ]; then
+            elif [ "$HOUR" = "21" ] && [ "$MINUTE" -ge "10" ] && [ "$MINUTE" -lt "30" ]; then
+              # Evening reflection window: 21:10-21:29 UTC (4:10-4:29 PM ET)
+              # Cron fires at 21:15 but GHA can start up to ~10 min late
               echo "phase=reflect" >> "$GITHUB_OUTPUT"
             elif [ "$DOW" = "1" ] && [ "$HOUR" = "01" ]; then
               echo "phase=weekly" >> "$GITHUB_OUTPUT"

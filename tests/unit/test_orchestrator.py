@@ -98,6 +98,97 @@ async def test_run_single_agent():
     assert result.data == {"test": "value"}
 
 
+@pytest.mark.asyncio
+async def test_run_evening_reflection_writes_journal(monkeypatch):
+    """run_evening_reflection should call the research agent and write a journal entry."""
+    original_cwd = Path.cwd()
+    with tempfile.TemporaryDirectory(dir=".") as tmp_dir:
+        monkeypatch.chdir(Path(tmp_dir).resolve())
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+
+        research_agent = MockAgent(
+            AgentRole.RESEARCH,
+            bus,
+            return_value={
+                "research": {
+                    "date": "2026-03-21",
+                    "market_regime": "risk_on",
+                    "market_summary": "Tech led rally",
+                    "lessons": ["Momentum works in risk-on"],
+                    "self_improvement_proposals": [],
+                },
+                "phase": "evening_reflection",
+            },
+        )
+        orch.register(research_agent)
+
+        result = await orch.run_evening_reflection()
+        monkeypatch.chdir(original_cwd)
+
+    assert result["phase"] == "evening_reflection"
+    assert len(research_agent.received_messages) == 1
+    assert research_agent.received_messages[0].data["phase"] == "evening_reflection"
+
+
+@pytest.mark.asyncio
+async def test_run_weekly_review_writes_journal(monkeypatch):
+    """run_weekly_review should call research agent and run archival pass."""
+    original_cwd = Path.cwd()
+    with tempfile.TemporaryDirectory(dir=".") as tmp_dir:
+        monkeypatch.chdir(Path(tmp_dir).resolve())
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+
+        research_agent = MockAgent(
+            AgentRole.RESEARCH,
+            bus,
+            return_value={
+                "research": {
+                    "knowledge_updates": {"new_patterns": ["gap_and_go"], "new_lessons": ["lesson1"]},
+                },
+                "phase": "weekly_consolidation",
+            },
+        )
+        orch.register(research_agent)
+
+        result = await orch.run_weekly_review()
+        monkeypatch.chdir(original_cwd)
+
+    assert result["phase"] == "weekly_consolidation"
+    assert len(research_agent.received_messages) == 1
+    assert research_agent.received_messages[0].data["phase"] == "weekly_consolidation"
+
+
+@pytest.mark.asyncio
+async def test_run_monthly_retrospective_writes_journal(monkeypatch):
+    """run_monthly_retrospective should call research agent for monthly review."""
+    original_cwd = Path.cwd()
+    with tempfile.TemporaryDirectory(dir=".") as tmp_dir:
+        monkeypatch.chdir(Path(tmp_dir).resolve())
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+
+        research_agent = MockAgent(
+            AgentRole.RESEARCH,
+            bus,
+            return_value={
+                "research": {
+                    "top_lessons": ["lesson A", "lesson B"],
+                },
+                "phase": "monthly_retrospective",
+            },
+        )
+        orch.register(research_agent)
+
+        result = await orch.run_monthly_retrospective()
+        monkeypatch.chdir(original_cwd)
+
+    assert result["phase"] == "monthly_retrospective"
+    assert len(research_agent.received_messages) == 1
+    assert research_agent.received_messages[0].data["phase"] == "monthly_retrospective"
+
+
 def test_write_journal_preserves_research_phase_payload(monkeypatch):
     original_cwd = Path.cwd()
     with tempfile.TemporaryDirectory(dir=".") as temp_dir:

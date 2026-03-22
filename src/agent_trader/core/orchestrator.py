@@ -560,7 +560,13 @@ class Orchestrator:
 
     def _load_morning_context(self) -> dict | None:
         path = Path(get_settings().data_dir) / "cache" / "morning_research.json"
-        return json.loads(path.read_text()) if path.exists() else None
+        if not path.exists():
+            return None
+        try:
+            return json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError):
+            console.print("  [yellow]Warning: morning context cache corrupted, ignoring[/yellow]")
+            return None
 
     def _load_watchlist(self) -> list[str]:
         path = Path(get_settings().data_dir) / "cache" / "watchlist.json"

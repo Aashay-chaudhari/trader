@@ -49,13 +49,13 @@ def main():
                               help="Run without placing orders")
 
     # Reflection command (Phase 3)
-    subparsers.add_parser("reflect", help="Evening reflection phase")
+    reflect_parser = subparsers.add_parser("reflect", help="Evening reflection phase")
 
     # Weekly review command (Phase 4)
-    subparsers.add_parser("weekly", help="Weekly consolidation review")
+    weekly_parser = subparsers.add_parser("weekly", help="Weekly consolidation review")
 
     # Monthly retrospective command (Phase 5)
-    subparsers.add_parser("monthly", help="Monthly retrospective")
+    monthly_parser = subparsers.add_parser("monthly", help="Monthly retrospective")
 
     # Status command
     subparsers.add_parser("status", help="Show portfolio status")
@@ -73,7 +73,8 @@ def main():
     subparsers.add_parser("dashboard", help="Generate dashboard data")
 
     # Add --debug flag to all action commands
-    for p in [research_parser, monitor_parser, run_parser, cycle_parser]:
+    for p in [research_parser, monitor_parser, run_parser, cycle_parser,
+              reflect_parser, weekly_parser, monthly_parser]:
         p.add_argument("--debug", action="store_true", help="Debug mode (reduced tokens)")
 
     args = parser.parse_args()
