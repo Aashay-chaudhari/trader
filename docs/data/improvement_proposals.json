@@ -1,0 +1,28 @@
+[
+  {
+    "date": "2026-03-22",
+    "proposals": [
+      {
+        "category": "infrastructure",
+        "priority": "high",
+        "title": "Add preflight filesystem-read health check",
+        "description": "Run a startup check that verifies read access to journal, positions, and observations paths before analysis, and fail fast with actionable diagnostics.",
+        "expected_impact": "Prevents silent analysis gaps and reduces missed daily reviews."
+      },
+      {
+        "category": "knowledge",
+        "priority": "high",
+        "title": "Create fallback reflection mode",
+        "description": "When files are unavailable, automatically emit a structured incident reflection template and queue a retry once access is restored.",
+        "expected_impact": "Maintains continuity in the review cycle and preserves accountability."
+      },
+      {
+        "category": "data",
+        "priority": "medium",
+        "title": "Cache end-of-day snapshot artifacts",
+        "description": "Persist a compact daily snapshot (positions, realized/unrealized PnL, sector attribution) in a single resilient file for reflection use.",
+        "expected_impact": "Improves robustness and speeds up daily synthesis even during partial outages."
+      }
+    ]
+  }
+]

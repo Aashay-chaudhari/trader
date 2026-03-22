@@ -1,0 +1,54 @@
+{
+  "overall_sentiment": "neutral",
+  "market_summary": "LLM analysis failed: anthropic/claude-haiku-4-5-20251001: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZHEVTXLwsMS1zznnJNw1'}",
+  "stocks": {},
+  "_meta": {
+    "status": "error",
+    "provider_preference": "anthropic",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "usage": {},
+    "service_tier": null,
+    "request_id": null,
+    "rate_limits": {},
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+      "agent_profile": "claude",
+      "agent_label": "Claude Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "workflow_dispatch",
+        "actor": "Aashay-chaudhari",
+        "run_id": "23392800754",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23392800754",
+        "sha": "e8df3a30f79567f5ab5889e48406483f8e11497b",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": null,
+    "attempts": [
+      {
+        "provider": "cli:claude",
+        "model": "gpt-4o-mini",
+        "status": "error",
+        "duration_ms": 1657.0,
+        "error": "Credit balance is too low",
+        "quota_issue_detected": true
+      },
+      {
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "status": "error",
+        "duration_ms": 281.5,
+        "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZHEVTXLwsMS1zznnJNw1'}",
+        "quota_issue_detected": true
+      }
+    ],
+    "quota_issue_detected": true,
+    "quota_note": "Credit balance is too low"
+  }
+}
