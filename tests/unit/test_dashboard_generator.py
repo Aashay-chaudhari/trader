@@ -571,3 +571,101 @@ def test_generate_dashboard_includes_knowledge_store_bundle():
         assert knowledge["patterns"][0]["name"] == "gap_and_go"
         assert knowledge["proposals"][0]["title"] == "Add earnings surprise context"
         assert (docs_dir / "data" / "knowledge.json").exists()
+
+
+def test_generate_dashboard_exports_interaction_logs():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        (data_dir / "profiles" / "claude" / "snapshots").mkdir(parents=True)
+        (data_dir / "profiles" / "claude" / "research").mkdir(parents=True)
+        (data_dir / "profiles" / "claude" / "analytics").mkdir(parents=True)
+        (data_dir / "profiles" / "claude" / "context").mkdir(parents=True)
+        interaction_dir = data_dir / "profiles" / "claude" / "interactions" / "2026-03-22"
+        interaction_dir.mkdir(parents=True)
+
+        profile_root = data_dir / "profiles" / "claude"
+        (profile_root / "profile.json").write_text(
+            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-22T13:30:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (profile_root / "research" / "2026-03-22_research.json").write_text(
+            json.dumps({"best_opportunities": [], "stocks": {}}),
+            encoding="utf-8",
+        )
+        (profile_root / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (profile_root / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+
+        prompt_path = interaction_dir / "083000_morning_prompt.md"
+        transcript_path = interaction_dir / "083000_morning_transcript.txt"
+        metadata_path = interaction_dir / "083000_morning_interaction.json"
+
+        prompt_path.write_text("# Morning prompt", encoding="utf-8")
+        transcript_path.write_text("Research started\nTop thesis line", encoding="utf-8")
+        metadata_path.write_text(
+            json.dumps(
+                {
+                    "timestamp": "2026-03-22T08:30:00-04:00",
+                    "profile": "claude",
+                    "phase": "morning",
+                    "tool": "claude",
+                    "status": "success",
+                    "prompt_source": "scripts/prompts/morning_research.md",
+                    "prompt_file": "data/profiles/claude/interactions/2026-03-22/083000_morning_prompt.md",
+                    "transcript_file": "data/profiles/claude/interactions/2026-03-22/083000_morning_transcript.txt",
+                    "raw_log_file": ".tmp/cli_logs/claude_morning_2026-03-22_083000.ndjson",
+                    "summary": "Research started | Top thesis line",
+                }
+            ),
+            encoding="utf-8",
+        )
+        (profile_root / "interactions" / "latest.json").write_text(metadata_path.read_text(encoding="utf-8"), encoding="utf-8")
+        (profile_root / "interactions" / "latest_morning.json").write_text(
+            metadata_path.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        interactions = bundle["profiles"]["claude"]["interactions"]
+
+        assert interactions["counts"]["total"] == 1
+        assert interactions["latest"]["phase"] == "morning"
+        assert interactions["recent"][0]["prompt_url"] == (
+            "data/profiles/claude/interactions/2026-03-22/083000_morning_prompt.md"
+        )
+        assert interactions["recent"][0]["transcript_url"] == (
+            "data/profiles/claude/interactions/2026-03-22/083000_morning_transcript.txt"
+        )
+        assert (docs_dir / "data" / "profiles" / "claude" / "interactions.json").exists()
+        assert (
+            docs_dir
+            / "data"
+            / "profiles"
+            / "claude"
+            / "interactions"
+            / "2026-03-22"
+            / "083000_morning_prompt.md"
+        ).exists()
+        assert (
+            docs_dir
+            / "data"
+            / "profiles"
+            / "claude"
+            / "interactions"
+            / "2026-03-22"
+            / "083000_morning_transcript.txt"
+        ).exists()

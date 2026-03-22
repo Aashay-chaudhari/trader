@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
@@ -588,6 +589,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "llm.json", bundle["llm"])
     _write_json(data_out / "context.json", bundle["context"])
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
+    _write_json(data_out / "interactions.json", bundle["interactions"])
     _write_json(data_out / "report_research.json", bundle["reports"]["research"])
     _write_json(data_out / "report_monitor.json", bundle["reports"]["monitor"])
     _write_json(
@@ -603,6 +605,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _copy_latest_report_artifact(active_root, data_out / "report_monitor.md", phase="monitor", suffix=".md")
     _copy_if_exists(active_root / "improvement_proposals.json", data_out / "improvement_proposals.json")
     _copy_if_exists(active_root / "IMPROVEMENT_PROPOSALS.md", data_out / "IMPROVEMENT_PROPOSALS.md")
+    _copy_interaction_files(active_root, data_out / "interactions", bundle["interactions"])
 
     for profile_id, profile_root in profile_roots.items():
         profile_bundle = bundle["profiles"][profile_id]
@@ -616,6 +619,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "llm.json", profile_bundle["llm"])
         _write_json(profile_out / "context.json", profile_bundle["context"])
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
+        _write_json(profile_out / "interactions.json", profile_bundle["interactions"])
         _write_json(profile_out / "report_research.json", profile_bundle["reports"]["research"])
         _write_json(profile_out / "report_monitor.json", profile_bundle["reports"]["monitor"])
         _write_json(
@@ -636,6 +640,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
             profile_root / "IMPROVEMENT_PROPOSALS.md",
             profile_out / "IMPROVEMENT_PROPOSALS.md",
         )
+        _copy_interaction_files(profile_root, profile_out / "interactions", profile_bundle["interactions"])
 
     rules_path = active_root / "feedback" / "learned_rules.json"
     if rules_path.exists():
@@ -671,6 +676,7 @@ def _build_dashboard_bundle(
         "llm": active_bundle["llm"],
         "context": active_bundle["context"],
         "knowledge": active_bundle["knowledge"],
+        "interactions": active_bundle["interactions"],
         "reports": active_bundle["reports"],
     }
 
@@ -713,6 +719,7 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "llm": llm,
         "context": context,
         "knowledge": _load_knowledge_bundle(data_root),
+        "interactions": _load_interaction_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "reports": {"research": research_report, "monitor": monitor_report},
         "artifacts": _build_profile_artifacts(profile["id"], multi_profile=multi_profile),
     }
@@ -732,16 +739,18 @@ def _load_knowledge_bundle(data_root: Path) -> dict[str, Any]:
     regime_payload = _read_json(knowledge_root / "regime_library.json", {"regimes": {}})
     proposal_entries = _read_json(data_root / "improvement_proposals.json", [])
 
+    lessons_source = lessons_payload.get("lessons") if isinstance(lessons_payload, dict) else lessons_payload
     lessons = [
         str(item).strip()
-        for item in _safe_list(lessons_payload.get("lessons"))
+        for item in _safe_list(lessons_source)
         if str(item).strip()
     ][-10:]
     lessons.reverse()
 
+    patterns_source = patterns_payload.get("patterns") if isinstance(patterns_payload, dict) else patterns_payload
     patterns = [
         item
-        for item in _safe_list(patterns_payload.get("patterns"))
+        for item in _safe_list(patterns_source)
         if isinstance(item, dict)
     ]
     patterns.sort(
@@ -788,10 +797,10 @@ def _load_knowledge_bundle(data_root: Path) -> dict[str, Any]:
         "weekly_reviews": len(list((observations_root / "weekly").glob("week_*.json"))),
         "monthly_reviews": len(list((observations_root / "monthly").glob("month_*.json"))),
         "patterns": len(
-            [item for item in _safe_list(patterns_payload.get("patterns")) if isinstance(item, dict)]
+            [item for item in _safe_list(patterns_source) if isinstance(item, dict)]
         ),
         "lessons": len(
-            [item for item in _safe_list(lessons_payload.get("lessons")) if str(item).strip()]
+            [item for item in _safe_list(lessons_source) if str(item).strip()]
         ),
         "strategies": len(strategies),
         "regimes": len(regimes),
@@ -812,6 +821,73 @@ def _load_knowledge_bundle(data_root: Path) -> dict[str, Any]:
         "proposals": proposals,
         "prompt_preview": prompt_preview,
         "improvement_log_present": (data_root / "IMPROVEMENT_PROPOSALS.md").exists(),
+    }
+
+
+def _load_interaction_bundle(data_root: Path, *, profile_id: str, multi_profile: bool) -> dict[str, Any]:
+    interactions_root = data_root / "interactions"
+    if not interactions_root.exists():
+        return _empty_interaction_bundle()
+
+    metadata_files = sorted(
+        [
+            path
+            for path in interactions_root.rglob("*_interaction.json")
+            if path.is_file()
+        ],
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+
+    base = f"data/profiles/{profile_id}" if multi_profile else "data"
+    recent: list[dict[str, Any]] = []
+    latest_by_phase: dict[str, dict[str, Any]] = {}
+
+    for path in metadata_files:
+        payload = _read_json(path, {})
+        if not isinstance(payload, dict):
+            continue
+        phase = str(payload.get("phase", "")).strip().lower() or "unknown"
+        item = {
+            "timestamp": payload.get("timestamp"),
+            "profile": payload.get("profile", profile_id),
+            "phase": phase,
+            "tool": payload.get("tool", ""),
+            "status": payload.get("status", "unknown"),
+            "summary": payload.get("summary", ""),
+            "prompt_file": payload.get("prompt_file", ""),
+            "transcript_file": payload.get("transcript_file", ""),
+            "metadata_file": str(path).replace("\\", "/"),
+            "raw_log_file": payload.get("raw_log_file", ""),
+            "prompt_source": payload.get("prompt_source", ""),
+            "prompt_url": _public_interaction_path(payload.get("prompt_file", ""), profile_id=profile_id, multi_profile=multi_profile),
+            "transcript_url": _public_interaction_path(payload.get("transcript_file", ""), profile_id=profile_id, multi_profile=multi_profile),
+            "metadata_url": _public_interaction_path(str(path).replace("\\", "/"), profile_id=profile_id, multi_profile=multi_profile),
+            "prompt_source_url": _public_repo_path(payload.get("prompt_source", "")),
+        }
+        recent.append(item)
+        if phase not in latest_by_phase:
+            latest_by_phase[phase] = item
+        if len(recent) >= 12 and len(latest_by_phase) >= 4:
+            break
+
+    return {
+        "counts": {
+            "total": len(metadata_files),
+            "recent": len(recent),
+        },
+        "latest": recent[0] if recent else {},
+        "latest_by_phase": latest_by_phase,
+        "recent": recent,
+    }
+
+
+def _empty_interaction_bundle() -> dict[str, Any]:
+    return {
+        "counts": {"total": 0, "recent": 0},
+        "latest": {},
+        "latest_by_phase": {},
+        "recent": [],
     }
 
 
@@ -905,6 +981,57 @@ def _load_trade_history(data_root: Path, *, profile: dict[str, Any]) -> list[dic
     return trades
 
 
+def _copy_interaction_files(data_root: Path, destination_root: Path, interactions: dict[str, Any]) -> None:
+    source_root = data_root / "interactions"
+    if not source_root.exists():
+        return
+
+    copied: set[tuple[Path, Path]] = set()
+    destination_root.mkdir(parents=True, exist_ok=True)
+
+    items = []
+    if isinstance(interactions, dict):
+        items.extend(_safe_list(interactions.get("recent")))
+        latest = interactions.get("latest")
+        if isinstance(latest, dict):
+            items.append(latest)
+        latest_by_phase = interactions.get("latest_by_phase", {})
+        if isinstance(latest_by_phase, dict):
+            phase_items = latest_by_phase.values()
+        else:
+            phase_items = []
+        for value in phase_items:
+            if isinstance(value, dict):
+                items.append(value)
+
+    for item in items:
+        for key in ("prompt_file", "transcript_file", "metadata_file"):
+            raw_path = str(item.get(key, "")).strip()
+            if not raw_path:
+                continue
+            if raw_path.startswith("data/profiles/"):
+                relative_parts = Path(raw_path).parts
+                try:
+                    relative = Path(*relative_parts[4:])
+                except Exception:
+                    continue
+            else:
+                try:
+                    relative = Path(raw_path).relative_to(source_root)
+                except ValueError:
+                    continue
+            source = source_root / relative
+            destination = destination_root / relative
+            if not source.exists():
+                continue
+            pair = (source, destination)
+            if pair in copied:
+                continue
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+            copied.add(pair)
+
+
 def _get_latest_report(data_root: Path, phase: str) -> dict[str, Any]:
     path = _get_latest_report_path(data_root, phase=phase, suffix=".json")
     return _read_json(path, {}) if path else {}
@@ -974,6 +1101,7 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "llm_json": f"{base}/llm.json",
         "context_json": f"{base}/context.json",
         "knowledge_json": f"{base}/knowledge.json",
+        "interactions_json": f"{base}/interactions.json",
         "improvement_json": f"{base}/improvement_proposals.json",
         "improvement_md": f"{base}/IMPROVEMENT_PROPOSALS.md",
         "research_report_json": f"{base}/report_research.json",
@@ -983,6 +1111,23 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "research_report_md": f"{base}/report_research.md",
         "monitor_report_md": f"{base}/report_monitor.md",
     }
+
+
+def _public_interaction_path(raw_path: str, *, profile_id: str, multi_profile: bool) -> str:
+    path_text = str(raw_path or "").replace("\\", "/").strip()
+    if not path_text:
+        return ""
+    if path_text.startswith("data/profiles/"):
+        return path_text
+    if "interactions/" in path_text:
+        suffix = path_text.split("interactions/", 1)[1]
+        base = f"data/profiles/{profile_id}" if multi_profile else "data"
+        return f"{base}/interactions/{suffix}".replace("//", "/")
+    return path_text
+
+
+def _public_repo_path(raw_path: str) -> str:
+    return ""
 
 
 def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
@@ -999,6 +1144,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "llm": {},
         "context": {},
         "knowledge": _empty_knowledge_bundle(),
+        "interactions": _empty_interaction_bundle(),
         "reports": {"research": {}, "monitor": {}},
         "artifacts": _build_profile_artifacts(profile_id, multi_profile=True),
     }
@@ -1316,6 +1462,49 @@ def _load_recent_json_series(directory: Path, pattern: str, *, limit: int) -> li
 
 def _flatten_strategy_effectiveness(payload: dict[str, Any]) -> list[dict[str, Any]]:
     strategies: list[dict[str, Any]] = []
+    by_regime = payload.get("by_regime", {})
+    if isinstance(by_regime, dict) and by_regime:
+        aggregate: dict[str, dict[str, Any]] = {}
+        for regime, strategies_payload in by_regime.items():
+            if not isinstance(strategies_payload, dict):
+                continue
+            for name, details in strategies_payload.items():
+                if not isinstance(details, dict):
+                    continue
+                bucket = aggregate.setdefault(
+                    name,
+                    {
+                        "name": name,
+                        "win_rates": [],
+                        "avg_returns": [],
+                        "best_regime": "",
+                        "best_win_rate": -1.0,
+                    },
+                )
+                win_rate = details.get("win_rate")
+                avg_return = details.get("avg_return", details.get("avg_pnl"))
+                if isinstance(win_rate, (int, float)):
+                    bucket["win_rates"].append(float(win_rate))
+                    if float(win_rate) > float(bucket["best_win_rate"]):
+                        bucket["best_win_rate"] = float(win_rate)
+                        bucket["best_regime"] = str(regime)
+                if isinstance(avg_return, (int, float)):
+                    bucket["avg_returns"].append(float(avg_return))
+
+        for name, bucket in aggregate.items():
+            win_rates = bucket.get("win_rates", [])
+            avg_returns = bucket.get("avg_returns", [])
+            strategies.append(
+                {
+                    "name": name,
+                    "win_rate": (sum(win_rates) / len(win_rates)) if win_rates else None,
+                    "avg_return": (sum(avg_returns) / len(avg_returns)) if avg_returns else None,
+                    "best_regime": bucket.get("best_regime") or None,
+                }
+            )
+        strategies.sort(key=lambda item: num_or_zero(item.get("win_rate")), reverse=True)
+        return strategies[:8]
+
     for name, details in payload.items():
         if name == "last_updated" or not isinstance(details, dict):
             continue
@@ -1333,6 +1522,13 @@ def _flatten_strategy_effectiveness(payload: dict[str, Any]) -> list[dict[str, A
 
 def _flatten_regime_library(payload: dict[str, Any]) -> list[dict[str, Any]]:
     regimes_payload = payload.get("regimes", {})
+    if not isinstance(regimes_payload, dict) or not regimes_payload:
+        top_level = {
+            key: value
+            for key, value in payload.items()
+            if key != "regimes" and isinstance(value, dict)
+        }
+        regimes_payload = top_level
     if not isinstance(regimes_payload, dict):
         return []
 
@@ -1360,6 +1556,18 @@ def _flatten_improvement_proposals(entries: Any) -> list[dict[str, Any]]:
 
     for entry in reversed(entries[-8:]):
         if not isinstance(entry, dict):
+            continue
+        if {"title", "description", "priority"} & set(entry.keys()):
+            flattened.append(
+                {
+                    "date": entry.get("date", ""),
+                    "priority": entry.get("priority", "medium"),
+                    "category": entry.get("category", "other"),
+                    "title": entry.get("title", "Untitled proposal"),
+                    "description": entry.get("description", ""),
+                    "expected_impact": entry.get("expected_impact", ""),
+                }
+            )
             continue
         date = str(entry.get("date", "")).strip()
         for proposal in _safe_list(entry.get("proposals")):

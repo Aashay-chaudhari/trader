@@ -82,6 +82,71 @@ echo ""
 
 # Ensure required cache directories exist before agents run.
 mkdir -p data/profiles/claude/cache data/profiles/codex/cache
+mkdir -p data/profiles/claude/interactions data/profiles/codex/interactions
+
+write_interaction_metadata() {
+  local metadata_path="$1"
+  local profile="$2"
+  local phase="$3"
+  local tool="$4"
+  local prompt_file="$5"
+  local transcript_file="$6"
+  local raw_log_file="$7"
+  local status="$8"
+  local prompt_source="$9"
+
+  python - "$metadata_path" "$profile" "$phase" "$tool" "$prompt_file" "$transcript_file" "$raw_log_file" "$status" "$prompt_source" <<'PY'
+import json
+import sys
+from datetime import datetime
+from pathlib import Path
+
+(
+    metadata_path,
+    profile,
+    phase,
+    tool,
+    prompt_file,
+    transcript_file,
+    raw_log_file,
+    status,
+    prompt_source,
+) = sys.argv[1:]
+
+transcript_path = Path(transcript_file)
+summary_lines = []
+if transcript_path.exists():
+    for raw in transcript_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith("[init]") or line.startswith("[assistant]") or line.startswith("[result]"):
+            continue
+        summary_lines.append(line)
+        if len(summary_lines) >= 4:
+            break
+
+payload = {
+    "timestamp": datetime.now().astimezone().isoformat(),
+    "profile": profile,
+    "phase": phase,
+    "tool": tool,
+    "status": "success" if status == "0" else "failed",
+    "prompt_source": prompt_source,
+    "prompt_file": prompt_file.replace("\\", "/"),
+    "transcript_file": transcript_file.replace("\\", "/"),
+    "raw_log_file": raw_log_file.replace("\\", "/"),
+    "summary": " | ".join(summary_lines[:3]),
+}
+
+metadata = Path(metadata_path)
+metadata.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+interactions_root = metadata.parent.parent
+(interactions_root / "latest.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+(interactions_root / f"latest_{phase}.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+PY
+}
 
 pretty_print_claude_stream() {
   python -u -c '
@@ -146,13 +211,21 @@ run_claude() {
   echo "Running Claude strategist"
   echo "--------------------------------------------"
 
-  local prompt allowed ts log
+  local prompt allowed ts log status
+  local interaction_dir prompt_file transcript_file metadata_file
   prompt="${PROMPT_TEMPLATE//\{\{PROFILE\}\}/claude}"
   allowed="Read,Write,Edit,Glob,Grep,Bash,WebSearch,WebFetch"
   ts="$(date '+%H%M%S')"
   log=".tmp/cli_logs/claude_${PHASE}_${DATE}_${ts}.ndjson"
+  interaction_dir="data/profiles/claude/interactions/${DATE}"
+  mkdir -p "$interaction_dir"
+  prompt_file="${interaction_dir}/${ts}_${PHASE}_prompt.md"
+  transcript_file="${interaction_dir}/${ts}_${PHASE}_transcript.txt"
+  metadata_file="${interaction_dir}/${ts}_${PHASE}_interaction.json"
+  printf "%s\n" "$prompt" > "$prompt_file"
 
   echo "Streaming Claude events (JSONL) - log: $log"
+  set +e
   echo "$prompt" | claude \
     --print \
     --verbose \
@@ -160,7 +233,17 @@ run_claude() {
     --include-partial-messages \
     --allowedTools "$allowed" \
     | tee "$log" \
-    | pretty_print_claude_stream
+    | pretty_print_claude_stream \
+    | tee "$transcript_file"
+  status=$?
+  set -e
+  write_interaction_metadata \
+    "$metadata_file" "claude" "$PHASE" "claude" \
+    "$prompt_file" "$transcript_file" "$log" "$status" "$PROMPT_FILE"
+  if [[ "$status" -ne 0 ]]; then
+    echo "Error: Claude exited with status $status."
+    return "$status"
+  fi
 
   echo ""
   echo "Claude strategist complete."
@@ -173,6 +256,7 @@ run_codex() {
   echo "--------------------------------------------"
 
   local prompt ts log status
+  local interaction_dir prompt_file transcript_file metadata_file
   local -a codex_cmd
   prompt="${PROMPT_TEMPLATE//\{\{PROFILE\}\}/codex}"
   prompt="$prompt
@@ -194,6 +278,12 @@ Behavior under limits:
 "
   ts="$(date '+%H%M%S')"
   log=".tmp/cli_logs/codex_${PHASE}_${DATE}_${ts}.log"
+  interaction_dir="data/profiles/codex/interactions/${DATE}"
+  mkdir -p "$interaction_dir"
+  prompt_file="${interaction_dir}/${ts}_${PHASE}_prompt.md"
+  transcript_file="${interaction_dir}/${ts}_${PHASE}_transcript.txt"
+  metadata_file="${interaction_dir}/${ts}_${PHASE}_interaction.json"
+  printf "%s\n" "$prompt" > "$prompt_file"
 
   if ! codex exec --help >/dev/null 2>&1; then
     echo "Error: this Codex CLI version does not support 'codex exec'."
@@ -228,9 +318,12 @@ Behavior under limits:
   echo "Streaming Codex output - log: $log"
   echo "Codex limits: timeout=${CODEX_MAX_SECONDS}s, max_web_searches=${CODEX_MAX_WEB_SEARCHES}, max_loops=${CODEX_MAX_AGENT_LOOPS}, effort=${CODEX_REASONING_EFFORT}, host_write=${CODEX_HOST_WRITE}, sandbox=${CODEX_SANDBOX_MODE}, approval=${CODEX_APPROVAL_POLICY}"
   set +e
-  echo "$prompt" | timeout "$CODEX_MAX_SECONDS" "${codex_cmd[@]}" | tee "$log" | strip_ps_encoding_warning
+  echo "$prompt" | timeout "$CODEX_MAX_SECONDS" "${codex_cmd[@]}" | tee "$log" | strip_ps_encoding_warning | tee "$transcript_file"
   status=$?
   set -e
+  write_interaction_metadata \
+    "$metadata_file" "codex" "$PHASE" "codex" \
+    "$prompt_file" "$transcript_file" "$log" "$status" "$PROMPT_FILE"
   if [[ "$status" -eq 124 ]]; then
     echo "Error: Codex timed out after ${CODEX_MAX_SECONDS}s (guardrail triggered)."
     echo "Increase CODEX_MAX_SECONDS if you want a longer run."
@@ -275,7 +368,10 @@ else
 fi
 
 echo "Committing and pushing..."
-git add data/profiles/claude/ data/profiles/codex/
+echo "Regenerating dashboard..."
+python -m agent_trader dashboard
+
+git add data/profiles/claude/ data/profiles/codex/ docs/ WEEKBOOK.md
 if git diff --staged --quiet; then
   echo "No changes to commit."
 else

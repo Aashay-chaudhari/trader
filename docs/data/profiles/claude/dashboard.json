@@ -1,0 +1,141 @@
+{
+  "profile": {
+    "id": "claude",
+    "label": "Claude Strategist",
+    "data_dir": "data/profiles/claude",
+    "llm_provider": "auto",
+    "use_cli_agent": false,
+    "cli_agent_provider": "codex",
+    "cli_agent_max_turns": 5,
+    "cli_agent_timeout": 300,
+    "dry_run": true,
+    "paper_portfolio_value": 100000.0
+  },
+  "latest": {
+    "timestamp": "2026-03-22T20:13:39.670190+00:00",
+    "profile": "claude",
+    "profile_label": "Claude Strategist",
+    "portfolio_value": 100000.0,
+    "cash": 100000.0,
+    "invested": 0.0,
+    "total_pnl": 0.0,
+    "total_pnl_pct": 0.0,
+    "positions": [],
+    "position_count": 0
+  },
+  "history": [],
+  "trades": [],
+  "research": {},
+  "llm": {},
+  "context": {
+    "prompt_sections": {
+      "news_inputs": {
+        "per_symbol": {},
+        "market_headlines": [],
+        "news_discoveries": [],
+        "hot_stocks": [],
+        "finviz": {
+          "analyst_changes": []
+        }
+      },
+      "market_context": {},
+      "market_data": {},
+      "screener_context": {}
+    },
+    "symbols": [],
+    "provider": "",
+    "model": "",
+    "llm_meta": {}
+  },
+  "knowledge": {
+    "counts": {
+      "daily_observations": 0,
+      "weekly_reviews": 0,
+      "monthly_reviews": 0,
+      "patterns": 0,
+      "lessons": 0,
+      "strategies": 1,
+      "regimes": 3,
+      "pending_proposals": 0
+    },
+    "recent_observations": [],
+    "weekly_reviews": [],
+    "monthly_reviews": [],
+    "latest_weekly_review": {},
+    "latest_monthly_review": {},
+    "lessons": [],
+    "patterns": [],
+    "strategies": [
+      {
+        "name": "by_regime",
+        "win_rate": null,
+        "avg_return": null,
+        "best_regime": null
+      }
+    ],
+    "regimes": [
+      {
+        "name": "neutral",
+        "preferred_strategies": [],
+        "avoid_strategies": [],
+        "rules": [],
+        "position_size_modifier": null,
+        "stop_loss_modifier": null
+      },
+      {
+        "name": "risk_off",
+        "preferred_strategies": [],
+        "avoid_strategies": [],
+        "rules": [],
+        "position_size_modifier": null,
+        "stop_loss_modifier": null
+      },
+      {
+        "name": "risk_on",
+        "preferred_strategies": [],
+        "avoid_strategies": [],
+        "rules": [],
+        "position_size_modifier": null,
+        "stop_loss_modifier": null
+      }
+    ],
+    "proposals": [],
+    "prompt_preview": {
+      "knowledge_context": "",
+      "observations_context": ""
+    },
+    "improvement_log_present": false
+  },
+  "interactions": {
+    "counts": {
+      "total": 0,
+      "recent": 0
+    },
+    "latest": {},
+    "latest_by_phase": {},
+    "recent": []
+  },
+  "reports": {
+    "research": {},
+    "monitor": {}
+  },
+  "artifacts": {
+    "dashboard_json": "data/profiles/claude/dashboard.json",
+    "latest_json": "data/profiles/claude/latest.json",
+    "history_json": "data/profiles/claude/history.json",
+    "trades_json": "data/profiles/claude/trades.json",
+    "research_json": "data/profiles/claude/research.json",
+    "llm_json": "data/profiles/claude/llm.json",
+    "context_json": "data/profiles/claude/context.json",
+    "knowledge_json": "data/profiles/claude/knowledge.json",
+    "interactions_json": "data/profiles/claude/interactions.json",
+    "improvement_json": "data/profiles/claude/improvement_proposals.json",
+    "improvement_md": "data/profiles/claude/IMPROVEMENT_PROPOSALS.md",
+    "research_report_json": "data/profiles/claude/report_research.json",
+    "monitor_report_json": "data/profiles/claude/report_monitor.json",
+    "weekly_report_json": "data/profiles/claude/report_weekly.json",
+    "monthly_report_json": "data/profiles/claude/report_monthly.json",
+    "research_report_md": "data/profiles/claude/report_research.md",
+    "monitor_report_md": "data/profiles/claude/report_monitor.md"
+  }
+}
