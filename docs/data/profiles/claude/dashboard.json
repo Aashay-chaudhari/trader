@@ -8,7 +8,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-03-23T15:33:53.024434+00:00",
+    "timestamp": "2026-03-23T15:58:38.586874+00:00",
     "profile": "claude",
     "profile_label": "Claude Strategist",
     "portfolio_value": 100000.0,
@@ -82,6 +82,18 @@
     },
     {
       "timestamp": "2026-03-23T15:33:53.024434+00:00",
+      "profile": "claude",
+      "profile_label": "Claude Strategist",
+      "portfolio_value": 100000.0,
+      "cash": 100000.0,
+      "invested": 0,
+      "total_pnl": 0,
+      "total_pnl_pct": 0.0,
+      "positions": [],
+      "position_count": 0
+    },
+    {
+      "timestamp": "2026-03-23T15:58:38.586874+00:00",
       "profile": "claude",
       "profile_label": "Claude Strategist",
       "portfolio_value": 100000.0,
@@ -403,18 +415,18 @@
     }
   },
   "monitor": {
-    "overall_sentiment": "neutral",
-    "market_summary": "Live conditions do not confirm any immediate setup for trading, as evidence is mixed.",
+    "overall_sentiment": "bearish",
+    "market_summary": "Live conditions are not confirming the morning thesis as execution conditions are not fully satisfied.",
     "stocks": {
       "XOM": {
         "recommendation": "watch",
-        "confidence": 0.5,
+        "confidence": 0.3,
         "ready_to_trade": false,
         "matched_conditions": [],
         "failed_conditions": [
-          "oil direction unclear; need Brent's stability above $100 or clarity on the Iran talks"
+          "Need Brent to stabilize above $100 and clear direction from Iran talks"
         ],
-        "monitor_reason": "17 fresh headlines but conditions are unverified",
+        "monitor_reason": "18 fresh headlines suggest potential volatility influencing oil prices.",
         "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
         "trade_plan": {
           "entry": 158.0,
@@ -424,13 +436,13 @@
       },
       "UAL": {
         "recommendation": "watch",
-        "confidence": 0.5,
+        "confidence": 0.3,
         "ready_to_trade": false,
         "matched_conditions": [],
         "failed_conditions": [
-          "WTI crude holding below $95 not confirmed; need UAL trading above $100"
+          "WTI crude must hold below $95 and UAL needs to confirm above $100"
         ],
-        "monitor_reason": "20 fresh headlines but conditions are unverified",
+        "monitor_reason": "20 fresh headlines indicate possible fluctuations impacting UAL's performance.",
         "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
         "trade_plan": {
           "entry": 104.0,
@@ -440,13 +452,13 @@
       },
       "OXY": {
         "recommendation": "watch",
-        "confidence": 0.5,
+        "confidence": 0.3,
         "ready_to_trade": false,
         "matched_conditions": [],
         "failed_conditions": [
-          "need clarity on Iran news and oil holding above $90 WTI"
+          "Iran news needs resolution and oil must hold above $90 WTI"
         ],
-        "monitor_reason": "16 fresh headlines but conditions are unverified",
+        "monitor_reason": "16 fresh headlines could affect OXY's expected performance amidst oil volatility.",
         "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
         "trade_plan": {
           "entry": 63.0,
@@ -464,28 +476,28 @@
       "selected_provider": "openai",
       "selected_model": "gpt-4o-mini-2024-07-18",
       "usage": {
-        "input_tokens": 829,
-        "output_tokens": 521,
-        "total_tokens": 1350,
+        "input_tokens": 830,
+        "output_tokens": 527,
+        "total_tokens": 1357,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       },
       "service_tier": "default",
-      "request_id": "req_c801e9a865484654818712d9ecf4e217",
+      "request_id": "req_9f9c2b0bc2e344279d0eb4a594316394",
       "rate_limits": {
         "headers": {
           "x-ratelimit-limit-requests": "10000",
           "x-ratelimit-limit-tokens": "200000",
-          "x-ratelimit-remaining-requests": "9998",
+          "x-ratelimit-remaining-requests": "9999",
           "x-ratelimit-remaining-tokens": "199187",
-          "x-ratelimit-reset-requests": "12.237s",
+          "x-ratelimit-reset-requests": "8.64s",
           "x-ratelimit-reset-tokens": "243ms"
         },
         "estimates": {
-          "requests_remaining_after_request": 9998,
-          "requests_remaining_before_request_estimate": 9999,
+          "requests_remaining_after_request": 9999,
+          "requests_remaining_before_request_estimate": 10000,
           "tokens_remaining_after_request": 199187,
-          "tokens_remaining_before_request_estimate": 200537
+          "tokens_remaining_before_request_estimate": 200544
         },
         "billing_balance_before_workflow": {
           "available": false,
@@ -503,25 +515,25 @@
           "workflow": "Trading Pipeline",
           "event_name": "schedule",
           "actor": "Aashay-chaudhari",
-          "run_id": "23445582732",
+          "run_id": "23446770499",
           "run_attempt": "1",
-          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23445582732",
-          "sha": "f6eaf9d221b1ff94baf05768d829ad7b45c7d93b",
+          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23446770499",
+          "sha": "9131e396c9086c949405cb4bfd44c7c58f22d032",
           "ref": "refs/heads/main"
         }
       },
-      "duration_ms": 11328.2,
+      "duration_ms": 10309.7,
       "attempts": [
         {
           "execution_mode": "api",
           "provider": "openai",
           "model": "gpt-4o-mini",
           "status": "success",
-          "duration_ms": 11328.2,
+          "duration_ms": 10309.7,
           "usage": {
-            "input_tokens": 829,
-            "output_tokens": 521,
-            "total_tokens": 1350,
+            "input_tokens": 830,
+            "output_tokens": 527,
+            "total_tokens": 1357,
             "cached_input_tokens": 0,
             "reasoning_output_tokens": 0
           }
@@ -532,7 +544,7 @@
     }
   },
   "llm": {
-    "timestamp": "2026-03-23T15:33:53.021100+00:00",
+    "timestamp": "2026-03-23T15:58:38.583162+00:00",
     "phase": "monitor",
     "symbols": [
       "DELL",
@@ -550,9 +562,9 @@
     "quota_issue_detected": false,
     "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
     "usage": {
-      "input_tokens": 829,
-      "output_tokens": 521,
-      "total_tokens": 1350,
+      "input_tokens": 830,
+      "output_tokens": 527,
+      "total_tokens": 1357,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
@@ -560,16 +572,16 @@
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
-        "x-ratelimit-remaining-requests": "9998",
+        "x-ratelimit-remaining-requests": "9999",
         "x-ratelimit-remaining-tokens": "199187",
-        "x-ratelimit-reset-requests": "12.237s",
+        "x-ratelimit-reset-requests": "8.64s",
         "x-ratelimit-reset-tokens": "243ms"
       },
       "estimates": {
-        "requests_remaining_after_request": 9998,
-        "requests_remaining_before_request_estimate": 9999,
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
         "tokens_remaining_after_request": 199187,
-        "tokens_remaining_before_request_estimate": 200537
+        "tokens_remaining_before_request_estimate": 200544
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -577,19 +589,19 @@
       }
     },
     "service_tier": "default",
-    "request_id": "req_c801e9a865484654818712d9ecf4e217",
-    "duration_ms": 11328.2,
+    "request_id": "req_9f9c2b0bc2e344279d0eb4a594316394",
+    "duration_ms": 10309.7,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 11328.2,
+        "duration_ms": 10309.7,
         "usage": {
-          "input_tokens": 829,
-          "output_tokens": 521,
-          "total_tokens": 1350,
+          "input_tokens": 830,
+          "output_tokens": 527,
+          "total_tokens": 1357,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
@@ -606,10 +618,10 @@
         "workflow": "Trading Pipeline",
         "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "23445582732",
+        "run_id": "23446770499",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23445582732",
-        "sha": "f6eaf9d221b1ff94baf05768d829ad7b45c7d93b",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23446770499",
+        "sha": "9131e396c9086c949405cb4bfd44c7c58f22d032",
         "ref": "refs/heads/main"
       }
     }
@@ -1416,12 +1428,12 @@
   },
   "interactions": {
     "counts": {
-      "total": 8,
-      "recent": 8,
+      "total": 9,
+      "recent": 9,
       "days": 2
     },
     "latest": {
-      "timestamp": "2026-03-23T15:33:53.019637+00:00",
+      "timestamp": "2026-03-23T14:57:49.335700+00:00",
       "day": "2026-03-23",
       "profile": "claude",
       "phase": "monitor",
@@ -1429,20 +1441,20 @@
       "phase_label": "Monitor Evaluations",
       "tool": "python-api",
       "status": "success",
-      "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm any immediate setup for trading, as evidence is mixed. | openai / gpt-4o-mini-2024-07-18",
-      "prompt_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_prompt.md",
-      "transcript_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_transcript.txt",
-      "metadata_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_interaction.json",
+      "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming any candidate's execution thesis, leading to a cautious stance. | openai / gpt-4o-mini-2024-07-18",
+      "prompt_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+      "transcript_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+      "metadata_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
       "raw_log_file": "",
       "prompt_source": "src/agent_trader/agents/research_agent.py",
-      "prompt_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_prompt.md",
-      "transcript_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_transcript.txt",
-      "metadata_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_interaction.json",
+      "prompt_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+      "transcript_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+      "metadata_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
       "monitor": {
-        "timestamp": "2026-03-23T15:33:53.019637+00:00",
+        "timestamp": "2026-03-23T14:57:49.335700+00:00",
         "day": "2026-03-23",
         "profile": "claude",
         "phase": "monitor",
@@ -1450,15 +1462,15 @@
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm any immediate setup for trading, as evidence is mixed. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-03-23/153353_monitor_interaction.json",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming any candidate's execution thesis, leading to a cautious stance. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-03-23/153353_monitor_interaction.json",
+        "prompt_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
         "prompt_source_url": ""
       },
       "morning": {
@@ -1483,10 +1495,30 @@
       }
     },
     "phase_counts": {
-      "monitor": 6,
+      "monitor": 7,
       "morning": 2
     },
     "recent": [
+      {
+        "timestamp": "2026-03-23T14:57:49.335700+00:00",
+        "day": "2026-03-23",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming any candidate's execution thesis, leading to a cautious stance. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       {
         "timestamp": "2026-03-23T15:33:53.019637+00:00",
         "day": "2026-03-23",
@@ -1508,7 +1540,7 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-03-23T14:57:49.335700+00:00",
+        "timestamp": "2026-03-23T15:58:38.581730+00:00",
         "day": "2026-03-23",
         "profile": "claude",
         "phase": "monitor",
@@ -1516,15 +1548,35 @@
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming any candidate's execution thesis, leading to a cautious stance. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming the morning thesis as execution conditions are not fully satisfied. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-03-23/145749_monitor_interaction.json",
+        "prompt_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-03-23T02:15:29.717856+00:00",
+        "day": "2026-03-23",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
+        "prompt_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -1548,26 +1600,6 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-03-23T14:38:13.544415+00:00",
-        "day": "2026-03-23",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are unclear and do not confirm the morning thesis for the candidates. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
         "timestamp": "2026-03-23T08:50:55.894208-04:00",
         "day": "2026-03-23",
         "profile": "claude",
@@ -1588,7 +1620,7 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-03-23T02:15:29.717856+00:00",
+        "timestamp": "2026-03-23T14:38:13.544415+00:00",
         "day": "2026-03-23",
         "profile": "claude",
         "phase": "monitor",
@@ -1596,15 +1628,15 @@
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
-        "prompt_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-03-23/021529_monitor_interaction.json",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are unclear and do not confirm the morning thesis for the candidates. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-03-23/143813_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-03-23/021529_monitor_interaction.json",
+        "prompt_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-03-23/143813_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -1651,7 +1683,7 @@
     "days": [
       {
         "date": "2026-03-23",
-        "count": 7,
+        "count": 8,
         "phases": [
           {
             "key": "morning",
@@ -1683,6 +1715,26 @@
             "key": "monitor",
             "label": "Monitor Evaluations",
             "items": [
+              {
+                "timestamp": "2026-03-23T15:58:38.581730+00:00",
+                "day": "2026-03-23",
+                "profile": "claude",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "python-api",
+                "status": "success",
+                "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming the morning thesis as execution conditions are not fully satisfied. | openai / gpt-4o-mini-2024-07-18",
+                "prompt_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_prompt.md",
+                "transcript_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_transcript.txt",
+                "metadata_file": "data/profiles/claude/interactions/2026-03-23/155838_monitor_interaction.json",
+                "raw_log_file": "",
+                "prompt_source": "src/agent_trader/agents/research_agent.py",
+                "prompt_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_prompt.md",
+                "transcript_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_transcript.txt",
+                "metadata_url": "data/profiles/claude/interactions/2026-03-23/155838_monitor_interaction.json",
+                "prompt_source_url": ""
+              },
               {
                 "timestamp": "2026-03-23T15:33:53.019637+00:00",
                 "day": "2026-03-23",
@@ -1858,7 +1910,7 @@
   "reports": {
     "research": {},
     "monitor": {
-      "run_id": "20260323_153311",
+      "run_id": "20260323_155805",
       "phase": "monitor",
       "profile": {
         "id": "claude",
@@ -1868,7 +1920,7 @@
         "dry_run": false,
         "paper_portfolio_value": 100000.0
       },
-      "timestamp": "2026-03-23T15:33:53.028852+00:00",
+      "timestamp": "2026-03-23T15:58:38.591455+00:00",
       "screener": null,
       "research": {
         "symbols": [
@@ -1885,24 +1937,24 @@
             "info": {
               "name": "Dell Technologies Inc.",
               "sector": "Technology",
-              "market_cap": 108018401280,
-              "pe_ratio": 18.757193,
+              "market_cap": 106659889152,
+              "pe_ratio": 18.52129,
               "dividend_yield": 1.6,
               "fifty_two_week_high": 169.9,
               "fifty_two_week_low": 66.25
             },
-            "latest_price": 163.0,
+            "latest_price": 160.9499969482422,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 3.3804794145703774,
-            "volume": 4059261,
+            "price_change_pct": 2.080293535478016,
+            "volume": 4467620,
             "indicators": {
-              "rsi_14": 70.34472072046333,
-              "sma_20": 146.35099906921386,
-              "sma_50": 129.41610870361328,
-              "macd": 8.568655192771928,
-              "macd_signal": 7.773740898836479,
-              "bb_upper": 169.25925496163566,
-              "bb_lower": 123.44274317679204
+              "rsi_14": 69.15209637614397,
+              "sma_20": 146.24849891662598,
+              "sma_50": 129.3751086425781,
+              "macd": 8.405122185794113,
+              "macd_signal": 7.741034297440916,
+              "bb_upper": 168.87446772070746,
+              "bb_lower": 123.62253011254451
             },
             "price_history": [
               {
@@ -2142,34 +2194,34 @@
                 "open": 159.24000549316406,
                 "high": 165.4199981689453,
                 "low": 158.6300048828125,
-                "close": 163.0,
-                "volume": 4059261
+                "close": 160.9499969482422,
+                "volume": 4467620
               }
             ],
-            "fetch_time_ms": 759
+            "fetch_time_ms": 932
           },
           "UAL": {
             "info": {
               "name": "United Airlines Holdings, Inc.",
               "sector": "Industrials",
-              "market_cap": 30810142720,
-              "pe_ratio": 9.330392,
+              "market_cap": 30282450944,
+              "pe_ratio": 9.1705885,
               "dividend_yield": null,
               "fifty_two_week_high": 119.21,
               "fifty_two_week_low": 52.0
             },
-            "latest_price": 95.16999816894531,
+            "latest_price": 93.54000091552734,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 5.803225567319083,
-            "volume": 4930102,
+            "price_change_pct": 3.9911107160469026,
+            "volume": 5485872,
             "indicators": {
-              "rsi_14": 45.675499388347575,
-              "sma_20": 97.32999992370605,
-              "sma_50": 105.41000015258788,
-              "macd": -4.5170104923992795,
-              "macd_signal": -4.841717051108371,
-              "bb_upper": 114.6768738470424,
-              "bb_lower": 79.98312600036971
+              "rsi_14": 43.49348227225099,
+              "sma_20": 97.24850006103516,
+              "sma_50": 105.37740020751953,
+              "macd": -4.647038763327203,
+              "macd_signal": -4.867722705293955,
+              "bb_upper": 114.65042992475861,
+              "bb_lower": 79.8465701973117
             },
             "price_history": [
               {
@@ -2408,35 +2460,35 @@
                 "date": "2026-03-23T00:00:00-04:00",
                 "open": 95.83499908447266,
                 "high": 96.5999984741211,
-                "low": 93.66500091552734,
-                "close": 95.16999816894531,
-                "volume": 4930102
+                "low": 93.3499984741211,
+                "close": 93.54000091552734,
+                "volume": 5485872
               }
             ],
-            "fetch_time_ms": 520
+            "fetch_time_ms": 406
           },
           "FIVE": {
             "info": {
               "name": "Five Below, Inc.",
               "sector": "Consumer Cyclical",
-              "market_cap": 12852704256,
-              "pe_ratio": 41.834827,
+              "market_cap": 12692748288,
+              "pe_ratio": 41.314182,
               "dividend_yield": null,
               "fifty_two_week_high": 237.5,
               "fifty_two_week_low": 52.38
             },
-            "latest_price": 233.02000427246094,
+            "latest_price": 230.1199951171875,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 2.46240706560709,
-            "volume": 366234,
+            "price_change_pct": 1.1872293421779114,
+            "volume": 419092,
             "indicators": {
-              "rsi_14": 63.846853839708594,
-              "sma_20": 220.80899963378906,
-              "sma_50": 208.28659881591796,
-              "macd": 4.536475544414543,
-              "macd_signal": 3.873903321393507,
-              "bb_upper": 233.4482431953573,
-              "bb_lower": 208.16975607222082
+              "rsi_14": 62.06967536344952,
+              "sma_20": 220.66399917602538,
+              "sma_50": 208.2285986328125,
+              "macd": 4.305135782740308,
+              "macd_signal": 3.82763536905866,
+              "bb_upper": 232.79592308770887,
+              "bb_lower": 208.5320752643419
             },
             "price_history": [
               {
@@ -2676,34 +2728,34 @@
                 "open": 229.3300018310547,
                 "high": 234.4600067138672,
                 "low": 226.6999969482422,
-                "close": 233.02000427246094,
-                "volume": 366234
+                "close": 230.1199951171875,
+                "volume": 419092
               }
             ],
-            "fetch_time_ms": 260
+            "fetch_time_ms": 361
           },
           "XOM": {
             "info": {
               "name": "Exxon Mobil Corporation",
               "sector": "Energy",
-              "market_cap": 665765478400,
-              "pe_ratio": 23.81222,
+              "market_cap": 668307226624,
+              "pe_ratio": 23.90313,
               "dividend_yield": 2.58,
               "fifty_two_week_high": 162.44,
               "fifty_two_week_low": 97.8
             },
-            "latest_price": 159.77999877929688,
+            "latest_price": 160.38999938964844,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 0.06889247298366716,
-            "volume": 11032615,
+            "price_change_pct": 0.45093081290155623,
+            "volume": 12288479,
             "indicators": {
-              "rsi_14": 68.18288345150505,
-              "sma_20": 153.41199951171876,
-              "sma_50": 145.25902084350585,
-              "macd": 3.90343718935128,
-              "macd_signal": 3.6718913605410095,
-              "bb_upper": 161.1521726700889,
-              "bb_lower": 145.67182635334862
+              "rsi_14": 68.99731069123314,
+              "sma_20": 153.44249954223633,
+              "sma_50": 145.2712208557129,
+              "macd": 3.9520982067012653,
+              "macd_signal": 3.681623564011007,
+              "bb_upper": 161.28690984760726,
+              "bb_lower": 145.5980892368654
             },
             "price_history": [
               {
@@ -2943,34 +2995,34 @@
                 "open": 156.11500549316406,
                 "high": 161.33999633789062,
                 "low": 155.05999755859375,
-                "close": 159.77999877929688,
-                "volume": 11032615
+                "close": 160.38999938964844,
+                "volume": 12288479
               }
             ],
-            "fetch_time_ms": 514
+            "fetch_time_ms": 551
           },
           "OXY": {
             "info": {
               "name": "Occidental Petroleum Corporatio",
               "sector": "Energy",
-              "market_cap": 58603962368,
-              "pe_ratio": 44.014812,
+              "market_cap": 58880118784,
+              "pe_ratio": 44.22222,
               "dividend_yield": 1.71,
               "fifty_two_week_high": 61.37,
               "fifty_two_week_low": 34.78
             },
-            "latest_price": 59.41999816894531,
+            "latest_price": 59.70000076293945,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": -2.124857412256621,
-            "volume": 13429373,
+            "price_change_pct": -1.6636441060193046,
+            "volume": 14525995,
             "indicators": {
-              "rsi_14": 69.5290044163453,
-              "sma_20": 55.34495296478271,
-              "sma_50": 49.28747505187988,
-              "macd": 3.0662144102970643,
-              "macd_signal": 2.861427240473904,
-              "bb_upper": 61.32141567992041,
-              "bb_lower": 49.36849024964501
+              "rsi_14": 70.89317091705007,
+              "sma_20": 55.35895309448242,
+              "sma_50": 49.29307510375977,
+              "macd": 3.0885507995615527,
+              "macd_signal": 2.865894518326802,
+              "bb_upper": 61.374716732837655,
+              "bb_lower": 49.34318945612719
             },
             "price_history": [
               {
@@ -3210,34 +3262,34 @@
                 "open": 58.5,
                 "high": 60.435001373291016,
                 "low": 58.099998474121094,
-                "close": 59.41999816894531,
-                "volume": 13429373
+                "close": 59.70000076293945,
+                "volume": 14525995
               }
             ],
-            "fetch_time_ms": 342
+            "fetch_time_ms": 491
           },
           "NVDA": {
             "info": {
               "name": "NVIDIA Corporation",
               "sector": "Technology",
-              "market_cap": 4312436047872,
-              "pe_ratio": 36.2102,
+              "market_cap": 4258843852800,
+              "pe_ratio": 35.760204,
               "dividend_yield": 0.02,
               "fifty_two_week_high": 212.19,
               "fifty_two_week_low": 86.62
             },
-            "latest_price": 177.42010498046875,
+            "latest_price": 175.22999572753906,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 2.7331257183757613,
-            "volume": 80231620,
+            "price_change_pct": 1.4649674719190124,
+            "volume": 92854469,
             "indicators": {
-              "rsi_14": 44.0556134787617,
-              "sma_20": 182.40902557373047,
-              "sma_50": 184.4397766113281,
-              "macd": -2.1894669407079164,
-              "macd_signal": -1.4631378985844061,
-              "bb_upper": 192.4657340357595,
-              "bb_lower": 172.35231711170144
+              "rsi_14": 41.21007716138757,
+              "sma_20": 182.29952011108398,
+              "sma_50": 184.39597442626953,
+              "macd": -2.3641765107421975,
+              "macd_signal": -1.4980798125912622,
+              "bb_upper": 192.61549061676962,
+              "bb_lower": 171.98354960539834
             },
             "price_history": [
               {
@@ -3476,35 +3528,35 @@
                 "date": "2026-03-23T00:00:00-04:00",
                 "open": 177.25,
                 "high": 178.3699951171875,
-                "low": 175.87010192871094,
-                "close": 177.42010498046875,
-                "volume": 80231620
+                "low": 175.1999969482422,
+                "close": 175.22999572753906,
+                "volume": 92854469
               }
             ],
-            "fetch_time_ms": 325
+            "fetch_time_ms": 386
           },
           "HAL": {
             "info": {
               "name": "Halliburton Company",
               "sector": "Energy",
-              "market_cap": 31342176256,
-              "pe_ratio": 24.826668,
+              "market_cap": 31493666816,
+              "pe_ratio": 24.946665,
               "dividend_yield": 1.86,
               "fifty_two_week_high": 37.79,
               "fifty_two_week_low": 18.72
             },
-            "latest_price": 37.2400016784668,
+            "latest_price": 37.41999816894531,
             "last_trade_date": "2026-03-23T00:00:00-04:00",
-            "price_change_pct": 1.9436159947870328,
-            "volume": 4833054,
+            "price_change_pct": 2.4363520924967523,
+            "volume": 5259394,
             "indicators": {
-              "rsi_14": 63.37274579318213,
-              "sma_20": 35.33891201019287,
-              "sma_50": 34.30923049926758,
-              "macd": 0.6655609091180565,
-              "macd_signal": 0.5043875175210583,
-              "bb_upper": 37.245406276398874,
-              "bb_lower": 33.43241774398687
+              "rsi_14": 64.11172154759959,
+              "sma_20": 35.3479118347168,
+              "sma_50": 34.312830429077145,
+              "macd": 0.6799196035152022,
+              "macd_signal": 0.5072592564004874,
+              "bb_upper": 37.29155581816056,
+              "bb_lower": 33.40426785127303
             },
             "price_history": [
               {
@@ -3744,26 +3796,26 @@
                 "open": 36.560001373291016,
                 "high": 37.790000915527344,
                 "low": 36.36000061035156,
-                "close": 37.2400016784668,
-                "volume": 4833054
+                "close": 37.41999816894531,
+                "volume": 5259394
               }
             ],
-            "fetch_time_ms": 558
+            "fetch_time_ms": 537
           }
         },
         "research": {
-          "overall_sentiment": "neutral",
-          "market_summary": "Live conditions do not confirm any immediate setup for trading, as evidence is mixed.",
+          "overall_sentiment": "bearish",
+          "market_summary": "Live conditions are not confirming the morning thesis as execution conditions are not fully satisfied.",
           "stocks": {
             "XOM": {
               "recommendation": "watch",
-              "confidence": 0.5,
+              "confidence": 0.3,
               "ready_to_trade": false,
               "matched_conditions": [],
               "failed_conditions": [
-                "oil direction unclear; need Brent's stability above $100 or clarity on the Iran talks"
+                "Need Brent to stabilize above $100 and clear direction from Iran talks"
               ],
-              "monitor_reason": "17 fresh headlines but conditions are unverified",
+              "monitor_reason": "18 fresh headlines suggest potential volatility influencing oil prices.",
               "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
               "trade_plan": {
                 "entry": 158.0,
@@ -3773,13 +3825,13 @@
             },
             "UAL": {
               "recommendation": "watch",
-              "confidence": 0.5,
+              "confidence": 0.3,
               "ready_to_trade": false,
               "matched_conditions": [],
               "failed_conditions": [
-                "WTI crude holding below $95 not confirmed; need UAL trading above $100"
+                "WTI crude must hold below $95 and UAL needs to confirm above $100"
               ],
-              "monitor_reason": "20 fresh headlines but conditions are unverified",
+              "monitor_reason": "20 fresh headlines indicate possible fluctuations impacting UAL's performance.",
               "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
               "trade_plan": {
                 "entry": 104.0,
@@ -3789,13 +3841,13 @@
             },
             "OXY": {
               "recommendation": "watch",
-              "confidence": 0.5,
+              "confidence": 0.3,
               "ready_to_trade": false,
               "matched_conditions": [],
               "failed_conditions": [
-                "need clarity on Iran news and oil holding above $90 WTI"
+                "Iran news needs resolution and oil must hold above $90 WTI"
               ],
-              "monitor_reason": "16 fresh headlines but conditions are unverified",
+              "monitor_reason": "16 fresh headlines could affect OXY's expected performance amidst oil volatility.",
               "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
               "trade_plan": {
                 "entry": 63.0,
@@ -3813,28 +3865,28 @@
             "selected_provider": "openai",
             "selected_model": "gpt-4o-mini-2024-07-18",
             "usage": {
-              "input_tokens": 829,
-              "output_tokens": 521,
-              "total_tokens": 1350,
+              "input_tokens": 830,
+              "output_tokens": 527,
+              "total_tokens": 1357,
               "cached_input_tokens": 0,
               "reasoning_output_tokens": 0
             },
             "service_tier": "default",
-            "request_id": "req_c801e9a865484654818712d9ecf4e217",
+            "request_id": "req_9f9c2b0bc2e344279d0eb4a594316394",
             "rate_limits": {
               "headers": {
                 "x-ratelimit-limit-requests": "10000",
                 "x-ratelimit-limit-tokens": "200000",
-                "x-ratelimit-remaining-requests": "9998",
+                "x-ratelimit-remaining-requests": "9999",
                 "x-ratelimit-remaining-tokens": "199187",
-                "x-ratelimit-reset-requests": "12.237s",
+                "x-ratelimit-reset-requests": "8.64s",
                 "x-ratelimit-reset-tokens": "243ms"
               },
               "estimates": {
-                "requests_remaining_after_request": 9998,
-                "requests_remaining_before_request_estimate": 9999,
+                "requests_remaining_after_request": 9999,
+                "requests_remaining_before_request_estimate": 10000,
                 "tokens_remaining_after_request": 199187,
-                "tokens_remaining_before_request_estimate": 200537
+                "tokens_remaining_before_request_estimate": 200544
               },
               "billing_balance_before_workflow": {
                 "available": false,
@@ -3852,25 +3904,25 @@
                 "workflow": "Trading Pipeline",
                 "event_name": "schedule",
                 "actor": "Aashay-chaudhari",
-                "run_id": "23445582732",
+                "run_id": "23446770499",
                 "run_attempt": "1",
-                "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23445582732",
-                "sha": "f6eaf9d221b1ff94baf05768d829ad7b45c7d93b",
+                "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23446770499",
+                "sha": "9131e396c9086c949405cb4bfd44c7c58f22d032",
                 "ref": "refs/heads/main"
               }
             },
-            "duration_ms": 11328.2,
+            "duration_ms": 10309.7,
             "attempts": [
               {
                 "execution_mode": "api",
                 "provider": "openai",
                 "model": "gpt-4o-mini",
                 "status": "success",
-                "duration_ms": 11328.2,
+                "duration_ms": 10309.7,
                 "usage": {
-                  "input_tokens": 829,
-                  "output_tokens": 521,
-                  "total_tokens": 1350,
+                  "input_tokens": 830,
+                  "output_tokens": 527,
+                  "total_tokens": 1357,
                   "cached_input_tokens": 0,
                   "reasoning_output_tokens": 0
                 }
@@ -3885,6 +3937,38 @@
           "DELL": {
             "symbol": "DELL",
             "news_headlines": [
+              {
+                "title": "Super Micro Stock Rises After Plunge. Why This Analyst Is Backing a Sustained Rally.",
+                "source": "yfinance",
+                "published": "2026-03-23T14:44:00Z",
+                "symbols": [
+                  "DELL"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://www.barrons.com/articles/smci-stock-super-micro-price-44c4c331?siteid=yhoof2&yptr=yahoo",
+                "summary": "Super Micro Computer stock tumbled after one of its co-founders was indicted for alleged chip smuggling, but some see cause for hope.",
+                "publisher": "Barrons.com",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "SMCI Unveils AI Products With NVIDIA Integration: What's Ahead?",
+                "source": "yfinance",
+                "published": "2026-03-23T14:38:00Z",
+                "symbols": [
+                  "DELL"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/sectors/technology/articles/smci-unveils-ai-products-nvidia-143800003.html",
+                "summary": "Super Micro Computer expands AI lineup with NVIDIA-powered systems, targeting data centers and edge AI.",
+                "publisher": "Zacks",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
               {
                 "title": "Dell, Sandisk price targets lifted at BofA on \u2019very robust\u2019 AI servers demand",
                 "source": "yfinance",
@@ -3913,22 +3997,6 @@
                 "url": "https://finance.yahoo.com/markets/stocks/articles/computer-technology-stocks-lagging-dell-134004785.html",
                 "summary": "Here is how Dell Technologies (DELL) and Cognex Corporation (CGNX) have performed compared to their sector so far this year.",
                 "publisher": "Zacks",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Super Micro Stock Falls Again. Why This Analyst Is Backing a Bounce.",
-                "source": "yfinance",
-                "published": "2026-03-23T13:36:00Z",
-                "symbols": [
-                  "DELL"
-                ],
-                "sentiment": -1.0,
-                "category": "headline",
-                "url": "https://www.barrons.com/articles/smci-stock-super-micro-price-44c4c331?siteid=yhoof2&yptr=yahoo",
-                "summary": "Super Micro Computer stock tumbled after one of its co-founders was indicted for alleged chip smuggling but some see cause for hope.",
-                "publisher": "Barrons.com",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -3993,22 +4061,6 @@
                 "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-faces-export-control-scrutiny-090618864.html",
                 "summary": "Federal prosecutors have indicted Super Micro Computer\u2019s co founder and others over alleged illegal exports of Nvidia powered AI servers to China involving at least US$2.5b in equipment. The case centers on potential violations of US export controls tied to advanced Nvidia AI chips and high performa",
                 "publisher": "Simply Wall St.",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "NVIDIA GTC Keynote: Huang Unveils \u201cAI Factories,\u201d Blackwell-Rubin Roadmap, and $1T Demand View",
-                "source": "yfinance",
-                "published": "2026-03-21T09:05:40Z",
-                "symbols": [
-                  "DELL"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.marketbeat.com/instant-alerts/nvidia-gtc-keynote-huang-unveils-ai-factories-blackwell-rubin-roadmap-and-1t-demand-view-2026-03-21/?utm_source=yahoofinance&utm_medium=yahoofinance",
-                "summary": "NVIDIA (NASDAQ:NVDA) founder and CEO Jensen Huang used his GTC keynote to frame the company as a \u201cplatform company\u201d built around three core offerings: its CUDA-X software stack, NVIDIA systems, and a newer concept he described as \u201cAI factories.\u201d Huang repeatedly returned to a central theme: ecosyste",
-                "publisher": "MarketBeat",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -4636,7 +4688,7 @@
                 }
               }
             ],
-            "sentiment_score": -0.02,
+            "sentiment_score": 0.05,
             "sentiment": "neutral",
             "source_count": 4,
             "analyst_recommendations": {
@@ -4666,22 +4718,6 @@
             "symbol": "UAL",
             "news_headlines": [
               {
-                "title": "Airline Stocks Fly, Lead Travel Rally On Trump, Iran Developments",
-                "source": "yfinance",
-                "published": "2026-03-23T13:56:54Z",
-                "symbols": [
-                  "UAL"
-                ],
-                "sentiment": 1.0,
-                "category": "headline",
-                "url": "https://www.investors.com/news/airline-stocks-travel-trump-iran-delay-oil-prices-delta-dal-american-aal-united-ual-cruise-lines/?src=A00220&yptr=yahoo",
-                "summary": "Delta, American and United Airlines jump. Travel stocks rally as Trump delays Iran strikes. ICE to assist with TSA delays.",
-                "publisher": "Investor's Business Daily",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "Trump Postpones Strikes Against Iran\u2019s Power Plants for 5 Days. Stocks Spike.",
                 "source": "finnhub",
                 "published": "2026-03-23T13:19:00Z",
@@ -4695,6 +4731,39 @@
                 "publisher": "Yahoo",
                 "metadata": {
                   "finnhub_id": 139510705
+                }
+              },
+              {
+                "title": "Which Stocks Are Winning After Trump Pauses Iran Energy Attacks?",
+                "source": "finnhub",
+                "published": "2026-03-23T11:55:12Z",
+                "symbols": [
+                  "UAL",
+                  "OXY"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://finnhub.io/api/news?id=f90b544a6ce50ba5fa5283520dd80fb4e852a20c31eb33c3cf5f38f57f47a1c4",
+                "summary": "President Trump\u2019s surprise announcement that the U.S. was postponing threatened attacks on Iranian power plants after \u201cproductive\u201d talks with Tehran unleashed a rapid reshuffling in the stock market. Winners and losers included:    Airline stocks jumped.",
+                "publisher": "Yahoo",
+                "metadata": {
+                  "finnhub_id": 139510748
+                }
+              },
+              {
+                "title": "Airline Stocks Fly, Lead Travel Rally On Trump, Iran Developments",
+                "source": "yfinance",
+                "published": "2026-03-23T13:56:54Z",
+                "symbols": [
+                  "UAL"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://www.investors.com/news/airline-stocks-travel-trump-iran-delay-oil-prices-delta-dal-american-aal-united-ual-cruise-lines/?src=A00220&yptr=yahoo",
+                "summary": "Delta, American and United Airlines jump. Travel stocks rally as Trump delays Iran strikes. ICE to assist with TSA delays.",
+                "publisher": "Investor's Business Daily",
+                "metadata": {
+                  "type": "STORY"
                 }
               },
               {
@@ -4813,22 +4882,6 @@
                 "url": "https://finance.yahoo.com/markets/stocks/articles/did-fuel-driven-capacity-cuts-150427672.html",
                 "summary": "United Airlines has recently warned that surging jet fuel prices linked to Middle East tensions are forcing the airline to cancel about 5% of this year\u2019s planned flights, trim select routes, and brace for significantly higher operating costs that could add up to an extra US$11.00 billion annually if",
                 "publisher": "Simply Wall St.",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Bessent Says US to Press Ahead in Iran War With Hormuz in Sights",
-                "source": "yfinance",
-                "published": "2026-03-22T14:13:14Z",
-                "symbols": [
-                  "UAL"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/news/bessent-says-us-press-ahead-141314748.html",
-                "summary": "Bessent\u2019s comments, combined with Trump\u2019s demand Saturday that Iran \u201cfully open, without threat\u201d the strait, were a signal of resolve as spiking oil and gasoline prices put domestic pressure on the administration in a midterm election year.  \u201cThere has been a campaign to the using military assets to",
-                "publisher": "Bloomberg",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -5041,7 +5094,7 @@
                 }
               }
             ],
-            "sentiment_score": 0.13,
+            "sentiment_score": 0.18,
             "sentiment": "neutral",
             "source_count": 3,
             "analyst_recommendations": {
@@ -5429,6 +5482,22 @@
                 }
               },
               {
+                "title": "Archrock vs. Exxon Mobil: Which Energy Stock is the Stronger Bet?",
+                "source": "yfinance",
+                "published": "2026-03-23T14:08:00Z",
+                "symbols": [
+                  "XOM"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/sectors/energy/articles/archrock-vs-exxon-mobil-energy-140800681.html",
+                "summary": "AROC gains from rising natural gas demand, while XOM capitalizes on oil nearing $100. Here's which energy stock stands out now.",
+                "publisher": "Zacks",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
                 "title": "Is Trending Stock Exxon Mobil Corporation (XOM) a Buy Now?",
                 "source": "yfinance",
                 "published": "2026-03-23T13:00:05Z",
@@ -5506,22 +5575,6 @@
                 "publisher": "Yahoo",
                 "metadata": {
                   "finnhub_id": 139509116
-                }
-              },
-              {
-                "title": "China battery trio gain $70bn as Iran war sparks \u2018paradigm shift\u2019",
-                "source": "finnhub",
-                "published": "2026-03-23T05:59:39Z",
-                "symbols": [
-                  "XOM"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finnhub.io/api/news?id=8dec936d1696225f8951a5678661c4bd6aea9a1b27fc8e15b1afdfd516ba956a",
-                "summary": "China\u2019s top battery makers have gained more than $70bn in market capitalisation since the US and Israel attacked Iran, highlighting investor...",
-                "publisher": "Yahoo",
-                "metadata": {
-                  "finnhub_id": 139509750
                 }
               },
               {
@@ -5628,6 +5681,22 @@
                 }
               },
               {
+                "title": "China battery trio gain $70bn as Iran war sparks \u2018paradigm shift\u2019",
+                "source": "finnhub",
+                "published": "2026-03-23T05:59:39Z",
+                "symbols": [
+                  "XOM"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finnhub.io/api/news?id=8dec936d1696225f8951a5678661c4bd6aea9a1b27fc8e15b1afdfd516ba956a",
+                "summary": "China\u2019s top battery makers have gained more than $70bn in market capitalisation since the US and Israel attacked Iran, highlighting investor...",
+                "publisher": "Yahoo",
+                "metadata": {
+                  "finnhub_id": 139509750
+                }
+              },
+              {
                 "title": "Atlas Energy Stock Jumps 39% YTD, but One Fund Cut Exposure by $15 Million Last Quarter",
                 "source": "finnhub",
                 "published": "2026-03-22T18:09:26Z",
@@ -5698,8 +5767,8 @@
                 }
               }
             ],
-            "sentiment_score": -0.2,
-            "sentiment": "bearish",
+            "sentiment_score": -0.19,
+            "sentiment": "neutral",
             "source_count": 4,
             "analyst_recommendations": {
               "strong_buy": 5,
@@ -5728,6 +5797,55 @@
             "symbol": "OXY",
             "news_headlines": [
               {
+                "title": "Which Stocks Are Winning After Trump Pauses Iran Energy Attacks?",
+                "source": "finnhub",
+                "published": "2026-03-23T11:55:12Z",
+                "symbols": [
+                  "UAL",
+                  "OXY"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://finnhub.io/api/news?id=f90b544a6ce50ba5fa5283520dd80fb4e852a20c31eb33c3cf5f38f57f47a1c4",
+                "summary": "President Trump\u2019s surprise announcement that the U.S. was postponing threatened attacks on Iranian power plants after \u201cproductive\u201d talks with Tehran unleashed a rapid reshuffling in the stock market. Winners and losers included:    Airline stocks jumped.",
+                "publisher": "Yahoo",
+                "metadata": {
+                  "finnhub_id": 139510748
+                }
+              },
+              {
+                "title": "Pre-Market Turns Green",
+                "source": "yfinance",
+                "published": "2026-03-23T14:35:00Z",
+                "symbols": [
+                  "OXY"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/pre-market-turns-green-143500017.html",
+                "summary": "Pre-Market Turns Green",
+                "publisher": "Zacks",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Pre-Markets Hopeful for a Near-Term Solution on Iran",
+                "source": "yfinance",
+                "published": "2026-03-23T13:49:00Z",
+                "symbols": [
+                  "OXY"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/pre-markets-hopeful-near-term-134900270.html",
+                "summary": "Positive sentiment seems to have the upper hand in early trading, but literally anything can happen from here.",
+                "publisher": "Zacks",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
                 "title": "Is It Too Late To Consider Occidental Petroleum (OXY) After Its Strong Year To Date Run?",
                 "source": "finnhub",
                 "published": "2026-03-23T13:06:02Z",
@@ -5741,22 +5859,6 @@
                 "publisher": "Yahoo",
                 "metadata": {
                   "finnhub_id": 139510747
-                }
-              },
-              {
-                "title": "Which Stocks Are Winning After Trump Pauses Iran Energy Attacks?",
-                "source": "finnhub",
-                "published": "2026-03-23T11:55:12Z",
-                "symbols": [
-                  "OXY"
-                ],
-                "sentiment": 1.0,
-                "category": "headline",
-                "url": "https://finnhub.io/api/news?id=f90b544a6ce50ba5fa5283520dd80fb4e852a20c31eb33c3cf5f38f57f47a1c4",
-                "summary": "President Trump\u2019s surprise announcement that the U.S. was postponing threatened attacks on Iranian power plants after \u201cproductive\u201d talks with Tehran unleashed a rapid reshuffling in the stock market. Winners and losers included:    Airline stocks jumped.",
-                "publisher": "Yahoo",
-                "metadata": {
-                  "finnhub_id": 139510748
                 }
               },
               {
@@ -5824,38 +5926,6 @@
                 }
               },
               {
-                "title": "Occidental (OXY) Up 15.6% Since Last Earnings Report: Can It Continue?",
-                "source": "yfinance",
-                "published": "2026-03-20T15:30:10Z",
-                "symbols": [
-                  "OXY"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/markets/stocks/articles/occidental-oxy-15-6-since-153010527.html",
-                "summary": "Occidental (OXY) reported earnings 30 days ago. What's next for the stock? We take a look at earnings estimates for some clues.",
-                "publisher": "Zacks",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Berkshire Hathaway\u2019s Energy Stocks Are Surging\u2014but There\u2019s a Catch",
-                "source": "yfinance",
-                "published": "2026-03-20T12:55:00Z",
-                "symbols": [
-                  "OXY"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.barrons.com/articles/berkshire-energy-stock-occidental-chevron-9b1850ac?siteid=yhoof2&yptr=yahoo",
-                "summary": "Berkshire Hathaway\u2019s  equity portfolio is getting a lift in 2026 from its two large energy holdings\u2014  Chevron  and  Occidental Petroleum  But the company would have done better to have invested instead in a leading energy exchange-traded fund.  Occidental shares have risen 46% this year to $60.63, i",
-                "publisher": "Barrons.com",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "\"Outstanding\" Results for 10%-Yielding Kimbell Royalty Partners",
                 "source": "marketaux",
                 "published": "2026-03-23T14:04:52.000000Z",
@@ -5892,6 +5962,22 @@
                 }
               },
               {
+                "title": "Gapping S&P500 stocks in Monday's session",
+                "source": "finnhub",
+                "published": "2026-03-23T15:35:05Z",
+                "symbols": [
+                  "OXY"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finnhub.io/api/news?id=1ac0e6e476da413bd1dc90fbf18901912c1c6409e5417d7bb2a294b2788a6074",
+                "summary": "Stay updated with the S&P500 gap up and gap down stocks on Monday. Get a glimpse of the market's movement during today's session.",
+                "publisher": "ChartMill",
+                "metadata": {
+                  "finnhub_id": 139513120
+                }
+              },
+              {
                 "title": "Explore the top gainers and losers within the S&P500 index in today's session.",
                 "source": "finnhub",
                 "published": "2026-03-20T20:05:04Z",
@@ -5905,22 +5991,6 @@
                 "publisher": "ChartMill",
                 "metadata": {
                   "finnhub_id": 139491538
-                }
-              },
-              {
-                "title": "JP Morgan Upgrades Occidental Petroleum (OXY)",
-                "source": "finnhub",
-                "published": "2026-03-20T19:31:57Z",
-                "symbols": [
-                  "OXY"
-                ],
-                "sentiment": 1.0,
-                "category": "headline",
-                "url": "https://finnhub.io/api/news?id=6e636d868c9ec932fe52fe384dbc86727b0b886029088a66087b2ec541abc20f",
-                "summary": "",
-                "publisher": "Fintel",
-                "metadata": {
-                  "finnhub_id": 139491174
                 }
               },
               {
@@ -6019,7 +6089,7 @@
                 }
               }
             ],
-            "sentiment_score": 0.27,
+            "sentiment_score": 0.21,
             "sentiment": "bullish",
             "source_count": 3,
             "analyst_recommendations": {
@@ -6045,15 +6115,15 @@
             "symbol": "NVDA",
             "news_headlines": [
               {
-                "title": "Tech stocks today: Supermicro stock dives after US charges employees with smuggling Nvidia chips to China",
+                "title": "Tech stocks today: Alphabet's Wing expands drone deliveries",
                 "source": "yfinance",
                 "published": "2026-03-13T14:42:20Z",
                 "symbols": [
                   "NVDA"
                 ],
-                "sentiment": -1.0,
+                "sentiment": 1.0,
                 "category": "headline",
-                "url": "https://finance.yahoo.com/news/live/tech-stocks-today-supermicro-stock-dives-after-us-charges-employees-with-smuggling-nvidia-chips-to-china-144220474.html",
+                "url": "https://finance.yahoo.com/news/live/tech-stocks-today-alphabets-wing-expands-drone-deliveries-144220813.html",
                 "summary": "Live coverage of \"Magnificent Seven\" stocks, and the latest technology news.",
                 "publisher": "Yahoo Finance",
                 "metadata": {
@@ -6072,6 +6142,54 @@
                 "url": "https://finance.yahoo.com/news/if-iran-war-sends-oil-prices-up-100-heres-what-history-says-will-happen-to-the-stock-market-142450571.html",
                 "summary": "Right now is a good moment to use history as a guide to markets.",
                 "publisher": "Yahoo Finance",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Stock Market Today: Dow Surges As Trump Delays Iran Strikes; Yields Fall, Homebuilders Jump (Live Coverage)",
+                "source": "yfinance",
+                "published": "2026-03-23T15:48:50Z",
+                "symbols": [
+                  "NVDA"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-trump-iran-nvidia-tesla/?src=A00220&yptr=yahoo",
+                "summary": "The Dow Jones index soars Monday after President Trump says talks are ongoing with Iran. Nvidia and IBM rise on the stock market today.",
+                "publisher": "Investor's Business Daily",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Is Nvidia Still a Millionaire-Maker Stock in 2026?",
+                "source": "yfinance",
+                "published": "2026-03-23T15:36:00Z",
+                "symbols": [
+                  "NVDA"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://www.fool.com/investing/2026/03/23/is-nvidia-still-a-millionaire-maker-stock-in-2026/",
+                "summary": "What comes next for the massive chipmaker?",
+                "publisher": "Motley Fool",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Vertiv Stock Joins the S&P 500 Today. Can Its AI Rally Keep Going?",
+                "source": "yfinance",
+                "published": "2026-03-23T15:32:00Z",
+                "symbols": [
+                  "NVDA"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://www.barrons.com/articles/vertiv-stock-price-sp500-578906f0?siteid=yhoof2&yptr=yahoo",
+                "summary": "The stock has benefited from an explosion in data-center spending, but it\u2019s unclear how much further the stock can rise.",
+                "publisher": "Barrons.com",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -6120,54 +6238,6 @@
                 "url": "https://finance.yahoo.com/sectors/technology/articles/chip-stocks-set-benefit-musk-151052996.html",
                 "summary": "Investing.com -- A sweeping semiconductor buildout proposed by Elon Musk could shift investor sentiment across the chip-equipment sector, according to a new note from Mizuho.",
                 "publisher": "Investing.com",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Fintech Stock SoFi Technologies Just Proved That the Ultimate Cryptocurrency Has a Clear Use Case",
-                "source": "yfinance",
-                "published": "2026-03-23T15:05:00Z",
-                "symbols": [
-                  "NVDA"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.fool.com/investing/2026/03/23/fintech-stock-sofi-technologies-ultimate-crypto/",
-                "summary": "This top crypto asset received a valuable endorsement from the digital bank's leadership team.",
-                "publisher": "Motley Fool",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Why Intuitive Machines Stock Popped Today",
-                "source": "yfinance",
-                "published": "2026-03-23T14:56:00Z",
-                "symbols": [
-                  "NVDA"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.fool.com/investing/2026/03/23/why-intuitive-machines-stock-popped-today/",
-                "summary": "Intuitive Machines 2026 guidance looks good, but expect bumps in the road to space.",
-                "publisher": "Motley Fool",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "President Donald Trump Just Made a Huge Announcement About the Iran War: Here's Why it Could Be a Major Turning Point for the Stock Market",
-                "source": "yfinance",
-                "published": "2026-03-23T14:53:19Z",
-                "symbols": [
-                  "NVDA"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.fool.com/investing/2026/03/23/president-donald-trump-just-made-a-huge-announceme/",
-                "summary": "Trump announced this morning that the U.S. military would not attack critical infrastructure in Iran for five days after 'productive' talks with officials.",
-                "publisher": "Motley Fool",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -6636,8 +6706,8 @@
                 }
               }
             ],
-            "sentiment_score": 0.07,
-            "sentiment": "neutral",
+            "sentiment_score": 0.2,
+            "sentiment": "bullish",
             "source_count": 4,
             "analyst_recommendations": {
               "strong_buy": 8,
@@ -7231,106 +7301,106 @@
         "screener_results": null,
         "market_context": {
           "sp500": {
-            "price": 660.7,
-            "change_pct": 1.87,
-            "five_day_pct": -1.24,
+            "price": 656.81,
+            "change_pct": 1.27,
+            "five_day_pct": -1.82,
             "trend": "down"
           },
           "nasdaq": {
-            "price": 593.21,
-            "change_pct": 1.92
+            "price": NaN,
+            "change_pct": NaN
           },
           "vix": {
-            "value": 24.17,
-            "change": 1.8,
-            "level": "elevated",
-            "interpretation": "Caution \u2014 reduce position sizes, tighter stops",
+            "value": 25.01,
+            "change": 2.64,
+            "level": "high",
+            "interpretation": "Fear \u2014 avoid new longs unless strong conviction",
             "fred_value": 26.78
           },
           "treasury_10y": {
-            "yield_pct": 4.32
+            "yield_pct": 4.35
           },
           "sector_performance": {
             "Technology": {
-              "daily_pct": 2.22,
-              "weekly_pct": -0.89
+              "daily_pct": 1.04,
+              "weekly_pct": -2.04
             },
             "Healthcare": {
-              "daily_pct": 0.41,
-              "weekly_pct": -2.48
+              "daily_pct": 0.05,
+              "weekly_pct": -2.83
             },
             "Financial": {
-              "daily_pct": 1.11,
-              "weekly_pct": 0.13
+              "daily_pct": 0.65,
+              "weekly_pct": -0.32
             },
             "Energy": {
-              "daily_pct": -0.25,
-              "weekly_pct": 1.11
+              "daily_pct": 0.08,
+              "weekly_pct": 1.45
             },
             "Consumer Disc.": {
-              "daily_pct": 3.1,
-              "weekly_pct": -1.85
+              "daily_pct": 2.38,
+              "weekly_pct": -2.54
             },
             "Consumer Staples": {
               "daily_pct": 0.47,
               "weekly_pct": -3.58
             },
             "Industrial": {
-              "daily_pct": 2.43,
-              "weekly_pct": -0.54
+              "daily_pct": 1.8,
+              "weekly_pct": -1.15
             },
             "Communication": {
-              "daily_pct": 0.84,
-              "weekly_pct": -1.9
+              "daily_pct": 0.42,
+              "weekly_pct": -2.31
             },
             "Materials": {
-              "daily_pct": 2.09,
-              "weekly_pct": -3.15
+              "daily_pct": 1.39,
+              "weekly_pct": -3.81
             },
             "Utilities": {
-              "daily_pct": 0.68,
-              "weekly_pct": -4.61
+              "daily_pct": 0.58,
+              "weekly_pct": -4.71
             },
             "Real Estate": {
-              "daily_pct": 0.9,
-              "weekly_pct": -4.13
+              "daily_pct": 0.69,
+              "weekly_pct": -4.33
             }
           },
           "sector_leaders": [
             {
               "sector": "Consumer Disc.",
-              "daily_pct": 3.1,
-              "weekly_pct": -1.85
+              "daily_pct": 2.38,
+              "weekly_pct": -2.54
             },
             {
               "sector": "Industrial",
-              "daily_pct": 2.43,
-              "weekly_pct": -0.54
+              "daily_pct": 1.8,
+              "weekly_pct": -1.15
             },
             {
-              "sector": "Technology",
-              "daily_pct": 2.22,
-              "weekly_pct": -0.89
+              "sector": "Materials",
+              "daily_pct": 1.39,
+              "weekly_pct": -3.81
             }
           ],
           "sector_laggards": [
             {
-              "sector": "Consumer Staples",
-              "daily_pct": 0.47,
-              "weekly_pct": -3.58
-            },
-            {
-              "sector": "Healthcare",
-              "daily_pct": 0.41,
-              "weekly_pct": -2.48
+              "sector": "Communication",
+              "daily_pct": 0.42,
+              "weekly_pct": -2.31
             },
             {
               "sector": "Energy",
-              "daily_pct": -0.25,
-              "weekly_pct": 1.11
+              "daily_pct": 0.08,
+              "weekly_pct": 1.45
+            },
+            {
+              "sector": "Healthcare",
+              "daily_pct": 0.05,
+              "weekly_pct": -2.83
             }
           ],
-          "market_regime": "cautious",
+          "market_regime": "risk_off",
           "breadth": null,
           "fred": {
             "VIXCLS": {
@@ -7395,24 +7465,24 @@
           "info": {
             "name": "Dell Technologies Inc.",
             "sector": "Technology",
-            "market_cap": 108018401280,
-            "pe_ratio": 18.757193,
+            "market_cap": 106659889152,
+            "pe_ratio": 18.52129,
             "dividend_yield": 1.6,
             "fifty_two_week_high": 169.9,
             "fifty_two_week_low": 66.25
           },
-          "latest_price": 163.0,
+          "latest_price": 160.9499969482422,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 3.3804794145703774,
-          "volume": 4059261,
+          "price_change_pct": 2.080293535478016,
+          "volume": 4467620,
           "indicators": {
-            "rsi_14": 70.34472072046333,
-            "sma_20": 146.35099906921386,
-            "sma_50": 129.41610870361328,
-            "macd": 8.568655192771928,
-            "macd_signal": 7.773740898836479,
-            "bb_upper": 169.25925496163566,
-            "bb_lower": 123.44274317679204
+            "rsi_14": 69.15209637614397,
+            "sma_20": 146.24849891662598,
+            "sma_50": 129.3751086425781,
+            "macd": 8.405122185794113,
+            "macd_signal": 7.741034297440916,
+            "bb_upper": 168.87446772070746,
+            "bb_lower": 123.62253011254451
           },
           "price_history": [
             {
@@ -7652,34 +7722,34 @@
               "open": 159.24000549316406,
               "high": 165.4199981689453,
               "low": 158.6300048828125,
-              "close": 163.0,
-              "volume": 4059261
+              "close": 160.9499969482422,
+              "volume": 4467620
             }
           ],
-          "fetch_time_ms": 759
+          "fetch_time_ms": 932
         },
         "UAL": {
           "info": {
             "name": "United Airlines Holdings, Inc.",
             "sector": "Industrials",
-            "market_cap": 30810142720,
-            "pe_ratio": 9.330392,
+            "market_cap": 30282450944,
+            "pe_ratio": 9.1705885,
             "dividend_yield": null,
             "fifty_two_week_high": 119.21,
             "fifty_two_week_low": 52.0
           },
-          "latest_price": 95.16999816894531,
+          "latest_price": 93.54000091552734,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 5.803225567319083,
-          "volume": 4930102,
+          "price_change_pct": 3.9911107160469026,
+          "volume": 5485872,
           "indicators": {
-            "rsi_14": 45.675499388347575,
-            "sma_20": 97.32999992370605,
-            "sma_50": 105.41000015258788,
-            "macd": -4.5170104923992795,
-            "macd_signal": -4.841717051108371,
-            "bb_upper": 114.6768738470424,
-            "bb_lower": 79.98312600036971
+            "rsi_14": 43.49348227225099,
+            "sma_20": 97.24850006103516,
+            "sma_50": 105.37740020751953,
+            "macd": -4.647038763327203,
+            "macd_signal": -4.867722705293955,
+            "bb_upper": 114.65042992475861,
+            "bb_lower": 79.8465701973117
           },
           "price_history": [
             {
@@ -7918,35 +7988,35 @@
               "date": "2026-03-23T00:00:00-04:00",
               "open": 95.83499908447266,
               "high": 96.5999984741211,
-              "low": 93.66500091552734,
-              "close": 95.16999816894531,
-              "volume": 4930102
+              "low": 93.3499984741211,
+              "close": 93.54000091552734,
+              "volume": 5485872
             }
           ],
-          "fetch_time_ms": 520
+          "fetch_time_ms": 406
         },
         "FIVE": {
           "info": {
             "name": "Five Below, Inc.",
             "sector": "Consumer Cyclical",
-            "market_cap": 12852704256,
-            "pe_ratio": 41.834827,
+            "market_cap": 12692748288,
+            "pe_ratio": 41.314182,
             "dividend_yield": null,
             "fifty_two_week_high": 237.5,
             "fifty_two_week_low": 52.38
           },
-          "latest_price": 233.02000427246094,
+          "latest_price": 230.1199951171875,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 2.46240706560709,
-          "volume": 366234,
+          "price_change_pct": 1.1872293421779114,
+          "volume": 419092,
           "indicators": {
-            "rsi_14": 63.846853839708594,
-            "sma_20": 220.80899963378906,
-            "sma_50": 208.28659881591796,
-            "macd": 4.536475544414543,
-            "macd_signal": 3.873903321393507,
-            "bb_upper": 233.4482431953573,
-            "bb_lower": 208.16975607222082
+            "rsi_14": 62.06967536344952,
+            "sma_20": 220.66399917602538,
+            "sma_50": 208.2285986328125,
+            "macd": 4.305135782740308,
+            "macd_signal": 3.82763536905866,
+            "bb_upper": 232.79592308770887,
+            "bb_lower": 208.5320752643419
           },
           "price_history": [
             {
@@ -8186,34 +8256,34 @@
               "open": 229.3300018310547,
               "high": 234.4600067138672,
               "low": 226.6999969482422,
-              "close": 233.02000427246094,
-              "volume": 366234
+              "close": 230.1199951171875,
+              "volume": 419092
             }
           ],
-          "fetch_time_ms": 260
+          "fetch_time_ms": 361
         },
         "XOM": {
           "info": {
             "name": "Exxon Mobil Corporation",
             "sector": "Energy",
-            "market_cap": 665765478400,
-            "pe_ratio": 23.81222,
+            "market_cap": 668307226624,
+            "pe_ratio": 23.90313,
             "dividend_yield": 2.58,
             "fifty_two_week_high": 162.44,
             "fifty_two_week_low": 97.8
           },
-          "latest_price": 159.77999877929688,
+          "latest_price": 160.38999938964844,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 0.06889247298366716,
-          "volume": 11032615,
+          "price_change_pct": 0.45093081290155623,
+          "volume": 12288479,
           "indicators": {
-            "rsi_14": 68.18288345150505,
-            "sma_20": 153.41199951171876,
-            "sma_50": 145.25902084350585,
-            "macd": 3.90343718935128,
-            "macd_signal": 3.6718913605410095,
-            "bb_upper": 161.1521726700889,
-            "bb_lower": 145.67182635334862
+            "rsi_14": 68.99731069123314,
+            "sma_20": 153.44249954223633,
+            "sma_50": 145.2712208557129,
+            "macd": 3.9520982067012653,
+            "macd_signal": 3.681623564011007,
+            "bb_upper": 161.28690984760726,
+            "bb_lower": 145.5980892368654
           },
           "price_history": [
             {
@@ -8453,34 +8523,34 @@
               "open": 156.11500549316406,
               "high": 161.33999633789062,
               "low": 155.05999755859375,
-              "close": 159.77999877929688,
-              "volume": 11032615
+              "close": 160.38999938964844,
+              "volume": 12288479
             }
           ],
-          "fetch_time_ms": 514
+          "fetch_time_ms": 551
         },
         "OXY": {
           "info": {
             "name": "Occidental Petroleum Corporatio",
             "sector": "Energy",
-            "market_cap": 58603962368,
-            "pe_ratio": 44.014812,
+            "market_cap": 58880118784,
+            "pe_ratio": 44.22222,
             "dividend_yield": 1.71,
             "fifty_two_week_high": 61.37,
             "fifty_two_week_low": 34.78
           },
-          "latest_price": 59.41999816894531,
+          "latest_price": 59.70000076293945,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": -2.124857412256621,
-          "volume": 13429373,
+          "price_change_pct": -1.6636441060193046,
+          "volume": 14525995,
           "indicators": {
-            "rsi_14": 69.5290044163453,
-            "sma_20": 55.34495296478271,
-            "sma_50": 49.28747505187988,
-            "macd": 3.0662144102970643,
-            "macd_signal": 2.861427240473904,
-            "bb_upper": 61.32141567992041,
-            "bb_lower": 49.36849024964501
+            "rsi_14": 70.89317091705007,
+            "sma_20": 55.35895309448242,
+            "sma_50": 49.29307510375977,
+            "macd": 3.0885507995615527,
+            "macd_signal": 2.865894518326802,
+            "bb_upper": 61.374716732837655,
+            "bb_lower": 49.34318945612719
           },
           "price_history": [
             {
@@ -8720,34 +8790,34 @@
               "open": 58.5,
               "high": 60.435001373291016,
               "low": 58.099998474121094,
-              "close": 59.41999816894531,
-              "volume": 13429373
+              "close": 59.70000076293945,
+              "volume": 14525995
             }
           ],
-          "fetch_time_ms": 342
+          "fetch_time_ms": 491
         },
         "NVDA": {
           "info": {
             "name": "NVIDIA Corporation",
             "sector": "Technology",
-            "market_cap": 4312436047872,
-            "pe_ratio": 36.2102,
+            "market_cap": 4258843852800,
+            "pe_ratio": 35.760204,
             "dividend_yield": 0.02,
             "fifty_two_week_high": 212.19,
             "fifty_two_week_low": 86.62
           },
-          "latest_price": 177.42010498046875,
+          "latest_price": 175.22999572753906,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 2.7331257183757613,
-          "volume": 80231620,
+          "price_change_pct": 1.4649674719190124,
+          "volume": 92854469,
           "indicators": {
-            "rsi_14": 44.0556134787617,
-            "sma_20": 182.40902557373047,
-            "sma_50": 184.4397766113281,
-            "macd": -2.1894669407079164,
-            "macd_signal": -1.4631378985844061,
-            "bb_upper": 192.4657340357595,
-            "bb_lower": 172.35231711170144
+            "rsi_14": 41.21007716138757,
+            "sma_20": 182.29952011108398,
+            "sma_50": 184.39597442626953,
+            "macd": -2.3641765107421975,
+            "macd_signal": -1.4980798125912622,
+            "bb_upper": 192.61549061676962,
+            "bb_lower": 171.98354960539834
           },
           "price_history": [
             {
@@ -8986,35 +9056,35 @@
               "date": "2026-03-23T00:00:00-04:00",
               "open": 177.25,
               "high": 178.3699951171875,
-              "low": 175.87010192871094,
-              "close": 177.42010498046875,
-              "volume": 80231620
+              "low": 175.1999969482422,
+              "close": 175.22999572753906,
+              "volume": 92854469
             }
           ],
-          "fetch_time_ms": 325
+          "fetch_time_ms": 386
         },
         "HAL": {
           "info": {
             "name": "Halliburton Company",
             "sector": "Energy",
-            "market_cap": 31342176256,
-            "pe_ratio": 24.826668,
+            "market_cap": 31493666816,
+            "pe_ratio": 24.946665,
             "dividend_yield": 1.86,
             "fifty_two_week_high": 37.79,
             "fifty_two_week_low": 18.72
           },
-          "latest_price": 37.2400016784668,
+          "latest_price": 37.41999816894531,
           "last_trade_date": "2026-03-23T00:00:00-04:00",
-          "price_change_pct": 1.9436159947870328,
-          "volume": 4833054,
+          "price_change_pct": 2.4363520924967523,
+          "volume": 5259394,
           "indicators": {
-            "rsi_14": 63.37274579318213,
-            "sma_20": 35.33891201019287,
-            "sma_50": 34.30923049926758,
-            "macd": 0.6655609091180565,
-            "macd_signal": 0.5043875175210583,
-            "bb_upper": 37.245406276398874,
-            "bb_lower": 33.43241774398687
+            "rsi_14": 64.11172154759959,
+            "sma_20": 35.3479118347168,
+            "sma_50": 34.312830429077145,
+            "macd": 0.6799196035152022,
+            "macd_signal": 0.5072592564004874,
+            "bb_upper": 37.29155581816056,
+            "bb_lower": 33.40426785127303
           },
           "price_history": [
             {
@@ -9254,18 +9324,18 @@
               "open": 36.560001373291016,
               "high": 37.790000915527344,
               "low": 36.36000061035156,
-              "close": 37.2400016784668,
-              "volume": 4833054
+              "close": 37.41999816894531,
+              "volume": 5259394
             }
           ],
-          "fetch_time_ms": 558
+          "fetch_time_ms": 537
         }
       },
       "signals": [],
       "risk": {},
       "executed": [],
       "portfolio": {
-        "timestamp": "2026-03-23T15:33:53.024434+00:00",
+        "timestamp": "2026-03-23T15:58:38.586874+00:00",
         "profile": "claude",
         "profile_label": "Claude Strategist",
         "portfolio_value": 100000.0,

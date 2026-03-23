@@ -6,18 +6,18 @@ of preselected symbols still match their morning execution conditions.
 ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say no.
 
 MONITOR CANDIDATES:
-  XOM: buy | entry=$160.5 stop=$156.4 target=$168.8
-    Execution condition: Only buy if XOM holds above 159.50 and then trades through 160.50 after the first 15 minutes while crude-sensitive names remain stronger than SPY.
-    Why it is being checked now: 16 fresh headline(s)
-  NVDA: sell | entry=$171.8 stop=$176.5 target=$163.0
-    Execution condition: Only short if NVDA loses 172.00 early, fails to reclaim VWAP in the first hour, and QQQ remains under pressure.
+  XOM: buy | entry=$122.0 stop=$118.34 target=$130.54
+    Execution condition: Oil (WTI or Brent) remains above $95/barrel at market open AND XOM holds above $118.50 in the first 15 minutes of trading — if oil sells off overnight or XOM gaps down below $118, skip the entry and reassign to WATCH.
     Why it is being checked now: 22 fresh headline(s)
+  PAYX: watch | entry=$144.0 stop=$139.68 target=$153.5
+    Execution condition: Hold through Wednesday earnings — if PAYX beats consensus EPS and provides stable guidance, consider buying the post-earnings reaction if shares pull back to the $143-145 range within the first 30 minutes after open on Thursday.
+    Why it is being checked now: 13 fresh headline(s)
 
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
-| XOM   | $    0.00 |  +0.0% |   — |        — |        16 |
-| NVDA  | $    0.00 |  +0.0% |   — |        — |        22 |
+| XOM   | $    0.00 |  +0.0% |   — |        — |        22 |
+| PAYX  | $    0.00 |  +0.0% |   — |        — |        13 |
 
 ACTIVE POSITIONS:
   (none)

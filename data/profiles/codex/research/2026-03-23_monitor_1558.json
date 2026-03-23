@@ -1,53 +1,53 @@
 {
-  "overall_sentiment": "bearish",
-  "market_summary": "Live conditions are not confirming the morning thesis as execution conditions are not fully satisfied.",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions are not confirming the morning execution plans as all stocks are currently priced at $0.00, indicating no trading activity.",
   "stocks": {
-    "XOM": {
+    "RCL": {
       "recommendation": "watch",
-      "confidence": 0.3,
+      "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "Need Brent to stabilize above $100 and clear direction from Iran talks"
+        "RCL is not consolidating at or above 263.00; current price is unknown"
       ],
-      "monitor_reason": "18 fresh headlines suggest potential volatility influencing oil prices.",
-      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
+      "monitor_reason": "RCL's price is unavailable, preventing assessment of execution conditions.",
+      "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
       "trade_plan": {
-        "entry": 158.0,
-        "stop_loss": 152.5,
-        "target": 172.0
+        "entry": 264.0,
+        "stop_loss": 256.0,
+        "target": 279.0
       }
     },
-    "UAL": {
+    "NVDA": {
       "recommendation": "watch",
-      "confidence": 0.3,
+      "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "WTI crude must hold below $95 and UAL needs to confirm above $100"
+        "NVDA is not above 172.00; current price is unknown"
       ],
-      "monitor_reason": "20 fresh headlines indicate possible fluctuations impacting UAL's performance.",
-      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
+      "monitor_reason": "NVDA's price is unavailable, preventing assessment of execution conditions.",
+      "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
       "trade_plan": {
-        "entry": 104.0,
-        "stop_loss": 98.5,
-        "target": 116.0
+        "entry": 173.5,
+        "stop_loss": 168.3,
+        "target": 181.5
       }
     },
-    "OXY": {
-      "recommendation": "watch",
-      "confidence": 0.3,
+    "KBH": {
+      "recommendation": "buy",
+      "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "Iran news needs resolution and oil must hold above $90 WTI"
+        "KBH is not holding 51.00 or better; current price is unknown"
       ],
-      "monitor_reason": "16 fresh headlines could affect OXY's expected performance amidst oil volatility.",
-      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
+      "monitor_reason": "KBH's price is unavailable, preventing assessment of execution conditions.",
+      "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
       "trade_plan": {
-        "entry": 63.0,
-        "stop_loss": 59.5,
-        "target": 70.0
+        "entry": 51.35,
+        "stop_loss": 49.8,
+        "target": 54.9
       }
     }
   },
@@ -60,28 +60,28 @@
     "selected_provider": "openai",
     "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 830,
-      "output_tokens": 527,
-      "total_tokens": 1357,
+      "input_tokens": 782,
+      "output_tokens": 498,
+      "total_tokens": 1280,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_9f9c2b0bc2e344279d0eb4a594316394",
+    "request_id": "req_5bc1aeea34fe45f0b669fdceae841074",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
         "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199187",
+        "x-ratelimit-remaining-tokens": "199226",
         "x-ratelimit-reset-requests": "8.64s",
-        "x-ratelimit-reset-tokens": "243ms"
+        "x-ratelimit-reset-tokens": "231ms"
       },
       "estimates": {
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199187,
-        "tokens_remaining_before_request_estimate": 200544
+        "tokens_remaining_after_request": 199226,
+        "tokens_remaining_before_request_estimate": 200506
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -92,8 +92,8 @@
       "platform": "github_actions",
       "python_version": "3.12.13",
       "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
-      "agent_profile": "claude",
-      "agent_label": "Claude Strategist",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
@@ -106,18 +106,18 @@
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 10309.7,
+    "duration_ms": 10009.6,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 10309.7,
+        "duration_ms": 10009.6,
         "usage": {
-          "input_tokens": 830,
-          "output_tokens": 527,
-          "total_tokens": 1357,
+          "input_tokens": 782,
+          "output_tokens": 498,
+          "total_tokens": 1280,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }

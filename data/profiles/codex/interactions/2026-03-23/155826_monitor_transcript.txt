@@ -2,20 +2,20 @@ Phase: monitor
 Provider: openai
 Model: gpt-4o-mini-2024-07-18
 Status: success
-Total tokens: 1271
+Total tokens: 1280
 
 Market Summary:
-Live conditions do not confirm any setups as the stock prices are currently unavailable.
+Live conditions are not confirming the morning execution plans as all stocks are currently priced at $0.00, indicating no trading activity.
 
 Stocks:
-- RCL: watch | No price action available to confirm consolidation criteria.
-- NVDA: watch | No price action available to confirm levels for trade consideration.
-- KBH: buy | No price action available to confirm holding condition for buying.
+- RCL: watch | RCL's price is unavailable, preventing assessment of execution conditions.
+- NVDA: watch | NVDA's price is unavailable, preventing assessment of execution conditions.
+- KBH: buy | KBH's price is unavailable, preventing assessment of execution conditions.
 
 Response JSON:
 {
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions do not confirm any setups as the stock prices are currently unavailable.",
+  "market_summary": "Live conditions are not confirming the morning execution plans as all stocks are currently priced at $0.00, indicating no trading activity.",
   "stocks": {
     "RCL": {
       "recommendation": "watch",
@@ -23,9 +23,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "RCL price is $0.00 and does not indicate consolidation above $263.00"
+        "RCL is not consolidating at or above 263.00; current price is unknown"
       ],
-      "monitor_reason": "No price action available to confirm consolidation criteria.",
+      "monitor_reason": "RCL's price is unavailable, preventing assessment of execution conditions.",
       "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
       "trade_plan": {
         "entry": 264.0,
@@ -39,9 +39,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "NVDA price is $0.00 and not above $172.00 or retaking $174.00"
+        "NVDA is not above 172.00; current price is unknown"
       ],
-      "monitor_reason": "No price action available to confirm levels for trade consideration.",
+      "monitor_reason": "NVDA's price is unavailable, preventing assessment of execution conditions.",
       "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
       "trade_plan": {
         "entry": 173.5,
@@ -55,9 +55,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "KBH price is $0.00 and does not indicate holding above $51.00"
+        "KBH is not holding 51.00 or better; current price is unknown"
       ],
-      "monitor_reason": "No price action available to confirm holding condition for buying.",
+      "monitor_reason": "KBH's price is unavailable, preventing assessment of execution conditions.",
       "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
       "trade_plan": {
         "entry": 51.35,
@@ -76,27 +76,27 @@ Response JSON:
     "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
       "input_tokens": 782,
-      "output_tokens": 489,
-      "total_tokens": 1271,
+      "output_tokens": 498,
+      "total_tokens": 1280,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_199d1a2747424624ae50f7e09996aaa6",
+    "request_id": "req_5bc1aeea34fe45f0b669fdceae841074",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
         "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199227",
+        "x-ratelimit-remaining-tokens": "199226",
         "x-ratelimit-reset-requests": "8.64s",
         "x-ratelimit-reset-tokens": "231ms"
       },
       "estimates": {
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199227,
-        "tokens_remaining_before_request_estimate": 200498
+        "tokens_remaining_after_request": 199226,
+        "tokens_remaining_before_request_estimate": 200506
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -114,25 +114,25 @@ Response JSON:
         "workflow": "Trading Pipeline",
         "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "23443846864",
+        "run_id": "23446770499",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23443846864",
-        "sha": "a546685d3b5825cd31ed3aed17487bbbb5f46c68",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23446770499",
+        "sha": "9131e396c9086c949405cb4bfd44c7c58f22d032",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 10614.4,
+    "duration_ms": 10009.6,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 10614.4,
+        "duration_ms": 10009.6,
         "usage": {
           "input_tokens": 782,
-          "output_tokens": 489,
-          "total_tokens": 1271,
+          "output_tokens": 498,
+          "total_tokens": 1280,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }

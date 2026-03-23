@@ -9,7 +9,7 @@ Template response generated in RUN_MODE=debug for phase 'monitor'. No API model 
 
 Stocks:
 - XOM: hold | Monitor gate returned no explanation.
-- NVDA: hold | Monitor gate returned no explanation.
+- PAYX: hold | Monitor gate returned no explanation.
 
 Response JSON:
 {
@@ -23,25 +23,25 @@ Response JSON:
       "matched_conditions": [],
       "failed_conditions": [],
       "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Only buy if XOM holds above 159.50 and then trades through 160.50 after the first 15 minutes while crude-sensitive names remain stronger than SPY.",
+      "execution_condition": "Oil (WTI or Brent) remains above $95/barrel at market open AND XOM holds above $118.50 in the first 15 minutes of trading \u2014 if oil sells off overnight or XOM gaps down below $118, skip the entry and reassign to WATCH.",
       "trade_plan": {
         "entry": 159.67,
         "stop_loss": 156.48,
         "target": 164.46
       }
     },
-    "NVDA": {
+    "PAYX": {
       "recommendation": "hold",
       "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [],
       "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Only short if NVDA loses 172.00 early, fails to reclaim VWAP in the first hour, and QQQ remains under pressure.",
+      "execution_condition": "Hold through Wednesday earnings \u2014 if PAYX beats consensus EPS and provides stable guidance, consider buying the post-earnings reaction if shares pull back to the $143-145 range within the first 30 minutes after open on Thursday.",
       "trade_plan": {
-        "entry": 172.93,
-        "stop_loss": 169.47,
-        "target": 178.12
+        "entry": 92.55,
+        "stop_loss": 90.7,
+        "target": 95.33
       }
     }
   },
@@ -66,17 +66,17 @@ Response JSON:
       "platform": "github_actions",
       "python_version": "3.12.13",
       "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
-      "agent_profile": "codex",
-      "agent_label": "Codex Strategist",
+      "agent_profile": "claude",
+      "agent_label": "Claude Strategist",
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
-        "run_id": "23418551212",
+        "run_id": "23418347947",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23418551212",
-        "sha": "015bbe17f2044a3fa356a8a41abd22d663522cb9",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23418347947",
+        "sha": "8e721345dcfa3abadd4b51e4da00f0e671374f3d",
         "ref": "refs/heads/main"
       }
     },
@@ -98,6 +98,6 @@ Response JSON:
     "quota_issue_detected": false,
     "quota_note": "Template mode active; no model usage was attempted.",
     "template_note": "Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.",
-    "generated_at": "2026-03-23T02:15:34.913343+00:00"
+    "generated_at": "2026-03-23T02:06:28.164044+00:00"
   }
 }

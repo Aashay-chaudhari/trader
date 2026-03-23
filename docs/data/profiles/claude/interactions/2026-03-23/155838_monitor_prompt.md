@@ -8,7 +8,7 @@ ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say n
 MONITOR CANDIDATES:
   XOM: watch | entry=$158.0 stop=$152.5 target=$172.0
     Execution condition: Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry
-    Why it is being checked now: 17 fresh headline(s)
+    Why it is being checked now: 18 fresh headline(s)
   UAL: watch | entry=$104.0 stop=$98.5 target=$116.0
     Execution condition: WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket
     Why it is being checked now: 20 fresh headline(s)
@@ -19,7 +19,7 @@ MONITOR CANDIDATES:
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
-| XOM   | $    0.00 |  +0.0% |   — |        — |        17 |
+| XOM   | $    0.00 |  +0.0% |   — |        — |        18 |
 | UAL   | $    0.00 |  +0.0% |   — |        — |        20 |
 | OXY   | $    0.00 |  +0.0% |   — |        — |        16 |
 
@@ -33,7 +33,7 @@ DECISION RULES:
   - Approve only when the natural-language execution condition is clearly satisfied now.
   - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.
   - Never invent a new setup that was not part of the morning plan.
-  - Current market regime hint: cautious.
+  - Current market regime hint: risk_off.
 
 For each candidate symbol:
 1. Check whether the natural-language execution condition still matches the live data.
