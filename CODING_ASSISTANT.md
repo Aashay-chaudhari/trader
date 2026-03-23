@@ -4,6 +4,67 @@ This file is the shortest practical handoff for any coding assistant working in 
 
 If one assistant hits limits, another assistant should be able to read this file and continue with minimal re-discovery.
 
+
+## Bridge Between Assistants
+
+Use these files as the handoff contract between Codex, Claude, or any future coding assistant.
+
+### Stable manual
+
+`CODING_ASSISTANT.md` is the stable operator and debugging guide.
+
+Update this file when:
+
+- commands change
+- workflow triggers change
+- validation steps change
+- dashboard/debugging rules change
+- repo variables or secrets change
+
+### Current baton
+
+`CURRENT_STATE.md` is the short current-state baton.
+
+Update this file when:
+
+- a meaningful feature lands
+- a reliability caveat appears or is removed
+- run-mode defaults change
+- a deploy or production-readiness fact changes
+
+Keep it short and factual.
+
+### Architecture reference
+
+`SYSTEM_GUIDE.md` explains the deeper design and should change less often.
+
+Update it when:
+
+- the operating model changes
+- prompt flow changes
+- automation boundaries change
+- memory layout changes
+
+### Read order for a fresh assistant
+
+1. `CURRENT_STATE.md`
+2. `CODING_ASSISTANT.md`
+3. `SYSTEM_GUIDE.md`
+4. `README.md`
+
+### Writeback rule
+
+After any meaningful change:
+
+1. update code
+2. validate locally
+3. update `CURRENT_STATE.md`
+4. update `CODING_ASSISTANT.md` if the operating workflow changed
+5. update `README.md` or `SYSTEM_GUIDE.md` if the user-facing behavior changed
+6. commit and push
+
+This keeps Claude and Codex anchored to the same source of truth instead of relying on stale chat context.
+
 ## Project Shape
 
 ```text

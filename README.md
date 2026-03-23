@@ -91,6 +91,7 @@ sequenceDiagram
 
 For the full prompt walkthrough, see [docs/PROMPT_FLOW.md](docs/PROMPT_FLOW.md).
 For assistant handoffs and repo-operations commands, see [CODING_ASSISTANT.md](CODING_ASSISTANT.md).
+For the latest baton between assistants, see [CURRENT_STATE.md](CURRENT_STATE.md).
 
 ## Paper-Trading Configuration
 

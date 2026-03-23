@@ -23,6 +23,17 @@ What that means:
 - the local morning runner now blocks obviously unrealistic buy/sell price anchors before commit
 - the dashboard now backfills news panels from morning `supporting_articles` when structured news context is missing
 
+
+## Assistant Handoff Contract
+
+To bridge assistants reliably:
+
+- `CURRENT_STATE.md` is the latest baton
+- `CODING_ASSISTANT.md` is the stable operator manual
+- `SYSTEM_GUIDE.md` is the deeper architecture reference
+
+Any assistant making workflow or reliability changes should update these files before handoff.
+
 ## Primary Commands
 
 ### Daily
