@@ -153,6 +153,56 @@ def validate_morning_research_payload(
     return errors, warnings
 
 
+def demote_stale_entries(
+    data_dir: str | Path,
+    *,
+    reference_prices: dict[str, float] | None = None,
+    max_entry_deviation_pct: float = MAX_ENTRY_DEVIATION_PCT,
+) -> tuple[list[str], dict[str, float]]:
+    """Demote buy/sell stocks whose entry price is too far from market to watch.
+
+    Rewrites the cache file in place if any stocks are demoted.
+    Returns (demoted_symbols, reference_prices_used).
+    """
+    root = Path(data_dir)
+    cache_path = root / "cache" / "morning_research.json"
+    payload = json.loads(cache_path.read_text(encoding="utf-8-sig"))
+
+    stocks = payload.get("stocks", {}) if isinstance(payload, dict) else {}
+    symbols = sorted(s for s in stocks.keys() if isinstance(s, str) and s.strip())
+    live_prices = dict(reference_prices or {})
+    if symbols and not live_prices:
+        live_prices = fetch_reference_prices(symbols)
+
+    demoted: list[str] = []
+    for symbol, stock_data in stocks.items():
+        if not isinstance(stock_data, dict):
+            continue
+        recommendation = str(stock_data.get("recommendation", "watch")).strip().lower()
+        if recommendation not in {"buy", "sell"}:
+            continue
+        trade_plan = stock_data.get("trade_plan", {}) or {}
+        entry = _safe_float(trade_plan.get("entry"))
+        ref_price = _safe_float(live_prices.get(symbol))
+        if not entry or not ref_price:
+            continue
+        deviation_pct = abs(entry - ref_price) / ref_price * 100
+        if deviation_pct > max_entry_deviation_pct:
+            old_reasoning = str(stock_data.get("reasoning", "")).strip()
+            stock_data["recommendation"] = "watch"
+            stock_data["reasoning"] = (
+                f"[Auto-demoted from {recommendation}: entry {entry:.2f} was "
+                f"{deviation_pct:.1f}% from market price {ref_price:.2f}] "
+                + old_reasoning
+            )
+            demoted.append(symbol)
+
+    if demoted:
+        cache_path.write_text(json.dumps(payload, indent=4), encoding="utf-8")
+
+    return demoted, live_prices
+
+
 def fetch_reference_prices(symbols: list[str]) -> dict[str, float]:
     """Fetch the most recent close for a set of symbols."""
 

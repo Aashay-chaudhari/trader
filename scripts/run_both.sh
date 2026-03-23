@@ -111,13 +111,26 @@ validate_morning_cache() {
 
   echo "Validating ${profile} morning research against recent market prices..."
   python - "$profile" <<'PY'
-import json
+import subprocess
 import sys
 
-from agent_trader.utils.morning_sanity import validate_morning_research_file
+from agent_trader.utils.morning_sanity import demote_stale_entries, validate_morning_research_file
 
 profile = sys.argv[1]
-result = validate_morning_research_file(f"data/profiles/{profile}")
+data_dir = f"data/profiles/{profile}"
+
+# Pass 1: fetch prices once and auto-demote any buy/sell whose entry is too stale.
+demoted, ref_prices = demote_stale_entries(data_dir)
+if demoted:
+    print(f"[sanity] Auto-demoted to watch (stale entry): {', '.join(demoted)}")
+    # Re-stage the corrected file so the commit picks up the fix.
+    subprocess.run(
+        ["git", "add", f"{data_dir}/cache/morning_research.json"],
+        check=False,
+    )
+
+# Pass 2: validate the (possibly corrected) file. Only structural errors remain now.
+result = validate_morning_research_file(data_dir, reference_prices=ref_prices)
 
 if result.reference_prices:
     preview = ", ".join(
