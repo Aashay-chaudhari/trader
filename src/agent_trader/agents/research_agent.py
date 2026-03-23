@@ -1755,7 +1755,6 @@ class ResearchAgent(BaseAgent):
         prior_attempts: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """Build deterministic no-token responses for debug/test runs."""
-        settings = get_settings()
         runtime = build_runtime_metadata()
         now = datetime.now(timezone.utc)
         active_provider = "template:debug"

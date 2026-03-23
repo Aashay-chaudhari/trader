@@ -867,7 +867,6 @@ def _load_interaction_bundle(data_root: Path, *, profile_id: str, multi_profile:
         reverse=True,
     )
 
-    base = f"data/profiles/{profile_id}" if multi_profile else "data"
     recent: list[dict[str, Any]] = []
     latest_by_phase: dict[str, dict[str, Any]] = {}
     all_items: list[dict[str, Any]] = []

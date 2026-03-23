@@ -111,7 +111,6 @@ def _reset_profile_root(
     root: Path, removed: list[str], *, keep_knowledge: bool = False,
 ) -> None:
     if root.exists():
-        preserved = set(KNOWLEDGE_DIRS) | {f.split(".")[0] for f in KNOWLEDGE_FILES}
         for child in root.iterdir():
             if keep_knowledge and child.name in KNOWLEDGE_DIRS:
                 continue
