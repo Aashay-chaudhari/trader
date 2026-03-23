@@ -42,7 +42,7 @@ flowchart LR
 - GitHub Actions `Trading Pipeline`
 - Phase: `monitor` only
 - Schedule: every 30 minutes during US weekday market hours
-- Mode: `paper`
+- Mode: controlled by GitHub repo variable `MONITOR_RUN_MODE` (`debug` or `paper`)
 - Models: cheapest monitor-capable API models
 
 ### Why this split exists
@@ -97,7 +97,7 @@ For the full prompt walkthrough, see [docs/PROMPT_FLOW.md](docs/PROMPT_FLOW.md).
 Copy `.env.example` to `.env` and make sure these are set:
 
 ```env
-RUN_MODE=paper
+RUN_MODE=debug   # use paper before market opens for real paper execution
 LLM_PROVIDER=auto
 MONITOR_LLM_PROVIDER=openai
 MONITOR_MODEL=claude-haiku-4-5-20251001
@@ -109,7 +109,11 @@ AGENT_PROFILE=default
 Notes:
 
 - `run_both.sh` uses your local `claude` and `codex` CLI tools for research.
-- GitHub Actions monitor uses API keys and `RUN_MODE=paper`.
+- GitHub Actions monitor uses API keys and the repo variable `MONITOR_RUN_MODE`.
+- A safe Sunday / dry-run posture is:
+  - local `.env`: `RUN_MODE=debug`
+  - GitHub repo variable: `MONITOR_RUN_MODE=debug`
+- Before a real trading session, flip both to `paper`.
 - The standard monitor workflow forces both strategist monitor gates onto OpenAI to keep intraday cost down.
 - If you want local Python monitor runs to place paper orders too, your local `.env` also needs valid `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` values.
 

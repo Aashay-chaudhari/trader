@@ -102,7 +102,7 @@ jobs:
 
       - name: Print strategist runtime config
         env:
-          RUN_MODE: paper
+          RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
           MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
@@ -130,7 +130,7 @@ jobs:
           DATA_DIR: data/profiles/${{ matrix.profile_id }}
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
-          RUN_MODE: paper
+          RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
           MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
@@ -146,7 +146,7 @@ jobs:
           DATA_DIR: data/profiles/${{ matrix.profile_id }}
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
-          RUN_MODE: paper
+          RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
         run: python -m agent_trader.utils.check_mode

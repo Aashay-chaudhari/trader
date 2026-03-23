@@ -72,7 +72,7 @@ GitHub Actions runs:
 - `Trading Pipeline`
 - phase: `monitor`
 - schedule: every 30 minutes on market weekdays
-- run mode: `paper`
+- run mode: controlled by repo variable `MONITOR_RUN_MODE`
 
 ## Sequential Flow
 
@@ -285,13 +285,18 @@ Do not run it because you feel impatient. Run it when you want a sober review of
 
 Important runtime keys:
 
-- `RUN_MODE=paper`
+- `RUN_MODE=debug` for safe dry runs, `RUN_MODE=paper` before a real paper-trading session
 - `LLM_PROVIDER=auto`
 - `MONITOR_LLM_PROVIDER=openai`
 - `MONITOR_MODEL=claude-haiku-4-5-20251001`
 - `MONITOR_MODEL_OPENAI=gpt-4o-mini`
 - `DATA_DIR=data/profiles/default`
 - `AGENT_PROFILE=default`
+
+For the remote monitor workflow:
+
+- set GitHub repo variable `MONITOR_RUN_MODE=debug` for dry runs
+- set GitHub repo variable `MONITOR_RUN_MODE=paper` before market-open paper execution
 
 ### GitHub secrets
 
