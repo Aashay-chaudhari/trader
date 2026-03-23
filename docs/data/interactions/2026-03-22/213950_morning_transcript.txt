@@ -1,0 +1,52 @@
+Wrote and staged [morning_research.json](C:/Users/aasha/agent-trader/data/profiles/codex/cache/morning_research.json) and [watchlist.json](C:/Users/aasha/agent-trader/data/profiles/codex/cache/watchlist.json). Local codex profile state was mostly empty, so this run relied heavily on fresh market research and current price data. Since today is Sunday, March 22, 2026, the thesis is explicitly for Monday, March 23, 2026.
+
+**RESEARCH LOG**
+1. Query: `stock market today premarket S&P 500 March 23 2026`
+- Friday risk tone was weak into the close; this was not a healthy momentum tape.
+- I used the Reuters/Yahoo market coverage from this pass to frame Monday as a cautious open rather than a momentum-chasing session.
+- Sources: https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-futures-slide-after-nvidia-led-slump-dampens-ai-mood-again-235202719.html
+- Thesis impact: confirmed broad market fragility and pushed the regime toward `risk_off`.
+
+2. Query: `VIX today March 22 2026`
+- Search results were low signal, so I validated with current market data instead.
+- `^VIX` closed at `26.78` on Friday, March 20, 2026, which is elevated and not consistent with aggressive long exposure.
+- Source used for validation: Yahoo Finance market data via local `yfinance` pull
+- Thesis impact: confirmed elevated volatility and reduced appetite for more than 2 active longs.
+
+3. Query: `stock market news today March 22 2026`
+- Macro coverage stayed centered on tariff uncertainty, inflation pressure, and a fragile recovery attempt.
+- Reuters coverage showed the market still reacting defensively to inflation/tariff risk.
+- Sources: https://www.reuters.com/world/us/wall-street-bounces-back-after-recent-selloff-2026-03-20/
+- Thesis impact: supported a defensive, selective posture rather than broad risk-taking.
+
+4. Query: `sector performance today premarket March 23 2026`
+- Oil-sensitive equities were among the clearer leadership groups in related global coverage.
+- That relative strength matters because tech/growth was the weaker side of the tape.
+- Sources: https://www.reuters.com/world/europe/europe-shares-climb-open-led-by-oil-stocks-2026-03-20/
+- Thesis impact: elevated energy to the top of the long watchlist.
+
+5. Query: `top stock movers today premarket March 23 2026 Reuters`
+- Event-driven names were moving, but most were not cleaner than the energy setup.
+- NCR Atleos stood out as an acquisition-driven mover rather than a broad thematic opportunity.
+- Sources: https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-futures-slide-after-nvidia-led-slump-dampens-ai-mood-again-235202719.html
+- Thesis impact: kept `NATL` on watch only, not as a priority trade.
+
+6. Query: `stock earnings this week March 23 2026 earnings whispers`
+- This surfaced the week’s earnings catalysts, including Carnival, Chewy, and Braze.
+- Those are valid watchlist names, but the regime argues for post-earnings confirmation instead of anticipatory buying.
+- Sources: https://www.kiplinger.com/investing/stocks/upcoming-earnings-reports-this-week
+- Thesis impact: added `CCL`, `CHWY`, and `BRZE` as catalyst watches, not active longs.
+
+7. Query: `unusual volume stocks March 22 2026 marketbeat`
+- The search itself was not especially useful, so I leaned more on Friday’s actual volume/price action.
+- `NVDA` stood out as a high-volume weak close, which is cleaner for a tactical short than trying to fade defensive leaders.
+- Sources: https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-futures-slide-after-nvidia-led-slump-dampens-ai-mood-again-235202719.html
+- Thesis impact: promoted `NVDA` to the best downside candidate.
+
+8. Query: `stock market technical setup today March 22 2026`
+- Search quality was mixed, but the technical picture was clear from current prices: `SPY 648.57`, `QQQ 582.06`, `XLE 59.31`, `XLF 49.08`.
+- Energy and some financials held up better than tech; semis looked vulnerable.
+- Source used for validation: Yahoo Finance market data via local `yfinance` pull
+- Thesis impact: finalized the setup as energy strength, tech weakness, selective earnings watches.
+
+Resulting stance is `overall_sentiment: bearish`, `market_regime: risk_off`, with active buys limited to `XOM` and `CVX`, a tactical sell on `NVDA`, and the rest held as conditional watches. JSON validated successfully and only the two codex cache files were staged.
