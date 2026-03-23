@@ -1,30 +1,50 @@
 {
   "counts": {
-    "total": 1,
-    "recent": 1,
-    "days": 1
+    "total": 2,
+    "recent": 2,
+    "days": 2
   },
   "latest": {
-    "timestamp": "2026-03-22T21:45:46.478785-04:00",
-    "day": "2026-03-22",
+    "timestamp": "2026-03-23T02:06:28.164267+00:00",
+    "day": "2026-03-23",
     "profile": "claude",
-    "phase": "morning",
-    "phase_group": "morning",
-    "phase_label": "Morning",
-    "tool": "claude",
+    "phase": "monitor",
+    "phase_group": "monitor",
+    "phase_label": "Monitor Evaluations",
+    "tool": "python-api",
     "status": "success",
-    "summary": "[tool] Bash | Cache files don't exist \u2014 proceeding with full workflow. | [tool] Read",
-    "prompt_file": "data/profiles/claude/interactions/2026-03-22/213950_morning_prompt.md",
-    "transcript_file": "data/profiles/claude/interactions/2026-03-22/213950_morning_transcript.txt",
-    "metadata_file": "data/profiles/claude/interactions/2026-03-22/213950_morning_interaction.json",
-    "raw_log_file": ".tmp/cli_logs/claude_morning_2026-03-22_213950.ndjson",
-    "prompt_source": "scripts/prompts/morning_research.md",
-    "prompt_url": "data/profiles/claude/interactions/2026-03-22/213950_morning_prompt.md",
-    "transcript_url": "data/profiles/claude/interactions/2026-03-22/213950_morning_transcript.txt",
-    "metadata_url": "data/profiles/claude/interactions/2026-03-22/213950_morning_interaction.json",
+    "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
+    "prompt_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+    "transcript_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+    "metadata_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+    "raw_log_file": "",
+    "prompt_source": "src/agent_trader/agents/research_agent.py",
+    "prompt_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+    "transcript_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+    "metadata_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
     "prompt_source_url": ""
   },
   "latest_by_phase": {
+    "monitor": {
+      "timestamp": "2026-03-23T02:06:28.164267+00:00",
+      "day": "2026-03-23",
+      "profile": "claude",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "tool": "python-api",
+      "status": "success",
+      "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
+      "prompt_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+      "transcript_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+      "metadata_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+      "raw_log_file": "",
+      "prompt_source": "src/agent_trader/agents/research_agent.py",
+      "prompt_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+      "transcript_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+      "metadata_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+      "prompt_source_url": ""
+    },
     "morning": {
       "timestamp": "2026-03-22T21:45:46.478785-04:00",
       "day": "2026-03-22",
@@ -47,9 +67,30 @@
     }
   },
   "phase_counts": {
+    "monitor": 1,
     "morning": 1
   },
   "recent": [
+    {
+      "timestamp": "2026-03-23T02:06:28.164267+00:00",
+      "day": "2026-03-23",
+      "profile": "claude",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "tool": "python-api",
+      "status": "success",
+      "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
+      "prompt_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+      "transcript_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+      "metadata_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+      "raw_log_file": "",
+      "prompt_source": "src/agent_trader/agents/research_agent.py",
+      "prompt_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+      "transcript_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+      "metadata_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+      "prompt_source_url": ""
+    },
     {
       "timestamp": "2026-03-22T21:45:46.478785-04:00",
       "day": "2026-03-22",
@@ -72,6 +113,38 @@
     }
   ],
   "days": [
+    {
+      "date": "2026-03-23",
+      "count": 1,
+      "phases": [
+        {
+          "key": "monitor",
+          "label": "Monitor Evaluations",
+          "items": [
+            {
+              "timestamp": "2026-03-23T02:06:28.164267+00:00",
+              "day": "2026-03-23",
+              "profile": "claude",
+              "phase": "monitor",
+              "phase_group": "monitor",
+              "phase_label": "Monitor Evaluations",
+              "tool": "python-api",
+              "status": "success",
+              "summary": "Evaluated: XOM, PAYX | Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed. | template:debug / template-v1",
+              "prompt_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+              "transcript_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+              "metadata_file": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+              "raw_log_file": "",
+              "prompt_source": "src/agent_trader/agents/research_agent.py",
+              "prompt_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_prompt.md",
+              "transcript_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_transcript.txt",
+              "metadata_url": "data/profiles/claude/interactions/2026-03-23/020628_monitor_interaction.json",
+              "prompt_source_url": ""
+            }
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-03-22",
       "count": 1,
