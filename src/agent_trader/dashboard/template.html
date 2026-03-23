@@ -303,6 +303,16 @@
     .interaction-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .interaction-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; font-weight: 700; color: var(--accent); }
     .interaction-link:hover { border-color: var(--accent); }
+    .interaction-day-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .interaction-day-tab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+    .interaction-day-tab.active { border-color: var(--accent); color: var(--text); background: var(--surface2); }
+    .interaction-day-count { display: inline-flex; min-width: 20px; justify-content: center; padding: 2px 6px; border-radius: 999px; background: rgba(255,255,255,.06); font-size: 10px; font-weight: 900; color: var(--text); }
+    .interaction-day-view { display: grid; gap: 16px; }
+    .interaction-phase-group { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+    .interaction-phase-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .interaction-phase-title { font-size: 13px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+    .interaction-phase-count { font-size: 11px; color: var(--muted); }
+    .interaction-day-empty { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
     .divider { height: 1px; background: var(--border); margin: 16px 0; }
     .empty { padding: 32px 20px; text-align: center; color: var(--muted); font-size: 13px; border: 1px dashed rgba(90,140,230,.15); border-radius: var(--r); }
@@ -553,8 +563,9 @@
         </div>
       </div>
       <div class="card" style="margin-top:16px">
-        <div class="card-hd"><div><h3>Strategist Interactions</h3><p>Exact prompt files and readable CLI transcripts from local strategist runs.</p></div></div>
+        <div class="card-hd"><div><h3>Strategist Interactions</h3><p>Daily prompt and evaluation timeline across local sessions and automated monitor checks.</p></div></div>
         <div class="mini-grid" id="interactionSummary" style="margin-bottom:12px"></div>
+        <div id="interactionDateTabs"></div>
         <div id="interactionTimeline"></div>
       </div>
       <div class="card" style="margin-top:16px">
@@ -588,7 +599,7 @@
   const voiceStateClass = v => String(v || "").toLowerCase().replace(/_/g, "-");
   const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
 
-  let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all";
+  let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all", INTERACTION_DAY = "";
 
   function getProfiles(b) {
     const ps = obj(b.profiles);
@@ -846,24 +857,51 @@
     const recent = arr(interactions.recent);
     const latest = obj(interactions.latest);
     const counts = obj(interactions.counts);
+    const days = arr(interactions.days);
+    const phaseCounts = obj(interactions.phase_counts);
     document.getElementById("interactionSummary").innerHTML = [
       ["Total Logs", String(counts.total ?? recent.length)],
-      ["Recent Loaded", String(counts.recent ?? recent.length)],
+      ["Days", String(counts.days ?? days.length)],
+      ["Monitor Checks", String(phaseCounts.monitor ?? 0)],
       ["Latest Phase", latest.phase || "-"],
       ["Latest Time", latest.timestamp ? dtFull(latest.timestamp) : "-"],
     ].map(([l, v]) => miniTile(l, v)).join("");
 
-    document.getElementById("interactionTimeline").innerHTML = recent.length
-      ? `<div class="interaction-list">${recent.map(item => {
-          const links = [
-            item.prompt_url ? `<a class="interaction-link" href="${esc(item.prompt_url)}" target="_blank" rel="noreferrer">Prompt</a>` : "",
-            item.transcript_url ? `<a class="interaction-link" href="${esc(item.transcript_url)}" target="_blank" rel="noreferrer">Transcript</a>` : "",
-            item.metadata_url ? `<a class="interaction-link" href="${esc(item.metadata_url)}" target="_blank" rel="noreferrer">Metadata</a>` : "",
-            item.prompt_source_url ? `<a class="interaction-link" href="${esc(item.prompt_source_url)}" target="_blank" rel="noreferrer">Template</a>` : "",
-          ].filter(Boolean).join("");
-          return `<div class="interaction-card"><div class="interaction-top"><div><div class="interaction-phase">${esc(item.phase || "session")} | ${esc(item.tool || "local")}</div><div class="interaction-meta">${esc(item.timestamp ? dtFull(item.timestamp) : "No timestamp")} | ${esc(item.status || "unknown")}</div></div></div><div class="interaction-summary">${esc(item.summary || "Prompt and transcript archived for this local strategist run.")}</div><div class="interaction-links">${links}</div></div>`;
+    if (!days.length) {
+      document.getElementById("interactionDateTabs").innerHTML = "";
+      document.getElementById("interactionTimeline").innerHTML = emptyEl("No strategist interaction logs yet. They will appear after the next morning run, monitor evaluation, or evening session.");
+      return;
+    }
+
+    if (!INTERACTION_DAY || !days.some(day => day.date === INTERACTION_DAY)) {
+      INTERACTION_DAY = days[0].date;
+    }
+    const activeDay = days.find(day => day.date === INTERACTION_DAY) || days[0];
+
+    document.getElementById("interactionDateTabs").innerHTML = `<div class="interaction-day-tabs">${days.map(day =>
+      `<button class="interaction-day-tab ${day.date === INTERACTION_DAY ? "active" : ""}" data-day="${esc(day.date)}">${esc(day.date)} <span class="interaction-day-count">${esc(day.count)}</span></button>`
+    ).join("")}</div>`;
+    document.getElementById("interactionDateTabs").querySelectorAll("[data-day]").forEach(btn =>
+      btn.addEventListener("click", () => {
+        INTERACTION_DAY = btn.dataset.day || "";
+        renderInteractions(interactions);
+      })
+    );
+
+    document.getElementById("interactionTimeline").innerHTML = activeDay && arr(activeDay.phases).length
+      ? `<div class="interaction-day-view">${arr(activeDay.phases).map(section => {
+          const items = arr(section.items);
+          return `<div class="interaction-phase-group"><div class="interaction-phase-head"><div class="interaction-phase-title">${esc(section.label || "Session")}</div><div class="interaction-phase-count">${esc(items.length)} item${items.length === 1 ? "" : "s"}</div></div><div class="interaction-list">${items.map(item => {
+            const links = [
+              item.prompt_url ? `<a class="interaction-link" href="${esc(item.prompt_url)}" target="_blank" rel="noreferrer">Prompt</a>` : "",
+              item.transcript_url ? `<a class="interaction-link" href="${esc(item.transcript_url)}" target="_blank" rel="noreferrer">Transcript</a>` : "",
+              item.metadata_url ? `<a class="interaction-link" href="${esc(item.metadata_url)}" target="_blank" rel="noreferrer">Metadata</a>` : "",
+              item.prompt_source_url ? `<a class="interaction-link" href="${esc(item.prompt_source_url)}" target="_blank" rel="noreferrer">Template</a>` : "",
+            ].filter(Boolean).join("");
+            return `<div class="interaction-card"><div class="interaction-top"><div><div class="interaction-phase">${esc(item.phase_label || item.phase || "session")} | ${esc(item.tool || "local")}</div><div class="interaction-meta">${esc(item.timestamp ? dtFull(item.timestamp) : "No timestamp")} | ${esc(item.status || "unknown")}</div></div></div><div class="interaction-summary">${esc(item.summary || "Prompt and transcript archived for this run.")}</div>${links ? `<div class="interaction-links">${links}</div>` : ""}</div>`;
+          }).join("")}</div></div>`;
         }).join("")}</div>`
-      : emptyEl("No local strategist interaction logs yet. They will appear after the next morning or evening CLI run.");
+      : `<div class="interaction-day-empty">No interactions recorded for ${esc(INTERACTION_DAY)} yet.</div>`;
   }
 
   function renderVoice(voice, interactions) {

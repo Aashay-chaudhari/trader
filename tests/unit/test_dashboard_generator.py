@@ -4,6 +4,7 @@ import json
 import tempfile
 
 from agent_trader.dashboard.generator import generate_dashboard
+from agent_trader.utils.research_context import save_prompt_context_snapshot
 
 
 def test_generate_dashboard_writes_context_rich_bundle():
@@ -668,6 +669,103 @@ def test_generate_dashboard_exports_interaction_logs():
             / "interactions"
             / "2026-03-22"
             / "083000_morning_transcript.txt"
+        ).exists()
+        assert interactions["counts"]["days"] == 1
+        assert interactions["days"][0]["date"] == "2026-03-22"
+        assert interactions["days"][0]["phases"][0]["key"] == "morning"
+
+
+def test_generate_dashboard_groups_automated_monitor_evaluations_by_day():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+        profile_root = data_dir / "profiles" / "claude"
+
+        (profile_root / "snapshots").mkdir(parents=True)
+        (profile_root / "research").mkdir(parents=True)
+        (profile_root / "analytics").mkdir(parents=True)
+        (profile_root / "context").mkdir(parents=True)
+
+        (profile_root / "profile.json").write_text(
+            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-22T15:00:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (profile_root / "research" / "2026-03-22_monitor_1500.json").write_text(
+            json.dumps(
+                {
+                    "market_summary": "XOM moved into the planned entry zone.",
+                    "stocks": {"XOM": {"ready_to_trade": True, "monitor_reason": "Entry zone matched."}},
+                }
+            ),
+            encoding="utf-8",
+        )
+        (profile_root / "analytics" / "latest_llm.json").write_text(
+            json.dumps({"selected_provider": "openai", "selected_model": "gpt-4o-mini"}),
+            encoding="utf-8",
+        )
+        (profile_root / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+
+        save_prompt_context_snapshot(
+            phase="monitor",
+            provider="openai",
+            model="gpt-4o-mini",
+            symbols=["XOM"],
+            prompt_sections={"candidate_symbols": ["XOM"]},
+            llm_meta={
+                "status": "success",
+                "provider": "openai",
+                "model": "gpt-4o-mini",
+                "usage": {"total_tokens": 21},
+            },
+            prompt_text="Return JSON only. Check whether XOM still matches the morning plan.",
+            prompt_source="src/agent_trader/agents/research_agent.py",
+            tool="python-api",
+            response_payload={
+                "market_summary": "XOM moved into the planned entry zone.",
+                "stocks": {
+                    "XOM": {
+                        "ready_to_trade": True,
+                        "monitor_reason": "Entry zone matched.",
+                        "recommendation": "buy",
+                    }
+                },
+            },
+            data_dir=str(profile_root),
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        interactions = bundle["profiles"]["claude"]["interactions"]
+        day = interactions["days"][0]
+        monitor_group = next(section for section in day["phases"] if section["key"] == "monitor")
+        item = monitor_group["items"][0]
+
+        assert interactions["counts"]["days"] == 1
+        assert day["date"] == item["day"]
+        assert item["tool"] == "python-api"
+        assert item["phase"] == "monitor"
+        assert item["prompt_url"].endswith("_monitor_prompt.md")
+        assert item["transcript_url"].endswith("_monitor_transcript.txt")
+        assert (
+            docs_dir
+            / "data"
+            / "profiles"
+            / "claude"
+            / "interactions"
+            / day["date"]
+            / Path(item["prompt_url"]).name
         ).exists()
 
 

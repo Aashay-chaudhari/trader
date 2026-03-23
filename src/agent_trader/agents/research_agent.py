@@ -628,6 +628,10 @@ class ResearchAgent(BaseAgent):
                     symbols=message.data.get("symbols", []),
                     prompt_sections=prompt_sections,
                     llm_meta=analysis.get("_meta", {}),
+                    prompt_text="Monitor skipped: no symbols were near execution triggers or active-position checkpoints.",
+                    prompt_source="src/agent_trader/agents/research_agent.py",
+                    tool="python-monitor",
+                    response_payload=analysis,
                     data_dir=get_settings().data_dir,
                 )
                 record_llm_analytics(
@@ -772,6 +776,10 @@ class ResearchAgent(BaseAgent):
             symbols=message.data.get("symbols", []),
             prompt_sections=prompt_sections,
             llm_meta=llm_meta,
+            prompt_text=prompt,
+            prompt_source="src/agent_trader/agents/research_agent.py",
+            tool="python-api",
+            response_payload=analysis,
             data_dir=get_settings().data_dir,
         )
         record_llm_analytics(
@@ -2548,4 +2556,3 @@ class ResearchAgent(BaseAgent):
             learned_rules="",
             artifact_context=build_recent_artifact_summary(data_dir=settings.data_dir),
         )
-

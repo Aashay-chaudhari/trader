@@ -870,16 +870,22 @@ def _load_interaction_bundle(data_root: Path, *, profile_id: str, multi_profile:
     base = f"data/profiles/{profile_id}" if multi_profile else "data"
     recent: list[dict[str, Any]] = []
     latest_by_phase: dict[str, dict[str, Any]] = {}
+    all_items: list[dict[str, Any]] = []
+    phase_counts: dict[str, int] = {}
 
     for path in metadata_files:
         payload = _read_json(path, {})
         if not isinstance(payload, dict):
             continue
         phase = str(payload.get("phase", "")).strip().lower() or "unknown"
+        day = _interaction_day(payload, path)
         item = {
             "timestamp": payload.get("timestamp"),
+            "day": day,
             "profile": payload.get("profile", profile_id),
             "phase": phase,
+            "phase_group": _interaction_phase_group(phase),
+            "phase_label": _interaction_phase_label(phase),
             "tool": payload.get("tool", ""),
             "status": payload.get("status", "unknown"),
             "summary": payload.get("summary", ""),
@@ -893,30 +899,128 @@ def _load_interaction_bundle(data_root: Path, *, profile_id: str, multi_profile:
             "metadata_url": _public_interaction_path(str(path).replace("\\", "/"), profile_id=profile_id, multi_profile=multi_profile),
             "prompt_source_url": _public_repo_path(payload.get("prompt_source", "")),
         }
-        recent.append(item)
+        all_items.append(item)
+        phase_counts[phase] = phase_counts.get(phase, 0) + 1
+        if len(recent) < 24:
+            recent.append(item)
         if phase not in latest_by_phase:
             latest_by_phase[phase] = item
-        if len(recent) >= 12 and len(latest_by_phase) >= 4:
-            break
 
     return {
         "counts": {
             "total": len(metadata_files),
             "recent": len(recent),
+            "days": len({item.get("day", "") for item in all_items if item.get("day")}),
         },
         "latest": recent[0] if recent else {},
         "latest_by_phase": latest_by_phase,
+        "phase_counts": phase_counts,
         "recent": recent,
+        "days": _group_interactions_by_day(all_items),
     }
 
 
 def _empty_interaction_bundle() -> dict[str, Any]:
     return {
-        "counts": {"total": 0, "recent": 0},
+        "counts": {"total": 0, "recent": 0, "days": 0},
         "latest": {},
         "latest_by_phase": {},
+        "phase_counts": {},
         "recent": [],
+        "days": [],
     }
+
+
+def _interaction_day(payload: dict[str, Any], path: Path) -> str:
+    timestamp = str(payload.get("timestamp", "")).strip()
+    if len(timestamp) >= 10:
+        return timestamp[:10]
+    for part in path.parts:
+        if len(part) == 10 and part[4] == "-" and part[7] == "-":
+            return part
+    return ""
+
+
+def _interaction_phase_group(phase: str) -> str:
+    normalized = str(phase or "").strip().lower()
+    mapping = {
+        "morning": "morning",
+        "research": "morning",
+        "monitor": "monitor",
+        "evening": "evening",
+        "evening_reflection": "evening",
+        "voice": "voice",
+        "weekly": "weekly",
+        "weekly_review": "weekly",
+        "weekly_consolidation": "weekly",
+        "monthly": "monthly",
+        "monthly_review": "monthly",
+        "monthly_retrospective": "monthly",
+        "evolution": "evolution",
+        "evolve": "evolution",
+    }
+    return mapping.get(normalized, "other")
+
+
+def _interaction_phase_label(phase: str) -> str:
+    labels = {
+        "morning": "Morning",
+        "research": "Morning Research",
+        "monitor": "Monitor Evaluations",
+        "evening": "Evening",
+        "evening_reflection": "Evening Reflection",
+        "voice": "Voice",
+        "weekly": "Weekly Review",
+        "weekly_review": "Weekly Review",
+        "weekly_consolidation": "Weekly Review",
+        "monthly": "Monthly Review",
+        "monthly_review": "Monthly Review",
+        "monthly_retrospective": "Monthly Review",
+        "evolution": "Evolution",
+        "evolve": "Evolution",
+    }
+    normalized = str(phase or "").strip().lower()
+    return labels.get(normalized, normalized.replace("_", " ").title() or "Session")
+
+
+def _group_interactions_by_day(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    day_map: dict[str, dict[str, Any]] = {}
+    phase_order = ["morning", "monitor", "evening", "voice", "weekly", "monthly", "evolution", "other"]
+
+    for item in items:
+        day = str(item.get("day", "")).strip() or "unknown"
+        group = day_map.setdefault(day, {"date": day, "count": 0, "phases": {}})
+        group["count"] += 1
+        phase_group = str(item.get("phase_group", "other"))
+        phase_bucket = group["phases"].setdefault(
+            phase_group,
+            {
+                "key": phase_group,
+                "label": _interaction_phase_label(phase_group),
+                "items": [],
+            },
+        )
+        phase_bucket["label"] = _interaction_phase_label(phase_group)
+        phase_bucket["items"].append(item)
+
+    ordered_days: list[dict[str, Any]] = []
+    for date in sorted(day_map.keys(), reverse=True):
+        payload = day_map[date]
+        ordered_phases = []
+        raw_phases = payload["phases"]
+        for key in phase_order:
+            phase_payload = raw_phases.get(key)
+            if not phase_payload:
+                continue
+            phase_payload["items"] = sorted(
+                phase_payload["items"],
+                key=lambda item: str(item.get("timestamp", "")),
+                reverse=True,
+            )
+            ordered_phases.append(phase_payload)
+        payload["phases"] = ordered_phases
+        ordered_days.append(payload)
+    return ordered_days
 
 
 def _load_voice_bundle(data_root: Path, *, profile_id: str, multi_profile: bool) -> dict[str, Any]:
@@ -1131,6 +1235,15 @@ def _copy_interaction_files(data_root: Path, destination_root: Path, interaction
         for value in phase_items:
             if isinstance(value, dict):
                 items.append(value)
+        for day in _safe_list(interactions.get("days")):
+            if not isinstance(day, dict):
+                continue
+            for phase_group in _safe_list(day.get("phases")):
+                if not isinstance(phase_group, dict):
+                    continue
+                for value in _safe_list(phase_group.get("items")):
+                    if isinstance(value, dict):
+                        items.append(value)
 
     for item in items:
         for key in ("prompt_file", "transcript_file", "metadata_file"):

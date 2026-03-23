@@ -80,6 +80,10 @@ def save_prompt_context_snapshot(
     symbols: list[str],
     prompt_sections: dict[str, Any],
     llm_meta: dict[str, Any] | None = None,
+    prompt_text: str | None = None,
+    prompt_source: str | None = None,
+    tool: str | None = None,
+    response_payload: dict[str, Any] | None = None,
     data_dir: str = "data",
 ) -> str:
     """Persist the structured prompt inputs for auditability and reuse."""
@@ -94,6 +98,8 @@ def save_prompt_context_snapshot(
         "model": model,
         "symbols": symbols,
         "prompt_sections": prompt_sections,
+        "prompt_text": prompt_text or "",
+        "prompt_source": prompt_source or "",
         "llm_meta": llm_meta or {},
     }
 
@@ -105,4 +111,165 @@ def save_prompt_context_snapshot(
         encoding="utf-8",
     )
 
+    _write_interaction_archive(
+        timestamp=now,
+        data_dir=Path(data_dir),
+        phase=phase,
+        tool=tool or provider or "api",
+        prompt_text=prompt_text or "",
+        prompt_source=prompt_source or "",
+        llm_meta=llm_meta or {},
+        context_path=path,
+        response_payload=response_payload or {},
+    )
+
     return str(path)
+
+
+def _write_interaction_archive(
+    *,
+    timestamp: datetime,
+    data_dir: Path,
+    phase: str,
+    tool: str,
+    prompt_text: str,
+    prompt_source: str,
+    llm_meta: dict[str, Any],
+    context_path: Path,
+    response_payload: dict[str, Any],
+) -> None:
+    """Mirror API-driven phases into the shared interaction archive layout."""
+    interactions_root = data_dir / "interactions" / timestamp.strftime("%Y-%m-%d")
+    interactions_root.mkdir(parents=True, exist_ok=True)
+
+    slug = timestamp.strftime("%H%M%S")
+    safe_phase = str(phase or "unknown").strip().lower().replace(" ", "_")
+    prompt_path = interactions_root / f"{slug}_{safe_phase}_prompt.md"
+    transcript_path = interactions_root / f"{slug}_{safe_phase}_transcript.txt"
+    metadata_path = interactions_root / f"{slug}_{safe_phase}_interaction.json"
+
+    prompt_body = prompt_text.strip() or "(No raw prompt text captured for this phase.)"
+    prompt_path.write_text(prompt_body + "\n", encoding="utf-8")
+
+    transcript_lines = _build_response_transcript(
+        phase=safe_phase,
+        llm_meta=llm_meta,
+        response_payload=response_payload,
+    )
+    transcript_path.write_text("\n".join(transcript_lines).strip() + "\n", encoding="utf-8")
+
+    payload = {
+        "timestamp": timestamp.isoformat(),
+        "profile": data_dir.name,
+        "phase": safe_phase,
+        "tool": tool,
+        "status": _interaction_status(llm_meta),
+        "prompt_source": prompt_source,
+        "prompt_file": prompt_path.as_posix(),
+        "transcript_file": transcript_path.as_posix(),
+        "context_file": context_path.as_posix(),
+        "raw_log_file": "",
+        "summary": _interaction_summary(safe_phase, llm_meta, response_payload),
+    }
+    metadata_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    latest_root = interactions_root.parent
+    (latest_root / "latest.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    (latest_root / f"latest_{safe_phase}.json").write_text(
+        json.dumps(payload, indent=2),
+        encoding="utf-8",
+    )
+
+
+def _interaction_status(llm_meta: dict[str, Any]) -> str:
+    status = str(llm_meta.get("status", "")).strip().lower()
+    execution_mode = str(llm_meta.get("execution_mode", "")).strip().lower()
+    provider = str(llm_meta.get("provider", "")).strip().lower()
+    if provider == "monitor-skip":
+        return "skipped"
+    if status in {"success", "failed", "error", "skipped"}:
+        return "failed" if status == "error" else status
+    if execution_mode == "none":
+        return "skipped"
+    return "success"
+
+
+def _interaction_summary(
+    phase: str,
+    llm_meta: dict[str, Any],
+    response_payload: dict[str, Any],
+) -> str:
+    provider = str(llm_meta.get("provider", "")).strip()
+    model = str(llm_meta.get("model", "")).strip()
+    quota_note = str(llm_meta.get("quota_note", "")).strip()
+    bits: list[str] = []
+
+    if phase == "monitor":
+        stocks = response_payload.get("stocks", {}) if isinstance(response_payload, dict) else {}
+        ready = [
+            symbol
+            for symbol, payload in stocks.items()
+            if isinstance(payload, dict) and payload.get("ready_to_trade")
+        ]
+        candidates = list(stocks.keys())[:4]
+        if ready:
+            bits.append(f"Ready: {', '.join(ready[:3])}")
+        elif candidates:
+            bits.append(f"Evaluated: {', '.join(candidates[:3])}")
+        market_summary = str(response_payload.get("market_summary", "")).strip()
+        if market_summary:
+            bits.append(market_summary[:180])
+    else:
+        market_summary = str(response_payload.get("market_summary", "")).strip()
+        if market_summary:
+            bits.append(market_summary[:180])
+
+    if provider or model:
+        bits.append(" / ".join(part for part in (provider, model) if part))
+    if not bits and quota_note:
+        bits.append(quota_note[:180])
+    return " | ".join(bit for bit in bits if bit)
+
+
+def _build_response_transcript(
+    *,
+    phase: str,
+    llm_meta: dict[str, Any],
+    response_payload: dict[str, Any],
+) -> list[str]:
+    provider = str(llm_meta.get("provider", "")).strip() or "unknown"
+    model = str(llm_meta.get("model", "")).strip() or "unknown"
+    status = _interaction_status(llm_meta)
+    lines = [
+        f"Phase: {phase}",
+        f"Provider: {provider}",
+        f"Model: {model}",
+        f"Status: {status}",
+    ]
+
+    usage = llm_meta.get("usage", {}) if isinstance(llm_meta, dict) else {}
+    total_tokens = usage.get("total_tokens")
+    if total_tokens is not None:
+        lines.append(f"Total tokens: {total_tokens}")
+
+    market_summary = str(response_payload.get("market_summary", "")).strip()
+    if market_summary:
+        lines.extend(["", "Market Summary:", market_summary])
+
+    stocks = response_payload.get("stocks", {}) if isinstance(response_payload, dict) else {}
+    if isinstance(stocks, dict) and stocks:
+        lines.extend(["", "Stocks:"])
+        for symbol, payload in list(stocks.items())[:8]:
+            if not isinstance(payload, dict):
+                continue
+            ready = payload.get("ready_to_trade")
+            reason = str(payload.get("monitor_reason", "")).strip()
+            recommendation = str(payload.get("recommendation", "")).strip()
+            marker = "ready" if ready else recommendation or "watch"
+            entry = f"- {symbol}: {marker}"
+            if reason:
+                entry += f" | {reason}"
+            lines.append(entry)
+
+    lines.extend(["", "Response JSON:", json.dumps(response_payload, indent=2, default=str)])
+    return lines
