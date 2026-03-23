@@ -2,20 +2,20 @@ Phase: monitor
 Provider: openai
 Model: gpt-4o-mini-2024-07-18
 Status: success
-Total tokens: 1348
+Total tokens: 1350
 
 Market Summary:
-Live conditions are mixed, with no clear confirmation for any trades based on the execution criteria.
+Live conditions do not confirm any immediate setup for trading, as evidence is mixed.
 
 Stocks:
-- XOM: watch | Awaiting clearer oil direction and geopolitical context.
-- UAL: watch | Conditions for entry not met as market context is unclear.
-- OXY: watch | Pending resolution on geopolitical news impacting oil prices.
+- XOM: watch | 17 fresh headlines but conditions are unverified
+- UAL: watch | 20 fresh headlines but conditions are unverified
+- OXY: watch | 16 fresh headlines but conditions are unverified
 
 Response JSON:
 {
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions are mixed, with no clear confirmation for any trades based on the execution criteria.",
+  "market_summary": "Live conditions do not confirm any immediate setup for trading, as evidence is mixed.",
   "stocks": {
     "XOM": {
       "recommendation": "watch",
@@ -23,9 +23,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "need oil direction clarification based on Brent and Iran news"
+        "oil direction unclear; need Brent's stability above $100 or clarity on the Iran talks"
       ],
-      "monitor_reason": "Awaiting clearer oil direction and geopolitical context.",
+      "monitor_reason": "17 fresh headlines but conditions are unverified",
       "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
       "trade_plan": {
         "entry": 158.0,
@@ -39,9 +39,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "need WTI crude to hold below $95 and UAL price confirmation above $100"
+        "WTI crude holding below $95 not confirmed; need UAL trading above $100"
       ],
-      "monitor_reason": "Conditions for entry not met as market context is unclear.",
+      "monitor_reason": "20 fresh headlines but conditions are unverified",
       "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
       "trade_plan": {
         "entry": 104.0,
@@ -55,9 +55,9 @@ Response JSON:
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "waiting for Iran news resolution and oil pricing confirmation above $90 WTI"
+        "need clarity on Iran news and oil holding above $90 WTI"
       ],
-      "monitor_reason": "Pending resolution on geopolitical news impacting oil prices.",
+      "monitor_reason": "16 fresh headlines but conditions are unverified",
       "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
       "trade_plan": {
         "entry": 63.0,
@@ -76,27 +76,27 @@ Response JSON:
     "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
       "input_tokens": 829,
-      "output_tokens": 519,
-      "total_tokens": 1348,
+      "output_tokens": 521,
+      "total_tokens": 1350,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_a58b8d7b9de04757bdd38106f109d099",
+    "request_id": "req_c801e9a865484654818712d9ecf4e217",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
-        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-requests": "9998",
         "x-ratelimit-remaining-tokens": "199187",
-        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-requests": "12.237s",
         "x-ratelimit-reset-tokens": "243ms"
       },
       "estimates": {
-        "requests_remaining_after_request": 9999,
-        "requests_remaining_before_request_estimate": 10000,
+        "requests_remaining_after_request": 9998,
+        "requests_remaining_before_request_estimate": 9999,
         "tokens_remaining_after_request": 199187,
-        "tokens_remaining_before_request_estimate": 200535
+        "tokens_remaining_before_request_estimate": 200537
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -112,27 +112,27 @@ Response JSON:
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
-        "event_name": "workflow_dispatch",
+        "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "23441183387",
-        "run_attempt": "2",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23441183387",
-        "sha": "9d87f5fcfc2096f9e486c10b5995822d1b8d7ec9",
+        "run_id": "23445582732",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23445582732",
+        "sha": "f6eaf9d221b1ff94baf05768d829ad7b45c7d93b",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 10546.9,
+    "duration_ms": 11328.2,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 10546.9,
+        "duration_ms": 11328.2,
         "usage": {
           "input_tokens": 829,
-          "output_tokens": 519,
-          "total_tokens": 1348,
+          "output_tokens": 521,
+          "total_tokens": 1350,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
