@@ -355,8 +355,8 @@
     </div>
     <div class="nav-actions">
       <a class="nav-btn" id="navReport" href="data/report_research.md" target="_blank" rel="noreferrer">Report</a>
-      <a class="nav-btn" id="navInteraction" href="data/context.json" target="_blank" rel="noreferrer">Session Log</a>
-      <a class="nav-btn" id="navEvolution" href="data/EVOLUTION_REPORT.md" target="_blank" rel="noreferrer">Evolution</a>
+      <a class="nav-btn" id="navInteraction" href="#knowledge">Session Log</a>
+      <a class="nav-btn" id="navEvolution" href="#knowledge">Evolution</a>
       <a class="nav-btn" id="navActions" href="https://github.com" target="_blank" rel="noreferrer">Actions â†—</a>
     </div>
   </div>
@@ -600,6 +600,20 @@
   const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
 
   let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all", INTERACTION_DAY = "";
+
+  function activateKnowledgeTab(tab) {
+    document.querySelectorAll(".kb-tab").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
+    document.querySelectorAll(".kb-panel").forEach(x => x.classList.remove("visible"));
+    const pid = "kb" + tab.charAt(0).toUpperCase() + tab.slice(1);
+    const panel = document.getElementById(pid);
+    if (panel) panel.classList.add("visible");
+  }
+
+  function focusKnowledgeTab(tab) {
+    activateKnowledgeTab(tab);
+    const section = document.getElementById("knowledge");
+    if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   function getProfiles(b) {
     const ps = obj(b.profiles);
@@ -1017,8 +1031,6 @@
     const runUrl = rt.github?.run_url || ctx.llm_meta?.runtime?.github?.run_url || "";
     const arts = obj(pb.artifacts);
     document.getElementById("navReport").href = arts.research_report_md || "data/report_research.md";
-    document.getElementById("navInteraction").href = obj(interactions.latest).transcript_url || obj(interactions.latest).prompt_url || arts.interactions_json || "data/context.json";
-    document.getElementById("navEvolution").href = evolution.report_url || evolution.review_url || arts.evolution_report_md || arts.evolution_review_json || "data/EVOLUTION_REPORT.md";
     document.getElementById("navActions").href = wfUrl(rt, runUrl);
 
     const cmp = getComparison(BUNDLE, profiles);
@@ -1053,11 +1065,17 @@
   // Knowledge tabs
   document.getElementById("kbTabs").addEventListener("click", e => {
     const b = e.target.closest(".kb-tab"); if (!b) return;
-    const tab = b.dataset.tab;
-    document.querySelectorAll(".kb-tab").forEach(x => x.classList.remove("active")); b.classList.add("active");
-    document.querySelectorAll(".kb-panel").forEach(x => x.classList.remove("visible"));
-    const pid = "kb" + tab.charAt(0).toUpperCase() + tab.slice(1);
-    const panel = document.getElementById(pid); if (panel) panel.classList.add("visible");
+    activateKnowledgeTab(b.dataset.tab);
+  });
+
+  document.getElementById("navInteraction").addEventListener("click", e => {
+    e.preventDefault();
+    focusKnowledgeTab("positions");
+  });
+
+  document.getElementById("navEvolution").addEventListener("click", e => {
+    e.preventDefault();
+    focusKnowledgeTab("proposals");
   });
 
   // Nav active highlight on scroll
