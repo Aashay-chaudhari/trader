@@ -6,22 +6,18 @@ of preselected symbols still match their morning execution conditions.
 ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say no.
 
 MONITOR CANDIDATES:
-  XOM: watch | entry=$158.0 stop=$152.5 target=$172.0
-    Execution condition: Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry
-    Why it is being checked now: 14 fresh headline(s)
-  UAL: watch | entry=$104.0 stop=$98.5 target=$116.0
-    Execution condition: WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket
-    Why it is being checked now: 18 fresh headline(s)
-  OXY: watch | entry=$63.0 stop=$59.5 target=$70.0
-    Execution condition: Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume
-    Why it is being checked now: 15 fresh headline(s)
+  XOM: buy | entry=$160.5 stop=$156.4 target=$168.8
+    Execution condition: Only buy if XOM holds above 159.50 and then trades through 160.50 after the first 15 minutes while crude-sensitive names remain stronger than SPY.
+    Why it is being checked now: 22 fresh headline(s)
+  NVDA: sell | entry=$171.8 stop=$176.5 target=$163.0
+    Execution condition: Only short if NVDA loses 172.00 early, fails to reclaim VWAP in the first hour, and QQQ remains under pressure.
+    Why it is being checked now: 22 fresh headline(s)
 
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
-| XOM   | $    0.00 |  +0.0% |   — |        — |        14 |
-| UAL   | $    0.00 |  +0.0% |   — |        — |        18 |
-| OXY   | $    0.00 |  +0.0% |   — |        — |        15 |
+| XOM   | $    0.00 |  +0.0% |   — |        — |        22 |
+| NVDA  | $    0.00 |  +0.0% |   — |        — |        22 |
 
 ACTIVE POSITIONS:
   (none)

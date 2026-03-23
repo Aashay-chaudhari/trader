@@ -6,18 +6,22 @@ of preselected symbols still match their morning execution conditions.
 ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say no.
 
 MONITOR CANDIDATES:
-  XOM: buy | entry=$122.0 stop=$118.34 target=$130.54
-    Execution condition: Oil (WTI or Brent) remains above $95/barrel at market open AND XOM holds above $118.50 in the first 15 minutes of trading — if oil sells off overnight or XOM gaps down below $118, skip the entry and reassign to WATCH.
-    Why it is being checked now: 22 fresh headline(s)
-  PAYX: watch | entry=$144.0 stop=$139.68 target=$153.5
-    Execution condition: Hold through Wednesday earnings — if PAYX beats consensus EPS and provides stable guidance, consider buying the post-earnings reaction if shares pull back to the $143-145 range within the first 30 minutes after open on Thursday.
-    Why it is being checked now: 13 fresh headline(s)
+  RCL: watch | entry=$264.0 stop=$256.0 target=$279.0
+    Execution condition: Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.
+    Why it is being checked now: 15 fresh headline(s)
+  NVDA: watch | entry=$173.5 stop=$168.3 target=$181.5
+    Execution condition: Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.
+    Why it is being checked now: 30 fresh headline(s)
+  KBH: buy | entry=$51.35 stop=$49.8 target=$54.9
+    Execution condition: Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.
+    Why it is being checked now: 16 fresh headline(s)
 
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
-| XOM   | $    0.00 |  +0.0% |   — |        — |        22 |
-| PAYX  | $    0.00 |  +0.0% |   — |        — |        13 |
+| RCL   | $    0.00 |  +0.0% |   — |        — |        15 |
+| NVDA  | $    0.00 |  +0.0% |   — |        — |        30 |
+| KBH   | $    0.00 |  +0.0% |   — |        — |        16 |
 
 ACTIVE POSITIONS:
   (none)
@@ -29,7 +33,7 @@ DECISION RULES:
   - Approve only when the natural-language execution condition is clearly satisfied now.
   - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.
   - Never invent a new setup that was not part of the morning plan.
-  - Current market regime hint: risk_off.
+  - Current market regime hint: cautious.
 
 For each candidate symbol:
 1. Check whether the natural-language execution condition still matches the live data.
