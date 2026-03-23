@@ -1,53 +1,93 @@
 {
   "overall_sentiment": "neutral",
-  "market_summary": "Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.",
+  "market_summary": "Live conditions are unclear and do not confirm the morning thesis for the candidates.",
   "stocks": {
     "XOM": {
-      "recommendation": "hold",
+      "recommendation": "watch",
       "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
-      "failed_conditions": [],
-      "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Oil (WTI or Brent) remains above $95/barrel at market open AND XOM holds above $118.50 in the first 15 minutes of trading \u2014 if oil sells off overnight or XOM gaps down below $118, skip the entry and reassign to WATCH.",
+      "failed_conditions": [
+        "Need clarity on Brent direction and oil stability above $100; without that, cannot upgrade to buy."
+      ],
+      "monitor_reason": "15 fresh headline(s)",
+      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
       "trade_plan": {
-        "entry": 159.67,
-        "stop_loss": 156.48,
-        "target": 164.46
+        "entry": 158.0,
+        "stop_loss": 152.5,
+        "target": 172.0
       }
     },
-    "PAYX": {
-      "recommendation": "hold",
+    "UAL": {
+      "recommendation": "watch",
       "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
-      "failed_conditions": [],
-      "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Hold through Wednesday earnings \u2014 if PAYX beats consensus EPS and provides stable guidance, consider buying the post-earnings reaction if shares pull back to the $143-145 range within the first 30 minutes after open on Thursday.",
+      "failed_conditions": [
+        "Need WTI crude to hold below $95 and UAL to trade above $100; conditions are currently unverified."
+      ],
+      "monitor_reason": "20 fresh headline(s)",
+      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
       "trade_plan": {
-        "entry": 92.55,
-        "stop_loss": 90.7,
-        "target": 95.33
+        "entry": 104.0,
+        "stop_loss": 98.5,
+        "target": 116.0
+      }
+    },
+    "OXY": {
+      "recommendation": "watch",
+      "confidence": 0.5,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "Waiting for resolution on Iran news and confirmation of WTI oil holding above $90; setup remains incomplete."
+      ],
+      "monitor_reason": "15 fresh headline(s)",
+      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
+      "trade_plan": {
+        "entry": 63.0,
+        "stop_loss": 59.5,
+        "target": 70.0
       }
     }
   },
-  "web_checks": [],
   "_meta": {
     "status": "success",
-    "execution_mode": "template",
+    "execution_mode": "api",
     "provider_preference": "openai",
-    "provider": "template:debug",
-    "model": "template-v1",
-    "selected_provider": "template:debug",
-    "selected_model": "template-v1",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "selected_provider": "openai",
+    "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "total_tokens": 0
+      "input_tokens": 829,
+      "output_tokens": 526,
+      "total_tokens": 1355,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
     },
-    "service_tier": "debug-template",
-    "request_id": null,
-    "rate_limits": {},
+    "service_tier": "default",
+    "request_id": "req_5ec104394ce24d2f81b164c000671730",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9998",
+        "x-ratelimit-remaining-tokens": "199187",
+        "x-ratelimit-reset-requests": "14.789s",
+        "x-ratelimit-reset-tokens": "243ms"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9998,
+        "requests_remaining_before_request_estimate": 9999,
+        "tokens_remaining_after_request": 199187,
+        "tokens_remaining_before_request_estimate": 200542
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
     "runtime": {
       "platform": "github_actions",
       "python_version": "3.12.13",
@@ -57,33 +97,33 @@
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
-        "event_name": "workflow_dispatch",
+        "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "23418551212",
+        "run_id": "23442889249",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23418551212",
-        "sha": "015bbe17f2044a3fa356a8a41abd22d663522cb9",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23442889249",
+        "sha": "a7ee7f09415ece6fd7b40f44232eb25e9c5dedd7",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 0.0,
+    "duration_ms": 11318.6,
     "attempts": [
       {
-        "execution_mode": "template",
-        "provider": "template:debug",
-        "model": "template-v1",
+        "execution_mode": "api",
+        "provider": "openai",
+        "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 0.0,
+        "duration_ms": 11318.6,
         "usage": {
-          "input_tokens": 0,
-          "output_tokens": 0,
-          "total_tokens": 0
+          "input_tokens": 829,
+          "output_tokens": 526,
+          "total_tokens": 1355,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
         }
       }
     ],
     "quota_issue_detected": false,
-    "quota_note": "Template mode active; no model usage was attempted.",
-    "template_note": "Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.",
-    "generated_at": "2026-03-23T02:15:29.717677+00:00"
+    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
   }
 }
