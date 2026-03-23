@@ -959,6 +959,8 @@ class ResearchAgent(BaseAgent):
         candidate_symbols: list[str],
     ) -> dict[str, Any]:
         normalized = dict(analysis) if isinstance(analysis, dict) else {}
+        meta = normalized.get("_meta", {}) if isinstance(normalized, dict) else {}
+        prefer_morning_plan = str(meta.get("execution_mode", "")).strip().lower() == "template"
         morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
         source_stocks = normalized.get("stocks", {})
         if not isinstance(source_stocks, dict):
@@ -978,7 +980,12 @@ class ResearchAgent(BaseAgent):
             if not isinstance(morning_plan, dict):
                 morning_plan = {}
 
-            recommendation = str(payload.get("recommendation") or morning_info.get("recommendation") or "watch").lower()
+            recommendation_source = (
+                morning_info.get("recommendation")
+                if prefer_morning_plan
+                else payload.get("recommendation") or morning_info.get("recommendation")
+            )
+            recommendation = str(recommendation_source or "watch").lower()
             if recommendation not in {"buy", "sell", "hold", "watch"}:
                 recommendation = "watch"
 
@@ -987,30 +994,54 @@ class ResearchAgent(BaseAgent):
                 confidence = self._safe_float(morning_info.get("confidence"))
             confidence = max(0.0, min(1.0, confidence if confidence is not None else 0.5))
 
+            if prefer_morning_plan:
+                monitor_reason = (
+                    str(payload.get("monitor_reason") or "").strip()
+                    or str(meta.get("template_note") or "").strip()
+                    or "Template monitor run did not perform a live gate evaluation."
+                )
+            else:
+                monitor_reason = str(
+                    payload.get("monitor_reason")
+                    or payload.get("reason")
+                    or "Monitor gate returned no explanation."
+                )
+
             cleaned_stocks[symbol] = {
                 "recommendation": recommendation,
                 "confidence": round(confidence, 3),
                 "ready_to_trade": bool(payload.get("ready_to_trade", False)),
                 "matched_conditions": list(payload.get("matched_conditions") or []),
                 "failed_conditions": list(payload.get("failed_conditions") or []),
-                "monitor_reason": str(
-                    payload.get("monitor_reason")
-                    or payload.get("reason")
-                    or "Monitor gate returned no explanation."
-                ),
+                "monitor_reason": monitor_reason,
                 "execution_condition": str(
                     payload.get("execution_condition")
                     or morning_info.get("execution_condition")
                     or ""
                 ),
                 "trade_plan": {
-                    "entry": self._safe_float(plan.get("entry"))
+                    "entry": (
+                        self._safe_float(morning_plan.get("entry"))
+                        if prefer_morning_plan
+                        else self._safe_float(plan.get("entry"))
+                    )
+                    or self._safe_float(plan.get("entry"))
                     or self._safe_float(morning_plan.get("entry"))
                     or 0.0,
-                    "stop_loss": self._safe_float(plan.get("stop_loss"))
+                    "stop_loss": (
+                        self._safe_float(morning_plan.get("stop_loss"))
+                        if prefer_morning_plan
+                        else self._safe_float(plan.get("stop_loss"))
+                    )
+                    or self._safe_float(plan.get("stop_loss"))
                     or self._safe_float(morning_plan.get("stop_loss"))
                     or 0.0,
-                    "target": self._safe_float(plan.get("target"))
+                    "target": (
+                        self._safe_float(morning_plan.get("target"))
+                        if prefer_morning_plan
+                        else self._safe_float(plan.get("target"))
+                    )
+                    or self._safe_float(plan.get("target"))
                     or self._safe_float(morning_plan.get("target"))
                     or 0.0,
                 },

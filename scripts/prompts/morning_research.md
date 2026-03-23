@@ -123,6 +123,12 @@ For each selected stock, determine:
 - **risks**: what could go wrong
 - **supporting_articles**: links from your research
 
+**Price anchoring requirement (strict):**
+- Anchor every `trade_plan.entry` to the latest real quote or most recent market close you can verify today.
+- Do not recycle stale levels from prior runs or old articles.
+- If a stock is trading around $159, your entry cannot be $122 unless you explicitly justify it as a much-lower pullback level and downgrade the recommendation to `watch`.
+- Keep any stock-price numbers inside `execution_condition` in the same realistic neighborhood as the verified quote.
+
 ---
 
 ## Step 5 — Write output files

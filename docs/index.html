@@ -599,7 +599,7 @@
   const voiceStateClass = v => String(v || "").toLowerCase().replace(/_/g, "-");
   const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
 
-  let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all", INTERACTION_DAY = "";
+  let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, M_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all", INTERACTION_DAY = "";
 
   function activateKnowledgeTab(tab) {
     document.querySelectorAll(".kb-tab").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
@@ -619,7 +619,7 @@
     const ps = obj(b.profiles);
     if (Object.keys(ps).length) return ps;
     const fp = obj(b.profile), pid = fp.id || b.active_profile || "default";
-    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice), evolution: obj(b.evolution) } };
+    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), monitor: obj(b.monitor), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice), evolution: obj(b.evolution) } };
   }
 
   function getComparison(b, ps) {
@@ -703,13 +703,17 @@
   function renderPipeline(pb, reportMonitor) {
     const ctx = obj(pb.context), prompt = obj(ctx.prompt_sections), ni = obj(prompt.news_inputs), sc = obj(prompt.screener_context), mc = obj(prompt.market_context);
     const res = Object.keys(obj(pb.research)).length ? obj(pb.research) : {}, llm = obj(pb.llm);
+    const monitor = Object.keys(obj(pb.monitor)).length ? obj(pb.monitor) : obj(obj(reportMonitor).research);
+    const monitorStocks = obj(monitor.stocks);
+    const reviewed = Object.keys(monitorStocks);
+    const ready = reviewed.filter(sym => obj(monitorStocks[sym]).ready_to_trade);
     const disc = arr(ni.news_discoveries), hl = arr(ni.market_headlines), hot = arr(ni.hot_stocks), sl = arr(sc.shortlist);
-    const best = arr(res.best_opportunities), sigs = arr(reportMonitor.signals), appr = arr(obj(reportMonitor.risk).approved_trades), rej = arr(obj(reportMonitor.risk).rejected_trades), exec = arr(reportMonitor.executed);
+    const best = arr(res.best_opportunities), researched = Object.keys(obj(res.stocks)), sigs = arr(reportMonitor.signals), appr = arr(obj(reportMonitor.risk).approved_trades), rej = arr(obj(reportMonitor.risk).rejected_trades), exec = arr(reportMonitor.executed);
     document.getElementById("pipelineGrid").innerHTML = [
       { n: "01", name: "News & Discovery", desc: "Market headlines, filings, stock discoveries", metric: String(disc.length + hl.length), unit: "inputs", bullets: [`${hl.length} market headlines`, `${disc.length} discoveries`, `${hot.length} cross-source movers`, ...disc.slice(0,2).map(d => d.symbol + ": " + trunc(d.top_headline || d.discovery_reason || "", 55))] },
       { n: "02", name: "Screener", desc: "News + technicals narrowed to today's shortlist", metric: String(sl.length), unit: "stocks", bullets: [`Universe: ${sc.total_scanned || 0} scanned`, `Candidates: ${sc.candidates_found || 0}`, `News-boosted: ${sc.news_discovered || 0}`, ...sl.slice(0,3).map(x => `${x.symbol || "?"} via ${x.source || "technicals"}`)] },
-      { n: "03", name: "Research", desc: "Deep Claude analysis with full context + feedback", metric: String(best.length), unit: "ideas", bullets: [`Regime: ${res.market_regime || mc.market_regime || "unknown"}`, `Sentiment: ${res.overall_sentiment || "unknown"}`, `Provider: ${llm.selected_provider || llm.provider || "â€“"}`, `Tokens: ${llm.usage?.total_tokens ?? "â€“"}`, ...best.slice(0,3).map(s => `${s}: ${obj(obj(res.stocks)[s]).recommendation || "watch"}`)] },
-      { n: "04", name: "Monitor & Execute", desc: "Strategy signals, risk check, trade execution", metric: String(exec.length), unit: "trades", bullets: [`${sigs.length} signals`, `${appr.length} approved`, `${rej.length} rejected`, ...exec.slice(0,3).map(x => `${(x.action||"?").toUpperCase()} ${x.symbol || "?"} Ã—${x.quantity || 0}`)] },
+      { n: "03", name: "Research", desc: "Morning thesis, catalysts, and planned trade levels", metric: String(researched.length || best.length), unit: "stocks", bullets: [`Regime: ${res.market_regime || mc.market_regime || "unknown"}`, `Sentiment: ${res.overall_sentiment || "unknown"}`, `Provider: ${llm.selected_provider || llm.provider || "â€“"}`, `Tokens: ${llm.usage?.total_tokens ?? "â€“"}`, ...best.slice(0,3).map(s => `${s}: ${obj(obj(res.stocks)[s]).recommendation || "watch"}`)] },
+      { n: "04", name: "Monitor & Execute", desc: "Execution gate, risk checks, and order submission", metric: String(reviewed.length || exec.length), unit: "gate reviews", bullets: [`${ready.length} ready to trade`, `${sigs.length} signals`, `${appr.length} approved`, `${rej.length} rejected`, ...exec.slice(0,3).map(x => `${(x.action||"?").toUpperCase()} ${x.symbol || "?"} Ã—${x.quantity || 0}`)] },
     ].map(s => `<div class="stage-card"><div class="stage-num">Stage ${s.n}</div><div class="stage-name">${esc(s.name)}</div><div class="stage-desc">${esc(s.desc)}</div><div class="stage-metric">${esc(s.metric)}</div><div class="stage-metric-lbl">${esc(s.unit)}</div><div class="stage-bullets">${s.bullets.filter(Boolean).map(b=>`<div class="stage-bullet">${esc(trunc(b,70))}</div>`).join("")}</div></div>`).join("");
 
     const rr = obj(obj(pb.reports).research);
@@ -727,15 +731,19 @@
     const filtered = DEC_FILTER === "all" ? syms : syms.filter(s => (obj(R_BY_SYM[s]).recommendation || "watch") === DEC_FILTER);
     document.getElementById("decisionBoard").innerHTML = filtered.length
       ? filtered.map(sym => {
-          const a = obj(R_BY_SYM[sym]), plan = obj(a.trade_plan), rec = a.recommendation || "watch";
+          const a = obj(R_BY_SYM[sym]), plan = obj(a.trade_plan), rec = a.recommendation || "watch", gate = obj(M_BY_SYM[sym]);
           const conf = num(a.confidence), confP = conf !== null ? Math.round(conf * 100) : null;
           const hl = arr(obj(N_BY_SYM[sym]).news_headlines);
+          const gateState = gate.ready_to_trade === true ? "ready" : gate.monitor_reason ? "not_ready" : "not_checked";
+          const gateLabel = gateState === "ready" ? "Gate: ready" : gateState === "not_ready" ? "Gate: waiting" : "Gate: not checked";
           return `<div class="decision-card" data-rec="${esc(rec)}">
-            <div class="dec-top"><div><div class="dec-sym">${esc(sym)}</div><div class="dec-desc">${esc(trunc(a.technical_setup || a.news_summary || "", 110))}</div></div><span class="rec-badge ${esc(rec)}">${esc(rec)}</span></div>
+            <div class="dec-top"><div><div class="dec-sym">${esc(sym)}</div><div class="dec-desc">${esc(trunc(a.reasoning || a.technical_setup || a.news_summary || "", 140))}</div></div><span class="rec-badge ${esc(rec)}">${esc(rec)}</span></div>
             ${confP !== null ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;color:var(--muted)">Confidence</span><div class="conf-bar" style="flex:1"><div class="conf-fill" style="width:${clamp(confP,0,100)}%"></div></div><span style="font-size:12px;font-weight:700">${confP}%</span></div>` : ""}
+            <div class="dec-sec"><div class="dec-sec-lbl">Execution Gate</div><div class="news-chips"><div class="news-chip">${esc(gateLabel)}</div>${gate.monitor_reason ? `<div class="news-chip" title="${esc(gate.monitor_reason)}">${esc(trunc(gate.monitor_reason, 90))}</div>` : ""}</div></div>
             <div class="dec-plan">${[["Entry",fmtM(plan.entry)],["Stop",fmtM(plan.stop_loss)],["Target",fmtM(plan.target)],["R/R",plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"Ã—":"â€“"]].map(([l,v])=>`<div class="plan-cell"><div class="lbl">${esc(l)}</div><div class="val">${v}</div></div>`).join("")}</div>
             ${arr(a.key_observations).length ? `<div class="dec-sec"><div class="dec-sec-lbl">Key Observations</div><ul class="dec-bullets">${arr(a.key_observations).slice(0,3).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
             ${arr(a.catalysts).length ? `<div class="dec-sec"><div class="dec-sec-lbl">Catalysts</div><ul class="dec-bullets">${arr(a.catalysts).slice(0,2).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+            ${a.execution_condition ? `<div class="dec-sec"><div class="dec-sec-lbl">Execution Condition</div><div class="dec-desc">${esc(a.execution_condition)}</div></div>` : ""}
             ${hl.length ? `<div class="dec-sec"><div class="dec-sec-lbl">Headlines (${hl.length})</div><div class="news-chips">${hl.slice(0,3).map(h=>`<div class="news-chip" title="${esc(h.title||"")}">${esc(trunc(h.title||"",80))}</div>`).join("")}</div></div>` : ""}
           </div>`;
         }).join("")
@@ -1012,7 +1020,7 @@
     if (!ACTIVE || !profiles[ACTIVE]) ACTIVE = BUNDLE.active_profile && profiles[BUNDLE.active_profile] ? BUNDLE.active_profile : Object.keys(profiles)[0] || "default";
     const pb = profiles[ACTIVE] || Object.values(profiles)[0] || {};
     const latest = obj(pb.latest), trades = arr(pb.trades);
-    const reports = obj(pb.reports), rm = obj(reports.monitor), rr = obj(reports.research);
+    const reports = obj(pb.reports), rm = obj(reports.monitor), rr = obj(reports.research), monitor = obj(pb.monitor);
     const llm = obj(pb.llm), kb = obj(pb.knowledge), interactions = obj(pb.interactions), voice = obj(pb.voice), evolution = obj(pb.evolution);
     const res = Object.keys(obj(pb.research)).length ? obj(pb.research) : obj(obj(rr.research));
     const ctx = obj(pb.context), prompt = obj(ctx.prompt_sections), ni = obj(prompt.news_inputs);
@@ -1020,6 +1028,7 @@
     const profile = obj(pb.profile);
 
     R_BY_SYM = obj(res.stocks);
+    M_BY_SYM = obj(monitor.stocks);
     N_BY_SYM = perSym;
     HISTORY = arr(pb.history);
 

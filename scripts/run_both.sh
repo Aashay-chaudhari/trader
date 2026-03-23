@@ -103,6 +103,41 @@ mkdir -p data/profiles/claude/cache data/profiles/codex/cache
 mkdir -p data/profiles/claude/interactions data/profiles/codex/interactions
 mkdir -p data/profiles/claude/voice data/profiles/codex/voice
 
+validate_morning_cache() {
+  local profile="$1"
+  if [[ "$PHASE" != "morning" ]]; then
+    return 0
+  fi
+
+  echo "Validating ${profile} morning research against recent market prices..."
+  python - "$profile" <<'PY'
+import json
+import sys
+
+from agent_trader.utils.morning_sanity import validate_morning_research_file
+
+profile = sys.argv[1]
+result = validate_morning_research_file(f"data/profiles/{profile}")
+
+if result.reference_prices:
+    preview = ", ".join(
+        f"{symbol}={price:.2f}" for symbol, price in sorted(result.reference_prices.items())[:6]
+    )
+    print(f"[sanity] Reference prices: {preview}")
+
+for warning in result.warnings:
+    print(f"[sanity] warning: {warning}")
+
+if result.errors:
+    print("[sanity] errors detected:")
+    for error in result.errors:
+        print(f"  - {error}")
+    raise SystemExit(1)
+
+print("[sanity] Morning cache passed validation.")
+PY
+}
+
 write_interaction_metadata() {
   local metadata_path="$1"
   local profile="$2"
@@ -263,6 +298,8 @@ run_claude_once() {
     echo "Error: Claude exited with status $status."
     return "$status"
   fi
+
+  validate_morning_cache "claude"
 }
 
 run_claude() {
@@ -366,6 +403,8 @@ Behavior under limits:
     echo "Error: Codex exited with status $status."
     return "$status"
   fi
+
+  validate_morning_cache "codex"
 }
 
 run_codex() {

@@ -70,12 +70,14 @@ What this contributes to the repo:
   - `data/profiles/codex/cache/watchlist.json`
 - archives the exact prompt and readable transcript into `interactions/`
 - regenerates `docs/` so GitHub Pages reflects the latest strategist session
+- validates buy/sell entries against recent market prices before anything gets committed
 - commits and pushes the new state to `main`
 
 Why it matters:
 - this is the state the remote monitor will use all day
 - without this step, the monitor has nothing current to enforce
 - it also seeds the first day tab in the dashboard interaction timeline
+- it protects you from obviously stale morning trade plans before they reach the remote monitor
 
 ### 2. Monday Intraday Monitoring
 

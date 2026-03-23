@@ -15,6 +15,8 @@ What that means:
 - dashboard output includes knowledge, interactions, strategist voice, and evolution artifacts
 - the first local morning run has completed and been pushed
 - the remote monitor path has been dry-run validated and deployed successfully
+- the dashboard now keeps morning thesis data separate from monitor gate outcomes
+- the local morning runner now blocks obviously unrealistic buy/sell price anchors before commit
 
 ## Primary Commands
 

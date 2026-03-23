@@ -50,6 +50,7 @@ flowchart LR
 - Morning, weekly, and monthly research is much better done with your local CLI subscriptions.
 - Intraday monitor only needs a thin layer of judgment, so it can stay cheap.
 - Python remains the deterministic execution layer for strategy, risk, orders, journaling, and dashboard output.
+- The local morning runner now sanity-checks buy/sell entries against recent market prices before commit, so obviously stale plans are blocked early.
 
 ## Daily Workflow
 
@@ -121,6 +122,8 @@ Notes:
 
 - `Session Log` opens the readable `Strategist Interactions` panel inside the dashboard.
 - `Evolution` opens the `System Intelligence -> Proposals` panel.
+- The `Decisions` board shows the full morning thesis from `cache/morning_research.json`.
+- Monitor gate outcomes are shown separately, so a later monitor run does not overwrite the morning stock list.
 - Raw prompt, transcript, metadata, and evolution artifact files are still linked from inside those cards when you want the source files directly.
 
 ### GitHub Secrets

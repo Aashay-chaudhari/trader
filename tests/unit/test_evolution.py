@@ -1,7 +1,6 @@
 """Tests for the evolution phase and improved proposal schema."""
 
 import json
-import pytest
 import tempfile
 from pathlib import Path
 

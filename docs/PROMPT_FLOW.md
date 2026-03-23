@@ -36,6 +36,7 @@ Writes:
 - `cache/morning_research.json`
 - `cache/watchlist.json`
 - interaction logs
+- then the local runner sanity-checks buy/sell levels against recent prices before commit
 
 Role:
 - sets the thesis for the day
@@ -69,6 +70,7 @@ Role:
 - thin judgment layer
 - not a second morning research pass
 - only says whether a live setup still fits the plan
+- leaves the dashboard's main morning-thesis stock list intact
 
 ## 3. Evening Reflection
 

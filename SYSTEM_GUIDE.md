@@ -117,6 +117,7 @@ Purpose:
 - create the daily thesis
 - define execution conditions in natural language
 - write the cache files monitor will rely on
+- validate buy/sell trade plans against recent market prices before the runner commits them
 
 Writes:
 - `cache/morning_research.json`
@@ -131,6 +132,7 @@ Purpose:
 - not to redo research
 - only to judge whether a setup still fits live data and headlines
 - only on a small candidate set
+- never to replace the morning thesis in the dashboard
 
 Outputs feed:
 - strategy voting

@@ -27,6 +27,7 @@ What should happen:
 
 - latest `main` is pulled first
 - Claude and Codex each research independently
+- each morning cache is validated against recent market prices before commit
 - each profile writes:
   - `cache/morning_research.json`
   - `cache/watchlist.json`
@@ -41,6 +42,7 @@ What to check:
 - push to `main` succeeds
 - `data/profiles/claude/cache/morning_research.json` exists
 - `data/profiles/codex/cache/morning_research.json` exists
+- the dashboard `Decisions` view shows the full morning stock list, not just later monitor candidates
 - GitHub Pages `Session Log` opens the readable interaction timeline rather than a raw JSON file
 
 ### Intraday

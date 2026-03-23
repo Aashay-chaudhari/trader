@@ -590,6 +590,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "history.json", bundle["history"])
     _write_json(data_out / "trades.json", bundle["trades"])
     _write_json(data_out / "research.json", bundle["research"])
+    _write_json(data_out / "monitor.json", bundle["monitor"])
     _write_json(data_out / "llm.json", bundle["llm"])
     _write_json(data_out / "context.json", bundle["context"])
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
@@ -626,6 +627,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "history.json", profile_bundle["history"])
         _write_json(profile_out / "trades.json", profile_bundle["trades"])
         _write_json(profile_out / "research.json", profile_bundle["research"])
+        _write_json(profile_out / "monitor.json", profile_bundle["monitor"])
         _write_json(profile_out / "llm.json", profile_bundle["llm"])
         _write_json(profile_out / "context.json", profile_bundle["context"])
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
@@ -695,6 +697,7 @@ def _build_dashboard_bundle(
         "history": active_bundle["history"],
         "trades": active_bundle["trades"],
         "research": active_bundle["research"],
+        "monitor": active_bundle["monitor"],
         "llm": active_bundle["llm"],
         "context": active_bundle["context"],
         "knowledge": active_bundle["knowledge"],
@@ -725,7 +728,12 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
     research_report = _get_latest_report(data_root, "research")
     monitor_report = _get_latest_report(data_root, "monitor")
     report_payload = _extract_report_payload(research_report)
-    research = _get_latest_json(data_root / "research") or _extract_research_analysis(report_payload)
+    morning_cache = _read_json(data_root / "cache" / "morning_research.json", {})
+    latest_research = _get_latest_json(data_root / "research") or (
+        report_payload if isinstance(report_payload, dict) else {}
+    )
+    research = morning_cache if isinstance(morning_cache, dict) and morning_cache else latest_research
+    monitor = _extract_research_analysis(monitor_report)
     context = _normalize_context(
         _read_json(data_root / "context" / "latest_research.json", {}),
         report_payload,
@@ -742,6 +750,7 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "history": _read_json(data_root / "snapshots" / "history.json", []),
         "trades": _load_trade_history(data_root, profile=profile),
         "research": research,
+        "monitor": monitor,
         "llm": llm,
         "context": context,
         "knowledge": _load_knowledge_bundle(data_root),
@@ -1352,6 +1361,7 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "history_json": f"{base}/history.json",
         "trades_json": f"{base}/trades.json",
         "research_json": f"{base}/research.json",
+        "monitor_json": f"{base}/monitor.json",
         "llm_json": f"{base}/llm.json",
         "context_json": f"{base}/context.json",
         "knowledge_json": f"{base}/knowledge.json",
@@ -1430,6 +1440,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "history": [],
         "trades": [],
         "research": {},
+        "monitor": {},
         "llm": {},
         "context": {},
         "knowledge": _empty_knowledge_bundle(),
@@ -1729,8 +1740,13 @@ def _extract_report_payload(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def _extract_research_analysis(payload: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
     research = payload.get("research")
-    return research if isinstance(research, dict) else {}
+    if isinstance(research, dict):
+        nested = research.get("research")
+        return nested if isinstance(nested, dict) else research
+    return {}
 
 
 def _extract_llm_meta(source: dict[str, Any]) -> dict[str, Any]:

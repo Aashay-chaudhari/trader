@@ -120,7 +120,7 @@ def test_check_profile_structure_pass():
     """All checks pass when required dirs exist."""
     with tempfile.TemporaryDirectory() as tmpdir:
         from agent_trader.utils.knowledge_base import KnowledgeBase
-        kb = KnowledgeBase(tmpdir)
+        KnowledgeBase(tmpdir)
         for subdir in ["positions/active", "positions/closed", "cache", "voice", "journal"]:
             (Path(tmpdir) / subdir).mkdir(parents=True, exist_ok=True)
 

@@ -212,6 +212,44 @@ def test_research_agent_merges_web_context_into_analysis(
     assert merged["stocks"]["MSFT"]["supporting_articles"][0]["url"] == "https://example.com/msft"
 
 
+def test_normalize_monitor_analysis_preserves_morning_plan_in_template_mode(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+    normalized = agent._normalize_monitor_analysis(
+        {
+            "stocks": {
+                "XOM": {
+                    "recommendation": "hold",
+                    "trade_plan": {"entry": 159.67, "stop_loss": 156.48, "target": 164.46},
+                }
+            },
+            "_meta": {"execution_mode": "template", "template_note": "debug monitor"},
+        },
+        morning_context={
+            "stocks": {
+                "XOM": {
+                    "recommendation": "buy",
+                    "confidence": 0.72,
+                    "execution_condition": "Hold above 158 before entry.",
+                    "trade_plan": {"entry": 122.0, "stop_loss": 118.34, "target": 130.54},
+                }
+            }
+        },
+        candidate_symbols=["XOM"],
+    )
+
+    xom = normalized["stocks"]["XOM"]
+    assert xom["recommendation"] == "buy"
+    assert xom["trade_plan"]["entry"] == 122.0
+    assert xom["monitor_reason"] == "debug monitor"
+
+
 class AnthropicErroringClient:
     class Messages:
         @staticmethod

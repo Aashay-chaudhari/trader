@@ -324,6 +324,92 @@ def test_generate_dashboard_merges_multiple_profiles():
         assert (docs_dir / "data" / "profiles" / "codex" / "report_research.md").exists()
 
 
+def test_generate_dashboard_prefers_morning_cache_over_latest_monitor_subset():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+        profile_root = data_dir / "profiles" / "claude"
+
+        (profile_root / "snapshots").mkdir(parents=True)
+        (profile_root / "research").mkdir(parents=True)
+        (profile_root / "analytics").mkdir(parents=True)
+        (profile_root / "context").mkdir(parents=True)
+        (profile_root / "cache").mkdir(parents=True)
+        (profile_root / "journal" / "2026-03-23").mkdir(parents=True)
+
+        (profile_root / "profile.json").write_text(
+            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-23T13:30:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (profile_root / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (profile_root / "cache" / "morning_research.json").write_text(
+            json.dumps(
+                {
+                    "market_summary": "Morning thesis with seven names.",
+                    "best_opportunities": ["XOM", "HAL", "OXY"],
+                    "stocks": {
+                        "XOM": {"recommendation": "buy", "trade_plan": {"entry": 159.5}},
+                        "HAL": {"recommendation": "buy", "trade_plan": {"entry": 36.4}},
+                        "OXY": {"recommendation": "watch", "trade_plan": {"entry": 70.0}},
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        (profile_root / "research" / "2026-03-23_monitor_0215.json").write_text(
+            json.dumps(
+                {
+                    "market_summary": "Debug monitor subset",
+                    "stocks": {
+                        "XOM": {"recommendation": "hold", "ready_to_trade": False},
+                        "PAYX": {"recommendation": "hold", "ready_to_trade": False},
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        (profile_root / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (profile_root / "context" / "latest_research.json").write_text(
+            json.dumps({"prompt_sections": {"news_inputs": {"per_symbol": {}}}}),
+            encoding="utf-8",
+        )
+        (profile_root / "journal" / "2026-03-23" / "02-15-29Z_monitor_report.json").write_text(
+            json.dumps(
+                {
+                    "phase": "monitor",
+                    "timestamp": "2026-03-23T02:15:29Z",
+                    "research": {
+                        "market_summary": "Debug monitor subset",
+                        "stocks": {
+                            "XOM": {"recommendation": "hold", "ready_to_trade": False},
+                            "PAYX": {"recommendation": "hold", "ready_to_trade": False},
+                        },
+                    },
+                    "signals": [],
+                    "risk": {},
+                    "executed": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        profile_bundle = bundle["profiles"]["claude"]
+
+        assert set(profile_bundle["research"]["stocks"]) == {"XOM", "HAL", "OXY"}
+        assert set(profile_bundle["monitor"]["stocks"]) == {"XOM", "PAYX"}
+        assert (docs_dir / "data" / "profiles" / "claude" / "monitor.json").exists()
+
+
 def test_generate_dashboard_preserves_linkable_evidence():
     with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
         from pathlib import Path
