@@ -62,8 +62,8 @@ Workflow: `Trading Pipeline`
 
 ## Current Cheap Monitor Models
 
-- Claude strategist: `claude-haiku-4-5-20251001`
-- Codex strategist: `gpt-4o-mini`
+- provider for both strategist monitor jobs: `openai`
+- model for both strategist monitor jobs: `gpt-4o-mini`
 
 ## Evolution State
 

@@ -99,6 +99,7 @@ Copy `.env.example` to `.env` and make sure these are set:
 ```env
 RUN_MODE=paper
 LLM_PROVIDER=auto
+MONITOR_LLM_PROVIDER=openai
 MONITOR_MODEL=claude-haiku-4-5-20251001
 MONITOR_MODEL_OPENAI=gpt-4o-mini
 DATA_DIR=data/profiles/default
@@ -109,13 +110,13 @@ Notes:
 
 - `run_both.sh` uses your local `claude` and `codex` CLI tools for research.
 - GitHub Actions monitor uses API keys and `RUN_MODE=paper`.
+- The standard monitor workflow forces both strategist monitor gates onto OpenAI to keep intraday cost down.
 - If you want local Python monitor runs to place paper orders too, your local `.env` also needs valid `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` values.
 
 ### GitHub Secrets
 
 Required for remote monitor:
 
-- `ANTHROPIC_API_KEY`
 - `OPENAI_API_KEY`
 - `ALPACA_API_KEY_CLAUDE`
 - `ALPACA_SECRET_KEY_CLAUDE`

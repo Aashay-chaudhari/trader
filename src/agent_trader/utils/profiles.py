@@ -16,6 +16,17 @@ DEFAULT_PROFILE_LABELS = {
     "codex": "Codex Strategist",
 }
 
+REQUIRED_PROFILE_SUBDIRS = (
+    "knowledge",
+    "observations/daily",
+    "observations/weekly",
+    "observations/monthly",
+    "positions/active",
+    "positions/closed",
+    "cache",
+    "voice",
+)
+
 
 def normalize_profile_id(value: str | None) -> str:
     """Return a stable filesystem-safe profile identifier."""
@@ -49,11 +60,18 @@ def build_profile_metadata(settings: Settings | None = None) -> dict[str, Any]:
     }
 
 
+def ensure_profile_structure(root: Path) -> None:
+    """Create the standard profile directory layout."""
+    root.mkdir(parents=True, exist_ok=True)
+    for subdir in REQUIRED_PROFILE_SUBDIRS:
+        (root / subdir).mkdir(parents=True, exist_ok=True)
+
+
 def ensure_profile_metadata(settings: Settings | None = None) -> str:
     """Persist profile metadata alongside other strategist artifacts."""
     settings = settings or get_settings()
     root = Path(settings.data_dir)
-    root.mkdir(parents=True, exist_ok=True)
+    ensure_profile_structure(root)
     path = root / "profile.json"
     path.write_text(
         json.dumps(build_profile_metadata(settings), indent=2, default=str),

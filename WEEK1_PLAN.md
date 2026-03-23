@@ -87,7 +87,7 @@ What runs:
 What this contributes to the repo:
 - reads the pushed morning thesis
 - refreshes market/news data
-- makes a cheap LLM gate call only when a symbol is actually interesting
+- makes a cheap OpenAI gate call only when a symbol is actually interesting
 - writes updated runtime artifacts, reports, and portfolio state
 - republishes the dashboard
 

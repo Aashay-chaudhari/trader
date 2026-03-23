@@ -74,6 +74,26 @@ def test_research_agent_honors_provider_preference_when_both_keys_present(
     assert agent._get_provider_sequence() == ["openai", "anthropic"]
     assert agent._get_research_model() == "gpt-4o-mini"
 
+
+
+def test_monitor_phase_can_force_openai_even_when_research_prefers_anthropic(
+    message_bus, monkeypatch
+):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setenv("LLM_PROVIDER", "anthropic")
+    monkeypatch.setenv("MONITOR_LLM_PROVIDER", "openai")
+    monkeypatch.setenv("MONITOR_MODEL_OPENAI", "gpt-4.1-mini")
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+
+    agent = ResearchAgent(message_bus)
+
+    assert agent._get_provider_name("research") == "anthropic"
+    assert agent._get_provider_name("monitor") == "openai"
+    assert agent._get_provider_sequence("monitor") == ["openai", "anthropic"]
+    assert agent._get_monitor_model() == "gpt-4.1-mini"
+
 def test_select_monitor_candidates_prefers_active_and_near_entry_symbols(
     message_bus, monkeypatch
 ):

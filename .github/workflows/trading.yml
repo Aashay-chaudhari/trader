@@ -2,7 +2,7 @@ name: Trading Pipeline
 
 on:
   schedule:
-    # Monitor & trade — every 30 min during US market hours (weekday cron; Python guard handles exact open/close)
+    # Monitor & trade â€” every 30 min during US market hours (weekday cron; Python guard handles exact open/close)
     - cron: "30 13 * * 1-5"
     - cron: "0 14 * * 1-5"
     - cron: "30 14 * * 1-5"
@@ -63,11 +63,11 @@ jobs:
           fi
 
           if [ "$SELECTED_STRATEGISTS" = "claude" ]; then
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","llm_provider":"anthropic"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist"}]' >> "$GITHUB_OUTPUT"
           elif [ "$SELECTED_STRATEGISTS" = "codex" ]; then
-            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
           else
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist","llm_provider":"anthropic"},{"profile_id":"codex","profile_label":"Codex Strategist","llm_provider":"openai"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist"},{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
           fi
 
   strategist-run:
@@ -103,13 +103,15 @@ jobs:
       - name: Print strategist runtime config
         env:
           RUN_MODE: paper
-          LLM_PROVIDER: ${{ matrix.llm_provider }}
+          LLM_PROVIDER: openai
+          MONITOR_LLM_PROVIDER: openai
           MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
           MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
         run: |
           echo "profile=${{ matrix.profile_id }}"
           echo "phase=monitor"
           echo "api_provider=${LLM_PROVIDER}"
+          echo "monitor_provider=${MONITOR_LLM_PROVIDER}"
           echo "run_mode=${RUN_MODE}"
           echo "monitor_model_claude=${MONITOR_MODEL}"
           echo "monitor_model_openai=${MONITOR_MODEL_OPENAI}"
@@ -117,8 +119,7 @@ jobs:
 
       - name: Run strategist monitor pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ matrix.llm_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY || '' }}
-          OPENAI_API_KEY: ${{ matrix.llm_provider == 'openai' && secrets.OPENAI_API_KEY || '' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ALPACA_API_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_API_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_SECRET_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
           MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
@@ -130,7 +131,8 @@ jobs:
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
           RUN_MODE: paper
-          LLM_PROVIDER: ${{ matrix.llm_provider }}
+          LLM_PROVIDER: openai
+          MONITOR_LLM_PROVIDER: openai
           MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
           MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
           LLM_MAX_OUTPUT_TOKENS: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '700' || '4000' }}
@@ -145,7 +147,8 @@ jobs:
           AGENT_PROFILE: ${{ matrix.profile_id }}
           AGENT_LABEL: ${{ matrix.profile_label }}
           RUN_MODE: paper
-          LLM_PROVIDER: ${{ matrix.llm_provider }}
+          LLM_PROVIDER: openai
+          MONITOR_LLM_PROVIDER: openai
         run: python -m agent_trader.utils.check_mode
 
       - name: Upload strategist artifacts

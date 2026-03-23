@@ -53,7 +53,7 @@ What monitor does:
 - reads latest pushed profile state
 - refreshes data and news
 - evaluates only a small candidate set
-- makes a cheap API call when needed
+- makes a cheap OpenAI API call when needed
 - lets strategy, risk, and execution logic decide trades
 - updates portfolio state, journal, and dashboard artifacts
 

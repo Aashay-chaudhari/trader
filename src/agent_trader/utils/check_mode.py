@@ -82,6 +82,7 @@ def main() -> None:
     print("=" * 60)
     print(f"RUN_MODE={os.environ.get('RUN_MODE', 'unset')}")
     print(f"LLM_PROVIDER={os.environ.get('LLM_PROVIDER', 'unset')}")
+    print(f"MONITOR_LLM_PROVIDER={os.environ.get('MONITOR_LLM_PROVIDER', 'unset')}")
     print(f"DATA_DIR={settings.data_dir}")
 
     research_files = [Path(path) for path in glob(str(data_root / "research" / "*.json"))]

@@ -213,10 +213,10 @@ This is intentionally small and cheap:
 
 - monitor-time trade approval gate only
 
-Current default monitor models:
+Current default monitor posture:
 
-- Claude strategist: `claude-haiku-4-5-20251001`
-- Codex strategist: `gpt-4o-mini`
+- provider for both strategist monitor jobs: `openai`
+- monitor model for both strategist monitor jobs: `gpt-4o-mini`
 
 ## What The Python Runtime Still Owns
 
@@ -287,6 +287,7 @@ Important runtime keys:
 
 - `RUN_MODE=paper`
 - `LLM_PROVIDER=auto`
+- `MONITOR_LLM_PROVIDER=openai`
 - `MONITOR_MODEL=claude-haiku-4-5-20251001`
 - `MONITOR_MODEL_OPENAI=gpt-4o-mini`
 - `DATA_DIR=data/profiles/default`
@@ -296,9 +297,10 @@ Important runtime keys:
 
 Required for remote monitor:
 
-- Anthropic key
 - OpenAI key
 - per-strategist Alpaca paper keys
+
+Anthropic API keys are no longer used by the normal GitHub monitor workflow.
 
 ### What is no longer part of the design
 

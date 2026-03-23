@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from agent_trader.config.settings import get_settings
-from agent_trader.utils.profiles import build_profile_metadata
+from agent_trader.utils.profiles import build_profile_metadata, ensure_profile_structure
 
 
 TOP_LEVEL_DATA_DIRS = (
@@ -151,7 +151,7 @@ def _write_profile_metadata(root: Path) -> None:
     settings = get_settings()
     payload = build_profile_metadata(settings)
     payload["data_dir"] = root.as_posix()
-    root.mkdir(parents=True, exist_ok=True)
+    ensure_profile_structure(root)
     (root / "profile.json").write_text(
         json.dumps(payload, indent=2, default=str),
         encoding="utf-8",

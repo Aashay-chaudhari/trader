@@ -553,15 +553,19 @@ class ResearchAgent(BaseAgent):
             providers.append("openai")
         return providers
 
-    def _get_provider_preference(self) -> str:
-        preference = get_settings().llm_provider.strip().lower()
+    def _get_provider_preference(self, phase: str | None = None) -> str:
+        settings = get_settings()
+        preference = settings.llm_provider
+        if phase == "monitor":
+            preference = settings.monitor_llm_provider
+        preference = preference.strip().lower()
         if preference in {"auto", "anthropic", "openai"}:
             return preference
         return "auto"
 
-    def _get_provider_sequence(self) -> list[str]:
+    def _get_provider_sequence(self, phase: str | None = None) -> list[str]:
         available = self._get_available_providers()
-        preference = self._get_provider_preference()
+        preference = self._get_provider_preference(phase)
 
         if preference == "auto":
             return available
@@ -569,9 +573,9 @@ class ResearchAgent(BaseAgent):
             return [preference] + [provider for provider in available if provider != preference]
         return available
 
-    def _get_provider_name(self) -> str:
+    def _get_provider_name(self, phase: str | None = None) -> str:
         """Resolve the preferred provider based on config and available keys."""
-        providers = self._get_provider_sequence()
+        providers = self._get_provider_sequence(phase)
         return providers[0] if providers else ""
 
     async def process(self, message: Message) -> Any:
@@ -600,7 +604,7 @@ class ResearchAgent(BaseAgent):
 
         summary = self._prepare_rich_summary(market_data)
         artifact_context = build_recent_artifact_summary(data_dir=get_settings().data_dir)
-        provider = self._get_provider_name()
+        provider = self._get_provider_name(phase)
         prompt_sections: dict[str, Any] = {}
         web_context: dict[str, Any] = {}
 
@@ -800,15 +804,15 @@ class ResearchAgent(BaseAgent):
     def _get_research_model(self, provider: str | None = None) -> str:
         """Sonnet for deep research — smarter, worth the extra $0.02."""
         settings = get_settings()
-        provider = provider or self._get_provider_name()
+        provider = provider or self._get_provider_name("research")
         if provider == "anthropic":
             return settings.research_model
         return settings.research_model_openai
 
     def _get_monitor_model(self, provider: str | None = None) -> str:
-        """Haiku for monitoring — fast and cheap."""
+        """Resolve the lightweight monitor model for the selected provider."""
         settings = get_settings()
-        provider = provider or self._get_provider_name()
+        provider = provider or self._get_provider_name("monitor")
         if provider == "anthropic":
             return settings.monitor_model
         return settings.monitor_model_openai
@@ -1722,7 +1726,7 @@ class ResearchAgent(BaseAgent):
                 prior_attempts=[],
             )
 
-        api_providers = self._get_provider_sequence()
+        api_providers = self._get_provider_sequence(phase)
         self.logger.info(
             "Execution mode selected: API (providers=%s)",
             ",".join(api_providers) if api_providers else "none",
@@ -1767,7 +1771,7 @@ class ResearchAgent(BaseAgent):
         meta = {
             "status": "success",
             "execution_mode": "template",
-            "provider_preference": self._get_provider_preference(),
+            "provider_preference": self._get_provider_preference(phase),
             "provider": active_provider,
             "model": "template-v1",
             "selected_provider": active_provider,
@@ -2015,7 +2019,7 @@ class ResearchAgent(BaseAgent):
         providers: list[str] | None = None,
         prior_attempts: list[dict[str, Any]] | None = None,
     ) -> dict:
-        providers = list(providers) if providers is not None else self._get_provider_sequence()
+        providers = list(providers) if providers is not None else self._get_provider_sequence(phase)
         runtime = build_runtime_metadata()
         attempts = list(prior_attempts or [])
         if not providers:
@@ -2027,7 +2031,7 @@ class ResearchAgent(BaseAgent):
                 "_meta": {
                     "status": "error",
                     "execution_mode": "none",
-                    "provider_preference": self._get_provider_preference(),
+                    "provider_preference": self._get_provider_preference(phase),
                     "runtime": runtime,
                     "quota_issue_detected": any(
                         attempt.get("quota_issue_detected", False) for attempt in attempts
@@ -2064,7 +2068,7 @@ class ResearchAgent(BaseAgent):
                     {
                         "status": "success",
                         "execution_mode": "api",
-                        "provider_preference": self._get_provider_preference(),
+                        "provider_preference": self._get_provider_preference(phase),
                         "provider": provider,
                         "model": response_meta.get("model", model),
                         "selected_provider": provider,
@@ -2123,7 +2127,7 @@ class ResearchAgent(BaseAgent):
                 "execution_mode": "api" if any(
                     attempt.get("execution_mode") == "api" for attempt in attempts
                 ) else "cli",
-                "provider_preference": self._get_provider_preference(),
+                "provider_preference": self._get_provider_preference(phase),
                 "provider": providers[0] if providers else "",
                 "model": self._get_model_for_phase(providers[0], phase) if providers else "",
                 "selected_provider": providers[0] if providers else "",
@@ -2544,5 +2548,4 @@ class ResearchAgent(BaseAgent):
             learned_rules="",
             artifact_context=build_recent_artifact_summary(data_dir=settings.data_dir),
         )
-
 
