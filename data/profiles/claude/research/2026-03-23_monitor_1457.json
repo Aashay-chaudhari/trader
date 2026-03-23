@@ -1,0 +1,129 @@
+{
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions are not confirming any candidate's execution thesis, leading to a cautious stance.",
+  "stocks": {
+    "XOM": {
+      "recommendation": "watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "Oil direction is still unclear; Brent's price stabilization status is unknown."
+      ],
+      "monitor_reason": "15 fresh headlines indicate market activity but do not confirm setup.",
+      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
+      "trade_plan": {
+        "entry": 158.0,
+        "stop_loss": 152.5,
+        "target": 172.0
+      }
+    },
+    "UAL": {
+      "recommendation": "watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "WTI crude price below $95 and UAL price above $100 are not confirmed."
+      ],
+      "monitor_reason": "20 fresh headlines suggest volatility but lack clarity on key conditions.",
+      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
+      "trade_plan": {
+        "entry": 104.0,
+        "stop_loss": 98.5,
+        "target": 116.0
+      }
+    },
+    "OXY": {
+      "recommendation": "watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "Iran news direction is unresolved; no confirmation of volume at $63."
+      ],
+      "monitor_reason": "15 fresh headlines are present, but oil market clarity is lacking.",
+      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
+      "trade_plan": {
+        "entry": 63.0,
+        "stop_loss": 59.5,
+        "target": 70.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "api",
+    "provider_preference": "openai",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "selected_provider": "openai",
+    "selected_model": "gpt-4o-mini-2024-07-18",
+    "usage": {
+      "input_tokens": 829,
+      "output_tokens": 531,
+      "total_tokens": 1360,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "service_tier": "default",
+    "request_id": "req_dd914ad7978c4ade9fd3d45256fa2115",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-tokens": "199187",
+        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-tokens": "243ms"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
+        "tokens_remaining_after_request": 199187,
+        "tokens_remaining_before_request_estimate": 200547
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+      "agent_profile": "claude",
+      "agent_label": "Claude Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "schedule",
+        "actor": "Aashay-chaudhari",
+        "run_id": "23443846864",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23443846864",
+        "sha": "a546685d3b5825cd31ed3aed17487bbbb5f46c68",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": 11418.5,
+    "attempts": [
+      {
+        "execution_mode": "api",
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "status": "success",
+        "duration_ms": 11418.5,
+        "usage": {
+          "input_tokens": 829,
+          "output_tokens": 531,
+          "total_tokens": 1360,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
+  }
+}
