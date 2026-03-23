@@ -6,6 +6,10 @@ Date: 2026-03-22
 
 The repo is in a paper-trading-ready operator state.
 
+Assistant handoff file:
+
+- `CODING_ASSISTANT.md`
+
 What that means:
 
 - local CLI research and reflection are the primary workflow
@@ -17,6 +21,7 @@ What that means:
 - the remote monitor path has been dry-run validated and deployed successfully
 - the dashboard now keeps morning thesis data separate from monitor gate outcomes
 - the local morning runner now blocks obviously unrealistic buy/sell price anchors before commit
+- the dashboard now backfills news panels from morning `supporting_articles` when structured news context is missing
 
 ## Primary Commands
 

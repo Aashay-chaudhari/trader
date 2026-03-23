@@ -90,6 +90,7 @@ sequenceDiagram
 | `evolution_review.md` | Local on demand | Critically review backlog and recommend upgrades | `evolution_review.json`, `EVOLUTION_REPORT.md` |
 
 For the full prompt walkthrough, see [docs/PROMPT_FLOW.md](docs/PROMPT_FLOW.md).
+For assistant handoffs and repo-operations commands, see [CODING_ASSISTANT.md](CODING_ASSISTANT.md).
 
 ## Paper-Trading Configuration
 
@@ -124,6 +125,7 @@ Notes:
 - `Evolution` opens the `System Intelligence -> Proposals` panel.
 - The `Decisions` board shows the full morning thesis from `cache/morning_research.json`.
 - Monitor gate outcomes are shown separately, so a later monitor run does not overwrite the morning stock list.
+- If structured `news_inputs` are missing, the dashboard backfills its news panels from each stock's `supporting_articles`.
 - Raw prompt, transcript, metadata, and evolution artifact files are still linked from inside those cards when you want the source files directly.
 
 ### GitHub Secrets

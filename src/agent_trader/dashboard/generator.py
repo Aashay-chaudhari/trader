@@ -738,6 +738,7 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         _read_json(data_root / "context" / "latest_research.json", {}),
         report_payload,
         research_report,
+        research,
     )
     llm = _normalize_llm(
         _read_json(data_root / "analytics" / "latest_llm.json", {}),
@@ -1662,6 +1663,113 @@ def _parse_legacy_headline(line: str) -> dict[str, Any] | None:
     }
 
 
+def _build_news_inputs_from_research(research: dict[str, Any]) -> dict[str, Any]:
+    """Backfill dashboard news panels from morning supporting_articles."""
+
+    stocks = research.get("stocks", {}) if isinstance(research, dict) else {}
+    best = research.get("best_opportunities", []) if isinstance(research, dict) else []
+    if not isinstance(stocks, dict) or not stocks:
+        return {
+            "per_symbol": {},
+            "market_headlines": [],
+            "news_discoveries": [],
+            "hot_stocks": [],
+            "web_influence": {"articles_by_symbol": {}},
+        }
+
+    per_symbol: dict[str, Any] = {}
+    market_headlines: list[dict[str, Any]] = []
+    news_discoveries: list[dict[str, Any]] = []
+    hot_stocks: list[dict[str, Any]] = []
+    articles_by_symbol: dict[str, list[dict[str, Any]]] = {}
+    seen_market: set[tuple[str, str]] = set()
+
+    ordered_symbols = list(best) if isinstance(best, list) else []
+    ordered_symbols.extend(symbol for symbol in stocks if symbol not in ordered_symbols)
+
+    for symbol in ordered_symbols:
+        payload = stocks.get(symbol, {})
+        if not isinstance(payload, dict):
+            continue
+        articles = [
+            article
+            for article in _safe_list(payload.get("supporting_articles"))
+            if isinstance(article, dict) and str(article.get("title", "")).strip()
+        ]
+        if not articles:
+            continue
+
+        normalized_articles: list[dict[str, Any]] = []
+        for article in articles:
+            title = str(article.get("title", "")).strip()
+            source = str(article.get("source") or article.get("publisher") or "").strip()
+            reason = str(article.get("reason", "")).strip()
+            url = str(article.get("url", "")).strip()
+            kind = str(article.get("kind", "web")).strip().lower() or "web"
+            item = {
+                "title": title,
+                "publisher": source,
+                "source": source,
+                "summary": reason,
+                "url": url,
+                "category": kind,
+                "kind": kind,
+            }
+            normalized_articles.append(item)
+
+            key = (title.lower(), source.lower())
+            if key not in seen_market:
+                seen_market.add(key)
+                market_headlines.append(item)
+
+        articles_by_symbol[symbol] = normalized_articles
+        per_symbol[symbol] = {
+            "symbol": symbol,
+            "news_headlines": normalized_articles,
+            "sentiment": payload.get("sentiment", "neutral"),
+            "source_count": len(
+                {
+                    article.get("source")
+                    for article in normalized_articles
+                    if article.get("source")
+                }
+            ),
+        }
+
+        first_article = normalized_articles[0]
+        news_discoveries.append(
+            {
+                "symbol": symbol,
+                "top_headline": first_article.get("title", ""),
+                "top_headline_url": first_article.get("url", ""),
+                "discovery_reason": first_article.get("summary", "")
+                or str(payload.get("reasoning", "")).strip()
+                or str(payload.get("technical_setup", "")).strip(),
+            }
+        )
+        hot_stocks.append(
+            {
+                "symbol": symbol,
+                "sentiment": payload.get("sentiment", "neutral"),
+                "source_count": per_symbol[symbol]["source_count"],
+                "mention_count": len(normalized_articles),
+                "reasons": [
+                    article.get("summary") or article.get("title", "")
+                    for article in normalized_articles[:3]
+                ],
+                "articles": normalized_articles[:4],
+            }
+        )
+
+    return {
+        "per_symbol": per_symbol,
+        "market_headlines": market_headlines[:10],
+        "news_discoveries": news_discoveries[:10],
+        "hot_stocks": hot_stocks[:10],
+        "web_influence": {"articles_by_symbol": articles_by_symbol},
+    }
+
+
 def _safe_float(value: str | None) -> float:
     if value is None:
         return 0.0
@@ -1675,11 +1783,13 @@ def _normalize_context(
     saved_context: dict[str, Any],
     report_payload: dict[str, Any],
     report: dict[str, Any],
+    research: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     context = dict(saved_context) if isinstance(saved_context, dict) else {}
     prompt = dict(context.get("prompt_sections") or {})
     news_inputs = dict(prompt.get("news_inputs") or {})
     legacy_news = _parse_legacy_news_context(prompt.get("news_context", ""))
+    research_news = _build_news_inputs_from_research(research if isinstance(research, dict) else {})
 
     if not news_inputs:
         news_inputs = {
@@ -1699,6 +1809,16 @@ def _normalize_context(
         news_inputs["hot_stocks"] = legacy_news.get("hot_stocks", [])
     if not news_inputs.get("finviz"):
         news_inputs["finviz"] = legacy_news.get("finviz", {})
+    if not news_inputs.get("per_symbol"):
+        news_inputs["per_symbol"] = research_news.get("per_symbol", {})
+    if not news_inputs.get("market_headlines"):
+        news_inputs["market_headlines"] = research_news.get("market_headlines", [])
+    if not news_inputs.get("news_discoveries"):
+        news_inputs["news_discoveries"] = research_news.get("news_discoveries", [])
+    if not news_inputs.get("hot_stocks"):
+        news_inputs["hot_stocks"] = research_news.get("hot_stocks", [])
+    if not news_inputs.get("web_influence"):
+        news_inputs["web_influence"] = research_news.get("web_influence", {})
 
     prompt["news_inputs"] = news_inputs
     if not prompt.get("market_context"):
