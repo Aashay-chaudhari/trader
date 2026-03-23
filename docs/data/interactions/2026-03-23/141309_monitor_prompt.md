@@ -11,7 +11,7 @@ MONITOR CANDIDATES:
     Why it is being checked now: 15 fresh headline(s)
   NVDA: watch | entry=$173.5 stop=$168.3 target=$181.5
     Execution condition: Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.
-    Why it is being checked now: 24 fresh headline(s)
+    Why it is being checked now: 27 fresh headline(s)
   KBH: buy | entry=$51.35 stop=$49.8 target=$54.9
     Execution condition: Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.
     Why it is being checked now: 16 fresh headline(s)
@@ -20,7 +20,7 @@ LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
 | RCL   | $    0.00 |  +0.0% |   — |        — |        15 |
-| NVDA  | $    0.00 |  +0.0% |   — |        — |        24 |
+| NVDA  | $    0.00 |  +0.0% |   — |        — |        27 |
 | KBH   | $    0.00 |  +0.0% |   — |        — |        16 |
 
 ACTIVE POSITIONS:

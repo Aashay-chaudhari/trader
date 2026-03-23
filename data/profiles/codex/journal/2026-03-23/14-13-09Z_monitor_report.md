@@ -1,36 +1,40 @@
 # Trading Journal — 2026-03-23
 
-**Run ID:** `20260323_140145`  
+**Run ID:** `20260323_141238`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 14:02 UTC  
+**Time:** 14:13 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> LLM analysis failed: openai/gpt-4o-mini: Error code: 401 - {'error': {'message': "You have insufficient permissions for this operation. Missing scopes: model.request. Check that you have the correct role in your organization (Reader, Writer, Owner) and project (Member, Owner), and if you're using a restricted API key, that it has the necessary scopes.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+> Live conditions are not confirming the morning thesis as the stocks are trading at $0.00.
 
 ### RCL [?]
-- **Sentiment:** N/A | **Confidence:** 66% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
 
 ### NVDA [?]
-- **Sentiment:** N/A | **Confidence:** 62% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
 
 ### KBH [?]
-- **Sentiment:** N/A | **Confidence:** 68% | **Recommendation:** buy
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** buy
 
 ## LLM Telemetry
 
 - **Platform:** github_actions
 - **Provider Preference:** openai
 - **Selected Provider:** openai
-- **Selected Model:** gpt-4o-mini
+- **Selected Model:** gpt-4o-mini-2024-07-18
+- **Token Usage:** input=782, output=490, total=1272
+- **Capacity Before First Request (estimate):** 200,499 tokens remaining
+- **Request ID:** `req_478181801ae24d3aaabeedbf15127f3a`
+- **LLM Latency:** 15507.9 ms
 - **Quota Note:** Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.
 
 ### Provider Attempts
 
-- openai | gpt-4o-mini | error | 1065.0 ms | Error code: 401 - {'error': {'message': "You have insufficient permissions for this operation. Missing scopes: model.request. Check that you have the correct role in your organizat
+- openai | gpt-4o-mini | success | 15507.9 ms
 
 ## News Inputs Seen By The LLM
 
@@ -54,7 +58,7 @@
 - **Which Cruise Giant Actually Delivers the Smarter Return for Investors?** [finance.yahoo.com]
 - **Washington’s oil blockade triggers second total collapse of Cuban power grid** [Investing.com]
 - **Carnival Gets Something to Celebrate** [The Wall Street Journal]
-- **Carnival Gains From Strong Onboard Spending: A Yield Driver?** [Zacks]
+- **FTSE 100 Live: Shares whipsaw on Trump's Iran talks claim, denied by Tehran** [Proactive]
 
 ### KBH Headlines
 
@@ -79,10 +83,10 @@
 
 ### NVDA Headlines
 
+- **Uber Is Quietly Expanding Into a Multitrillion-Dollar Market** [Motley Fool]
+- **Stocks to Watch Monday: Synopsys, Super Micro, Air Canada, DraftKings** [The Wall Street Journal]
 - **If You Invested $10,000 in Mastercard Stock 10 Years Ago, Here's How Much You'd Have Today** [Motley Fool]
 - **Stock Market Today: Dow Surges 700 Points On Trump's Iran Comments; Nvidia Stock Climbs (Live Coverage)** [Yahoo]
-- **Chip Stocks Pop as Trump Hits Pause on Iran Strikes** [Yahoo]
-- **Nvidia Takes AI Factories To Power Grid** [Yahoo]
 
 ## Trade Signals
 

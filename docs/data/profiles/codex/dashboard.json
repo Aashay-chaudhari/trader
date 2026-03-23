@@ -8,7 +8,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-03-23T14:02:15.233359+00:00",
+    "timestamp": "2026-03-23T14:13:09.770184+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
@@ -45,7 +45,7 @@
       "position_count": 0
     },
     {
-      "timestamp": "2026-03-23T14:02:15.233359+00:00",
+      "timestamp": "2026-03-23T14:13:09.770184+00:00",
       "profile": "codex",
       "profile_label": "Codex Strategist",
       "portfolio_value": 100000.0,
@@ -355,7 +355,7 @@
     }
   },
   "llm": {
-    "timestamp": "2026-03-23T14:02:15.230000+00:00",
+    "timestamp": "2026-03-23T14:13:09.766559+00:00",
     "phase": "monitor",
     "symbols": [
       "CCL",
@@ -367,24 +367,54 @@
     ],
     "provider_preference": "openai",
     "selected_provider": "openai",
-    "selected_model": "gpt-4o-mini",
-    "status": "error",
+    "selected_model": "gpt-4o-mini-2024-07-18",
+    "status": "success",
     "quota_issue_detected": false,
     "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
-    "usage": {},
-    "rate_limits": {},
-    "service_tier": null,
-    "request_id": null,
-    "duration_ms": null,
+    "usage": {
+      "input_tokens": 782,
+      "output_tokens": 490,
+      "total_tokens": 1272,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-tokens": "199227",
+        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-tokens": "231ms"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
+        "tokens_remaining_after_request": 199227,
+        "tokens_remaining_before_request_estimate": 200499
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "service_tier": "default",
+    "request_id": "req_478181801ae24d3aaabeedbf15127f3a",
+    "duration_ms": 15507.9,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
-        "status": "error",
-        "duration_ms": 1065.0,
-        "error": "Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that you have the correct role in your organization (Reader, Writer, Owner) and project (Member, Owner), and if you're using a restricted API key, that it has the necessary scopes.\", 'type': 'invalid_request_error', 'param': None, 'code': None}}",
-        "quota_issue_detected": false
+        "status": "success",
+        "duration_ms": 15507.9,
+        "usage": {
+          "input_tokens": 782,
+          "output_tokens": 490,
+          "total_tokens": 1272,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
       }
     ],
     "runtime": {
@@ -399,7 +429,7 @@
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
         "run_id": "23441183387",
-        "run_attempt": "1",
+        "run_attempt": "2",
         "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23441183387",
         "sha": "9d87f5fcfc2096f9e486c10b5995822d1b8d7ec9",
         "ref": "refs/heads/main"
@@ -919,26 +949,46 @@
       "days": 2
     },
     "latest": {
-      "timestamp": "2026-03-23T08:49:27.002443-04:00",
+      "timestamp": "2026-03-23T14:13:09.765124+00:00",
       "day": "2026-03-23",
       "profile": "codex",
-      "phase": "morning",
-      "phase_group": "morning",
-      "phase_label": "Morning",
-      "tool": "codex",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "tool": "python-api",
       "status": "success",
-      "summary": "**RESEARCH LOG** | Search #1: `stock market today premarket S&P 500 March 23 2026` | - Yahoo live-market result indicated S&P 500 futures were up roughly 1.4% premarket, consistent with a relief rally setup.",
-      "prompt_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
-      "metadata_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_morning_2026-03-23_084459.log",
-      "prompt_source": "scripts/prompts/morning_research.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
-      "metadata_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
+      "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as the stocks are trading at $0.00. | openai / gpt-4o-mini-2024-07-18",
+      "prompt_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
+      "raw_log_file": "",
+      "prompt_source": "src/agent_trader/agents/research_agent.py",
+      "prompt_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+      "metadata_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
+      "monitor": {
+        "timestamp": "2026-03-23T14:13:09.765124+00:00",
+        "day": "2026-03-23",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as the stocks are trading at $0.00. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       "morning": {
         "timestamp": "2026-03-23T08:49:27.002443-04:00",
         "day": "2026-03-23",
@@ -958,71 +1008,31 @@
         "transcript_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
         "metadata_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
         "prompt_source_url": ""
-      },
-      "monitor": {
-        "timestamp": "2026-03-23T14:02:15.228303+00:00",
-        "day": "2026-03-23",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "failed",
-        "summary": "Evaluated: RCL, NVDA, KBH | LLM analysis failed: openai/gpt-4o-mini: Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that yo | openai / gpt-4o-mini",
-        "prompt_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
-        "prompt_source_url": ""
       }
     },
     "phase_counts": {
-      "morning": 2,
-      "monitor": 3
+      "monitor": 3,
+      "morning": 2
     },
     "recent": [
       {
-        "timestamp": "2026-03-23T08:49:27.002443-04:00",
-        "day": "2026-03-23",
-        "profile": "codex",
-        "phase": "morning",
-        "phase_group": "morning",
-        "phase_label": "Morning",
-        "tool": "codex",
-        "status": "success",
-        "summary": "**RESEARCH LOG** | Search #1: `stock market today premarket S&P 500 March 23 2026` | - Yahoo live-market result indicated S&P 500 futures were up roughly 1.4% premarket, consistent with a relief rally setup.",
-        "prompt_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-03-23_084459.log",
-        "prompt_source": "scripts/prompts/morning_research.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-03-23T14:02:15.228303+00:00",
+        "timestamp": "2026-03-23T14:13:09.765124+00:00",
         "day": "2026-03-23",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
-        "status": "failed",
-        "summary": "Evaluated: RCL, NVDA, KBH | LLM analysis failed: openai/gpt-4o-mini: Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that yo | openai / gpt-4o-mini",
-        "prompt_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
+        "status": "success",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as the stocks are trading at $0.00. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -1043,6 +1053,26 @@
         "prompt_url": "data/profiles/codex/interactions/2026-03-23/021534_monitor_prompt.md",
         "transcript_url": "data/profiles/codex/interactions/2026-03-23/021534_monitor_transcript.txt",
         "metadata_url": "data/profiles/codex/interactions/2026-03-23/021534_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-03-23T08:49:27.002443-04:00",
+        "day": "2026-03-23",
+        "profile": "codex",
+        "phase": "morning",
+        "phase_group": "morning",
+        "phase_label": "Morning",
+        "tool": "codex",
+        "status": "success",
+        "summary": "**RESEARCH LOG** | Search #1: `stock market today premarket S&P 500 March 23 2026` | - Yahoo live-market result indicated S&P 500 futures were up roughly 1.4% premarket, consistent with a relief rally setup.",
+        "prompt_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-03-23_084459.log",
+        "prompt_source": "scripts/prompts/morning_research.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-03-23/084459_morning_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -1122,23 +1152,23 @@
             "label": "Monitor Evaluations",
             "items": [
               {
-                "timestamp": "2026-03-23T14:02:15.228303+00:00",
+                "timestamp": "2026-03-23T14:13:09.765124+00:00",
                 "day": "2026-03-23",
                 "profile": "codex",
                 "phase": "monitor",
                 "phase_group": "monitor",
                 "phase_label": "Monitor Evaluations",
                 "tool": "python-api",
-                "status": "failed",
-                "summary": "Evaluated: RCL, NVDA, KBH | LLM analysis failed: openai/gpt-4o-mini: Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that yo | openai / gpt-4o-mini",
-                "prompt_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-                "transcript_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-                "metadata_file": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
+                "status": "success",
+                "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as the stocks are trading at $0.00. | openai / gpt-4o-mini-2024-07-18",
+                "prompt_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
                 "raw_log_file": "",
                 "prompt_source": "src/agent_trader/agents/research_agent.py",
-                "prompt_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_prompt.md",
-                "transcript_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_transcript.txt",
-                "metadata_url": "data/profiles/codex/interactions/2026-03-23/140215_monitor_interaction.json",
+                "prompt_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-03-23/141309_monitor_interaction.json",
                 "prompt_source_url": ""
               },
               {

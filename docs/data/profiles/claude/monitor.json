@@ -1,60 +1,51 @@
 {
   "overall_sentiment": "neutral",
-  "market_summary": "LLM analysis failed: openai/gpt-4o-mini: Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that you have the correct role in your organization (Reader, Writer, Owner) and project (Member, Owner), and if you're using a restricted API key, that it has the necessary scopes.\", 'type': 'invalid_request_error', 'param': None, 'code': None}}",
+  "market_summary": "Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.",
   "stocks": {
     "XOM": {
-      "recommendation": "watch",
-      "confidence": 0.62,
+      "recommendation": "hold",
+      "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [],
       "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
+      "execution_condition": "Oil (WTI or Brent) remains above $95/barrel at market open AND XOM holds above $118.50 in the first 15 minutes of trading \u2014 if oil sells off overnight or XOM gaps down below $118, skip the entry and reassign to WATCH.",
       "trade_plan": {
-        "entry": 158.0,
-        "stop_loss": 152.5,
-        "target": 172.0
+        "entry": 159.67,
+        "stop_loss": 156.48,
+        "target": 164.46
       }
     },
-    "UAL": {
-      "recommendation": "watch",
-      "confidence": 0.7,
+    "PAYX": {
+      "recommendation": "hold",
+      "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [],
       "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
+      "execution_condition": "Hold through Wednesday earnings \u2014 if PAYX beats consensus EPS and provides stable guidance, consider buying the post-earnings reaction if shares pull back to the $143-145 range within the first 30 minutes after open on Thursday.",
       "trade_plan": {
-        "entry": 104.0,
-        "stop_loss": 98.5,
-        "target": 116.0
-      }
-    },
-    "OXY": {
-      "recommendation": "watch",
-      "confidence": 0.6,
-      "ready_to_trade": false,
-      "matched_conditions": [],
-      "failed_conditions": [],
-      "monitor_reason": "Monitor gate returned no explanation.",
-      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
-      "trade_plan": {
-        "entry": 63.0,
-        "stop_loss": 59.5,
-        "target": 70.0
+        "entry": 92.55,
+        "stop_loss": 90.7,
+        "target": 95.33
       }
     }
   },
+  "web_checks": [],
   "_meta": {
-    "status": "error",
-    "execution_mode": "api",
+    "status": "success",
+    "execution_mode": "template",
     "provider_preference": "openai",
-    "provider": "openai",
-    "model": "gpt-4o-mini",
-    "selected_provider": "openai",
-    "selected_model": "gpt-4o-mini",
-    "usage": {},
-    "service_tier": null,
+    "provider": "template:debug",
+    "model": "template-v1",
+    "selected_provider": "template:debug",
+    "selected_model": "template-v1",
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "service_tier": "debug-template",
     "request_id": null,
     "rate_limits": {},
     "runtime": {
@@ -68,26 +59,31 @@
         "workflow": "Trading Pipeline",
         "event_name": "workflow_dispatch",
         "actor": "Aashay-chaudhari",
-        "run_id": "23441183387",
+        "run_id": "23418551212",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23441183387",
-        "sha": "9d87f5fcfc2096f9e486c10b5995822d1b8d7ec9",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23418551212",
+        "sha": "015bbe17f2044a3fa356a8a41abd22d663522cb9",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": null,
+    "duration_ms": 0.0,
     "attempts": [
       {
-        "execution_mode": "api",
-        "provider": "openai",
-        "model": "gpt-4o-mini",
-        "status": "error",
-        "duration_ms": 1186.1,
-        "error": "Error code: 401 - {'error': {'message': \"You have insufficient permissions for this operation. Missing scopes: model.request. Check that you have the correct role in your organization (Reader, Writer, Owner) and project (Member, Owner), and if you're using a restricted API key, that it has the necessary scopes.\", 'type': 'invalid_request_error', 'param': None, 'code': None}}",
-        "quota_issue_detected": false
+        "execution_mode": "template",
+        "provider": "template:debug",
+        "model": "template-v1",
+        "status": "success",
+        "duration_ms": 0.0,
+        "usage": {
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0
+        }
       }
     ],
     "quota_issue_detected": false,
-    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
+    "quota_note": "Template mode active; no model usage was attempted.",
+    "template_note": "Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.",
+    "generated_at": "2026-03-23T02:15:29.717677+00:00"
   }
 }

@@ -11,17 +11,17 @@ MONITOR CANDIDATES:
     Why it is being checked now: 14 fresh headline(s)
   UAL: watch | entry=$104.0 stop=$98.5 target=$116.0
     Execution condition: WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket
-    Why it is being checked now: 19 fresh headline(s)
+    Why it is being checked now: 20 fresh headline(s)
   OXY: watch | entry=$63.0 stop=$59.5 target=$70.0
     Execution condition: Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume
-    Why it is being checked now: 16 fresh headline(s)
+    Why it is being checked now: 15 fresh headline(s)
 
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
 | XOM   | $    0.00 |  +0.0% |   — |        — |        14 |
-| UAL   | $    0.00 |  +0.0% |   — |        — |        19 |
-| OXY   | $    0.00 |  +0.0% |   — |        — |        16 |
+| UAL   | $    0.00 |  +0.0% |   — |        — |        20 |
+| OXY   | $    0.00 |  +0.0% |   — |        — |        15 |
 
 ACTIVE POSITIONS:
   (none)
