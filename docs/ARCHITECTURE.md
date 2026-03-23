@@ -117,6 +117,12 @@ flowchart LR
     F --> G[GitHub Pages]
 ```
 
+Dashboard navigation behavior:
+
+- `Session Log` focuses the `Strategist Interactions` panel
+- `Evolution` focuses the proposals/evolution panel
+- raw artifacts remain available from links inside those panels
+
 ## Why This Architecture Is Stable
 
 - heavy research is kept off the remote scheduler
@@ -141,3 +147,5 @@ It writes:
 - `EVOLUTION_REPORT.md`
 
 That keeps self-improvement deliberate instead of letting the system rewrite itself intraday.
+
+If those files do not exist yet, the dashboard should show an empty evolution state rather than an error.

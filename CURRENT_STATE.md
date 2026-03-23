@@ -13,6 +13,8 @@ What that means:
 - monitor uses cheap API models
 - Alpaca paper execution is wired through the Python runtime
 - dashboard output includes knowledge, interactions, strategist voice, and evolution artifacts
+- the first local morning run has completed and been pushed
+- the remote monitor path has been dry-run validated and deployed successfully
 
 ## Primary Commands
 
@@ -47,16 +49,19 @@ GitHub Pages should now show:
 - strategist comparison
 - trade history and market intelligence
 - knowledge summaries
-- local session logs
+- local session logs plus monitor evaluations in the same daily timeline
 - strategist voice
 - evolution summary plus report link
+- `Session Log` routes to the readable interactions panel
+- `Evolution` routes to the proposals/evolution panel
 
 ## Current Remote Automation
 
 Workflow: `Trading Pipeline`
 
 - schedule: every 30 minutes on weekday market hours
-- run mode: `paper`
+- run mode is controlled by `MONITOR_RUN_MODE`
+- current production setting: `paper`
 - normal production use: `monitor` only
 - publish path: commits updated runtime state and deploys GitHub Pages
 
@@ -76,6 +81,12 @@ Evolution is now available in two forms:
 2. explicit on-demand local review
    - `./scripts/run_both.sh evolve parallel`
    - outputs `evolution_review.json` and `EVOLUTION_REPORT.md`
+
+Current live state:
+
+- the evolution pipeline is wired and exposed in the dashboard
+- no evolution review has been run yet
+- an empty evolution card is expected until the first explicit evolve pass
 
 ## Operator Expectation
 

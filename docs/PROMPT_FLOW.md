@@ -63,6 +63,7 @@ Writes:
 - trade decisions
 - snapshots and journal updates
 - dashboard outputs
+- interaction logs for each monitor evaluation
 
 Role:
 - thin judgment layer
@@ -186,6 +187,8 @@ Writes:
 Role:
 - not another reflection
 - a critical review of which improvements actually deserve implementation
+
+Until this prompt has been run at least once, the dashboard evolution section should show an empty state. That is expected.
 
 ## How The Prompts Evolve Over Time
 

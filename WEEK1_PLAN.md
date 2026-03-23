@@ -75,6 +75,7 @@ What this contributes to the repo:
 Why it matters:
 - this is the state the remote monitor will use all day
 - without this step, the monitor has nothing current to enforce
+- it also seeds the first day tab in the dashboard interaction timeline
 
 ### 2. Monday Intraday Monitoring
 
@@ -94,6 +95,7 @@ What this contributes to the repo:
 Why it matters:
 - this is the execution layer
 - it tests whether the repo can convert a morning idea into an actual monitored trading decision
+- it appends the monitor decisions into the same daily interaction history as the local runs
 
 What success looks like:
 - workflow runs on schedule
@@ -243,6 +245,8 @@ Look for:
 - the `Strategist Interactions` section
 - updated reports and knowledge summaries
 
+The `Session Log` button should open the readable interaction timeline panel, not a raw JSON file.
+
 ### In Alpaca paper
 
 Look for:
@@ -280,6 +284,8 @@ Specifically, it creates:
 - real improvement proposals
 - real strategy effectiveness updates
 - real interaction history showing how the strategists reasoned
+
+Before the first evolve run, the dashboard should still show an empty evolution card. That is normal.
 
 That means when we come back to the evolution piece, we will not be designing it in a vacuum.
 We will have actual data to evolve from.

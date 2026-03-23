@@ -117,6 +117,12 @@ Notes:
 - The standard monitor workflow forces both strategist monitor gates onto OpenAI to keep intraday cost down.
 - If you want local Python monitor runs to place paper orders too, your local `.env` also needs valid `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` values.
 
+### Dashboard navigation
+
+- `Session Log` opens the readable `Strategist Interactions` panel inside the dashboard.
+- `Evolution` opens the `System Intelligence -> Proposals` panel.
+- Raw prompt, transcript, metadata, and evolution artifact files are still linked from inside those cards when you want the source files directly.
+
 ### GitHub Secrets
 
 Required for remote monitor:
@@ -169,8 +175,15 @@ GitHub Pages is generated from `docs/` and now exposes:
 - market intelligence and trade history
 - knowledge summaries
 - interaction logs from local CLI sessions
+- automated monitor evaluations grouped into the same interaction timeline
 - strategist voice summaries
 - evolution report links and structured evolution summary
+
+Evolution remains intentionally empty until you run:
+
+```bash
+./scripts/run_both.sh evolve parallel
+```
 
 Regenerate locally with:
 

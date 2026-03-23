@@ -244,8 +244,15 @@ GitHub Pages now exposes:
 - market intelligence
 - knowledge summaries
 - prompt and transcript archives from local runs
+- monitor-time API evaluations grouped into the same day timeline
 - strategist voice summaries
 - evolution summary and report links
+
+Top-nav behavior:
+
+- `Session Log` jumps to `System Intelligence -> Positions & Telemetry -> Strategist Interactions`
+- `Evolution` jumps to `System Intelligence -> Proposals`
+- raw files stay linked from inside those cards
 
 ## Timing Guidance
 
@@ -278,6 +285,8 @@ Best window: month-end evening or the following weekend
 Best use: on demand after a few evenings or after a weekly review
 
 Do not run it because you feel impatient. Run it when you want a sober review of what should actually change.
+
+Until you run it, the dashboard should show an empty-state message for evolution. That is expected and means the pipeline is wired but intentionally idle.
 
 ## Configuration That Matters
 

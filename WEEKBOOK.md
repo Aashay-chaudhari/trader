@@ -41,6 +41,7 @@ What to check:
 - push to `main` succeeds
 - `data/profiles/claude/cache/morning_research.json` exists
 - `data/profiles/codex/cache/morning_research.json` exists
+- GitHub Pages `Session Log` opens the readable interaction timeline rather than a raw JSON file
 
 ### Intraday
 
@@ -62,6 +63,7 @@ What to check:
 - GitHub Actions `Trading Pipeline` shows scheduled or manual runs
 - Alpaca paper accounts reflect any submitted paper trades
 - GitHub Pages dashboard updates after publish
+- `Strategist Interactions` shows monitor evaluations under the correct day tab
 
 ### Evening
 
@@ -159,6 +161,8 @@ What to check:
 - GitHub Pages `System Intelligence -> Proposals` shows the evolution summary
 - the resulting priority queue feels selective, not noisy
 
+If the evolution card is empty before the first evolve run, that is expected.
+
 ## Monday Checklist
 
 ### Before market open
@@ -218,6 +222,7 @@ On GitHub Pages, you should be able to browse:
 - knowledge summaries
 - strategist voice summaries
 - local strategist interaction logs
+- monitor evaluations grouped into the same day-based interaction timeline
 
 ## If Something Looks Wrong
 
