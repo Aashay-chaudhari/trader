@@ -6,22 +6,22 @@ of preselected symbols still match their morning execution conditions.
 ONLY evaluate the candidates below. Be strict. If the setup is incomplete, say no.
 
 MONITOR CANDIDATES:
-  RCL: watch | entry=$264.0 stop=$256.0 target=$279.0
-    Execution condition: Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.
-    Why it is being checked now: 15 fresh headline(s)
-  NVDA: watch | entry=$173.5 stop=$168.3 target=$181.5
-    Execution condition: Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.
-    Why it is being checked now: 30 fresh headline(s)
-  KBH: buy | entry=$51.35 stop=$49.8 target=$54.9
-    Execution condition: Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.
+  XOM: watch | entry=$158.0 stop=$152.5 target=$172.0
+    Execution condition: Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry
+    Why it is being checked now: 17 fresh headline(s)
+  UAL: watch | entry=$104.0 stop=$98.5 target=$116.0
+    Execution condition: WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket
+    Why it is being checked now: 20 fresh headline(s)
+  OXY: watch | entry=$63.0 stop=$59.5 target=$70.0
+    Execution condition: Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume
     Why it is being checked now: 16 fresh headline(s)
 
 LIVE MARKET SNAPSHOT:
 | Stock | Price | Chg% | RSI | VolRatio | Headlines |
 |-------|-------|------|-----|----------|-----------|
-| RCL   | $    0.00 |  +0.0% |   — |        — |        15 |
-| NVDA  | $    0.00 |  +0.0% |   — |        — |        30 |
-| KBH   | $    0.00 |  +0.0% |   — |        — |        16 |
+| XOM   | $    0.00 |  +0.0% |   — |        — |        17 |
+| UAL   | $    0.00 |  +0.0% |   — |        — |        20 |
+| OXY   | $    0.00 |  +0.0% |   — |        — |        16 |
 
 ACTIVE POSITIONS:
   (none)
