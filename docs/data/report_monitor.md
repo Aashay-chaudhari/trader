@@ -1,99 +1,101 @@
-# Trading Journal — 2026-03-24
+# Trading Journal — 2026-03-23
 
-**Run ID:** `20260324_175857`  
+**Run ID:** `20260323_020605`  
 **Phase:** monitor  
-**Strategist:** Claude Strategist  
-**Time:** 17:59 UTC  
+**Strategist:** Codex Strategist  
+**Time:** 02:06 UTC  
 
 ## Research Analysis
 
-**Overall Sentiment:** bearish
+**Overall Sentiment:** neutral
 
-> Live conditions do not confirm the morning thesis due to unresolved oil direction and recent headlines.
+> Template response generated in RUN_MODE=debug for phase 'monitor'. No API model call was made and zero tokens were consumed.
 
 ### XOM [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** hold
 
-### UAL [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
-
-### OXY [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
+### NVDA [?]
+- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** hold
 
 ## LLM Telemetry
 
 - **Platform:** github_actions
 - **Provider Preference:** openai
-- **Selected Provider:** openai
-- **Selected Model:** gpt-4o-mini-2024-07-18
-- **Token Usage:** input=830, output=532, total=1362
-- **Capacity Before First Request (estimate):** 200,549 tokens remaining
-- **Request ID:** `req_a0fb85dff3084a15b53b5ac7a949a90e`
-- **LLM Latency:** 9006.2 ms
-- **Quota Note:** Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.
+- **Selected Provider:** template:debug
+- **Selected Model:** template-v1
+- **Token Usage:** input=0, output=0, total=0
+- **LLM Latency:** 0.0 ms
+- **Quota Note:** Template mode active; no model usage was attempted.
 
 ### Provider Attempts
 
-- openai | gpt-4o-mini | success | 9006.2 ms
+- template:debug | template-v1 | success | 0.0 ms
 
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
 
-- **5 Best-Performing Leveraged ETFs of Last Week** [yfinance:SPY]
-- **Fintech Is Down 17% This Year, but Cybersecurity Tells a Different Story for These 2 ETFs** [yfinance:SPY]
-- **Innovator Equity ETF (AAPR) Hits New 52-Week High** [yfinance:SPY]
-- **With Two Companies Dictating Everything, IHE Is Riskier Than Most Investors Realize** [yfinance:SPY]
-- **Exchange-Traded Funds Mixed, US Equities Lower After Midday** [yfinance:QQQ]
-
-### DELL Headlines
-
-- **Citi Is the Latest Bank to Sour On Super Micro Computer Stock** [Yahoo]
-- **Dell Stock (DELL) Will Rise Further, Says Five-Star Analyst** [Yahoo]
-- **Zacks Investment Ideas feature highlights: Micron, NVIDIA, Broadcom, Dell and SPY** [Yahoo]
-- **Zacks Investment Ideas feature highlights: QQQ, SPY, Micron, NVIDIA, Broadcom, Dell and TQQQ** [Yahoo]
-
-### UAL Headlines
-
-- **Shutdown Deal Nears. Relief for Air Travelers, TSA Workers on the Horizon.** [Barrons.com]
-- **This Airline Adds Premium Seats. Shares Lag, But These Travel Stocks Defy Slump.** [Investor's Business Daily]
-- **Market Chatter: United Airlines CEO Kirby Says Air Fares May Have to Rise 20%** [MT Newswires]
-- **United Airlines Stock Is Rebounding as Oil Prices Fluctuate. Should You Buy the UAL Stock Dip?** [Barchart]
-
-### FIVE Headlines
-
-- **Best Growth Stocks to Buy for March 24th** [Yahoo]
-- **3 Reasons Why Growth Investors Shouldn't Overlook Five Below (FIVE)** [Yahoo]
-- **Darden Restaurants Gains on Menu Innovation Amid Cost Headwinds** [Yahoo]
-- **Sally Beauty E-Commerce Rises 11%: Is Double-Digit Growth Sustainable?** [Yahoo]
+- **MIDD’s $3.3B Restructuring: A Leaner Company Chasing a Higher Stock Price** [yfinance:SPY]
+- **USA Compression Partners Eyes Debt Reduction as Record Cash Flow Powers 1.6x Coverage Target** [yfinance:SPY]
+- **Exclusively Mitigating Market Volatility For Yield Through SVOL** [yfinance:SPY]
+- **This 1 ETF Keeps Outrallying the SPY, While Also Losing Less During Downturns** [yfinance:SPY]
+- **NexGen Energy Up 123% This Past Year as Investor Adds $7.3 Million Before Major Approval** [yfinance:QQQ]
 
 ### XOM Headlines
 
-- **2 Oil Stocks That Can Weather the Current Volatility** [Motley Fool]
-- **Economic risks of U.S. war on Iran keep mounting** [Yahoo]
-- **ExxonMobil Stock Hits an All-Time High. Is It Still a Good Buy?** [Yahoo]
-- **3 Oil Stocks Set to Deliver 50%+ Returns in 2026** [Yahoo]
+- **Iranian Missile Strikes Are Costing Big Oil Billions in Lost Revenue** [The Wall Street Journal]
+- **Atlas Energy Stock Jumps 39% YTD, but One Fund Cut Exposure by $15 Million Last Quarter** [Yahoo]
+- **G7 allies pledge energy supply defense amid escalating maritime threats** [Investing.com]
+- **Big Oil Flocks to Alaska in Record-Setting Petroleum Lease Sale** [Yahoo]
 
-### OXY Headlines
+### CVX Headlines
 
-- **3 Oil Stocks Set to Deliver 50%+ Returns in 2026** [Yahoo]
-- **DVN vs. OXY: Which Permian Stock Benefits More From Oil Price Spikes?** [Zacks]
-- **Pre-Market Turns Green** [Zacks]
-- **Which Stocks Are Winning After Trump Pauses Iran Energy Attacks?** [The Wall Street Journal]
+- **Iranian Missile Strikes Are Costing Big Oil Billions in Lost Revenue** [The Wall Street Journal]
+- **Better Oil Stock: Chevron vs. Occidental Petroleum** [finance.yahoo.com]
+- **This $19.8 Million Bet on Commvault Comes Amid a 51% Drop. Here’s What Investors Should Know** [Yahoo]
+- **3 Energy Stocks You'll Want to Own if Oil Soars Above $100 per Barrel** [Yahoo]
+
+### JPM Headlines
+
+- **How The Gogo (GOGO) Narrative Is Shifting After Softer 2026 Guidance And Target Cuts** [Yahoo]
+- **Should You Buy JPMorgan Chase Stock Before April 14?** [Yahoo]
+- **How The Sigma Foods.de (BMV:SIGMAF A) Narrative Is Shifting After JPMorgan Neutral Call** [Yahoo]
+- **How The CrowdStrike (CRWD) Investment Story Is Shifting As Analyst Valuations Reset** [Yahoo]
 
 ### NVDA Headlines
 
-- **2 Oil Stocks That Can Weather the Current Volatility** [Motley Fool]
-- **Tech stocks today: Anthropic announces new Claude capability, Nvidia's Jensen Huang says AGI era is here** [Yahoo Finance]
-- **1 Oversold AI Stock to Buy Before It Rebounds This Spring** [Motley Fool]
-- **Dow Wavers. It's Getting Hit by Tech Now, Too.** [Barrons.com]
+- **Dow Jones Futures, Oil Prices Waver After Trump Threats To 'Obliterate' Iran's Power Plants** [Investor's Business Daily]
+- **The Nasdaq Is on the Verge of a Correction. 4 Things Investors Need To Remember** [Yahoo]
+- **Think You Can Ignore RMDs? Here's What It Could Cost You.** [Yahoo]
+- **AI-Driven Fear Slashed Toast Stock by 43%, Even as Free Cash Flow Hit Records** [Yahoo]
 
-### HAL Headlines
+### CCL Headlines
 
-- **Halliburton (HAL) Outperforms Broader Market: What You Need to Know** [Yahoo]
-- **How Exxon’s Guyana Drilling Automation Breakthrough Could Shape Efficiency and Resilience for XOM Investors** [Yahoo]
-- **Is It Worth Investing in Halliburton (HAL) Based on Wall Street's Bullish Views?** [Zacks]
-- **Halliburton’s Guyana Automation Milestone Puts Digital Well Strategy In Focus** [Simply Wall St.]
+- **6 Surprising Stocks Affected by High Oil Prices** [Yahoo]
+- **Gamestop, Carnival, Chewy, Jefferies, and More to Watch This Week** [Yahoo]
+- **Washington’s oil blockade triggers second total collapse of Cuban power grid** [Investing.com]
+- **Jim Cramer on Carnival Corporation: “That’s an Inexpensive Stock”** [Yahoo]
+
+### CHWY Headlines
+
+- **Gamestop, Carnival, Chewy, Jefferies, and More to Watch This Week** [Yahoo]
+- **Middle East tensions, GameStop earnings: What to Watch** [Yahoo]
+- **What to Expect in Markets This Week: GameStop Earnings, Consumer Sentiment, Import Price Index, Jobless Claims** [Yahoo]
+- **Chewy Appears De-Risked Ahead of Q4 Results, RBC Says** [Yahoo]
+
+### BRZE Headlines
+
+- **1 Unprofitable Stock on Our Watchlist and 2 That Underwhelm** [StockStory]
+- **Replacement Cycle Trends and Evolving Fundamentals Offer Support to Braze (BRZE)** [Insider Monkey]
+- **A Look At Braze (BRZE) Valuation After Recent Share Price Momentum** [Simply Wall St.]
+- **Wall Street Analysts See a 126.44% Upside in Braze (BRZE): Can the Stock Really Move This High?** [Zacks]
+
+### NATL Headlines
+
+- **2 Stocks Under $50 with Competitive Advantages and 1 Facing Challenges** [StockStory]
+- **Q4 Earnings Roundup: NCR Atleos (NYSE:NATL) And The Rest Of The Diversified Financial Services Segment** [StockStory]
+- **A Look At NCR Atleos (NATL) Valuation After Recent Share Price Momentum And Pullback** [Simply Wall St.]
+- **2 Surging  Stocks Worth Investigating and 1 Facing Challenges** [StockStory]
 
 ## Trade Signals
 
