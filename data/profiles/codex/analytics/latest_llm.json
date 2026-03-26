@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-26T17:36:24.084069+00:00",
+  "timestamp": "2026-03-26T18:02:28.589507+00:00",
   "phase": "monitor",
   "symbols": [
     "CCL",
@@ -17,8 +17,8 @@
   "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
   "usage": {
     "input_tokens": 783,
-    "output_tokens": 482,
-    "total_tokens": 1265,
+    "output_tokens": 502,
+    "total_tokens": 1285,
     "cached_input_tokens": 0,
     "reasoning_output_tokens": 0
   },
@@ -28,14 +28,14 @@
       "x-ratelimit-limit-tokens": "200000",
       "x-ratelimit-remaining-requests": "9998",
       "x-ratelimit-remaining-tokens": "199227",
-      "x-ratelimit-reset-requests": "11.084s",
+      "x-ratelimit-reset-requests": "13.705s",
       "x-ratelimit-reset-tokens": "231ms"
     },
     "estimates": {
       "requests_remaining_after_request": 9998,
       "requests_remaining_before_request_estimate": 9999,
       "tokens_remaining_after_request": 199227,
-      "tokens_remaining_before_request_estimate": 200492
+      "tokens_remaining_before_request_estimate": 200512
     },
     "billing_balance_before_workflow": {
       "available": false,
@@ -43,19 +43,19 @@
     }
   },
   "service_tier": "default",
-  "request_id": "req_f3813636bb4c4a688bad40104c3293b2",
-  "duration_ms": 16232.6,
+  "request_id": "req_db3be16a218947779500b4be26e303ce",
+  "duration_ms": 11681.6,
   "attempts": [
     {
       "execution_mode": "api",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "status": "success",
-      "duration_ms": 16232.6,
+      "duration_ms": 11681.6,
       "usage": {
         "input_tokens": 783,
-        "output_tokens": 482,
-        "total_tokens": 1265,
+        "output_tokens": 502,
+        "total_tokens": 1285,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       }
@@ -72,10 +72,10 @@
       "workflow": "Trading Pipeline",
       "event_name": "schedule",
       "actor": "Aashay-chaudhari",
-      "run_id": "23608944668",
+      "run_id": "23610142704",
       "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23608944668",
-      "sha": "690e66ba431331efafb3987b68db8e70b0de0bca",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23610142704",
+      "sha": "a13fc5aea701dc6e79de4dd5711166ba1c5834d1",
       "ref": "refs/heads/main"
     }
   }
