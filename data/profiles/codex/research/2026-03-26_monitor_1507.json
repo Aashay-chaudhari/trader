@@ -1,0 +1,129 @@
+{
+  "overall_sentiment": "bearish",
+  "market_summary": "Live conditions indicate a risk-off environment, which is not supportive of the execution conditions for the monitored candidates.",
+  "stocks": {
+    "RCL": {
+      "recommendation": "watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "RCL is not consolidating above 263.00 after the open; peer performance and crude oil trends are unclear."
+      ],
+      "monitor_reason": "Execution conditions are incomplete as RCL has not met critical price levels.",
+      "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
+      "trade_plan": {
+        "entry": 264.0,
+        "stop_loss": 256.0,
+        "target": 279.0
+      }
+    },
+    "NVDA": {
+      "recommendation": "watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "NVDA is not above 172.00 or retaking the 174.00 area; semiconductor confirmation is lacking."
+      ],
+      "monitor_reason": "Execution conditions are incomplete as NVDA has not met necessary price levels.",
+      "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
+      "trade_plan": {
+        "entry": 173.5,
+        "stop_loss": 168.3,
+        "target": 181.5
+      }
+    },
+    "KBH": {
+      "recommendation": "buy",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "KBH is not holding 51.00 or better after the first 30 minutes; homebuilders' performance is uncertain."
+      ],
+      "monitor_reason": "Execution conditions are incomplete as KBH has not maintained the required price level.",
+      "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
+      "trade_plan": {
+        "entry": 51.35,
+        "stop_loss": 49.8,
+        "target": 54.9
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "api",
+    "provider_preference": "openai",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "selected_provider": "openai",
+    "selected_model": "gpt-4o-mini-2024-07-18",
+    "usage": {
+      "input_tokens": 783,
+      "output_tokens": 523,
+      "total_tokens": 1306,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "service_tier": "default",
+    "request_id": "req_86beecf20000418896f07e194a6e22d0",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9998",
+        "x-ratelimit-remaining-tokens": "199226",
+        "x-ratelimit-reset-requests": "9.526s",
+        "x-ratelimit-reset-tokens": "231ms"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9998,
+        "requests_remaining_before_request_estimate": 9999,
+        "tokens_remaining_after_request": 199226,
+        "tokens_remaining_before_request_estimate": 200532
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.14.0-1017-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "schedule",
+        "actor": "Aashay-chaudhari",
+        "run_id": "23601665257",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23601665257",
+        "sha": "b369e9488b874de332c74bf8cb45b2c43af6b398",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": 12493.1,
+    "attempts": [
+      {
+        "execution_mode": "api",
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "status": "success",
+        "duration_ms": 12493.1,
+        "usage": {
+          "input_tokens": 783,
+          "output_tokens": 523,
+          "total_tokens": 1306,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
+  }
+}
