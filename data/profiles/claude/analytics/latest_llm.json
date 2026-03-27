@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-27T19:25:26.754672+00:00",
+  "timestamp": "2026-03-27T19:37:53.270520+00:00",
   "phase": "monitor",
   "symbols": [
     "DELL",
@@ -18,8 +18,8 @@
   "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
   "usage": {
     "input_tokens": 830,
-    "output_tokens": 529,
-    "total_tokens": 1359,
+    "output_tokens": 556,
+    "total_tokens": 1386,
     "cached_input_tokens": 0,
     "reasoning_output_tokens": 0
   },
@@ -27,16 +27,16 @@
     "headers": {
       "x-ratelimit-limit-requests": "10000",
       "x-ratelimit-limit-tokens": "200000",
-      "x-ratelimit-remaining-requests": "9999",
+      "x-ratelimit-remaining-requests": "9998",
       "x-ratelimit-remaining-tokens": "199187",
-      "x-ratelimit-reset-requests": "8.64s",
+      "x-ratelimit-reset-requests": "15.942s",
       "x-ratelimit-reset-tokens": "243ms"
     },
     "estimates": {
-      "requests_remaining_after_request": 9999,
-      "requests_remaining_before_request_estimate": 10000,
+      "requests_remaining_after_request": 9998,
+      "requests_remaining_before_request_estimate": 9999,
       "tokens_remaining_after_request": 199187,
-      "tokens_remaining_before_request_estimate": 200546
+      "tokens_remaining_before_request_estimate": 200573
     },
     "billing_balance_before_workflow": {
       "available": false,
@@ -44,19 +44,19 @@
     }
   },
   "service_tier": "default",
-  "request_id": "req_919e30a552ad4183bfa91743d90dfc34",
-  "duration_ms": 11760.9,
+  "request_id": "req_b641ebb7d9694f64b43dac53a92bd7dd",
+  "duration_ms": 10058.2,
   "attempts": [
     {
       "execution_mode": "api",
       "provider": "openai",
       "model": "gpt-4o-mini",
       "status": "success",
-      "duration_ms": 11760.9,
+      "duration_ms": 10058.2,
       "usage": {
         "input_tokens": 830,
-        "output_tokens": 529,
-        "total_tokens": 1359,
+        "output_tokens": 556,
+        "total_tokens": 1386,
         "cached_input_tokens": 0,
         "reasoning_output_tokens": 0
       }
@@ -73,10 +73,10 @@
       "workflow": "Trading Pipeline",
       "event_name": "schedule",
       "actor": "Aashay-chaudhari",
-      "run_id": "23663676807",
+      "run_id": "23664153042",
       "run_attempt": "1",
-      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23663676807",
-      "sha": "2f61c4cd8c03e1a93b850a514e6380ad90de746c",
+      "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/23664153042",
+      "sha": "f5e162ddc186b2c5de75608d4bf2cf5407d5117e",
       "ref": "refs/heads/main"
     }
   }
