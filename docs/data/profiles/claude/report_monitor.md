@@ -1,24 +1,24 @@
-# Trading Journal — 2026-03-24
+# Trading Journal — 2026-03-27
 
-**Run ID:** `20260324_175857`  
+**Run ID:** `20260327_172708`  
 **Phase:** monitor  
 **Strategist:** Claude Strategist  
-**Time:** 17:59 UTC  
+**Time:** 17:27 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** bearish
 
-> Live conditions do not confirm the morning thesis due to unresolved oil direction and recent headlines.
+> Live conditions are not confirming the morning thesis as execution conditions remain incomplete for all candidates.
 
 ### XOM [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
 
 ### UAL [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
 
 ### OXY [?]
-- **Sentiment:** N/A | **Confidence:** 50% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
 
 ## LLM Telemetry
 
@@ -26,74 +26,74 @@
 - **Provider Preference:** openai
 - **Selected Provider:** openai
 - **Selected Model:** gpt-4o-mini-2024-07-18
-- **Token Usage:** input=830, output=532, total=1362
-- **Capacity Before First Request (estimate):** 200,549 tokens remaining
-- **Request ID:** `req_a0fb85dff3084a15b53b5ac7a949a90e`
-- **LLM Latency:** 9006.2 ms
+- **Token Usage:** input=830, output=531, total=1361
+- **Capacity Before First Request (estimate):** 200,548 tokens remaining
+- **Request ID:** `req_be5cf4097af445f685e438f66ffbfc75`
+- **LLM Latency:** 12934.4 ms
 - **Quota Note:** Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.
 
 ### Provider Attempts
 
-- openai | gpt-4o-mini | success | 9006.2 ms
+- openai | gpt-4o-mini | success | 12934.4 ms
 
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
 
-- **5 Best-Performing Leveraged ETFs of Last Week** [yfinance:SPY]
-- **Fintech Is Down 17% This Year, but Cybersecurity Tells a Different Story for These 2 ETFs** [yfinance:SPY]
-- **Innovator Equity ETF (AAPR) Hits New 52-Week High** [yfinance:SPY]
-- **With Two Companies Dictating Everything, IHE Is Riskier Than Most Investors Realize** [yfinance:SPY]
-- **Exchange-Traded Funds Mixed, US Equities Lower After Midday** [yfinance:QQQ]
+- **OEF Returned 314.83% Over 10 Years While SPY Managed 223.37%** [yfinance:SPY]
+- **Pre-Markets Down Again Ahead of Weekend** [yfinance:SPY]
+- **Exchange-Traded Funds, Equity Futures Lower Pre-Bell Friday as Investor Concerns Linger Amid Middle East Conflict** [yfinance:SPY]
+- **3 ETFs That Are Beating the Market Right Now — and None of Them Are the Ones Everyone Already Owns** [yfinance:SPY]
+- **Exchange-Traded Funds Fall as US Equities Drop After Midday** [yfinance:QQQ]
 
 ### DELL Headlines
 
-- **Citi Is the Latest Bank to Sour On Super Micro Computer Stock** [Yahoo]
-- **Dell Stock (DELL) Will Rise Further, Says Five-Star Analyst** [Yahoo]
-- **Zacks Investment Ideas feature highlights: Micron, NVIDIA, Broadcom, Dell and SPY** [Yahoo]
-- **Zacks Investment Ideas feature highlights: QQQ, SPY, Micron, NVIDIA, Broadcom, Dell and TQQQ** [Yahoo]
+- **1 Value Stock with Impressive Fundamentals and 2 We Question** [Yahoo]
+- **Dell Technologies Inc. (DELL) Is a Trending Stock: Facts to Know Before Betting on It** [zacks.com]
+- **AI Chips Update - AI Partnerships Propel Innovation at Cloudera's IMPACT26 Event** [Yahoo]
+- **Stock Market Today, March 26: Super Micro Computer Falls After Shareholder Lawsuits Over Smuggling Allegations** [Yahoo]
 
 ### UAL Headlines
 
-- **Shutdown Deal Nears. Relief for Air Travelers, TSA Workers on the Horizon.** [Barrons.com]
-- **This Airline Adds Premium Seats. Shares Lag, But These Travel Stocks Defy Slump.** [Investor's Business Daily]
-- **Market Chatter: United Airlines CEO Kirby Says Air Fares May Have to Rise 20%** [MT Newswires]
-- **United Airlines Stock Is Rebounding as Oil Prices Fluctuate. Should You Buy the UAL Stock Dip?** [Barchart]
+- **Senate Agrees To Narrow DHS Shutdown, Fund TSA; Airline Stocks Keep Sliding** [Yahoo]
+- **Delta suspends VIP travel perks for Congress members amid budget feud — warns safety is ‘increasingly difficult.’** [Yahoo]
+- **Air Carrier's Recent Reversal Points To A Bear Call Spread** [Yahoo]
+- **United Airlines' Quarterly Earnings Preview: What You Need to Know** [Yahoo]
 
 ### FIVE Headlines
 
-- **Best Growth Stocks to Buy for March 24th** [Yahoo]
-- **3 Reasons Why Growth Investors Shouldn't Overlook Five Below (FIVE)** [Yahoo]
-- **Darden Restaurants Gains on Menu Innovation Amid Cost Headwinds** [Yahoo]
-- **Sally Beauty E-Commerce Rises 11%: Is Double-Digit Growth Sustainable?** [Yahoo]
+- **TJX Hits $60B Sales Milestone in FY26: What Fuels Long-Term Growth?** [Zacks]
+- **How Five Below, Up 200% In A Year, Rode Squishy Dumplings To Defy Tariffs, Oil Prices** [Yahoo]
+- **Best Growth Stocks to Buy for March 27th** [Yahoo]
+- **Zacks.com featured highlights include Allstate, Five Below, Archrock, BrightSpring Health and Beachbody** [Yahoo]
 
 ### XOM Headlines
 
-- **2 Oil Stocks That Can Weather the Current Volatility** [Motley Fool]
-- **Economic risks of U.S. war on Iran keep mounting** [Yahoo]
-- **ExxonMobil Stock Hits an All-Time High. Is It Still a Good Buy?** [Yahoo]
-- **3 Oil Stocks Set to Deliver 50%+ Returns in 2026** [Yahoo]
+- **Oil Over $95: Tailwind or Trap for ExxonMobil's Business Model?** [Zacks]
+- **Not Worried About an Oil Shock? Chevron CEO, Other Energy Execs Sure Are.** [Yahoo]
+- **Sector Update: Energy Stocks Advance Premarket Friday** [Yahoo]
+- **Exchange-Traded Funds, Equity Futures Lower Pre-Bell Friday as Investor Concerns Linger Amid Middle East Conflict** [Yahoo]
 
 ### OXY Headlines
 
-- **3 Oil Stocks Set to Deliver 50%+ Returns in 2026** [Yahoo]
-- **DVN vs. OXY: Which Permian Stock Benefits More From Oil Price Spikes?** [Zacks]
-- **Pre-Market Turns Green** [Zacks]
-- **Which Stocks Are Winning After Trump Pauses Iran Energy Attacks?** [The Wall Street Journal]
+- **Not Worried About an Oil Shock? Chevron CEO, Other Energy Execs Sure Are.** [Yahoo]
+- **Occidental CEO’s Tenure May Be Ending. It Hasn’t Been Good for the Stock.** [Yahoo]
+- **Occidental Petroleum (OXY) Is Up 8.0% After CEO Transition And OxyChem Sale Announcement - Has The Bull Case Changed?** [Simply Wall St.]
+- **Why Is Cactus (WHD) Down 5.3% Since Last Earnings Report?** [Zacks]
 
 ### NVDA Headlines
 
-- **2 Oil Stocks That Can Weather the Current Volatility** [Motley Fool]
-- **Tech stocks today: Anthropic announces new Claude capability, Nvidia's Jensen Huang says AGI era is here** [Yahoo Finance]
-- **1 Oversold AI Stock to Buy Before It Rebounds This Spring** [Motley Fool]
-- **Dow Wavers. It's Getting Hit by Tech Now, Too.** [Barrons.com]
+- **Tech stocks today: Big Tech stocks sell off, Anthropic considers IPO as soon as Q4** [Yahoo Finance]
+- **These Top Stocks Have a Big China Problem to Solve** [Motley Fool]
+- **S&P 500, Nasdaq Slide as Iran Conflict Keeps Oil Prices Elevated** [Motley Fool]
+- **The 2 Best Consumer Staples Stocks to Buy and Hold for Decades** [Motley Fool]
 
 ### HAL Headlines
 
-- **Halliburton (HAL) Outperforms Broader Market: What You Need to Know** [Yahoo]
-- **How Exxon’s Guyana Drilling Automation Breakthrough Could Shape Efficiency and Resilience for XOM Investors** [Yahoo]
-- **Is It Worth Investing in Halliburton (HAL) Based on Wall Street's Bullish Views?** [Zacks]
-- **Halliburton’s Guyana Automation Milestone Puts Digital Well Strategy In Focus** [Simply Wall St.]
+- **Zacks Industry Outlook Highlights Halliburton, Baker Hughes, TechnipFMC and Archrock** [Yahoo]
+- **4 Oilfield Services Stocks Set to Gain From Strong Industry Tailwinds** [Yahoo]
+- **ReconAfrica begins testing at Namibia discovery, advances Gabon work program** [Yahoo]
+- **Halliburton (HAL) Is Up 6.7% After First Fully Automated Offshore Well in Guyana - What's Changed** [Yahoo]
 
 ## Trade Signals
 
