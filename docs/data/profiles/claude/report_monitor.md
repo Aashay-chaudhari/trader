@@ -1,15 +1,15 @@
-# Trading Journal — 2026-03-27
+# Trading Journal — 2026-04-06
 
-**Run ID:** `20260327_172708`  
+**Run ID:** `20260406_193712`  
 **Phase:** monitor  
 **Strategist:** Claude Strategist  
-**Time:** 17:27 UTC  
+**Time:** 19:37 UTC  
 
 ## Research Analysis
 
-**Overall Sentiment:** bearish
+**Overall Sentiment:** neutral
 
-> Live conditions are not confirming the morning thesis as execution conditions remain incomplete for all candidates.
+> Live conditions are uncertain and do not clearly confirm the morning thesis for any of the candidates.
 
 ### XOM [?]
 - **Sentiment:** N/A | **Confidence:** 0% | **Recommendation:** watch
@@ -26,74 +26,74 @@
 - **Provider Preference:** openai
 - **Selected Provider:** openai
 - **Selected Model:** gpt-4o-mini-2024-07-18
-- **Token Usage:** input=830, output=531, total=1361
-- **Capacity Before First Request (estimate):** 200,548 tokens remaining
-- **Request ID:** `req_be5cf4097af445f685e438f66ffbfc75`
-- **LLM Latency:** 12934.4 ms
+- **Token Usage:** input=829, output=501, total=1330
+- **Capacity Before First Request (estimate):** 200,517 tokens remaining
+- **Request ID:** `req_8d778e6f3cda465e84f0a79033e02673`
+- **LLM Latency:** 8051.4 ms
 - **Quota Note:** Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.
 
 ### Provider Attempts
 
-- openai | gpt-4o-mini | success | 12934.4 ms
+- openai | gpt-4o-mini | success | 8051.4 ms
 
 ## News Inputs Seen By The LLM
 
 ### Market Headlines
 
-- **OEF Returned 314.83% Over 10 Years While SPY Managed 223.37%** [yfinance:SPY]
-- **Pre-Markets Down Again Ahead of Weekend** [yfinance:SPY]
-- **Exchange-Traded Funds, Equity Futures Lower Pre-Bell Friday as Investor Concerns Linger Amid Middle East Conflict** [yfinance:SPY]
-- **3 ETFs That Are Beating the Market Right Now — and None of Them Are the Ones Everyone Already Owns** [yfinance:SPY]
-- **Exchange-Traded Funds Fall as US Equities Drop After Midday** [yfinance:QQQ]
+- **Pre-Markets Mixed Post-BLS Jobs, Pre-Iran Ultimatum** [yfinance:SPY]
+- **Best-Performing Leveraged ETFs of March** [yfinance:SPY]
+- **Exchange-Traded Funds Higher, Equity Futures Mixed Pre-Bell Monday Amid Ongoing Iran Conflict** [yfinance:SPY]
+- **Wes Moss Tells $5 Million Couple Avoiding Stocks: ‘You’re Caught in the Everything’s Overvalued Trap’** [yfinance:SPY]
+- **Exchange-Traded Funds Edge Higher as US Equities Rise After Midday** [yfinance:QQQ]
 
 ### DELL Headlines
 
-- **1 Value Stock with Impressive Fundamentals and 2 We Question** [Yahoo]
-- **Dell Technologies Inc. (DELL) Is a Trending Stock: Facts to Know Before Betting on It** [zacks.com]
-- **AI Chips Update - AI Partnerships Propel Innovation at Cloudera's IMPACT26 Event** [Yahoo]
-- **Stock Market Today, March 26: Super Micro Computer Falls After Shareholder Lawsuits Over Smuggling Allegations** [Yahoo]
+- **Why Dell Stock Just Had Its Price Target Raised—and Super Micro Didn’t** [Yahoo]
+- **3 Market-Beating Stocks with Competitive Advantages** [Yahoo]
+- **DELL Benefits From Cloud Infrastructure Expansion: More Upside Ahead?** [Zacks]
+- **AMD Stock Tries To Recover After Giant Plunge** [Yahoo]
 
 ### UAL Headlines
 
-- **Senate Agrees To Narrow DHS Shutdown, Fund TSA; Airline Stocks Keep Sliding** [Yahoo]
-- **Delta suspends VIP travel perks for Congress members amid budget feud — warns safety is ‘increasingly difficult.’** [Yahoo]
-- **Air Carrier's Recent Reversal Points To A Bear Call Spread** [Yahoo]
-- **United Airlines' Quarterly Earnings Preview: What You Need to Know** [Yahoo]
+- **United Airlines Unveils Tiered Premium Fares After $10 Bag Fee Increase** [GuruFocus.com]
+- **United Airlines Rolls Out Tiered Fares to Boost Revenue Flexibility** [Yahoo]
+- **United Airlines makes big change to its bags policy** [Yahoo]
+- **Company News for Apr 6, 2026** [Yahoo]
 
 ### FIVE Headlines
 
-- **TJX Hits $60B Sales Milestone in FY26: What Fuels Long-Term Growth?** [Zacks]
-- **How Five Below, Up 200% In A Year, Rode Squishy Dumplings To Defy Tariffs, Oil Prices** [Yahoo]
-- **Best Growth Stocks to Buy for March 27th** [Yahoo]
-- **Zacks.com featured highlights include Allstate, Five Below, Archrock, BrightSpring Health and Beachbody** [Yahoo]
+- **FIVE's Product Innovation Plan Drives Broad-Based Category Strength** [Yahoo]
+- **5 Growth Stocks to Buy for Q2 2026 After a Disappointing Q1** [Yahoo]
+- **Why Ollie's (OLLI) Stock Is Trading Up Today** [StockStory]
+- **Ollie’s Bargain Outlet upgrade driven by outlet expansion, margin stability** [Proactive]
 
 ### XOM Headlines
 
-- **Oil Over $95: Tailwind or Trap for ExxonMobil's Business Model?** [Zacks]
-- **Not Worried About an Oil Shock? Chevron CEO, Other Energy Execs Sure Are.** [Yahoo]
-- **Sector Update: Energy Stocks Advance Premarket Friday** [Yahoo]
-- **Exchange-Traded Funds, Equity Futures Lower Pre-Bell Friday as Investor Concerns Linger Amid Middle East Conflict** [Yahoo]
+- **Sector Update: Energy Stocks Rise Monday Afternoon** [MT Newswires]
+- **By This Metric, Exxon Passed Nvidia in March** [Yahoo]
+- **Exxon Mobil Poised to Benefit From Global Helium Shortage, UBS Says** [Yahoo]
+- **Jim Cramer Says He is Willing to Bless The Trade Desk Stock at $22** [Yahoo]
 
 ### OXY Headlines
 
-- **Not Worried About an Oil Shock? Chevron CEO, Other Energy Execs Sure Are.** [Yahoo]
-- **Occidental CEO’s Tenure May Be Ending. It Hasn’t Been Good for the Stock.** [Yahoo]
-- **Occidental Petroleum (OXY) Is Up 8.0% After CEO Transition And OxyChem Sale Announcement - Has The Bull Case Changed?** [Simply Wall St.]
-- **Why Is Cactus (WHD) Down 5.3% Since Last Earnings Report?** [Zacks]
+- **Why Occidental (OXY) Could Beat Earnings Estimates Again** [Yahoo]
+- **These 2 Oils-Energy Stocks Could Beat Earnings: Why They Should Be on Your Radar** [Yahoo]
+- **Jim Cramer Says Occidental Petroleum Is a “Big Loser If Peace Breaks Out” and Vice Versa** [finance.yahoo.com]
+- **Jim Cramer Highlights Texas Pacific Land as the Ninth Best Performing S&P 500 Stock in Q1** [Yahoo]
 
 ### NVDA Headlines
 
-- **Tech stocks today: Big Tech stocks sell off, Anthropic considers IPO as soon as Q4** [Yahoo Finance]
-- **These Top Stocks Have a Big China Problem to Solve** [Motley Fool]
-- **S&P 500, Nasdaq Slide as Iran Conflict Keeps Oil Prices Elevated** [Motley Fool]
-- **The 2 Best Consumer Staples Stocks to Buy and Hold for Decades** [Motley Fool]
+- **Consumer hardware trade in danger as Iran war triggers memory chip pricing explosion** [Yahoo Finance]
+- **It's 'time to jump in' with Palantir and these 2 stock picks** [Yahoo Finance Video]
+- **Why Lennar Corporation Stock Fell 24.1% In March** [Motley Fool]
+- **Stock Market Today: Dow Up As Oil Pops; Bank Play Eyes Entry After This 'Trump Accounts' Move (Live Coverage)** [Investor's Business Daily]
 
 ### HAL Headlines
 
-- **Zacks Industry Outlook Highlights Halliburton, Baker Hughes, TechnipFMC and Archrock** [Yahoo]
-- **4 Oilfield Services Stocks Set to Gain From Strong Industry Tailwinds** [Yahoo]
-- **ReconAfrica begins testing at Namibia discovery, advances Gabon work program** [Yahoo]
-- **Halliburton (HAL) Is Up 6.7% After First Fully Automated Offshore Well in Guyana - What's Changed** [Yahoo]
+- **Halliburton Charter Vote Tests Governance Control And Valuation Upside** [Yahoo]
+- **Sector Update: Energy Stocks Lean Lower Pre-Bell Monday** [Yahoo]
+- **Oil Stocks Look Tapped Out. Why It’s Time to Move Into Other Sectors.** [Barrons.com]
+- **ReconAfrica CEO talks Kavango West test plans - ICYMI** [Proactive]
 
 ## Trade Signals
 
