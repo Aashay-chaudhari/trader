@@ -8,7 +8,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-04-16T19:57:33.003911+00:00",
+    "timestamp": "2026-04-17T14:41:12.771374+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
@@ -2803,6 +2803,18 @@
       "total_pnl_pct": 0.0,
       "positions": [],
       "position_count": 0
+    },
+    {
+      "timestamp": "2026-04-17T14:41:12.771374+00:00",
+      "profile": "codex",
+      "profile_label": "Codex Strategist",
+      "portfolio_value": 100000.0,
+      "cash": 100000.0,
+      "invested": 0,
+      "total_pnl": 0,
+      "total_pnl_pct": 0.0,
+      "positions": [],
+      "position_count": 0
     }
   ],
   "trades": [],
@@ -3103,7 +3115,7 @@
     }
   },
   "llm": {
-    "timestamp": "2026-04-16T19:57:33.000097+00:00",
+    "timestamp": "2026-04-17T14:41:12.767684+00:00",
     "phase": "monitor",
     "symbols": [
       "CCL",
@@ -3120,9 +3132,9 @@
     "quota_issue_detected": false,
     "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
     "usage": {
-      "input_tokens": 782,
-      "output_tokens": 491,
-      "total_tokens": 1273,
+      "input_tokens": 783,
+      "output_tokens": 471,
+      "total_tokens": 1254,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
@@ -3130,16 +3142,16 @@
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
-        "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199228",
-        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-remaining-requests": "9998",
+        "x-ratelimit-remaining-tokens": "199227",
+        "x-ratelimit-reset-requests": "16.283s",
         "x-ratelimit-reset-tokens": "231ms"
       },
       "estimates": {
-        "requests_remaining_after_request": 9999,
-        "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199228,
-        "tokens_remaining_before_request_estimate": 200501
+        "requests_remaining_after_request": 9998,
+        "requests_remaining_before_request_estimate": 9999,
+        "tokens_remaining_after_request": 199227,
+        "tokens_remaining_before_request_estimate": 200481
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -3147,19 +3159,19 @@
       }
     },
     "service_tier": "default",
-    "request_id": "req_a53927127dc1438d8112ce1a4156a3d6",
-    "duration_ms": 8842.9,
+    "request_id": "req_88dca1162bbe4f32be75b710166d2069",
+    "duration_ms": 10101.2,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 8842.9,
+        "duration_ms": 10101.2,
         "usage": {
-          "input_tokens": 782,
-          "output_tokens": 491,
-          "total_tokens": 1273,
+          "input_tokens": 783,
+          "output_tokens": 471,
+          "total_tokens": 1254,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
@@ -3176,10 +3188,10 @@
         "workflow": "Trading Pipeline",
         "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "24530962223",
+        "run_id": "24570870177",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/24530962223",
-        "sha": "5d80b5117043ec07bd60a52f3bf85a1ffb1f9a50",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/24570870177",
+        "sha": "12502345cb753b0cd256450db0cf0faa5ca03813",
         "ref": "refs/heads/main"
       }
     }
@@ -3692,9 +3704,9 @@
   },
   "interactions": {
     "counts": {
-      "total": 234,
+      "total": 235,
       "recent": 24,
-      "days": 20
+      "days": 21
     },
     "latest": {
       "timestamp": "2026-04-16T16:53:27.184235+00:00",
@@ -3759,7 +3771,7 @@
       }
     },
     "phase_counts": {
-      "monitor": 232,
+      "monitor": 233,
       "morning": 2
     },
     "recent": [
@@ -3844,66 +3856,6 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-16T16:02:33.861043+00:00",
-        "day": "2026-04-16",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are incomplete and do not confirm any of the morning setups. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-04-16T16:21:46.181204+00:00",
-        "day": "2026-04-16",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming any of the morning theses as prices for all candidates are currently $0.00. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-04-16T15:28:32.445278+00:00",
-        "day": "2026-04-16",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not confirm the morning execution setups as the stocks have not yet established price levels required for entry. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
         "timestamp": "2026-04-16T19:22:52.877321+00:00",
         "day": "2026-04-16",
         "profile": "codex",
@@ -3984,63 +3936,63 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-15T19:59:53.318812+00:00",
-        "day": "2026-04-15",
+        "timestamp": "2026-04-16T16:02:33.861043+00:00",
+        "day": "2026-04-16",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not provide sufficient evidence to confirm morning execution setups for RCL, NVDA, and KBH. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_interaction.json",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are incomplete and do not confirm any of the morning setups. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-16/160233_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-16/160233_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-15T19:23:30.871524+00:00",
-        "day": "2026-04-15",
+        "timestamp": "2026-04-16T16:21:46.181204+00:00",
+        "day": "2026-04-16",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not confirm the morning trade setups as the stocks are currently not trading at any specific price. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_interaction.json",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming any of the morning theses as prices for all candidates are currently $0.00. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-16/162146_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-16/162146_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-15T19:50:44.687452+00:00",
-        "day": "2026-04-15",
+        "timestamp": "2026-04-16T15:28:32.445278+00:00",
+        "day": "2026-04-16",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are insufficient to confirm any of the morning setups, as none of the symbols are currently trading at valid prices. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_interaction.json",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not confirm the morning execution setups as the stocks have not yet established price levels required for entry. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-16/152832_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-16/152832_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -4081,6 +4033,26 @@
         "prompt_url": "data/profiles/codex/interactions/2026-04-15/165928_monitor_prompt.md",
         "transcript_url": "data/profiles/codex/interactions/2026-04-15/165928_monitor_transcript.txt",
         "metadata_url": "data/profiles/codex/interactions/2026-04-15/165928_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-04-15T19:59:53.318812+00:00",
+        "day": "2026-04-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not provide sufficient evidence to confirm morning execution setups for RCL, NVDA, and KBH. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-15/195953_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-15/195953_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -4144,6 +4116,46 @@
         "prompt_source_url": ""
       },
       {
+        "timestamp": "2026-04-15T19:23:30.871524+00:00",
+        "day": "2026-04-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not confirm the morning trade setups as the stocks are currently not trading at any specific price. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-15/192330_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-15/192330_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-04-15T19:50:44.687452+00:00",
+        "day": "2026-04-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are insufficient to confirm any of the morning setups, as none of the symbols are currently trading at valid prices. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-15/195044_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-15/195044_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
         "timestamp": "2026-04-15T16:03:58.093424+00:00",
         "day": "2026-04-15",
         "profile": "codex",
@@ -4204,7 +4216,7 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-14T18:08:13.187027+00:00",
+        "timestamp": "2026-04-14T19:50:33.402330+00:00",
         "day": "2026-04-14",
         "profile": "codex",
         "phase": "monitor",
@@ -4212,39 +4224,71 @@
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as all candidates are at $0.00 and no price action or conditions can be validated. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-14/180813_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-14/180813_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-14/180813_monitor_interaction.json",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are confirming the morning thesis with a risk-on environment. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-14/195033_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-14/195033_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-14/195033_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-14/180813_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-14/180813_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-14/180813_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-14/195033_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-14/195033_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-14/195033_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-04-14T17:03:01.378064+00:00",
-        "day": "2026-04-14",
+        "timestamp": "2026-04-13T18:06:58.598460+00:00",
+        "day": "2026-04-13",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions do not confirm the morning execution setups as stock prices are not provided. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/codex/interactions/2026-04-14/170301_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-04-14/170301_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-04-14/170301_monitor_interaction.json",
+        "summary": "Evaluated: RCL, NVDA, KBH | Live conditions are not confirming the morning thesis as none of the candidates have valid prices for evaluation. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/codex/interactions/2026-04-13/180658_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-04-13/180658_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-04-13/180658_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/codex/interactions/2026-04-14/170301_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-04-14/170301_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-04-14/170301_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-04-13/180658_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-04-13/180658_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-04-13/180658_monitor_interaction.json",
         "prompt_source_url": ""
       }
     ],
     "days": [
+      {
+        "date": "2026-04-17",
+        "count": 1,
+        "phases": [
+          {
+            "key": "monitor",
+            "label": "Monitor Evaluations",
+            "items": [
+              {
+                "timestamp": "2026-04-17T14:41:12.766189+00:00",
+                "day": "2026-04-17",
+                "profile": "codex",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "python-api",
+                "status": "success",
+                "summary": "Ready: KBH | Live conditions are confirming the morning thesis for KBH, while the conditions for RCL and NVDA are incomplete. | openai / gpt-4o-mini-2024-07-18",
+                "prompt_file": "data/profiles/codex/interactions/2026-04-17/144112_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-04-17/144112_monitor_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-04-17/144112_monitor_interaction.json",
+                "raw_log_file": "",
+                "prompt_source": "src/agent_trader/agents/research_agent.py",
+                "prompt_url": "data/profiles/codex/interactions/2026-04-17/144112_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-04-17/144112_monitor_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-04-17/144112_monitor_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          }
+        ]
+      },
       {
         "date": "2026-04-16",
         "count": 12,
