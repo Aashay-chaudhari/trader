@@ -8,7 +8,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-06-02T19:56:55.595412+00:00",
+    "timestamp": "2026-06-03T18:08:18.745763+00:00",
     "profile": "claude",
     "profile_label": "Claude Strategist",
     "portfolio_value": 100000.0,
@@ -20,18 +20,6 @@
     "position_count": 0
   },
   "history": [
-    {
-      "timestamp": "2026-04-13T18:45:35.376063+00:00",
-      "profile": "claude",
-      "profile_label": "Claude Strategist",
-      "portfolio_value": 100000.0,
-      "cash": 100000.0,
-      "invested": 0,
-      "total_pnl": 0,
-      "total_pnl_pct": 0.0,
-      "positions": [],
-      "position_count": 0
-    },
     {
       "timestamp": "2026-04-13T19:19:16.883678+00:00",
       "profile": "claude",
@@ -4399,6 +4387,18 @@
       "total_pnl_pct": 0.0,
       "positions": [],
       "position_count": 0
+    },
+    {
+      "timestamp": "2026-06-03T18:08:18.745763+00:00",
+      "profile": "claude",
+      "profile_label": "Claude Strategist",
+      "portfolio_value": 100000.0,
+      "cash": 100000.0,
+      "invested": 0,
+      "total_pnl": 0,
+      "total_pnl_pct": 0.0,
+      "positions": [],
+      "position_count": 0
     }
   ],
   "trades": [],
@@ -4840,7 +4840,7 @@
     }
   },
   "llm": {
-    "timestamp": "2026-06-02T19:56:55.592029+00:00",
+    "timestamp": "2026-06-03T18:08:18.742316+00:00",
     "phase": "monitor",
     "symbols": [
       "DELL",
@@ -4858,9 +4858,9 @@
     "quota_issue_detected": false,
     "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider.",
     "usage": {
-      "input_tokens": 829,
-      "output_tokens": 537,
-      "total_tokens": 1366,
+      "input_tokens": 830,
+      "output_tokens": 530,
+      "total_tokens": 1360,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
@@ -4868,16 +4868,16 @@
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
-        "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199188",
-        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-remaining-requests": "9998",
+        "x-ratelimit-remaining-tokens": "199187",
+        "x-ratelimit-reset-requests": "15.263s",
         "x-ratelimit-reset-tokens": "243ms"
       },
       "estimates": {
-        "requests_remaining_after_request": 9999,
-        "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199188,
-        "tokens_remaining_before_request_estimate": 200554
+        "requests_remaining_after_request": 9998,
+        "requests_remaining_before_request_estimate": 9999,
+        "tokens_remaining_after_request": 199187,
+        "tokens_remaining_before_request_estimate": 200547
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -4885,19 +4885,19 @@
       }
     },
     "service_tier": "default",
-    "request_id": "req_0e9de76002a645b68a62d7b33764eabf",
-    "duration_ms": 8521.9,
+    "request_id": "req_363bd47e48e6428a93236f600474d74e",
+    "duration_ms": 12102.7,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 8521.9,
+        "duration_ms": 12102.7,
         "usage": {
-          "input_tokens": 829,
-          "output_tokens": 537,
-          "total_tokens": 1366,
+          "input_tokens": 830,
+          "output_tokens": 530,
+          "total_tokens": 1360,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
@@ -4914,10 +4914,10 @@
         "workflow": "Trading Pipeline",
         "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "26844415331",
+        "run_id": "26903679512",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/26844415331",
-        "sha": "1549cae54219fb8f9cc037aaba2c606d0dd2422f",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/26903679512",
+        "sha": "ea233f2e76309575283b22162559a3b719e13622",
         "ref": "refs/heads/main"
       }
     }
@@ -5724,49 +5724,49 @@
   },
   "interactions": {
     "counts": {
-      "total": 561,
+      "total": 562,
       "recent": 24,
-      "days": 53
+      "days": 54
     },
     "latest": {
-      "timestamp": "2026-06-02T18:59:50.923471+00:00",
-      "day": "2026-06-02",
+      "timestamp": "2026-05-29T19:33:48.054094+00:00",
+      "day": "2026-05-29",
       "profile": "claude",
       "phase": "monitor",
       "phase_group": "monitor",
       "phase_label": "Monitor Evaluations",
       "tool": "python-api",
       "status": "success",
-      "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm the morning thesis as execution conditions are incomplete for all candidates. | openai / gpt-4o-mini-2024-07-18",
-      "prompt_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-      "transcript_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-      "metadata_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
+      "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm the morning execution setups as critical conditions are not met for the candidates. | openai / gpt-4o-mini-2024-07-18",
+      "prompt_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_prompt.md",
+      "transcript_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_transcript.txt",
+      "metadata_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_interaction.json",
       "raw_log_file": "",
       "prompt_source": "src/agent_trader/agents/research_agent.py",
-      "prompt_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-      "transcript_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-      "metadata_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
+      "prompt_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_prompt.md",
+      "transcript_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_transcript.txt",
+      "metadata_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
       "monitor": {
-        "timestamp": "2026-06-02T18:59:50.923471+00:00",
-        "day": "2026-06-02",
+        "timestamp": "2026-05-29T19:33:48.054094+00:00",
+        "day": "2026-05-29",
         "profile": "claude",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
         "tool": "python-api",
         "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm the morning thesis as execution conditions are incomplete for all candidates. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm the morning execution setups as critical conditions are not met for the candidates. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-05-29/193348_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
+        "prompt_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-05-29/193348_monitor_interaction.json",
         "prompt_source_url": ""
       },
       "morning": {
@@ -5791,110 +5791,10 @@
       }
     },
     "phase_counts": {
-      "monitor": 559,
+      "monitor": 560,
       "morning": 2
     },
     "recent": [
-      {
-        "timestamp": "2026-06-02T18:59:50.923471+00:00",
-        "day": "2026-06-02",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm the morning thesis as execution conditions are incomplete for all candidates. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/185950_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-02T19:56:55.590445+00:00",
-        "day": "2026-06-02",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are unclear and do not confirm the morning execution conditions for the monitored stocks. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/195655_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/195655_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/195655_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/195655_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/195655_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/195655_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-02T18:13:56.258749+00:00",
-        "day": "2026-06-02",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are inconclusive, as key execution parameters for all candidates are not met. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/181356_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/181356_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/181356_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/181356_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/181356_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/181356_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-02T19:39:10.981305+00:00",
-        "day": "2026-06-02",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming the morning thesis for any of the candidates. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/193910_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/193910_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/193910_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/193910_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/193910_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/193910_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-02T18:38:16.486648+00:00",
-        "day": "2026-06-02",
-        "profile": "claude",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "python-api",
-        "status": "success",
-        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are unclear and do not fully confirm the morning thesis for any of the candidates. | openai / gpt-4o-mini-2024-07-18",
-        "prompt_file": "data/profiles/claude/interactions/2026-06-02/183816_monitor_prompt.md",
-        "transcript_file": "data/profiles/claude/interactions/2026-06-02/183816_monitor_transcript.txt",
-        "metadata_file": "data/profiles/claude/interactions/2026-06-02/183816_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "src/agent_trader/agents/research_agent.py",
-        "prompt_url": "data/profiles/claude/interactions/2026-06-02/183816_monitor_prompt.md",
-        "transcript_url": "data/profiles/claude/interactions/2026-06-02/183816_monitor_transcript.txt",
-        "metadata_url": "data/profiles/claude/interactions/2026-06-02/183816_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
       {
         "timestamp": "2026-05-29T19:33:48.054094+00:00",
         "day": "2026-05-29",
@@ -6116,6 +6016,86 @@
         "prompt_source_url": ""
       },
       {
+        "timestamp": "2026-06-03T18:08:18.740794+00:00",
+        "day": "2026-06-03",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are lacking clarity and do not confirm the morning thesis. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-05-28T19:38:50.986706+00:00",
+        "day": "2026-05-28",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions do not confirm any candidates for execution as the setups depend on specific price action and direction which is not met. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-05-28/193850_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-05-28/193850_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-05-28/193850_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-05-28/193850_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-05-28/193850_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-05-28/193850_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-05-28T19:53:23.825749+00:00",
+        "day": "2026-05-28",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions indicate a lack of confirmation for any of the setups due to missing critical price points and unresolved news. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-05-28/195323_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-05-28/195323_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-05-28/195323_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-05-28/195323_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-05-28/195323_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-05-28/195323_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-02T18:06:37.172207+00:00",
+        "day": "2026-06-02",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are not confirming the morning thesis as prices for all candidates are currently at $0.00, rendering them untradeable. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-06-02/180637_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-06-02/180637_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-06-02/180637_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-06-02/180637_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-06-02/180637_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-06-02/180637_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
         "timestamp": "2026-05-27T18:23:32.533976+00:00",
         "day": "2026-05-27",
         "profile": "claude",
@@ -6173,6 +6153,26 @@
         "prompt_url": "data/profiles/claude/interactions/2026-05-27/175724_monitor_prompt.md",
         "transcript_url": "data/profiles/claude/interactions/2026-05-27/175724_monitor_transcript.txt",
         "metadata_url": "data/profiles/claude/interactions/2026-05-27/175724_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-05-27T17:20:57.211508+00:00",
+        "day": "2026-05-27",
+        "profile": "claude",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "python-api",
+        "status": "success",
+        "summary": "Evaluated: XOM, UAL, OXY | Live conditions are inconclusive, as there is no market price data available to match the morning execution conditions for any of the stocks. | openai / gpt-4o-mini-2024-07-18",
+        "prompt_file": "data/profiles/claude/interactions/2026-05-27/172057_monitor_prompt.md",
+        "transcript_file": "data/profiles/claude/interactions/2026-05-27/172057_monitor_transcript.txt",
+        "metadata_file": "data/profiles/claude/interactions/2026-05-27/172057_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "src/agent_trader/agents/research_agent.py",
+        "prompt_url": "data/profiles/claude/interactions/2026-05-27/172057_monitor_prompt.md",
+        "transcript_url": "data/profiles/claude/interactions/2026-05-27/172057_monitor_transcript.txt",
+        "metadata_url": "data/profiles/claude/interactions/2026-05-27/172057_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -6277,6 +6277,38 @@
       }
     ],
     "days": [
+      {
+        "date": "2026-06-03",
+        "count": 1,
+        "phases": [
+          {
+            "key": "monitor",
+            "label": "Monitor Evaluations",
+            "items": [
+              {
+                "timestamp": "2026-06-03T18:08:18.740794+00:00",
+                "day": "2026-06-03",
+                "profile": "claude",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "python-api",
+                "status": "success",
+                "summary": "Evaluated: XOM, UAL, OXY | Live conditions are lacking clarity and do not confirm the morning thesis. | openai / gpt-4o-mini-2024-07-18",
+                "prompt_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_prompt.md",
+                "transcript_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_transcript.txt",
+                "metadata_file": "data/profiles/claude/interactions/2026-06-03/180818_monitor_interaction.json",
+                "raw_log_file": "",
+                "prompt_source": "src/agent_trader/agents/research_agent.py",
+                "prompt_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_prompt.md",
+                "transcript_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_transcript.txt",
+                "metadata_url": "data/profiles/claude/interactions/2026-06-03/180818_monitor_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          }
+        ]
+      },
       {
         "date": "2026-06-02",
         "count": 7,
