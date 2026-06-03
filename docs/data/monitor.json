@@ -1,53 +1,53 @@
 {
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions are mixed and do not clearly confirm morning thesis for any of the candidates.",
+  "market_summary": "Live conditions reflect a neutral market with no clear confirmation for active positions or watch candidates.",
   "stocks": {
-    "XOM": {
-      "recommendation": "watch",
-      "confidence": 0.0,
+    "KBH": {
+      "recommendation": "hold",
+      "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "need clarity on oil direction and whether Brent stabilizes above $100"
+        "KBH is not holding 51.00 or better after the first 30 minutes"
       ],
-      "monitor_reason": "Fresh headlines require further clarity on oil direction.",
-      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry",
+      "monitor_reason": "KBH is currently below the necessary price level for execution.",
+      "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
       "trade_plan": {
-        "entry": 158.0,
-        "stop_loss": 152.5,
-        "target": 172.0
+        "entry": 51.35,
+        "stop_loss": 49.8,
+        "target": 54.9
       }
     },
-    "UAL": {
+    "RCL": {
       "recommendation": "watch",
-      "confidence": 0.0,
+      "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "WTI crude needs to hold below $95 and UAL must trade above $100"
+        "RCL has not consolidated above 263.00 after the open and peers are not confirmed to be outperforming while crude stays under pressure."
       ],
-      "monitor_reason": "Current trading conditions have not confirmed the necessary levels.",
-      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket",
+      "monitor_reason": "RCL has not met the consolidation criteria needed for an entry upgrade.",
+      "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
       "trade_plan": {
-        "entry": 104.0,
-        "stop_loss": 98.5,
-        "target": 116.0
+        "entry": 264.0,
+        "stop_loss": 256.0,
+        "target": 279.0
       }
     },
-    "OXY": {
+    "NVDA": {
       "recommendation": "watch",
-      "confidence": 0.0,
+      "confidence": 0.5,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "wait for Iran news to resolve direction; oil needs to hold above $90 WTI"
+        "NVDA is not above 172.00 and has not retaken the 174.00 area with semiconductors confirming higher."
       ],
-      "monitor_reason": "Market uncertainty with Iran news prevents clear resolution.",
-      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume",
+      "monitor_reason": "NVDA is not meeting the price level criteria after opening volatility.",
+      "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
       "trade_plan": {
-        "entry": 63.0,
-        "stop_loss": 59.5,
-        "target": 70.0
+        "entry": 173.5,
+        "stop_loss": 168.3,
+        "target": 181.5
       }
     }
   },
@@ -60,28 +60,28 @@
     "selected_provider": "openai",
     "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 829,
-      "output_tokens": 523,
-      "total_tokens": 1352,
+      "input_tokens": 806,
+      "output_tokens": 513,
+      "total_tokens": 1319,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_2598003530e44d65a3156e8c2ae2c269",
+    "request_id": "req_05f5cfbc41f0453db4488279c422479d",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
         "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199188",
+        "x-ratelimit-remaining-tokens": "199210",
         "x-ratelimit-reset-requests": "8.64s",
-        "x-ratelimit-reset-tokens": "243ms"
+        "x-ratelimit-reset-tokens": "237ms"
       },
       "estimates": {
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199188,
-        "tokens_remaining_before_request_estimate": 200540
+        "tokens_remaining_after_request": 199210,
+        "tokens_remaining_before_request_estimate": 200529
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -92,32 +92,32 @@
       "platform": "github_actions",
       "python_version": "3.12.13",
       "os": "Linux-6.17.0-1010-azure-x86_64-with-glibc2.39",
-      "agent_profile": "claude",
-      "agent_label": "Claude Strategist",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
         "event_name": "schedule",
         "actor": "Aashay-chaudhari",
-        "run_id": "25686393170",
+        "run_id": "25756667679",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/25686393170",
-        "sha": "ba229fc1557d3ee1423d5e31fb248bd6e1209871",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/25756667679",
+        "sha": "9d2b0d1513d0d36028811c6fe4c46515d4dc1102",
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 11961.1,
+    "duration_ms": 9317.7,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 11961.1,
+        "duration_ms": 9317.7,
         "usage": {
-          "input_tokens": 829,
-          "output_tokens": 523,
-          "total_tokens": 1352,
+          "input_tokens": 806,
+          "output_tokens": 513,
+          "total_tokens": 1319,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }

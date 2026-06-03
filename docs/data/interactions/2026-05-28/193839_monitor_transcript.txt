@@ -1,0 +1,144 @@
+Phase: monitor
+Provider: openai
+Model: gpt-4o-mini-2024-07-18
+Status: success
+Total tokens: 1294
+
+Market Summary:
+Live conditions are confirming the morning thesis with KBH needing supervision and strong interest in the market.
+
+Stocks:
+- KBH: buy | active position needs supervision; recent news flow is significant.
+- RCL: watch | significant headlines but price action does not meet criteria.
+- NVDA: watch | strong interest in the stock but fails to meet entry criteria.
+
+Response JSON:
+{
+  "overall_sentiment": "bullish",
+  "market_summary": "Live conditions are confirming the morning thesis with KBH needing supervision and strong interest in the market.",
+  "stocks": {
+    "KBH": {
+      "recommendation": "buy",
+      "confidence": 0.85,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "KBH is not holding 51.00 or better after the first 30 minutes."
+      ],
+      "monitor_reason": "active position needs supervision; recent news flow is significant.",
+      "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
+      "trade_plan": {
+        "entry": 51.35,
+        "stop_loss": 49.8,
+        "target": 54.9
+      }
+    },
+    "RCL": {
+      "recommendation": "watch",
+      "confidence": 0.3,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "RCL has not consolidated above 263.00."
+      ],
+      "monitor_reason": "significant headlines but price action does not meet criteria.",
+      "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
+      "trade_plan": {
+        "entry": 264.0,
+        "stop_loss": 256.0,
+        "target": 279.0
+      }
+    },
+    "NVDA": {
+      "recommendation": "watch",
+      "confidence": 0.4,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "NVDA is not above 172.00 or has not retaken 174.00."
+      ],
+      "monitor_reason": "strong interest in the stock but fails to meet entry criteria.",
+      "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
+      "trade_plan": {
+        "entry": 173.5,
+        "stop_loss": 168.3,
+        "target": 181.5
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "api",
+    "provider_preference": "openai",
+    "provider": "openai",
+    "model": "gpt-4o-mini-2024-07-18",
+    "selected_provider": "openai",
+    "selected_model": "gpt-4o-mini-2024-07-18",
+    "usage": {
+      "input_tokens": 807,
+      "output_tokens": 487,
+      "total_tokens": 1294,
+      "cached_input_tokens": 0,
+      "reasoning_output_tokens": 0
+    },
+    "service_tier": "default",
+    "request_id": "req_e2c500c90f26498fb5bbc2b7c96d5ab2",
+    "rate_limits": {
+      "headers": {
+        "x-ratelimit-limit-requests": "10000",
+        "x-ratelimit-limit-tokens": "200000",
+        "x-ratelimit-remaining-requests": "9999",
+        "x-ratelimit-remaining-tokens": "199210",
+        "x-ratelimit-reset-requests": "8.64s",
+        "x-ratelimit-reset-tokens": "237ms"
+      },
+      "estimates": {
+        "requests_remaining_after_request": 9999,
+        "requests_remaining_before_request_estimate": 10000,
+        "tokens_remaining_after_request": 199210,
+        "tokens_remaining_before_request_estimate": 200504
+      },
+      "billing_balance_before_workflow": {
+        "available": false,
+        "reason": "Rate-limit headers are available, but billing/credit balance is not available from these request responses."
+      }
+    },
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1015-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Trading Pipeline",
+        "event_name": "schedule",
+        "actor": "Aashay-chaudhari",
+        "run_id": "26597707955",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/26597707955",
+        "sha": "286399ed8024779e6885d6266f080ee7a4d43f0d",
+        "ref": "refs/heads/main"
+      }
+    },
+    "duration_ms": 7552.7,
+    "attempts": [
+      {
+        "execution_mode": "api",
+        "provider": "openai",
+        "model": "gpt-4o-mini",
+        "status": "success",
+        "duration_ms": 7552.7,
+        "usage": {
+          "input_tokens": 807,
+          "output_tokens": 487,
+          "total_tokens": 1294,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": "Billing balance is not exposed by normal request responses. This repo records token usage and any quota errors returned by the provider."
+  }
+}
