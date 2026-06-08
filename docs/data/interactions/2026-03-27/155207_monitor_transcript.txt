@@ -2,67 +2,67 @@ Phase: monitor
 Provider: openai
 Model: gpt-4o-mini-2024-07-18
 Status: success
-Total tokens: 1408
+Total tokens: 1282
 
 Market Summary:
-Live conditions are weakening the morning thesis due to uncertainty surrounding oil prices and execution conditions not being fully met.
+Live conditions are not confirming the morning thesis as none of the candidates meet their execution conditions.
 
 Stocks:
-- XOM: watch | Current conditions do not clarify oil direction as required.
-- UAL: watch | Conditions for entry are not met due to lack of confirmation of WTI and UAL's price.
-- OXY: watch | Current conditions do not allow for trade confirmation due to unresolved news and oil price movement.
+- RCL: watch | 16 fresh headlines but RCL's price action does not meet the criteria.
+- NVDA: watch | 31 fresh headlines but NVDA is not meeting the price condition.
+- KBH: buy | 13 fresh headlines but KBH's price action does not meet the buy condition.
 
 Response JSON:
 {
   "overall_sentiment": "bearish",
-  "market_summary": "Live conditions are weakening the morning thesis due to uncertainty surrounding oil prices and execution conditions not being fully met.",
+  "market_summary": "Live conditions are not confirming the morning thesis as none of the candidates meet their execution conditions.",
   "stocks": {
-    "XOM": {
+    "RCL": {
       "recommendation": "watch",
       "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "Uncertainty about oil direction as Brent has not stabilized above $100, and no indication of Iran talks collapsing."
+        "RCL has not consolidated above 263.00 after the open."
       ],
-      "monitor_reason": "Current conditions do not clarify oil direction as required.",
-      "execution_condition": "Watch for oil direction to clarify: if Brent stabilizes above $100 and Iran talks collapse (oil re-spikes), upgrade to buy at $158-160; if de-escalation holds and oil breaks below $90, step aside and look for $148-152 re-entry.",
+      "monitor_reason": "16 fresh headlines but RCL's price action does not meet the criteria.",
+      "execution_condition": "Only upgrade this to an entry if RCL consolidates above 263.00 after the open and cruise peers keep outperforming while crude stays under pressure.",
       "trade_plan": {
-        "entry": 158.0,
-        "stop_loss": 152.5,
-        "target": 172.0
+        "entry": 264.0,
+        "stop_loss": 256.0,
+        "target": 279.0
       }
     },
-    "UAL": {
+    "NVDA": {
       "recommendation": "watch",
       "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "WTI crude has not been confirmed to hold below $95, and UAL's price action is not confirmed above $100."
+        "NVDA is below 172.00 and has not retaken the 174.00 area."
       ],
-      "monitor_reason": "Conditions for entry are not met due to lack of confirmation of WTI and UAL's price.",
-      "execution_condition": "WTI crude holding below $95 at open and through first 30 minutes of trading; UAL trading above $100 (confirming it held the bounce from $89 lows); no new Iran escalation headlines premarket.",
+      "monitor_reason": "31 fresh headlines but NVDA is not meeting the price condition.",
+      "execution_condition": "Only consider a trade if NVDA stays above 172.00 and retakes the 174.00 area with semiconductors confirming higher after the opening volatility settles.",
       "trade_plan": {
-        "entry": 104.0,
-        "stop_loss": 98.5,
-        "target": 116.0
+        "entry": 173.5,
+        "stop_loss": 168.3,
+        "target": 181.5
       }
     },
-    "OXY": {
-      "recommendation": "watch",
+    "KBH": {
+      "recommendation": "buy",
       "confidence": 0.0,
       "ready_to_trade": false,
       "matched_conditions": [],
       "failed_conditions": [
-        "Iran news has not yet resolved direction, and oil prices have not confirmed holding above $90 WTI."
+        "KBH is not holding above 51.00 after the first 30 minutes."
       ],
-      "monitor_reason": "Current conditions do not allow for trade confirmation due to unresolved news and oil price movement.",
-      "execution_condition": "Wait for Iran news to resolve direction; if oil holds above $90 WTI and HSBC $68 target draws buyers toward $63-65 range, enter on a test of $63 with confirmation of volume.",
+      "monitor_reason": "13 fresh headlines but KBH's price action does not meet the buy condition.",
+      "execution_condition": "Only buy if KBH is holding 51.00 or better after the first 30 minutes and homebuilders are not lagging the broader risk-on tape.",
       "trade_plan": {
-        "entry": 63.0,
-        "stop_loss": 59.5,
-        "target": 70.0
+        "entry": 51.35,
+        "stop_loss": 49.8,
+        "target": 54.9
       }
     }
   },
@@ -75,28 +75,28 @@ Response JSON:
     "selected_provider": "openai",
     "selected_model": "gpt-4o-mini-2024-07-18",
     "usage": {
-      "input_tokens": 830,
-      "output_tokens": 578,
-      "total_tokens": 1408,
+      "input_tokens": 783,
+      "output_tokens": 499,
+      "total_tokens": 1282,
       "cached_input_tokens": 0,
       "reasoning_output_tokens": 0
     },
     "service_tier": "default",
-    "request_id": "req_1b8176980a874f268a29165259bc4b2f",
+    "request_id": "req_2368a7ce61c248df8dd3bfa679ae38cd",
     "rate_limits": {
       "headers": {
         "x-ratelimit-limit-requests": "10000",
         "x-ratelimit-limit-tokens": "200000",
         "x-ratelimit-remaining-requests": "9999",
-        "x-ratelimit-remaining-tokens": "199187",
+        "x-ratelimit-remaining-tokens": "199227",
         "x-ratelimit-reset-requests": "8.64s",
-        "x-ratelimit-reset-tokens": "243ms"
+        "x-ratelimit-reset-tokens": "231ms"
       },
       "estimates": {
         "requests_remaining_after_request": 9999,
         "requests_remaining_before_request_estimate": 10000,
-        "tokens_remaining_after_request": 199187,
-        "tokens_remaining_before_request_estimate": 200595
+        "tokens_remaining_after_request": 199227,
+        "tokens_remaining_before_request_estimate": 200509
       },
       "billing_balance_before_workflow": {
         "available": false,
@@ -107,8 +107,8 @@ Response JSON:
       "platform": "github_actions",
       "python_version": "3.12.13",
       "os": "Linux-6.17.0-1008-azure-x86_64-with-glibc2.39",
-      "agent_profile": "claude",
-      "agent_label": "Claude Strategist",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
       "github": {
         "repository": "Aashay-chaudhari/trader",
         "workflow": "Trading Pipeline",
@@ -121,18 +121,18 @@ Response JSON:
         "ref": "refs/heads/main"
       }
     },
-    "duration_ms": 12616.3,
+    "duration_ms": 10354.3,
     "attempts": [
       {
         "execution_mode": "api",
         "provider": "openai",
         "model": "gpt-4o-mini",
         "status": "success",
-        "duration_ms": 12616.3,
+        "duration_ms": 10354.3,
         "usage": {
-          "input_tokens": 830,
-          "output_tokens": 578,
-          "total_tokens": 1408,
+          "input_tokens": 783,
+          "output_tokens": 499,
+          "total_tokens": 1282,
           "cached_input_tokens": 0,
           "reasoning_output_tokens": 0
         }
