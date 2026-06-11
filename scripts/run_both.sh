@@ -38,15 +38,17 @@ else
   exit 1
 fi
 
-if command -v codex >/dev/null 2>&1; then
-  CODEX_BIN="$(command -v codex)"
-else
-  CODEX_BIN=""
+CODEX_BIN="${CODEX_BIN:-}"
+if [[ -z "$CODEX_BIN" ]]; then
   for candidate in /c/Users/"${USERNAME:-$USER}"/AppData/Local/OpenAI/Codex/bin/*/codex.exe; do
     if [[ -x "$candidate" ]]; then
       CODEX_BIN="$candidate"
+      break
     fi
   done
+fi
+if [[ -z "$CODEX_BIN" ]] && command -v codex >/dev/null 2>&1; then
+  CODEX_BIN="$(command -v codex)"
 fi
 
 if [[ -z "$CODEX_BIN" ]]; then
