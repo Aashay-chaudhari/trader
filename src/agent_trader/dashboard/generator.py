@@ -13,7 +13,8 @@ from typing import Any
 from agent_trader.utils.profiles import DEFAULT_PROFILE_LABELS
 
 _TEMPLATE_PATH = Path(__file__).parent / "template.html"
-DISABLED_PROFILE_IDS = {"claude"}
+IGNORED_PROFILE_IDS = {"claude"}
+DISABLED_PROFILE_IDS: set[str] = set()
 
 
 def _load_dashboard_html() -> str:
@@ -689,7 +690,7 @@ def _build_dashboard_bundle(
     profile_roots = {
         profile_id: path
         for profile_id, path in profile_roots.items()
-        if profile_id not in DISABLED_PROFILE_IDS
+        if profile_id not in IGNORED_PROFILE_IDS
     }
     if not profile_roots:
         profile_roots = {"default": data_root}
@@ -711,7 +712,7 @@ def _build_dashboard_bundle(
                     "label": DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.title()),
                 },
                 "status": "coming_soon",
-                "message": "Claude coming soon",
+                "message": f"{DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.title())} unavailable",
             }
             for profile_id in DISABLED_PROFILE_IDS
         },

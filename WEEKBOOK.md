@@ -1,271 +1,71 @@
-﻿# Weekbook
+# Weekbook
 
-This is the practical operating runbook for Agent Trader during a normal trading week.
+## Every Trading Morning
 
-## Core Rhythm
-
-- Morning research is local and manual.
-- Intraday monitoring is automatic in GitHub Actions.
-- Evening reflection is local and manual.
-- Weekly and monthly reviews are local and manual.
-
-Use this as the default cadence unless you intentionally override it.
-
-## Daily Timeline
-
-### Morning
-
-Ideal window: `8:15 AM - 8:45 AM ET`
-
-Run:
+Ideal window: 8:15 AM to 8:45 AM ET.
 
 ```powershell
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh morning parallel
 ```
 
-What should happen:
+Confirm:
 
-- latest `main` is pulled first
-- Codex performs the morning research
-- the morning cache is validated against recent market prices before commit
-- the Codex profile writes:
-  - `cache/morning_research.json`
-  - `cache/watchlist.json`
-  - `interactions/<date>/..._prompt.md`
-  - `interactions/<date>/..._transcript.txt`
-  - `interactions/<date>/..._interaction.json`
-- the runner commits and pushes automatically
+- the Codex session succeeds or records an intentional same-day skip
+- morning sanity validation passes
+- `data/profiles/codex/cache/morning_research.json` and `watchlist.json` are current
+- the research commit reaches `origin/main`
+- GitHub Pages lists the morning interaction
 
-What to check:
+## During Market Hours
 
-- the Codex strategist completes successfully
-- push to `main` succeeds
-- `data/profiles/codex/cache/morning_research.json` exists
-- the dashboard `Decisions` view shows the full morning stock list, not just later monitor candidates
-- GitHub Pages `Session Log` opens the readable interaction timeline rather than a raw JSON file
+No local command is normally required. The `Trading Pipeline` runs every 30 minutes across the configured weekday market window. Python applies the exact market-hours guard.
 
-### Intraday
+Check GitHub Actions when:
 
-Ideal expectation: do nothing unless you want to inspect logs.
+- no monitor interaction appears after a scheduled interval
+- the dashboard stops updating
+- an expected paper order is absent
+- market-data or model evidence looks incomplete
 
-GitHub Actions should run automatically every 30 minutes during market hours.
+For a manual monitor run, use GitHub Actions workflow dispatch with `low_cost_mode=true` and `reset_state=false`.
 
-What monitor does:
-
-- reads latest pushed profile state
-- refreshes data and news
-- evaluates only a small candidate set
-- makes a cheap OpenAI API call when needed
-- lets strategy, risk, and execution logic decide trades
-- updates portfolio state, journal, and dashboard artifacts
-
-What to check:
-
-- GitHub Actions `Trading Pipeline` shows scheduled or manual runs
-- Alpaca paper accounts reflect any submitted paper trades
-- GitHub Pages dashboard updates after publish
-- `Strategist Interactions` shows monitor evaluations under the correct day tab
-
-### Evening
-
-Ideal window: `4:20 PM - 5:00 PM ET`
-
-Run:
+## Every Trading Evening
 
 ```powershell
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evening parallel
 ```
 
-What should happen:
+Confirm the daily observation, knowledge updates, proposal backlog, voice summary, interaction transcript, dashboard, commit, and push.
 
-- latest remote state is pulled first
-- Codex reviews the day
-- Codex then runs a short local "voice" check that summarizes its current state honestly
-- each profile writes:
-  - `observations/daily/obs_YYYY-MM-DD.json`
-  - `voice/voice_YYYY-MM-DD.json`
-  - `voice/latest_voice.json`
-  - updated `knowledge/` files
-  - `IMPROVEMENT_PROPOSALS.md`
-  - `improvement_proposals.json`
-  - interaction prompt/transcript/metadata files for the evening run
-- the runner commits and pushes automatically
-
-What to check:
-
-- the Codex strategist completes successfully
-- push succeeds
-- daily observation files exist for each profile
-
-## Weekly
-
-Ideal window: `Sunday 6:00 PM - 8:00 PM ET`
-
-Run:
+## Weekend and Periodic Work
 
 ```powershell
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh weekly parallel
-```
-
-What should happen:
-
-- each strategist reads the week of observations and journals
-- each strategist writes:
-  - `observations/weekly/week_YYYY-MM-DD.json`
-  - updated knowledge files
-  - interaction logs for the weekly session
-- the runner commits and pushes automatically
-
-## Monthly
-
-Ideal window: `Last trading day after close` or that weekend
-
-Run:
-
-```powershell
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh monthly parallel
-```
-
-What should happen:
-
-- each strategist performs a month-level retrospective
-- each strategist writes:
-  - `observations/monthly/month_YYYY-MM.json`
-  - pruned and updated knowledge
-  - interaction logs for the monthly session
-- the runner commits and pushes automatically
-
-## Optional Evolution Review
-
-Best use: after a few trading days, after a weekly review, or whenever you want
-an explicit sober review of what should change next.
-
-Run:
-
-```powershell
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evolve parallel
 ```
 
-What should happen:
+Weekly review consolidates recent evidence. Monthly review updates longer-term strategy trust. Evolution review converts the improvement backlog into explicit engineering recommendations.
 
-- each strategist reads its own proposal backlog, voice summary, observations,
-  knowledge, and portfolio history
-- each strategist writes:
-  - `EVOLUTION_REPORT.md`
-  - `evolution_review.json`
-  - interaction logs for the evolution session
-- the runner commits and pushes automatically
+## Recovery
 
-What to check:
+Morning failure:
 
-- each profile now has an evolution report
-- GitHub Pages `System Intelligence -> Proposals` shows the evolution summary
-- the resulting priority queue feels selective, not noisy
+1. Inspect `.tmp/cli_logs/` and the newest interaction transcript.
+2. Confirm the current Codex desktop CLI is available.
+3. Rerun the morning command; idempotency prevents duplicate research after valid files exist.
 
-If the evolution card is empty before the first evolve run, that is expected.
+Monitor failure:
 
-## Monday Checklist
+1. Check the Actions job that failed: monitor, publish, or deploy.
+2. Verify `OPENAI_API_KEY`, Alpaca credentials, and `MONITOR_RUN_MODE`.
+3. Inspect the retained `strategist-codex-monitor` artifact.
+4. Dispatch the workflow manually after correcting configuration.
 
-### Before market open
-
-1. Pull latest repo state if needed:
+Dashboard failure:
 
 ```powershell
-git pull --ff-only origin main
+$env:UV_CACHE_DIR="$PWD\.tmp\uv-cache"
+uv run --extra dev python -m agent_trader dashboard
 ```
 
-2. Run morning research:
-
-```powershell
-& "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh morning parallel
-```
-
-3. Confirm push succeeded.
-
-4. Open GitHub Actions and keep an eye on the first monitor run around `9:30 AM ET`.
-
-### During the session
-
-1. If you want to sanity-check automation, open:
-   - GitHub Actions `Trading Pipeline`
-   - GitHub Pages dashboard
-   - Alpaca paper accounts
-
-2. If the first scheduled monitor run does not appear when expected, manually dispatch the workflow once.
-
-### After close
-
-1. Run evening reflection:
-
-```powershell
-& "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evening parallel
-```
-
-2. Verify both daily observation files exist.
-
-## Expected Artifacts By End Of Week 1
-
-Per profile, you should have:
-
-- `cache/morning_research.json`
-- `cache/watchlist.json`
-- `journal/`
-- `observations/daily/`
-- `observations/weekly/`
-- `knowledge/` with more meaningful content than day 1
-- `voice/` with short strategist state summaries
-- `interactions/` with readable prompt and transcript archives
-
-On GitHub Pages, you should be able to browse:
-
-- latest portfolio and comparison view
-- research and monitor reports
-- knowledge summaries
-- strategist voice summaries
-- local strategist interaction logs
-- monitor evaluations grouped into the same day-based interaction timeline
-
-## If Something Looks Wrong
-
-### Morning run fails locally
-
-- rerun `./scripts/run_both.sh morning parallel`
-- check CLI authentication
-- inspect `data/profiles/<profile>/interactions/..._transcript.txt`
-- inspect `.tmp/cli_logs/`
-
-### Monitor does not trade
-
-That is not automatically a bug. It may mean:
-
-- no candidate was near entry
-- the monitor gate rejected the setup
-- risk validation blocked the trade
-- the market was closed
-
-Check:
-
-- GitHub Actions run logs
-- dashboard `Monitor / Execution`
-- Alpaca paper orders page
-
-### Dashboard looks stale
-
-Check:
-
-- latest monitor run succeeded
-- publish step succeeded
-- `docs/data/` was updated in the latest commit
-
-## First Principle
-
-Do not over-seed the system.
-
-Let week 1 create the real memory:
-
-- morning theses
-- monitor decisions
-- evening lessons
-- weekly consolidation
-
-That gives you a cleaner learning loop than a heavily preloaded knowledge base.

@@ -5,8 +5,8 @@ retrospective. This is the **highest-level review** — analyzing an entire mont
 of trading to identify systemic patterns, validate or invalidate strategies,
 and set your plan for next month.
 
-**IMPORTANT**: Read and write ONLY your own profile: `data/profiles/{{PROFILE}}/`.
-Your counterpart does their own independent retrospective.
+**IMPORTANT**: Read and write ONLY the active profile:
+`data/profiles/{{PROFILE}}/`.
 
 > This is the most important review. Be thorough, be honest, be strategic.
 
@@ -191,7 +191,7 @@ git add data/profiles/{{PROFILE}}/observations/monthly/ \
         data/profiles/{{PROFILE}}/knowledge/
 ```
 
-**Do NOT commit or push.** The runner script handles that after both strategists finish.
+**Do NOT commit or push.** The runner script handles that after the strategist finishes.
 
 ---
 
@@ -204,4 +204,4 @@ git add data/profiles/{{PROFILE}}/observations/monthly/ \
 - [ ] Next month plan has specific key_dates from research
 - [ ] All knowledge files were READ before updating (don't overwrite from scratch)
 - [ ] JSON is valid
-- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/ — not the other profile
+- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/

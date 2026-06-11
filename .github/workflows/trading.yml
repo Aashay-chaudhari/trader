@@ -22,13 +22,6 @@ on:
 
   workflow_dispatch:
     inputs:
-      strategists:
-        description: "Which strategist books to run"
-        required: true
-        default: "codex"
-        type: choice
-        options:
-          - codex
       low_cost_mode:
         description: "Use cheapest monitor models plus tighter monitor budgets"
         required: true
@@ -46,34 +39,9 @@ permissions:
   id-token: write
 
 jobs:
-  determine-strategists:
-    runs-on: ubuntu-latest
-    outputs:
-      strategist_matrix: ${{ steps.matrix.outputs.strategist_matrix }}
-    steps:
-      - name: Determine strategist matrix
-        id: matrix
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SELECTED_STRATEGISTS="${{ inputs.strategists }}"
-          else
-            SELECTED_STRATEGISTS="both"
-          fi
-
-          if [ "$SELECTED_STRATEGISTS" = "codex" ]; then
-            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
-          else
-            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
-          fi
-
   strategist-run:
-    name: Monitor (${{ matrix.profile_id }})
-    needs: determine-strategists
+    name: Monitor (codex)
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.determine-strategists.outputs.strategist_matrix) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -91,9 +59,9 @@ jobs:
       - name: Reset strategist state
         if: github.event_name == 'workflow_dispatch' && inputs.reset_state == true
         env:
-          DATA_DIR: data/profiles/${{ matrix.profile_id }}
-          AGENT_PROFILE: ${{ matrix.profile_id }}
-          AGENT_LABEL: ${{ matrix.profile_label }}
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
         run: python -m agent_trader reset
 
       - name: Print strategist runtime config
@@ -103,7 +71,7 @@ jobs:
           MONITOR_LLM_PROVIDER: openai
           MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
         run: |
-          echo "profile=${{ matrix.profile_id }}"
+          echo "profile=codex"
           echo "phase=monitor"
           echo "api_provider=${LLM_PROVIDER}"
           echo "monitor_provider=${MONITOR_LLM_PROVIDER}"
@@ -121,9 +89,9 @@ jobs:
           SEC_EDGAR_USER_AGENT: ${{ secrets.SEC_EDGAR_USER_AGENT }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
-          DATA_DIR: data/profiles/${{ matrix.profile_id }}
-          AGENT_PROFILE: ${{ matrix.profile_id }}
-          AGENT_LABEL: ${{ matrix.profile_label }}
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
@@ -136,9 +104,9 @@ jobs:
       - name: Check strategist analysis mode used
         if: always()
         env:
-          DATA_DIR: data/profiles/${{ matrix.profile_id }}
-          AGENT_PROFILE: ${{ matrix.profile_id }}
-          AGENT_LABEL: ${{ matrix.profile_label }}
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
@@ -148,16 +116,15 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: strategist-${{ matrix.profile_id }}-monitor
-          path: data/profiles/${{ matrix.profile_id }}/
+          name: strategist-codex-monitor
+          path: data/profiles/codex/
           if-no-files-found: warn
           retention-days: 30
 
   publish-results:
     needs:
-      - determine-strategists
       - strategist-run
-    if: always() && needs.determine-strategists.result == 'success'
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -183,7 +150,7 @@ jobs:
 
       - name: Clean previous strategist bundles
         run: |
-          rm -rf data/profiles/claude data/profiles/codex docs/data/profiles
+          rm -rf data/profiles/codex docs/data/profiles
           mkdir -p data/profiles docs/data
 
       - name: Download Codex strategist artifacts

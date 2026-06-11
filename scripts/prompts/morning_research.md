@@ -4,10 +4,9 @@ You are the **{{PROFILE}}** trading strategist. Your job is to research today's
 market, select stocks, and write trade plans that the automated monitor crons
 will execute throughout the day.
 
-**IMPORTANT**: You are one of two competing strategists. Read and write ONLY
-your own profile directory: `data/profiles/{{PROFILE}}/`. Your counterpart has
-their own knowledge, their own positions, their own lessons. You must develop
-your OWN thesis independently.
+**IMPORTANT**: Read and write ONLY the active profile directory:
+`data/profiles/{{PROFILE}}/`. Build the thesis from that profile's own
+knowledge, positions, lessons, and observations.
 
 > Spend time on web research. The quality of today's trades depends on it.
 
@@ -215,7 +214,7 @@ git add data/profiles/{{PROFILE}}/cache/morning_research.json \
         data/profiles/{{PROFILE}}/cache/watchlist.json
 ```
 
-**Do NOT commit or push.** The runner script handles that after both strategists finish.
+**Do NOT commit or push.** The runner script handles that after the strategist finishes.
 
 ---
 
@@ -231,4 +230,4 @@ git add data/profiles/{{PROFILE}}/cache/morning_research.json \
 - [ ] Checked lessons_learned.json and avoided known pitfalls
 - [ ] Checked strategy_effectiveness.json and favored strategies that work in current regime
 - [ ] JSON is valid (no trailing commas, no comments)
-- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/ — not the other profile
+- [ ] Wrote ONLY to data/profiles/{{PROFILE}}/

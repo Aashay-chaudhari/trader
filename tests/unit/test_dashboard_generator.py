@@ -313,7 +313,7 @@ def test_generate_dashboard_merges_multiple_profiles():
 
         assert set(bundle["profiles"]) == {"codex"}
         assert bundle["active_profile"] == "codex"
-        assert bundle["disabled_profiles"]["claude"]["message"] == "Claude coming soon"
+        assert bundle["disabled_profiles"] == {}
         assert bundle["comparison"]["leaders"]["portfolio_value"] == "codex"
         assert {item["profile"] for item in bundle["comparison"]["summary"]} == {"codex"}
         assert codex_bundle["profile"]["label"] == "Codex Strategist"
@@ -1117,5 +1117,5 @@ def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
         assert set(bundle["profiles"]) == {"codex"}
-        assert bundle["disabled_profiles"]["claude"]["message"] == "Claude coming soon"
+        assert bundle["disabled_profiles"] == {}
         assert not (docs_dir / "data" / "profiles" / "default").exists()

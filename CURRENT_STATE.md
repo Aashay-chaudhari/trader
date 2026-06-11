@@ -1,116 +1,49 @@
-﻿# Current State
+# Current State
 
-Date: 2026-03-22
+Date: 2026-06-11
 
 ## Status
 
-The repo is in a paper-trading-ready operator state.
+The repository is aligned around one active strategist profile: `codex`.
 
-Assistant handoff file:
+- June 11 morning research is committed to `main`.
+- Market regime: `risk_on`.
+- Watchlist: `CCL`, `RCL`, `KBH`, `BRZE`, `AIR`, `NVDA`.
+- Morning price-anchor validation passed.
+- GitHub Pages contains the June 11 successful morning interaction.
+- The remote monitor workflow is Codex-only and scheduled every 30 minutes during weekday market hours.
+- The monitor uses OpenAI and defaults to Alpaca paper mode when `MONITOR_RUN_MODE` is absent.
 
-- `CODING_ASSISTANT.md`
+## Monitor Readiness
 
-What that means:
+Repository-side prerequisites are satisfied for June 11, 2026. External readiness still depends on repository configuration that is intentionally not stored in Git:
 
-- local CLI research and reflection are the primary workflow
-- GitHub Actions runs only the lightweight monitor path
-- monitor uses cheap API models
-- Alpaca paper execution is wired through the Python runtime
-- dashboard output includes knowledge, interactions, strategist voice, and evolution artifacts
-- the first local morning run has completed and been pushed
-- the remote monitor path has been dry-run validated and deployed successfully
-- the dashboard now keeps morning thesis data separate from monitor gate outcomes
-- the local morning runner now blocks obviously unrealistic buy/sell price anchors before commit
-- the dashboard now backfills news panels from morning `supporting_articles` when structured news context is missing
+- `OPENAI_API_KEY` is available to GitHub Actions.
+- `ALPACA_API_KEY_CODEX` and `ALPACA_SECRET_KEY_CODEX`, or the fallback Alpaca key pair, are available.
+- `MONITOR_RUN_MODE` is `paper` for paper execution or `debug` for observation-only runs.
 
+## Active Workflow
 
-## Assistant Handoff Contract
+1. Run local morning research.
+2. Push validated morning state to `main`.
+3. Let GitHub Actions monitor candidates intraday.
+4. Let the workflow commit runtime state and redeploy GitHub Pages.
+5. Run local evening reflection after the close.
+6. Run weekly, monthly, and evolution reviews on demand.
 
-To bridge assistants reliably:
+## Recent Reliability Changes
 
-- `CURRENT_STATE.md` is the latest baton
-- `CODING_ASSISTANT.md` is the stable operator manual
-- `SYSTEM_GUIDE.md` is the deeper architecture reference
+- Removed active Claude workflow branches and dashboard bundles.
+- Added Codex-only workflow dispatch and artifact publication.
+- Added portable Python discovery through `python` or `uv`.
+- Added discovery of the current Codex desktop CLI.
+- Changed local runner pushes to `HEAD:main`.
+- Added required empty profile directories to source control.
+- Kept morning thesis and later monitor decisions separate in the dashboard.
 
-Any assistant making workflow or reliability changes should update these files before handoff.
+## Validation Baseline
 
-## Primary Commands
+- Focused unit suite: 18 passed.
+- Profile validation: 37 passed, 0 failed.
+- Dashboard generation completed successfully.
 
-### Daily
-
-```bash
-./scripts/run_both.sh morning parallel
-./scripts/run_both.sh evening parallel
-```
-
-### Periodic
-
-```bash
-./scripts/run_both.sh weekly parallel
-./scripts/run_both.sh monthly parallel
-./scripts/run_both.sh evolve parallel
-```
-
-### Validation
-
-```bash
-pytest -q
-python -m agent_trader validate --data-dir data/profiles/codex
-python -m agent_trader dashboard
-```
-
-## Current Frontend Surface
-
-GitHub Pages should now show:
-
-- strategist comparison
-- trade history and market intelligence
-- knowledge summaries
-- local session logs plus monitor evaluations in the same daily timeline
-- strategist voice
-- evolution summary plus report link
-- `Session Log` routes to the readable interactions panel
-- `Evolution` routes to the proposals/evolution panel
-
-## Current Remote Automation
-
-Workflow: `Trading Pipeline`
-
-- schedule: every 30 minutes on weekday market hours
-- run mode is controlled by `MONITOR_RUN_MODE`
-- current production setting: `paper`
-- normal production use: `monitor` only
-- publish path: commits updated runtime state and deploys GitHub Pages
-
-## Current Cheap Monitor Models
-
-- provider for the Codex monitor job: `openai`
-- model for the Codex monitor job: `gpt-4o-mini`
-
-## Evolution State
-
-Evolution is now available in two forms:
-
-1. ongoing evening proposal backlog
-   - `IMPROVEMENT_PROPOSALS.md`
-   - `improvement_proposals.json`
-
-2. explicit on-demand local review
-   - `./scripts/run_both.sh evolve parallel`
-   - outputs `evolution_review.json` and `EVOLUTION_REPORT.md`
-
-Current live state:
-
-- the evolution pipeline is wired and exposed in the dashboard
-- no evolution review has been run yet
-- an empty evolution card is expected until the first explicit evolve pass
-
-## Operator Expectation
-
-From here, the normal week should only require:
-
-1. local morning research
-2. remote monitor automation
-3. local evening reflection
-4. weekly review on the weekend
-5. optional evolution review when you want a deliberate improvement pass

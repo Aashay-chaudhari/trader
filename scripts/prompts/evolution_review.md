@@ -169,8 +169,8 @@ git add data/profiles/{{PROFILE}}/EVOLUTION_REPORT.md \
         data/profiles/{{PROFILE}}/evolution_review.json
 ```
 
-**Do NOT commit or push.** The runner script handles that after both local
-strategists finish.
+**Do NOT commit or push.** The runner script handles that after the local
+strategist finishes.
 
 ---
 
