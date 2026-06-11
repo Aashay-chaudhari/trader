@@ -55,7 +55,6 @@ Any assistant making workflow or reliability changes should update these files b
 
 ```bash
 pytest -q
-python -m agent_trader validate --data-dir data/profiles/claude
 python -m agent_trader validate --data-dir data/profiles/codex
 python -m agent_trader dashboard
 ```
@@ -85,8 +84,8 @@ Workflow: `Trading Pipeline`
 
 ## Current Cheap Monitor Models
 
-- provider for both strategist monitor jobs: `openai`
-- model for both strategist monitor jobs: `gpt-4o-mini`
+- provider for the Codex monitor job: `openai`
+- model for the Codex monitor job: `gpt-4o-mini`
 
 ## Evolution State
 

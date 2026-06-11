@@ -26,9 +26,9 @@ Run:
 What should happen:
 
 - latest `main` is pulled first
-- Claude and Codex each research independently
-- each morning cache is validated against recent market prices before commit
-- each profile writes:
+- Codex performs the morning research
+- the morning cache is validated against recent market prices before commit
+- the Codex profile writes:
   - `cache/morning_research.json`
   - `cache/watchlist.json`
   - `interactions/<date>/..._prompt.md`
@@ -38,9 +38,8 @@ What should happen:
 
 What to check:
 
-- both strategists complete successfully
+- the Codex strategist completes successfully
 - push to `main` succeeds
-- `data/profiles/claude/cache/morning_research.json` exists
 - `data/profiles/codex/cache/morning_research.json` exists
 - the dashboard `Decisions` view shows the full morning stock list, not just later monitor candidates
 - GitHub Pages `Session Log` opens the readable interaction timeline rather than a raw JSON file
@@ -80,8 +79,8 @@ Run:
 What should happen:
 
 - latest remote state is pulled first
-- both strategists review the day
-- both strategists then run a short local "voice" check that summarizes their current state honestly
+- Codex reviews the day
+- Codex then runs a short local "voice" check that summarizes its current state honestly
 - each profile writes:
   - `observations/daily/obs_YYYY-MM-DD.json`
   - `voice/voice_YYYY-MM-DD.json`
@@ -94,7 +93,7 @@ What should happen:
 
 What to check:
 
-- both strategists complete successfully
+- the Codex strategist completes successfully
 - push succeeds
 - daily observation files exist for each profile
 

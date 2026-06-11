@@ -96,3 +96,5 @@ async def test_execution_agent_submits_paper_order_when_not_dry_run(message_bus,
     assert len(result["executed"]) == 1
     assert result["executed"][0]["status"] == "submitted"
     assert result["executed"][0]["order_id"] == "order-123"
+    assert result["executed"][0]["estimated_price"] == 250.0
+    assert result["executed"][0]["estimated_value"] == 5000.0

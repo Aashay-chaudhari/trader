@@ -139,6 +139,7 @@ class ExecutionAgent(BaseAgent):
                 "profile": profile["id"],
                 "profile_label": profile["label"],
                 "status": "submitted",
+                "estimated_price": price,
                 "estimated_value": qty * price,
             }
 

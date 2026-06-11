@@ -1,6 +1,6 @@
 ﻿# Agent Trader
 
-Agent Trader is a dual-strategist paper-trading system with a simple operating split:
+Agent Trader is a Codex-driven paper-trading system with a simple operating split:
 
 - Local CLI sessions do the heavy thinking.
 - GitHub Actions does lightweight intraday monitoring.
@@ -11,10 +11,8 @@ Agent Trader is a dual-strategist paper-trading system with a simple operating s
 
 ```mermaid
 flowchart LR
-    A[You run local morning research] --> B[Claude profile updated]
-    A --> C[Codex profile updated]
-    B --> D[Push to main]
-    C --> D
+    A[You run local morning research] --> C[Codex profile updated]
+    C --> D[Push to main]
     D --> E[GitHub Actions monitor every 30 min]
     E --> F[Cheap API gate checks candidate setups]
     F --> G[Strategy plus risk plus execution]
@@ -101,9 +99,8 @@ Copy `.env.example` to `.env` and make sure these are set:
 
 ```env
 RUN_MODE=debug   # use paper before market opens for real paper execution
-LLM_PROVIDER=auto
+LLM_PROVIDER=openai
 MONITOR_LLM_PROVIDER=openai
-MONITOR_MODEL=claude-haiku-4-5-20251001
 MONITOR_MODEL_OPENAI=gpt-4o-mini
 DATA_DIR=data/profiles/default
 AGENT_PROFILE=default
@@ -111,13 +108,13 @@ AGENT_PROFILE=default
 
 Notes:
 
-- `run_both.sh` uses your local `claude` and `codex` CLI tools for research.
+- `run_both.sh` uses the local Codex CLI for research.
 - GitHub Actions monitor uses API keys and the repo variable `MONITOR_RUN_MODE`.
 - A safe Sunday / dry-run posture is:
   - local `.env`: `RUN_MODE=debug`
   - GitHub repo variable: `MONITOR_RUN_MODE=debug`
 - Before a real trading session, flip both to `paper`.
-- The standard monitor workflow forces both strategist monitor gates onto OpenAI to keep intraday cost down.
+- The standard monitor workflow uses OpenAI for the Codex monitor gate.
 - If you want local Python monitor runs to place paper orders too, your local `.env` also needs valid `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` values.
 
 ### Dashboard navigation
@@ -206,7 +203,6 @@ python -m agent_trader dashboard
 
 ```bash
 pytest -q
-python -m agent_trader validate --data-dir data/profiles/claude
 python -m agent_trader validate --data-dir data/profiles/codex
 python -m agent_trader dashboard
 ```

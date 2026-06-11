@@ -307,20 +307,17 @@ def test_generate_dashboard_merges_multiple_profiles():
         generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        claude_bundle = json.loads(
-            (docs_dir / "data" / "profiles" / "claude" / "dashboard.json").read_text(encoding="utf-8")
-        )
         codex_bundle = json.loads(
             (docs_dir / "data" / "profiles" / "codex" / "dashboard.json").read_text(encoding="utf-8")
         )
 
-        assert set(bundle["profiles"]) == {"claude", "codex"}
-        assert bundle["active_profile"] == "claude"
-        assert bundle["comparison"]["leaders"]["portfolio_value"] == "claude"
-        assert {item["profile"] for item in bundle["comparison"]["summary"]} == {"claude", "codex"}
-        assert claude_bundle["profile"]["label"] == "Claude Strategist"
+        assert set(bundle["profiles"]) == {"codex"}
+        assert bundle["active_profile"] == "codex"
+        assert bundle["disabled_profiles"]["claude"]["message"] == "Claude coming soon"
+        assert bundle["comparison"]["leaders"]["portfolio_value"] == "codex"
+        assert {item["profile"] for item in bundle["comparison"]["summary"]} == {"codex"}
         assert codex_bundle["profile"]["label"] == "Codex Strategist"
-        assert (docs_dir / "data" / "profiles" / "claude" / "report_research.md").exists()
+        assert not (docs_dir / "data" / "profiles" / "claude").exists()
         assert (docs_dir / "data" / "profiles" / "codex" / "report_research.md").exists()
 
 
@@ -331,7 +328,7 @@ def test_generate_dashboard_prefers_morning_cache_over_latest_monitor_subset():
         root = Path(temp_dir).resolve()
         data_dir = root / "data"
         docs_dir = root / "docs"
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
 
         (profile_root / "snapshots").mkdir(parents=True)
         (profile_root / "research").mkdir(parents=True)
@@ -341,7 +338,7 @@ def test_generate_dashboard_prefers_morning_cache_over_latest_monitor_subset():
         (profile_root / "journal" / "2026-03-23").mkdir(parents=True)
 
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -403,11 +400,11 @@ def test_generate_dashboard_prefers_morning_cache_over_latest_monitor_subset():
         generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        profile_bundle = bundle["profiles"]["claude"]
+        profile_bundle = bundle["profiles"]["codex"]
 
         assert set(profile_bundle["research"]["stocks"]) == {"XOM", "HAL", "OXY"}
         assert set(profile_bundle["monitor"]["stocks"]) == {"XOM", "PAYX"}
-        assert (docs_dir / "data" / "profiles" / "claude" / "monitor.json").exists()
+        assert (docs_dir / "data" / "profiles" / "codex" / "monitor.json").exists()
 
 
 def test_generate_dashboard_backfills_news_panels_from_morning_supporting_articles():
@@ -417,7 +414,7 @@ def test_generate_dashboard_backfills_news_panels_from_morning_supporting_articl
         root = Path(temp_dir).resolve()
         data_dir = root / "data"
         docs_dir = root / "docs"
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
 
         (profile_root / "snapshots").mkdir(parents=True)
         (profile_root / "research").mkdir(parents=True)
@@ -426,7 +423,7 @@ def test_generate_dashboard_backfills_news_panels_from_morning_supporting_articl
         (profile_root / "cache").mkdir(parents=True)
 
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -482,7 +479,7 @@ def test_generate_dashboard_backfills_news_panels_from_morning_supporting_articl
         generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        news_inputs = bundle["profiles"]["claude"]["context"]["prompt_sections"]["news_inputs"]
+        news_inputs = bundle["profiles"]["codex"]["context"]["prompt_sections"]["news_inputs"]
 
         assert set(news_inputs["per_symbol"]) == {"XOM", "HAL"}
         assert news_inputs["market_headlines"][0]["title"] == "Oil stocks lead global rally"
@@ -748,16 +745,16 @@ def test_generate_dashboard_exports_interaction_logs():
         data_dir = root / "data"
         docs_dir = root / "docs"
 
-        (data_dir / "profiles" / "claude" / "snapshots").mkdir(parents=True)
-        (data_dir / "profiles" / "claude" / "research").mkdir(parents=True)
-        (data_dir / "profiles" / "claude" / "analytics").mkdir(parents=True)
-        (data_dir / "profiles" / "claude" / "context").mkdir(parents=True)
-        interaction_dir = data_dir / "profiles" / "claude" / "interactions" / "2026-03-22"
+        (data_dir / "profiles" / "codex" / "snapshots").mkdir(parents=True)
+        (data_dir / "profiles" / "codex" / "research").mkdir(parents=True)
+        (data_dir / "profiles" / "codex" / "analytics").mkdir(parents=True)
+        (data_dir / "profiles" / "codex" / "context").mkdir(parents=True)
+        interaction_dir = data_dir / "profiles" / "codex" / "interactions" / "2026-03-22"
         interaction_dir.mkdir(parents=True)
 
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -785,14 +782,14 @@ def test_generate_dashboard_exports_interaction_logs():
             json.dumps(
                 {
                     "timestamp": "2026-03-22T08:30:00-04:00",
-                    "profile": "claude",
+                    "profile": "codex",
                     "phase": "morning",
-                    "tool": "claude",
+                    "tool": "codex",
                     "status": "success",
                     "prompt_source": "scripts/prompts/morning_research.md",
-                    "prompt_file": "data/profiles/claude/interactions/2026-03-22/083000_morning_prompt.md",
-                    "transcript_file": "data/profiles/claude/interactions/2026-03-22/083000_morning_transcript.txt",
-                    "raw_log_file": ".tmp/cli_logs/claude_morning_2026-03-22_083000.ndjson",
+                    "prompt_file": "data/profiles/codex/interactions/2026-03-22/083000_morning_prompt.md",
+                    "transcript_file": "data/profiles/codex/interactions/2026-03-22/083000_morning_transcript.txt",
+                    "raw_log_file": ".tmp/cli_logs/codex_morning_2026-03-22_083000.ndjson",
                     "summary": "Research started | Top thesis line",
                 }
             ),
@@ -807,22 +804,21 @@ def test_generate_dashboard_exports_interaction_logs():
         generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        interactions = bundle["profiles"]["claude"]["interactions"]
+        interactions = bundle["profiles"]["codex"]["interactions"]
 
         assert interactions["counts"]["total"] == 1
         assert interactions["latest"]["phase"] == "morning"
         assert interactions["recent"][0]["prompt_url"] == (
-            "data/profiles/claude/interactions/2026-03-22/083000_morning_prompt.md"
+            "data/profiles/codex/interactions/2026-03-22/083000_morning_prompt.md"
         )
         assert interactions["recent"][0]["transcript_url"] == (
-            "data/profiles/claude/interactions/2026-03-22/083000_morning_transcript.txt"
+            "data/profiles/codex/interactions/2026-03-22/083000_morning_transcript.txt"
         )
-        assert (docs_dir / "data" / "profiles" / "claude" / "interactions.json").exists()
+        assert (docs_dir / "data" / "profiles" / "codex" / "interactions.json").exists()
         assert (
             docs_dir
             / "data"
-            / "profiles"
-            / "claude"
+            / "profiles" / "codex"
             / "interactions"
             / "2026-03-22"
             / "083000_morning_prompt.md"
@@ -830,8 +826,7 @@ def test_generate_dashboard_exports_interaction_logs():
         assert (
             docs_dir
             / "data"
-            / "profiles"
-            / "claude"
+            / "profiles" / "codex"
             / "interactions"
             / "2026-03-22"
             / "083000_morning_transcript.txt"
@@ -848,7 +843,7 @@ def test_generate_dashboard_groups_automated_monitor_evaluations_by_day():
         root = Path(temp_dir).resolve()
         data_dir = root / "data"
         docs_dir = root / "docs"
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
 
         (profile_root / "snapshots").mkdir(parents=True)
         (profile_root / "research").mkdir(parents=True)
@@ -856,7 +851,7 @@ def test_generate_dashboard_groups_automated_monitor_evaluations_by_day():
         (profile_root / "context").mkdir(parents=True)
 
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -913,7 +908,7 @@ def test_generate_dashboard_groups_automated_monitor_evaluations_by_day():
         generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        interactions = bundle["profiles"]["claude"]["interactions"]
+        interactions = bundle["profiles"]["codex"]["interactions"]
         day = interactions["days"][0]
         monitor_group = next(section for section in day["phases"] if section["key"] == "monitor")
         item = monitor_group["items"][0]
@@ -927,8 +922,7 @@ def test_generate_dashboard_groups_automated_monitor_evaluations_by_day():
         assert (
             docs_dir
             / "data"
-            / "profiles"
-            / "claude"
+            / "profiles" / "codex"
             / "interactions"
             / day["date"]
             / Path(item["prompt_url"]).name
@@ -943,7 +937,7 @@ def test_generate_dashboard_exports_strategist_voice_bundle():
         data_dir = root / "data"
         docs_dir = root / "docs"
 
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
         (profile_root / "snapshots").mkdir(parents=True)
         (profile_root / "research").mkdir(parents=True)
         (profile_root / "analytics").mkdir(parents=True)
@@ -951,7 +945,7 @@ def test_generate_dashboard_exports_strategist_voice_bundle():
         (profile_root / "voice").mkdir(parents=True)
 
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -971,7 +965,7 @@ def test_generate_dashboard_exports_strategist_voice_bundle():
 
         voice_payload = {
             "date": "2026-03-22",
-            "profile": "claude",
+            "profile": "codex",
             "state": "building",
             "summary": "Process quality is improving, but trade evidence is still thin.",
             "since_last_time": ["First voice entry - no prior baseline yet."],
@@ -994,14 +988,14 @@ def test_generate_dashboard_exports_strategist_voice_bundle():
 
         html = (docs_dir / "index.html").read_text(encoding="utf-8")
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        voice = bundle["profiles"]["claude"]["voice"]
+        voice = bundle["profiles"]["codex"]["voice"]
 
         assert "Strategist Voice" in html
         assert voice["counts"]["total"] == 1
         assert voice["latest"]["state"] == "building"
-        assert voice["recent"][0]["json_url"] == "data/profiles/claude/voice/voice_2026-03-22.json"
-        assert (docs_dir / "data" / "profiles" / "claude" / "voice.json").exists()
-        assert (docs_dir / "data" / "profiles" / "claude" / "voice" / "latest_voice.json").exists()
+        assert voice["recent"][0]["json_url"] == "data/profiles/codex/voice/voice_2026-03-22.json"
+        assert (docs_dir / "data" / "profiles" / "codex" / "voice.json").exists()
+        assert (docs_dir / "data" / "profiles" / "codex" / "voice" / "latest_voice.json").exists()
 
 
 def test_generate_dashboard_exports_evolution_bundle():
@@ -1012,14 +1006,14 @@ def test_generate_dashboard_exports_evolution_bundle():
         data_dir = root / "data"
         docs_dir = root / "docs"
 
-        profile_root = data_dir / "profiles" / "claude"
+        profile_root = data_dir / "profiles" / "codex"
         (profile_root / "snapshots").mkdir(parents=True)
         (profile_root / "research").mkdir(parents=True)
         (profile_root / "analytics").mkdir(parents=True)
         (profile_root / "context").mkdir(parents=True)
 
         (profile_root / "profile.json").write_text(
-            json.dumps({"id": "claude", "label": "Claude Strategist"}),
+            json.dumps({"id": "codex", "label": "Codex Strategist"}),
             encoding="utf-8",
         )
         (profile_root / "snapshots" / "latest.json").write_text(
@@ -1039,7 +1033,7 @@ def test_generate_dashboard_exports_evolution_bundle():
 
         evolution_payload = {
             "date": "2026-03-22",
-            "profile": "claude",
+            "profile": "codex",
             "status": "focused_upgrade_window",
             "summary": "Execution conditions are usable, but the improvement queue needs tighter prioritization.",
             "top_priority": {
@@ -1063,7 +1057,7 @@ def test_generate_dashboard_exports_evolution_bundle():
             encoding="utf-8",
         )
         (profile_root / "EVOLUTION_REPORT.md").write_text(
-            "# Evolution Report - Claude Strategist\n\n## Top Priority\n\n- Tighten execution-condition templates\n",
+            "# Evolution Report - Codex Strategist\n\n## Top Priority\n\n- Tighten execution-condition templates\n",
             encoding="utf-8",
         )
 
@@ -1071,15 +1065,15 @@ def test_generate_dashboard_exports_evolution_bundle():
 
         html = (docs_dir / "index.html").read_text(encoding="utf-8")
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
-        evolution = bundle["profiles"]["claude"]["evolution"]
+        evolution = bundle["profiles"]["codex"]["evolution"]
 
         assert "Evolution Review" in html
         assert evolution["status"] == "focused_upgrade_window"
         assert evolution["top_priority"]["title"] == "Tighten execution-condition templates"
-        assert evolution["report_url"] == "data/profiles/claude/EVOLUTION_REPORT.md"
-        assert evolution["review_url"] == "data/profiles/claude/evolution_review.json"
-        assert (docs_dir / "data" / "profiles" / "claude" / "evolution.json").exists()
-        assert (docs_dir / "data" / "profiles" / "claude" / "EVOLUTION_REPORT.md").exists()
+        assert evolution["report_url"] == "data/profiles/codex/EVOLUTION_REPORT.md"
+        assert evolution["review_url"] == "data/profiles/codex/evolution_review.json"
+        assert (docs_dir / "data" / "profiles" / "codex" / "evolution.json").exists()
+        assert (docs_dir / "data" / "profiles" / "codex" / "EVOLUTION_REPORT.md").exists()
 
 
 def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
@@ -1122,5 +1116,6 @@ def test_generate_dashboard_ignores_default_profile_when_named_profiles_exist():
 
         bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
 
-        assert set(bundle["profiles"]) == {"claude", "codex"}
+        assert set(bundle["profiles"]) == {"codex"}
+        assert bundle["disabled_profiles"]["claude"]["message"] == "Claude coming soon"
         assert not (docs_dir / "data" / "profiles" / "default").exists()

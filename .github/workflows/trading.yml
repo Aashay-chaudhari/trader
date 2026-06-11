@@ -25,11 +25,9 @@ on:
       strategists:
         description: "Which strategist books to run"
         required: true
-        default: "both"
+        default: "codex"
         type: choice
         options:
-          - both
-          - claude
           - codex
       low_cost_mode:
         description: "Use cheapest monitor models plus tighter monitor budgets"
@@ -62,12 +60,10 @@ jobs:
             SELECTED_STRATEGISTS="both"
           fi
 
-          if [ "$SELECTED_STRATEGISTS" = "claude" ]; then
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist"}]' >> "$GITHUB_OUTPUT"
-          elif [ "$SELECTED_STRATEGISTS" = "codex" ]; then
+          if [ "$SELECTED_STRATEGISTS" = "codex" ]; then
             echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
           else
-            echo 'strategist_matrix=[{"profile_id":"claude","profile_label":"Claude Strategist"},{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
+            echo 'strategist_matrix=[{"profile_id":"codex","profile_label":"Codex Strategist"}]' >> "$GITHUB_OUTPUT"
           fi
 
   strategist-run:
@@ -105,7 +101,6 @@ jobs:
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
-          MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
           MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
         run: |
           echo "profile=${{ matrix.profile_id }}"
@@ -113,15 +108,14 @@ jobs:
           echo "api_provider=${LLM_PROVIDER}"
           echo "monitor_provider=${MONITOR_LLM_PROVIDER}"
           echo "run_mode=${RUN_MODE}"
-          echo "monitor_model_claude=${MONITOR_MODEL}"
           echo "monitor_model_openai=${MONITOR_MODEL_OPENAI}"
           echo "low_cost_mode=${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode || false }}"
 
       - name: Run strategist monitor pipeline
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ALPACA_API_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_API_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
-          ALPACA_SECRET_KEY: ${{ matrix.profile_id == 'claude' && secrets.ALPACA_SECRET_KEY_CLAUDE || matrix.profile_id == 'codex' && secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
           MARKETAUX_API_KEY: ${{ secrets.MARKETAUX_API_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           SEC_EDGAR_USER_AGENT: ${{ secrets.SEC_EDGAR_USER_AGENT }}
@@ -133,7 +127,6 @@ jobs:
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
-          MONITOR_MODEL: ${{ vars.MONITOR_MODEL || 'claude-haiku-4-5-20251001' }}
           MONITOR_MODEL_OPENAI: ${{ vars.MONITOR_MODEL_OPENAI || 'gpt-4o-mini' }}
           LLM_MAX_OUTPUT_TOKENS: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '700' || '4000' }}
           LLM_MAX_PROMPT_CHARS: ${{ github.event_name == 'workflow_dispatch' && inputs.low_cost_mode && '16000' || '80000' }}
@@ -193,16 +186,7 @@ jobs:
           rm -rf data/profiles/claude data/profiles/codex docs/data/profiles
           mkdir -p data/profiles docs/data
 
-      - name: Download Claude strategist artifacts
-        if: github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == 'claude'
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          name: strategist-claude-monitor
-          path: data/profiles/claude
-
       - name: Download Codex strategist artifacts
-        if: github.event_name != 'workflow_dispatch' || inputs.strategists == 'both' || inputs.strategists == 'codex'
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
@@ -217,7 +201,7 @@ jobs:
           git config user.name "Agent Trader Bot"
           git config user.email "bot@agent-trader"
           git add -A data/profiles docs/
-          git diff --staged --quiet || git commit -m "[monitor] $(date -u +%Y-%m-%d\ %H:%M\ UTC) dual-strategist update"
+          git diff --staged --quiet || git commit -m "[monitor] $(date -u +%Y-%m-%d\ %H:%M\ UTC) codex strategist update"
           git push
 
   deploy-dashboard:

@@ -88,6 +88,8 @@
     .profile-tab { display: flex; align-items: center; gap: 8px; padding: 7px 18px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2); font-size: 13px; font-weight: 700; color: var(--muted); transition: all .18s; }
     .profile-tab:hover { border-color: var(--accent); color: var(--text); }
     .profile-tab.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+    .profile-tab.disabled { cursor: default; opacity: .72; border-style: dashed; }
+    .profile-tab.disabled:hover { border-color: var(--border); color: var(--muted); }
     .profile-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 
     /* OVERVIEW GRID */
@@ -644,8 +646,11 @@
   }
 
   function renderTabs(ps, cmp) {
+    const disabled = Object.values(obj(BUNDLE.disabled_profiles)).map(item => obj(item));
     document.getElementById("profileTabs").innerHTML = cmp.map(item =>
       `<button class="profile-tab ${item.profile === ACTIVE ? "active" : ""}" data-profile="${esc(item.profile)}"><span class="profile-dot"></span>${esc(item.label || labelOf(item.profile))}</button>`
+    ).join("") + disabled.map(item =>
+      `<button class="profile-tab disabled" type="button" disabled><span class="profile-dot"></span>${esc(item.message || "Claude coming soon")}</button>`
     ).join("");
     document.getElementById("profileTabs").querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => selectProfile(b.dataset.profile)));
   }

@@ -13,6 +13,7 @@ from typing import Any
 from agent_trader.utils.profiles import DEFAULT_PROFILE_LABELS
 
 _TEMPLATE_PATH = Path(__file__).parent / "template.html"
+DISABLED_PROFILE_IDS = {"claude"}
 
 
 def _load_dashboard_html() -> str:
@@ -618,7 +619,12 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _copy_voice_files(active_root, data_out / "voice")
     _copy_evolution_files(active_root, data_out / "evolution")
 
-    for profile_id, profile_root in profile_roots.items():
+    active_profile_roots = {
+        profile_id: profile_root
+        for profile_id, profile_root in profile_roots.items()
+        if profile_id in bundle["profiles"]
+    }
+    for profile_id, profile_root in active_profile_roots.items():
         profile_bundle = bundle["profiles"][profile_id]
         profile_out = data_out / "profiles" / profile_id
         profile_out.mkdir(parents=True, exist_ok=True)
@@ -680,6 +686,13 @@ def _build_dashboard_bundle(
     profile_roots: dict[str, Path] | None = None,
 ) -> dict[str, Any]:
     profile_roots = profile_roots or _discover_profile_roots(data_root)
+    profile_roots = {
+        profile_id: path
+        for profile_id, path in profile_roots.items()
+        if profile_id not in DISABLED_PROFILE_IDS
+    }
+    if not profile_roots:
+        profile_roots = {"default": data_root}
     multi_profile = len(profile_roots) > 1 or any(profile_id != "default" for profile_id in profile_roots)
     profiles = {
         profile_id: _build_profile_bundle(profile_root, profile_id=profile_id, multi_profile=multi_profile)
@@ -691,6 +704,17 @@ def _build_dashboard_bundle(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "active_profile": active_profile,
         "profiles": profiles,
+        "disabled_profiles": {
+            profile_id: {
+                "profile": {
+                    "id": profile_id,
+                    "label": DEFAULT_PROFILE_LABELS.get(profile_id, profile_id.title()),
+                },
+                "status": "coming_soon",
+                "message": "Claude coming soon",
+            }
+            for profile_id in DISABLED_PROFILE_IDS
+        },
         "comparison": _build_comparison_bundle(profiles),
         "profile": active_bundle["profile"],
         "latest": active_bundle["latest"],

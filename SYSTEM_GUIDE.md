@@ -27,27 +27,18 @@ flowchart TB
     end
 
     subgraph Memory[Profile memory]
-      P1[data/profiles/claude]
       P2[data/profiles/codex]
     end
 
-    M --> P1
     M --> P2
-    E --> P1
     E --> P2
-    W --> P1
     W --> P2
-    MO --> P1
     MO --> P2
-    EV --> P1
     EV --> P2
-    P1 --> MON
     P2 --> MON
     MON --> STRAT --> RISK --> EXEC
-    EXEC --> P1
     EXEC --> P2
     MON --> DASH
-    P1 --> DASH
     P2 --> DASH
 ```
 
@@ -79,16 +70,13 @@ GitHub Actions runs:
 ```mermaid
 sequenceDiagram
     participant You
-    participant Claude as Claude CLI
     participant Codex as Codex CLI
     participant Repo as Git main
     participant Monitor as GitHub monitor
     participant Broker as Alpaca paper
     participant Pages as GitHub Pages
 
-    You->>Claude: morning prompt
     You->>Codex: morning prompt
-    Claude->>Repo: write claude cache files
     Codex->>Repo: write codex cache files
     You->>Repo: commit and push
     Monitor->>Repo: pull latest
@@ -99,9 +87,7 @@ sequenceDiagram
         Monitor->>Repo: commit runtime artifacts
         Monitor->>Pages: deploy dashboard
     end
-    You->>Claude: evening reflection + voice
     You->>Codex: evening reflection + voice
-    Claude->>Repo: write observations and knowledge
     Codex->>Repo: write observations and knowledge
     You->>Repo: commit and push
 ```
@@ -217,8 +203,8 @@ This is intentionally small and cheap:
 
 Current default monitor posture:
 
-- provider for both strategist monitor jobs: `openai`
-- monitor model for both strategist monitor jobs: `gpt-4o-mini`
+- provider for the Codex monitor job: `openai`
+- monitor model for the Codex monitor job: `gpt-4o-mini`
 
 ## What The Python Runtime Still Owns
 

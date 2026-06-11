@@ -7,7 +7,7 @@ If one assistant hits limits, another assistant should be able to read this file
 
 ## Bridge Between Assistants
 
-Use these files as the handoff contract between Codex, Claude, or any future coding assistant.
+Use these files as the handoff contract between Codex and any future coding assistant.
 
 ### Stable manual
 
@@ -63,13 +63,13 @@ After any meaningful change:
 5. update `README.md` or `SYSTEM_GUIDE.md` if the user-facing behavior changed
 6. commit and push
 
-This keeps Claude and Codex anchored to the same source of truth instead of relying on stale chat context.
+This keeps Codex anchored to the repo's source of truth instead of relying on stale chat context.
 
 ## Project Shape
 
 ```text
 Local CLI work
-  -> writes strategist state into data/profiles/{claude,codex}/
+  -> writes strategist state into data/profiles/codex/
   -> commits to main
   -> regenerates docs/
 
@@ -116,7 +116,6 @@ Workflow:
 
 Each strategist owns:
 
-- `data/profiles/claude/`
 - `data/profiles/codex/`
 
 Important subfolders:
@@ -216,7 +215,6 @@ Useful rule:
 ```powershell
 ruff check src tests
 pytest -q
-python -m agent_trader validate --data-dir data/profiles/claude
 python -m agent_trader validate --data-dir data/profiles/codex
 python -m agent_trader dashboard
 ```

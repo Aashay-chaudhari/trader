@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run a prompt phase for BOTH strategists, then commit and push.
+# Run a prompt phase for the active GPT/Codex strategist, then commit and push.
 #
 # Usage:
 #   ./scripts/run_both.sh morning
@@ -7,12 +7,10 @@
 #   ./scripts/run_both.sh weekly
 #   ./scripts/run_both.sh monthly
 #   ./scripts/run_both.sh evolve
-#   ./scripts/run_both.sh morning parallel
+#   ./scripts/run_both.sh morning
 #
 # Notes:
-#   - Default mode is serial.
-#   - In parallel mode, both strategists run concurrently and we commit only
-#     after BOTH succeed.
+#   - Claude is disabled for now. The runner only updates data/profiles/codex.
 
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
@@ -29,6 +27,32 @@ CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-medium}"
 CODEX_SANDBOX_MODE="${CODEX_SANDBOX_MODE:-workspace-write}"
 CODEX_APPROVAL_POLICY="${CODEX_APPROVAL_POLICY:-never}"
 CODEX_HOST_WRITE="${CODEX_HOST_WRITE:-true}"
+
+if command -v python >/dev/null 2>&1; then
+  PYTHON_CMD=(python)
+elif command -v uv >/dev/null 2>&1; then
+  export UV_CACHE_DIR="${UV_CACHE_DIR:-$PWD/.tmp/uv-cache}"
+  PYTHON_CMD=(uv run --extra dev python)
+else
+  echo "Error: neither python nor uv is available."
+  exit 1
+fi
+
+if command -v codex >/dev/null 2>&1; then
+  CODEX_BIN="$(command -v codex)"
+else
+  CODEX_BIN=""
+  for candidate in /c/Users/"${USERNAME:-$USER}"/AppData/Local/OpenAI/Codex/bin/*/codex.exe; do
+    if [[ -x "$candidate" ]]; then
+      CODEX_BIN="$candidate"
+    fi
+  done
+fi
+
+if [[ -z "$CODEX_BIN" ]]; then
+  echo "Error: Codex CLI was not found on PATH or in the Codex desktop app install."
+  exit 1
+fi
 
 if [[ "$RUN_MODE" == "--parallel" ]]; then
   RUN_MODE="parallel"
@@ -98,10 +122,10 @@ echo "Pulling latest from main..."
 git pull --ff-only origin main || true
 echo ""
 
-# Ensure required cache directories exist before agents run.
-mkdir -p data/profiles/claude/cache data/profiles/codex/cache
-mkdir -p data/profiles/claude/interactions data/profiles/codex/interactions
-mkdir -p data/profiles/claude/voice data/profiles/codex/voice
+# Ensure required cache directories exist before the agent runs.
+mkdir -p data/profiles/codex/cache
+mkdir -p data/profiles/codex/interactions
+mkdir -p data/profiles/codex/voice
 
 validate_morning_cache() {
   local profile="$1"
@@ -110,7 +134,7 @@ validate_morning_cache() {
   fi
 
   echo "Validating ${profile} morning research against recent market prices..."
-  python - "$profile" <<'PY'
+  "${PYTHON_CMD[@]}" - "$profile" <<'PY'
 import subprocess
 import sys
 
@@ -162,7 +186,7 @@ write_interaction_metadata() {
   local status="$8"
   local prompt_source="$9"
 
-  python - "$metadata_path" "$profile" "$phase" "$tool" "$prompt_file" "$transcript_file" "$raw_log_file" "$status" "$prompt_source" <<'PY'
+  "${PYTHON_CMD[@]}" - "$metadata_path" "$profile" "$phase" "$tool" "$prompt_file" "$transcript_file" "$raw_log_file" "$status" "$prompt_source" <<'PY'
 import json
 import sys
 from datetime import datetime
@@ -215,54 +239,6 @@ interactions_root = metadata.parent.parent
 PY
 }
 
-pretty_print_claude_stream() {
-  python -u -c '
-import json
-import sys
-
-def out(msg):
-    print(msg, flush=True)
-
-for raw in sys.stdin:
-    line = raw.strip()
-    if not line:
-        continue
-    try:
-        obj = json.loads(line)
-    except Exception:
-        out(line)
-        continue
-
-    typ = obj.get("type")
-    if typ == "system":
-        model = obj.get("model", "unknown")
-        tools = obj.get("tools", [])
-        out(f"[init] model={model} tools={len(tools)}")
-    elif typ == "stream_event":
-        event = obj.get("event", {})
-        etype = event.get("type")
-        if etype == "message_start":
-            out("[assistant] generating...")
-        elif etype == "content_block_start":
-            cb = event.get("content_block", {})
-            if cb.get("type") == "tool_use":
-                name = cb.get("name", "tool")
-                out(f"[tool] {name}")
-        elif etype == "content_block_delta":
-            delta = event.get("delta", {})
-            text = delta.get("text")
-            if text:
-                print(text, end="", flush=True)
-        elif etype == "content_block_stop":
-            print("", flush=True)
-    elif typ == "result":
-        turns = obj.get("num_turns")
-        duration_ms = obj.get("duration_ms")
-        cost = obj.get("total_cost_usd")
-        out(f"[result] turns={turns} duration_ms={duration_ms} cost_usd={cost}")
-'
-}
-
 strip_ps_encoding_warning() {
   sed -E \
     -e '/^Cannot set property\. Property setting is supported only on core types in this language mode\.$/d' \
@@ -271,67 +247,6 @@ strip_ps_encoding_warning() {
     -e '/^\+ ~+$/d' \
     -e '/^[[:space:]]*\+ CategoryInfo[[:space:]]+: InvalidOperation: \(:\) \[\], RuntimeException$/d' \
     -e '/^[[:space:]]*\+ FullyQualifiedErrorId : PropertySetterNotSupportedInConstrainedLanguage$/d'
-}
-
-run_claude_once() {
-  local phase_label="$1"
-  local prompt_source="$2"
-  local prompt_template="$3"
-  local prompt allowed ts log status
-  local interaction_dir prompt_file transcript_file metadata_file
-
-  prompt="${prompt_template//\{\{PROFILE\}\}/claude}"
-  allowed="Read,Write,Edit,Glob,Grep,Bash,WebSearch,WebFetch"
-  ts="$(date '+%H%M%S')"
-  log=".tmp/cli_logs/claude_${phase_label}_${DATE}_${ts}.ndjson"
-  interaction_dir="data/profiles/claude/interactions/${DATE}"
-  mkdir -p "$interaction_dir"
-  prompt_file="${interaction_dir}/${ts}_${phase_label}_prompt.md"
-  transcript_file="${interaction_dir}/${ts}_${phase_label}_transcript.txt"
-  metadata_file="${interaction_dir}/${ts}_${phase_label}_interaction.json"
-  printf "%s\n" "$prompt" > "$prompt_file"
-
-  echo "Streaming Claude events (${phase_label}) - log: $log"
-  set +e
-  echo "$prompt" | claude \
-    --print \
-    --verbose \
-    --output-format stream-json \
-    --include-partial-messages \
-    --allowedTools "$allowed" \
-    | tee "$log" \
-    | pretty_print_claude_stream \
-    | tee "$transcript_file"
-  status=$?
-  set -e
-  write_interaction_metadata \
-    "$metadata_file" "claude" "$phase_label" "claude" \
-    "$prompt_file" "$transcript_file" "$log" "$status" "$prompt_source"
-  if [[ "$status" -ne 0 ]]; then
-    echo "Error: Claude exited with status $status."
-    return "$status"
-  fi
-
-  validate_morning_cache "claude"
-}
-
-run_claude() {
-  echo "--------------------------------------------"
-  echo "Running Claude strategist"
-  echo "--------------------------------------------"
-
-  run_claude_once "$PHASE" "$PROMPT_FILE" "$PROMPT_TEMPLATE"
-
-  if [[ -n "$EXTRA_PROMPT_TEMPLATE" ]]; then
-    echo ""
-    echo "Running Claude strategist voice check"
-    echo ""
-    run_claude_once "voice" "$EXTRA_PROMPT_FILE" "$EXTRA_PROMPT_TEMPLATE"
-  fi
-
-  echo ""
-  echo "Claude strategist complete."
-  echo ""
 }
 
 run_codex_once() {
@@ -368,7 +283,7 @@ Behavior under limits:
   metadata_file="${interaction_dir}/${ts}_${phase_label}_interaction.json"
   printf "%s\n" "$prompt" > "$prompt_file"
 
-  if ! codex exec --help >/dev/null 2>&1; then
+  if ! "$CODEX_BIN" exec --help >/dev/null 2>&1; then
     echo "Error: this Codex CLI version does not support 'codex exec'."
     echo "Please upgrade Codex CLI (npm install -g @openai/codex) and retry."
     return 1
@@ -377,7 +292,7 @@ Behavior under limits:
   if [[ "$CODEX_HOST_WRITE" == "true" ]]; then
     # Host-write mode is needed for non-interactive runs that must persist file edits.
     codex_cmd=(
-      codex
+      "$CODEX_BIN"
       --dangerously-bypass-approvals-and-sandbox
       --search
       exec
@@ -385,7 +300,7 @@ Behavior under limits:
     )
   else
     codex_cmd=(
-      codex
+      "$CODEX_BIN"
       -a "$CODEX_APPROVAL_POLICY"
       --search
       exec
@@ -440,47 +355,24 @@ run_codex() {
 }
 
 if [[ "$RUN_MODE" == "parallel" ]]; then
-  echo "Running strategists in PARALLEL mode..."
-  echo ""
-
-  set +e
-  (run_claude 2>&1 | sed 's/^/[CLAUDE] /') &
-  CLAUDE_PID=$!
-
-  (run_codex 2>&1 | sed 's/^/[CODEX] /') &
-  CODEX_PID=$!
-
-  wait "$CLAUDE_PID"
-  CLAUDE_STATUS=$?
-  wait "$CODEX_PID"
-  CODEX_STATUS=$?
-  set -e
-
-  if [[ "$CLAUDE_STATUS" -ne 0 || "$CODEX_STATUS" -ne 0 ]]; then
-    echo "One or more strategist runs failed."
-    echo "Claude exit code: $CLAUDE_STATUS"
-    echo "Codex exit code: $CODEX_STATUS"
-    exit 1
-  fi
-else
-  run_claude
-  run_codex
+  echo "Parallel mode requested, but Claude is disabled. Running Codex only."
 fi
+run_codex
 
 echo "Committing and pushing..."
 echo "Regenerating dashboard..."
-python -m agent_trader dashboard
+"${PYTHON_CMD[@]}" -m agent_trader dashboard
 
-git add data/profiles/claude/ data/profiles/codex/ docs/ WEEKBOOK.md
+git add data/profiles/codex/ docs/ WEEKBOOK.md
 if git diff --staged --quiet; then
   echo "No changes to commit."
 else
-  git commit -m "[$COMMIT_TAG] $DATE dual-strategist update"
-  git push origin main
+  git commit -m "[$COMMIT_TAG] $DATE codex strategist update"
+  git push origin HEAD:main
   echo "Pushed to main."
 fi
 
 echo ""
 echo "============================================"
-echo "Done! Both strategists updated."
+echo "Done! Codex strategist updated."
 echo "============================================"

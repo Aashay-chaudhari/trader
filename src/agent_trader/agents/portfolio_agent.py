@@ -78,7 +78,14 @@ class PortfolioAgent(BaseAgent):
             position["avg_cost"] = total_cost / total_shares if total_shares > 0 else 0
 
         elif action == "sell":
-            position["shares"] = max(0, position["shares"] - qty)
+            shares_before = position["shares"]
+            sell_qty = min(qty, shares_before)
+            avg_cost = position["avg_cost"]
+            proceeds = sell_qty * price
+            cost_removed = sell_qty * avg_cost
+            position["shares"] = max(0, shares_before - sell_qty)
+            position["total_invested"] = max(0, position["total_invested"] - cost_removed)
+            position["realized_pnl"] = position.get("realized_pnl", 0) + (proceeds - cost_removed)
             if position["shares"] == 0:
                 position["total_invested"] = 0
                 position["avg_cost"] = 0
@@ -119,8 +126,12 @@ class PortfolioAgent(BaseAgent):
         total_invested = sum(
             p.get("total_invested", 0) for p in self._portfolio.values()
         )
-        total_pnl = total_value - total_invested
-        cash = settings.paper_portfolio_value - total_invested
+        realized_pnl = sum(
+            p.get("realized_pnl", 0) for p in self._portfolio.values()
+        )
+        unrealized_pnl = total_value - total_invested
+        total_pnl = realized_pnl + unrealized_pnl
+        cash = settings.paper_portfolio_value - total_invested + realized_pnl
 
         positions = []
         for symbol, pos in self._portfolio.items():
@@ -142,7 +153,9 @@ class PortfolioAgent(BaseAgent):
             "portfolio_value": round(total_value + cash, 2),
             "cash": round(cash, 2),
             "invested": round(total_invested, 2),
+            "unrealized_pnl": round(unrealized_pnl, 2),
             "total_pnl": round(total_pnl, 2),
+            "realized_pnl": round(realized_pnl, 2),
             "total_pnl_pct": round(total_pnl / settings.paper_portfolio_value * 100, 2)
             if settings.paper_portfolio_value > 0
             else 0,
