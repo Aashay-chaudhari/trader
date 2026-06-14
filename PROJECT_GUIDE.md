@@ -85,6 +85,7 @@ Utilities
 ```
 
 The shell runner deterministically sequences these components, invokes Codex only at the reasoning steps, and commits/pushes each completed phase.
+If WSL Git cannot authenticate the push, the runner retries through Windows Git Credential Manager automatically.
 
 ## What You Have Modeled
 

@@ -42,7 +42,7 @@ On Windows PowerShell:
 & "C:\Program Files\Git\bin\bash.exe" ./scripts/run_both.sh evolve serial
 ```
 
-The runner discovers Python through `python` or `uv`, prefers the current Codex desktop CLI, validates morning price anchors, regenerates `docs/`, commits, and pushes `HEAD:main`.
+The runner discovers Python through `python` or `uv`, prefers the current Codex desktop CLI, validates morning price anchors, regenerates `docs/`, commits, and pushes `HEAD:main`. When WSL Git has no stored GitHub credentials, it automatically retries the push through Windows Git Credential Manager.
 
 ## Local Defaults
 

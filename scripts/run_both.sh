@@ -170,6 +170,22 @@ PY
 
 print_local_runtime_config
 
+push_main() {
+  if git push origin HEAD:main; then
+    return 0
+  fi
+
+  local windows_git="/mnt/c/Program Files/Git/cmd/git.exe"
+  if [[ -x "$windows_git" ]]; then
+    echo "WSL Git push was unavailable; retrying with Windows Git Credential Manager..."
+    GCM_INTERACTIVE=Never "$windows_git" push origin HEAD:main
+    return 0
+  fi
+
+  echo "Error: push failed and Windows Git fallback was not found."
+  return 1
+}
+
 validate_morning_cache() {
   local profile="$1"
   if [[ "$PHASE" != "morning" ]]; then
@@ -502,7 +518,7 @@ if git diff --staged --quiet; then
   echo "No changes to commit."
 else
   git commit -m "[$COMMIT_TAG] $DATE codex strategist update"
-  git push origin HEAD:main
+  push_main
   echo "Pushed to main."
   if [[ "$PHASE" == "monitor" && "$monitor_status" == "ready" && "$MONITOR_EXECUTION_OWNER" == "github_actions" ]]; then
     echo "GitHub Actions will now apply the decision, commit execution artifacts, and publish Pages."
