@@ -22,6 +22,7 @@ PHASE 2 — Monitor & Trade (every 30 min during market hours):
 """
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -32,7 +33,9 @@ from rich.table import Table
 from agent_trader.config.settings import get_settings
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
+from agent_trader.utils.llm_analytics import build_runtime_metadata, record_llm_analytics
 from agent_trader.utils.profiles import build_profile_metadata
+from agent_trader.utils.research_context import save_prompt_context_snapshot
 
 console = Console()
 
@@ -406,6 +409,701 @@ class Orchestrator:
         self._send_trade_alerts(execution_data)
 
         return results
+
+    async def prepare_local_monitor_context(
+        self,
+        symbols: list[str] | None = None,
+        *,
+        context_path: str | Path | None = None,
+        prompt_path: str | Path | None = None,
+        decision_path: str | Path | None = None,
+    ) -> dict:
+        """Build the local Codex monitor context without calling an LLM API."""
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        settings = get_settings()
+        paths = self._local_monitor_paths(
+            context_path=context_path,
+            prompt_path=prompt_path,
+            decision_path=decision_path,
+        )
+
+        if not (settings.is_debug or settings.is_dry_run) and not _is_market_hours():
+            context = self._local_monitor_base_context(
+                run_id=run_id,
+                paths=paths,
+                status="skipped",
+                reason="market_closed",
+                symbols=[],
+                active_positions=[],
+            )
+            return self._write_local_monitor_context(context, paths)
+
+        active_positions = self._load_active_position_symbols()
+        watchlist = symbols or self._today_watchlist or self._load_watchlist()
+        watchlist = [str(symbol).upper() for symbol in watchlist if str(symbol).strip()]
+        if active_positions:
+            seen = set(watchlist)
+            for symbol in active_positions:
+                if symbol not in seen:
+                    watchlist.append(symbol)
+                    seen.add(symbol)
+
+        if not watchlist:
+            context = self._local_monitor_base_context(
+                run_id=run_id,
+                paths=paths,
+                status="error",
+                reason="no_watchlist",
+                symbols=[],
+                active_positions=active_positions,
+            )
+            return self._write_local_monitor_context(context, paths)
+
+        morning_context = self._morning_research or self._load_morning_context()
+        if not morning_context:
+            context = self._local_monitor_base_context(
+                run_id=run_id,
+                paths=paths,
+                status="error",
+                reason="no_morning_context",
+                symbols=watchlist,
+                active_positions=active_positions,
+            )
+            return self._write_local_monitor_context(context, paths)
+
+        self._print_header(run_id, f"Prepare Local Monitor ({', '.join(watchlist[:5])})")
+
+        results: dict[str, Any] = {
+            "run_id": run_id,
+            "phase": "monitor",
+            "status": "ready",
+            "symbols": watchlist,
+            "active_positions": active_positions,
+        }
+
+        market_data: dict[str, Any] = {}
+        data_agent = self._agents.get("data")
+        if data_agent:
+            console.print("  [cyan]Refreshing[/cyan] local monitor prices...")
+            response = await data_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data={"symbols": watchlist},
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                market_data = response.data.get("market_data", {})
+                results["data"] = response.data
+
+        news_data: dict[str, Any] = {}
+        market_context: dict[str, Any] = {}
+        market_headlines: list[Any] = []
+        news_agent = self._agents.get("news")
+        if news_agent:
+            console.print("  [cyan]Checking[/cyan] local monitor news...")
+            response = await news_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data={"symbols": watchlist, "market_data": market_data},
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                news_data = response.data.get("news", {})
+                market_context = response.data.get("market_context", {})
+                market_headlines = response.data.get("market_headlines", [])
+                results["news"] = response.data
+
+        research_agent = self._agents.get("research")
+        if (
+            research_agent
+            and hasattr(research_agent, "_prepare_rich_summary")
+            and hasattr(research_agent, "_build_lean_monitor_context")
+        ):
+            market_summary = research_agent._prepare_rich_summary(market_data)  # type: ignore[attr-defined]
+            prompt_sections = research_agent._build_lean_monitor_context(  # type: ignore[attr-defined]
+                market_summary,
+                morning_context,
+                news_data,
+                market_context,
+            )
+        else:
+            market_summary = market_data
+            prompt_sections = self._fallback_local_monitor_prompt_sections(
+                market_summary=market_summary,
+                morning_context=morning_context,
+                news_data=news_data,
+                market_context=market_context,
+                symbols=watchlist,
+                active_positions=active_positions,
+            )
+
+        candidate_symbols = list(prompt_sections.get("candidate_symbols") or [])
+        status = "ready" if candidate_symbols else "no_candidates"
+        context = {
+            **self._local_monitor_base_context(
+                run_id=run_id,
+                paths=paths,
+                status=status,
+                reason="" if candidate_symbols else "no_symbols_near_monitor_triggers",
+                symbols=watchlist,
+                active_positions=active_positions,
+            ),
+            "market_data": market_data,
+            "market_summary": market_summary,
+            "news": news_data,
+            "market_context": market_context,
+            "market_headlines": market_headlines,
+            "morning_context": morning_context,
+            "prompt_sections": prompt_sections,
+            "candidate_symbols": candidate_symbols,
+            "prepare_results": results,
+        }
+        return self._write_local_monitor_context(context, paths)
+
+    async def run_local_monitor_decision(
+        self,
+        *,
+        context_path: str | Path | None = None,
+        decision_path: str | Path | None = None,
+    ) -> dict:
+        """Apply a Codex-written local monitor decision through the normal pipeline."""
+        paths = self._local_monitor_paths(
+            context_path=context_path,
+            decision_path=decision_path,
+        )
+        context_file = paths["context"]
+        decision_file = paths["decision"]
+        context = self._read_json_file(context_file)
+
+        run_id = str(
+            context.get("run_id")
+            or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        )
+        applied_file = paths["applied"]
+        if applied_file.exists():
+            applied = self._read_json_file(applied_file)
+            if applied.get("run_id") == run_id and applied.get("status") == "completed":
+                console.print(
+                    f"[yellow]Skipping local monitor apply:[/yellow] run {run_id} was already applied"
+                )
+                return {
+                    "run_id": run_id,
+                    "phase": "monitor",
+                    "skipped": "already_applied",
+                    "applied": applied,
+                }
+        status = str(context.get("status") or "").strip().lower()
+        reason = str(context.get("reason") or "").strip()
+        if status == "skipped":
+            console.print(f"[yellow]Skipping local monitor apply:[/yellow] {reason or 'skipped'}")
+            return {"run_id": run_id, "phase": "monitor", "skipped": reason or "skipped"}
+        if status == "error":
+            console.print(f"[yellow]Local monitor context error:[/yellow] {reason or 'unknown'}")
+            return {"run_id": run_id, "phase": "monitor", "error": reason or "context_error"}
+
+        decision_source = "codex_loop"
+        if decision_file.exists():
+            decision = self._read_json_file(decision_file)
+            decision_run_id = str(decision.get("run_id") or run_id)
+            if decision_run_id != run_id:
+                raise ValueError(
+                    "Local monitor decision run_id does not match its prepared context: "
+                    f"decision={decision_run_id}, context={run_id}"
+                )
+            decision["run_id"] = run_id
+        elif status == "no_candidates":
+            decision_source = "monitor_skip"
+            decision = self._local_monitor_skip_decision(context)
+        else:
+            raise FileNotFoundError(
+                f"Local monitor decision not found: {decision_file}. "
+                "Run the Codex monitor prompt first."
+            )
+
+        self._print_header(run_id, "Apply Local Codex Monitor")
+
+        symbols = list(context.get("symbols") or [])
+        active_positions = list(context.get("active_positions") or [])
+        market_data = context.get("market_data") or {}
+        news_data = context.get("news") or {}
+        market_context = context.get("market_context") or {}
+        market_headlines = context.get("market_headlines") or []
+        morning_context = context.get("morning_context") or {}
+        prompt_sections = context.get("prompt_sections") or {}
+        candidate_symbols = list(
+            context.get("candidate_symbols")
+            or prompt_sections.get("candidate_symbols")
+            or []
+        )
+
+        research_agent = self._agents.get("research")
+        if research_agent and hasattr(research_agent, "_normalize_monitor_analysis"):
+            analysis = research_agent._normalize_monitor_analysis(  # type: ignore[attr-defined]
+                decision,
+                morning_context=morning_context,
+                candidate_symbols=candidate_symbols,
+            )
+        else:
+            analysis = dict(decision)
+
+        meta = analysis.get("_meta", {})
+        if not isinstance(meta, dict):
+            meta = {}
+        analysis["_meta"] = meta
+        if decision_source == "codex_loop":
+            meta.update(
+                {
+                    "status": "success",
+                    "execution_mode": "codex_loop",
+                    "provider": "codex",
+                    "model": "codex-cli",
+                    "duration_ms": 0.0,
+                    "usage": meta.get(
+                        "usage",
+                        {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+                    ),
+                    "attempts": meta.get(
+                        "attempts",
+                        [
+                            {
+                                "mode": "codex_loop",
+                                "provider": "codex",
+                                "model": "codex-cli",
+                                "status": "success",
+                            }
+                        ],
+                    ),
+                    "quota_issue_detected": False,
+                    "quota_note": None,
+                    "runtime": build_runtime_metadata(),
+                }
+            )
+        else:
+            meta.setdefault("status", "success")
+            meta.setdefault("execution_mode", "none")
+            meta.setdefault("provider", "monitor-skip")
+            meta.setdefault("model", "none")
+            meta.setdefault("duration_ms", 0.0)
+            meta.setdefault("usage", {})
+            meta.setdefault("attempts", [])
+            meta.setdefault("quota_issue_detected", False)
+            meta.setdefault("quota_note", None)
+            meta.setdefault("runtime", build_runtime_metadata())
+
+        prompt_text = context.get("prompt_text", "")
+        save_prompt_context_snapshot(
+            phase="monitor",
+            provider=str(meta.get("provider") or "codex"),
+            model=str(meta.get("model") or "codex-cli"),
+            symbols=symbols,
+            prompt_sections=prompt_sections,
+            llm_meta=meta,
+            prompt_text=prompt_text,
+            prompt_source=(
+                "scripts/prompts/monitor_check.md"
+                if decision_source == "codex_loop"
+                else "src/agent_trader/core/orchestrator.py"
+            ),
+            tool="codex-loop" if decision_source == "codex_loop" else "python-monitor",
+            response_payload=analysis,
+            data_dir=get_settings().data_dir,
+        )
+        record_llm_analytics(
+            phase="monitor",
+            symbols=symbols,
+            llm_meta=meta,
+            data_dir=get_settings().data_dir,
+        )
+        if research_agent and hasattr(research_agent, "_save_research"):
+            research_agent._save_research(analysis, "monitor")  # type: ignore[attr-defined]
+
+        results: dict[str, Any] = {
+            "run_id": run_id,
+            "phase": "monitor",
+            "research": {
+                "status": "ok",
+                "data": {
+                    "research": analysis,
+                    "phase": "monitor",
+                    "symbols": symbols,
+                    "market_data": market_data,
+                    "news": news_data,
+                    "market_headlines": market_headlines,
+                    "market_context": market_context,
+                },
+            },
+        }
+
+        strategy_data: dict[str, Any] = {}
+        strategy_agent = self._agents.get("strategy")
+        if strategy_agent:
+            console.print("  [cyan]Evaluating[/cyan] strategies from local monitor decision...")
+            response = await strategy_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data={
+                        "symbols": symbols,
+                        "market_data": market_data,
+                        "research": analysis,
+                        "news": news_data,
+                        "market_context": market_context,
+                        "phase": "monitor",
+                        "active_positions": active_positions,
+                    },
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                strategy_data = response.data
+                results["strategy"] = {"status": "ok", "data": strategy_data}
+
+        risk_data: dict[str, Any] = {}
+        risk_agent = self._agents.get("risk")
+        if risk_agent and strategy_data.get("signals"):
+            console.print("  [cyan]Risk check[/cyan]...")
+            response = await risk_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data={
+                        "signals": strategy_data.get("signals", []),
+                        "market_data": market_data,
+                        "symbols": symbols,
+                    },
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                risk_data = response.data
+                results["risk"] = {"status": "ok", "data": risk_data}
+
+        execution_data: dict[str, Any] = {}
+        execution_agent = self._agents.get("execution")
+        if execution_agent:
+            approved_trades = risk_data.get("approved_trades", [])
+            for index, trade in enumerate(approved_trades, start=1):
+                if isinstance(trade, dict):
+                    trade.setdefault(
+                        "client_order_id",
+                        self._monitor_client_order_id(run_id, trade, index),
+                    )
+            console.print("  [cyan]Executing[/cyan] local monitor output...")
+            response = await execution_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data=(
+                        risk_data
+                        if risk_data
+                        else {"approved_trades": [], "symbols": symbols, "market_data": market_data}
+                    ),
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                execution_data = response.data
+                results["execution"] = {"status": "ok", "data": execution_data}
+
+        portfolio_agent = self._agents.get("portfolio")
+        if portfolio_agent:
+            console.print("  [cyan]Updating[/cyan] portfolio...")
+            response = await portfolio_agent.receive(
+                Message(
+                    type=MessageType.COMMAND,
+                    source="orchestrator",
+                    data={
+                        "executed": execution_data.get("executed", []),
+                        "market_data": market_data,
+                        "symbols": symbols,
+                    },
+                )
+            )
+            if response and response.type == MessageType.RESULT:
+                results["portfolio"] = {"status": "ok", "data": response.data}
+
+        self._write_journal(run_id, "monitor", results)
+        applied = self._write_local_monitor_applied(
+            path=applied_file,
+            run_id=run_id,
+            risk_data=risk_data,
+            execution_data=execution_data,
+        )
+        results["applied"] = applied
+        self._print_monitor_summary(results)
+        self._send_trade_alerts(execution_data)
+        return results
+
+    def _local_monitor_paths(
+        self,
+        *,
+        context_path: str | Path | None = None,
+        prompt_path: str | Path | None = None,
+        decision_path: str | Path | None = None,
+    ) -> dict[str, Path]:
+        cache_dir = Path(get_settings().data_dir) / "cache"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        return {
+            "context": Path(context_path) if context_path else cache_dir / "local_monitor_context.json",
+            "prompt": Path(prompt_path) if prompt_path else cache_dir / "local_monitor_prompt.md",
+            "decision": Path(decision_path) if decision_path else cache_dir / "local_monitor_decision.json",
+            "applied": cache_dir / "local_monitor_applied.json",
+        }
+
+    def _monitor_client_order_id(self, run_id: str, trade: dict[str, Any], index: int) -> str:
+        symbol = re.sub(r"[^A-Za-z0-9]", "", str(trade.get("symbol") or "trade"))[:8]
+        action = re.sub(r"[^A-Za-z0-9]", "", str(trade.get("action") or "order"))[:5]
+        clean_run_id = re.sub(r"[^A-Za-z0-9_-]", "", run_id)[:20]
+        return f"codex-{clean_run_id}-{symbol}-{action}-{index}"[:48]
+
+    def _write_local_monitor_applied(
+        self,
+        *,
+        path: Path,
+        run_id: str,
+        risk_data: dict[str, Any],
+        execution_data: dict[str, Any],
+    ) -> dict[str, Any]:
+        approved = list(risk_data.get("approved_trades") or [])
+        executed = list(execution_data.get("executed") or [])
+        statuses = [str(item.get("status") or "unknown") for item in executed]
+
+        if not approved:
+            status = "completed"
+        elif len(executed) == len(approved) and all(item == "submitted" for item in statuses):
+            status = "completed"
+        elif "dry_run" in statuses:
+            status = "dry_run"
+        else:
+            status = "failed"
+
+        payload = {
+            "run_id": run_id,
+            "phase": "monitor",
+            "status": status,
+            "applied_at": datetime.now(timezone.utc).isoformat(),
+            "execution_owner": get_settings().monitor_execution_owner,
+            "approved_count": len(approved),
+            "submitted_count": statuses.count("submitted"),
+            "dry_run_count": statuses.count("dry_run"),
+            "failed_count": statuses.count("failed"),
+            "client_order_ids": [
+                item.get("client_order_id")
+                for item in executed
+                if item.get("client_order_id")
+            ],
+        }
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return payload
+
+    def _local_monitor_base_context(
+        self,
+        *,
+        run_id: str,
+        paths: dict[str, Path],
+        status: str,
+        reason: str,
+        symbols: list[str],
+        active_positions: list[str],
+    ) -> dict[str, Any]:
+        return {
+            "run_id": run_id,
+            "phase": "monitor",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "status": status,
+            "reason": reason,
+            "symbols": symbols,
+            "active_positions": active_positions,
+            "context_path": paths["context"].as_posix(),
+            "prompt_path": paths["prompt"].as_posix(),
+            "decision_path": paths["decision"].as_posix(),
+            "market_data": {},
+            "market_summary": {},
+            "news": {},
+            "market_context": {},
+            "market_headlines": [],
+            "morning_context": {},
+            "prompt_sections": {},
+            "candidate_symbols": [],
+        }
+
+    def _write_local_monitor_context(
+        self,
+        context: dict[str, Any],
+        paths: dict[str, Path],
+    ) -> dict:
+        prompt_text = self._build_local_monitor_prompt(context)
+        context["prompt_text"] = prompt_text
+
+        for path in paths.values():
+            path.parent.mkdir(parents=True, exist_ok=True)
+        paths["context"].write_text(
+            json.dumps(context, indent=2, default=str),
+            encoding="utf-8",
+        )
+        paths["prompt"].write_text(prompt_text + "\n", encoding="utf-8")
+        if paths["decision"].exists():
+            paths["decision"].unlink()
+
+        console.print(f"  [dim]Local monitor context: {paths['context']}[/dim]")
+        console.print(f"  [dim]Local monitor prompt: {paths['prompt']}[/dim]")
+        return context
+
+    def _build_local_monitor_prompt(self, context: dict[str, Any]) -> str:
+        prompt_sections = context.get("prompt_sections") or {}
+        candidate_symbols = list(context.get("candidate_symbols") or [])
+        status = str(context.get("status") or "unknown")
+        reason = str(context.get("reason") or "")
+        decision_path = str(context.get("decision_path") or "")
+
+        if status != "ready":
+            return f"""# Local Codex Monitor Gate
+
+Run id: {context.get("run_id")}
+Status: {status}
+Reason: {reason or "none"}
+
+No local Codex market decision is required for this monitor tick. If asked to write
+a decision file, write a valid no-op JSON object to `{decision_path}`:
+
+```json
+{{
+  "run_id": "{context.get('run_id')}",
+  "overall_sentiment": "neutral",
+  "market_summary": "{reason or "No symbols require monitor review right now."}",
+  "stocks": {{}}
+}}
+```
+"""
+
+        return f"""# Local Codex Monitor Gate
+
+Run id: {context.get("run_id")}
+Candidate symbols: {", ".join(candidate_symbols)}
+Decision output: `{decision_path}`
+
+You are an intraday execution gate. Do not re-research the market, broaden the
+watchlist, or invent new trades. Evaluate only the candidates below against the
+morning execution conditions and the live snapshot.
+
+## Monitor Candidates
+
+{prompt_sections.get("morning_plans", "(none)")}
+
+## Live Market Snapshot
+
+{prompt_sections.get("current_state", "(unavailable)")}
+
+## Active Positions
+
+{prompt_sections.get("active_positions", "(none)")}
+
+## Deterministic Strategy Snapshot
+
+{prompt_sections.get("strategy_signals", "(unavailable)")}
+
+## Decision Rules
+
+{prompt_sections.get("decision_rules", "(unavailable)")}
+
+Write ONLY valid JSON to `{decision_path}` with this schema:
+
+```json
+{{
+  "run_id": "{context.get('run_id')}",
+  "overall_sentiment": "bullish | bearish | neutral",
+  "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
+  "stocks": {{
+    "SYMBOL": {{
+      "recommendation": "buy | sell | hold | watch",
+      "confidence": 0.0,
+      "ready_to_trade": false,
+      "matched_conditions": ["condition currently satisfied"],
+      "failed_conditions": ["condition still missing"],
+      "monitor_reason": "1 concise sentence",
+      "execution_condition": "condition evaluated",
+      "trade_plan": {{"entry": 0.0, "stop_loss": 0.0, "target": 0.0}}
+    }}
+  }}
+}}
+```
+"""
+
+    def _fallback_local_monitor_prompt_sections(
+        self,
+        *,
+        market_summary: dict[str, Any],
+        morning_context: dict[str, Any],
+        news_data: dict[str, Any],
+        market_context: dict[str, Any],
+        symbols: list[str],
+        active_positions: list[str],
+    ) -> dict[str, Any]:
+        morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
+        candidate_symbols = [
+            symbol for symbol in symbols
+            if symbol in morning_stocks or symbol in active_positions
+        ][: max(get_settings().monitor_candidate_limit, 1)]
+        plan_lines: list[str] = []
+        state_lines = [
+            "| Stock | Price | Chg% | Headlines |",
+            "|-------|-------|------|-----------|",
+        ]
+        for symbol in candidate_symbols:
+            info = morning_stocks.get(symbol, {}) if isinstance(morning_stocks, dict) else {}
+            trade_plan = info.get("trade_plan", {}) if isinstance(info, dict) else {}
+            plan_lines.append(
+                f"  {symbol}: {info.get('recommendation', 'watch')} | "
+                f"entry=${trade_plan.get('entry', 'n/a')} "
+                f"stop=${trade_plan.get('stop_loss', 'n/a')} "
+                f"target=${trade_plan.get('target', 'n/a')}\n"
+                f"    Execution condition: {info.get('execution_condition', 'Morning condition unavailable.')}"
+            )
+            data = market_summary.get(symbol, {}) if isinstance(market_summary, dict) else {}
+            price = data.get("latest_price", 0)
+            change = data.get("price_change_pct", 0)
+            news_entry = news_data.get(symbol, {}) if isinstance(news_data, dict) else {}
+            headlines = len(news_entry.get("news_headlines", [])) if isinstance(news_entry, dict) else 0
+            state_lines.append(f"| {symbol} | ${price} | {change}% | {headlines} |")
+
+        return {
+            "morning_plans": "\n".join(plan_lines) or "  (no candidates)",
+            "current_state": "\n".join(state_lines),
+            "active_positions": ", ".join(active_positions) or "  (none)",
+            "strategy_signals": "Local fallback context; strategy engine runs after this gate.",
+            "decision_rules": "\n".join(
+                [
+                    "  - Approve only when the morning execution condition is clearly satisfied.",
+                    "  - Prefer ready_to_trade=false when evidence is mixed.",
+                    f"  - Current market regime hint: {market_context.get('market_regime', 'unknown')}.",
+                ]
+            ),
+            "candidate_symbols": candidate_symbols,
+        }
+
+    def _local_monitor_skip_decision(self, context: dict[str, Any]) -> dict[str, Any]:
+        reason = str(
+            context.get("reason")
+            or "No symbols are near execution triggers or active-position checkpoints."
+        )
+        research_agent = self._agents.get("research")
+        if research_agent and hasattr(research_agent, "_build_monitor_skip_analysis"):
+            return research_agent._build_monitor_skip_analysis(reason)  # type: ignore[attr-defined]
+        return {
+            "run_id": context.get("run_id"),
+            "overall_sentiment": "neutral",
+            "market_summary": reason,
+            "stocks": {},
+            "_meta": {
+                "status": "success",
+                "execution_mode": "none",
+                "provider": "monitor-skip",
+                "model": "none",
+            },
+        }
+
+    def _read_json_file(self, path: Path) -> dict[str, Any]:
+        return json.loads(path.read_text(encoding="utf-8-sig"))
 
     # ── Full Pipeline ────────────────────────────────────────────
 

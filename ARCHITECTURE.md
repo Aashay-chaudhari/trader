@@ -2,125 +2,190 @@
 
 ## System Context
 
-```mermaid
-flowchart TB
-    User[Operator]
-    CLI[Codex CLI]
-    Repo[GitHub main]
-    Actions[GitHub Actions]
-    OpenAI[OpenAI monitor model]
-    Data[Market and news providers]
-    Alpaca[Alpaca paper account]
-    Pages[GitHub Pages]
+```text
+Operator
+  |
+  | local morning / monitor / review commands
+  v
+scripts/run_both.sh
+  |
+  +--> Local Codex CLI
+  |       |
+  |       +--> morning thesis, monitor decision, reflections, reviews
+  |
+  +--> Python runtime
+          |
+          +--> market/news data
+          +--> strategy votes
+          +--> risk approval
+          +--> portfolio snapshots
+          +--> journal and dashboard generation
+  |
+  v
+data/profiles/codex
+  |
+  v
+GitHub main
+  |
+  +--> local_monitor_decision.json -> Codex Decision Execution
+  |       -> strategy -> risk -> Alpaca paper -> portfolio -> commit
+  |
+  +--> docs/ -> Publish Dashboard -> GitHub Pages
 
-    User -->|Morning, evening, reviews| CLI
-    CLI -->|Writes and pushes| Repo
-    Repo -->|Scheduled checkout| Actions
-    Actions --> Data
-    Actions --> OpenAI
-    Actions -->|Approved paper orders| Alpaca
-    Actions -->|Runtime commits| Repo
-    Repo --> Pages
-    Pages --> User
+Optional path:
+  GitHub Actions scheduled monitor
+    runs only when MONITOR_RUNTIME=github_actions_api
+    uses OpenAI monitor gate and Alpaca paper execution
 ```
 
 ## Runtime Components
 
-```mermaid
-flowchart LR
-    Research[Morning research cache]
-    Collector[Data and news agents]
-    Gate[Monitor LLM gate]
-    Strategies[Strategy ensemble]
-    Risk[Risk agent]
-    Execution[Execution agent]
-    Broker[Alpaca paper]
-    Memory[Codex profile memory]
-    Dashboard[Dashboard generator]
-
-    Research --> Collector
-    Collector --> Gate
-    Collector --> Strategies
-    Gate --> Strategies
-    Strategies --> Risk
-    Risk --> Execution
-    Execution --> Broker
-    Execution --> Memory
-    Gate --> Memory
-    Memory --> Dashboard
+```text
+MorningResearchCache
+  |
+  v
+Monitor context preparation
+  |
+  +--> DataAgent
+  +--> NewsAgent
+  +--> ResearchAgent candidate selector, no API call
+  |
+  v
+Local Codex monitor gate
+  |
+  v
+local_monitor_decision.json
+  |
+  v
+git push to main
+  |
+  v
+Codex Decision Execution (GitHub Actions, repository Alpaca secrets)
+  |
+  v
+StrategyAgent -> RiskAgent -> ExecutionAgent -> PortfolioAgent
+  |
+  v
+Journal + research archive + analytics + dashboard
 ```
 
 ## Durable State
 
-```mermaid
-flowchart TB
-    Profile[data/profiles/codex]
-    Cache[cache: morning thesis and watchlist]
-    Portfolio[portfolio state, snapshots, positions]
-    Journal[journal and trade history]
-    Knowledge[lessons, patterns, regimes, effectiveness]
-    Observations[daily, weekly, monthly observations]
-    Interactions[prompts, transcripts, metadata]
-    Voice[voice and evolution artifacts]
-
-    Profile --> Cache
-    Profile --> Portfolio
-    Profile --> Journal
-    Profile --> Knowledge
-    Profile --> Observations
-    Profile --> Interactions
-    Profile --> Voice
+```text
+data/profiles/codex/
+  |
+  +-- cache/
+  |     +-- morning_research.json
+  |     +-- watchlist.json
+  |     +-- local_monitor_context.json
+  |     +-- local_monitor_prompt.md
+  |     +-- local_monitor_decision.json
+  |     +-- local_monitor_applied.json
+  |
+  +-- context/
+  |     +-- latest_monitor.json
+  |
+  +-- interactions/
+  |     +-- prompt, transcript, metadata per phase
+  |
+  +-- journal/
+  |     +-- timestamped phase reports
+  |
+  +-- research/
+  |     +-- timestamped research and monitor outputs
+  |
+  +-- analytics/
+  |     +-- LLM/runtime usage metadata
+  |
+  +-- snapshots/ and portfolio_state.json
+  |
+  +-- knowledge/, observations/, voice/, evolution/
 ```
 
-## Scheduled Workflow
+## Local Monitor Workflow
 
-```mermaid
-sequenceDiagram
-    participant Cron as GitHub schedule
-    participant Monitor as Monitor job
-    participant APIs as Data and OpenAI
-    participant Broker as Alpaca paper
-    participant Publish as Publish job
-    participant Git as GitHub main
-    participant Pages as GitHub Pages
+```text
+./scripts/run_both.sh monitor serial
+  |
+  v
+python -m agent_trader monitor-local-prepare
+  |
+  +-- market closed?       -> write skipped context, no Codex call
+  +-- no candidates?       -> write no-candidate context, no Codex call
+  +-- candidates present?  -> write local monitor prompt
+                              |
+                              v
+                          Codex CLI writes decision JSON
+                              |
+                              v
+                       stamp run_id, commit, push
+                              |
+                              v
+                    GitHub Actions applies decision
+                              |
+                              v
+strategy -> risk -> execution -> portfolio -> journal -> dashboard -> commit -> Pages
+```
 
-    Cron->>Monitor: Start Codex monitor
-    Monitor->>Git: Checkout latest morning state
-    Monitor->>APIs: Refresh evidence and evaluate candidates
-    Monitor->>Broker: Submit approved paper orders
-    Monitor-->>Publish: Upload Codex profile artifact
-    Publish->>Git: Checkout current main
-    Publish->>Publish: Merge artifact and regenerate docs
-    Publish->>Git: Commit runtime state
-    Git->>Pages: Deploy docs directory
+## GitHub Actions Workflow
+
+```text
+Schedule or manual dispatch
+  |
+  v
+Trading Pipeline workflow
+  |
+  +-- MONITOR_RUNTIME=codex_loop?        -> skip API monitor by default
+  |
+  +-- MONITOR_RUNTIME=github_actions_api?
+          |
+          +-- checkout latest main
+          +-- run python -m agent_trader monitor
+          +-- use OpenAI monitor model
+          +-- submit approved Alpaca paper orders
+          +-- upload profile artifact
+          +-- publish job merges artifact, regenerates docs, commits state
+
+Local Codex decision push
+  |
+  v
+Codex Decision Execution workflow
+  +-- validate Alpaca paper secrets
+  +-- apply decision without an LLM API call
+  +-- reject incomplete/dry-run execution as a failed workflow
+  +-- commit profile and dashboard artifacts
+  +-- deploy GitHub Pages
+
+Any local push that changes docs/
+  |
+  v
+Publish Dashboard workflow -> deploy GitHub Pages
 ```
 
 ## Local Session Workflow
 
-```mermaid
-sequenceDiagram
-    participant Operator
-    participant Runner as run_both.sh
-    participant Codex
-    participant Validator
-    participant Dashboard
-    participant Git
-
-    Operator->>Runner: Run phase
-    Runner->>Git: Pull latest main
-    Runner->>Codex: Execute phase prompt
-    Codex->>Git: Write Codex profile artifacts
-    Runner->>Validator: Validate morning anchors when applicable
-    Runner->>Dashboard: Regenerate GitHub Pages data
-    Runner->>Git: Commit and push HEAD:main
+```text
+Operator
+  |
+  v
+./scripts/run_both.sh <phase> serial
+  |
+  +-- pull latest main
+  +-- run phase prompt through Codex CLI
+  +-- validate morning anchors when phase=morning
+  +-- hand ready monitor decision to GitHub Actions by default
+  +-- regenerate docs/
+  +-- git add data/profiles/codex/ docs/ WEEKBOOK.md
+  +-- commit and push HEAD:main when files changed
 ```
 
 ## Safety Boundaries
 
-- The monitor can execute only after strategy and risk approval.
 - `debug` mode never places orders.
 - `paper` mode targets Alpaca paper trading only.
-- Morning research is preserved separately from intraday monitor outcomes.
-- Local morning validation rejects structurally invalid plans and demotes stale entries.
-- Publication and Pages deployment are separate jobs, so failures remain visible.
-
+- `live` mode is not part of the normal operator flow.
+- The monitor can execute only after strategy and risk approval.
+- Monitor submissions use deterministic Alpaca client order IDs and an applied marker.
+- Local monitor skips the Codex call when no candidate needs review.
+- GitHub Actions API monitoring is opt-in via `MONITOR_RUNTIME=github_actions_api`.
+- Morning validation rejects structurally invalid plans and demotes stale entries.

@@ -35,6 +35,16 @@ class Settings(BaseSettings):
     llm_max_output_tokens: int = 4000  # Cap output tokens for API calls
     llm_max_prompt_chars: int = 80000  # Soft cap input prompt size before API call
 
+    # --- Monitor Runtime Owner ---
+    # "codex_loop" — local long-running Codex terminal session owns intraday reasoning
+    # "github_actions_api" — scheduled GitHub Actions monitor may call model APIs
+    monitor_runtime: Literal["codex_loop", "github_actions_api"] = "codex_loop"
+
+    # --- Monitor Broker Execution Owner ---
+    # Local Codex writes the decision; GitHub Actions owns paper submission by default
+    # because repository secrets are available only inside Actions jobs.
+    monitor_execution_owner: Literal["github_actions", "local"] = "github_actions"
+
     # --- Run Mode (single control variable) ---
     # "debug" — template responses, no LLM calls, no orders, 3 stocks, skip web
     # "paper" — real LLM calls, Alpaca paper orders, full pipeline
@@ -103,10 +113,10 @@ class Settings(BaseSettings):
     enable_error_alerts: bool = True   # Notify on pipeline errors
 
     # --- Paths ---
-    data_dir: str = "data/profiles/default"
+    data_dir: str = "data/profiles/codex"
     log_dir: str = "logs"
-    agent_profile: str = "default"
-    agent_label: str = ""
+    agent_profile: str = "codex"
+    agent_label: str = "Codex Strategist"
 
     model_config = {
         "env_file": ".env",

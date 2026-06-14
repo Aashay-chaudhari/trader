@@ -19,11 +19,31 @@ def make_settings(**env_overrides):
 
 def test_run_mode_debug_is_default(monkeypatch):
     monkeypatch.delenv("RUN_MODE", raising=False)
+    monkeypatch.delenv("MONITOR_RUNTIME", raising=False)
     reset_settings()
     s = Settings(_env_file=None)
     assert s.run_mode == "debug"
+    assert s.monitor_runtime == "codex_loop"
+    assert s.monitor_execution_owner == "github_actions"
     assert s.is_debug is True
     assert s.is_dry_run is True
+    assert s.agent_profile == "codex"
+    assert s.agent_label == "Codex Strategist"
+    assert s.data_dir == "data/profiles/codex"
+
+
+def test_monitor_runtime_can_use_github_actions_api(monkeypatch):
+    monkeypatch.setenv("MONITOR_RUNTIME", "github_actions_api")
+    reset_settings()
+    s = Settings(_env_file=None)
+    assert s.monitor_runtime == "github_actions_api"
+
+
+def test_monitor_execution_owner_can_be_local(monkeypatch):
+    monkeypatch.setenv("MONITOR_EXECUTION_OWNER", "local")
+    reset_settings()
+    s = Settings(_env_file=None)
+    assert s.monitor_execution_owner == "local"
 
 
 def test_run_mode_paper_via_env(monkeypatch):

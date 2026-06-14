@@ -122,11 +122,13 @@ class ExecutionAgent(BaseAgent):
             from alpaca.trading.requests import MarketOrderRequest
             from alpaca.trading.enums import OrderSide, TimeInForce
 
+            client_order_id = trade.get("client_order_id")
             order_request = MarketOrderRequest(
                 symbol=symbol,
                 qty=qty,
                 side=OrderSide.BUY if action == "buy" else OrderSide.SELL,
                 time_in_force=TimeInForce.DAY,
+                client_order_id=client_order_id,
             )
 
             order = client.submit_order(order_request)
@@ -136,6 +138,7 @@ class ExecutionAgent(BaseAgent):
                 "action": action,
                 "quantity": qty,
                 "order_id": str(order.id),
+                "client_order_id": client_order_id,
                 "profile": profile["id"],
                 "profile_label": profile["label"],
                 "status": "submitted",
@@ -148,6 +151,7 @@ class ExecutionAgent(BaseAgent):
                 "symbol": symbol,
                 "action": action,
                 "quantity": qty,
+                "client_order_id": trade.get("client_order_id"),
                 "profile": profile["id"],
                 "profile_label": profile["label"],
                 "status": "failed",

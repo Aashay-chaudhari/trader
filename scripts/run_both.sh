@@ -3,11 +3,11 @@
 #
 # Usage:
 #   ./scripts/run_both.sh morning
+#   ./scripts/run_both.sh monitor
 #   ./scripts/run_both.sh evening
 #   ./scripts/run_both.sh weekly
 #   ./scripts/run_both.sh monthly
 #   ./scripts/run_both.sh evolve
-#   ./scripts/run_both.sh morning
 #
 # Notes:
 #   - Claude is disabled for now. The runner only updates data/profiles/codex.
@@ -15,9 +15,21 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
-PHASE="${1:?Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]}"
-RUN_MODE="${2:-serial}"
+PHASE="${1:?Usage: $0 <morning|monitor|evening|weekly|monthly|evolve> [serial|parallel]}"
+RUN_STYLE="${2:-serial}"
 DATE="$(date +%Y-%m-%d)"
+
+export AGENT_PROFILE="${AGENT_PROFILE:-codex}"
+export AGENT_LABEL="${AGENT_LABEL:-Codex Strategist}"
+export DATA_DIR="${DATA_DIR:-data/profiles/${AGENT_PROFILE}}"
+export MONITOR_RUNTIME="${MONITOR_RUNTIME:-codex_loop}"
+export MONITOR_EXECUTION_OWNER="${MONITOR_EXECUTION_OWNER:-github_actions}"
+export RUN_MODE="${RUN_MODE:-paper}"
+
+if [[ "$MONITOR_EXECUTION_OWNER" != "github_actions" && "$MONITOR_EXECUTION_OWNER" != "local" ]]; then
+  echo "Error: MONITOR_EXECUTION_OWNER must be github_actions or local."
+  exit 1
+fi
 
 # Codex execution budgets (override via environment variables if needed)
 CODEX_MAX_SECONDS="${CODEX_MAX_SECONDS:-900}"
@@ -56,12 +68,12 @@ if [[ -z "$CODEX_BIN" ]]; then
   exit 1
 fi
 
-if [[ "$RUN_MODE" == "--parallel" ]]; then
-  RUN_MODE="parallel"
+if [[ "$RUN_STYLE" == "--parallel" ]]; then
+  RUN_STYLE="parallel"
 fi
-if [[ "$RUN_MODE" != "serial" && "$RUN_MODE" != "parallel" ]]; then
-  echo "Unknown run mode: $RUN_MODE"
-  echo "Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]"
+if [[ "$RUN_STYLE" != "serial" && "$RUN_STYLE" != "parallel" ]]; then
+  echo "Unknown run style: $RUN_STYLE"
+  echo "Usage: $0 <morning|monitor|evening|weekly|monthly|evolve> [serial|parallel]"
   exit 1
 fi
 
@@ -70,6 +82,11 @@ case "$PHASE" in
     PROMPT_FILE="scripts/prompts/morning_research.md"
     EXTRA_PROMPT_FILE=""
     COMMIT_TAG="research"
+    ;;
+  monitor)
+    PROMPT_FILE="scripts/prompts/monitor_check.md"
+    EXTRA_PROMPT_FILE=""
+    COMMIT_TAG="monitor"
     ;;
   evening)
     PROMPT_FILE="scripts/prompts/evening_reflection.md"
@@ -93,7 +110,7 @@ case "$PHASE" in
     ;;
   *)
     echo "Unknown phase: $PHASE"
-    echo "Usage: $0 <morning|evening|weekly|monthly|evolve> [serial|parallel]"
+    echo "Usage: $0 <morning|monitor|evening|weekly|monthly|evolve> [serial|parallel]"
     exit 1
     ;;
 esac
@@ -116,7 +133,7 @@ fi
 mkdir -p .tmp/cli_logs
 
 echo "============================================"
-echo "  Agent Trader - $PHASE ($DATE) [$RUN_MODE]"
+echo "  Agent Trader - $PHASE ($DATE) [$RUN_STYLE]"
 echo "============================================"
 echo ""
 
@@ -128,6 +145,30 @@ echo ""
 mkdir -p data/profiles/codex/cache
 mkdir -p data/profiles/codex/interactions
 mkdir -p data/profiles/codex/voice
+
+print_local_runtime_config() {
+  "${PYTHON_CMD[@]}" - <<'PY'
+from agent_trader.config.settings import get_settings
+
+settings = get_settings()
+alpaca_ready = bool(settings.alpaca_api_key and settings.alpaca_secret_key)
+
+print("Local runtime configuration:")
+print(f"  profile={settings.agent_profile}")
+print(f"  data_dir={settings.data_dir}")
+print(f"  run_mode={settings.run_mode}")
+print(f"  monitor_runtime={settings.monitor_runtime}")
+print(f"  monitor_execution_owner={settings.monitor_execution_owner}")
+print(f"  alpaca_paper_credentials={'available' if alpaca_ready else 'missing'}")
+if settings.monitor_execution_owner == "github_actions":
+    print("  broker_handoff=GitHub Actions will use repository Alpaca secrets")
+elif settings.run_mode == "paper" and not alpaca_ready:
+    print("  warning=paper analysis is active, but broker execution will fall back to dry_run")
+PY
+  echo ""
+}
+
+print_local_runtime_config
 
 validate_morning_cache() {
   local profile="$1"
@@ -174,6 +215,66 @@ if result.errors:
     raise SystemExit(1)
 
 print("[sanity] Morning cache passed validation.")
+PY
+}
+
+prepare_monitor_context() {
+  if [[ "$PHASE" != "monitor" ]]; then
+    return 0
+  fi
+
+  echo "Preparing local Codex monitor context..."
+  "${PYTHON_CMD[@]}" -m agent_trader monitor-local-prepare
+}
+
+monitor_context_status() {
+  "${PYTHON_CMD[@]}" - <<'PY'
+import json
+from pathlib import Path
+
+path = Path("data/profiles/codex/cache/local_monitor_context.json")
+payload = json.loads(path.read_text(encoding="utf-8-sig"))
+print(payload.get("status", "unknown"))
+PY
+}
+
+apply_monitor_decision() {
+  if [[ "$PHASE" != "monitor" ]]; then
+    return 0
+  fi
+
+  echo "Applying local Codex monitor decision..."
+  "${PYTHON_CMD[@]}" -m agent_trader monitor-local-apply
+}
+
+stamp_monitor_decision_run_id() {
+  if [[ "$PHASE" != "monitor" ]]; then
+    return 0
+  fi
+
+  "${PYTHON_CMD[@]}" - <<'PY'
+import json
+import os
+from pathlib import Path
+
+cache_dir = Path(os.environ["DATA_DIR"]) / "cache"
+context_path = cache_dir / "local_monitor_context.json"
+decision_path = cache_dir / "local_monitor_decision.json"
+context = json.loads(context_path.read_text(encoding="utf-8-sig"))
+decision = json.loads(decision_path.read_text(encoding="utf-8-sig"))
+run_id = str(context.get("run_id") or "").strip()
+decision_run_id = str(decision.get("run_id") or "").strip()
+
+if not run_id:
+    raise SystemExit("Prepared monitor context has no run_id.")
+if decision_run_id and decision_run_id != run_id:
+    raise SystemExit(
+        f"Monitor decision run_id mismatch: decision={decision_run_id}, context={run_id}"
+    )
+
+decision["run_id"] = run_id
+decision_path.write_text(json.dumps(decision, indent=2), encoding="utf-8")
+print(f"Stamped monitor decision run_id={run_id}")
 PY
 }
 
@@ -356,10 +457,41 @@ run_codex() {
   echo ""
 }
 
-if [[ "$RUN_MODE" == "parallel" ]]; then
+if [[ "$RUN_STYLE" == "parallel" ]]; then
   echo "Parallel mode requested, but Claude is disabled. Running Codex only."
 fi
-run_codex
+if [[ "$PHASE" == "monitor" ]]; then
+  prepare_monitor_context
+  monitor_status="$(monitor_context_status)"
+  case "$monitor_status" in
+    ready)
+      run_codex
+      stamp_monitor_decision_run_id
+      if [[ "$MONITOR_EXECUTION_OWNER" == "local" ]]; then
+        apply_monitor_decision
+      else
+        echo "Broker execution handed off to GitHub Actions after this decision is pushed."
+      fi
+      ;;
+    no_candidates)
+      echo "Skipping Codex monitor call (context status: $monitor_status)."
+      apply_monitor_decision
+      ;;
+    skipped)
+      echo "Skipping Codex monitor call and execution (context status: $monitor_status)."
+      ;;
+    error)
+      echo "Local monitor context has an error. Run morning research first or inspect data/profiles/codex/cache/local_monitor_context.json."
+      exit 1
+      ;;
+    *)
+      echo "Unknown local monitor context status: $monitor_status"
+      exit 1
+      ;;
+  esac
+else
+  run_codex
+fi
 
 echo "Committing and pushing..."
 echo "Regenerating dashboard..."
@@ -372,6 +504,9 @@ else
   git commit -m "[$COMMIT_TAG] $DATE codex strategist update"
   git push origin HEAD:main
   echo "Pushed to main."
+  if [[ "$PHASE" == "monitor" && "$monitor_status" == "ready" && "$MONITOR_EXECUTION_OWNER" == "github_actions" ]]; then
+    echo "GitHub Actions will now apply the decision, commit execution artifacts, and publish Pages."
+  fi
 fi
 
 echo ""

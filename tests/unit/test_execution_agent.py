@@ -44,8 +44,11 @@ async def test_execution_agent_submits_paper_order_when_not_dry_run(message_bus,
     class FakeOrder:
         id = "order-123"
 
+    submitted_requests = []
+
     class FakeClient:
         def submit_order(self, order_request):
+            submitted_requests.append(order_request)
             return FakeOrder()
 
     class FakeOrderSide:
@@ -85,6 +88,7 @@ async def test_execution_agent_submits_paper_order_when_not_dry_run(message_bus,
                         "action": "buy",
                         "suggested_size_pct": 5.0,
                         "entry": 250.0,
+                        "client_order_id": "codex-20260614-aapl-buy-1",
                     }
                 ],
                 "symbols": ["AAPL"],
@@ -96,5 +100,7 @@ async def test_execution_agent_submits_paper_order_when_not_dry_run(message_bus,
     assert len(result["executed"]) == 1
     assert result["executed"][0]["status"] == "submitted"
     assert result["executed"][0]["order_id"] == "order-123"
+    assert result["executed"][0]["client_order_id"] == "codex-20260614-aapl-buy-1"
     assert result["executed"][0]["estimated_price"] == 250.0
     assert result["executed"][0]["estimated_value"] == 5000.0
+    assert submitted_requests[0].kwargs["client_order_id"] == "codex-20260614-aapl-buy-1"

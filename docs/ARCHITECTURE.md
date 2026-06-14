@@ -1,21 +1,40 @@
 # Architecture
 
-The canonical architecture reference is [`ARCHITECTURE.md`](../ARCHITECTURE.md) at the repository root.
+The canonical architecture reference is [`ARCHITECTURE.md`](../ARCHITECTURE.md)
+at the repository root.
 
 ## Published System View
 
-```mermaid
-flowchart LR
-    Operator -->|Local sessions| Codex[Codex CLI]
-    Codex --> Profile[data/profiles/codex]
-    Profile --> Main[GitHub main]
-    Main --> Monitor[GitHub Actions monitor]
-    Monitor --> OpenAI
-    Monitor --> Alpaca[Alpaca paper]
-    Monitor --> Profile
-    Profile --> Dashboard[Dashboard generator]
-    Dashboard --> Pages[GitHub Pages]
+```text
+Operator
+  |
+  v
+Local Codex runner
+  |
+  +-- morning research
+  +-- intraday monitor gate
+  +-- evening / weekly / monthly / evolution reviews
+  |
+  +-- pushes monitor decision to main
+  |       |
+  |       v
+  |     GitHub Actions -> strategy -> risk -> Alpaca paper execution
+  |
+  v
+data/profiles/codex
+  |
+  +-- journal, research, context, interactions, portfolio, knowledge
+  |
+  v
+Dashboard generator -> docs/ -> Publish Dashboard -> GitHub Pages
+
+Optional:
+  GitHub Actions API monitor
+    enabled only by MONITOR_RUNTIME=github_actions_api
 ```
 
-The active system has one profile, `codex`. Morning research is local, intraday monitoring is remote, execution is constrained by deterministic strategy and risk code, and all published state is generated from the durable profile.
-
+The active system has one profile, `codex`. Morning research and the intraday
+reasoning gate are local by default. Python still owns deterministic strategy,
+risk, execution, persistence, and dashboard generation. GitHub Actions owns the
+default Alpaca paper submission handoff because repository secrets exist there;
+the OpenAI API monitor remains a separate opt-in path.

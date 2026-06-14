@@ -6,7 +6,7 @@ Agent Trader separates expensive reasoning from deterministic trading operations
 
 - Local Codex CLI: morning research, evening reflection, weekly review, monthly retrospective, evolution review.
 - Python runtime: data collection, candidate selection, strategy voting, risk limits, order submission, journaling, validation, dashboard generation.
-- GitHub Actions: scheduled monitor execution, artifact merge, commit, and GitHub Pages deployment.
+- GitHub Actions: CI, reminders, repository-secret paper execution, dashboard publication, and optional scheduled API monitor execution.
 - Alpaca: paper brokerage execution.
 - `data/profiles/codex/`: durable system memory.
 
@@ -26,7 +26,10 @@ The morning phase is idempotent. If valid cache files were already written on th
 
 ## Monitor Phase
 
-The monitor reads the pushed morning thesis but does not replace it. It refreshes live evidence, limits the candidate set, asks a low-cost OpenAI model whether execution conditions remain valid, and then passes approved opportunities through deterministic strategy, risk, and execution logic.
+The monitor reads the pushed morning thesis but does not replace it. The runtime owner is controlled by `MONITOR_RUNTIME`.
+
+- `codex_loop` is the default. A local long-running Codex terminal session owns intraday reasoning. The runner pushes each ready decision, then the `Codex Decision Execution` workflow uses repository Alpaca secrets for deterministic strategy, risk, paper execution, persistence, and dashboard generation.
+- `github_actions_api` opts into the legacy scheduled GitHub Actions monitor. It refreshes live evidence, limits the candidate set, asks a low-cost OpenAI model whether execution conditions remain valid, and then passes approved opportunities through deterministic strategy, risk, and execution logic.
 
 `RUN_MODE` behavior:
 
@@ -36,7 +39,7 @@ The monitor reads the pushed morning thesis but does not replace it. It refreshe
 
 ## Publication
 
-Each scheduled workflow run uploads the Codex profile as an artifact. The publish job checks out current `main`, replaces the generated Codex runtime bundle, regenerates `docs/`, commits changed state, and deploys GitHub Pages.
+When `MONITOR_RUNTIME=github_actions_api`, each scheduled workflow run uploads the Codex profile as an artifact. The publish job checks out current `main`, replaces the generated Codex runtime bundle, regenerates `docs/`, commits changed state, and deploys GitHub Pages. When `MONITOR_RUNTIME=codex_loop`, scheduled API-monitor runs skip, while local decision pushes trigger deterministic paper execution and publication without an OpenAI API call.
 
 The dashboard exposes:
 
@@ -49,17 +52,16 @@ The dashboard exposes:
 
 ## Configuration
 
-GitHub Actions requires OpenAI and Alpaca credentials. Optional MarketAux, FRED, Finnhub, Alpha Vantage, and SEC configuration improve context but are not required for the workflow to start.
+GitHub Actions requires OpenAI and Alpaca credentials only when `MONITOR_RUNTIME=github_actions_api`. Optional MarketAux, FRED, Finnhub, Alpha Vantage, and SEC configuration improve context but are not required for the workflow to start.
 
-The important repository variable is `MONITOR_RUN_MODE`. The workflow default is `paper`, so explicitly set it to `debug` when orders must be disabled.
+The important repository variable is `MONITOR_RUNTIME`. The default is `codex_loop`, which avoids scheduled OpenAI API monitor calls. `MONITOR_EXECUTION_OWNER=github_actions` is the local runner default and routes ready decisions to repository-secret paper execution. Set `MONITOR_RUNTIME=github_actions_api` only when the GitHub workflow should spend API tokens for monitoring. `MONITOR_RUN_MODE` still controls `debug`, `paper`, or `live` behavior inside the API monitor after it is enabled.
 
 ## Failure Boundaries
 
 - Missing or stale morning entries are demoted or rejected before local commit.
-- Missing required secrets fail the remote monitor rather than fabricating execution.
+- Missing required secrets fail the remote API monitor rather than fabricating execution.
 - Monitor artifacts are retained for 30 days even when publication fails.
 - The publish job runs after monitor completion and records available output.
 - GitHub Pages deploys only after publication succeeds.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for diagrams.
-

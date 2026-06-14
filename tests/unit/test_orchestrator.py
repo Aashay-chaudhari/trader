@@ -27,6 +27,9 @@ class MockAgent(BaseAgent):
 @pytest.fixture(autouse=True)
 def force_debug_runtime(monkeypatch):
     monkeypatch.setenv("RUN_MODE", "debug")
+    monkeypatch.setenv("DATA_DIR", "data/profiles/default")
+    monkeypatch.setenv("AGENT_PROFILE", "default")
+    monkeypatch.setenv("AGENT_LABEL", "Test Strategist")
     reset_settings()
     yield
     reset_settings()
@@ -257,3 +260,212 @@ def test_write_journal_preserves_research_phase_payload(monkeypatch):
         monkeypatch.chdir(original_cwd)
 
         assert raw["research"]["research"]["overall_sentiment"] == "neutral"
+
+
+class LocalMonitorResearchHelper:
+    """Tiny helper that mimics the ResearchAgent monitor helpers without LLM calls."""
+
+    def __init__(self):
+        self.saved = []
+
+    def _prepare_rich_summary(self, market_data):
+        return market_data
+
+    def _build_lean_monitor_context(self, market_summary, morning_context, news_data, market_context):
+        return {
+            "morning_plans": "  AAPL: buy | entry=$100 stop=$95 target=$110",
+            "current_state": "| Stock | Price |\n|-------|-------|\n| AAPL | $100.50 |",
+            "active_positions": "  (none)",
+            "strategy_signals": "Strategy runs after monitor gate.",
+            "decision_rules": "  - Approve only if the execution condition is satisfied.",
+            "candidate_symbols": ["AAPL"],
+        }
+
+    def _normalize_monitor_analysis(self, analysis, *, morning_context, candidate_symbols):
+        normalized = dict(analysis)
+        normalized["stocks"] = {
+            symbol: normalized.get("stocks", {}).get(symbol, {})
+            for symbol in candidate_symbols
+        }
+        return normalized
+
+    def _save_research(self, analysis, phase):
+        self.saved.append((phase, analysis))
+
+
+@pytest.mark.asyncio
+async def test_prepare_local_monitor_context_writes_artifacts(monkeypatch):
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.setenv("DATA_DIR", temp_dir)
+        reset_settings()
+        cache_dir = Path(temp_dir) / "cache"
+        cache_dir.mkdir(parents=True)
+        (cache_dir / "morning_research.json").write_text(
+            json.dumps(
+                {
+                    "stocks": {
+                        "AAPL": {
+                            "recommendation": "buy",
+                            "execution_condition": "AAPL holds above $100.",
+                            "trade_plan": {"entry": 100, "stop_loss": 95, "target": 110},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+        orch.register(
+            MockAgent(
+                AgentRole.DATA,
+                bus,
+                return_value={
+                    "market_data": {
+                        "AAPL": {
+                            "latest_price": 100.5,
+                            "price_change_pct": 1.2,
+                        }
+                    }
+                },
+            )
+        )
+        news_agent = MockAgent(
+            AgentRole.DATA,
+            bus,
+            return_value={"news": {"AAPL": {"news_headlines": []}}, "market_context": {}},
+        )
+        orch._agents["news"] = news_agent
+        orch._agents["research"] = LocalMonitorResearchHelper()
+
+        context = await orch.prepare_local_monitor_context(["AAPL"])
+
+        assert context["status"] == "ready"
+        assert context["candidate_symbols"] == ["AAPL"]
+        assert (cache_dir / "local_monitor_context.json").exists()
+        assert (cache_dir / "local_monitor_prompt.md").exists()
+        prompt = (cache_dir / "local_monitor_prompt.md").read_text(encoding="utf-8")
+        assert "AAPL" in prompt
+        assert "local_monitor_decision.json" in prompt
+
+
+@pytest.mark.asyncio
+async def test_apply_local_monitor_decision_runs_trade_pipeline(monkeypatch):
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.setenv("DATA_DIR", temp_dir)
+        reset_settings()
+        cache_dir = Path(temp_dir) / "cache"
+        cache_dir.mkdir(parents=True)
+
+        context = {
+            "run_id": "20260614_150000",
+            "phase": "monitor",
+            "status": "ready",
+            "reason": "",
+            "symbols": ["AAPL"],
+            "active_positions": [],
+            "market_data": {"AAPL": {"latest_price": 100.5}},
+            "news": {"AAPL": {"news_headlines": []}},
+            "market_context": {},
+            "market_headlines": [],
+            "morning_context": {
+                "stocks": {
+                    "AAPL": {
+                        "recommendation": "buy",
+                        "execution_condition": "AAPL holds above $100.",
+                        "trade_plan": {"entry": 100, "stop_loss": 95, "target": 110},
+                    }
+                }
+            },
+            "prompt_sections": {"candidate_symbols": ["AAPL"]},
+            "candidate_symbols": ["AAPL"],
+            "prompt_text": "prepared monitor prompt",
+        }
+        decision = {
+            "run_id": "20260614_150000",
+            "overall_sentiment": "bullish",
+            "market_summary": "AAPL confirms the morning setup.",
+            "stocks": {
+                "AAPL": {
+                    "recommendation": "buy",
+                    "confidence": 0.8,
+                    "ready_to_trade": True,
+                    "matched_conditions": ["held above $100"],
+                    "failed_conditions": [],
+                    "monitor_reason": "Price is holding above the trigger.",
+                    "execution_condition": "AAPL holds above $100.",
+                    "trade_plan": {"entry": 100, "stop_loss": 95, "target": 110},
+                }
+            },
+        }
+        (cache_dir / "local_monitor_context.json").write_text(json.dumps(context), encoding="utf-8")
+        (cache_dir / "local_monitor_decision.json").write_text(json.dumps(decision), encoding="utf-8")
+
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+        research_helper = LocalMonitorResearchHelper()
+        orch._agents["research"] = research_helper
+        strategy_agent = MockAgent(
+            AgentRole.STRATEGY,
+            bus,
+            return_value={
+                "signals": [
+                    {
+                        "symbol": "AAPL",
+                        "action": "buy",
+                        "strength": 0.8,
+                        "strategy": "monitor_gate",
+                        "reasoning": "Local Codex gate confirmed the morning trigger.",
+                    }
+                ]
+            },
+        )
+        risk_agent = MockAgent(
+            AgentRole.RISK,
+            bus,
+            return_value={"approved_trades": [{"symbol": "AAPL", "action": "buy"}], "rejected_trades": []},
+        )
+        execution_agent = MockAgent(
+            AgentRole.EXECUTION,
+            bus,
+            return_value={
+                "executed": [
+                    {
+                        "symbol": "AAPL",
+                        "action": "buy",
+                        "price": 100.5,
+                        "status": "submitted",
+                        "client_order_id": "codex-20260614_150000-AAPL-buy-1",
+                    }
+                ]
+            },
+        )
+        portfolio_agent = MockAgent(
+            AgentRole.PORTFOLIO,
+            bus,
+            return_value={"portfolio_value": 100500, "positions": []},
+        )
+        orch.register(strategy_agent)
+        orch.register(risk_agent)
+        orch.register(execution_agent)
+        orch.register(portfolio_agent)
+
+        result = await orch.run_local_monitor_decision()
+
+        assert result["phase"] == "monitor"
+        assert strategy_agent.received_messages[0].data["research"]["stocks"]["AAPL"]["ready_to_trade"] is True
+        assert len(risk_agent.received_messages) == 1
+        assert len(execution_agent.received_messages) == 1
+        approved_trade = execution_agent.received_messages[0].data["approved_trades"][0]
+        assert approved_trade["client_order_id"] == "codex-20260614_150000-AAPL-buy-1"
+        assert research_helper.saved[0][0] == "monitor"
+        assert next((Path(temp_dir) / "journal").rglob("*_monitor_report.json")).exists()
+        applied = json.loads(
+            (cache_dir / "local_monitor_applied.json").read_text(encoding="utf-8")
+        )
+        assert applied["status"] == "completed"
+
+        repeated = await orch.run_local_monitor_decision()
+        assert repeated["skipped"] == "already_applied"
+        assert len(execution_agent.received_messages) == 1

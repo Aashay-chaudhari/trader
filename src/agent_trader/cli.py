@@ -35,6 +35,23 @@ def main():
     monitor_parser = subparsers.add_parser("monitor", help="Monitor & trade phase")
     monitor_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
 
+    # Local Codex monitor commands (Phase 2 without API monitor LLM calls)
+    monitor_prepare_parser = subparsers.add_parser(
+        "monitor-local-prepare",
+        help="Prepare local Codex monitor context without calling an LLM API",
+    )
+    monitor_prepare_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
+    monitor_prepare_parser.add_argument("--context-path", help="Override context JSON path")
+    monitor_prepare_parser.add_argument("--prompt-path", help="Override prompt markdown path")
+    monitor_prepare_parser.add_argument("--decision-path", help="Override decision JSON path")
+
+    monitor_apply_parser = subparsers.add_parser(
+        "monitor-local-apply",
+        help="Apply a local Codex monitor decision through strategy/risk/execution/portfolio",
+    )
+    monitor_apply_parser.add_argument("--context-path", help="Override context JSON path")
+    monitor_apply_parser.add_argument("--decision-path", help="Override decision JSON path")
+
     # Full run command
     run_parser = subparsers.add_parser("run", help="Run both phases")
     run_parser.add_argument("--symbols", nargs="+", help="Override watchlist")
@@ -84,7 +101,8 @@ def main():
                               help="Which reminder to send")
 
     # Add --debug flag to all action commands
-    for p in [research_parser, monitor_parser, run_parser, cycle_parser,
+    for p in [research_parser, monitor_parser, monitor_prepare_parser, monitor_apply_parser,
+              run_parser, cycle_parser,
               reflect_parser, weekly_parser, monthly_parser,
               subparsers._name_parser_map["evolve"]]:
         p.add_argument("--debug", action="store_true", help="Debug mode (reduced tokens)")
@@ -102,6 +120,10 @@ def main():
         asyncio.run(cmd_research(args))
     elif args.command == "monitor":
         asyncio.run(cmd_monitor(args))
+    elif args.command == "monitor-local-prepare":
+        asyncio.run(cmd_monitor_local_prepare(args))
+    elif args.command == "monitor-local-apply":
+        asyncio.run(cmd_monitor_local_apply(args))
     elif args.command == "run":
         asyncio.run(cmd_run(args))
     elif args.command == "cycle":
@@ -143,6 +165,28 @@ async def cmd_monitor(args):
     orchestrator, settings = build_system()
     symbols = getattr(args, "symbols", None)
     return await run_monitor(orchestrator, symbols)
+
+
+async def cmd_monitor_local_prepare(args):
+    """Prepare local Codex monitor context."""
+    console.print("\n[bold]Agent Trader[/bold] — Local Monitor Prepare\n")
+    orchestrator, settings = build_system()
+    return await orchestrator.prepare_local_monitor_context(
+        symbols=getattr(args, "symbols", None),
+        context_path=getattr(args, "context_path", None),
+        prompt_path=getattr(args, "prompt_path", None),
+        decision_path=getattr(args, "decision_path", None),
+    )
+
+
+async def cmd_monitor_local_apply(args):
+    """Apply local Codex monitor decision."""
+    console.print("\n[bold]Agent Trader[/bold] — Local Monitor Apply\n")
+    orchestrator, settings = build_system()
+    return await orchestrator.run_local_monitor_decision(
+        context_path=getattr(args, "context_path", None),
+        decision_path=getattr(args, "decision_path", None),
+    )
 
 
 async def cmd_run(args):

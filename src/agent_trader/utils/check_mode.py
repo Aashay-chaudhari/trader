@@ -81,6 +81,8 @@ def main() -> None:
     print("ANALYSIS MODE REPORT")
     print("=" * 60)
     print(f"RUN_MODE={os.environ.get('RUN_MODE', 'unset')}")
+    print(f"MONITOR_RUNTIME={settings.monitor_runtime}")
+    print(f"MONITOR_EXECUTION_OWNER={settings.monitor_execution_owner}")
     print(f"LLM_PROVIDER={os.environ.get('LLM_PROVIDER', 'unset')}")
     print(f"MONITOR_LLM_PROVIDER={os.environ.get('MONITOR_LLM_PROVIDER', 'unset')}")
     print(f"DATA_DIR={settings.data_dir}")

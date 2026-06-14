@@ -22,6 +22,14 @@ on:
 
   workflow_dispatch:
     inputs:
+      monitor_runtime:
+        description: "Who owns intraday monitoring"
+        required: true
+        default: codex_loop
+        type: choice
+        options:
+          - codex_loop
+          - github_actions_api
       low_cost_mode:
         description: "Use cheapest monitor models plus tighter monitor budgets"
         required: true
@@ -39,8 +47,21 @@ permissions:
   id-token: write
 
 jobs:
+  codex-loop-selected:
+    name: Codex loop selected
+    if: ${{ !((github.event_name == 'workflow_dispatch' && inputs.monitor_runtime == 'github_actions_api') || (github.event_name != 'workflow_dispatch' && vars.MONITOR_RUNTIME == 'github_actions_api')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip scheduled API monitor
+        run: |
+          echo "MONITOR_RUNTIME=codex_loop"
+          echo "The scheduled GitHub Actions API monitor is disabled by default."
+          echo "Keep a local Codex terminal loop running for intraday monitoring."
+          echo "Set repository variable MONITOR_RUNTIME=github_actions_api, or select github_actions_api on manual dispatch, to use the old API monitor."
+
   strategist-run:
     name: Monitor (codex)
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.monitor_runtime == 'github_actions_api') || (github.event_name != 'workflow_dispatch' && vars.MONITOR_RUNTIME == 'github_actions_api') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +87,7 @@ jobs:
 
       - name: Print strategist runtime config
         env:
+          MONITOR_RUNTIME: ${{ github.event_name == 'workflow_dispatch' && inputs.monitor_runtime || vars.MONITOR_RUNTIME || 'codex_loop' }}
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
@@ -73,6 +95,7 @@ jobs:
         run: |
           echo "profile=codex"
           echo "phase=monitor"
+          echo "monitor_runtime=${MONITOR_RUNTIME}"
           echo "api_provider=${LLM_PROVIDER}"
           echo "monitor_provider=${MONITOR_LLM_PROVIDER}"
           echo "run_mode=${RUN_MODE}"
@@ -92,6 +115,7 @@ jobs:
           DATA_DIR: data/profiles/codex
           AGENT_PROFILE: codex
           AGENT_LABEL: Codex Strategist
+          MONITOR_RUNTIME: ${{ github.event_name == 'workflow_dispatch' && inputs.monitor_runtime || vars.MONITOR_RUNTIME || 'codex_loop' }}
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
@@ -107,6 +131,7 @@ jobs:
           DATA_DIR: data/profiles/codex
           AGENT_PROFILE: codex
           AGENT_LABEL: Codex Strategist
+          MONITOR_RUNTIME: ${{ github.event_name == 'workflow_dispatch' && inputs.monitor_runtime || vars.MONITOR_RUNTIME || 'codex_loop' }}
           RUN_MODE: ${{ vars.MONITOR_RUN_MODE || 'paper' }}
           LLM_PROVIDER: openai
           MONITOR_LLM_PROVIDER: openai
@@ -124,7 +149,7 @@ jobs:
   publish-results:
     needs:
       - strategist-run
-    if: always()
+    if: ${{ needs.strategist-run.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

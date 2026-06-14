@@ -1,0 +1,121 @@
+name: Codex Decision Execution
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - data/profiles/codex/cache/local_monitor_decision.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: codex-decision-execution
+  cancel-in-progress: false
+
+jobs:
+  apply-decision:
+    name: Apply paper decision
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Validate Alpaca paper credentials
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
+        run: |
+          test -n "$ALPACA_API_KEY" || { echo "Missing Alpaca API key secret"; exit 1; }
+          test -n "$ALPACA_SECRET_KEY" || { echo "Missing Alpaca secret key secret"; exit 1; }
+          echo "Alpaca paper credentials are available."
+
+      - name: Apply Codex decision through strategy, risk, and execution
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY_CODEX || secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY_CODEX || secrets.ALPACA_SECRET_KEY }}
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
+          MONITOR_RUNTIME: codex_loop
+          MONITOR_EXECUTION_OWNER: github_actions
+          RUN_MODE: paper
+        run: python -m agent_trader monitor-local-apply
+
+      - name: Require a completed execution result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/profiles/codex/cache/local_monitor_applied.json")
+          payload = json.loads(path.read_text(encoding="utf-8-sig"))
+          print(json.dumps(payload, indent=2))
+          if payload.get("status") != "completed":
+              raise SystemExit(
+                  f"Monitor execution did not complete: {payload.get('status', 'unknown')}"
+              )
+          PY
+
+      - name: Generate dashboard
+        env:
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
+        run: python -m agent_trader dashboard
+
+      - name: Commit execution artifacts
+        run: |
+          git config user.name "Agent Trader Bot"
+          git config user.email "bot@agent-trader"
+          git add data/profiles/codex/ docs/ WEEKBOOK.md
+          git diff --staged --quiet || git commit -m "[monitor-execution] $(date -u +%Y-%m-%d\ %H:%M\ UTC) codex paper update"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload execution artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-decision-execution-${{ github.run_id }}
+          path: data/profiles/codex/
+          if-no-files-found: warn
+          retention-days: 30
+
+  deploy-dashboard:
+    name: Deploy updated dashboard
+    needs: apply-decision
+    if: needs.apply-decision.result == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
