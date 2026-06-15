@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260615_140514
-Candidate symbols: XOM, JBL, DAL
+Run id: 20260615_143512
+Candidate symbols: XOM, JBL, UAL
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -15,18 +15,18 @@ morning execution conditions and the live snapshot.
     Why it is being checked now: price is near stop loss; price is near target; 9 fresh headline(s)
   JBL: watch | entry=$390.0 stop=$378.0 target=$412.0
     Execution condition: Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.
-    Why it is being checked now: price is within 0.7% of entry; 8 fresh headline(s)
-  DAL: buy | entry=$86.2 stop=$83.8 target=$90.0
-    Execution condition: Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.
-    Why it is being checked now: price is within 1.2% of entry; 9 fresh headline(s)
+    Why it is being checked now: price is within 0.4% of entry; 8 fresh headline(s)
+  UAL: watch | entry=$118.0 stop=$114.5 target=$124.0
+    Execution condition: Watch for UAL to hold above $114.50 and break $118 with DAL also maintaining its opening gains.
+    Why it is being checked now: price is within 1.7% of entry; 8 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| XOM   | $  139.40 |  -5.2% |  34 |     0.4x | yahoo_1m | 20s |         9 |
-| JBL   | $  392.61 |  +2.0% |  63 |     0.2x | yahoo_1m | 21s |         8 |
-| DAL   | $   85.20 |  +2.6% |  66 |     0.4x | yahoo_1m | 18s |         9 |
+| XOM   | $  140.83 |  -4.2% |  36 |     0.5x | yahoo_1m | 17s |         9 |
+| JBL   | $  388.52 |  +1.0% |  62 |     0.2x | yahoo_1m | 18s |         8 |
+| UAL   | $  119.97 |  +3.9% |  67 |     0.6x | yahoo_1m | 17s |         8 |
 
 ## Active Positions
 
@@ -47,7 +47,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260615_140514",
+  "run_id": "20260615_143512",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
