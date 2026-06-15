@@ -1,0 +1,103 @@
+{
+  "run_id": "20260615_153513",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions confirm the UAL hold thesis but leave the XOM and JBL entry setups incomplete.",
+  "stocks": {
+    "UAL": {
+      "recommendation": "hold",
+      "confidence": 0.86,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "UAL is holding above $114.50",
+        "UAL has broken above $118",
+        "DAL is maintaining an opening gain"
+      ],
+      "failed_conditions": [],
+      "monitor_reason": "UAL confirms the morning setup, but the existing position should be held rather than duplicated.",
+      "execution_condition": "Watch for UAL to hold above $114.50 and break $118 with DAL also maintaining its opening gains.",
+      "trade_plan": {
+        "entry": 118.0,
+        "stop_loss": 114.5,
+        "target": 124.0
+      }
+    },
+    "XOM": {
+      "recommendation": "watch",
+      "confidence": 0.72,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "XOM is below $144",
+        "XOM remains below the $148 reclaim invalidation level"
+      ],
+      "failed_conditions": [
+        "The live snapshot does not confirm WTI remains below $81"
+      ],
+      "monitor_reason": "XOM confirms price weakness, but the required live crude confirmation is missing.",
+      "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
+      "trade_plan": {
+        "entry": 144.0,
+        "stop_loss": 148.5,
+        "target": 137.0
+      }
+    },
+    "JBL": {
+      "recommendation": "watch",
+      "confidence": 0.9,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "JBL is holding above $380"
+      ],
+      "failed_conditions": [
+        "JBL has not cleared $390",
+        "Volume is weak at 0.3x rather than strong"
+      ],
+      "monitor_reason": "JBL has preliminary support but lacks the required breakout and volume confirmation.",
+      "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
+      "trade_plan": {
+        "entry": 390.0,
+        "stop_loss": 378.0,
+        "target": 412.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27557722320",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27557722320",
+        "sha": "5ce6b304bf6ebbf1e891171c941ecc1fce108c8f",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
