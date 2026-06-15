@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260615_153513
+Run id: 20260615_160512
 Candidate symbols: UAL, XOM, JBL
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -15,22 +15,22 @@ morning execution conditions and the live snapshot.
     Why it is being checked now: active position needs supervision; 8 fresh headline(s)
   XOM: watch | entry=$144.0 stop=$148.5 target=$137.0
     Execution condition: Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.
-    Why it is being checked now: price is within 1.8% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
+    Why it is being checked now: price is near stop loss; price is near target; 9 fresh headline(s)
   JBL: watch | entry=$390.0 stop=$378.0 target=$412.0
     Execution condition: Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.
-    Why it is being checked now: price is within 1.0% of entry; 8 fresh headline(s)
+    Why it is being checked now: price is within 0.6% of entry; 8 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| UAL   | $  121.89 |  +5.5% |  68 |     0.8x | yahoo_1m | 17s |         8 |
-| XOM   | $  141.35 |  -3.9% |  36 |     0.7x | yahoo_1m | 18s |         9 |
-| JBL   | $  386.11 |  +0.3% |  61 |     0.3x | yahoo_1m | 18s |         8 |
+| UAL   | $  121.60 |  +5.3% |  68 |     0.9x | yahoo_1m | 77s |         8 |
+| XOM   | $  140.63 |  -4.3% |  36 |     0.8x | yahoo_1m | 18s |         9 |
+| JBL   | $  387.57 |  +0.7% |  62 |     0.4x | yahoo_1m | 18s |         8 |
 
 ## Active Positions
 
-  UAL: 84 shares @ $118.05, now $118.00 (-0.0%)
+  UAL: 149 shares @ $119.92, now $122.33 (+2.0%)
 
 ## Deterministic Strategy Snapshot
 
@@ -47,7 +47,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260615_153513",
+  "run_id": "20260615_160512",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
