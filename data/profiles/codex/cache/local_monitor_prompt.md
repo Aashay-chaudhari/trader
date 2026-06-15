@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260615_190431
-Candidate symbols: UAL, XOM, DAL
+Run id: 20260615_193424
+Candidate symbols: UAL, XOM, JBL
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -16,21 +16,21 @@ morning execution conditions and the live snapshot.
   XOM: watch | entry=$144.0 stop=$148.5 target=$137.0
     Execution condition: Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.
     Why it is being checked now: price is within 1.8% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
-  DAL: buy | entry=$86.2 stop=$83.8 target=$90.0
-    Execution condition: Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.
-    Why it is being checked now: price is within 1.9% of entry; price is near stop loss; 9 fresh headline(s)
+  JBL: watch | entry=$390.0 stop=$378.0 target=$412.0
+    Execution condition: Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.
+    Why it is being checked now: price is within 0.5% of entry; 8 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| UAL   | $  120.60 |  +4.4% |  67 |     1.2x | yahoo_1m | 37s |         8 |
-| XOM   | $  141.40 |  -3.8% |  36 |     1.0x | yahoo_1m | 37s |         9 |
-| DAL   | $   84.53 |  +1.8% |  65 |     1.0x | yahoo_1m | 35s |         9 |
+| UAL   | $  120.38 |  +4.2% |  67 |     1.2x | yahoo_1m | 30s |         8 |
+| XOM   | $  141.44 |  -3.8% |  36 |     1.1x | yahoo_1m | 31s |         9 |
+| JBL   | $  388.05 |  +0.8% |  62 |     0.7x | yahoo_1m | 31s |         8 |
 
 ## Active Positions
 
-  UAL: 397 shares @ $120.03, now $118.87 (-1.0%)
+  UAL: 438 shares @ $120.07, now $120.47 (+0.3%)
 
 ## Deterministic Strategy Snapshot
 
@@ -47,7 +47,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260615_190431",
+  "run_id": "20260615_193424",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
