@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260615_180435
-Candidate symbols: UAL, XOM, DAL
+Run id: 20260615_183432
+Candidate symbols: UAL, XOM, JBL
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -15,22 +15,22 @@ morning execution conditions and the live snapshot.
     Why it is being checked now: active position needs supervision; 8 fresh headline(s)
   XOM: watch | entry=$144.0 stop=$148.5 target=$137.0
     Execution condition: Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.
-    Why it is being checked now: price is within 1.9% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
-  DAL: buy | entry=$86.2 stop=$83.8 target=$90.0
-    Execution condition: Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.
-    Why it is being checked now: price is within 1.9% of entry; price is near stop loss; 9 fresh headline(s)
+    Why it is being checked now: price is within 1.8% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
+  JBL: watch | entry=$390.0 stop=$378.0 target=$412.0
+    Execution condition: Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.
+    Why it is being checked now: price is within 0.1% of entry; 8 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| UAL   | $  120.94 |  +4.7% |  68 |     1.1x | yahoo_1m | 40s |         8 |
-| XOM   | $  141.33 |  -3.9% |  36 |     0.9x | yahoo_1m | 41s |         9 |
-| DAL   | $   84.53 |  +1.8% |  65 |     0.9x | yahoo_1m | 39s |         9 |
+| UAL   | $  120.53 |  +4.3% |  67 |     1.2x | yahoo_1m | 37s |         8 |
+| XOM   | $  141.47 |  -3.8% |  36 |     1.0x | yahoo_1m | 37s |         9 |
+| JBL   | $  389.80 |  +1.3% |  63 |     0.6x | yahoo_1m | 38s |         8 |
 
 ## Active Positions
 
-  UAL: 314 shares @ $119.96, now $121.81 (+1.5%)
+  UAL: 355 shares @ $120.17, now $121.79 (+1.4%)
 
 ## Deterministic Strategy Snapshot
 
@@ -47,7 +47,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260615_180435",
+  "run_id": "20260615_183432",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
