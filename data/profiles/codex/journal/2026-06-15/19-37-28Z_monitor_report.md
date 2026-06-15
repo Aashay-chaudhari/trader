@@ -1,0 +1,127 @@
+# Trading Journal — 2026-06-15
+
+**Run ID:** `20260615_193424`  
+**Phase:** monitor  
+**Strategist:** Codex Strategist  
+**Time:** 19:37 UTC  
+
+## Research Analysis
+
+**Overall Sentiment:** neutral
+
+> Live conditions selectively confirm the airline momentum thesis for UAL, while XOM lacks explicit WTI confirmation and JBL has not cleared its trigger on strong volume.
+
+### UAL [?]
+- **Sentiment:** N/A | **Confidence:** 74% | **Recommendation:** buy
+
+### XOM [?]
+- **Sentiment:** N/A | **Confidence:** 52% | **Recommendation:** watch
+
+### JBL [?]
+- **Sentiment:** N/A | **Confidence:** 46% | **Recommendation:** watch
+
+## LLM Telemetry
+
+- **Platform:** github_actions
+- **Provider Preference:** auto
+- **Selected Provider:** codex
+- **Selected Model:** codex-cli
+- **Token Usage:** input=0, output=0, total=0
+- **LLM Latency:** 0.0 ms
+
+### Provider Attempts
+
+- codex | codex-cli | success
+
+## News Inputs Seen By The LLM
+
+### Market Headlines
+
+- **EHang Rockets 18%, Archer Zooms 10%, Joby Rises 7% as Air Taxi Stocks Fly Higher With the Broader Market** [yfinance:SPY]
+- **Palantir Rises 5%, Cloudflare Pops 3% as Investors Pile Into AI Security Plays** [yfinance:SPY]
+- **64 Years of Raises: How DGRO Finds Companies That Never Cut Dividends** [yfinance:SPY]
+- **Quantum Computing and D-Wave Quantum Jump 12%, Rigetti Climbs 9%, IonQ Gains 6% Amid Risk-On Optimism** [yfinance:SPY]
+- **Can Retirees Count on JEPQ’s 10.3 Percent Dividend and Monthly Payments?** [yfinance:QQQ]
+
+### AMD Headlines
+
+- **Cathie Wood Buys $444 Million in SpaceX, Dumps Tesla and AMD** [GuruFocus.com]
+- **AMD Wants Flash To Behave Like DRAM — And Just Bought The Tech To Do It** [Stocktwits]
+- **Better Artificial Intelligence (AI) Inference Stock: AMD vs. Intel** [Motley Fool]
+- **Quantum Stocks Jump as Growth Trade Revives** [GuruFocus.com]
+
+### DAL Headlines
+
+- **United and Other Airline Stocks Are Winners—but Not the Winners—of the Iran Deal** [Barrons.com]
+- **United, Delta and Southwest Rally as Iran Deal Lifts Travel Stocks** [GuruFocus.com]
+- **Stocks to Watch: SpaceX, Micron Technology, Remy Cointreau** [The Wall Street Journal]
+- **Travel Sector Rallies as Iran Agreement Sends Oil Prices Lower** [InvestorsHub]
+
+### MU Headlines
+
+- **Quantum Stocks Jump as Growth Trade Revives** [GuruFocus.com]
+- **Micron Rallies as TD Cowen Lifts Price Target 127% Ahead of Earnings** [GuruFocus.com]
+- **Top Midday Gainers** [MT Newswires]
+- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
+
+### WDC Headlines
+
+- **Quantum Stocks Jump as Growth Trade Revives** [GuruFocus.com]
+- **Top Midday Gainers** [MT Newswires]
+- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
+- **Stock Market Today, June 15: SpaceX Surges at Midday After Blockbuster IPO** [Motley Fool]
+
+### UAL Headlines
+
+- **United and Other Airline Stocks Are Winners—but Not the Winners—of the Iran Deal** [Barrons.com]
+- **United, Delta and Southwest Rally as Iran Deal Lifts Travel Stocks** [GuruFocus.com]
+- **Stocks to Watch: SpaceX, Micron Technology, Remy Cointreau** [The Wall Street Journal]
+- **Travel Sector Rallies as Iran Agreement Sends Oil Prices Lower** [InvestorsHub]
+
+### XOM Headlines
+
+- **Update: US Equity Indexes Jump Following Weekend Agreement to End Iran War** [MT Newswires]
+- **Oil Prices Slump, Exxon and Valero Stocks Drop After Trump Iran Deal** [Barrons.com]
+- **Oil Prices Dive On U.S.-Iran Deal, But Prewar Pricing Is Far Off** [Investor's Business Daily]
+- **1 Unstoppable Vanguard ETF to Buy and Hold for the Next Decade** [24/7 Wall St.]
+
+### JBL Headlines
+
+- **Stocks Set to Open Sharply Higher as Oil Sinks on U.S.-Iran Deal, Fed Meeting Awaited** [Barchart]
+- **Update: Equity Markets Rally Intraday, Oil Tumbles Following US-Iran Deal** [MT Newswires]
+- **Jabil's Q3 Earnings Coming Up: How Should You Play the Stock?** [Zacks]
+- **Apple supplier Jabil, Adani partner to build AI data center infra platform in India ** [Reuters]
+
+## Trade Signals
+
+| Symbol | Action | Strength | Strategy | Reasoning |
+|--------|--------|----------|----------|-----------|
+| **UAL** | BUY | 0.52 | combined(trend+relative_strength+news_catalyst) | Uptrend: price > SMA20 (106.52) > SMA50 (99.40) | Outperforming market by +2.5%  |
+
+## Risk Assessment
+
+- **Approved:** 1 trades
+- **Rejected:** 0 trades
+
+## Execution
+
+- **UAL** BUY 42 shares @ ~$117.84 = $4,949.07 [SUBMITTED]
+
+## Portfolio Snapshot
+
+| Metric | Value |
+|--------|------:|
+| **Total Value** | $99,019.65 |
+| **Cash** | $42,458.85 |
+| **Invested** | $57,541.15 |
+| **Total P&L** | $-980.35 (-0.98%) |
+| **Positions** | 1 |
+
+### Open Positions
+
+| Symbol | Shares | Avg Cost | Current | Value | P&L |
+|--------|-------:|---------:|--------:|------:|----:|
+| UAL | 480 | $119.88 | $117.84 | $56,560.80 | $-980.35 (-1.70%) |
+
+---
+*Generated by Agent Trader v0.1.0*
