@@ -8,7 +8,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-06-15T13:38:21.277853+00:00",
+    "timestamp": "2026-06-15T14:08:11.447790+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
@@ -24,6 +24,20 @@
   "history": [
     {
       "timestamp": "2026-06-15T13:38:21.277853+00:00",
+      "profile": "codex",
+      "profile_label": "Codex Strategist",
+      "portfolio_value": 100000.0,
+      "cash": 100000.0,
+      "invested": 0,
+      "unrealized_pnl": 0,
+      "total_pnl": 0,
+      "realized_pnl": 0,
+      "total_pnl_pct": 0.0,
+      "positions": [],
+      "position_count": 0
+    },
+    {
+      "timestamp": "2026-06-15T14:08:11.447790+00:00",
       "profile": "codex",
       "profile_label": "Codex Strategist",
       "portfolio_value": 100000.0,
@@ -274,23 +288,24 @@
     }
   },
   "monitor": {
-    "run_id": "20260615_133516",
+    "run_id": "20260615_140514",
     "overall_sentiment": "bullish",
-    "market_summary": "The risk-on and lower-oil backdrop confirms the morning thesis, but none of the three setups offers a clearly satisfied entry with adequate confirmation and remaining reward.",
+    "market_summary": "Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot.",
     "stocks": {
       "XOM": {
         "recommendation": "watch",
-        "confidence": 0.84,
+        "confidence": 0.72,
         "ready_to_trade": false,
         "matched_conditions": [
-          "XOM has decisively lost $144",
-          "Prepared market context indicates WTI remains below $81",
-          "XOM remains below the $148 invalidation level"
+          "XOM is trading below the $144 trigger",
+          "XOM remains well below the $148 invalidation level",
+          "Energy is the weakest sector and lower-oil headlines support the bearish thesis"
         ],
         "failed_conditions": [
-          "Price is already near the $137 target, leaving insufficient reward for a new bearish entry"
+          "The snapshot does not explicitly confirm a live WTI price below $81",
+          "XOM is already close to the $137 target, reducing entry quality"
         ],
-        "monitor_reason": "The bearish thesis is confirmed, but the move from the planned entry is already largely complete and should not be chased.",
+        "monitor_reason": "The bearish price break is confirmed, but missing live WTI verification and proximity to target make a new entry premature.",
         "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
         "trade_plan": {
           "entry": 144.0,
@@ -298,44 +313,45 @@
           "target": 137.0
         }
       },
-      "DAL": {
-        "recommendation": "buy",
-        "confidence": 0.72,
-        "ready_to_trade": false,
-        "matched_conditions": [
-          "DAL is currently above $85.80",
-          "DAL is trading above the $86.20 trigger",
-          "Prepared market context indicates WTI remains near or below $81"
-        ],
-        "failed_conditions": [
-          "The live session low of $85.75 did not strictly hold above $85.80 after the open"
-        ],
-        "monitor_reason": "DAL has reclaimed the trigger in a favorable oil backdrop, but the required post-open hold was narrowly violated.",
-        "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
-        "trade_plan": {
-          "entry": 86.2,
-          "stop_loss": 83.8,
-          "target": 90.0
-        }
-      },
       "JBL": {
         "recommendation": "watch",
-        "confidence": 0.79,
+        "confidence": 0.78,
         "ready_to_trade": false,
         "matched_conditions": [
-          "JBL is holding above $380",
-          "JBL has cleared the $390 price trigger"
+          "JBL is trading above the $390 breakout level",
+          "JBL remains above the $380 support requirement"
         ],
         "failed_conditions": [
-          "The 0.1x volume ratio does not confirm a strong-volume breakout",
-          "Wednesday earnings remain a near-term position-sizing risk"
+          "Volume ratio is only 0.2x and does not confirm a strong-volume breakout",
+          "Wednesday earnings increase near-term event risk"
         ],
-        "monitor_reason": "Price has cleared the planned level, but weak relative volume leaves the breakout unconfirmed ahead of earnings.",
+        "monitor_reason": "Price has cleared the trigger, but the required strong volume is absent ahead of earnings.",
         "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
         "trade_plan": {
           "entry": 390.0,
           "stop_loss": 378.0,
           "target": 412.0
+        }
+      },
+      "DAL": {
+        "recommendation": "watch",
+        "confidence": 0.86,
+        "ready_to_trade": false,
+        "matched_conditions": [
+          "Lower-oil headlines continue to support the airline catalyst",
+          "DAL remains positive on the session"
+        ],
+        "failed_conditions": [
+          "DAL is below the required $85.80 hold level",
+          "DAL is below the $86.20 reclaim trigger",
+          "The snapshot does not explicitly confirm a live WTI price at or below $81"
+        ],
+        "monitor_reason": "DAL has faded below both required price levels, so the planned buy trigger is not active.",
+        "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
+        "trade_plan": {
+          "entry": 86.2,
+          "stop_loss": 83.8,
+          "target": 90.0
         }
       }
     },
@@ -371,22 +387,22 @@
           "workflow": "Codex Decision Execution",
           "event_name": "push",
           "actor": "Aashay-chaudhari",
-          "run_id": "27550189633",
+          "run_id": "27552027097",
           "run_attempt": "1",
-          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27550189633",
-          "sha": "96b1beed70025d733aee056aee2ef2d8a6dc757b",
+          "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27552027097",
+          "sha": "9e19df1734442905545e83c68164e32aca2994de",
           "ref": "refs/heads/main"
         }
       }
     }
   },
   "llm": {
-    "timestamp": "2026-06-15T13:38:21.275719+00:00",
+    "timestamp": "2026-06-15T14:08:11.445533+00:00",
     "phase": "monitor",
     "symbols": [
       "XOM",
-      "DAL",
-      "JBL"
+      "JBL",
+      "DAL"
     ],
     "provider_preference": null,
     "selected_provider": "codex",
@@ -422,10 +438,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "27550189633",
+        "run_id": "27552027097",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27550189633",
-        "sha": "96b1beed70025d733aee056aee2ef2d8a6dc757b",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27552027097",
+        "sha": "9e19df1734442905545e83c68164e32aca2994de",
         "ref": "refs/heads/main"
       }
     }
@@ -1021,49 +1037,49 @@
   },
   "interactions": {
     "counts": {
-      "total": 4,
-      "recent": 4,
+      "total": 5,
+      "recent": 5,
       "days": 1
     },
     "latest": {
-      "timestamp": "2026-06-15T10:07:06.212620-04:00",
+      "timestamp": "2026-06-15T14:08:11.444271+00:00",
       "day": "2026-06-15",
       "profile": "codex",
       "phase": "monitor",
       "phase_group": "monitor",
       "phase_label": "Monitor Evaluations",
-      "tool": "codex",
+      "tool": "codex-loop",
       "status": "success",
-      "summary": "Wrote `local_monitor_decision.json` with no trades approved. JSON validation passed.",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_100535.log",
+      "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+      "raw_log_file": "",
       "prompt_source": "scripts/prompts/monitor_check.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
       "monitor": {
-        "timestamp": "2026-06-15T10:07:06.212620-04:00",
+        "timestamp": "2026-06-15T14:08:11.444271+00:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
-        "tool": "codex",
+        "tool": "codex-loop",
         "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` with no trades approved. JSON validation passed.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_100535.log",
+        "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+        "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
         "prompt_source_url": ""
       },
       "morning": {
@@ -1088,28 +1104,28 @@
       }
     },
     "phase_counts": {
-      "monitor": 3,
+      "monitor": 4,
       "morning": 1
     },
     "recent": [
       {
-        "timestamp": "2026-06-15T10:07:06.212620-04:00",
+        "timestamp": "2026-06-15T14:08:11.444271+00:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
-        "tool": "codex",
+        "tool": "codex-loop",
         "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` with no trades approved. JSON validation passed.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_100535.log",
+        "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+        "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -1153,6 +1169,26 @@
         "prompt_source_url": ""
       },
       {
+        "timestamp": "2026-06-15T10:07:06.212620-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `local_monitor_decision.json` with no trades approved. JSON validation passed.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_100535.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/100535_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
         "timestamp": "2026-06-15T08:48:21.317921-04:00",
         "day": "2026-06-15",
         "profile": "codex",
@@ -1176,7 +1212,7 @@
     "days": [
       {
         "date": "2026-06-15",
-        "count": 4,
+        "count": 5,
         "phases": [
           {
             "key": "morning",
@@ -1208,6 +1244,26 @@
             "key": "monitor",
             "label": "Monitor Evaluations",
             "items": [
+              {
+                "timestamp": "2026-06-15T14:08:11.444271+00:00",
+                "day": "2026-06-15",
+                "profile": "codex",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "codex-loop",
+                "status": "success",
+                "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+                "raw_log_file": "",
+                "prompt_source": "scripts/prompts/monitor_check.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+                "prompt_source_url": ""
+              },
               {
                 "timestamp": "2026-06-15T13:38:21.274499+00:00",
                 "day": "2026-06-15",
@@ -1291,7 +1347,7 @@
   "reports": {
     "research": {},
     "monitor": {
-      "run_id": "20260615_133516",
+      "run_id": "20260615_140514",
       "phase": "monitor",
       "profile": {
         "id": "codex",
@@ -1301,27 +1357,28 @@
         "dry_run": false,
         "paper_portfolio_value": 100000.0
       },
-      "timestamp": "2026-06-15T13:38:21.281796+00:00",
+      "timestamp": "2026-06-15T14:08:11.452169+00:00",
       "screener": null,
       "research": {
         "research": {
-          "run_id": "20260615_133516",
+          "run_id": "20260615_140514",
           "overall_sentiment": "bullish",
-          "market_summary": "The risk-on and lower-oil backdrop confirms the morning thesis, but none of the three setups offers a clearly satisfied entry with adequate confirmation and remaining reward.",
+          "market_summary": "Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot.",
           "stocks": {
             "XOM": {
               "recommendation": "watch",
-              "confidence": 0.84,
+              "confidence": 0.72,
               "ready_to_trade": false,
               "matched_conditions": [
-                "XOM has decisively lost $144",
-                "Prepared market context indicates WTI remains below $81",
-                "XOM remains below the $148 invalidation level"
+                "XOM is trading below the $144 trigger",
+                "XOM remains well below the $148 invalidation level",
+                "Energy is the weakest sector and lower-oil headlines support the bearish thesis"
               ],
               "failed_conditions": [
-                "Price is already near the $137 target, leaving insufficient reward for a new bearish entry"
+                "The snapshot does not explicitly confirm a live WTI price below $81",
+                "XOM is already close to the $137 target, reducing entry quality"
               ],
-              "monitor_reason": "The bearish thesis is confirmed, but the move from the planned entry is already largely complete and should not be chased.",
+              "monitor_reason": "The bearish price break is confirmed, but missing live WTI verification and proximity to target make a new entry premature.",
               "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
               "trade_plan": {
                 "entry": 144.0,
@@ -1329,44 +1386,45 @@
                 "target": 137.0
               }
             },
-            "DAL": {
-              "recommendation": "buy",
-              "confidence": 0.72,
-              "ready_to_trade": false,
-              "matched_conditions": [
-                "DAL is currently above $85.80",
-                "DAL is trading above the $86.20 trigger",
-                "Prepared market context indicates WTI remains near or below $81"
-              ],
-              "failed_conditions": [
-                "The live session low of $85.75 did not strictly hold above $85.80 after the open"
-              ],
-              "monitor_reason": "DAL has reclaimed the trigger in a favorable oil backdrop, but the required post-open hold was narrowly violated.",
-              "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
-              "trade_plan": {
-                "entry": 86.2,
-                "stop_loss": 83.8,
-                "target": 90.0
-              }
-            },
             "JBL": {
               "recommendation": "watch",
-              "confidence": 0.79,
+              "confidence": 0.78,
               "ready_to_trade": false,
               "matched_conditions": [
-                "JBL is holding above $380",
-                "JBL has cleared the $390 price trigger"
+                "JBL is trading above the $390 breakout level",
+                "JBL remains above the $380 support requirement"
               ],
               "failed_conditions": [
-                "The 0.1x volume ratio does not confirm a strong-volume breakout",
-                "Wednesday earnings remain a near-term position-sizing risk"
+                "Volume ratio is only 0.2x and does not confirm a strong-volume breakout",
+                "Wednesday earnings increase near-term event risk"
               ],
-              "monitor_reason": "Price has cleared the planned level, but weak relative volume leaves the breakout unconfirmed ahead of earnings.",
+              "monitor_reason": "Price has cleared the trigger, but the required strong volume is absent ahead of earnings.",
               "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
               "trade_plan": {
                 "entry": 390.0,
                 "stop_loss": 378.0,
                 "target": 412.0
+              }
+            },
+            "DAL": {
+              "recommendation": "watch",
+              "confidence": 0.86,
+              "ready_to_trade": false,
+              "matched_conditions": [
+                "Lower-oil headlines continue to support the airline catalyst",
+                "DAL remains positive on the session"
+              ],
+              "failed_conditions": [
+                "DAL is below the required $85.80 hold level",
+                "DAL is below the $86.20 reclaim trigger",
+                "The snapshot does not explicitly confirm a live WTI price at or below $81"
+              ],
+              "monitor_reason": "DAL has faded below both required price levels, so the planned buy trigger is not active.",
+              "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
+              "trade_plan": {
+                "entry": 86.2,
+                "stop_loss": 83.8,
+                "target": 90.0
               }
             }
           },
@@ -1402,10 +1460,10 @@
                 "workflow": "Codex Decision Execution",
                 "event_name": "push",
                 "actor": "Aashay-chaudhari",
-                "run_id": "27550189633",
+                "run_id": "27552027097",
                 "run_attempt": "1",
-                "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27550189633",
-                "sha": "96b1beed70025d733aee056aee2ef2d8a6dc757b",
+                "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27552027097",
+                "sha": "9e19df1734442905545e83c68164e32aca2994de",
                 "ref": "refs/heads/main"
               }
             }
@@ -1414,36 +1472,36 @@
         "phase": "monitor",
         "symbols": [
           "XOM",
-          "DAL",
-          "JBL"
+          "JBL",
+          "DAL"
         ],
         "market_data": {
           "AMD": {
             "info": {
               "name": "Advanced Micro Devices, Inc.",
               "sector": "Technology",
-              "market_cap": 893014638592,
-              "pe_ratio": 181.34436,
+              "market_cap": 902341722112,
+              "pe_ratio": 183.23842,
               "dividend_yield": null,
-              "fifty_two_week_high": 549.341,
+              "fifty_two_week_high": 558.37,
               "fifty_two_week_low": 117.78
             },
-            "latest_price": 547.6599731445312,
-            "quote_timestamp": "2026-06-15T13:35:00+00:00",
+            "latest_price": 553.260009765625,
+            "quote_timestamp": "2026-06-15T14:05:00+00:00",
             "quote_source": "yahoo_1m",
-            "quote_age_seconds": 19,
+            "quote_age_seconds": 17,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 7.054746232892361,
-            "volume": 3078486,
+            "price_change_pct": 8.159194174165368,
+            "volume": 8289812,
             "indicators": {
-              "rsi_14": 65.34184382160836,
-              "sma_20": 488.15149993896483,
-              "sma_50": 393.38300079345703,
-              "macd": 31.19255221185807,
-              "macd_signal": 35.6602765044879,
-              "bb_upper": 562.0828315578528,
-              "bb_lower": 414.22016832007677
+              "rsi_14": 65.99442332069668,
+              "sma_20": 488.43400115966796,
+              "sma_50": 393.4960012817383,
+              "macd": 31.643266410130877,
+              "macd_signal": 35.750419344142465,
+              "bb_upper": 563.3098774680032,
+              "bb_lower": 413.55812485133276
             },
             "price_history": [
               {
@@ -1681,40 +1739,40 @@
               {
                 "date": "2026-06-15T00:00:00-04:00",
                 "open": 535.75,
-                "high": 549.3410034179688,
+                "high": 558.3699951171875,
                 "low": 530.5,
-                "close": 547.6599731445312,
-                "volume": 3078486
+                "close": 553.3099975585938,
+                "volume": 8289812
               }
             ],
-            "fetch_time_ms": 2847
+            "fetch_time_ms": 2970
           },
           "DAL": {
             "info": {
               "name": "Delta Air Lines, Inc.",
               "sector": "Industrials",
-              "market_cap": 57132228608,
-              "pe_ratio": 12.694891,
+              "market_cap": 55975919616,
+              "pe_ratio": 12.437956,
               "dividend_yield": 0.9,
-              "fifty_two_week_high": 87.09,
+              "fifty_two_week_high": 87.38,
               "fifty_two_week_low": 45.28
             },
-            "latest_price": 89.13,
-            "quote_timestamp": "2026-06-15T13:38:20.890438+00:00",
+            "latest_price": 84.92500000000001,
+            "quote_timestamp": "2026-06-15T14:08:11.273624+00:00",
             "quote_source": "alpaca_iex_quote_midpoint",
             "quote_age_seconds": 0,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 4.69540289009483,
-            "volume": 920587,
+            "price_change_pct": 2.5764500993860477,
+            "volume": 2125620,
             "indicators": {
-              "rsi_14": 68.23067818385509,
-              "sma_20": 78.84850006103515,
-              "sma_50": 73.19002182006835,
-              "macd": 2.956878564837524,
-              "macd_signal": 2.6863563285745067,
-              "bb_upper": 87.62721750665355,
-              "bb_lower": 70.06978261541676
+              "rsi_14": 66.06789140128679,
+              "sma_20": 78.76049995422363,
+              "sma_50": 73.15482177734376,
+              "macd": 2.816479534027124,
+              "macd_signal": 2.658276522412427,
+              "bb_upper": 87.24247632621407,
+              "bb_lower": 70.27852358223319
             },
             "price_history": [
               {
@@ -1951,48 +2009,48 @@
               },
               {
                 "date": "2026-06-15T00:00:00-04:00",
-                "open": 83.16000366210938,
-                "high": 87.08999633789062,
-                "low": 85.75,
-                "close": 86.95999908447266,
-                "volume": 920587
+                "open": 86.05000305175781,
+                "high": 87.37999725341797,
+                "low": 85.19999694824219,
+                "close": 85.19999694824219,
+                "volume": 2125620
               }
             ],
-            "fetch_time_ms": 566,
-            "last_trade_price": 87.18,
-            "last_trade_timestamp": "2026-06-15T13:38:20.023128+00:00",
-            "bid_price": 87.17,
-            "ask_price": 91.09,
+            "fetch_time_ms": 468,
+            "last_trade_price": 84.89,
+            "last_trade_timestamp": "2026-06-15T14:08:08.572051+00:00",
+            "bid_price": 84.87,
+            "ask_price": 84.98,
             "bid_size": 100.0,
             "ask_size": 200.0,
-            "bid_ask_timestamp": "2026-06-15T13:38:20.890438+00:00"
+            "bid_ask_timestamp": "2026-06-15T14:08:11.273624+00:00"
           },
           "MU": {
             "info": {
               "name": "Micron Technology, Inc.",
               "sector": "Technology",
-              "market_cap": 1198341488640,
-              "pe_ratio": 50.12311,
+              "market_cap": 1200145825792,
+              "pe_ratio": 50.19858,
               "dividend_yield": 0.06,
               "fifty_two_week_high": 1089.29,
               "fifty_two_week_low": 103.38
             },
-            "latest_price": 1062.47119140625,
-            "quote_timestamp": "2026-06-15T13:35:00+00:00",
+            "latest_price": 1063.925048828125,
+            "quote_timestamp": "2026-06-15T14:05:00+00:00",
             "quote_source": "yahoo_1m",
-            "quote_age_seconds": 20,
+            "quote_age_seconds": 19,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 8.2458677020485,
-            "volume": 5396257,
+            "price_change_pct": 8.41016849287352,
+            "volume": 10990048,
             "indicators": {
-              "rsi_14": 65.35029359272903,
-              "sma_20": 910.0221069335937,
-              "sma_50": 691.5730462646484,
-              "macd": 87.3596253210086,
-              "macd_signal": 93.2944225011338,
-              "bb_upper": 1153.409582654141,
-              "bb_lower": 666.6346312130464
+              "rsi_14": 65.430751341388,
+              "sma_20": 910.1027465820313,
+              "sma_50": 691.6053021240234,
+              "macd": 87.4882811703676,
+              "macd_signal": 93.32015367100558,
+              "bb_upper": 1153.6932992749146,
+              "bb_lower": 666.5121938891479
             },
             "price_history": [
               {
@@ -2231,39 +2289,39 @@
                 "date": "2026-06-15T00:00:00-04:00",
                 "open": 1055.8900146484375,
                 "high": 1076.7899169921875,
-                "low": 1054.0,
-                "close": 1062.55224609375,
-                "volume": 5396257
+                "low": 1051.5001220703125,
+                "close": 1064.1650390625,
+                "volume": 10990048
               }
             ],
-            "fetch_time_ms": 762
+            "fetch_time_ms": 730
           },
           "WDC": {
             "info": {
               "name": "Western Digital Corporation",
               "sector": "Technology",
-              "market_cap": 221285941248,
-              "pe_ratio": 38.39713,
+              "market_cap": 218442268672,
+              "pe_ratio": 37.9037,
               "dividend_yield": 0.11,
-              "fifty_two_week_high": 642.74,
+              "fifty_two_week_high": 658.8,
               "fifty_two_week_low": 56.27
             },
-            "latest_price": 642.5101928710938,
-            "quote_timestamp": "2026-06-15T13:35:00+00:00",
+            "latest_price": 633.3400268554688,
+            "quote_timestamp": "2026-06-15T14:05:00+00:00",
             "quote_source": "yahoo_1m",
-            "quote_age_seconds": 21,
+            "quote_age_seconds": 19,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 14.088785211391682,
-            "volume": 1084446,
+            "price_change_pct": 12.5077780711251,
+            "volume": 3081863,
             "indicators": {
-              "rsi_14": 70.36160522736785,
-              "sma_20": 526.0276306152343,
-              "sma_50": 455.96622985839844,
-              "macd": 31.973335981291257,
-              "macd_signal": 30.150220740202656,
-              "bb_upper": 618.3133615385791,
-              "bb_lower": 433.74189969188956
+              "rsi_14": 69.57060360732632,
+              "sma_20": 525.582632446289,
+              "sma_50": 455.7882305908203,
+              "macd": 31.263367392660598,
+              "macd_signal": 30.008227022476525,
+              "bb_upper": 615.6825303945612,
+              "bb_lower": 435.4827344980169
             },
             "price_history": [
               {
@@ -2501,40 +2559,40 @@
               {
                 "date": "2026-06-15T00:00:00-04:00",
                 "open": 618.0,
-                "high": 642.739990234375,
+                "high": 658.7999877929688,
                 "low": 612.0,
-                "close": 642.239990234375,
-                "volume": 1084446
+                "close": 633.3400268554688,
+                "volume": 3081863
               }
             ],
-            "fetch_time_ms": 574
+            "fetch_time_ms": 446
           },
           "UAL": {
             "info": {
               "name": "United Airlines Holdings, Inc.",
               "sector": "Industrials",
-              "market_cap": 40139538432,
-              "pe_ratio": 11.061717,
+              "market_cap": 38940254208,
+              "pe_ratio": 10.731216,
               "dividend_yield": null,
               "fifty_two_week_high": 124.79,
               "fifty_two_week_low": 71.55
             },
-            "latest_price": 123.66999816894531,
-            "quote_timestamp": "2026-06-15T13:35:00+00:00",
+            "latest_price": 119.9749984741211,
+            "quote_timestamp": "2026-06-15T14:05:00+00:00",
             "quote_source": "yahoo_1m",
-            "quote_age_seconds": 22,
+            "quote_age_seconds": 19,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 7.055056927555819,
-            "volume": 1037306,
+            "price_change_pct": 3.8564767663729667,
+            "volume": 2191019,
             "indicators": {
-              "rsi_14": 69.40659591405549,
-              "sma_20": 106.68050003051758,
-              "sma_50": 99.46559982299804,
-              "macd": 4.647049602060093,
-              "macd_signal": 3.6399706976360893,
-              "bb_upper": 122.8926332807213,
-              "bb_lower": 90.46836678031386
+              "rsi_14": 66.97299950685073,
+              "sma_20": 106.49575004577636,
+              "sma_50": 99.39169982910157,
+              "macd": 4.352291791646778,
+              "macd_signal": 3.581019135553426,
+              "bb_upper": 121.99790675602739,
+              "bb_lower": 90.99359333552533
             },
             "price_history": [
               {
@@ -2773,39 +2831,39 @@
                 "date": "2026-06-15T00:00:00-04:00",
                 "open": 120.8949966430664,
                 "high": 124.79000091552734,
-                "low": 120.6500015258789,
-                "close": 123.66999816894531,
-                "volume": 1037306
+                "low": 119.80999755859375,
+                "close": 119.9749984741211,
+                "volume": 2191019
               }
             ],
-            "fetch_time_ms": 537
+            "fetch_time_ms": 463
           },
           "XOM": {
             "info": {
               "name": "Exxon Mobil Corporation",
               "sector": "Energy",
-              "market_cap": 572582985728,
-              "pe_ratio": 23.255892,
+              "market_cap": 577784905728,
+              "pe_ratio": 23.467173,
               "dividend_yield": 2.8,
               "fifty_two_week_high": 176.41,
               "fifty_two_week_low": 105.53
             },
-            "latest_price": 138.42000000000002,
-            "quote_timestamp": "2026-06-15T13:38:21.172865+00:00",
+            "latest_price": 139.515,
+            "quote_timestamp": "2026-06-15T14:08:11.419275+00:00",
             "quote_source": "alpaca_iex_quote_midpoint",
             "quote_age_seconds": 0,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": -6.071007500482384,
-            "volume": 1861063,
+            "price_change_pct": -5.179913284073284,
+            "volume": 5125276,
             "indicators": {
-              "rsi_14": 33.102284097611005,
-              "sma_20": 150.79324951171876,
-              "sma_50": 150.8607763671875,
-              "macd": -1.8929664018097014,
-              "macd_signal": -0.9410002340937703,
-              "bb_upper": 161.38561501388492,
-              "bb_lower": 140.2008840095526
+              "rsi_14": 34.30730163957523,
+              "sma_20": 150.85874938964844,
+              "sma_50": 150.8869763183594,
+              "macd": -1.7884651720643205,
+              "macd_signal": -0.9200999881446942,
+              "bb_upper": 161.1478289354809,
+              "bb_lower": 140.56966984381597
             },
             "price_history": [
               {
@@ -3042,48 +3100,48 @@
               },
               {
                 "date": "2026-06-15T00:00:00-04:00",
-                "open": 145.6300048828125,
-                "high": 139.74000549316406,
-                "low": 137.9499969482422,
-                "close": 138.0850067138672,
-                "volume": 1861063
+                "open": 139.74000549316406,
+                "high": 140.2799072265625,
+                "low": 137.72000122070312,
+                "close": 139.39500427246094,
+                "volume": 5125276
               }
             ],
-            "fetch_time_ms": 624,
-            "last_trade_price": 138.39,
-            "last_trade_timestamp": "2026-06-15T13:38:19.604013+00:00",
-            "bid_price": 138.37,
-            "ask_price": 138.47,
+            "fetch_time_ms": 560,
+            "last_trade_price": 139.455,
+            "last_trade_timestamp": "2026-06-15T14:08:09.403057+00:00",
+            "bid_price": 139.49,
+            "ask_price": 139.54,
             "bid_size": 100.0,
-            "ask_size": 100.0,
-            "bid_ask_timestamp": "2026-06-15T13:38:21.172865+00:00"
+            "ask_size": 300.0,
+            "bid_ask_timestamp": "2026-06-15T14:08:11.419275+00:00"
           },
           "JBL": {
             "info": {
               "name": "Jabil Inc.",
               "sector": "Technology",
-              "market_cap": 41749499904,
-              "pe_ratio": 53.259758,
+              "market_cap": 41421381632,
+              "pe_ratio": 52.841183,
               "dividend_yield": 0.08,
               "fifty_two_week_high": 398.89,
               "fifty_two_week_low": 177.18
             },
-            "latest_price": 384.7,
-            "quote_timestamp": "2026-06-15T13:38:21.151727+00:00",
+            "latest_price": 392.89,
+            "quote_timestamp": "2026-06-15T14:08:10.574746+00:00",
             "quote_source": "alpaca_iex_quote_midpoint",
             "quote_age_seconds": 0,
             "quote_is_fresh": true,
             "last_trade_date": "2026-06-15T00:00:00-04:00",
-            "price_change_pct": 2.8324914736828917,
-            "volume": 55384,
+            "price_change_pct": 2.0243173117505124,
+            "volume": 171668,
             "indicators": {
-              "rsi_14": 64.21431258124994,
-              "sma_20": 364.63550262451173,
-              "sma_50": 342.90783203125,
-              "macd": 10.557144157926928,
-              "macd_signal": 9.705800177666188,
-              "bb_upper": 395.01123232387187,
-              "bb_lower": 334.2597729251516
+              "rsi_14": 63.36591063961948,
+              "sma_20": 364.48000183105466,
+              "sma_50": 342.8456317138672,
+              "macd": 10.309051723921414,
+              "macd_signal": 9.656181690865086,
+              "bb_upper": 394.24329061027754,
+              "bb_lower": 334.7167130518318
             },
             "price_history": [
               {
@@ -3320,27 +3378,43 @@
               },
               {
                 "date": "2026-06-15T00:00:00-04:00",
-                "open": 379.3999938964844,
+                "open": 398.1099853515625,
                 "high": 398.8900146484375,
-                "low": 394.4649963378906,
-                "close": 395.7200012207031,
-                "volume": 55384
+                "low": 389.2449951171875,
+                "close": 392.6099853515625,
+                "volume": 171668
               }
             ],
-            "fetch_time_ms": 651,
-            "last_trade_price": 394.66,
-            "last_trade_timestamp": "2026-06-15T13:37:36.474120+00:00",
+            "fetch_time_ms": 880,
+            "last_trade_price": 391.905,
+            "last_trade_timestamp": "2026-06-15T14:07:41.306414+00:00",
             "bid_price": 375.25,
-            "ask_price": 394.15,
+            "ask_price": 410.53,
             "bid_size": 40.0,
             "ask_size": 40.0,
-            "bid_ask_timestamp": "2026-06-15T13:38:21.151727+00:00"
+            "bid_ask_timestamp": "2026-06-15T14:08:10.574746+00:00"
           }
         },
         "news": {
           "AMD": {
             "symbol": "AMD",
             "news_headlines": [
+              {
+                "title": "Is AMD the Next $1 Trillion Chip Stock, or Just the Next AI Trap?",
+                "source": "yfinance",
+                "published": "2026-06-15T13:27:02Z",
+                "symbols": [
+                  "AMD"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://247wallst.com/investing/2026/06/15/is-amd-the-next-1-trillion-chip-stock-or-just-the-next-ai-trap/",
+                "summary": "A trillion-dollar market cap used to be a club reserved for software empires and one graphics chip company that surprised the world. Advanced Micro Devices (NASDAQ:AMD) now sits at $834 billion, which puts the question right in front of every long-term holder. Shares are up 129% year to date and 304",
+                "publisher": "24/7 Wall St.",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
               {
                 "title": "This Under-the-Radar AI Chip Leader Just Became a No-Brainer Buy This Week",
                 "source": "yfinance",
@@ -3411,8 +3485,7 @@
                 "source": "yfinance",
                 "published": "2026-06-15T12:05:22Z",
                 "symbols": [
-                  "AMD",
-                  "MU"
+                  "AMD"
                 ],
                 "sentiment": -1.0,
                 "category": "headline",
@@ -3452,22 +3525,6 @@
                 "url": "https://finance.yahoo.com/sectors/technology/articles/week-ai-chips-aymer-ai-113812951.html",
                 "summary": "Aymer AI has revealed a strategic initiative to develop a 90-acre powered land bank in Texas, targeting next-generation AI and high-performance computing infrastructure. Dubbed Project Macedonia, the venture aims to provide up to 100 megawatts of power capacity through a mix of grid and behind-the-m",
                 "publisher": "Simply Wall St.",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "AT&S invests up to \u20ac2 billion in Malaysia plan to capitalise on AI boom",
-                "source": "yfinance",
-                "published": "2026-06-15T10:33:22Z",
-                "symbols": [
-                  "AMD"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/sectors/technology/articles/invests-2-billion-malaysia-plan-103322010.html",
-                "summary": "Austrian circuit board manufacturer AT&S has announced it is investing \u200cup to \u20ac2 billion ($2.3 billion) in Malaysia to \u200ccapitalise on the AI boom, sending its shares soaring nearly 30%.  \"We \u200bwill fully expand our site in Kulim,\" the company's CEO Michael Mertin told Reuters in an interview on Monda",
-                "publisher": "Reuters",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -3734,23 +3791,6 @@
             "symbol": "MU",
             "news_headlines": [
               {
-                "title": "He Watched His $1M ETF Investment Crash to $200k. Then He Cashed Out at $7.5 Million",
-                "source": "yfinance",
-                "published": "2026-06-15T12:05:22Z",
-                "symbols": [
-                  "AMD",
-                  "MU"
-                ],
-                "sentiment": -1.0,
-                "category": "headline",
-                "url": "https://247wallst.com/investing/2026/06/15/he-watched-his-1m-etf-investment-crash-to-200k-then-he-cashed-out-at-7-5-million/",
-                "summary": "A Redditor shared the kind of story that makes everyone reach for the calculator. A friend put roughly $1 million into Direxion Daily Semiconductor Bull 3X Shares (NYSEARCA:SOXL), watched the position bleed down to about $200,000 during the 2025 tariff-war selloff, refused to sell, and then cashed o",
-                "publisher": "24/7 Wall St.",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "United Stock Surges but Airlines Are Not the Biggest Risers in the Iran Deal Rally",
                 "source": "yfinance",
                 "published": "2026-06-15T12:27:00Z",
@@ -3782,6 +3822,39 @@
                 "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-15-2026/card/stocks-to-watch-spacex-micron-technology-remy-cointreau-I52ZlHTefBMgyZlLA2cF?siteid=yhoof2&yptr=yahoo",
                 "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company rose about 6% premarket, putting the stock on track to extend the 19% gain recorded on its trading debut. \u2197\ufe0f Micron Technology (MU), Super Micro Computer (SMCI), Marvell Technology (MRVL): Shares of companies tied to the AI buildout were among t",
                 "publisher": "The Wall Street Journal",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "AI Memory Bottleneck: This Sizzling ETF Lets You Buy Micron, Sandisk, SK Hynix, and Samsung for Less Than $100",
+                "source": "yfinance",
+                "published": "2026-06-15T13:53:00Z",
+                "symbols": [
+                  "MU"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://www.fool.com/investing/2026/06/15/ai-memory-bottleneck-this-sizzling-etf-lets-you-bu/",
+                "summary": "The DRAM ETF has jumped impressively in just over two months, and it can soar higher thanks to the favorable demand-supply dynamics in the memory market.",
+                "publisher": "Motley Fool",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Micron and Western Digital Climb 8%, SanDisk Rises 6% on Iran Truce",
+                "source": "yfinance",
+                "published": "2026-06-15T13:28:46Z",
+                "symbols": [
+                  "MU",
+                  "WDC"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://247wallst.com/investing/2026/06/15/micron-and-western-digital-climb-8-sandisk-rises-6-on-iran-truce/",
+                "summary": "Memory and storage stocks are surging on the morning of Monday, June 15, after news of a U.S.-Iran peace agreement reopened risk appetite across global equities. Micron Technology (NASDAQ:MU) stock is up 8% to around $1,060 in early action, climbing back above the $1,000 level. Western Digital (NASD",
+                "publisher": "24/7 Wall St.",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -3852,22 +3925,6 @@
                 }
               },
               {
-                "title": "1 Cash-Heavy Stock with Impressive Fundamentals and 2 We Ignore",
-                "source": "yfinance",
-                "published": "2026-06-15T12:20:07Z",
-                "symbols": [
-                  "MU"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/markets/stocks/articles/1-cash-heavy-stock-impressive-122007537.html",
-                "summary": "Companies with more cash than debt can be financially resilient, but that doesn\u2019t mean they\u2019re all strong investments. Some lack leverage because they struggle to grow or generate consistent profits, making them unattractive borrowers.",
-                "publisher": "StockStory",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "SEC 8-K: MU \u2014 Filed 2026-06-09",
                 "source": "sec_edgar",
                 "published": "2026-06-09",
@@ -3904,7 +3961,7 @@
                 }
               }
             ],
-            "sentiment_score": 0.44,
+            "sentiment_score": 0.64,
             "sentiment": "bullish",
             "source_count": 2,
             "analyst_recommendations": {
@@ -3945,6 +4002,23 @@
             "symbol": "WDC",
             "news_headlines": [
               {
+                "title": "Micron and Western Digital Climb 8%, SanDisk Rises 6% on Iran Truce",
+                "source": "yfinance",
+                "published": "2026-06-15T13:28:46Z",
+                "symbols": [
+                  "MU",
+                  "WDC"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://247wallst.com/investing/2026/06/15/micron-and-western-digital-climb-8-sandisk-rises-6-on-iran-truce/",
+                "summary": "Memory and storage stocks are surging on the morning of Monday, June 15, after news of a U.S.-Iran peace agreement reopened risk appetite across global equities. Micron Technology (NASDAQ:MU) stock is up 8% to around $1,060 in early action, climbing back above the $1,000 level. Western Digital (NASD",
+                "publisher": "24/7 Wall St.",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
                 "title": "SpaceX Stock Jumps Again as Elon Musk Unveils Meteoric Revenue Target",
                 "source": "yfinance",
                 "published": "2026-06-15T12:26:00Z",
@@ -3957,6 +4031,39 @@
                 "url": "https://www.barrons.com/articles/spacex-stock-trading-today-musk-a439efb6?siteid=yhoof2&yptr=yahoo",
                 "summary": "The broader market rally gives the rocket and AI company\u2019s shares a boost, following a stellar trading debut last week.",
                 "publisher": "Barrons.com",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Stock Market Today: Dow Rallies 600 Points On U.S.-Iran Deal; Oil Prices Tumble (Live Coverage)",
+                "source": "yfinance",
+                "published": "2026-06-15T13:53:33Z",
+                "symbols": [
+                  "WDC",
+                  "SPY"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-deal-oil-prices/?src=A00220&yptr=yahoo",
+                "summary": "Stock Market Today: The Dow Jones index rallied 600 points Monday on the U.S.-Iran deal. Oil prices dived below $80 a barrel.",
+                "publisher": "Investor's Business Daily",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "If You Invested $1000 in Western Digital a Decade Ago, This is How Much It'd Be Worth Now",
+                "source": "yfinance",
+                "published": "2026-06-15T12:30:05Z",
+                "symbols": [
+                  "WDC"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/invested-1000-western-digital-decade-123005866.html",
+                "summary": "Why investing for the long run, especially if you buy certain popular stocks, could reap huge rewards.",
+                "publisher": "Zacks",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -4026,54 +4133,6 @@
                 }
               },
               {
-                "title": "Western Digital AI Storage Push At Computex 2026 And Valuation Gap",
-                "source": "yfinance",
-                "published": "2026-06-13T09:11:33Z",
-                "symbols": [
-                  "WDC"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/markets/stocks/articles/western-digital-ai-storage-push-091133063.html",
-                "summary": "Western Digital (NasdaqGS:WDC) used Computex 2026 to showcase new storage technologies designed specifically for AI workloads. The company highlighted High Bandwidth Drive Technology and Dual Pivot Drive Technology aimed at handling growing AI data throughput and access needs. Western Digital also i",
-                "publisher": "Simply Wall St.",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Western Digital (WDC) Stock Trades Up, Here Is Why",
-                "source": "yfinance",
-                "published": "2026-06-12T20:45:20Z",
-                "symbols": [
-                  "WDC"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/markets/stocks/articles/western-digital-wdc-stock-trades-204520392.html",
-                "summary": "Shares of leading data storage manufacturer Western Digital (NASDAQ: WDC) jumped 6.2% in the morning session after it received an upgrade to an overweight rating while a peer's capacity announcement from South Korea reignited optimism in the AI-storage market.",
-                "publisher": "StockStory",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
-                "title": "Micron Stock And The Supply-Demand Tightrope",
-                "source": "yfinance",
-                "published": "2026-06-12T17:45:46Z",
-                "symbols": [
-                  "WDC"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://www.trefis.com/articles/602702/micron-stock-and-the-supply-demand-tightrope/2026-06-12",
-                "summary": "Behind the company's record-breaking performance is a single, extreme number that reveals just how much pressure is in the system, and why that should give investors pause.",
-                "publisher": "Trefis",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "SEC 8-K: WDC \u2014 Filed 2026-06-11",
                 "source": "sec_edgar",
                 "published": "2026-06-11",
@@ -4128,8 +4187,8 @@
                 }
               }
             ],
-            "sentiment_score": 0.16,
-            "sentiment": "neutral",
+            "sentiment_score": 0.35,
+            "sentiment": "bullish",
             "source_count": 2,
             "analyst_recommendations": {
               "strong_buy": 4,
@@ -4389,6 +4448,22 @@
                 }
               },
               {
+                "title": "Will Strong Oil Prices Boost ExxonMobil's Energy Business?",
+                "source": "yfinance",
+                "published": "2026-06-15T12:45:00Z",
+                "symbols": [
+                  "XOM"
+                ],
+                "sentiment": 1.0,
+                "category": "headline",
+                "url": "https://finance.yahoo.com/sectors/energy/articles/strong-oil-prices-boost-exxonmobils-124500728.html",
+                "summary": "XOM's low-cost assets in the Permian Basin and Guyana position it to capitalize on elevated crude prices and a favorable 2026 oil market outlook.",
+                "publisher": "Zacks",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
                 "title": "Oil Prices Slump, Exxon and Chevron Stocks Drop After Trump Iran Deal",
                 "source": "yfinance",
                 "published": "2026-06-15T12:26:00Z",
@@ -4454,22 +4529,6 @@
                 }
               },
               {
-                "title": "Woodside Denies Exxon Deal Talks Amid Takeover Speculation",
-                "source": "yfinance",
-                "published": "2026-06-15T02:28:49Z",
-                "symbols": [
-                  "XOM"
-                ],
-                "sentiment": 1.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/sectors/energy/articles/woodside-denies-exxon-deal-talks-022849120.html",
-                "summary": "Woodside said it is not aware of any proposal from Exxon Mobil and is not engaged in takeover discussions.",
-                "publisher": "Oilprice.com",
-                "metadata": {
-                  "type": "STORY"
-                }
-              },
-              {
                 "title": "S&P 500, Nasdaq, Dow End Higher On SpaceX Strong Debut And US-Iran Peace Signals \u2014 SPCX, SHEL, ROKU, XOM, HOOD In Focus",
                 "source": "rss",
                 "published": "2026-06-12T21:45:19Z",
@@ -4527,6 +4586,22 @@
                 "url": "https://finance.yahoo.com/markets/stocks/articles/stocks-rise-pre-bell-us-114307265.html",
                 "summary": "The benchmark US stock measures were pointing higher before the opening bell Monday as the US and Ir",
                 "publisher": "MT Newswires",
+                "metadata": {
+                  "type": "STORY"
+                }
+              },
+              {
+                "title": "Apple supplier Jabil, Adani partner to build AI data center infra platform in India\u00a0",
+                "source": "yfinance",
+                "published": "2026-06-15T13:55:29Z",
+                "symbols": [
+                  "JBL"
+                ],
+                "sentiment": 0.0,
+                "category": "headline",
+                "url": "https://sg.finance.yahoo.com/news/apple-supplier-jabil-adani-partner-135529027.html",
+                "summary": "June 15 (Reuters) - Electronics manufacturer Jabil and India's Adani Enterprises on Monday announced a partnership to build an integrated AI and data center infrastructure manufacturing platform in",
+                "publisher": "Reuters",
                 "metadata": {
                   "type": "STORY"
                 }
@@ -4626,22 +4701,6 @@
                 "metadata": {
                   "type": "STORY"
                 }
-              },
-              {
-                "title": "How To Earn $500 A Month From Jabil Stock Ahead Of Q3 Earnings",
-                "source": "yfinance",
-                "published": "2026-06-12T12:00:16Z",
-                "symbols": [
-                  "JBL"
-                ],
-                "sentiment": 0.0,
-                "category": "headline",
-                "url": "https://finance.yahoo.com/markets/stocks/articles/earn-500-month-jabil-stock-120016544.html",
-                "summary": "Jabil Inc.will release earnings for its third quarter before the opening bell on Wednesday, June 17. Analysts expect the Florida-based manufacturer to report quarterly earnings of $3.10 per share. That\u2019s up from $2.55 per share in the year-ago period. The...",
-                "publisher": "Benzinga",
-                "metadata": {
-                  "type": "STORY"
-                }
               }
             ],
             "sentiment_score": 0.5,
@@ -4673,6 +4732,20 @@
         },
         "market_headlines": [
           {
+            "title": "Stock Market Today: Dow Rallies 600 Points On U.S.-Iran Deal; Oil Prices Tumble (Live Coverage)",
+            "source": "rss",
+            "published": "2026-06-15T13:53:33Z",
+            "symbols": [
+              "SPY"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-deal-oil-prices/?src=A00220&yptr=yahoo",
+            "summary": "Stock Market Today: The Dow Jones index rallied 600 points Monday on the U.S.-Iran deal. Oil prices dived below $80 a barrel.",
+            "publisher": "yfinance:SPY",
+            "metadata": {}
+          },
+          {
             "title": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Monday Amid US-Iran Ceasefire",
             "source": "rss",
             "published": "2026-06-15T12:56:54Z",
@@ -4683,20 +4756,6 @@
             "category": "headline",
             "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-125654489.html",
             "summary": "The broad market exchange-traded fund SPDR S&P 500 ETF Trust (SPY) was up 1.3%, and the actively tra",
-            "publisher": "yfinance:SPY",
-            "metadata": {}
-          },
-          {
-            "title": "Stock Market Today: Dow Rallies 500 Points On U.S.-Iran Deal; Oil Prices Tumble (Live Coverage)",
-            "source": "rss",
-            "published": "2026-06-15T12:55:24Z",
-            "symbols": [
-              "SPY"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-deal-oil-prices/?src=A00220&yptr=yahoo",
-            "summary": "Stock Market Today: The Dow Jones index rallied 500 points Monday on the U.S.-Iran deal. Oil prices dived below $80 a barrel.",
             "publisher": "yfinance:SPY",
             "metadata": {}
           },
@@ -4949,18 +5008,18 @@
         ],
         "market_context": {
           "sp500": {
-            "price": 753.05,
-            "change_pct": 1.52,
-            "five_day_pct": 2.17,
+            "price": 753.89,
+            "change_pct": 1.64,
+            "five_day_pct": 2.28,
             "trend": "up"
           },
           "nasdaq": {
-            "price": 739.55,
-            "change_pct": 2.53
+            "price": 741.09,
+            "change_pct": 2.74
           },
           "vix": {
-            "value": 16.27,
-            "change": -3.6,
+            "value": 16.28,
+            "change": -3.59,
             "level": "normal",
             "interpretation": "Normal conditions \u2014 standard position sizing"
           },
@@ -4969,82 +5028,82 @@
           },
           "sector_performance": {
             "Technology": {
-              "daily_pct": 3.27,
-              "weekly_pct": 5.58
+              "daily_pct": 3.38,
+              "weekly_pct": 5.69
             },
             "Healthcare": {
-              "daily_pct": -1.25,
-              "weekly_pct": -1.73
+              "daily_pct": -0.77,
+              "weekly_pct": -1.26
             },
             "Financial": {
-              "daily_pct": 1.03,
-              "weekly_pct": 2.73
+              "daily_pct": 1.02,
+              "weekly_pct": 2.72
             },
             "Energy": {
-              "daily_pct": -3.93,
-              "weekly_pct": -3.66
+              "daily_pct": -3.84,
+              "weekly_pct": -3.57
             },
             "Consumer Disc.": {
-              "daily_pct": 2.3,
-              "weekly_pct": 2.94
+              "daily_pct": 2.07,
+              "weekly_pct": 2.71
             },
             "Consumer Staples": {
-              "daily_pct": -0.73,
-              "weekly_pct": 1.3
+              "daily_pct": -0.47,
+              "weekly_pct": 1.57
             },
             "Industrial": {
-              "daily_pct": 2.01,
-              "weekly_pct": 2.35
+              "daily_pct": 1.72,
+              "weekly_pct": 2.06
             },
             "Communication": {
-              "daily_pct": 0.4,
-              "weekly_pct": 0.56
+              "daily_pct": 0.43,
+              "weekly_pct": 0.58
             },
             "Materials": {
-              "daily_pct": 1.62,
-              "weekly_pct": 4.44
+              "daily_pct": 1.63,
+              "weekly_pct": 4.45
             },
             "Utilities": {
-              "daily_pct": -0.51,
-              "weekly_pct": 0.74
+              "daily_pct": 0.13,
+              "weekly_pct": 1.39
             },
             "Real Estate": {
-              "daily_pct": 0.35,
-              "weekly_pct": 1.22
+              "daily_pct": 0.47,
+              "weekly_pct": 1.35
             }
           },
           "sector_leaders": [
             {
               "sector": "Technology",
-              "daily_pct": 3.27,
-              "weekly_pct": 5.58
+              "daily_pct": 3.38,
+              "weekly_pct": 5.69
             },
             {
               "sector": "Consumer Disc.",
-              "daily_pct": 2.3,
-              "weekly_pct": 2.94
+              "daily_pct": 2.07,
+              "weekly_pct": 2.71
             },
             {
               "sector": "Industrial",
-              "daily_pct": 2.01,
-              "weekly_pct": 2.35
+              "daily_pct": 1.72,
+              "weekly_pct": 2.06
             }
           ],
           "sector_laggards": [
             {
               "sector": "Consumer Staples",
-              "daily_pct": -0.73,
-              "weekly_pct": 1.3
+              "daily_pct": -0.47,
+              "weekly_pct": 1.57
             },
             {
               "sector": "Healthcare",
-              "daily_pct": -1.25,
-              "weekly_pct": -1.73
+              "daily_pct": -0.77,
+              "weekly_pct": -1.26
             },
             {
               "sector": "Energy",
-              "daily_pct": -3.93,
-              "weekly_pct": -3.66
+              "daily_pct": -3.84,
+              "weekly_pct": -3.57
             }
           ],
           "market_regime": "risk_on",
@@ -5056,28 +5115,28 @@
           "info": {
             "name": "Advanced Micro Devices, Inc.",
             "sector": "Technology",
-            "market_cap": 893014638592,
-            "pe_ratio": 181.34436,
+            "market_cap": 902341722112,
+            "pe_ratio": 183.23842,
             "dividend_yield": null,
-            "fifty_two_week_high": 549.341,
+            "fifty_two_week_high": 558.37,
             "fifty_two_week_low": 117.78
           },
-          "latest_price": 547.6599731445312,
-          "quote_timestamp": "2026-06-15T13:35:00+00:00",
+          "latest_price": 553.260009765625,
+          "quote_timestamp": "2026-06-15T14:05:00+00:00",
           "quote_source": "yahoo_1m",
-          "quote_age_seconds": 19,
+          "quote_age_seconds": 17,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 7.054746232892361,
-          "volume": 3078486,
+          "price_change_pct": 8.159194174165368,
+          "volume": 8289812,
           "indicators": {
-            "rsi_14": 65.34184382160836,
-            "sma_20": 488.15149993896483,
-            "sma_50": 393.38300079345703,
-            "macd": 31.19255221185807,
-            "macd_signal": 35.6602765044879,
-            "bb_upper": 562.0828315578528,
-            "bb_lower": 414.22016832007677
+            "rsi_14": 65.99442332069668,
+            "sma_20": 488.43400115966796,
+            "sma_50": 393.4960012817383,
+            "macd": 31.643266410130877,
+            "macd_signal": 35.750419344142465,
+            "bb_upper": 563.3098774680032,
+            "bb_lower": 413.55812485133276
           },
           "price_history": [
             {
@@ -5315,40 +5374,40 @@
             {
               "date": "2026-06-15T00:00:00-04:00",
               "open": 535.75,
-              "high": 549.3410034179688,
+              "high": 558.3699951171875,
               "low": 530.5,
-              "close": 547.6599731445312,
-              "volume": 3078486
+              "close": 553.3099975585938,
+              "volume": 8289812
             }
           ],
-          "fetch_time_ms": 2847
+          "fetch_time_ms": 2970
         },
         "DAL": {
           "info": {
             "name": "Delta Air Lines, Inc.",
             "sector": "Industrials",
-            "market_cap": 57132228608,
-            "pe_ratio": 12.694891,
+            "market_cap": 55975919616,
+            "pe_ratio": 12.437956,
             "dividend_yield": 0.9,
-            "fifty_two_week_high": 87.09,
+            "fifty_two_week_high": 87.38,
             "fifty_two_week_low": 45.28
           },
-          "latest_price": 89.13,
-          "quote_timestamp": "2026-06-15T13:38:20.890438+00:00",
+          "latest_price": 84.92500000000001,
+          "quote_timestamp": "2026-06-15T14:08:11.273624+00:00",
           "quote_source": "alpaca_iex_quote_midpoint",
           "quote_age_seconds": 0,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 4.69540289009483,
-          "volume": 920587,
+          "price_change_pct": 2.5764500993860477,
+          "volume": 2125620,
           "indicators": {
-            "rsi_14": 68.23067818385509,
-            "sma_20": 78.84850006103515,
-            "sma_50": 73.19002182006835,
-            "macd": 2.956878564837524,
-            "macd_signal": 2.6863563285745067,
-            "bb_upper": 87.62721750665355,
-            "bb_lower": 70.06978261541676
+            "rsi_14": 66.06789140128679,
+            "sma_20": 78.76049995422363,
+            "sma_50": 73.15482177734376,
+            "macd": 2.816479534027124,
+            "macd_signal": 2.658276522412427,
+            "bb_upper": 87.24247632621407,
+            "bb_lower": 70.27852358223319
           },
           "price_history": [
             {
@@ -5585,48 +5644,48 @@
             },
             {
               "date": "2026-06-15T00:00:00-04:00",
-              "open": 83.16000366210938,
-              "high": 87.08999633789062,
-              "low": 85.75,
-              "close": 86.95999908447266,
-              "volume": 920587
+              "open": 86.05000305175781,
+              "high": 87.37999725341797,
+              "low": 85.19999694824219,
+              "close": 85.19999694824219,
+              "volume": 2125620
             }
           ],
-          "fetch_time_ms": 566,
-          "last_trade_price": 87.18,
-          "last_trade_timestamp": "2026-06-15T13:38:20.023128+00:00",
-          "bid_price": 87.17,
-          "ask_price": 91.09,
+          "fetch_time_ms": 468,
+          "last_trade_price": 84.89,
+          "last_trade_timestamp": "2026-06-15T14:08:08.572051+00:00",
+          "bid_price": 84.87,
+          "ask_price": 84.98,
           "bid_size": 100.0,
           "ask_size": 200.0,
-          "bid_ask_timestamp": "2026-06-15T13:38:20.890438+00:00"
+          "bid_ask_timestamp": "2026-06-15T14:08:11.273624+00:00"
         },
         "MU": {
           "info": {
             "name": "Micron Technology, Inc.",
             "sector": "Technology",
-            "market_cap": 1198341488640,
-            "pe_ratio": 50.12311,
+            "market_cap": 1200145825792,
+            "pe_ratio": 50.19858,
             "dividend_yield": 0.06,
             "fifty_two_week_high": 1089.29,
             "fifty_two_week_low": 103.38
           },
-          "latest_price": 1062.47119140625,
-          "quote_timestamp": "2026-06-15T13:35:00+00:00",
+          "latest_price": 1063.925048828125,
+          "quote_timestamp": "2026-06-15T14:05:00+00:00",
           "quote_source": "yahoo_1m",
-          "quote_age_seconds": 20,
+          "quote_age_seconds": 19,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 8.2458677020485,
-          "volume": 5396257,
+          "price_change_pct": 8.41016849287352,
+          "volume": 10990048,
           "indicators": {
-            "rsi_14": 65.35029359272903,
-            "sma_20": 910.0221069335937,
-            "sma_50": 691.5730462646484,
-            "macd": 87.3596253210086,
-            "macd_signal": 93.2944225011338,
-            "bb_upper": 1153.409582654141,
-            "bb_lower": 666.6346312130464
+            "rsi_14": 65.430751341388,
+            "sma_20": 910.1027465820313,
+            "sma_50": 691.6053021240234,
+            "macd": 87.4882811703676,
+            "macd_signal": 93.32015367100558,
+            "bb_upper": 1153.6932992749146,
+            "bb_lower": 666.5121938891479
           },
           "price_history": [
             {
@@ -5865,39 +5924,39 @@
               "date": "2026-06-15T00:00:00-04:00",
               "open": 1055.8900146484375,
               "high": 1076.7899169921875,
-              "low": 1054.0,
-              "close": 1062.55224609375,
-              "volume": 5396257
+              "low": 1051.5001220703125,
+              "close": 1064.1650390625,
+              "volume": 10990048
             }
           ],
-          "fetch_time_ms": 762
+          "fetch_time_ms": 730
         },
         "WDC": {
           "info": {
             "name": "Western Digital Corporation",
             "sector": "Technology",
-            "market_cap": 221285941248,
-            "pe_ratio": 38.39713,
+            "market_cap": 218442268672,
+            "pe_ratio": 37.9037,
             "dividend_yield": 0.11,
-            "fifty_two_week_high": 642.74,
+            "fifty_two_week_high": 658.8,
             "fifty_two_week_low": 56.27
           },
-          "latest_price": 642.5101928710938,
-          "quote_timestamp": "2026-06-15T13:35:00+00:00",
+          "latest_price": 633.3400268554688,
+          "quote_timestamp": "2026-06-15T14:05:00+00:00",
           "quote_source": "yahoo_1m",
-          "quote_age_seconds": 21,
+          "quote_age_seconds": 19,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 14.088785211391682,
-          "volume": 1084446,
+          "price_change_pct": 12.5077780711251,
+          "volume": 3081863,
           "indicators": {
-            "rsi_14": 70.36160522736785,
-            "sma_20": 526.0276306152343,
-            "sma_50": 455.96622985839844,
-            "macd": 31.973335981291257,
-            "macd_signal": 30.150220740202656,
-            "bb_upper": 618.3133615385791,
-            "bb_lower": 433.74189969188956
+            "rsi_14": 69.57060360732632,
+            "sma_20": 525.582632446289,
+            "sma_50": 455.7882305908203,
+            "macd": 31.263367392660598,
+            "macd_signal": 30.008227022476525,
+            "bb_upper": 615.6825303945612,
+            "bb_lower": 435.4827344980169
           },
           "price_history": [
             {
@@ -6135,40 +6194,40 @@
             {
               "date": "2026-06-15T00:00:00-04:00",
               "open": 618.0,
-              "high": 642.739990234375,
+              "high": 658.7999877929688,
               "low": 612.0,
-              "close": 642.239990234375,
-              "volume": 1084446
+              "close": 633.3400268554688,
+              "volume": 3081863
             }
           ],
-          "fetch_time_ms": 574
+          "fetch_time_ms": 446
         },
         "UAL": {
           "info": {
             "name": "United Airlines Holdings, Inc.",
             "sector": "Industrials",
-            "market_cap": 40139538432,
-            "pe_ratio": 11.061717,
+            "market_cap": 38940254208,
+            "pe_ratio": 10.731216,
             "dividend_yield": null,
             "fifty_two_week_high": 124.79,
             "fifty_two_week_low": 71.55
           },
-          "latest_price": 123.66999816894531,
-          "quote_timestamp": "2026-06-15T13:35:00+00:00",
+          "latest_price": 119.9749984741211,
+          "quote_timestamp": "2026-06-15T14:05:00+00:00",
           "quote_source": "yahoo_1m",
-          "quote_age_seconds": 22,
+          "quote_age_seconds": 19,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 7.055056927555819,
-          "volume": 1037306,
+          "price_change_pct": 3.8564767663729667,
+          "volume": 2191019,
           "indicators": {
-            "rsi_14": 69.40659591405549,
-            "sma_20": 106.68050003051758,
-            "sma_50": 99.46559982299804,
-            "macd": 4.647049602060093,
-            "macd_signal": 3.6399706976360893,
-            "bb_upper": 122.8926332807213,
-            "bb_lower": 90.46836678031386
+            "rsi_14": 66.97299950685073,
+            "sma_20": 106.49575004577636,
+            "sma_50": 99.39169982910157,
+            "macd": 4.352291791646778,
+            "macd_signal": 3.581019135553426,
+            "bb_upper": 121.99790675602739,
+            "bb_lower": 90.99359333552533
           },
           "price_history": [
             {
@@ -6407,39 +6466,39 @@
               "date": "2026-06-15T00:00:00-04:00",
               "open": 120.8949966430664,
               "high": 124.79000091552734,
-              "low": 120.6500015258789,
-              "close": 123.66999816894531,
-              "volume": 1037306
+              "low": 119.80999755859375,
+              "close": 119.9749984741211,
+              "volume": 2191019
             }
           ],
-          "fetch_time_ms": 537
+          "fetch_time_ms": 463
         },
         "XOM": {
           "info": {
             "name": "Exxon Mobil Corporation",
             "sector": "Energy",
-            "market_cap": 572582985728,
-            "pe_ratio": 23.255892,
+            "market_cap": 577784905728,
+            "pe_ratio": 23.467173,
             "dividend_yield": 2.8,
             "fifty_two_week_high": 176.41,
             "fifty_two_week_low": 105.53
           },
-          "latest_price": 138.42000000000002,
-          "quote_timestamp": "2026-06-15T13:38:21.172865+00:00",
+          "latest_price": 139.515,
+          "quote_timestamp": "2026-06-15T14:08:11.419275+00:00",
           "quote_source": "alpaca_iex_quote_midpoint",
           "quote_age_seconds": 0,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": -6.071007500482384,
-          "volume": 1861063,
+          "price_change_pct": -5.179913284073284,
+          "volume": 5125276,
           "indicators": {
-            "rsi_14": 33.102284097611005,
-            "sma_20": 150.79324951171876,
-            "sma_50": 150.8607763671875,
-            "macd": -1.8929664018097014,
-            "macd_signal": -0.9410002340937703,
-            "bb_upper": 161.38561501388492,
-            "bb_lower": 140.2008840095526
+            "rsi_14": 34.30730163957523,
+            "sma_20": 150.85874938964844,
+            "sma_50": 150.8869763183594,
+            "macd": -1.7884651720643205,
+            "macd_signal": -0.9200999881446942,
+            "bb_upper": 161.1478289354809,
+            "bb_lower": 140.56966984381597
           },
           "price_history": [
             {
@@ -6676,48 +6735,48 @@
             },
             {
               "date": "2026-06-15T00:00:00-04:00",
-              "open": 145.6300048828125,
-              "high": 139.74000549316406,
-              "low": 137.9499969482422,
-              "close": 138.0850067138672,
-              "volume": 1861063
+              "open": 139.74000549316406,
+              "high": 140.2799072265625,
+              "low": 137.72000122070312,
+              "close": 139.39500427246094,
+              "volume": 5125276
             }
           ],
-          "fetch_time_ms": 624,
-          "last_trade_price": 138.39,
-          "last_trade_timestamp": "2026-06-15T13:38:19.604013+00:00",
-          "bid_price": 138.37,
-          "ask_price": 138.47,
+          "fetch_time_ms": 560,
+          "last_trade_price": 139.455,
+          "last_trade_timestamp": "2026-06-15T14:08:09.403057+00:00",
+          "bid_price": 139.49,
+          "ask_price": 139.54,
           "bid_size": 100.0,
-          "ask_size": 100.0,
-          "bid_ask_timestamp": "2026-06-15T13:38:21.172865+00:00"
+          "ask_size": 300.0,
+          "bid_ask_timestamp": "2026-06-15T14:08:11.419275+00:00"
         },
         "JBL": {
           "info": {
             "name": "Jabil Inc.",
             "sector": "Technology",
-            "market_cap": 41749499904,
-            "pe_ratio": 53.259758,
+            "market_cap": 41421381632,
+            "pe_ratio": 52.841183,
             "dividend_yield": 0.08,
             "fifty_two_week_high": 398.89,
             "fifty_two_week_low": 177.18
           },
-          "latest_price": 384.7,
-          "quote_timestamp": "2026-06-15T13:38:21.151727+00:00",
+          "latest_price": 392.89,
+          "quote_timestamp": "2026-06-15T14:08:10.574746+00:00",
           "quote_source": "alpaca_iex_quote_midpoint",
           "quote_age_seconds": 0,
           "quote_is_fresh": true,
           "last_trade_date": "2026-06-15T00:00:00-04:00",
-          "price_change_pct": 2.8324914736828917,
-          "volume": 55384,
+          "price_change_pct": 2.0243173117505124,
+          "volume": 171668,
           "indicators": {
-            "rsi_14": 64.21431258124994,
-            "sma_20": 364.63550262451173,
-            "sma_50": 342.90783203125,
-            "macd": 10.557144157926928,
-            "macd_signal": 9.705800177666188,
-            "bb_upper": 395.01123232387187,
-            "bb_lower": 334.2597729251516
+            "rsi_14": 63.36591063961948,
+            "sma_20": 364.48000183105466,
+            "sma_50": 342.8456317138672,
+            "macd": 10.309051723921414,
+            "macd_signal": 9.656181690865086,
+            "bb_upper": 394.24329061027754,
+            "bb_lower": 334.7167130518318
           },
           "price_history": [
             {
@@ -6954,28 +7013,28 @@
             },
             {
               "date": "2026-06-15T00:00:00-04:00",
-              "open": 379.3999938964844,
+              "open": 398.1099853515625,
               "high": 398.8900146484375,
-              "low": 394.4649963378906,
-              "close": 395.7200012207031,
-              "volume": 55384
+              "low": 389.2449951171875,
+              "close": 392.6099853515625,
+              "volume": 171668
             }
           ],
-          "fetch_time_ms": 651,
-          "last_trade_price": 394.66,
-          "last_trade_timestamp": "2026-06-15T13:37:36.474120+00:00",
+          "fetch_time_ms": 880,
+          "last_trade_price": 391.905,
+          "last_trade_timestamp": "2026-06-15T14:07:41.306414+00:00",
           "bid_price": 375.25,
-          "ask_price": 394.15,
+          "ask_price": 410.53,
           "bid_size": 40.0,
           "ask_size": 40.0,
-          "bid_ask_timestamp": "2026-06-15T13:38:21.151727+00:00"
+          "bid_ask_timestamp": "2026-06-15T14:08:10.574746+00:00"
         }
       },
       "signals": [],
       "risk": {},
       "executed": [],
       "portfolio": {
-        "timestamp": "2026-06-15T13:38:21.277853+00:00",
+        "timestamp": "2026-06-15T14:08:11.447790+00:00",
         "profile": "codex",
         "profile_label": "Codex Strategist",
         "portfolio_value": 100000.0,
