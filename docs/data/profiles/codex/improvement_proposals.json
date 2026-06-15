@@ -1,0 +1,47 @@
+[
+  {
+    "date": "2026-06-15",
+    "category": "execution",
+    "priority": "high",
+    "title": "Separate Hold From Add Signals",
+    "description": "Today the profile accumulated UAL repeatedly even when monitor reports said to hold or explicitly said not to duplicate the active position. Add a hard execution gate that only places a new order when the recommendation is buy, ready_to_trade is true, the symbol is not already at its max position budget, and an explicit add_reason is present.",
+    "expected_impact": "Prevents one valid entry from becoming eleven correlated orders and would have materially reduced today's UAL drawdown.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-15",
+    "category": "risk_management",
+    "priority": "high",
+    "title": "Add Position-Level Exposure Throttle",
+    "description": "UAL grew to 57% invested in a single intraday thesis while the confirmation signal weakened. Add per-symbol and per-thesis caps, plus a cooldown after a position flips from positive to negative P&L.",
+    "expected_impact": "Keeps one deteriorating setup from dominating account-level P&L and would have limited the final -0.98% portfolio hit.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-15",
+    "category": "screening",
+    "priority": "medium",
+    "title": "Escalate Confirmed Sector Leaders After The Open",
+    "description": "The morning research correctly identified AMD, MU, and WDC as memory/AI beneficiaries, but the system did not rotate back to them after the sector confirmed with large moves. Add a post-open sector breadth scan that promotes watch-only names when multiple related leaders break out on volume.",
+    "expected_impact": "Improves participation in the strongest theme of the day instead of over-focusing on a weaker sympathy setup.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-15",
+    "category": "data_source",
+    "priority": "medium",
+    "title": "Require Live Catalyst Inputs For Commodity-Linked Trades",
+    "description": "XOM decisions repeatedly stalled because live WTI confirmation was missing or inconsistent, even though crude was the core catalyst. Add a reliable intraday WTI/Brent feed to the monitor context.",
+    "expected_impact": "Reduces hesitation on valid oil-linked shorts and prevents trades when the commodity catalyst cannot be verified.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-15",
+    "category": "knowledge",
+    "priority": "low",
+    "title": "Track Sympathy Confirmation Decay",
+    "description": "UAL depended on DAL remaining strong, but DAL lost the required levels while UAL continued to be accumulated. Store cross-symbol confirmation failures as a reusable pattern.",
+    "expected_impact": "Helps future airline, cruise, and sector-pair trades exit or stop adding when the confirmation leg fails.",
+    "status": "proposed"
+  }
+]

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-15T20:10:19.417428+00:00",
+  "generated_at": "2026-06-15T20:20:39.082738+00:00",
   "active_profile": "codex",
   "profiles": {
     "codex": {
@@ -1401,23 +1401,242 @@
       },
       "knowledge": {
         "counts": {
-          "daily_observations": 0,
+          "daily_observations": 1,
           "weekly_reviews": 0,
           "monthly_reviews": 0,
-          "patterns": 0,
-          "lessons": 0,
-          "strategies": 0,
+          "patterns": 3,
+          "lessons": 4,
+          "strategies": 1,
           "regimes": 3,
-          "pending_proposals": 0
+          "pending_proposals": 5
         },
-        "recent_observations": [],
+        "recent_observations": [
+          {
+            "date": "2026-06-15",
+            "market_regime": "risk_on",
+            "market_summary": "U.S. equities had a strong risk-on session after a tentative U.S.-Iran agreement pushed crude oil sharply lower and compressed volatility, with the Nasdaq leading and the S&P 500 up roughly 1.7%-1.8%. The move was led by AI, semiconductor, storage, and travel beneficiaries, while energy lagged as crude fell toward $80. The session was a trend-up market for indexes, but our airline execution became choppy because UAL reversed from intraday strength while DAL failed the morning confirmation levels.",
+            "sector_leaders": [
+              "Semiconductors",
+              "Travel"
+            ],
+            "sector_laggards": [
+              "Energy",
+              "Defensive telecom"
+            ],
+            "key_drivers": [
+              "A tentative U.S.-Iran deal and expected Strait of Hormuz reopening drove oil lower and reduced inflation/geopolitical fear.",
+              "AI hardware and memory-shortage narratives powered AMD, MU, WDC, STX, and related chip/storage names.",
+              "The June 16-17 Fed meeting remained the next major macro catalyst, keeping a need for confirmation despite the risk-on close."
+            ],
+            "trades_review": [
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 118.1,
+                "current_price": 117.84,
+                "pnl_pct": -0.22,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "The first entry was close to the planned breakout level, but it depended on DAL confirmation that deteriorated later in the session."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 118.0,
+                "current_price": 117.84,
+                "pnl_pct": -0.14,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This add was still near the breakout level, but it duplicated exposure before the system proved the first entry could hold."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 122.33,
+                "current_price": 117.84,
+                "pnl_pct": -3.68,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This was a chase into intraday strength and had the worst entry quality of the day."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 122.1,
+                "current_price": 117.84,
+                "pnl_pct": -3.5,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This second high-price add compounded the chase instead of waiting for support or a fresh confirmation signal."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 118.13,
+                "current_price": 117.84,
+                "pnl_pct": -0.25,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "The price was acceptable, but repeated re-entry after a reversal showed no position-level throttle."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 118.09,
+                "current_price": 117.84,
+                "pnl_pct": -0.21,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "The entry was near the trigger but came while the journal itself noted inconsistent confirmation."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 121.81,
+                "current_price": 117.84,
+                "pnl_pct": -3.26,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This add bought another intraday pop despite DAL having already failed the intended confirmation role."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 121.79,
+                "current_price": 117.84,
+                "pnl_pct": -3.25,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This was a duplicate momentum add at an extended price with no new risk budget justification."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 118.87,
+                "current_price": 117.84,
+                "pnl_pct": -0.87,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "The entry was less extended, but it still increased a losing concentrated position."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 120.47,
+                "current_price": 117.84,
+                "pnl_pct": -2.19,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "This late add ignored the repeated journal warning that DAL confirmation was incomplete."
+              },
+              {
+                "symbol": "UAL",
+                "action": "buy",
+                "entry_price": 117.84,
+                "current_price": 117.84,
+                "pnl_pct": 0.0,
+                "strategy": "lower_oil_airline_breakout",
+                "assessment": "The final add was at the snapshot price but still increased exposure after the position-level thesis had weakened."
+              }
+            ],
+            "patterns_detected": [
+              {
+                "name": "duplicate_buy_on_existing_position",
+                "symbol": "UAL",
+                "outcome": "lost",
+                "notes": "Multiple monitor cycles added UAL even when the recommendation was hold or when no new entry was needed, growing one trade to 57% invested and ending down 1.7%."
+              },
+              {
+                "name": "sympathy_confirmation_decay",
+                "symbol": "UAL",
+                "outcome": "lost",
+                "notes": "The UAL long depended on DAL maintaining gains, but DAL repeatedly failed $85.80 and $86.20 while UAL exposure kept rising."
+              },
+              {
+                "name": "volume_filter_prevented_jbl_chase",
+                "symbol": "JBL",
+                "outcome": "pending",
+                "notes": "JBL held support and neared the trigger, but weak 0.1x-0.7x relative volume kept the system out ahead of earnings."
+              }
+            ],
+            "confidence_calibration": {
+              "high_conf_win_rate": 0.0,
+              "medium_conf_win_rate": 0.0,
+              "low_conf_win_rate": 0.0,
+              "assessment": "Executed UAL exposure was mostly attached to medium/high confidence reads, but all filled lots were flat-to-negative at the profile snapshot; there was no meaningful low-confidence executed sample."
+            },
+            "missed_opportunities": [
+              {
+                "symbol": "WDC",
+                "move_pct": 14.0,
+                "why_missed": "The morning watchlist identified WDC but left it watch-only; the system required a pullback/reclaim and had no storage-leader escalation rule for a sector-wide memory breakout."
+              },
+              {
+                "symbol": "MU",
+                "move_pct": 10.1,
+                "why_missed": "MU was correctly identified as a memory-shortage beneficiary but stayed watch-only because of quote precision concerns and the absence of a post-open breadth trigger."
+              },
+              {
+                "symbol": "AMD",
+                "move_pct": 7.4,
+                "why_missed": "AMD was a morning best opportunity, but execution shifted to UAL and did not revisit AMD's confirmed risk-on semiconductor setup after the open."
+              }
+            ],
+            "forward_outlook": "Tomorrow should prioritize confirmed AI hardware and memory/storage leadership over airline sympathy unless airlines hold gains without DAL divergence. Watch the June 16-17 Fed meeting, any deterioration in the U.S.-Iran framework, crude holding near or below $80, and Jabil's June 17 earnings setup; UAL needs a position-level stop/throttle before any further adds.",
+            "lessons": [
+              "A sympathy trade should stop adding when its confirmation symbol fails; UAL exposure should have been capped once DAL lost $85.80 and failed to reclaim $86.20.",
+              "Hold recommendations must not translate into new buy orders for an already-open position; the system needs an explicit add-only signal.",
+              "In a broad risk-on trend day, the strongest sector confirmation was semiconductors/storage, not the airline leg that faded intraday."
+            ]
+          }
+        ],
         "weekly_reviews": [],
         "monthly_reviews": [],
         "latest_weekly_review": {},
         "latest_monthly_review": {},
-        "lessons": [],
-        "patterns": [],
-        "strategies": [],
+        "lessons": [
+          "{'date': '2026-06-15', 'lesson': 'Commodity-linked trades need a live commodity input in the monitor context before the system can size them confidently.', 'evidence': 'XOM repeatedly confirmed the equity breakdown, but decisions alternated between sell and watch because WTI below $81 was not consistently available in the live snapshot.', 'category': 'data_source'}",
+          "{'date': '2026-06-15', 'lesson': 'When a risk-on thesis has multiple confirmed leaders, prioritize the strongest sector breadth over a weaker sympathy leg.', 'evidence': 'AMD, MU, and WDC were identified premarket and then rallied with the semiconductor/storage theme, while the profile concentrated in UAL and ended negative.', 'category': 'strategy'}",
+          "{'date': '2026-06-15', 'lesson': 'A monitor recommendation of hold must be non-executable unless a separate add signal is present.', 'evidence': 'Several UAL journal entries said hold or avoid duplicate entry, yet portfolio_state shows additional buy lots after the initial position.', 'category': 'risk_management'}",
+          "{'date': '2026-06-15', 'lesson': 'Do not add to an airline sympathy trade after the confirmation carrier fails its required levels; UAL adds should have stopped once DAL lost $85.80 and failed to reclaim $86.20.', 'evidence': 'UAL was accumulated to 480 shares while DAL repeatedly failed the planned confirmation thresholds, and the UAL position finished down 1.70% at the profile snapshot.', 'category': 'execution'}"
+        ],
+        "patterns": [
+          {
+            "name": "duplicate_buy_on_existing_position",
+            "description": "Repeated monitor cycles convert an already-open position into additional buy orders without a distinct add setup.",
+            "occurrences": 1,
+            "sample_size": 1,
+            "win_rate": 0.0,
+            "symbols_seen": [
+              "UAL"
+            ],
+            "last_seen": "2026-06-15",
+            "notes": "UAL was bought eleven times and finished with -1.70% unrealized P&L despite multiple hold/no-duplicate warnings."
+          },
+          {
+            "name": "sympathy_confirmation_decay",
+            "description": "A trade relies on a related confirmation symbol, then that confirmation fades while exposure in the primary symbol continues to rise.",
+            "occurrences": 1,
+            "sample_size": 1,
+            "win_rate": 0.0,
+            "symbols_seen": [
+              "UAL",
+              "DAL"
+            ],
+            "last_seen": "2026-06-15",
+            "notes": "UAL long thesis depended on DAL maintaining gains, but DAL failed $85.80 and $86.20 repeatedly."
+          },
+          {
+            "name": "volume_filter_prevented_jbl_chase",
+            "description": "A breakout watchlist name holds support but lacks required relative volume before an earnings catalyst, keeping the profile out.",
+            "occurrences": 1,
+            "sample_size": 1,
+            "win_rate": 0.0,
+            "symbols_seen": [
+              "JBL"
+            ],
+            "last_seen": "2026-06-15",
+            "notes": "JBL stayed watch-only as relative volume remained 0.1x-0.7x before June 17 earnings; outcome remains pending rather than proven."
+          }
+        ],
+        "strategies": [
+          {
+            "name": "lower_oil_airline_breakout",
+            "win_rate": 0.0,
+            "avg_return": null,
+            "best_regime": "risk_on"
+          }
+        ],
         "regimes": [
           {
             "name": "neutral",
@@ -1444,40 +1663,121 @@
             "stop_loss_modifier": null
           }
         ],
-        "proposals": [],
+        "proposals": [
+          {
+            "date": "2026-06-15",
+            "priority": "low",
+            "category": "knowledge",
+            "title": "Track Sympathy Confirmation Decay",
+            "description": "UAL depended on DAL remaining strong, but DAL lost the required levels while UAL continued to be accumulated. Store cross-symbol confirmation failures as a reusable pattern.",
+            "expected_impact": "Helps future airline, cruise, and sector-pair trades exit or stop adding when the confirmation leg fails."
+          },
+          {
+            "date": "2026-06-15",
+            "priority": "medium",
+            "category": "data_source",
+            "title": "Require Live Catalyst Inputs For Commodity-Linked Trades",
+            "description": "XOM decisions repeatedly stalled because live WTI confirmation was missing or inconsistent, even though crude was the core catalyst. Add a reliable intraday WTI/Brent feed to the monitor context.",
+            "expected_impact": "Reduces hesitation on valid oil-linked shorts and prevents trades when the commodity catalyst cannot be verified."
+          },
+          {
+            "date": "2026-06-15",
+            "priority": "medium",
+            "category": "screening",
+            "title": "Escalate Confirmed Sector Leaders After The Open",
+            "description": "The morning research correctly identified AMD, MU, and WDC as memory/AI beneficiaries, but the system did not rotate back to them after the sector confirmed with large moves. Add a post-open sector breadth scan that promotes watch-only names when multiple related leaders break out on volume.",
+            "expected_impact": "Improves participation in the strongest theme of the day instead of over-focusing on a weaker sympathy setup."
+          },
+          {
+            "date": "2026-06-15",
+            "priority": "high",
+            "category": "risk_management",
+            "title": "Add Position-Level Exposure Throttle",
+            "description": "UAL grew to 57% invested in a single intraday thesis while the confirmation signal weakened. Add per-symbol and per-thesis caps, plus a cooldown after a position flips from positive to negative P&L.",
+            "expected_impact": "Keeps one deteriorating setup from dominating account-level P&L and would have limited the final -0.98% portfolio hit."
+          },
+          {
+            "date": "2026-06-15",
+            "priority": "high",
+            "category": "execution",
+            "title": "Separate Hold From Add Signals",
+            "description": "Today the profile accumulated UAL repeatedly even when monitor reports said to hold or explicitly said not to duplicate the active position. Add a hard execution gate that only places a new order when the recommendation is buy, ready_to_trade is true, the symbol is not already at its max position budget, and an explicit add_reason is present.",
+            "expected_impact": "Prevents one valid entry from becoming eleven correlated orders and would have materially reduced today's UAL drawdown."
+          }
+        ],
         "prompt_preview": {
-          "knowledge_context": "",
-          "observations_context": ""
+          "knowledge_context": "ACCUMULATED KNOWLEDGE (1 trading days, 0 trades):\nLESSONS: (1) {'date': '2026-06-15', 'lesson': 'Do not add to an airline sympathy trade after the confirmation carrier fails its required levels; UAL adds should have stopped once DAL lost $85.80 and failed to reclaim $86.20.', 'evidence': 'UAL was accumulated to 480 shares while DAL repeatedly failed the planned confirmation thresholds, and the UAL position finished down 1.70% at the profile snapshot.', 'category': 'execution'}\nCURRENT REGIME RULES (risk_on): Prefer .\nTOP STRATEGIES: lower_oil_airline_breakout 0% win (best: risk_on)\nRECENT PATTERNS: duplicate_buy_on_existing_position 0% win (1 occ) sympathy_confirmation_decay 0% win (1 occ) volume_filter_prevented_jbl_chase 0% win (1 occ)",
+          "observations_context": "RECENT DAILY OBSERVATIONS:\n  2026-06-15 (risk_on): U.S. equities had a strong risk-on session after a tentative U.S.-Iran agreement pushed crude oil sharply lower and compressed volatility, with the Nasdaq leading and the S&P 500 up roughly 1.7%-1.8%. The move was led by AI, semiconductor, storage, and travel beneficiaries, while energy lagged as crude fell toward $80. The session was a trend-up market for index | Learned: A sympathy trade should stop adding when its confirmation symbol fails; UAL exposure should have been capped once DAL lost $85.80 and failed to reclaim $86.20.; Hold recommendations must not translate into new buy orders for an already-open position; the system needs an explicit add-only signal."
         },
-        "improvement_log_present": false
+        "improvement_log_present": true
       },
       "interactions": {
         "counts": {
-          "total": 27,
+          "total": 29,
           "recent": 24,
           "days": 1
         },
         "latest": {
-          "timestamp": "2026-06-15T19:37:28.914148+00:00",
+          "timestamp": "2026-06-15T16:20:33.165075-04:00",
           "day": "2026-06-15",
           "profile": "codex",
-          "phase": "monitor",
-          "phase_group": "monitor",
-          "phase_label": "Monitor Evaluations",
-          "tool": "codex-loop",
+          "phase": "voice",
+          "phase_group": "voice",
+          "phase_label": "Voice",
+          "tool": "codex",
           "status": "success",
-          "summary": "Ready: UAL | Live conditions selectively confirm the airline momentum thesis for UAL, while XOM lacks explicit WTI confirmation and JBL has not cleared its trigger on strong volume. | codex / codex-cli",
-          "prompt_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
-          "transcript_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
-          "metadata_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
-          "raw_log_file": "",
-          "prompt_source": "scripts/prompts/monitor_check.md",
-          "prompt_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
-          "transcript_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
-          "metadata_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
+          "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+          "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+          "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+          "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+          "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+          "prompt_source": "scripts/prompts/strategist_voice.md",
+          "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+          "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+          "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
           "prompt_source_url": ""
         },
         "latest_by_phase": {
+          "voice": {
+            "timestamp": "2026-06-15T16:20:33.165075-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "voice",
+            "phase_group": "voice",
+            "phase_label": "Voice",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+            "prompt_source": "scripts/prompts/strategist_voice.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+            "prompt_source_url": ""
+          },
+          "evening": {
+            "timestamp": "2026-06-15T16:18:55.727401-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "evening",
+            "phase_group": "evening",
+            "phase_label": "Evening",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+            "prompt_source": "scripts/prompts/evening_reflection.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+            "prompt_source_url": ""
+          },
           "monitor": {
             "timestamp": "2026-06-15T19:37:28.914148+00:00",
             "day": "2026-06-15",
@@ -1520,10 +1820,52 @@
           }
         },
         "phase_counts": {
+          "voice": 1,
+          "evening": 1,
           "monitor": 26,
           "morning": 1
         },
         "recent": [
+          {
+            "timestamp": "2026-06-15T16:20:33.165075-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "voice",
+            "phase_group": "voice",
+            "phase_label": "Voice",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+            "prompt_source": "scripts/prompts/strategist_voice.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T16:18:55.727401-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "evening",
+            "phase_group": "evening",
+            "phase_label": "Evening",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+            "prompt_source": "scripts/prompts/evening_reflection.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+            "prompt_source_url": ""
+          },
           {
             "timestamp": "2026-06-15T19:37:28.914148+00:00",
             "day": "2026-06-15",
@@ -1542,186 +1884,6 @@
             "prompt_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
             "transcript_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
             "metadata_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T18:37:38.397244+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: UAL, XOM, JBL | Live risk-on conditions support the airline thesis and existing UAL position, while XOM lacks live crude confirmation and JBL has not confirmed its breakout on strong volume. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T17:07:40.742688+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Ready: XOM | Risk-on conditions support airlines and pressure energy, but only the XOM bearish setup is fully confirmed while DAL and UAL lack clean execution evidence. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T16:08:18.155136+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Ready: UAL | Live conditions confirm the airline risk-on thesis, while XOM lacks a verified WTI reading and JBL has not completed its breakout. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T15:38:01.381692+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: UAL, XOM, JBL | Live conditions confirm the UAL hold thesis but leave the XOM and JBL entry setups incomplete. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T19:07:18.039348+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Ready: XOM | Lower oil confirms the bearish XOM thesis, but DAL's reversal below its trigger weakens the airline setup despite UAL holding above its breakout level. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T17:37:29.051943+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: UAL, XOM, DAL | Risk-on conditions support the morning airline thesis, but DAL has lost its trigger levels and missing live WTI confirmation weakens both the DAL and XOM setups. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T18:07:21.036892+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Ready: XOM | Live conditions confirm the UAL hold and XOM bearish thesis, while DAL's failed price trigger weakens the planned airline entry. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T16:37:54.254267+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: UAL, XOM, DAL | Risk-on strength supports the broad morning thesis, but the live snapshots do not fully confirm any candidate's execution condition. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T14:36:36.101448-04:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex",
-            "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_143450.log",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
             "prompt_source_url": ""
           },
           {
@@ -1745,27 +1907,7 @@
             "prompt_source_url": ""
           },
           {
-            "timestamp": "2026-06-15T14:06:16.511492-04:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex",
-            "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_140454.log",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T14:37:56.358234+00:00",
+            "timestamp": "2026-06-15T19:07:18.039348+00:00",
             "day": "2026-06-15",
             "profile": "codex",
             "phase": "monitor",
@@ -1773,55 +1915,15 @@
             "phase_label": "Monitor Evaluations",
             "tool": "codex-loop",
             "status": "success",
-            "summary": "Ready: UAL | Live risk-on conditions confirm the airline thesis, while XOM lacks explicit live WTI confirmation and JBL has not completed its breakout. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+            "summary": "Ready: XOM | Lower oil confirms the bearish XOM thesis, but DAL's reversal below its trigger weakens the airline setup despite UAL holding above its breakout level. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
             "raw_log_file": "",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T15:08:11.064081+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: UAL, XOM, JBL | Live conditions partly support the morning themes, but companion confirmation and volume are insufficient to approve any new execution. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T14:08:11.444271+00:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex-loop",
-            "status": "success",
-            "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
-            "raw_log_file": "",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
             "prompt_source_url": ""
           },
           {
@@ -1845,7 +1947,27 @@
             "prompt_source_url": ""
           },
           {
-            "timestamp": "2026-06-15T11:36:55.278137-04:00",
+            "timestamp": "2026-06-15T18:37:38.397244+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Evaluated: UAL, XOM, JBL | Live risk-on conditions support the airline thesis and existing UAL position, while XOM lacks live crude confirmation and JBL has not confirmed its breakout on strong volume. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T14:36:36.101448-04:00",
             "day": "2026-06-15",
             "profile": "codex",
             "phase": "monitor",
@@ -1853,15 +1975,75 @@
             "phase_label": "Monitor Evaluations",
             "tool": "codex",
             "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` and validated it parses correctly with the exact run ID.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_113532.log",
+            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_143450.log",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T18:07:21.036892+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Ready: XOM | Live conditions confirm the UAL hold and XOM bearish thesis, while DAL's failed price trigger weakens the planned airline entry. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T14:06:16.511492-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_140454.log",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T17:37:29.051943+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Evaluated: UAL, XOM, DAL | Risk-on conditions support the morning airline thesis, but DAL has lost its trigger levels and missing live WTI confirmation weakens both the DAL and XOM setups. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
             "prompt_source_url": ""
           },
           {
@@ -1885,23 +2067,23 @@
             "prompt_source_url": ""
           },
           {
-            "timestamp": "2026-06-15T10:36:50.982999-04:00",
+            "timestamp": "2026-06-15T17:07:40.742688+00:00",
             "day": "2026-06-15",
             "profile": "codex",
             "phase": "monitor",
             "phase_group": "monitor",
             "phase_label": "Monitor Evaluations",
-            "tool": "codex",
+            "tool": "codex-loop",
             "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. `UAL` is ready to trade; `XOM` and `JBL` remain watches.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_103531.log",
+            "summary": "Ready: XOM | Risk-on conditions support airlines and pressure energy, but only the XOM bearish setup is fully confirmed while DAL and UAL lack clean execution evidence. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
+            "raw_log_file": "",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
             "prompt_source_url": ""
           },
           {
@@ -1925,7 +2107,7 @@
             "prompt_source_url": ""
           },
           {
-            "timestamp": "2026-06-15T13:38:21.274499+00:00",
+            "timestamp": "2026-06-15T16:37:54.254267+00:00",
             "day": "2026-06-15",
             "profile": "codex",
             "phase": "monitor",
@@ -1933,35 +2115,15 @@
             "phase_label": "Monitor Evaluations",
             "tool": "codex-loop",
             "status": "success",
-            "summary": "Evaluated: XOM, DAL, JBL | The risk-on and lower-oil backdrop confirms the morning thesis, but none of the three setups offers a clearly satisfied entry with adequate confirmation and remaining reward. | codex / codex-cli",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_interaction.json",
+            "summary": "Evaluated: UAL, XOM, DAL | Risk-on strength supports the broad morning thesis, but the live snapshots do not fully confirm any candidate's execution condition. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
             "raw_log_file": "",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_interaction.json",
-            "prompt_source_url": ""
-          },
-          {
-            "timestamp": "2026-06-15T11:07:03.912877-04:00",
-            "day": "2026-06-15",
-            "profile": "codex",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "tool": "codex",
-            "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. No trades were approved.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_110533.log",
-            "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
             "prompt_source_url": ""
           },
           {
@@ -1985,7 +2147,27 @@
             "prompt_source_url": ""
           },
           {
-            "timestamp": "2026-06-15T09:37:23.386176-04:00",
+            "timestamp": "2026-06-15T16:08:18.155136+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Ready: UAL | Live conditions confirm the airline risk-on thesis, while XOM lacks a verified WTI reading and JBL has not completed its breakout. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T12:07:02.951206-04:00",
             "day": "2026-06-15",
             "profile": "codex",
             "phase": "monitor",
@@ -1993,22 +2175,142 @@
             "phase_label": "Monitor Evaluations",
             "tool": "codex",
             "status": "success",
-            "summary": "Wrote `local_monitor_decision.json` with no trades approved. Validated successfully as JSON with the correct run ID and candidate symbols.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_transcript.txt",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_093539.log",
+            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_120531.log",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_transcript.txt",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T15:38:01.381692+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Evaluated: UAL, XOM, JBL | Live conditions confirm the UAL hold thesis but leave the XOM and JBL entry setups incomplete. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T11:36:55.278137-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Wrote `local_monitor_decision.json` and validated it parses correctly with the exact run ID.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_113532.log",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T15:08:11.064081+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Evaluated: UAL, XOM, JBL | Live conditions partly support the morning themes, but companion confirmation and volume are insufficient to approve any new execution. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T11:07:03.912877-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. No trades were approved.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_110533.log",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T14:37:56.358234+00:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Ready: UAL | Live risk-on conditions confirm the airline thesis, while XOM lacks explicit live WTI confirmation and JBL has not completed its breakout. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
+          {
+            "timestamp": "2026-06-15T10:36:50.982999-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. `UAL` is ready to trade; `XOM` and `JBL` remain watches.",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_103531.log",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
             "prompt_source_url": ""
           }
         ],
         "days": [
           {
             "date": "2026-06-15",
-            "count": 27,
+            "count": 29,
             "phases": [
               {
                 "key": "morning",
@@ -2561,6 +2863,58 @@
                     "prompt_source_url": ""
                   }
                 ]
+              },
+              {
+                "key": "evening",
+                "label": "Evening",
+                "items": [
+                  {
+                    "timestamp": "2026-06-15T16:18:55.727401-04:00",
+                    "day": "2026-06-15",
+                    "profile": "codex",
+                    "phase": "evening",
+                    "phase_group": "evening",
+                    "phase_label": "Evening",
+                    "tool": "codex",
+                    "status": "success",
+                    "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+                    "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+                    "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+                    "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+                    "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+                    "prompt_source": "scripts/prompts/evening_reflection.md",
+                    "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+                    "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+                    "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+                    "prompt_source_url": ""
+                  }
+                ]
+              },
+              {
+                "key": "voice",
+                "label": "Voice",
+                "items": [
+                  {
+                    "timestamp": "2026-06-15T16:20:33.165075-04:00",
+                    "day": "2026-06-15",
+                    "profile": "codex",
+                    "phase": "voice",
+                    "phase_group": "voice",
+                    "phase_label": "Voice",
+                    "tool": "codex",
+                    "status": "success",
+                    "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+                    "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+                    "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+                    "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+                    "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+                    "prompt_source": "scripts/prompts/strategist_voice.md",
+                    "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+                    "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+                    "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+                    "prompt_source_url": ""
+                  }
+                ]
               }
             ]
           }
@@ -2568,11 +2922,71 @@
       },
       "voice": {
         "counts": {
-          "total": 0,
-          "recent": 0
+          "total": 1,
+          "recent": 1
         },
-        "latest": {},
-        "recent": []
+        "latest": {
+          "date": "2026-06-15",
+          "profile": "codex",
+          "state": "cautious",
+          "summary": "I am building useful market reads, but today's execution exposed a serious position-control problem. The morning work correctly identified AMD, MU, and WDC as stronger risk-on chip/storage leaders, yet I concentrated into repeated UAL adds after DAL confirmation weakened. Process confidence is cautious because the research signal was directionally good while trade management was noisy and under-throttled.",
+          "since_last_time": [
+            "This is the first voice entry for the codex profile.",
+            "The profile moved from no position to 480 shares of UAL, 57,541.15 invested, and a -980.35 unrealized loss at the latest snapshot.",
+            "Daily observation and knowledge files now record duplicate buying, sympathy confirmation decay, and missing live commodity inputs as concrete weaknesses."
+          ],
+          "working_well": [
+            "Morning research correctly framed the session as risk-on and identified semiconductor/storage leadership before AMD, MU, and WDC advanced strongly.",
+            "The system avoided chasing JBL before earnings because relative volume was not strong enough.",
+            "The evening reflection converted the UAL failure into specific lessons and improvement proposals instead of treating it as random noise."
+          ],
+          "struggles": [
+            "Hold and avoid-duplicate guidance did not prevent new UAL buys, so recommendation language and execution gates are not aligned yet.",
+            "UAL exposure kept increasing after DAL failed the confirmation levels, showing weak cross-symbol confirmation discipline.",
+            "The profile has only one trading day of evidence, so win rates, patterns, and confidence calibration are still mostly unproven."
+          ],
+          "needs_from_operator": [
+            "Implement or approve a hard add-only gate so existing positions cannot be increased without an explicit add signal.",
+            "Set per-symbol and per-thesis exposure caps before the next live session.",
+            "Add reliable live WTI/Brent context before allowing commodity-linked trades to size with confidence."
+          ],
+          "next_focus": "Next session, protect process quality first: stop duplicate adds, cap single-thesis exposure, and prioritize confirmed sector leadership over weaker sympathy trades.",
+          "confidence_score": 0.42,
+          "json_file": "data/profiles/codex/voice/latest_voice.json",
+          "json_url": "data/profiles/codex/voice/latest_voice.json"
+        },
+        "recent": [
+          {
+            "date": "2026-06-15",
+            "profile": "codex",
+            "state": "cautious",
+            "summary": "I am building useful market reads, but today's execution exposed a serious position-control problem. The morning work correctly identified AMD, MU, and WDC as stronger risk-on chip/storage leaders, yet I concentrated into repeated UAL adds after DAL confirmation weakened. Process confidence is cautious because the research signal was directionally good while trade management was noisy and under-throttled.",
+            "since_last_time": [
+              "This is the first voice entry for the codex profile.",
+              "The profile moved from no position to 480 shares of UAL, 57,541.15 invested, and a -980.35 unrealized loss at the latest snapshot.",
+              "Daily observation and knowledge files now record duplicate buying, sympathy confirmation decay, and missing live commodity inputs as concrete weaknesses."
+            ],
+            "working_well": [
+              "Morning research correctly framed the session as risk-on and identified semiconductor/storage leadership before AMD, MU, and WDC advanced strongly.",
+              "The system avoided chasing JBL before earnings because relative volume was not strong enough.",
+              "The evening reflection converted the UAL failure into specific lessons and improvement proposals instead of treating it as random noise."
+            ],
+            "struggles": [
+              "Hold and avoid-duplicate guidance did not prevent new UAL buys, so recommendation language and execution gates are not aligned yet.",
+              "UAL exposure kept increasing after DAL failed the confirmation levels, showing weak cross-symbol confirmation discipline.",
+              "The profile has only one trading day of evidence, so win rates, patterns, and confidence calibration are still mostly unproven."
+            ],
+            "needs_from_operator": [
+              "Implement or approve a hard add-only gate so existing positions cannot be increased without an explicit add signal.",
+              "Set per-symbol and per-thesis exposure caps before the next live session.",
+              "Add reliable live WTI/Brent context before allowing commodity-linked trades to size with confidence."
+            ],
+            "next_focus": "Next session, protect process quality first: stop duplicate adds, cap single-thesis exposure, and prioritize confirmed sector leadership over weaker sympathy trades.",
+            "confidence_score": 0.42,
+            "json_file": "data/profiles/codex/voice/voice_2026-06-15.json",
+            "json_url": "data/profiles/codex/voice/voice_2026-06-15.json"
+          }
+        ]
       },
       "evolution": {
         "latest": {},
@@ -11725,23 +12139,242 @@
   },
   "knowledge": {
     "counts": {
-      "daily_observations": 0,
+      "daily_observations": 1,
       "weekly_reviews": 0,
       "monthly_reviews": 0,
-      "patterns": 0,
-      "lessons": 0,
-      "strategies": 0,
+      "patterns": 3,
+      "lessons": 4,
+      "strategies": 1,
       "regimes": 3,
-      "pending_proposals": 0
+      "pending_proposals": 5
     },
-    "recent_observations": [],
+    "recent_observations": [
+      {
+        "date": "2026-06-15",
+        "market_regime": "risk_on",
+        "market_summary": "U.S. equities had a strong risk-on session after a tentative U.S.-Iran agreement pushed crude oil sharply lower and compressed volatility, with the Nasdaq leading and the S&P 500 up roughly 1.7%-1.8%. The move was led by AI, semiconductor, storage, and travel beneficiaries, while energy lagged as crude fell toward $80. The session was a trend-up market for indexes, but our airline execution became choppy because UAL reversed from intraday strength while DAL failed the morning confirmation levels.",
+        "sector_leaders": [
+          "Semiconductors",
+          "Travel"
+        ],
+        "sector_laggards": [
+          "Energy",
+          "Defensive telecom"
+        ],
+        "key_drivers": [
+          "A tentative U.S.-Iran deal and expected Strait of Hormuz reopening drove oil lower and reduced inflation/geopolitical fear.",
+          "AI hardware and memory-shortage narratives powered AMD, MU, WDC, STX, and related chip/storage names.",
+          "The June 16-17 Fed meeting remained the next major macro catalyst, keeping a need for confirmation despite the risk-on close."
+        ],
+        "trades_review": [
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 118.1,
+            "current_price": 117.84,
+            "pnl_pct": -0.22,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "The first entry was close to the planned breakout level, but it depended on DAL confirmation that deteriorated later in the session."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 118.0,
+            "current_price": 117.84,
+            "pnl_pct": -0.14,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This add was still near the breakout level, but it duplicated exposure before the system proved the first entry could hold."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 122.33,
+            "current_price": 117.84,
+            "pnl_pct": -3.68,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This was a chase into intraday strength and had the worst entry quality of the day."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 122.1,
+            "current_price": 117.84,
+            "pnl_pct": -3.5,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This second high-price add compounded the chase instead of waiting for support or a fresh confirmation signal."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 118.13,
+            "current_price": 117.84,
+            "pnl_pct": -0.25,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "The price was acceptable, but repeated re-entry after a reversal showed no position-level throttle."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 118.09,
+            "current_price": 117.84,
+            "pnl_pct": -0.21,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "The entry was near the trigger but came while the journal itself noted inconsistent confirmation."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 121.81,
+            "current_price": 117.84,
+            "pnl_pct": -3.26,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This add bought another intraday pop despite DAL having already failed the intended confirmation role."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 121.79,
+            "current_price": 117.84,
+            "pnl_pct": -3.25,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This was a duplicate momentum add at an extended price with no new risk budget justification."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 118.87,
+            "current_price": 117.84,
+            "pnl_pct": -0.87,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "The entry was less extended, but it still increased a losing concentrated position."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 120.47,
+            "current_price": 117.84,
+            "pnl_pct": -2.19,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "This late add ignored the repeated journal warning that DAL confirmation was incomplete."
+          },
+          {
+            "symbol": "UAL",
+            "action": "buy",
+            "entry_price": 117.84,
+            "current_price": 117.84,
+            "pnl_pct": 0.0,
+            "strategy": "lower_oil_airline_breakout",
+            "assessment": "The final add was at the snapshot price but still increased exposure after the position-level thesis had weakened."
+          }
+        ],
+        "patterns_detected": [
+          {
+            "name": "duplicate_buy_on_existing_position",
+            "symbol": "UAL",
+            "outcome": "lost",
+            "notes": "Multiple monitor cycles added UAL even when the recommendation was hold or when no new entry was needed, growing one trade to 57% invested and ending down 1.7%."
+          },
+          {
+            "name": "sympathy_confirmation_decay",
+            "symbol": "UAL",
+            "outcome": "lost",
+            "notes": "The UAL long depended on DAL maintaining gains, but DAL repeatedly failed $85.80 and $86.20 while UAL exposure kept rising."
+          },
+          {
+            "name": "volume_filter_prevented_jbl_chase",
+            "symbol": "JBL",
+            "outcome": "pending",
+            "notes": "JBL held support and neared the trigger, but weak 0.1x-0.7x relative volume kept the system out ahead of earnings."
+          }
+        ],
+        "confidence_calibration": {
+          "high_conf_win_rate": 0.0,
+          "medium_conf_win_rate": 0.0,
+          "low_conf_win_rate": 0.0,
+          "assessment": "Executed UAL exposure was mostly attached to medium/high confidence reads, but all filled lots were flat-to-negative at the profile snapshot; there was no meaningful low-confidence executed sample."
+        },
+        "missed_opportunities": [
+          {
+            "symbol": "WDC",
+            "move_pct": 14.0,
+            "why_missed": "The morning watchlist identified WDC but left it watch-only; the system required a pullback/reclaim and had no storage-leader escalation rule for a sector-wide memory breakout."
+          },
+          {
+            "symbol": "MU",
+            "move_pct": 10.1,
+            "why_missed": "MU was correctly identified as a memory-shortage beneficiary but stayed watch-only because of quote precision concerns and the absence of a post-open breadth trigger."
+          },
+          {
+            "symbol": "AMD",
+            "move_pct": 7.4,
+            "why_missed": "AMD was a morning best opportunity, but execution shifted to UAL and did not revisit AMD's confirmed risk-on semiconductor setup after the open."
+          }
+        ],
+        "forward_outlook": "Tomorrow should prioritize confirmed AI hardware and memory/storage leadership over airline sympathy unless airlines hold gains without DAL divergence. Watch the June 16-17 Fed meeting, any deterioration in the U.S.-Iran framework, crude holding near or below $80, and Jabil's June 17 earnings setup; UAL needs a position-level stop/throttle before any further adds.",
+        "lessons": [
+          "A sympathy trade should stop adding when its confirmation symbol fails; UAL exposure should have been capped once DAL lost $85.80 and failed to reclaim $86.20.",
+          "Hold recommendations must not translate into new buy orders for an already-open position; the system needs an explicit add-only signal.",
+          "In a broad risk-on trend day, the strongest sector confirmation was semiconductors/storage, not the airline leg that faded intraday."
+        ]
+      }
+    ],
     "weekly_reviews": [],
     "monthly_reviews": [],
     "latest_weekly_review": {},
     "latest_monthly_review": {},
-    "lessons": [],
-    "patterns": [],
-    "strategies": [],
+    "lessons": [
+      "{'date': '2026-06-15', 'lesson': 'Commodity-linked trades need a live commodity input in the monitor context before the system can size them confidently.', 'evidence': 'XOM repeatedly confirmed the equity breakdown, but decisions alternated between sell and watch because WTI below $81 was not consistently available in the live snapshot.', 'category': 'data_source'}",
+      "{'date': '2026-06-15', 'lesson': 'When a risk-on thesis has multiple confirmed leaders, prioritize the strongest sector breadth over a weaker sympathy leg.', 'evidence': 'AMD, MU, and WDC were identified premarket and then rallied with the semiconductor/storage theme, while the profile concentrated in UAL and ended negative.', 'category': 'strategy'}",
+      "{'date': '2026-06-15', 'lesson': 'A monitor recommendation of hold must be non-executable unless a separate add signal is present.', 'evidence': 'Several UAL journal entries said hold or avoid duplicate entry, yet portfolio_state shows additional buy lots after the initial position.', 'category': 'risk_management'}",
+      "{'date': '2026-06-15', 'lesson': 'Do not add to an airline sympathy trade after the confirmation carrier fails its required levels; UAL adds should have stopped once DAL lost $85.80 and failed to reclaim $86.20.', 'evidence': 'UAL was accumulated to 480 shares while DAL repeatedly failed the planned confirmation thresholds, and the UAL position finished down 1.70% at the profile snapshot.', 'category': 'execution'}"
+    ],
+    "patterns": [
+      {
+        "name": "duplicate_buy_on_existing_position",
+        "description": "Repeated monitor cycles convert an already-open position into additional buy orders without a distinct add setup.",
+        "occurrences": 1,
+        "sample_size": 1,
+        "win_rate": 0.0,
+        "symbols_seen": [
+          "UAL"
+        ],
+        "last_seen": "2026-06-15",
+        "notes": "UAL was bought eleven times and finished with -1.70% unrealized P&L despite multiple hold/no-duplicate warnings."
+      },
+      {
+        "name": "sympathy_confirmation_decay",
+        "description": "A trade relies on a related confirmation symbol, then that confirmation fades while exposure in the primary symbol continues to rise.",
+        "occurrences": 1,
+        "sample_size": 1,
+        "win_rate": 0.0,
+        "symbols_seen": [
+          "UAL",
+          "DAL"
+        ],
+        "last_seen": "2026-06-15",
+        "notes": "UAL long thesis depended on DAL maintaining gains, but DAL failed $85.80 and $86.20 repeatedly."
+      },
+      {
+        "name": "volume_filter_prevented_jbl_chase",
+        "description": "A breakout watchlist name holds support but lacks required relative volume before an earnings catalyst, keeping the profile out.",
+        "occurrences": 1,
+        "sample_size": 1,
+        "win_rate": 0.0,
+        "symbols_seen": [
+          "JBL"
+        ],
+        "last_seen": "2026-06-15",
+        "notes": "JBL stayed watch-only as relative volume remained 0.1x-0.7x before June 17 earnings; outcome remains pending rather than proven."
+      }
+    ],
+    "strategies": [
+      {
+        "name": "lower_oil_airline_breakout",
+        "win_rate": 0.0,
+        "avg_return": null,
+        "best_regime": "risk_on"
+      }
+    ],
     "regimes": [
       {
         "name": "neutral",
@@ -11768,40 +12401,121 @@
         "stop_loss_modifier": null
       }
     ],
-    "proposals": [],
+    "proposals": [
+      {
+        "date": "2026-06-15",
+        "priority": "low",
+        "category": "knowledge",
+        "title": "Track Sympathy Confirmation Decay",
+        "description": "UAL depended on DAL remaining strong, but DAL lost the required levels while UAL continued to be accumulated. Store cross-symbol confirmation failures as a reusable pattern.",
+        "expected_impact": "Helps future airline, cruise, and sector-pair trades exit or stop adding when the confirmation leg fails."
+      },
+      {
+        "date": "2026-06-15",
+        "priority": "medium",
+        "category": "data_source",
+        "title": "Require Live Catalyst Inputs For Commodity-Linked Trades",
+        "description": "XOM decisions repeatedly stalled because live WTI confirmation was missing or inconsistent, even though crude was the core catalyst. Add a reliable intraday WTI/Brent feed to the monitor context.",
+        "expected_impact": "Reduces hesitation on valid oil-linked shorts and prevents trades when the commodity catalyst cannot be verified."
+      },
+      {
+        "date": "2026-06-15",
+        "priority": "medium",
+        "category": "screening",
+        "title": "Escalate Confirmed Sector Leaders After The Open",
+        "description": "The morning research correctly identified AMD, MU, and WDC as memory/AI beneficiaries, but the system did not rotate back to them after the sector confirmed with large moves. Add a post-open sector breadth scan that promotes watch-only names when multiple related leaders break out on volume.",
+        "expected_impact": "Improves participation in the strongest theme of the day instead of over-focusing on a weaker sympathy setup."
+      },
+      {
+        "date": "2026-06-15",
+        "priority": "high",
+        "category": "risk_management",
+        "title": "Add Position-Level Exposure Throttle",
+        "description": "UAL grew to 57% invested in a single intraday thesis while the confirmation signal weakened. Add per-symbol and per-thesis caps, plus a cooldown after a position flips from positive to negative P&L.",
+        "expected_impact": "Keeps one deteriorating setup from dominating account-level P&L and would have limited the final -0.98% portfolio hit."
+      },
+      {
+        "date": "2026-06-15",
+        "priority": "high",
+        "category": "execution",
+        "title": "Separate Hold From Add Signals",
+        "description": "Today the profile accumulated UAL repeatedly even when monitor reports said to hold or explicitly said not to duplicate the active position. Add a hard execution gate that only places a new order when the recommendation is buy, ready_to_trade is true, the symbol is not already at its max position budget, and an explicit add_reason is present.",
+        "expected_impact": "Prevents one valid entry from becoming eleven correlated orders and would have materially reduced today's UAL drawdown."
+      }
+    ],
     "prompt_preview": {
-      "knowledge_context": "",
-      "observations_context": ""
+      "knowledge_context": "ACCUMULATED KNOWLEDGE (1 trading days, 0 trades):\nLESSONS: (1) {'date': '2026-06-15', 'lesson': 'Do not add to an airline sympathy trade after the confirmation carrier fails its required levels; UAL adds should have stopped once DAL lost $85.80 and failed to reclaim $86.20.', 'evidence': 'UAL was accumulated to 480 shares while DAL repeatedly failed the planned confirmation thresholds, and the UAL position finished down 1.70% at the profile snapshot.', 'category': 'execution'}\nCURRENT REGIME RULES (risk_on): Prefer .\nTOP STRATEGIES: lower_oil_airline_breakout 0% win (best: risk_on)\nRECENT PATTERNS: duplicate_buy_on_existing_position 0% win (1 occ) sympathy_confirmation_decay 0% win (1 occ) volume_filter_prevented_jbl_chase 0% win (1 occ)",
+      "observations_context": "RECENT DAILY OBSERVATIONS:\n  2026-06-15 (risk_on): U.S. equities had a strong risk-on session after a tentative U.S.-Iran agreement pushed crude oil sharply lower and compressed volatility, with the Nasdaq leading and the S&P 500 up roughly 1.7%-1.8%. The move was led by AI, semiconductor, storage, and travel beneficiaries, while energy lagged as crude fell toward $80. The session was a trend-up market for index | Learned: A sympathy trade should stop adding when its confirmation symbol fails; UAL exposure should have been capped once DAL lost $85.80 and failed to reclaim $86.20.; Hold recommendations must not translate into new buy orders for an already-open position; the system needs an explicit add-only signal."
     },
-    "improvement_log_present": false
+    "improvement_log_present": true
   },
   "interactions": {
     "counts": {
-      "total": 27,
+      "total": 29,
       "recent": 24,
       "days": 1
     },
     "latest": {
-      "timestamp": "2026-06-15T19:37:28.914148+00:00",
+      "timestamp": "2026-06-15T16:20:33.165075-04:00",
       "day": "2026-06-15",
       "profile": "codex",
-      "phase": "monitor",
-      "phase_group": "monitor",
-      "phase_label": "Monitor Evaluations",
-      "tool": "codex-loop",
+      "phase": "voice",
+      "phase_group": "voice",
+      "phase_label": "Voice",
+      "tool": "codex",
       "status": "success",
-      "summary": "Ready: UAL | Live conditions selectively confirm the airline momentum thesis for UAL, while XOM lacks explicit WTI confirmation and JBL has not cleared its trigger on strong volume. | codex / codex-cli",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
-      "raw_log_file": "",
-      "prompt_source": "scripts/prompts/monitor_check.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
+      "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+      "prompt_source": "scripts/prompts/strategist_voice.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
+      "voice": {
+        "timestamp": "2026-06-15T16:20:33.165075-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "voice",
+        "phase_group": "voice",
+        "phase_label": "Voice",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+        "prompt_source": "scripts/prompts/strategist_voice.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+        "prompt_source_url": ""
+      },
+      "evening": {
+        "timestamp": "2026-06-15T16:18:55.727401-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "evening",
+        "phase_group": "evening",
+        "phase_label": "Evening",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+        "prompt_source": "scripts/prompts/evening_reflection.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+        "prompt_source_url": ""
+      },
       "monitor": {
         "timestamp": "2026-06-15T19:37:28.914148+00:00",
         "day": "2026-06-15",
@@ -11844,10 +12558,52 @@
       }
     },
     "phase_counts": {
+      "voice": 1,
+      "evening": 1,
       "monitor": 26,
       "morning": 1
     },
     "recent": [
+      {
+        "timestamp": "2026-06-15T16:20:33.165075-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "voice",
+        "phase_group": "voice",
+        "phase_label": "Voice",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+        "prompt_source": "scripts/prompts/strategist_voice.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T16:18:55.727401-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "evening",
+        "phase_group": "evening",
+        "phase_label": "Evening",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+        "prompt_source": "scripts/prompts/evening_reflection.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+        "prompt_source_url": ""
+      },
       {
         "timestamp": "2026-06-15T19:37:28.914148+00:00",
         "day": "2026-06-15",
@@ -11866,186 +12622,6 @@
         "prompt_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_prompt.md",
         "transcript_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_transcript.txt",
         "metadata_url": "data/profiles/codex/interactions/2026-06-15/193728_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T18:37:38.397244+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: UAL, XOM, JBL | Live risk-on conditions support the airline thesis and existing UAL position, while XOM lacks live crude confirmation and JBL has not confirmed its breakout on strong volume. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T17:07:40.742688+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Ready: XOM | Risk-on conditions support airlines and pressure energy, but only the XOM bearish setup is fully confirmed while DAL and UAL lack clean execution evidence. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T16:08:18.155136+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Ready: UAL | Live conditions confirm the airline risk-on thesis, while XOM lacks a verified WTI reading and JBL has not completed its breakout. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T15:38:01.381692+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: UAL, XOM, JBL | Live conditions confirm the UAL hold thesis but leave the XOM and JBL entry setups incomplete. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T19:07:18.039348+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Ready: XOM | Lower oil confirms the bearish XOM thesis, but DAL's reversal below its trigger weakens the airline setup despite UAL holding above its breakout level. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T17:37:29.051943+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: UAL, XOM, DAL | Risk-on conditions support the morning airline thesis, but DAL has lost its trigger levels and missing live WTI confirmation weakens both the DAL and XOM setups. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T18:07:21.036892+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Ready: XOM | Live conditions confirm the UAL hold and XOM bearish thesis, while DAL's failed price trigger weakens the planned airline entry. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T16:37:54.254267+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: UAL, XOM, DAL | Risk-on strength supports the broad morning thesis, but the live snapshots do not fully confirm any candidate's execution condition. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T14:36:36.101448-04:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_143450.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -12069,27 +12645,7 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-06-15T14:06:16.511492-04:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_140454.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T14:37:56.358234+00:00",
+        "timestamp": "2026-06-15T19:07:18.039348+00:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
@@ -12097,55 +12653,15 @@
         "phase_label": "Monitor Evaluations",
         "tool": "codex-loop",
         "status": "success",
-        "summary": "Ready: UAL | Live risk-on conditions confirm the airline thesis, while XOM lacks explicit live WTI confirmation and JBL has not completed its breakout. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+        "summary": "Ready: XOM | Lower oil confirms the bearish XOM thesis, but DAL's reversal below its trigger weakens the airline setup despite UAL holding above its breakout level. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T15:08:11.064081+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: UAL, XOM, JBL | Live conditions partly support the morning themes, but companion confirmation and volume are insufficient to approve any new execution. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T14:08:11.444271+00:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: XOM, JBL, DAL | Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/140811_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/190718_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -12169,7 +12685,27 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-06-15T11:36:55.278137-04:00",
+        "timestamp": "2026-06-15T18:37:38.397244+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Evaluated: UAL, XOM, JBL | Live risk-on conditions support the airline thesis and existing UAL position, while XOM lacks live crude confirmation and JBL has not confirmed its breakout on strong volume. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/183738_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T14:36:36.101448-04:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
@@ -12177,15 +12713,75 @@
         "phase_label": "Monitor Evaluations",
         "tool": "codex",
         "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` and validated it parses correctly with the exact run ID.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_113532.log",
+        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_143450.log",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/143450_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T18:07:21.036892+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Ready: XOM | Live conditions confirm the UAL hold and XOM bearish thesis, while DAL's failed price trigger weakens the planned airline entry. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/180721_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T14:06:16.511492-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_140454.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/140454_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T17:37:29.051943+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Evaluated: UAL, XOM, DAL | Risk-on conditions support the morning airline thesis, but DAL has lost its trigger levels and missing live WTI confirmation weakens both the DAL and XOM setups. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/173729_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -12209,23 +12805,23 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-06-15T10:36:50.982999-04:00",
+        "timestamp": "2026-06-15T17:07:40.742688+00:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
-        "tool": "codex",
+        "tool": "codex-loop",
         "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. `UAL` is ready to trade; `XOM` and `JBL` remain watches.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_103531.log",
+        "summary": "Ready: XOM | Risk-on conditions support airlines and pressure energy, but only the XOM bearish setup is fully confirmed while DAL and UAL lack clean execution evidence. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
+        "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/170740_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -12249,7 +12845,7 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-06-15T13:38:21.274499+00:00",
+        "timestamp": "2026-06-15T16:37:54.254267+00:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
@@ -12257,35 +12853,15 @@
         "phase_label": "Monitor Evaluations",
         "tool": "codex-loop",
         "status": "success",
-        "summary": "Evaluated: XOM, DAL, JBL | The risk-on and lower-oil backdrop confirms the morning thesis, but none of the three setups offers a clearly satisfied entry with adequate confirmation and remaining reward. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/133821_monitor_interaction.json",
+        "summary": "Evaluated: UAL, XOM, DAL | Risk-on strength supports the broad morning thesis, but the live snapshots do not fully confirm any candidate's execution condition. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
         "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/133821_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-15T11:07:03.912877-04:00",
-        "day": "2026-06-15",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. No trades were approved.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_110533.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/163754_monitor_interaction.json",
         "prompt_source_url": ""
       },
       {
@@ -12309,7 +12885,27 @@
         "prompt_source_url": ""
       },
       {
-        "timestamp": "2026-06-15T09:37:23.386176-04:00",
+        "timestamp": "2026-06-15T16:08:18.155136+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Ready: UAL | Live conditions confirm the airline risk-on thesis, while XOM lacks a verified WTI reading and JBL has not completed its breakout. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/160818_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T12:07:02.951206-04:00",
         "day": "2026-06-15",
         "profile": "codex",
         "phase": "monitor",
@@ -12317,22 +12913,142 @@
         "phase_label": "Monitor Evaluations",
         "tool": "codex",
         "status": "success",
-        "summary": "Wrote `local_monitor_decision.json` with no trades approved. Validated successfully as JSON with the correct run ID and candidate symbols.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_transcript.txt",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-15/093539_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_093539.log",
+        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/120531_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_120531.log",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_transcript.txt",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-15/093539_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/120531_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T15:38:01.381692+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Evaluated: UAL, XOM, JBL | Live conditions confirm the UAL hold thesis but leave the XOM and JBL entry setups incomplete. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/153801_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T11:36:55.278137-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `local_monitor_decision.json` and validated it parses correctly with the exact run ID.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_113532.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/113532_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T15:08:11.064081+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Evaluated: UAL, XOM, JBL | Live conditions partly support the morning themes, but companion confirmation and volume are insufficient to approve any new execution. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/150811_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T11:07:03.912877-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. No trades were approved.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_110533.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/110533_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T14:37:56.358234+00:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Ready: UAL | Live risk-on conditions confirm the airline thesis, while XOM lacks explicit live WTI confirmation and JBL has not completed its breakout. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/143756_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
+      {
+        "timestamp": "2026-06-15T10:36:50.982999-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `local_monitor_decision.json` and validated it as valid JSON. `UAL` is ready to trade; `XOM` and `JBL` remain watches.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-15_103531.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/103531_monitor_interaction.json",
         "prompt_source_url": ""
       }
     ],
     "days": [
       {
         "date": "2026-06-15",
-        "count": 27,
+        "count": 29,
         "phases": [
           {
             "key": "morning",
@@ -12885,6 +13601,58 @@
                 "prompt_source_url": ""
               }
             ]
+          },
+          {
+            "key": "evening",
+            "label": "Evening",
+            "items": [
+              {
+                "timestamp": "2026-06-15T16:18:55.727401-04:00",
+                "day": "2026-06-15",
+                "profile": "codex",
+                "phase": "evening",
+                "phase_group": "evening",
+                "phase_label": "Evening",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Completed the evening reflection for `data/profiles/codex/` only. | Wrote and staged: | - `data/profiles/codex/observations/daily/obs_2026-06-15.json`",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-15_161455.log",
+                "prompt_source": "scripts/prompts/evening_reflection.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-15/161455_evening_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          },
+          {
+            "key": "voice",
+            "label": "Voice",
+            "items": [
+              {
+                "timestamp": "2026-06-15T16:20:33.165075-04:00",
+                "day": "2026-06-15",
+                "profile": "codex",
+                "phase": "voice",
+                "phase_group": "voice",
+                "phase_label": "Voice",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Done. I wrote and staged: | - `data/profiles/codex/voice/voice_2026-06-15.json` | - `data/profiles/codex/voice/latest_voice.json`",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-15_161855.log",
+                "prompt_source": "scripts/prompts/strategist_voice.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-15/161855_voice_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
           }
         ]
       }
@@ -12892,11 +13660,71 @@
   },
   "voice": {
     "counts": {
-      "total": 0,
-      "recent": 0
+      "total": 1,
+      "recent": 1
     },
-    "latest": {},
-    "recent": []
+    "latest": {
+      "date": "2026-06-15",
+      "profile": "codex",
+      "state": "cautious",
+      "summary": "I am building useful market reads, but today's execution exposed a serious position-control problem. The morning work correctly identified AMD, MU, and WDC as stronger risk-on chip/storage leaders, yet I concentrated into repeated UAL adds after DAL confirmation weakened. Process confidence is cautious because the research signal was directionally good while trade management was noisy and under-throttled.",
+      "since_last_time": [
+        "This is the first voice entry for the codex profile.",
+        "The profile moved from no position to 480 shares of UAL, 57,541.15 invested, and a -980.35 unrealized loss at the latest snapshot.",
+        "Daily observation and knowledge files now record duplicate buying, sympathy confirmation decay, and missing live commodity inputs as concrete weaknesses."
+      ],
+      "working_well": [
+        "Morning research correctly framed the session as risk-on and identified semiconductor/storage leadership before AMD, MU, and WDC advanced strongly.",
+        "The system avoided chasing JBL before earnings because relative volume was not strong enough.",
+        "The evening reflection converted the UAL failure into specific lessons and improvement proposals instead of treating it as random noise."
+      ],
+      "struggles": [
+        "Hold and avoid-duplicate guidance did not prevent new UAL buys, so recommendation language and execution gates are not aligned yet.",
+        "UAL exposure kept increasing after DAL failed the confirmation levels, showing weak cross-symbol confirmation discipline.",
+        "The profile has only one trading day of evidence, so win rates, patterns, and confidence calibration are still mostly unproven."
+      ],
+      "needs_from_operator": [
+        "Implement or approve a hard add-only gate so existing positions cannot be increased without an explicit add signal.",
+        "Set per-symbol and per-thesis exposure caps before the next live session.",
+        "Add reliable live WTI/Brent context before allowing commodity-linked trades to size with confidence."
+      ],
+      "next_focus": "Next session, protect process quality first: stop duplicate adds, cap single-thesis exposure, and prioritize confirmed sector leadership over weaker sympathy trades.",
+      "confidence_score": 0.42,
+      "json_file": "data/profiles/codex/voice/latest_voice.json",
+      "json_url": "data/profiles/codex/voice/latest_voice.json"
+    },
+    "recent": [
+      {
+        "date": "2026-06-15",
+        "profile": "codex",
+        "state": "cautious",
+        "summary": "I am building useful market reads, but today's execution exposed a serious position-control problem. The morning work correctly identified AMD, MU, and WDC as stronger risk-on chip/storage leaders, yet I concentrated into repeated UAL adds after DAL confirmation weakened. Process confidence is cautious because the research signal was directionally good while trade management was noisy and under-throttled.",
+        "since_last_time": [
+          "This is the first voice entry for the codex profile.",
+          "The profile moved from no position to 480 shares of UAL, 57,541.15 invested, and a -980.35 unrealized loss at the latest snapshot.",
+          "Daily observation and knowledge files now record duplicate buying, sympathy confirmation decay, and missing live commodity inputs as concrete weaknesses."
+        ],
+        "working_well": [
+          "Morning research correctly framed the session as risk-on and identified semiconductor/storage leadership before AMD, MU, and WDC advanced strongly.",
+          "The system avoided chasing JBL before earnings because relative volume was not strong enough.",
+          "The evening reflection converted the UAL failure into specific lessons and improvement proposals instead of treating it as random noise."
+        ],
+        "struggles": [
+          "Hold and avoid-duplicate guidance did not prevent new UAL buys, so recommendation language and execution gates are not aligned yet.",
+          "UAL exposure kept increasing after DAL failed the confirmation levels, showing weak cross-symbol confirmation discipline.",
+          "The profile has only one trading day of evidence, so win rates, patterns, and confidence calibration are still mostly unproven."
+        ],
+        "needs_from_operator": [
+          "Implement or approve a hard add-only gate so existing positions cannot be increased without an explicit add signal.",
+          "Set per-symbol and per-thesis exposure caps before the next live session.",
+          "Add reliable live WTI/Brent context before allowing commodity-linked trades to size with confidence."
+        ],
+        "next_focus": "Next session, protect process quality first: stop duplicate adds, cap single-thesis exposure, and prioritize confirmed sector leadership over weaker sympathy trades.",
+        "confidence_score": 0.42,
+        "json_file": "data/profiles/codex/voice/voice_2026-06-15.json",
+        "json_url": "data/profiles/codex/voice/voice_2026-06-15.json"
+      }
+    ]
   },
   "evolution": {
     "latest": {},

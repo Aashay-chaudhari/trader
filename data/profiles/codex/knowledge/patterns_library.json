@@ -1,1 +1,39 @@
-[]
+[
+  {
+    "name": "duplicate_buy_on_existing_position",
+    "description": "Repeated monitor cycles convert an already-open position into additional buy orders without a distinct add setup.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 0.0,
+    "symbols_seen": [
+      "UAL"
+    ],
+    "last_seen": "2026-06-15",
+    "notes": "UAL was bought eleven times and finished with -1.70% unrealized P&L despite multiple hold/no-duplicate warnings."
+  },
+  {
+    "name": "sympathy_confirmation_decay",
+    "description": "A trade relies on a related confirmation symbol, then that confirmation fades while exposure in the primary symbol continues to rise.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 0.0,
+    "symbols_seen": [
+      "UAL",
+      "DAL"
+    ],
+    "last_seen": "2026-06-15",
+    "notes": "UAL long thesis depended on DAL maintaining gains, but DAL failed $85.80 and $86.20 repeatedly."
+  },
+  {
+    "name": "volume_filter_prevented_jbl_chase",
+    "description": "A breakout watchlist name holds support but lacks required relative volume before an earnings catalyst, keeping the profile out.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 0.0,
+    "symbols_seen": [
+      "JBL"
+    ],
+    "last_seen": "2026-06-15",
+    "notes": "JBL stayed watch-only as relative volume remained 0.1x-0.7x before June 17 earnings; outcome remains pending rather than proven."
+  }
+]
