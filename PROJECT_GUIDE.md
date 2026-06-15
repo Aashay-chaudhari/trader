@@ -782,7 +782,9 @@ Recommended order:
 4. Run Verify Alpaca Paper Account and require zero positions/orders.
 5. Delete the old Alpaca paper account if it is no longer needed.
 6. Run ./scripts/reset_for_fresh_start.sh YYYY-MM-DD RESET, or dispatch Reset Application State.
-7. On the start date, paste codex_day_loop_master.md into Codex.
+7. On the start date, open Codex in the repository and tell it to read and
+   execute `scripts/prompts/codex_day_loop_master.md` as the long-running
+   trading-day supervisor. Do not paste the entire file into chat.
 ```
 
 The reset removes old artifacts from the current branch and dashboard, but Git

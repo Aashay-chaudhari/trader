@@ -6,8 +6,14 @@ tracking era starts on `2026-06-15`, as recorded in
 
 ## Tomorrow Morning
 
-Paste the contents of `scripts/prompts/codex_day_loop_master.md` into a fresh
-Codex chat. The supervisor will:
+Open a fresh Codex chat in the repository and send:
+
+```text
+Read scripts/prompts/codex_day_loop_master.md completely and execute it as the long-running trading-day supervisor. Start now, use America/New_York time, and keep the session alive until all due phases are complete.
+```
+
+Codex reads the full prompt from disk, avoiding chat paste and attachment-size
+limits. The supervisor will:
 
 ```text
 Pull main

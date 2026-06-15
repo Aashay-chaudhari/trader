@@ -1,7 +1,13 @@
 # Codex Day Loop Master Prompt
 
-Use this prompt by pasting it into a fresh Codex session at the start of a
-trading day. It is designed for the repository at
+Start a fresh Codex session in this repository and send this short bootstrap
+instruction (do not paste this whole file into chat):
+
+```text
+Read scripts/prompts/codex_day_loop_master.md completely and execute it as the long-running trading-day supervisor. Start now, use America/New_York time, and keep the session alive until all due phases are complete.
+```
+
+This prompt is designed for the repository at
 `C:\Users\aasha\Desktop\trader` / `/mnt/c/Users/aasha/Desktop/trader`.
 
 This repo has local Codex runner phases for `morning`, `monitor`, `evening`,
@@ -10,7 +16,7 @@ Python, asks the local Codex session for the intraday gate decision, then applie
 that decision through strategy/risk/execution/portfolio. Do not silently run the
 direct API monitor when the operator expects the local Codex loop.
 
-Copy everything below this line into Codex.
+Codex must read and follow everything below this line.
 
 ---
 
