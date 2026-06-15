@@ -1,0 +1,91 @@
+name: Reset Application State
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "New tracking baseline date (YYYY-MM-DD)"
+        required: true
+        type: string
+      confirmation:
+        description: "Type RESET to delete generated Codex state"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: reset-application-state
+  cancel-in-progress: false
+
+jobs:
+  reset:
+    name: Create fresh application baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Validate confirmation and date
+        env:
+          START_DATE: ${{ inputs.start_date }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          test "$CONFIRMATION" = "RESET" || { echo "Confirmation must be RESET"; exit 1; }
+          [[ "$START_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "Use YYYY-MM-DD"; exit 1; }
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Reset generated state and rebuild empty dashboard
+        env:
+          DATA_DIR: data/profiles/codex
+          AGENT_PROFILE: codex
+          AGENT_LABEL: Codex Strategist
+          START_DATE: ${{ inputs.start_date }}
+        run: |
+          python -m agent_trader reset --docs --fresh-start-date "$START_DATE"
+          python -m agent_trader dashboard
+
+      - name: Commit fresh baseline
+        env:
+          START_DATE: ${{ inputs.start_date }}
+        run: |
+          git config user.name "Agent Trader Bot"
+          git config user.email "bot@agent-trader"
+          git add -A data/profiles/codex/ docs/
+          git diff --staged --quiet || git commit -m "[fresh-start] ${START_DATE} reset application state"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+  deploy:
+    name: Deploy empty baseline dashboard
+    needs: reset
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

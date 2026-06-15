@@ -189,3 +189,23 @@ Operator
 - Local monitor skips the Codex call when no candidate needs review.
 - GitHub Actions API monitoring is opt-in via `MONITOR_RUNTIME=github_actions_api`.
 - Morning validation rejects structurally invalid plans and demotes stale entries.
+
+## Fresh-Start Flow
+
+```text
+Operator confirms RESET + start date
+  |
+  v
+reset_for_fresh_start.sh or Reset Application State workflow
+  |
+  +-- delete generated Codex profile state
+  +-- delete generated docs/ dashboard state
+  +-- preserve source code and documentation
+  +-- write fresh_start.json
+  +-- regenerate empty dashboard
+  +-- commit, push, deploy Pages
+
+Separate Alpaca operation:
+  create new paper account -> generate keys -> update GitHub secrets
+  -> Verify Alpaca Paper Account -> begin day loop
+```

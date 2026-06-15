@@ -118,10 +118,32 @@ uv run --extra dev python -m agent_trader validate --data-dir data/profiles/code
 uv run --extra dev python -m agent_trader dashboard
 ```
 
+## Fresh Start
+
+A clean application baseline and a clean Alpaca history are separate operations.
+
+```text
+Application reset:
+  ./scripts/reset_for_fresh_start.sh YYYY-MM-DD RESET
+
+Alpaca reset:
+  create a new paper account in the Alpaca dashboard
+  generate a new key pair
+  replace the GitHub Actions secrets
+  run Verify Alpaca Paper Account
+```
+
+The application reset deletes generated Codex research, monitoring, portfolio,
+journal, observations, knowledge, interactions, and published dashboard data.
+It preserves source code and documentation and writes `fresh_start.json`.
+Previous artifacts remain in Git history unless history is deliberately
+rewritten. See [Fresh Start Guide](FRESH_START.md).
+
 ## Documentation
 
 - [Architecture](ARCHITECTURE.md)
 - [Current state](CURRENT_STATE.md)
+- [Fresh start guide](FRESH_START.md)
 - [Operator weekbook](WEEKBOOK.md)
 - [System guide](SYSTEM_GUIDE.md)
 - [Coding assistant handoff](CODING_ASSISTANT.md)

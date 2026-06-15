@@ -91,6 +91,10 @@ def main():
                               help="Preserve knowledge/ and observations/ dirs (reset only runtime)")
     reset_parser.add_argument("--data-dir", help="Override data directory to reset")
     reset_parser.add_argument("--docs-dir", help="Override docs directory to reset")
+    reset_parser.add_argument(
+        "--fresh-start-date",
+        help="Write a YYYY-MM-DD fresh-start marker after resetting one profile",
+    )
 
     # Dashboard command
     subparsers.add_parser("dashboard", help="Generate dashboard data")
@@ -282,10 +286,13 @@ def cmd_reset(args):
         all_profiles=bool(args.all_profiles),
         include_docs=bool(args.docs),
         keep_knowledge=bool(args.keep_knowledge),
+        fresh_start_date=args.fresh_start_date,
     )
     console.print("[green]Project state reset complete.[/green]")
     console.print(f"  Data root: {summary['data_root']}")
     console.print(f"  Removed paths: {len(summary['removed'])}")
+    if summary["fresh_start_date"]:
+        console.print(f"  Fresh start date: {summary['fresh_start_date']}")
     if summary["removed"]:
         for path in summary["removed"][:12]:
             console.print(f"    - {path}")

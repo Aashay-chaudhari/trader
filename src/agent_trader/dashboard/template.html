@@ -636,11 +636,11 @@
 
   function wfUrl(rt, runUrl) {
     const repo = obj(obj(rt).github).repository;
-    if (repo) return "https://github.com/" + repo + "/actions/workflows/trading.yml";
+    if (repo) return "https://github.com/" + repo + "/actions/workflows/reset-application.yml";
     if (location.hostname.endsWith(".github.io")) {
       const owner = location.hostname.replace(/\.github\.io$/i, "");
       const part = location.pathname.split("/").filter(Boolean)[0];
-      if (owner && part) return "https://github.com/" + owner + "/" + part + "/actions/workflows/trading.yml";
+      if (owner && part) return "https://github.com/" + owner + "/" + part + "/actions/workflows/reset-application.yml";
     }
     return "https://github.com";
   }

@@ -305,7 +305,7 @@ python -m agent_trader evolve [--debug]
 python -m agent_trader validate [--smoke] [--data-dir ...]
 python -m agent_trader dashboard
 python -m agent_trader status
-python -m agent_trader reset [--all-profiles] [--docs] [--keep-knowledge]
+python -m agent_trader reset [--all-profiles] [--docs] [--keep-knowledge] [--fresh-start-date YYYY-MM-DD]
 python -m agent_trader alert morning|evening|weekly|monthly|test
 ```
 
@@ -318,6 +318,7 @@ Operator runner:
 ./scripts/run_both.sh weekly serial
 ./scripts/run_both.sh monthly serial
 ./scripts/run_both.sh evolve serial
+./scripts/reset_for_fresh_start.sh YYYY-MM-DD RESET
 ```
 
 The `parallel` argument is now historical. Claude is disabled in the runner, so it prints that parallel mode was requested but runs Codex only.
@@ -504,6 +505,33 @@ Action: upload docs/ and deploy GitHub Pages
 The decision-execution workflow deploys Pages itself because commits made by a
 workflow's built-in token do not trigger another push workflow. Morning,
 evening, weekly, monthly, and evolution pushes use `Publish Dashboard`.
+
+### Reset Application State
+
+`.github/workflows/reset-application.yml`
+
+```text
+Trigger: manual workflow_dispatch only
+Inputs: start_date=YYYY-MM-DD and confirmation=RESET
+Action:
+  remove generated Codex profile and docs state
+  write fresh_start.json
+  regenerate an empty dashboard
+  commit the baseline
+  deploy GitHub Pages
+```
+
+### Verify Alpaca Paper Account
+
+`.github/workflows/verify-paper-account.yml`
+
+```text
+Trigger: manual workflow_dispatch only
+Action:
+  connect to the configured Alpaca paper account read-only
+  print masked account, status, cash, equity, and buying power
+  require zero open positions and zero open orders
+```
 
 Optional evidence-quality secrets:
 
@@ -723,6 +751,38 @@ After code changes:
 3. python -m agent_trader validate --data-dir data/profiles/codex
 4. python -m agent_trader dashboard
 ```
+
+## Hard Reset and New Tracking Era
+
+Application state and broker state are separate:
+
+```text
+Application hard reset
+  deletes generated research, monitoring, portfolio, journal, interactions,
+  analytics, observations, knowledge, positions, voice, evolution, and docs data
+  preserves code and documentation
+  writes data/profiles/codex/fresh_start.json
+
+Alpaca hard reset
+  cannot erase selected trades from the existing paper account
+  requires a new paper account for a genuinely blank history and balance
+```
+
+Recommended order:
+
+```text
+1. In Alpaca, open a new paper account.
+2. Generate its API key and secret.
+3. Replace ALPACA_API_KEY_CODEX and ALPACA_SECRET_KEY_CODEX in GitHub Actions secrets.
+4. Run Verify Alpaca Paper Account and require zero positions/orders.
+5. Delete the old Alpaca paper account if it is no longer needed.
+6. Run ./scripts/reset_for_fresh_start.sh YYYY-MM-DD RESET, or dispatch Reset Application State.
+7. On the start date, paste codex_day_loop_master.md into Codex.
+```
+
+The reset removes old artifacts from the current branch and dashboard, but Git
+commits remain an audit trail. Completely purging prior files from Git history is
+a separate destructive history rewrite and is not required for a clean new run.
 
 ## Quick Mental Model
 

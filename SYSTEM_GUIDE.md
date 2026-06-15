@@ -64,4 +64,17 @@ The important repository variable is `MONITOR_RUNTIME`. The default is `codex_lo
 - The publish job runs after monitor completion and records available output.
 - GitHub Pages deploys only after publication succeeds.
 
+## Fresh-Start Boundary
+
+`python -m agent_trader reset --docs --fresh-start-date YYYY-MM-DD` clears one
+profile's generated application state and writes a dated baseline marker. The
+guarded wrapper is `./scripts/reset_for_fresh_start.sh YYYY-MM-DD RESET`; the
+same operation is available through the `Reset Application State` workflow.
+
+This does not erase Alpaca activity. Alpaca's current paper-account reset model
+is to create a new paper account, generate new keys, update GitHub secrets, and
+optionally delete the old account. The `Verify Alpaca Paper Account` workflow
+checks the configured account read-only and fails when open positions or orders
+remain.
+
 See [ARCHITECTURE.md](ARCHITECTURE.md) for diagrams.

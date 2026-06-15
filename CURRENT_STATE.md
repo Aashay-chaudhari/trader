@@ -6,6 +6,14 @@ Date: 2026-06-14
 
 The repository is aligned around one active strategist profile: `codex`.
 
+- A new tracked application era begins on June 15, 2026.
+- Generated Codex research, monitor, portfolio, journal, observations, knowledge,
+  interactions, and dashboard state are being reset to an empty baseline.
+- `data/profiles/codex/fresh_start.json` prevents the day-loop supervisor from
+  creating catch-up reviews for the pre-reset era.
+- A truly blank Alpaca trade history still requires a new paper account and new
+  GitHub secret values; application reset cannot erase broker history.
+
 - June 11 morning research is committed to `main`.
 - Market regime: `risk_on`.
 - Watchlist: `CCL`, `RCL`, `KBH`, `BRZE`, `AIR`, `NVDA`.
@@ -31,13 +39,15 @@ Repository-side prerequisites are satisfied for June 11, 2026. External readines
 
 ## Active Workflow
 
-1. Run local morning research.
-2. Push validated morning state to `main`.
-3. Keep the local Codex terminal loop running and call `./scripts/run_both.sh monitor serial` every 30 minutes during market hours.
-4. Track `Codex Decision Execution` for broker submission and its artifact commit.
-5. Use the OpenAI API monitor only when `MONITOR_RUNTIME=github_actions_api` is intentionally selected.
-6. Run local evening reflection after the close.
-7. Run weekly, monthly, and evolution reviews on demand.
+1. Verify the replacement Alpaca paper account has zero positions and orders.
+2. On June 15, paste `codex_day_loop_master.md` into a fresh Codex session.
+3. Run local morning research.
+4. Push validated morning state to `main`.
+5. Keep the local Codex terminal loop running and call `./scripts/run_both.sh monitor serial` every 30 minutes during market hours.
+6. Track `Codex Decision Execution` for broker submission and its artifact commit.
+7. Use the OpenAI API monitor only when `MONITOR_RUNTIME=github_actions_api` is intentionally selected.
+8. Run local evening reflection after the close.
+9. Run weekly, monthly, and evolution reviews only for periods after the fresh start.
 
 ## Recent Reliability Changes
 
@@ -53,6 +63,6 @@ Repository-side prerequisites are satisfied for June 11, 2026. External readines
 
 ## Validation Baseline
 
-- Unit suite: 140 passed after the June 14 execution-handoff change.
+- Unit suite: 141 passed after the June 14 fresh-start tooling change.
 - Profile validation: 37 passed, 0 failed.
 - Dashboard generation completed successfully.

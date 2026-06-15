@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +52,7 @@ def reset_project_state(
     all_profiles: bool = False,
     include_docs: bool = False,
     keep_knowledge: bool = False,
+    fresh_start_date: str | None = None,
 ) -> dict[str, Any]:
     """Reset generated runtime state for one profile or the whole project.
 
@@ -59,6 +61,10 @@ def reset_project_state(
     (cache, journal, analytics, staging, context, snapshots) are cleared.
     """
     settings = get_settings()
+    normalized_start_date = _validate_fresh_start_date(fresh_start_date)
+    if normalized_start_date and all_profiles:
+        raise ValueError("fresh_start_date can only be used with a single profile reset")
+
     configured_root = Path(data_dir or settings.data_dir)
     base_data_root = _base_data_root(configured_root)
     removed: list[str] = []
@@ -79,6 +85,8 @@ def reset_project_state(
         if _is_profile_root(configured_root):
             _reset_profile_root(configured_root, removed, keep_knowledge=keep_knowledge)
             _write_profile_metadata(configured_root)
+            if normalized_start_date:
+                _write_fresh_start_marker(configured_root, normalized_start_date)
         else:
             _reset_top_level_data_root(configured_root, removed)
             _write_profile_metadata(configured_root)
@@ -91,8 +99,15 @@ def reset_project_state(
         "all_profiles": all_profiles,
         "keep_knowledge": keep_knowledge,
         "include_docs": include_docs,
+        "fresh_start_date": normalized_start_date,
         "removed": removed,
     }
+
+
+def _validate_fresh_start_date(value: str | None) -> str | None:
+    if not value:
+        return None
+    return date.fromisoformat(value).isoformat()
 
 
 def _base_data_root(root: Path) -> Path:
@@ -153,5 +168,18 @@ def _write_profile_metadata(root: Path) -> None:
     ensure_profile_structure(root)
     (root / "profile.json").write_text(
         json.dumps(payload, indent=2, default=str),
+        encoding="utf-8",
+    )
+
+
+def _write_fresh_start_marker(root: Path, start_date: str) -> None:
+    payload = {
+        "start_date": start_date,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "profile": get_settings().agent_profile,
+        "purpose": "Ignore pre-reset history and begin a new tracked paper-trading baseline.",
+    }
+    (root / "fresh_start.json").write_text(
+        json.dumps(payload, indent=2),
         encoding="utf-8",
     )

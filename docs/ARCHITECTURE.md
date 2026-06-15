@@ -38,3 +38,7 @@ reasoning gate are local by default. Python still owns deterministic strategy,
 risk, execution, persistence, and dashboard generation. GitHub Actions owns the
 default Alpaca paper submission handoff because repository secrets exist there;
 the OpenAI API monitor remains a separate opt-in path.
+
+Fresh starts are deliberately split: the application reset clears generated
+repository state and writes `fresh_start.json`; a truly clean brokerage history
+requires a newly created Alpaca paper account and replacement GitHub secrets.

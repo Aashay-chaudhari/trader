@@ -25,6 +25,7 @@ def test_reset_project_state_clears_profile_root_and_rewrites_profile_metadata(m
             data_dir=str(profile_root),
             docs_dir=str(docs_root),
             include_docs=True,
+            fresh_start_date="2026-06-15",
         )
 
         assert summary["include_docs"] is True
@@ -33,11 +34,28 @@ def test_reset_project_state_clears_profile_root_and_rewrites_profile_metadata(m
         assert not (profile_root / "portfolio_state.json").exists()
         assert not (docs_root / "data").exists()
         assert not (docs_root / "index.html").exists()
+        assert summary["fresh_start_date"] == "2026-06-15"
 
         metadata = json.loads((profile_root / "profile.json").read_text(encoding="utf-8"))
         assert metadata["id"] == "claude"
         assert metadata["label"] == "Claude Strategist"
         assert metadata["data_dir"] == profile_root.as_posix()
+        marker = json.loads((profile_root / "fresh_start.json").read_text(encoding="utf-8"))
+        assert marker["start_date"] == "2026-06-15"
+
+
+def test_fresh_start_date_rejects_all_profiles_reset():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        try:
+            reset_project_state(
+                data_dir=str(Path(temp_dir) / "data"),
+                all_profiles=True,
+                fresh_start_date="2026-06-15",
+            )
+        except ValueError as exc:
+            assert "single profile" in str(exc)
+        else:
+            raise AssertionError("Expected a ValueError for all-profile fresh start")
 
 
 def test_reset_project_state_clears_all_profiles_and_top_level_generated_data():

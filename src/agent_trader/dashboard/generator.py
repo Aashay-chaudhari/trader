@@ -137,7 +137,7 @@ DASHBOARD_HTML = dedent(
               <p id="heroSummary">Latest research, workflow context, and article-level catalysts from the trading pipeline.</p>
               <div class="hero-actions">
               <a class="btn" id="runLink" href="data/report_research.md" target="_blank" rel="noreferrer">Open latest report</a>
-              <a class="btn" id="resetLink" href="https://github.com/Aashay-chaudhari/trader/actions/workflows/trading.yml" target="_blank" rel="noreferrer">Reset project state</a>
+              <a class="btn" id="resetLink" href="https://github.com/Aashay-chaudhari/trader/actions/workflows/reset-application.yml" target="_blank" rel="noreferrer">Reset project state</a>
               <a class="btn" id="researchLink" href="data/report_research.md" target="_blank" rel="noreferrer">Research markdown</a>
               <a class="btn" id="monitorLink" href="data/report_monitor.md" target="_blank" rel="noreferrer">Monitor markdown</a>
               <a class="btn" id="weeklyLink" href="data/report_weekly.json" target="_blank" rel="noreferrer">Weekly review</a>
@@ -348,13 +348,13 @@ DASHBOARD_HTML = dedent(
 
         function workflowUrlFromContext(runtime,runUrl){
           const repo=obj(obj(runtime).github).repository;
-          if(repo)return `https://github.com/${repo}/actions/workflows/trading.yml`;
+          if(repo)return `https://github.com/${repo}/actions/workflows/reset-application.yml`;
           const match=String(runUrl||"").match(/https:\\/\\/github\\.com\\/([^\\/]+\\/[^\\/]+)\\/actions\\/runs\\//i);
-          if(match)return `https://github.com/${match[1]}/actions/workflows/trading.yml`;
+          if(match)return `https://github.com/${match[1]}/actions/workflows/reset-application.yml`;
           if(location.hostname.endsWith(".github.io")){
             const owner=location.hostname.replace(/\\.github\\.io$/i,"");
             const repoName=location.pathname.split("/").filter(Boolean)[0];
-            if(owner&&repoName)return `https://github.com/${owner}/${repoName}/actions/workflows/trading.yml`;
+            if(owner&&repoName)return `https://github.com/${owner}/${repoName}/actions/workflows/reset-application.yml`;
           }
           return "https://github.com";
         }
@@ -476,7 +476,7 @@ DASHBOARD_HTML = dedent(
           const resetLink=document.getElementById("resetLink");
           const workflowUrl=workflowUrlFromContext(runtime,runUrl);
           resetLink.href=workflowUrl;
-          resetLink.title="Open the GitHub Actions workflow page, then dispatch a run with reset_state enabled.";
+          resetLink.title="Open the guarded Reset Application State workflow.";
         }
 
         function renderProfile(profileBundle,bundle){

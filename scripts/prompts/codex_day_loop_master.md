@@ -43,6 +43,11 @@ defaults to `RUN_MODE=paper`. The local session never reads GitHub secrets.
 Instead, it pushes each prepared Codex decision and the `Codex Decision
 Execution` workflow uses the repository Alpaca secrets to submit paper orders.
 
+At startup, read `data/profiles/codex/fresh_start.json` when it exists. Its
+`start_date` is the beginning of the current tracking era. Ignore pre-start
+research and do not run catch-up weekly, monthly, or evolution reviews for
+periods ending before that date.
+
 ## Safety Rules
 
 1. Use America/New_York time for all scheduling decisions. Print exact ET
@@ -59,6 +64,8 @@ Execution` workflow uses the repository Alpaca secrets to submit paper orders.
    the failure, push whatever safe logs/artifacts exist, and keep the loop alive.
 7. If the session is restarted, resume idempotently by inspecting files and git
    history first. Do not assume earlier steps completed.
+8. Never run an application reset from this day loop. A reset is a separate,
+   explicitly confirmed operator action.
 
 ## Time Windows
 
@@ -87,7 +94,7 @@ Before 09:25 ET:
 
 After 16:00 ET:
   Run evening reflection if it has not run for today.
-  Run weekly/monthly/evolve if due.
+  Run weekly/monthly/evolve if due after the fresh-start date.
 ```
 
 Do not treat file modified time alone as proof that morning research is fresh.
@@ -111,6 +118,7 @@ git branch --show-current
 git status --short
 git fetch origin main
 git pull --ff-only origin main || true
+test -f data/profiles/codex/fresh_start.json && cat data/profiles/codex/fresh_start.json || true
 ```
 
 Run local Codex prompt phases through the existing runner:
@@ -266,6 +274,7 @@ Weekly:
 ```text
 Run Sunday evening after 19:45 ET.
 If missed, run Monday morning before market open.
+Do not catch up a week that ended before fresh_start.json start_date.
 ```
 
 Monthly:
@@ -273,6 +282,7 @@ Monthly:
 ```text
 Run after the last market day of the month, after 16:45 ET.
 If missed, run on the next startup before morning research.
+Do not catch up a month that ended before fresh_start.json start_date.
 ```
 
 Evolution:
@@ -305,6 +315,7 @@ Begin immediately:
 1. `cd` into the repo.
 2. Fetch/pull `origin main`.
 3. Print current ET time and current branch.
-4. Check whether today's morning research is genuinely fresh.
-5. Decide whether to run morning now, wait, or move into monitor/review logic.
-6. Continue the loop.
+4. Read fresh_start.json and state the active tracking start date.
+5. Check whether today's morning research is genuinely fresh.
+6. Decide whether to run morning now, wait, or move into monitor/review logic.
+7. Continue the loop.
