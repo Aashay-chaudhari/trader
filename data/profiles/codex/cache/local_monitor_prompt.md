@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260615_170443
+Run id: 20260615_173439
 Candidate symbols: UAL, XOM, DAL
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -15,7 +15,7 @@ morning execution conditions and the live snapshot.
     Why it is being checked now: active position needs supervision; 8 fresh headline(s)
   XOM: watch | entry=$144.0 stop=$148.5 target=$137.0
     Execution condition: Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.
-    Why it is being checked now: price is within 1.6% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
+    Why it is being checked now: price is within 1.8% of entry; price is near stop loss; price is near target; 9 fresh headline(s)
   DAL: buy | entry=$86.2 stop=$83.8 target=$90.0
     Execution condition: Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.
     Why it is being checked now: price is within 1.8% of entry; price is near stop loss; 9 fresh headline(s)
@@ -24,13 +24,13 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| UAL   | $  121.26 |  +5.0% |  68 |     1.0x | yahoo_1m | 47s |         8 |
-| XOM   | $  141.76 |  -3.6% |  37 |     0.9x | yahoo_1m | 48s |         9 |
-| DAL   | $   84.63 |  +1.9% |  65 |     0.8x | yahoo_1m | 45s |         9 |
+| UAL   | $  120.92 |  +4.7% |  68 |     1.0x | yahoo_1m | 44s |         8 |
+| XOM   | $  141.48 |  -3.8% |  36 |     0.9x | yahoo_1m | 45s |         9 |
+| DAL   | $   84.61 |  +1.9% |  65 |     0.9x | yahoo_1m | 43s |         9 |
 
 ## Active Positions
 
-  UAL: 231 shares @ $119.97, now $118.12 (-1.5%)
+  UAL: 273 shares @ $119.68, now $118.09 (-1.3%)
 
 ## Deterministic Strategy Snapshot
 
@@ -47,7 +47,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260615_170443",
+  "run_id": "20260615_173439",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
