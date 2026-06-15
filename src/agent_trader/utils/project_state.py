@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from agent_trader.config.settings import get_settings
+from agent_trader.utils.knowledge_base import KnowledgeBase
 from agent_trader.utils.profiles import build_profile_metadata, ensure_profile_structure
 
 
@@ -166,6 +167,7 @@ def _write_profile_metadata(root: Path) -> None:
     payload = build_profile_metadata(settings)
     payload["data_dir"] = root.as_posix()
     ensure_profile_structure(root)
+    KnowledgeBase(root.as_posix()).ensure_cold_start_schemas()
     (root / "profile.json").write_text(
         json.dumps(payload, indent=2, default=str),
         encoding="utf-8",

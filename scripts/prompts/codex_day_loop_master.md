@@ -119,7 +119,12 @@ git status --short
 git fetch origin main
 git pull --ff-only origin main || true
 test -f data/profiles/codex/fresh_start.json && cat data/profiles/codex/fresh_start.json || true
+./scripts/check_readiness.sh
 ```
+
+Do not begin a trading phase if the readiness check fails. Resolve the reported
+local issue first. The check cannot read GitHub secrets; the repository's
+`Verify Alpaca Paper Account` workflow is the authoritative broker-key check.
 
 Run local Codex prompt phases through the existing runner:
 
@@ -290,6 +295,9 @@ Evolution:
 ```text
 Run after weekly review, and after monthly review.
 Do not run more than once per calendar week unless Aasha asks.
+Evolution writes a prioritized review and operator recommendations. It does not
+silently edit production code, prompts, risk limits, or GitHub configuration.
+Any proposed implementation is a separate reviewed coding change.
 ```
 
 ## Status Updates

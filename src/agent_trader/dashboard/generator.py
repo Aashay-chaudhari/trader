@@ -1958,7 +1958,7 @@ def _flatten_strategy_effectiveness(payload: dict[str, Any]) -> list[dict[str, A
         return strategies[:8]
 
     for name, details in payload.items():
-        if name == "last_updated" or not isinstance(details, dict):
+        if name in {"last_updated", "by_regime"} or not isinstance(details, dict):
             continue
         strategies.append(
             {

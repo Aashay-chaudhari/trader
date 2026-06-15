@@ -18,7 +18,8 @@ The repository is aligned around one active strategist profile: `codex`.
 - Market regime: `risk_on`.
 - Watchlist: `CCL`, `RCL`, `KBH`, `BRZE`, `AIR`, `NVDA`.
 - Morning price-anchor validation passed.
-- GitHub Pages contains the June 11 successful morning interaction.
+- GitHub Pages contains the empty June 15 fresh-start baseline and will fill as
+  the local day loop commits each new phase.
 - The default intraday monitor owner is now the local Codex loop via `MONITOR_RUNTIME=codex_loop`.
 - `./scripts/run_both.sh monitor serial` now implements the local monitor path: Python prepares live context, Codex writes a monitor decision only when candidates need review, and the runner pushes it to GitHub.
 - Local non-secret defaults now select the `codex` profile, `data/profiles/codex`, `codex_loop`, and paper mode in the operator runner. Raw Python commands remain debug by default.
@@ -29,7 +30,9 @@ The repository is aligned around one active strategist profile: `codex`.
 
 ## Monitor Readiness
 
-Repository-side prerequisites are satisfied for June 11, 2026. External readiness still depends on repository configuration that is intentionally not stored in Git:
+Repository-side prerequisites are satisfied for the June 15, 2026 fresh start.
+External readiness still depends on repository configuration that is
+intentionally not stored in Git:
 
 - `OPENAI_API_KEY` is available to GitHub Actions if the API monitor is enabled.
 - `ALPACA_API_KEY_CODEX` and `ALPACA_SECRET_KEY_CODEX`, or the fallback Alpaca key pair, are available.

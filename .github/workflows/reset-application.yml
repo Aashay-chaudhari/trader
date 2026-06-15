@@ -53,6 +53,7 @@ jobs:
           DATA_DIR: data/profiles/codex
           AGENT_PROFILE: codex
           AGENT_LABEL: Codex Strategist
+          RUN_MODE: paper
           START_DATE: ${{ inputs.start_date }}
         run: |
           python -m agent_trader reset --docs --fresh-start-date "$START_DATE"

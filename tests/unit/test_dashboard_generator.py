@@ -3,8 +3,12 @@
 import json
 import tempfile
 
-from agent_trader.dashboard.generator import generate_dashboard
+from agent_trader.dashboard.generator import _flatten_strategy_effectiveness, generate_dashboard
 from agent_trader.utils.research_context import save_prompt_context_snapshot
+
+
+def test_cold_start_strategy_effectiveness_has_no_fake_strategy():
+    assert _flatten_strategy_effectiveness({"last_updated": "", "by_regime": {}}) == []
 
 
 def test_generate_dashboard_writes_context_rich_bundle():

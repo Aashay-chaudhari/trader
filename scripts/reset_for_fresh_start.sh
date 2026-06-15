@@ -28,6 +28,7 @@ git pull --ff-only origin main
 export AGENT_PROFILE="${AGENT_PROFILE:-codex}"
 export AGENT_LABEL="${AGENT_LABEL:-Codex Strategist}"
 export DATA_DIR="${DATA_DIR:-data/profiles/${AGENT_PROFILE}}"
+export RUN_MODE="${RUN_MODE:-paper}"
 
 if command -v python >/dev/null 2>&1; then
   PYTHON_CMD=(python)

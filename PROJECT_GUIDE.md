@@ -795,5 +795,8 @@ Python enforces the rules.
 Alpaca paper records the attempted execution.
 The journal explains what happened.
 The knowledge base remembers what mattered.
+
+For the exact daily schedule, published Pages sections, and the boundary between
+automatic learning and reviewed code changes, see `docs/OPERATIONS.md`.
 The dashboard makes the whole loop inspectable.
 ```

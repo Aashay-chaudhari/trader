@@ -146,6 +146,21 @@ mkdir -p data/profiles/codex/cache
 mkdir -p data/profiles/codex/interactions
 mkdir -p data/profiles/codex/voice
 
+echo "Bootstrapping profile structure and empty learning schemas..."
+"${PYTHON_CMD[@]}" - <<'PY'
+import os
+
+from agent_trader.config.settings import get_settings
+from agent_trader.utils.knowledge_base import KnowledgeBase
+from agent_trader.utils.profiles import ensure_profile_metadata
+
+settings = get_settings()
+ensure_profile_metadata(settings)
+KnowledgeBase(os.environ["DATA_DIR"]).ensure_cold_start_schemas()
+print(f"Profile ready: {os.environ['DATA_DIR']}")
+PY
+echo ""
+
 print_local_runtime_config() {
   "${PYTHON_CMD[@]}" - <<'PY'
 from agent_trader.config.settings import get_settings

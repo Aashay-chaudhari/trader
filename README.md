@@ -149,3 +149,4 @@ rewritten. See [Fresh Start Guide](FRESH_START.md).
 - [Coding assistant handoff](CODING_ASSISTANT.md)
 - [Prompt flow](docs/PROMPT_FLOW.md)
 - [Knowledge architecture](docs/KNOWLEDGE_ARCHITECTURE.md)
+- [Daily operations, Pages, and evolution](docs/OPERATIONS.md)

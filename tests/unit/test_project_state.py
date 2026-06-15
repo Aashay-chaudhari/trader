@@ -40,6 +40,18 @@ def test_reset_project_state_clears_profile_root_and_rewrites_profile_metadata(m
         assert metadata["id"] == "claude"
         assert metadata["label"] == "Claude Strategist"
         assert metadata["data_dir"] == profile_root.as_posix()
+        knowledge_dir = profile_root / "knowledge"
+        assert json.loads((knowledge_dir / "lessons_learned.json").read_text()) == []
+        assert json.loads((knowledge_dir / "patterns_library.json").read_text()) == []
+        assert json.loads((knowledge_dir / "strategy_effectiveness.json").read_text()) == {
+            "last_updated": "",
+            "by_regime": {},
+        }
+        assert set(json.loads((knowledge_dir / "regime_library.json").read_text())) == {
+            "risk_on",
+            "risk_off",
+            "neutral",
+        }
         marker = json.loads((profile_root / "fresh_start.json").read_text(encoding="utf-8"))
         assert marker["start_date"] == "2026-06-15"
 
