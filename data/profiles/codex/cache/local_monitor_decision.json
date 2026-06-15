@@ -1,21 +1,22 @@
 {
-  "run_id": "20260615_133516",
+  "run_id": "20260615_140514",
   "overall_sentiment": "bullish",
-  "market_summary": "The risk-on and lower-oil backdrop confirms the morning thesis, but none of the three setups offers a clearly satisfied entry with adequate confirmation and remaining reward.",
+  "market_summary": "Risk-on conditions and lower-oil headlines broadly confirm the morning thesis, but the listed setups lack complete execution confirmation at the live snapshot.",
   "stocks": {
     "XOM": {
       "recommendation": "watch",
-      "confidence": 0.84,
+      "confidence": 0.72,
       "ready_to_trade": false,
       "matched_conditions": [
-        "XOM has decisively lost $144",
-        "Prepared market context indicates WTI remains below $81",
-        "XOM remains below the $148 invalidation level"
+        "XOM is trading below the $144 trigger",
+        "XOM remains well below the $148 invalidation level",
+        "Energy is the weakest sector and lower-oil headlines support the bearish thesis"
       ],
       "failed_conditions": [
-        "Price is already near the $137 target, leaving insufficient reward for a new bearish entry"
+        "The snapshot does not explicitly confirm a live WTI price below $81",
+        "XOM is already close to the $137 target, reducing entry quality"
       ],
-      "monitor_reason": "The bearish thesis is confirmed, but the move from the planned entry is already largely complete and should not be chased.",
+      "monitor_reason": "The bearish price break is confirmed, but missing live WTI verification and proximity to target make a new entry premature.",
       "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
       "trade_plan": {
         "entry": 144.0,
@@ -23,44 +24,45 @@
         "target": 137.0
       }
     },
-    "DAL": {
-      "recommendation": "buy",
-      "confidence": 0.72,
-      "ready_to_trade": false,
-      "matched_conditions": [
-        "DAL is currently above $85.80",
-        "DAL is trading above the $86.20 trigger",
-        "Prepared market context indicates WTI remains near or below $81"
-      ],
-      "failed_conditions": [
-        "The live session low of $85.75 did not strictly hold above $85.80 after the open"
-      ],
-      "monitor_reason": "DAL has reclaimed the trigger in a favorable oil backdrop, but the required post-open hold was narrowly violated.",
-      "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
-      "trade_plan": {
-        "entry": 86.2,
-        "stop_loss": 83.8,
-        "target": 90.0
-      }
-    },
     "JBL": {
       "recommendation": "watch",
-      "confidence": 0.79,
+      "confidence": 0.78,
       "ready_to_trade": false,
       "matched_conditions": [
-        "JBL is holding above $380",
-        "JBL has cleared the $390 price trigger"
+        "JBL is trading above the $390 breakout level",
+        "JBL remains above the $380 support requirement"
       ],
       "failed_conditions": [
-        "The 0.1x volume ratio does not confirm a strong-volume breakout",
-        "Wednesday earnings remain a near-term position-sizing risk"
+        "Volume ratio is only 0.2x and does not confirm a strong-volume breakout",
+        "Wednesday earnings increase near-term event risk"
       ],
-      "monitor_reason": "Price has cleared the planned level, but weak relative volume leaves the breakout unconfirmed ahead of earnings.",
+      "monitor_reason": "Price has cleared the trigger, but the required strong volume is absent ahead of earnings.",
       "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
       "trade_plan": {
         "entry": 390.0,
         "stop_loss": 378.0,
         "target": 412.0
+      }
+    },
+    "DAL": {
+      "recommendation": "watch",
+      "confidence": 0.86,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "Lower-oil headlines continue to support the airline catalyst",
+        "DAL remains positive on the session"
+      ],
+      "failed_conditions": [
+        "DAL is below the required $85.80 hold level",
+        "DAL is below the $86.20 reclaim trigger",
+        "The snapshot does not explicitly confirm a live WTI price at or below $81"
+      ],
+      "monitor_reason": "DAL has faded below both required price levels, so the planned buy trigger is not active.",
+      "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
+      "trade_plan": {
+        "entry": 86.2,
+        "stop_loss": 83.8,
+        "target": 90.0
       }
     }
   }
