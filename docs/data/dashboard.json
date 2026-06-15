@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-15T00:33:55.139771+00:00",
+  "generated_at": "2026-06-15T12:48:37.488065+00:00",
   "active_profile": "codex",
   "profiles": {
     "codex": {
@@ -12,7 +12,7 @@
         "paper_portfolio_value": 100000.0
       },
       "latest": {
-        "timestamp": "2026-06-15T00:33:54.879081+00:00",
+        "timestamp": "2026-06-15T12:48:37.361978+00:00",
         "profile": "codex",
         "profile_label": "Codex Strategist",
         "portfolio_value": 100000.0,
@@ -25,21 +25,769 @@
       },
       "history": [],
       "trades": [],
-      "research": {},
+      "research": {
+        "overall_sentiment": "bullish",
+        "market_regime": "risk_on",
+        "market_summary": "U.S. equities are positioned for a risk-on open on June 15, 2026, as a tentative U.S.-Iran agreement pushes oil sharply lower, index futures higher, and the VIX toward the mid-teens. Semiconductors and airlines offer the clearest liquid momentum, but the large opening gap and the June 16-17 Fed meeting argue for pullback or opening-range confirmation rather than immediate chasing. The codex profile has no portfolio, observations, learned patterns, or effectiveness history yet, so confidence is deliberately moderate and active recommendations are limited to two.",
+        "best_opportunities": [
+          "AMD",
+          "DAL"
+        ],
+        "stocks": {
+          "AMD": {
+            "sentiment": "bullish",
+            "confidence": 0.7,
+            "recommendation": "buy",
+            "execution_condition": "Buy only if AMD holds above $520 after the opening volatility and reclaims or accepts above $524 with semiconductor breadth still positive.",
+            "reasoning": "AMD is participating in the semiconductor rally tied to memory tightness and renewed risk appetite, with a verified premarket quote near $533. The $524 entry seeks a controlled pullback instead of chasing the gap; the profile has no calibration history, so conviction remains below high-confidence territory.",
+            "catalysts": [
+              "Broad semiconductor and AI-hardware strength",
+              "Risk-on response to lower oil and reduced geopolitical tension"
+            ],
+            "risks": [
+              "The opening gap could fade after a recent volatile run toward the 52-week high",
+              "Hawkish expectations ahead of the June 16-17 Fed meeting could pressure high-multiple technology stocks"
+            ],
+            "trade_plan": {
+              "entry": 524.0,
+              "stop_loss": 509.0,
+              "target": 550.0
+            },
+            "supporting_articles": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "source": "Investopedia",
+                "kind": "news",
+                "reason": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting."
+              },
+              {
+                "title": "Advanced Micro Devices Stock Quote",
+                "url": "https://www.marketwatch.com/investing/stock/amd",
+                "source": "MarketWatch",
+                "kind": "web",
+                "reason": "Provides the June 15 delayed quote used to anchor the entry."
+              }
+            ]
+          },
+          "DAL": {
+            "sentiment": "bullish",
+            "confidence": 0.68,
+            "recommendation": "buy",
+            "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
+            "reasoning": "Delta has a direct cost catalyst from the greater than 5% decline in oil and was indicated near $86.70 premarket. The entry is close to the verified quote but requires the stock to hold its breakout rather than reverse below the opening range.",
+            "catalysts": [
+              "Lower jet-fuel expectations after the U.S.-Iran peace framework",
+              "Travel-sector leadership in premarket trading"
+            ],
+            "risks": [
+              "The peace agreement is tentative and an adverse headline could reverse oil and airline shares quickly",
+              "DAL is pressing a 52-week high and could see profit-taking after the gap"
+            ],
+            "trade_plan": {
+              "entry": 86.2,
+              "stop_loss": 83.8,
+              "target": 90.0
+            },
+            "supporting_articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "source": "MarketWatch",
+                "kind": "news",
+                "reason": "Reports airline gains tied to lower expected fuel costs."
+              },
+              {
+                "title": "Delta Air Lines Stock Information",
+                "url": "https://ir.delta.com/stock-information/default.aspx",
+                "source": "Delta Air Lines Investor Relations",
+                "kind": "web",
+                "reason": "Provides first-party quote context used to validate today's price neighborhood."
+              }
+            ]
+          },
+          "MU": {
+            "sentiment": "bullish",
+            "confidence": 0.62,
+            "recommendation": "watch",
+            "execution_condition": "Watch for MU to stabilize above $975 and then clear $990 with sustained semiconductor volume before considering a momentum entry.",
+            "reasoning": "Micron is a direct beneficiary of the reported global memory shortage and was among the strongest chip names premarket. The move is already extended and available quote feeds were less consistent than for the active buys, so it remains watch-only.",
+            "catalysts": [
+              "Global memory-chip shortage narrative",
+              "Broad AI and semiconductor momentum"
+            ],
+            "risks": [
+              "A crowded gap can reverse sharply after the open",
+              "Quote-feed inconsistency and elevated nominal price reduce entry precision"
+            ],
+            "trade_plan": {
+              "entry": 990.0,
+              "stop_loss": 961.0,
+              "target": 1040.0
+            },
+            "supporting_articles": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "source": "Investopedia",
+                "kind": "news",
+                "reason": "Names Micron among chip leaders and attributes strength to memory scarcity."
+              }
+            ]
+          },
+          "WDC": {
+            "sentiment": "bullish",
+            "confidence": 0.61,
+            "recommendation": "watch",
+            "execution_condition": "Watch for WDC to hold $550 and reclaim $560 after the opening range while MU and AMD remain firm.",
+            "reasoning": "Western Digital was up more than 5% premarket as storage and memory names rallied, and the latest quote was near $563. It remains watch-only because the initial gap is large and a better-defined intraday base is needed.",
+            "catalysts": [
+              "Storage and memory sector momentum",
+              "Technology leadership in the risk-on open"
+            ],
+            "risks": [
+              "Sector momentum may be exhausted at the opening print",
+              "A reversal in Nasdaq futures would likely hit high-beta hardware names"
+            ],
+            "trade_plan": {
+              "entry": 560.0,
+              "stop_loss": 544.0,
+              "target": 590.0
+            },
+            "supporting_articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "source": "MarketWatch",
+                "kind": "news",
+                "reason": "Reports Western Digital's premarket gain and the broader chip rally."
+              }
+            ]
+          },
+          "UAL": {
+            "sentiment": "bullish",
+            "confidence": 0.6,
+            "recommendation": "watch",
+            "execution_condition": "Watch for UAL to hold above $114.50 and break $118 with DAL also maintaining its opening gains.",
+            "reasoning": "United shares were among the airline beneficiaries of lower crude, with the latest available quote near $115.52 before the stronger premarket indication. DAL offers the cleaner verified active setup, so UAL is retained as confirmation and a secondary watch.",
+            "catalysts": [
+              "Potential reduction in jet-fuel costs",
+              "Airline-sector sympathy strength"
+            ],
+            "risks": [
+              "Oil can rebound if the geopolitical agreement weakens",
+              "Airline gains may be correlated and reverse together"
+            ],
+            "trade_plan": {
+              "entry": 118.0,
+              "stop_loss": 114.5,
+              "target": 124.0
+            },
+            "supporting_articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "source": "MarketWatch",
+                "kind": "news",
+                "reason": "Specifically reports United's premarket gain on lower fuel expectations."
+              }
+            ]
+          },
+          "XOM": {
+            "sentiment": "bearish",
+            "confidence": 0.58,
+            "recommendation": "watch",
+            "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
+            "reasoning": "The immediate catalyst is negative because crude fell more than 5% on expected restoration of supply through the Strait of Hormuz. XOM's latest quote near $147 was not yet confirming decisive downside, so the name is a bearish watch rather than an active sell.",
+            "catalysts": [
+              "Sharp decline in crude oil prices",
+              "Expected reopening of the Strait of Hormuz"
+            ],
+            "risks": [
+              "Energy shares may already discount the oil decline",
+              "Any failure or delay in the peace framework could send crude sharply higher"
+            ],
+            "trade_plan": {
+              "entry": 144.0,
+              "stop_loss": 148.5,
+              "target": 137.0
+            },
+            "supporting_articles": [
+              {
+                "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "source": "The Guardian",
+                "kind": "news",
+                "reason": "Documents the oil-price decline and weakness in major energy producers."
+              },
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "source": "MarketWatch",
+                "kind": "news",
+                "reason": "Reports pressure on Exxon and peers during premarket trading."
+              }
+            ]
+          },
+          "JBL": {
+            "sentiment": "bullish",
+            "confidence": 0.57,
+            "recommendation": "watch",
+            "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
+            "reasoning": "Jabil has a clear June 17 earnings catalyst and strong AI-hardware revenue expectations, with the latest quote near $384.82. Event risk is two sessions away and the profile has no evidence of an earnings-trading edge, so this is observation-only today.",
+            "catalysts": [
+              "June 17 earnings report",
+              "AI-hardware revenue growth expectations"
+            ],
+            "risks": [
+              "Pre-earnings positioning can reverse without new information",
+              "Guidance expectations may already be embedded after strong year-to-date performance"
+            ],
+            "trade_plan": {
+              "entry": 390.0,
+              "stop_loss": 378.0,
+              "target": 412.0
+            },
+            "supporting_articles": [
+              {
+                "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "source": "Kiplinger",
+                "kind": "news",
+                "reason": "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+              }
+            ]
+          }
+        }
+      },
       "monitor": {},
       "llm": {},
       "context": {
         "prompt_sections": {
           "news_inputs": {
-            "per_symbol": {},
-            "market_headlines": [],
-            "news_discoveries": [],
-            "hot_stocks": [],
+            "per_symbol": {
+              "AMD": {
+                "symbol": "AMD",
+                "news_headlines": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Advanced Micro Devices Stock Quote",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                    "url": "https://www.marketwatch.com/investing/stock/amd",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 2
+              },
+              "DAL": {
+                "symbol": "DAL",
+                "news_headlines": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports airline gains tied to lower expected fuel costs.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Delta Air Lines Stock Information",
+                    "publisher": "Delta Air Lines Investor Relations",
+                    "source": "Delta Air Lines Investor Relations",
+                    "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                    "url": "https://ir.delta.com/stock-information/default.aspx",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 2
+              },
+              "MU": {
+                "symbol": "MU",
+                "news_headlines": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 1
+              },
+              "WDC": {
+                "symbol": "WDC",
+                "news_headlines": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 1
+              },
+              "UAL": {
+                "symbol": "UAL",
+                "news_headlines": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 1
+              },
+              "XOM": {
+                "symbol": "XOM",
+                "news_headlines": [
+                  {
+                    "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                    "publisher": "The Guardian",
+                    "source": "The Guardian",
+                    "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                    "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "sentiment": "bearish",
+                "source_count": 2
+              },
+              "JBL": {
+                "symbol": "JBL",
+                "news_headlines": [
+                  {
+                    "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                    "publisher": "Kiplinger",
+                    "source": "Kiplinger",
+                    "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                    "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "sentiment": "bullish",
+                "source_count": 1
+              }
+            },
+            "market_headlines": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Advanced Micro Devices Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                "url": "https://www.marketwatch.com/investing/stock/amd",
+                "category": "web",
+                "kind": "web"
+              },
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports airline gains tied to lower expected fuel costs.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Delta Air Lines Stock Information",
+                "publisher": "Delta Air Lines Investor Relations",
+                "source": "Delta Air Lines Investor Relations",
+                "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                "url": "https://ir.delta.com/stock-information/default.aspx",
+                "category": "web",
+                "kind": "web"
+              },
+              {
+                "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "publisher": "The Guardian",
+                "source": "The Guardian",
+                "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "publisher": "Kiplinger",
+                "source": "Kiplinger",
+                "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "news_discoveries": [
+              {
+                "symbol": "AMD",
+                "top_headline": "5 Things to Know Before the Stock Market Opens",
+                "top_headline_url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "discovery_reason": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting."
+              },
+              {
+                "symbol": "DAL",
+                "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "discovery_reason": "Reports airline gains tied to lower expected fuel costs."
+              },
+              {
+                "symbol": "MU",
+                "top_headline": "5 Things to Know Before the Stock Market Opens",
+                "top_headline_url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "discovery_reason": "Names Micron among chip leaders and attributes strength to memory scarcity."
+              },
+              {
+                "symbol": "WDC",
+                "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "discovery_reason": "Reports Western Digital's premarket gain and the broader chip rally."
+              },
+              {
+                "symbol": "UAL",
+                "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "discovery_reason": "Specifically reports United's premarket gain on lower fuel expectations."
+              },
+              {
+                "symbol": "XOM",
+                "top_headline": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "top_headline_url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "discovery_reason": "Documents the oil-price decline and weakness in major energy producers."
+              },
+              {
+                "symbol": "JBL",
+                "top_headline": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "top_headline_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "discovery_reason": "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+              }
+            ],
+            "hot_stocks": [
+              {
+                "symbol": "AMD",
+                "sentiment": "bullish",
+                "source_count": 2,
+                "mention_count": 2,
+                "reasons": [
+                  "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                  "Provides the June 15 delayed quote used to anchor the entry."
+                ],
+                "articles": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Advanced Micro Devices Stock Quote",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                    "url": "https://www.marketwatch.com/investing/stock/amd",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ]
+              },
+              {
+                "symbol": "DAL",
+                "sentiment": "bullish",
+                "source_count": 2,
+                "mention_count": 2,
+                "reasons": [
+                  "Reports airline gains tied to lower expected fuel costs.",
+                  "Provides first-party quote context used to validate today's price neighborhood."
+                ],
+                "articles": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports airline gains tied to lower expected fuel costs.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Delta Air Lines Stock Information",
+                    "publisher": "Delta Air Lines Investor Relations",
+                    "source": "Delta Air Lines Investor Relations",
+                    "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                    "url": "https://ir.delta.com/stock-information/default.aspx",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ]
+              },
+              {
+                "symbol": "MU",
+                "sentiment": "bullish",
+                "source_count": 1,
+                "mention_count": 1,
+                "reasons": [
+                  "Names Micron among chip leaders and attributes strength to memory scarcity."
+                ],
+                "articles": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              },
+              {
+                "symbol": "WDC",
+                "sentiment": "bullish",
+                "source_count": 1,
+                "mention_count": 1,
+                "reasons": [
+                  "Reports Western Digital's premarket gain and the broader chip rally."
+                ],
+                "articles": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              },
+              {
+                "symbol": "UAL",
+                "sentiment": "bullish",
+                "source_count": 1,
+                "mention_count": 1,
+                "reasons": [
+                  "Specifically reports United's premarket gain on lower fuel expectations."
+                ],
+                "articles": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              },
+              {
+                "symbol": "XOM",
+                "sentiment": "bearish",
+                "source_count": 2,
+                "mention_count": 2,
+                "reasons": [
+                  "Documents the oil-price decline and weakness in major energy producers.",
+                  "Reports pressure on Exxon and peers during premarket trading."
+                ],
+                "articles": [
+                  {
+                    "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                    "publisher": "The Guardian",
+                    "source": "The Guardian",
+                    "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                    "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              },
+              {
+                "symbol": "JBL",
+                "sentiment": "bullish",
+                "source_count": 1,
+                "mention_count": 1,
+                "reasons": [
+                  "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+                ],
+                "articles": [
+                  {
+                    "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                    "publisher": "Kiplinger",
+                    "source": "Kiplinger",
+                    "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                    "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              }
+            ],
             "finviz": {
               "analyst_changes": []
             },
             "web_influence": {
-              "articles_by_symbol": {}
+              "articles_by_symbol": {
+                "AMD": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Advanced Micro Devices Stock Quote",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                    "url": "https://www.marketwatch.com/investing/stock/amd",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ],
+                "DAL": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports airline gains tied to lower expected fuel costs.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Delta Air Lines Stock Information",
+                    "publisher": "Delta Air Lines Investor Relations",
+                    "source": "Delta Air Lines Investor Relations",
+                    "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                    "url": "https://ir.delta.com/stock-information/default.aspx",
+                    "category": "web",
+                    "kind": "web"
+                  }
+                ],
+                "MU": [
+                  {
+                    "title": "5 Things to Know Before the Stock Market Opens",
+                    "publisher": "Investopedia",
+                    "source": "Investopedia",
+                    "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                    "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "WDC": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "UAL": [
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "XOM": [
+                  {
+                    "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                    "publisher": "The Guardian",
+                    "source": "The Guardian",
+                    "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                    "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                    "category": "news",
+                    "kind": "news"
+                  },
+                  {
+                    "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                    "publisher": "MarketWatch",
+                    "source": "MarketWatch",
+                    "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                    "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ],
+                "JBL": [
+                  {
+                    "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                    "publisher": "Kiplinger",
+                    "source": "Kiplinger",
+                    "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                    "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                    "category": "news",
+                    "kind": "news"
+                  }
+                ]
+              }
             }
           },
           "market_context": {},
@@ -105,15 +853,111 @@
       },
       "interactions": {
         "counts": {
-          "total": 0,
-          "recent": 0,
-          "days": 0
+          "total": 1,
+          "recent": 1,
+          "days": 1
         },
-        "latest": {},
-        "latest_by_phase": {},
-        "phase_counts": {},
-        "recent": [],
-        "days": []
+        "latest": {
+          "timestamp": "2026-06-15T08:48:21.317921-04:00",
+          "day": "2026-06-15",
+          "profile": "codex",
+          "phase": "morning",
+          "phase_group": "morning",
+          "phase_label": "Morning",
+          "tool": "codex",
+          "status": "success",
+          "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+          "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+          "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+          "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+          "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+          "prompt_source": "scripts/prompts/morning_research.md",
+          "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+          "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+          "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+          "prompt_source_url": ""
+        },
+        "latest_by_phase": {
+          "morning": {
+            "timestamp": "2026-06-15T08:48:21.317921-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "morning",
+            "phase_group": "morning",
+            "phase_label": "Morning",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+            "prompt_source": "scripts/prompts/morning_research.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+            "prompt_source_url": ""
+          }
+        },
+        "phase_counts": {
+          "morning": 1
+        },
+        "recent": [
+          {
+            "timestamp": "2026-06-15T08:48:21.317921-04:00",
+            "day": "2026-06-15",
+            "profile": "codex",
+            "phase": "morning",
+            "phase_group": "morning",
+            "phase_label": "Morning",
+            "tool": "codex",
+            "status": "success",
+            "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+            "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+            "prompt_source": "scripts/prompts/morning_research.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+            "prompt_source_url": ""
+          }
+        ],
+        "days": [
+          {
+            "date": "2026-06-15",
+            "count": 1,
+            "phases": [
+              {
+                "key": "morning",
+                "label": "Morning",
+                "items": [
+                  {
+                    "timestamp": "2026-06-15T08:48:21.317921-04:00",
+                    "day": "2026-06-15",
+                    "profile": "codex",
+                    "phase": "morning",
+                    "phase_group": "morning",
+                    "phase_label": "Morning",
+                    "tool": "codex",
+                    "status": "success",
+                    "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+                    "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+                    "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+                    "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+                    "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+                    "prompt_source": "scripts/prompts/morning_research.md",
+                    "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+                    "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+                    "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+                    "prompt_source_url": ""
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "voice": {
         "counts": {
@@ -166,7 +1010,7 @@
       {
         "profile": "codex",
         "label": "Codex Strategist",
-        "last_updated": "2026-06-15T00:33:54.879081+00:00",
+        "last_updated": "2026-06-15T12:48:37.361978+00:00",
         "portfolio_value": 100000.0,
         "total_pnl": 0.0,
         "total_pnl_pct": 0.0,
@@ -194,7 +1038,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-06-15T00:33:54.879081+00:00",
+    "timestamp": "2026-06-15T12:48:37.361978+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
@@ -207,21 +1051,769 @@
   },
   "history": [],
   "trades": [],
-  "research": {},
+  "research": {
+    "overall_sentiment": "bullish",
+    "market_regime": "risk_on",
+    "market_summary": "U.S. equities are positioned for a risk-on open on June 15, 2026, as a tentative U.S.-Iran agreement pushes oil sharply lower, index futures higher, and the VIX toward the mid-teens. Semiconductors and airlines offer the clearest liquid momentum, but the large opening gap and the June 16-17 Fed meeting argue for pullback or opening-range confirmation rather than immediate chasing. The codex profile has no portfolio, observations, learned patterns, or effectiveness history yet, so confidence is deliberately moderate and active recommendations are limited to two.",
+    "best_opportunities": [
+      "AMD",
+      "DAL"
+    ],
+    "stocks": {
+      "AMD": {
+        "sentiment": "bullish",
+        "confidence": 0.7,
+        "recommendation": "buy",
+        "execution_condition": "Buy only if AMD holds above $520 after the opening volatility and reclaims or accepts above $524 with semiconductor breadth still positive.",
+        "reasoning": "AMD is participating in the semiconductor rally tied to memory tightness and renewed risk appetite, with a verified premarket quote near $533. The $524 entry seeks a controlled pullback instead of chasing the gap; the profile has no calibration history, so conviction remains below high-confidence territory.",
+        "catalysts": [
+          "Broad semiconductor and AI-hardware strength",
+          "Risk-on response to lower oil and reduced geopolitical tension"
+        ],
+        "risks": [
+          "The opening gap could fade after a recent volatile run toward the 52-week high",
+          "Hawkish expectations ahead of the June 16-17 Fed meeting could pressure high-multiple technology stocks"
+        ],
+        "trade_plan": {
+          "entry": 524.0,
+          "stop_loss": 509.0,
+          "target": 550.0
+        },
+        "supporting_articles": [
+          {
+            "title": "5 Things to Know Before the Stock Market Opens",
+            "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+            "source": "Investopedia",
+            "kind": "news",
+            "reason": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting."
+          },
+          {
+            "title": "Advanced Micro Devices Stock Quote",
+            "url": "https://www.marketwatch.com/investing/stock/amd",
+            "source": "MarketWatch",
+            "kind": "web",
+            "reason": "Provides the June 15 delayed quote used to anchor the entry."
+          }
+        ]
+      },
+      "DAL": {
+        "sentiment": "bullish",
+        "confidence": 0.68,
+        "recommendation": "buy",
+        "execution_condition": "Buy only if DAL stays above $85.80 after the open and trades back through $86.20 while WTI remains near or below $81.",
+        "reasoning": "Delta has a direct cost catalyst from the greater than 5% decline in oil and was indicated near $86.70 premarket. The entry is close to the verified quote but requires the stock to hold its breakout rather than reverse below the opening range.",
+        "catalysts": [
+          "Lower jet-fuel expectations after the U.S.-Iran peace framework",
+          "Travel-sector leadership in premarket trading"
+        ],
+        "risks": [
+          "The peace agreement is tentative and an adverse headline could reverse oil and airline shares quickly",
+          "DAL is pressing a 52-week high and could see profit-taking after the gap"
+        ],
+        "trade_plan": {
+          "entry": 86.2,
+          "stop_loss": 83.8,
+          "target": 90.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "source": "MarketWatch",
+            "kind": "news",
+            "reason": "Reports airline gains tied to lower expected fuel costs."
+          },
+          {
+            "title": "Delta Air Lines Stock Information",
+            "url": "https://ir.delta.com/stock-information/default.aspx",
+            "source": "Delta Air Lines Investor Relations",
+            "kind": "web",
+            "reason": "Provides first-party quote context used to validate today's price neighborhood."
+          }
+        ]
+      },
+      "MU": {
+        "sentiment": "bullish",
+        "confidence": 0.62,
+        "recommendation": "watch",
+        "execution_condition": "Watch for MU to stabilize above $975 and then clear $990 with sustained semiconductor volume before considering a momentum entry.",
+        "reasoning": "Micron is a direct beneficiary of the reported global memory shortage and was among the strongest chip names premarket. The move is already extended and available quote feeds were less consistent than for the active buys, so it remains watch-only.",
+        "catalysts": [
+          "Global memory-chip shortage narrative",
+          "Broad AI and semiconductor momentum"
+        ],
+        "risks": [
+          "A crowded gap can reverse sharply after the open",
+          "Quote-feed inconsistency and elevated nominal price reduce entry precision"
+        ],
+        "trade_plan": {
+          "entry": 990.0,
+          "stop_loss": 961.0,
+          "target": 1040.0
+        },
+        "supporting_articles": [
+          {
+            "title": "5 Things to Know Before the Stock Market Opens",
+            "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+            "source": "Investopedia",
+            "kind": "news",
+            "reason": "Names Micron among chip leaders and attributes strength to memory scarcity."
+          }
+        ]
+      },
+      "WDC": {
+        "sentiment": "bullish",
+        "confidence": 0.61,
+        "recommendation": "watch",
+        "execution_condition": "Watch for WDC to hold $550 and reclaim $560 after the opening range while MU and AMD remain firm.",
+        "reasoning": "Western Digital was up more than 5% premarket as storage and memory names rallied, and the latest quote was near $563. It remains watch-only because the initial gap is large and a better-defined intraday base is needed.",
+        "catalysts": [
+          "Storage and memory sector momentum",
+          "Technology leadership in the risk-on open"
+        ],
+        "risks": [
+          "Sector momentum may be exhausted at the opening print",
+          "A reversal in Nasdaq futures would likely hit high-beta hardware names"
+        ],
+        "trade_plan": {
+          "entry": 560.0,
+          "stop_loss": 544.0,
+          "target": 590.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "source": "MarketWatch",
+            "kind": "news",
+            "reason": "Reports Western Digital's premarket gain and the broader chip rally."
+          }
+        ]
+      },
+      "UAL": {
+        "sentiment": "bullish",
+        "confidence": 0.6,
+        "recommendation": "watch",
+        "execution_condition": "Watch for UAL to hold above $114.50 and break $118 with DAL also maintaining its opening gains.",
+        "reasoning": "United shares were among the airline beneficiaries of lower crude, with the latest available quote near $115.52 before the stronger premarket indication. DAL offers the cleaner verified active setup, so UAL is retained as confirmation and a secondary watch.",
+        "catalysts": [
+          "Potential reduction in jet-fuel costs",
+          "Airline-sector sympathy strength"
+        ],
+        "risks": [
+          "Oil can rebound if the geopolitical agreement weakens",
+          "Airline gains may be correlated and reverse together"
+        ],
+        "trade_plan": {
+          "entry": 118.0,
+          "stop_loss": 114.5,
+          "target": 124.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "source": "MarketWatch",
+            "kind": "news",
+            "reason": "Specifically reports United's premarket gain on lower fuel expectations."
+          }
+        ]
+      },
+      "XOM": {
+        "sentiment": "bearish",
+        "confidence": 0.58,
+        "recommendation": "watch",
+        "execution_condition": "Watch for XOM to lose $144 while WTI remains below $81; avoid a bearish entry if crude rebounds or XOM reclaims $148.",
+        "reasoning": "The immediate catalyst is negative because crude fell more than 5% on expected restoration of supply through the Strait of Hormuz. XOM's latest quote near $147 was not yet confirming decisive downside, so the name is a bearish watch rather than an active sell.",
+        "catalysts": [
+          "Sharp decline in crude oil prices",
+          "Expected reopening of the Strait of Hormuz"
+        ],
+        "risks": [
+          "Energy shares may already discount the oil decline",
+          "Any failure or delay in the peace framework could send crude sharply higher"
+        ],
+        "trade_plan": {
+          "entry": 144.0,
+          "stop_loss": 148.5,
+          "target": 137.0
+        },
+        "supporting_articles": [
+          {
+            "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+            "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+            "source": "The Guardian",
+            "kind": "news",
+            "reason": "Documents the oil-price decline and weakness in major energy producers."
+          },
+          {
+            "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "source": "MarketWatch",
+            "kind": "news",
+            "reason": "Reports pressure on Exxon and peers during premarket trading."
+          }
+        ]
+      },
+      "JBL": {
+        "sentiment": "bullish",
+        "confidence": 0.57,
+        "recommendation": "watch",
+        "execution_condition": "Watch for JBL to build support above $380 and clear $390 on strong volume, but do not carry an oversized position into Wednesday's earnings.",
+        "reasoning": "Jabil has a clear June 17 earnings catalyst and strong AI-hardware revenue expectations, with the latest quote near $384.82. Event risk is two sessions away and the profile has no evidence of an earnings-trading edge, so this is observation-only today.",
+        "catalysts": [
+          "June 17 earnings report",
+          "AI-hardware revenue growth expectations"
+        ],
+        "risks": [
+          "Pre-earnings positioning can reverse without new information",
+          "Guidance expectations may already be embedded after strong year-to-date performance"
+        ],
+        "trade_plan": {
+          "entry": 390.0,
+          "stop_loss": 378.0,
+          "target": 412.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+            "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "source": "Kiplinger",
+            "kind": "news",
+            "reason": "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+          }
+        ]
+      }
+    }
+  },
   "monitor": {},
   "llm": {},
   "context": {
     "prompt_sections": {
       "news_inputs": {
-        "per_symbol": {},
-        "market_headlines": [],
-        "news_discoveries": [],
-        "hot_stocks": [],
+        "per_symbol": {
+          "AMD": {
+            "symbol": "AMD",
+            "news_headlines": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Advanced Micro Devices Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                "url": "https://www.marketwatch.com/investing/stock/amd",
+                "category": "web",
+                "kind": "web"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 2
+          },
+          "DAL": {
+            "symbol": "DAL",
+            "news_headlines": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports airline gains tied to lower expected fuel costs.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Delta Air Lines Stock Information",
+                "publisher": "Delta Air Lines Investor Relations",
+                "source": "Delta Air Lines Investor Relations",
+                "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                "url": "https://ir.delta.com/stock-information/default.aspx",
+                "category": "web",
+                "kind": "web"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 2
+          },
+          "MU": {
+            "symbol": "MU",
+            "news_headlines": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 1
+          },
+          "WDC": {
+            "symbol": "WDC",
+            "news_headlines": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 1
+          },
+          "UAL": {
+            "symbol": "UAL",
+            "news_headlines": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 1
+          },
+          "XOM": {
+            "symbol": "XOM",
+            "news_headlines": [
+              {
+                "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "publisher": "The Guardian",
+                "source": "The Guardian",
+                "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bearish",
+            "source_count": 2
+          },
+          "JBL": {
+            "symbol": "JBL",
+            "news_headlines": [
+              {
+                "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "publisher": "Kiplinger",
+                "source": "Kiplinger",
+                "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 1
+          }
+        },
+        "market_headlines": [
+          {
+            "title": "5 Things to Know Before the Stock Market Opens",
+            "publisher": "Investopedia",
+            "source": "Investopedia",
+            "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+            "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+            "category": "news",
+            "kind": "news"
+          },
+          {
+            "title": "Advanced Micro Devices Stock Quote",
+            "publisher": "MarketWatch",
+            "source": "MarketWatch",
+            "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+            "url": "https://www.marketwatch.com/investing/stock/amd",
+            "category": "web",
+            "kind": "web"
+          },
+          {
+            "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "publisher": "MarketWatch",
+            "source": "MarketWatch",
+            "summary": "Reports airline gains tied to lower expected fuel costs.",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "category": "news",
+            "kind": "news"
+          },
+          {
+            "title": "Delta Air Lines Stock Information",
+            "publisher": "Delta Air Lines Investor Relations",
+            "source": "Delta Air Lines Investor Relations",
+            "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+            "url": "https://ir.delta.com/stock-information/default.aspx",
+            "category": "web",
+            "kind": "web"
+          },
+          {
+            "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+            "publisher": "The Guardian",
+            "source": "The Guardian",
+            "summary": "Documents the oil-price decline and weakness in major energy producers.",
+            "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+            "category": "news",
+            "kind": "news"
+          },
+          {
+            "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+            "publisher": "Kiplinger",
+            "source": "Kiplinger",
+            "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+            "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "category": "news",
+            "kind": "news"
+          }
+        ],
+        "news_discoveries": [
+          {
+            "symbol": "AMD",
+            "top_headline": "5 Things to Know Before the Stock Market Opens",
+            "top_headline_url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+            "discovery_reason": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting."
+          },
+          {
+            "symbol": "DAL",
+            "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "discovery_reason": "Reports airline gains tied to lower expected fuel costs."
+          },
+          {
+            "symbol": "MU",
+            "top_headline": "5 Things to Know Before the Stock Market Opens",
+            "top_headline_url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+            "discovery_reason": "Names Micron among chip leaders and attributes strength to memory scarcity."
+          },
+          {
+            "symbol": "WDC",
+            "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "discovery_reason": "Reports Western Digital's premarket gain and the broader chip rally."
+          },
+          {
+            "symbol": "UAL",
+            "top_headline": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+            "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+            "discovery_reason": "Specifically reports United's premarket gain on lower fuel expectations."
+          },
+          {
+            "symbol": "XOM",
+            "top_headline": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+            "top_headline_url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+            "discovery_reason": "Documents the oil-price decline and weakness in major energy producers."
+          },
+          {
+            "symbol": "JBL",
+            "top_headline": "Earnings Calendar and Analysis for This Week (June 15-19)",
+            "top_headline_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "discovery_reason": "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+          }
+        ],
+        "hot_stocks": [
+          {
+            "symbol": "AMD",
+            "sentiment": "bullish",
+            "source_count": 2,
+            "mention_count": 2,
+            "reasons": [
+              "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+              "Provides the June 15 delayed quote used to anchor the entry."
+            ],
+            "articles": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Advanced Micro Devices Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                "url": "https://www.marketwatch.com/investing/stock/amd",
+                "category": "web",
+                "kind": "web"
+              }
+            ]
+          },
+          {
+            "symbol": "DAL",
+            "sentiment": "bullish",
+            "source_count": 2,
+            "mention_count": 2,
+            "reasons": [
+              "Reports airline gains tied to lower expected fuel costs.",
+              "Provides first-party quote context used to validate today's price neighborhood."
+            ],
+            "articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports airline gains tied to lower expected fuel costs.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Delta Air Lines Stock Information",
+                "publisher": "Delta Air Lines Investor Relations",
+                "source": "Delta Air Lines Investor Relations",
+                "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                "url": "https://ir.delta.com/stock-information/default.aspx",
+                "category": "web",
+                "kind": "web"
+              }
+            ]
+          },
+          {
+            "symbol": "MU",
+            "sentiment": "bullish",
+            "source_count": 1,
+            "mention_count": 1,
+            "reasons": [
+              "Names Micron among chip leaders and attributes strength to memory scarcity."
+            ],
+            "articles": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "WDC",
+            "sentiment": "bullish",
+            "source_count": 1,
+            "mention_count": 1,
+            "reasons": [
+              "Reports Western Digital's premarket gain and the broader chip rally."
+            ],
+            "articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "UAL",
+            "sentiment": "bullish",
+            "source_count": 1,
+            "mention_count": 1,
+            "reasons": [
+              "Specifically reports United's premarket gain on lower fuel expectations."
+            ],
+            "articles": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "XOM",
+            "sentiment": "bearish",
+            "source_count": 2,
+            "mention_count": 2,
+            "reasons": [
+              "Documents the oil-price decline and weakness in major energy producers.",
+              "Reports pressure on Exxon and peers during premarket trading."
+            ],
+            "articles": [
+              {
+                "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "publisher": "The Guardian",
+                "source": "The Guardian",
+                "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "JBL",
+            "sentiment": "bullish",
+            "source_count": 1,
+            "mention_count": 1,
+            "reasons": [
+              "Details Jabil's earnings timing, estimates, and AI-hardware growth context."
+            ],
+            "articles": [
+              {
+                "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "publisher": "Kiplinger",
+                "source": "Kiplinger",
+                "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          }
+        ],
         "finviz": {
           "analyst_changes": []
         },
         "web_influence": {
-          "articles_by_symbol": {}
+          "articles_by_symbol": {
+            "AMD": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Identifies chip strength, the Iran agreement, falling oil, and the upcoming Fed meeting.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Advanced Micro Devices Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Provides the June 15 delayed quote used to anchor the entry.",
+                "url": "https://www.marketwatch.com/investing/stock/amd",
+                "category": "web",
+                "kind": "web"
+              }
+            ],
+            "DAL": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports airline gains tied to lower expected fuel costs.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Delta Air Lines Stock Information",
+                "publisher": "Delta Air Lines Investor Relations",
+                "source": "Delta Air Lines Investor Relations",
+                "summary": "Provides first-party quote context used to validate today's price neighborhood.",
+                "url": "https://ir.delta.com/stock-information/default.aspx",
+                "category": "web",
+                "kind": "web"
+              }
+            ],
+            "MU": [
+              {
+                "title": "5 Things to Know Before the Stock Market Opens",
+                "publisher": "Investopedia",
+                "source": "Investopedia",
+                "summary": "Names Micron among chip leaders and attributes strength to memory scarcity.",
+                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-15-2026-11997863",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "WDC": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports Western Digital's premarket gain and the broader chip rally.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "UAL": [
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Specifically reports United's premarket gain on lower fuel expectations.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "XOM": [
+              {
+                "title": "European stock markets hit record high and oil price falls to three-month low after US-Iran peace deal",
+                "publisher": "The Guardian",
+                "source": "The Guardian",
+                "summary": "Documents the oil-price decline and weakness in major energy producers.",
+                "url": "https://www.theguardian.com/business/live/2026/jun/15/oil-price-low-stock-markets-rally-us-iran-peace-deal-ftse-wall-street-live-news-updates",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Premarket movers: SpaceX climbs, chip stocks rally, oil producers slump",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Reports pressure on Exxon and peers during premarket trading.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-s-p-500-nasdaq-oil-prices-us-iran-peace-deal-strait-of-hormuz/card/premarket-movers-spacex-climbs-chip-stocks-rally-oil-producers-slump-A1NbFSKDfKUFmNMfrlJ2",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "JBL": [
+              {
+                "title": "Earnings Calendar and Analysis for This Week (June 15-19)",
+                "publisher": "Kiplinger",
+                "source": "Kiplinger",
+                "summary": "Details Jabil's earnings timing, estimates, and AI-hardware growth context.",
+                "url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          }
         }
       },
       "market_context": {},
@@ -287,15 +1879,111 @@
   },
   "interactions": {
     "counts": {
-      "total": 0,
-      "recent": 0,
-      "days": 0
+      "total": 1,
+      "recent": 1,
+      "days": 1
     },
-    "latest": {},
-    "latest_by_phase": {},
-    "phase_counts": {},
-    "recent": [],
-    "days": []
+    "latest": {
+      "timestamp": "2026-06-15T08:48:21.317921-04:00",
+      "day": "2026-06-15",
+      "profile": "codex",
+      "phase": "morning",
+      "phase_group": "morning",
+      "phase_label": "Morning",
+      "tool": "codex",
+      "status": "success",
+      "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+      "prompt_source": "scripts/prompts/morning_research.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+      "prompt_source_url": ""
+    },
+    "latest_by_phase": {
+      "morning": {
+        "timestamp": "2026-06-15T08:48:21.317921-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "morning",
+        "phase_group": "morning",
+        "phase_label": "Morning",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+        "prompt_source": "scripts/prompts/morning_research.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+        "prompt_source_url": ""
+      }
+    },
+    "phase_counts": {
+      "morning": 1
+    },
+    "recent": [
+      {
+        "timestamp": "2026-06-15T08:48:21.317921-04:00",
+        "day": "2026-06-15",
+        "profile": "codex",
+        "phase": "morning",
+        "phase_group": "morning",
+        "phase_label": "Morning",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+        "prompt_source": "scripts/prompts/morning_research.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+        "prompt_source_url": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-06-15",
+        "count": 1,
+        "phases": [
+          {
+            "key": "morning",
+            "label": "Morning",
+            "items": [
+              {
+                "timestamp": "2026-06-15T08:48:21.317921-04:00",
+                "day": "2026-06-15",
+                "profile": "codex",
+                "phase": "morning",
+                "phase_group": "morning",
+                "phase_label": "Morning",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Morning research completed and staged without committing. | - Regime: `risk_on` | - Active buys: `AMD`, `DAL`",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-15_084509.log",
+                "prompt_source": "scripts/prompts/morning_research.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_transcript.txt",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-15/084509_morning_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   "voice": {
     "counts": {
