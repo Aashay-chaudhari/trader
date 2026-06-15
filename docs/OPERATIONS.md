@@ -41,11 +41,14 @@ inspects current files and Git history before resuming.
 
 ```text
 Local Codex monitor
-  -> Python gathers current prices, news, positions, and morning plans
+  -> Python gathers Yahoo one-minute prices, timestamps, news, positions, and plans
+  -> monitoring stops if a market-hours quote is more than five minutes old
   -> Codex writes local_monitor_decision.json
   -> local runner commits and pushes the decision
   -> Codex Decision Execution starts in GitHub Actions
   -> GitHub injects Alpaca paper secrets
+  -> Alpaca IEX latest bid/ask and trade refresh the execution price
+  -> execution stops if the Alpaca price is more than two minutes old
   -> deterministic strategy and risk checks run
   -> approved paper orders are submitted
   -> portfolio, journal, analytics, and dashboard are committed
@@ -56,6 +59,15 @@ The local machine does not need Alpaca secrets. It cannot verify their values.
 Run the `Verify Alpaca Paper Account` workflow whenever keys change and before a
 new tracking era. A successful check proves that GitHub can reach an empty paper
 account with the configured secrets.
+
+Yahoo does not impose one universal 15-minute delay. Its published exchange
+table labels U.S. Nasdaq equities as real-time, while various other exchanges,
+indices, options, and futures are delayed. `yfinance` is still an unofficial
+client with no execution-grade service guarantee, so it is used only for the
+local decision snapshot. Alpaca's authenticated IEX feed is the final quote
+authority before paper execution. Free paper accounts receive real-time IEX,
+which covers one exchange; consolidated all-exchange SIP data requires the paid
+Alpaca market-data subscription.
 
 ## What Appears On Pages
 

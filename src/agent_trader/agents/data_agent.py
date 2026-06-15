@@ -96,6 +96,10 @@ class DataAgent(BaseAgent):
         except Exception:
             pass  # Info fetch can fail; price data is what matters
 
+        # Daily history drives indicators. A separate one-minute request supplies
+        # the monitor price so we do not mistake the latest daily close for a live quote.
+        quote = self._fetch_latest_quote(ticker, hist)
+
         # Convert to serializable format (last 30 days for the pipeline)
         recent = hist.tail(30)
 
@@ -103,7 +107,11 @@ class DataAgent(BaseAgent):
         # agents (StrategyAgent) don't silently compute on garbage values.
         return {
             "info": info,
-            "latest_price": float(hist["Close"].iloc[-1]),
+            "latest_price": quote["price"],
+            "quote_timestamp": quote["timestamp"],
+            "quote_source": quote["source"],
+            "quote_age_seconds": quote["age_seconds"],
+            "quote_is_fresh": quote["is_fresh"],
             "last_trade_date": hist.index[-1].isoformat(),
             "price_change_pct": float(
                 (hist["Close"].iloc[-1] - hist["Close"].iloc[-2]) / hist["Close"].iloc[-2] * 100
@@ -129,6 +137,46 @@ class DataAgent(BaseAgent):
                 }
                 for idx, row in recent.iterrows()
             ],
+        }
+
+    def _fetch_latest_quote(self, ticker: yf.Ticker, daily_history: pd.DataFrame) -> dict:
+        """Return the newest available Yahoo one-minute price with provenance."""
+        now = pd.Timestamp.now(tz="UTC")
+        try:
+            intraday = ticker.history(
+                period="1d",
+                interval="1m",
+                prepost=True,
+                timeout=_YFINANCE_TIMEOUT,
+            )
+            if not intraday.empty:
+                timestamp = pd.Timestamp(intraday.index[-1])
+                if timestamp.tzinfo is None:
+                    timestamp = timestamp.tz_localize("UTC")
+                else:
+                    timestamp = timestamp.tz_convert("UTC")
+                age_seconds = max(0, int((now - timestamp).total_seconds()))
+                return {
+                    "price": float(intraday["Close"].iloc[-1]),
+                    "timestamp": timestamp.isoformat(),
+                    "source": "yahoo_1m",
+                    "age_seconds": age_seconds,
+                    "is_fresh": age_seconds <= 300,
+                }
+        except Exception:
+            pass
+
+        timestamp = pd.Timestamp(daily_history.index[-1])
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.tz_localize("UTC")
+        else:
+            timestamp = timestamp.tz_convert("UTC")
+        return {
+            "price": float(daily_history["Close"].iloc[-1]),
+            "timestamp": timestamp.isoformat(),
+            "source": "yahoo_daily_fallback",
+            "age_seconds": max(0, int((now - timestamp).total_seconds())),
+            "is_fresh": False,
         }
 
     def _check_freshness(self, data: dict) -> str | None:

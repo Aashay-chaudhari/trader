@@ -10,6 +10,11 @@ Agent Trader is a Codex/GPT-centered paper-trading research and monitoring syste
 
 The project models one active strategist profile, `codex`, with a durable memory store under `data/profiles/codex/`. Local Codex CLI sessions create the richer morning and review artifacts and own intraday reasoning by default through `MONITOR_RUNTIME=codex_loop`. Python owns deterministic data collection, strategy voting, risk checks, execution, journaling, validation, and dashboard generation. For ready monitor decisions, GitHub Actions owns broker submission by default through `MONITOR_EXECUTION_OWNER=github_actions`, because that is where the Alpaca secrets are available. The legacy OpenAI API monitor remains opt-in through `MONITOR_RUNTIME=github_actions_api`.
 
+Intraday prices use a guarded two-stage path. The local monitor reads a
+timestamped Yahoo one-minute bar and refuses stale market-hours snapshots. The
+GitHub execution job then refreshes selected symbols from Alpaca's real-time IEX
+trade/quote feed immediately before strategy, risk sizing, and paper orders.
+
 GPT/OpenAI is enabled in implementation, but the scheduled monitor is opt-in:
 
 - GitHub Actions sets `LLM_PROVIDER=openai` and `MONITOR_LLM_PROVIDER=openai` only in the API monitor job.

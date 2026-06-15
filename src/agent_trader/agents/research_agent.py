@@ -1088,8 +1088,8 @@ class ResearchAgent(BaseAgent):
             plan_lines.append("  (no symbols are near execution triggers right now)")
 
         state_lines = [
-            "| Stock | Price | Chg% | RSI | VolRatio | Headlines |",
-            "|-------|-------|------|-----|----------|-----------|",
+            "| Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |",
+            "|-------|-------|------|-----|----------|--------------|-----------|-----------|",
         ]
         for sym in candidate_symbols:
             data = market_summary.get(sym, {}) if isinstance(market_summary, dict) else {}
@@ -1110,8 +1110,12 @@ class ResearchAgent(BaseAgent):
 
             headlines = news_data.get(sym, {}) if isinstance(news_data, dict) else {}
             headline_count = len(headlines.get("news_headlines", [])) if isinstance(headlines, dict) else 0
+            quote_source = str(data.get("quote_source") or "unknown")
+            quote_age = data.get("quote_age_seconds")
+            quote_age_text = f"{int(quote_age)}s" if isinstance(quote_age, (int, float)) else "unknown"
             state_lines.append(
-                f"| {sym:5s} | ${price:>8.2f} | {change:+5.1f}% | {rsi:>3s} | {vol_ratio:>8s} | {headline_count:>9d} |"
+                f"| {sym:5s} | ${price:>8.2f} | {change:+5.1f}% | {rsi:>3s} | {vol_ratio:>8s} | "
+                f"{quote_source} | {quote_age_text} | {headline_count:>9d} |"
             )
 
         pos_lines = ["  (none)"]

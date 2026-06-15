@@ -130,6 +130,40 @@ def test_select_monitor_candidates_prefers_active_and_near_entry_symbols(
         assert [item["symbol"] for item in candidates] == ["LMT", "CVX"]
 
 
+def test_lean_monitor_context_includes_quote_provenance(message_bus, monkeypatch):
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    reset_settings()
+    agent = ResearchAgent(message_bus)
+
+    context = agent._build_lean_monitor_context(
+        {
+            "AAPL": {
+                "latest_price": 100.5,
+                "price_change_pct": 1.2,
+                "volume": 1_000_000,
+                "indicators": {"rsi_14": 52.0},
+                "price_history": [],
+                "quote_source": "yahoo_1m",
+                "quote_age_seconds": 42,
+            }
+        },
+        {
+            "stocks": {
+                "AAPL": {
+                    "recommendation": "buy",
+                    "trade_plan": {"entry": 100.0, "stop_loss": 95.0, "target": 110.0},
+                }
+            }
+        },
+        {},
+        {},
+    )
+
+    assert context["candidate_symbols"] == ["AAPL"]
+    assert "yahoo_1m" in context["current_state"]
+    assert "42s" in context["current_state"]
+
+
 def test_research_agent_collects_web_context_for_high_value_symbols(
     message_bus, monkeypatch
 ):

@@ -261,6 +261,8 @@ Every 30 minutes during market hours once morning is valid.
 Use ./scripts/run_both.sh monitor serial.
 The runner skips the Codex call when market is closed or no symbols are near
 monitor triggers.
+The runner also stops the monitor tick if its timestamped Yahoo one-minute quote
+is more than five minutes old. Never override that freshness failure.
 For a ready decision, verify the push succeeded; GitHub Actions owns broker
 submission and the follow-up artifact commit.
 Do not use python -m agent_trader monitor in RUN_MODE=paper unless

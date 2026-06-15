@@ -267,11 +267,13 @@ class LocalMonitorResearchHelper:
 
     def __init__(self):
         self.saved = []
+        self.monitor_market_data = None
 
     def _prepare_rich_summary(self, market_data):
-        return market_data
+        return {symbol: {"price": payload.get("latest_price")} for symbol, payload in market_data.items()}
 
     def _build_lean_monitor_context(self, market_summary, morning_context, news_data, market_context):
+        self.monitor_market_data = market_summary
         return {
             "morning_plans": "  AAPL: buy | entry=$100 stop=$95 target=$110",
             "current_state": "| Stock | Price |\n|-------|-------|\n| AAPL | $100.50 |",
@@ -343,11 +345,59 @@ async def test_prepare_local_monitor_context_writes_artifacts(monkeypatch):
 
         assert context["status"] == "ready"
         assert context["candidate_symbols"] == ["AAPL"]
+        assert orch._agents["research"].monitor_market_data["AAPL"]["latest_price"] == 100.5
         assert (cache_dir / "local_monitor_context.json").exists()
         assert (cache_dir / "local_monitor_prompt.md").exists()
         prompt = (cache_dir / "local_monitor_prompt.md").read_text(encoding="utf-8")
         assert "AAPL" in prompt
         assert "local_monitor_decision.json" in prompt
+
+
+@pytest.mark.asyncio
+async def test_prepare_local_monitor_context_rejects_stale_market_hours_quote(monkeypatch):
+    with tempfile.TemporaryDirectory(dir=".") as temp_dir:
+        monkeypatch.setenv("DATA_DIR", temp_dir)
+        monkeypatch.setenv("RUN_MODE", "paper")
+        monkeypatch.setattr("agent_trader.core.orchestrator._is_market_hours", lambda: True)
+        reset_settings()
+        cache_dir = Path(temp_dir) / "cache"
+        cache_dir.mkdir(parents=True)
+        (cache_dir / "morning_research.json").write_text(
+            json.dumps(
+                {
+                    "stocks": {
+                        "AAPL": {
+                            "recommendation": "buy",
+                            "trade_plan": {"entry": 100, "stop_loss": 95, "target": 110},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        bus = MessageBus()
+        orch = Orchestrator(bus)
+        orch.register(
+            MockAgent(
+                AgentRole.DATA,
+                bus,
+                return_value={
+                    "market_data": {
+                        "AAPL": {
+                            "latest_price": 100.5,
+                            "quote_source": "yahoo_daily_fallback",
+                            "quote_is_fresh": False,
+                        }
+                    }
+                },
+            )
+        )
+
+        context = await orch.prepare_local_monitor_context(["AAPL"])
+
+        assert context["status"] == "error"
+        assert context["reason"] == "stale_monitor_quotes:AAPL"
 
 
 @pytest.mark.asyncio

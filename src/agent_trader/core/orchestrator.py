@@ -34,6 +34,7 @@ from agent_trader.config.settings import get_settings
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
 from agent_trader.utils.llm_analytics import build_runtime_metadata, record_llm_analytics
+from agent_trader.utils.market_quotes import refresh_with_alpaca_iex
 from agent_trader.utils.profiles import build_profile_metadata
 from agent_trader.utils.research_context import save_prompt_context_snapshot
 
@@ -496,6 +497,28 @@ class Orchestrator:
                 market_data = response.data.get("market_data", {})
                 results["data"] = response.data
 
+        if not settings.is_dry_run and _is_market_hours():
+            stale_symbols = [
+                symbol
+                for symbol in watchlist
+                if not bool((market_data.get(symbol) or {}).get("quote_is_fresh"))
+            ]
+            if stale_symbols:
+                context = {
+                    **self._local_monitor_base_context(
+                        run_id=run_id,
+                        paths=paths,
+                        status="error",
+                        reason=f"stale_monitor_quotes:{','.join(stale_symbols)}",
+                        symbols=watchlist,
+                        active_positions=active_positions,
+                    ),
+                    "market_data": market_data,
+                    "morning_context": morning_context,
+                    "prepare_results": results,
+                }
+                return self._write_local_monitor_context(context, paths)
+
         news_data: dict[str, Any] = {}
         market_context: dict[str, Any] = {}
         market_headlines: list[Any] = []
@@ -523,7 +546,7 @@ class Orchestrator:
         ):
             market_summary = research_agent._prepare_rich_summary(market_data)  # type: ignore[attr-defined]
             prompt_sections = research_agent._build_lean_monitor_context(  # type: ignore[attr-defined]
-                market_summary,
+                market_data,
                 morning_context,
                 news_data,
                 market_context,
@@ -637,6 +660,17 @@ class Orchestrator:
             or prompt_sections.get("candidate_symbols")
             or []
         )
+        decision_symbols = candidate_symbols or symbols
+
+        settings = get_settings()
+        if not settings.is_dry_run and settings.alpaca_api_key and settings.alpaca_secret_key:
+            console.print("  [cyan]Refreshing[/cyan] execution prices from Alpaca IEX...")
+            market_data = refresh_with_alpaca_iex(
+                market_data,
+                decision_symbols,
+                api_key=settings.alpaca_api_key,
+                secret_key=settings.alpaca_secret_key,
+            )
 
         research_agent = self._agents.get("research")
         if research_agent and hasattr(research_agent, "_normalize_monitor_analysis"):
@@ -697,7 +731,7 @@ class Orchestrator:
             phase="monitor",
             provider=str(meta.get("provider") or "codex"),
             model=str(meta.get("model") or "codex-cli"),
-            symbols=symbols,
+            symbols=decision_symbols,
             prompt_sections=prompt_sections,
             llm_meta=meta,
             prompt_text=prompt_text,
@@ -712,7 +746,7 @@ class Orchestrator:
         )
         record_llm_analytics(
             phase="monitor",
-            symbols=symbols,
+            symbols=decision_symbols,
             llm_meta=meta,
             data_dir=get_settings().data_dir,
         )
@@ -727,7 +761,7 @@ class Orchestrator:
                 "data": {
                     "research": analysis,
                     "phase": "monitor",
-                    "symbols": symbols,
+                    "symbols": decision_symbols,
                     "market_data": market_data,
                     "news": news_data,
                     "market_headlines": market_headlines,
@@ -745,7 +779,7 @@ class Orchestrator:
                     type=MessageType.COMMAND,
                     source="orchestrator",
                     data={
-                        "symbols": symbols,
+                        "symbols": decision_symbols,
                         "market_data": market_data,
                         "research": analysis,
                         "news": news_data,
@@ -770,7 +804,7 @@ class Orchestrator:
                     data={
                         "signals": strategy_data.get("signals", []),
                         "market_data": market_data,
-                        "symbols": symbols,
+                        "symbols": decision_symbols,
                     },
                 )
             )
@@ -796,7 +830,11 @@ class Orchestrator:
                     data=(
                         risk_data
                         if risk_data
-                        else {"approved_trades": [], "symbols": symbols, "market_data": market_data}
+                        else {
+                            "approved_trades": [],
+                            "symbols": decision_symbols,
+                            "market_data": market_data,
+                        }
                     ),
                 )
             )
@@ -814,7 +852,7 @@ class Orchestrator:
                     data={
                         "executed": execution_data.get("executed", []),
                         "market_data": market_data,
-                        "symbols": symbols,
+                        "symbols": decision_symbols,
                     },
                 )
             )
