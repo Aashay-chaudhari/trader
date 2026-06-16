@@ -1,41 +1,21 @@
 {
-  "run_id": "20260616_173517",
+  "run_id": "20260616_183513",
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions weaken the morning thesis because the candidates are either outside their required execution ranges or lack clear confirmation of the setup.",
+  "market_summary": "Live conditions weaken the morning thesis because the listed buy setups are below their required entry windows and confirmation signals are incomplete.",
   "stocks": {
-    "GM": {
-      "recommendation": "watch",
-      "confidence": 0.35,
-      "ready_to_trade": false,
-      "matched_conditions": [
-        "GM is positive on the day"
-      ],
-      "failed_conditions": [
-        "GM is trading below the required 84.00 to 86.00 entry range",
-        "VWAP hold is not confirmed in the live snapshot",
-        "broader market regime hint is neutral rather than clearly risk-on"
-      ],
-      "monitor_reason": "GM is close but still below the required buy band and lacks clear VWAP and risk-on confirmation.",
-      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
-      "trade_plan": {
-        "entry": 85.0,
-        "stop_loss": 82.5,
-        "target": 90.0
-      }
-    },
     "QCOM": {
       "recommendation": "watch",
-      "confidence": 0.25,
+      "confidence": 0.18,
       "ready_to_trade": false,
       "matched_conditions": [
-        "QCOM is positive on the day"
+        "fresh live quote available"
       ],
       "failed_conditions": [
-        "QCOM is trading below the required 224.00 to 229.50 entry range",
-        "VWAP hold is not confirmed in the live snapshot",
-        "semiconductor ETF confirmation is not provided in the live snapshot"
+        "price is below the required 224.00 to 229.50 entry range",
+        "holding above VWAP is not confirmed",
+        "semiconductor ETF support is not confirmed"
       ],
-      "monitor_reason": "QCOM is below the planned entry band and near the stop area, so the buy condition is not satisfied.",
+      "monitor_reason": "QCOM is below the planned buy zone and below the stop, so the entry condition is not satisfied.",
       "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
       "trade_plan": {
         "entry": 226.5,
@@ -45,21 +25,43 @@
     },
     "HOOD": {
       "recommendation": "watch",
-      "confidence": 0.2,
+      "confidence": 0.15,
       "ready_to_trade": false,
-      "matched_conditions": [],
-      "failed_conditions": [
-        "HOOD is negative on the day",
-        "HOOD is far below the planned 124.00 entry and 120.00 stop levels",
-        "opening range hold is not confirmed in the live snapshot",
-        "fintech and crypto risk appetite confirmation is not provided in the live snapshot"
+      "matched_conditions": [
+        "fresh live quote available"
       ],
-      "monitor_reason": "HOOD remains a watch because price action does not confirm the continuation setup.",
+      "failed_conditions": [
+        "price is far below the morning entry and stop levels",
+        "holding the opening range is not confirmed",
+        "constructive fintech/crypto risk appetite is not confirmed"
+      ],
+      "monitor_reason": "HOOD remains a watch-only candidate with the live snapshot failing to confirm the required setup.",
       "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
       "trade_plan": {
         "entry": 124.0,
         "stop_loss": 120.0,
         "target": 132.0
+      }
+    },
+    "GM": {
+      "recommendation": "watch",
+      "confidence": 0.22,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "fresh live quote available",
+        "price is positive on the day"
+      ],
+      "failed_conditions": [
+        "price is below the required 84.00 to 86.00 entry range",
+        "holding above VWAP is not confirmed",
+        "broader market risk-on confirmation is not established"
+      ],
+      "monitor_reason": "GM is showing intraday strength but remains below the buy zone and lacks required confirmation.",
+      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
+      "trade_plan": {
+        "entry": 85.0,
+        "stop_loss": 82.5,
+        "target": 90.0
       }
     }
   },
@@ -95,10 +97,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "27636360232",
+        "run_id": "27639667310",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27636360232",
-        "sha": "6ea18d72124325e4679e009d8a92b5cf402c8986",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27639667310",
+        "sha": "06cd5acbb34331cdb4c55a7f628609c30d29ff0e",
         "ref": "refs/heads/main"
       }
     }
