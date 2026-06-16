@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-06-16T13:38:15.005497+00:00",
+  "phase": "monitor",
+  "provider": "codex",
+  "model": "codex-cli",
+  "symbols": [
+    "GM",
+    "QCOM",
+    "HOOD"
+  ],
+  "prompt_sections": {
+    "morning_plans": "  GM: buy | entry=$85.0 stop=$82.5 target=$90.0\n    Execution condition: Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.\n    Why it is being checked now: price is within 0.6% of entry; 9 fresh headline(s)\n  QCOM: buy | entry=$226.5 stop=$220.5 target=$238.0\n    Execution condition: Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.\n    Why it is being checked now: price is within 2.0% of entry; 9 fresh headline(s)\n  HOOD: watch | entry=$124.0 stop=$120.0 target=$132.0\n    Execution condition: Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.\n    Why it is being checked now: price is near stop loss; 13 fresh headline(s)",
+    "current_state": "| Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |\n|-------|-------|------|-----|----------|--------------|-----------|-----------|\n| GM    | $   84.49 |  +3.7% |  61 |     0.0x | yahoo_1m | 20s |         9 |\n| QCOM  | $  230.97 |  +9.0% |  57 |     0.1x | yahoo_1m | 19s |         9 |\n| HOOD  | $   99.41 |  +1.3% |  66 |     0.1x | yahoo_1m | 22s |        13 |",
+    "commodity_context": "No direct commodity driver mapped for current candidates.",
+    "active_positions": "  (none)",
+    "strategy_signals": "  Gate runs before the deterministic strategy engine. Use this check only to approve or reject planned setups.",
+    "decision_rules": "  - Approve only when the natural-language execution condition is clearly satisfied now.\n  - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.\n  - Never invent a new setup that was not part of the morning plan.\n  - Current market regime hint: risk_on.",
+    "candidate_symbols": [
+      "GM",
+      "QCOM",
+      "HOOD"
+    ]
+  },
+  "prompt_text": "# Local Codex Monitor Gate\n\nRun id: 20260616_133516\nCandidate symbols: GM, QCOM, HOOD\nDecision output: `data/profiles/codex/cache/local_monitor_decision.json`\n\nYou are an intraday execution gate. Do not re-research the market, broaden the\nwatchlist, or invent new trades. Evaluate only the candidates below against the\nmorning execution conditions and the live snapshot.\n\n## Monitor Candidates\n\n  GM: buy | entry=$85.0 stop=$82.5 target=$90.0\n    Execution condition: Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.\n    Why it is being checked now: price is within 0.6% of entry; 9 fresh headline(s)\n  QCOM: buy | entry=$226.5 stop=$220.5 target=$238.0\n    Execution condition: Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.\n    Why it is being checked now: price is within 2.0% of entry; 9 fresh headline(s)\n  HOOD: watch | entry=$124.0 stop=$120.0 target=$132.0\n    Execution condition: Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.\n    Why it is being checked now: price is near stop loss; 13 fresh headline(s)\n\n## Live Market Snapshot\n\n| Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |\n|-------|-------|------|-----|----------|--------------|-----------|-----------|\n| GM    | $   84.49 |  +3.7% |  61 |     0.0x | yahoo_1m | 20s |         9 |\n| QCOM  | $  230.97 |  +9.0% |  57 |     0.1x | yahoo_1m | 19s |         9 |\n| HOOD  | $   99.41 |  +1.3% |  66 |     0.1x | yahoo_1m | 22s |        13 |\n\n## Relevant Commodity Snapshot\n\nNo direct commodity driver mapped for current candidates.\n\n## Active Positions\n\n  (none)\n\n## Deterministic Strategy Snapshot\n\n  Gate runs before the deterministic strategy engine. Use this check only to approve or reject planned setups.\n\n## Decision Rules\n\n  - Approve only when the natural-language execution condition is clearly satisfied now.\n  - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.\n  - Never invent a new setup that was not part of the morning plan.\n  - Current market regime hint: risk_on.\n\nWrite ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json` with this schema:\n\n```json\n{\n  \"run_id\": \"20260616_133516\",\n  \"overall_sentiment\": \"bullish | bearish | neutral\",\n  \"market_summary\": \"1 sentence on whether live conditions confirm or weaken the morning thesis\",\n  \"stocks\": {\n    \"SYMBOL\": {\n      \"recommendation\": \"buy | sell | hold | watch\",\n      \"confidence\": 0.0,\n      \"ready_to_trade\": false,\n      \"matched_conditions\": [\"condition currently satisfied\"],\n      \"failed_conditions\": [\"condition still missing\"],\n      \"monitor_reason\": \"1 concise sentence\",\n      \"execution_condition\": \"condition evaluated\",\n      \"trade_plan\": {\"entry\": 0.0, \"stop_loss\": 0.0, \"target\": 0.0}\n    }\n  }\n}\n```\n",
+  "prompt_source": "scripts/prompts/monitor_check.md",
+  "llm_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27621593433",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27621593433",
+        "sha": "0641189c7be3ed59f583dd43de5d1efdf1dc521e",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
