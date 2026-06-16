@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260616_190511
+Run id: 20260616_193402
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -12,7 +12,7 @@ morning execution conditions and the live snapshot.
 
   QCOM: buy | entry=$226.5 stop=$220.5 target=$238.0
     Execution condition: Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.
-    Why it is being checked now: price is near stop loss; 3 fresh headline(s)
+    Why it is being checked now: price is near stop loss; 9 fresh headline(s)
   HOOD: watch | entry=$124.0 stop=$120.0 target=$132.0
     Execution condition: Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.
     Why it is being checked now: price is near stop loss; 13 fresh headline(s)
@@ -24,9 +24,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  220.00 |  -0.4% |  53 |     0.7x | yahoo_1m | 14s |         3 |
-| HOOD  | $   96.15 |  -2.0% |  63 |     0.8x | yahoo_1m | 16s |        13 |
-| GM    | $   82.43 |  +1.1% |  56 |     0.6x | yahoo_1m | 15s |         9 |
+| QCOM  | $  218.04 |  -1.3% |  53 |     0.7x | yahoo_1m | 5s |         9 |
+| HOOD  | $   96.63 |  -1.5% |  63 |     0.8x | yahoo_1m | 8s |        13 |
+| GM    | $   82.37 |  -2.0% |  55 |     0.7x | yahoo_1m | 6s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -45,13 +45,13 @@ No direct commodity driver mapped for current candidates.
   - Approve only when the natural-language execution condition is clearly satisfied now.
   - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.
   - Never invent a new setup that was not part of the morning plan.
-  - Current market regime hint: neutral.
+  - Current market regime hint: risk_off.
 
 Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json` with this schema:
 
 ```json
 {
-  "run_id": "20260616_190511",
+  "run_id": "20260616_193402",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
