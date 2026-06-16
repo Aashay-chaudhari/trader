@@ -1,0 +1,119 @@
+Phase: monitor
+Provider: codex
+Model: codex-cli
+Status: success
+Total tokens: 0
+
+Market Summary:
+Live conditions weaken the morning thesis because the listed setups are outside their required execution ranges or lack confirming risk-on evidence.
+
+Stocks:
+- GM: watch | GM is close to the plan but below the required buy range, so the setup is not confirmed.
+- QCOM: watch | QCOM is below both the planned entry band and stop area, so the buy gate is not satisfied.
+- HOOD: watch | HOOD is well below the planned watch level and does not show clear confirmation for action.
+
+Response JSON:
+{
+  "run_id": "20260616_180514",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions weaken the morning thesis because the listed setups are outside their required execution ranges or lack confirming risk-on evidence.",
+  "stocks": {
+    "GM": {
+      "recommendation": "watch",
+      "confidence": 0.25,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "GM is positive intraday"
+      ],
+      "failed_conditions": [
+        "GM is not trading between 84.00 and 86.00",
+        "VWAP confirmation is not provided",
+        "broader market risk-on confirmation is not provided"
+      ],
+      "monitor_reason": "GM is close to the plan but below the required buy range, so the setup is not confirmed.",
+      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
+      "trade_plan": {
+        "entry": 85.0,
+        "stop_loss": 82.5,
+        "target": 90.0
+      }
+    },
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.2,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "QCOM is positive intraday"
+      ],
+      "failed_conditions": [
+        "QCOM is not trading between 224.00 and 229.50",
+        "VWAP confirmation is not provided",
+        "semiconductor ETF rollover confirmation is not provided"
+      ],
+      "monitor_reason": "QCOM is below both the planned entry band and stop area, so the buy gate is not satisfied.",
+      "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
+      "trade_plan": {
+        "entry": 226.5,
+        "stop_loss": 220.5,
+        "target": 238.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.15,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "HOOD is not holding near the planned opening-range setup",
+        "fintech/crypto risk appetite confirmation is not provided"
+      ],
+      "monitor_reason": "HOOD is well below the planned watch level and does not show clear confirmation for action.",
+      "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
+      "trade_plan": {
+        "entry": 124.0,
+        "stop_loss": 120.0,
+        "target": 132.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27637973736",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27637973736",
+        "sha": "8a99e8646c8d982d94738dd24c6a9feb25597f91",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
