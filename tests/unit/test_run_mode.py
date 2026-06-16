@@ -30,6 +30,7 @@ def test_run_mode_debug_is_default(monkeypatch):
     assert s.agent_profile == "codex"
     assert s.agent_label == "Codex Strategist"
     assert s.data_dir == "data/profiles/codex"
+    assert s.guarantee_daily_trade is False
 
 
 def test_monitor_runtime_can_use_github_actions_api(monkeypatch):

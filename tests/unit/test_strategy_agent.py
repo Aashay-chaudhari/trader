@@ -59,7 +59,7 @@ async def test_oversold_rsi_generates_buy(strategy_agent):
 
 @pytest.mark.asyncio
 async def test_overbought_rsi_generates_sell(strategy_agent):
-    """RSI > 70 + MACD bearish + downtrend should produce a sell signal."""
+    """RSI > 70 + MACD bearish + downtrend can produce an exit signal for held longs."""
     msg = _make_message(
         symbols=["TEST"],
         market_data={
@@ -78,6 +78,7 @@ async def test_overbought_rsi_generates_sell(strategy_agent):
                 },
             }
         },
+        active_positions=["TEST"],
     )
 
     result = await strategy_agent.process(msg)
@@ -85,6 +86,34 @@ async def test_overbought_rsi_generates_sell(strategy_agent):
 
     assert len(signals) >= 1
     assert signals[0]["action"] == "sell"
+
+
+@pytest.mark.asyncio
+async def test_unheld_bearish_setup_does_not_create_short_signal(strategy_agent):
+    """Long-only mode blocks sell signals for symbols without an active long."""
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 93.0,
+                "price_change_pct": 3.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 80.0,
+                    "macd": -0.2,
+                    "macd_signal": 0.1,
+                    "sma_20": 95.0,
+                    "sma_50": 98.0,
+                    "bb_upper": 105.0,
+                    "bb_lower": 90.0,
+                },
+            }
+        },
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert result["signals"] == []
 
 
 @pytest.mark.asyncio
@@ -236,3 +265,119 @@ async def test_monitor_phase_allows_ready_to_trade_signal(strategy_agent):
 
     assert len(result["signals"]) >= 1
     assert result["signals"][0]["action"] == "buy"
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_blocks_active_position_without_add_signal(strategy_agent):
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 107.0,
+                "price_change_pct": -2.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 25.0,
+                    "macd": 0.5,
+                    "macd_signal": 0.3,
+                    "sma_20": 105.0,
+                    "sma_50": 102.0,
+                    "bb_upper": 115.0,
+                    "bb_lower": 95.0,
+                },
+            }
+        },
+        phase="monitor",
+        active_positions=["TEST"],
+        research={
+            "stocks": {
+                "TEST": {
+                    "recommendation": "buy",
+                    "ready_to_trade": True,
+                    "confidence": 0.8,
+                }
+            }
+        },
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert result["signals"] == []
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_allows_explicit_add_to_active_position(strategy_agent):
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 107.0,
+                "price_change_pct": -2.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 25.0,
+                    "macd": 0.5,
+                    "macd_signal": 0.3,
+                    "sma_20": 105.0,
+                    "sma_50": 102.0,
+                    "bb_upper": 115.0,
+                    "bb_lower": 95.0,
+                },
+            }
+        },
+        phase="monitor",
+        active_positions=["TEST"],
+        research={
+            "stocks": {
+                "TEST": {
+                    "recommendation": "buy",
+                    "ready_to_trade": True,
+                    "confidence": 0.8,
+                    "add_reason": "Fresh breakout after initial position held support.",
+                }
+            }
+        },
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert len(result["signals"]) >= 1
+
+
+@pytest.mark.asyncio
+async def test_monitor_phase_allows_active_position_sell_exit(strategy_agent):
+    msg = _make_message(
+        symbols=["TEST"],
+        market_data={
+            "TEST": {
+                "latest_price": 93.0,
+                "price_change_pct": 3.0,
+                "volume": 1_000_000,
+                "indicators": {
+                    "rsi_14": 80.0,
+                    "macd": -0.2,
+                    "macd_signal": 0.1,
+                    "sma_20": 95.0,
+                    "sma_50": 98.0,
+                    "bb_upper": 105.0,
+                    "bb_lower": 90.0,
+                },
+            }
+        },
+        phase="monitor",
+        active_positions=["TEST"],
+        research={
+            "stocks": {
+                "TEST": {
+                    "recommendation": "sell",
+                    "ready_to_trade": True,
+                    "confidence": 0.8,
+                }
+            }
+        },
+    )
+
+    result = await strategy_agent.process(msg)
+
+    assert len(result["signals"]) >= 1
+    assert result["signals"][0]["action"] == "sell"

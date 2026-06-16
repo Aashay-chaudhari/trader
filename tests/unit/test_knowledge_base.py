@@ -239,6 +239,35 @@ class TestContextAssembly:
         assert "RECENT DAILY OBSERVATIONS" in context
         assert "2026-03-21" in context
 
+    def test_observations_context_includes_forward_theses(self, kb):
+        kb.save_daily_observation({
+            "date": "2026-03-21",
+            "market_regime": "risk_on",
+            "market_summary": "Airlines rallied as crude fell.",
+            "thesis_review": [
+                {
+                    "thesis": "Lower crude should help airlines.",
+                    "status": "confirmed",
+                    "evidence": "DAL and UAL outperformed while WTI fell.",
+                    "entry_quality_lesson": "Wait for opening range hold after public oil news.",
+                }
+            ],
+            "next_session_theses": [
+                {
+                    "name": "airline_oil_relief_continuation",
+                    "theory": "Airlines can continue if crude stays weak and transports confirm.",
+                    "confirmation_signals": ["WTI remains below prior close", "Airlines outperform SPY"],
+                    "invalidation_signals": ["Crude rebounds", "Airlines lose VWAP"],
+                }
+            ],
+        })
+
+        context = kb.build_observations_context(token_budget=300)
+
+        assert "Thesis confirmed" in context
+        assert "airline_oil_relief_continuation" in context
+        assert "WTI remains below prior close" in context
+
 
 class TestArchival:
     def test_archive_old_observations(self, kb):

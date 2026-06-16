@@ -10,6 +10,9 @@ from that profile's own trades and knowledge.
 
 > Take your time. This is where the system learns.
 
+> Long-only portfolio: treat `sell` as an exit/trim of existing longs. Do not
+> propose new short trades; bearish theses should become avoidance/watch rules.
+
 ---
 
 ## Step 1 — Read today's activity
@@ -60,17 +63,25 @@ Work through these questions honestly. Don't rush to write files.
    - Did we respect stops or did we let losers run?
    - What was the catalyst and did it play out?
 
-3. **Regime accuracy**: Did our morning regime call match what actually happened?
+3. **Theory quality**: Did we create a real swing theory or just follow a public catalyst?
+   Which morning theses were confirmed, weakened, invalidated, or still pending?
+   Was the entry early/fair/late/chasing?
+
+4. **Regime accuracy**: Did our morning regime call match what actually happened?
    If the market moved 2%+ in either direction, was our positioning correct?
 
-4. **Patterns**: Did you see any setups repeat? (e.g., "every time VIX spikes above 25,
+5. **Patterns**: Did you see any setups repeat? (e.g., "every time VIX spikes above 25,
    oversold tech bounces within 2 days" — is that a pattern we should track?)
 
-5. **Missed opportunities**: From the "top movers" search — did we miss any obvious
+6. **Missed opportunities**: From the "top movers" search — did we miss any obvious
    setups? Could our screening have caught them?
 
-6. **Confidence calibration**: Were our high-confidence calls (>0.7) actually better
+7. **Confidence calibration**: Were our high-confidence calls (>0.7) actually better
    than low-confidence (<0.5)? Be honest.
+
+8. **Forward scenarios**: Create 2-4 falsifiable theses for tomorrow / the next
+   2-10 trading days. Include confirmation, invalidation, preferred entry style,
+   and crowding risk. These will be injected into the next morning research.
 
 ---
 
@@ -90,6 +101,14 @@ File: `data/profiles/{{PROFILE}}/observations/daily/obs_YYYY-MM-DD.json`
         "Major market driver from your research",
         "Another driver"
     ],
+    "thesis_review": [
+        {
+            "thesis": "morning thesis or implied theory",
+            "status": "confirmed|weakened|invalidated|pending",
+            "evidence": "What today's tape proved",
+            "entry_quality_lesson": "What this teaches about timing and avoiding crowd-following"
+        }
+    ],
     "trades_review": [
         {
             "symbol": "TICKER",
@@ -98,6 +117,8 @@ File: `data/profiles/{{PROFILE}}/observations/daily/obs_YYYY-MM-DD.json`
             "current_price": 0.00,
             "pnl_pct": 0.0,
             "strategy": "which strategy triggered this",
+            "entry_quality": "early|fair|late|chasing",
+            "thesis_quality": "valid|partly_valid|invalid|unproven",
             "assessment": "Honest 1-sentence assessment of this trade"
         }
     ],
@@ -120,6 +141,19 @@ File: `data/profiles/{{PROFILE}}/observations/daily/obs_YYYY-MM-DD.json`
             "symbol": "TICKER",
             "move_pct": 0.0,
             "why_missed": "Why our system didn't catch this"
+        }
+    ],
+    "next_session_theses": [
+        {
+            "name": "short thesis name",
+            "theory": "Falsifiable 2-10 day theory",
+            "symbols_to_watch": ["SYM1", "SYM2"],
+            "drivers_to_monitor": ["macro/commodity/sector/company driver"],
+            "confirmation_signals": ["What strengthens the thesis"],
+            "invalidation_signals": ["What proves the thesis wrong"],
+            "preferred_entry_style": "pullback|opening_range_hold|breakout_retest|avoid_if_gap_extended",
+            "crowding_risk": "low|medium|high",
+            "confidence": 0.0
         }
     ],
     "forward_outlook": "What to watch for tomorrow based on your research and today's action",

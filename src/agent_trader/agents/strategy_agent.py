@@ -138,13 +138,22 @@ class StrategyAgent(BaseAgent):
                 market_context, settings,
             )
             if signal:
+                if signal.action == "sell" and str(symbol).upper() not in active_positions:
+                    continue
                 signal.latest_price = stock_data.get("latest_price")
                 all_signals.append(signal.to_dict())
 
         # "Best available" mode: if no signals passed the strict filter,
         # take the single best one with a tiny position
         if not all_signals and settings.guarantee_daily_trade and phase != "monitor":
-            best = self._find_best_available(symbols, market_data, research, news, market_context)
+            best = self._find_best_available(
+                symbols,
+                market_data,
+                research,
+                news,
+                market_context,
+                active_positions,
+            )
             if best:
                 best.suggested_size_pct = 2.0  # Tiny position — learning trade
                 best.reasoning = f"[BEST AVAILABLE] {best.reasoning}"
@@ -164,14 +173,20 @@ class StrategyAgent(BaseAgent):
         active_positions: set[str],
     ) -> bool:
         symbol = str(symbol).upper()
-        if symbol in active_positions:
-            return True
         if not isinstance(stock_research, dict):
             return False
         if not stock_research.get("ready_to_trade", False):
             return False
         recommendation = str(stock_research.get("recommendation", "")).lower()
-        return recommendation in {"buy", "sell"}
+        if symbol in active_positions:
+            if recommendation == "sell":
+                return True
+            if recommendation == "buy":
+                return bool(
+                    stock_research.get("add_to_position") or stock_research.get("add_reason")
+                )
+            return False
+        return recommendation == "buy"
 
     def _evaluate(
         self, symbol: str, data: dict, research: dict,
@@ -258,15 +273,15 @@ class StrategyAgent(BaseAgent):
 
     def _find_best_available(
         self, symbols: list, market_data: dict, research: dict,
-        news: dict, market_ctx: dict,
+        news: dict, market_ctx: dict, active_positions: set[str] | None = None,
     ) -> TradeSignal | None:
         """Find the single best signal across all stocks, even if weak.
 
-        Used when no signal passes the strict multi-strategy filter.
-        This ensures we get at least 1 trade/day for learning.
+        Used only when explicitly enabled for no-signal learning runs.
         """
         best_signal = None
         best_score = 0
+        active_positions = active_positions or set()
 
         for symbol in symbols:
             data = market_data.get(symbol, {})
@@ -289,6 +304,8 @@ class StrategyAgent(BaseAgent):
                 self._support_resistance_strategy,
             ]:
                 signal = strategy_fn(symbol, data, indicators, history, stock_news, market_ctx)
+                if signal and signal.action == "sell" and str(symbol).upper() not in active_positions:
+                    continue
                 if signal and signal.strength > best_score:
                     # Boost if Claude agrees
                     research_rec = stock_research.get("recommendation", "")

@@ -10,6 +10,8 @@ Key safety features:
   - Has a kill switch (dry_run mode) for testing without any API calls
 """
 
+import json
+from pathlib import Path
 from typing import Any
 
 from agent_trader.core.base_agent import BaseAgent, AgentRole
@@ -81,9 +83,14 @@ class ExecutionAgent(BaseAgent):
         profile = build_profile_metadata(settings)
 
         # Calculate quantity based on position size and portfolio value
-        portfolio_value = settings.paper_portfolio_value
-        size_pct = trade.get("suggested_size_pct", 5.0)
-        allocation = portfolio_value * (size_pct / 100)
+        snapshot = self._load_latest_snapshot(settings)
+        portfolio_value = float(snapshot.get("portfolio_value") or settings.paper_portfolio_value)
+        cash = float(snapshot.get("cash") or portfolio_value)
+        current_position = self._current_position(symbol, settings)
+        current_position_value = float(current_position.get("current_value") or 0)
+        current_shares = int(current_position.get("shares") or 0)
+        max_position_value = portfolio_value * (settings.max_position_pct / 100)
+        remaining_position_value = max(0.0, max_position_value - current_position_value)
 
         # Get approximate share count
         # In a real system, we'd use the current bid/ask
@@ -101,7 +108,45 @@ class ExecutionAgent(BaseAgent):
                 "reason": "Could not determine price",
             }
 
-        qty = max(1, int(allocation / price))
+        if action == "sell":
+            if current_shares < 1:
+                return {
+                    "symbol": symbol,
+                    "action": action,
+                    "profile": profile["id"],
+                    "profile_label": profile["label"],
+                    "status": "failed",
+                    "reason": "No long position to sell; short sales are not modeled",
+                    "estimated_price": price,
+                    "estimated_value": 0,
+                }
+            requested_qty = trade.get("quantity")
+            try:
+                qty = int(requested_qty) if requested_qty is not None else current_shares
+            except (TypeError, ValueError):
+                qty = current_shares
+            qty = min(current_shares, qty)
+        else:
+            allocation = self._allocation_from_risk(
+                trade=trade,
+                price=price,
+                portfolio_value=portfolio_value,
+                settings=settings,
+            )
+            allocation = min(allocation, cash, remaining_position_value)
+            qty = int(allocation / price)
+
+        if qty < 1:
+            return {
+                "symbol": symbol,
+                "action": action,
+                "profile": profile["id"],
+                "profile_label": profile["label"],
+                "status": "failed",
+                "reason": "Position sizing produced quantity below 1 share",
+                "estimated_price": price,
+                "estimated_value": 0,
+            }
 
         # Dry run mode — log what would happen without calling the API
         if settings.is_dry_run or client is None:
@@ -157,3 +202,42 @@ class ExecutionAgent(BaseAgent):
                 "status": "failed",
                 "reason": str(e),
             }
+
+    def _allocation_from_risk(self, trade: dict, price: float, portfolio_value: float, settings) -> float:
+        """Return notional allocation, preferring stop-loss risk over flat sizing."""
+        entry = trade.get("entry") or price
+        stop_loss = trade.get("stop_loss")
+        try:
+            entry = float(entry)
+            stop_loss = float(stop_loss)
+        except (TypeError, ValueError):
+            entry = 0
+            stop_loss = 0
+
+        per_share_risk = abs(entry - stop_loss)
+        if per_share_risk > 0:
+            risk_budget = portfolio_value * (settings.risk_per_trade_pct / 100)
+            return int(risk_budget / per_share_risk) * price
+
+        size_pct = trade.get("suggested_size_pct", 5.0)
+        return portfolio_value * (size_pct / 100)
+
+    def _load_latest_snapshot(self, settings) -> dict:
+        path = Path(settings.data_dir) / "snapshots" / "latest.json"
+        try:
+            if path.exists():
+                return json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            pass
+        return {}
+
+    def _current_position(self, symbol: str, settings) -> dict:
+        path = Path(settings.data_dir) / "portfolio_state.json"
+        try:
+            if not path.exists():
+                return {}
+            portfolio = json.loads(path.read_text(encoding="utf-8"))
+            position = portfolio.get(symbol, {})
+            return position if isinstance(position, dict) else {}
+        except (json.JSONDecodeError, OSError, TypeError, ValueError):
+            return {}

@@ -13,7 +13,7 @@ def risk_agent():
     return RiskAgent(bus)
 
 
-def _make_message(signals, market_data=None):
+def _make_message(signals, market_data=None, active_positions=None, positions=None):
     return Message(
         type=MessageType.COMMAND,
         source="orchestrator",
@@ -21,6 +21,8 @@ def _make_message(signals, market_data=None):
             "signals": signals,
             "market_data": market_data or {},
             "symbols": [],
+            "active_positions": active_positions or [],
+            "positions": positions or [],
         },
     )
 
@@ -124,3 +126,50 @@ async def test_low_volume_rejected(risk_agent):
 
         result = await risk_agent.process(msg)
         assert len(result["rejected_trades"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_sell_without_active_long_rejected(risk_agent):
+    """A sell signal for an unheld symbol is treated as a forbidden short."""
+    with patch("agent_trader.agents.risk_agent.get_settings", return_value=_mock_settings()):
+        msg = _make_message(
+            signals=[{
+                "symbol": "AAPL",
+                "action": "sell",
+                "strength": 0.8,
+                "suggested_size_pct": 5.0,
+            }],
+            market_data={
+                "AAPL": {"price_change_pct": 1.0, "volume": 500_000},
+            },
+        )
+
+        result = await risk_agent.process(msg)
+
+        assert len(result["approved_trades"]) == 0
+        assert len(result["rejected_trades"]) == 1
+        reasons = " ".join(result["rejected_trades"][0]["rejection_reasons"]).lower()
+        assert "shorts are disabled" in reasons
+
+
+@pytest.mark.asyncio
+async def test_sell_existing_long_allowed(risk_agent):
+    """A sell signal can pass risk when it exits an existing long position."""
+    with patch("agent_trader.agents.risk_agent.get_settings", return_value=_mock_settings()):
+        msg = _make_message(
+            signals=[{
+                "symbol": "AAPL",
+                "action": "sell",
+                "strength": 0.8,
+                "suggested_size_pct": 5.0,
+            }],
+            market_data={
+                "AAPL": {"price_change_pct": 1.0, "volume": 500_000},
+            },
+            active_positions=["AAPL"],
+        )
+
+        result = await risk_agent.process(msg)
+
+        assert len(result["approved_trades"]) == 1
+        assert len(result["rejected_trades"]) == 0

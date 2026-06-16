@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     monitor_model: str = "claude-haiku-4-5-20251001"
     research_model_openai: str = "gpt-4o-mini"
     monitor_model_openai: str = "gpt-4o-mini"
-    llm_max_output_tokens: int = 4000  # Cap output tokens for API calls
+    llm_max_output_tokens: int = 6000  # Cap output tokens for API calls
     llm_max_prompt_chars: int = 80000  # Soft cap input prompt size before API call
 
     # --- Monitor Runtime Owner ---
@@ -76,7 +76,7 @@ class Settings(BaseSettings):
     # --- Knowledge Accumulation ---
     enable_knowledge_base: bool = True    # Load accumulated knowledge into prompts
     knowledge_token_budget: int = 1500    # Token budget for knowledge context
-    observations_token_budget: int = 500  # Token budget for observations context
+    observations_token_budget: int = 1000  # Token budget for observations context
     observation_retention_days: int = 90  # Archive daily observations after N days
 
     # --- Swing Trading ---
@@ -91,10 +91,11 @@ class Settings(BaseSettings):
 
     # --- Risk Limits ---
     max_position_pct: float = 10.0     # Max % of portfolio in one stock
+    risk_per_trade_pct: float = 3.0    # Max % of portfolio to risk to stop loss
     max_daily_loss_pct: float = 2.0    # Stop trading if daily loss > this %
     min_signal_strength: float = 0.3   # Minimum signal strength to trade
     min_strategies_agree: int = 2      # Min strategies that must agree for a trade
-    guarantee_daily_trade: bool = True  # If True, take best available if no strong signal
+    guarantee_daily_trade: bool = False  # If True, take best available if no strong signal
     monitor_candidate_limit: int = 3    # Max symbols to send to the monitor LLM gate
     monitor_entry_proximity_pct: float = 2.0  # Trigger monitor review when within this % of plan
 

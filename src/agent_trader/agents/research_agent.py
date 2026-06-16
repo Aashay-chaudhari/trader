@@ -45,11 +45,31 @@ from agent_trader.utils.knowledge_base import KnowledgeBase
 from agent_trader.utils.swing_tracker import SwingTracker
 
 
+COMMODITY_RELEVANCE = {
+    "UAL": ("wti_crude", "brent_crude"),
+    "DAL": ("wti_crude", "brent_crude"),
+    "AAL": ("wti_crude", "brent_crude"),
+    "LUV": ("wti_crude", "brent_crude"),
+    "JBLU": ("wti_crude", "brent_crude"),
+    "XOM": ("wti_crude", "brent_crude", "natural_gas"),
+    "CVX": ("wti_crude", "brent_crude", "natural_gas"),
+    "COP": ("wti_crude", "brent_crude", "natural_gas"),
+    "OXY": ("wti_crude", "brent_crude", "natural_gas"),
+    "SLB": ("wti_crude", "brent_crude", "natural_gas"),
+    "HAL": ("wti_crude", "brent_crude", "natural_gas"),
+    "FCX": ("copper", "gold"),
+    "NEM": ("gold", "copper"),
+    "GOLD": ("gold",),
+}
+
+
 RESEARCH_PROMPT = """You are an expert stock market analyst and trader. Your job is to find the best
 2-3 trading opportunities from today's shortlist.
 
 You are CONSERVATIVE — you only recommend trades with clear setups and defined risk.
 You have a $100,000 paper portfolio. Every dollar counts.
+This is a long-only portfolio: never recommend opening shorts. Use `sell` only to
+exit or trim an existing long position; bearish new ideas should be `watch` or `hold`.
 
 If you have limited historical data (few or no observations/patterns), this is normal early-stage
 behavior. Focus on building quality observations from today's data — your future self depends on them.
@@ -90,31 +110,56 @@ SCREENER CONTEXT (why these were picked)
 ═══════════════════════════════════════════════════════════
 YOUR TASK
 ═══════════════════════════════════════════════════════════
+This is a SWING trading system. Do not just chase the most public headline.
+First build falsifiable 2-10 day theories, then decide whether today's prices
+offer a disciplined entry.
+
 For each stock, analyze:
-1. TECHNICAL SETUP: trend, momentum indicators, support/resistance levels
-2. NEWS CATALYST: is there a reason for the move? Earnings? Upgrade? Sector rotation?
-3. VOLUME STORY: is smart money involved (high volume) or is this noise (low volume)?
-4. RISK/REWARD: specific entry, stop loss, and target prices
+1. SWING THESIS: what should happen over the next 2-10 trading days, and why?
+2. TECHNICAL SETUP: trend, momentum indicators, support/resistance levels
+3. DRIVER MAP: which macro/commodity/sector/news driver matters most?
+4. CONFIRMATION / INVALIDATION: what must happen before entry, and what proves you wrong?
+5. CROWDING RISK: is this obvious and already priced in? If yes, demand a better entry.
+6. RISK/REWARD: specific entry, stop loss, and target prices
 
 IMPORTANT RULES:
 - Be SPECIFIC with numbers. "$142.50 entry with $139.00 stop" not "buy near support"
-- Only recommend BUY or SELL when confidence > 0.65
-- If nothing looks great, pick the BEST AVAILABLE setup — we want at least 1 trade/day
+- Only recommend BUY for new long entries when confidence > 0.65
+- Only recommend SELL when exiting/trimming an existing long; do not use SELL for new bearish trades.
+- If nothing looks great, say so and keep candidates on watch. Swing trading does not require a trade every day.
 - Always include a stop loss. No trade without defined risk.
 - Flag earnings dates — never hold through earnings on a swing trade
 - Learn from your track record above. If your confidence is miscalibrated, adjust.
 - Consider the market regime: don't buy aggressively when VIX is high/market is selling off
+- Prefer watch over buy when the thesis is right but the entry is late.
+- Every buy or exit-sell must have at least 2 confirming signals and 1 explicit invalidation trigger.
+- For commodity-dependent theses, include the relevant commodity condition in execution_condition.
 
 Respond with ONLY valid JSON:
 {{
     "overall_sentiment": "bullish" | "bearish" | "neutral",
     "market_summary": "2-3 sentence overview including market regime assessment",
     "market_regime": "risk_on" | "risk_off" | "neutral",
+    "market_thesis": {{
+        "primary_swing_theory": "main 2-10 day market theory",
+        "drivers": ["driver 1", "driver 2"],
+        "what_would_change_my_mind": ["disconfirming evidence"],
+        "crowding_assessment": "low|medium|high plus 1 sentence"
+    }},
     "best_opportunities": ["SYMBOL1", "SYMBOL2"],
     "stocks": {{
         "<SYMBOL>": {{
             "sentiment": "bullish" | "bearish" | "neutral",
             "confidence": 0.0-1.0,
+            "swing_thesis": {{
+                "theory": "falsifiable 2-10 day thesis",
+                "driver": "primary macro/commodity/sector/company driver",
+                "expected_timeframe": "swing_2_5_days" | "swing_1_2_weeks",
+                "confirmation_signals": ["specific evidence required before entry"],
+                "invalidation_signals": ["specific evidence that cancels the trade"],
+                "crowding_risk": "low|medium|high",
+                "entry_quality": "early|fair|late|chasing"
+            }},
             "key_observations": [
                 "specific observation with numbers",
                 "another observation"
@@ -172,6 +217,9 @@ MONITOR CANDIDATES:
 LIVE MARKET SNAPSHOT:
 {current_state}
 
+RELEVANT COMMODITY SNAPSHOT:
+{commodity_context}
+
 ACTIVE POSITIONS:
 {active_positions}
 
@@ -188,6 +236,8 @@ For each candidate symbol:
 4. Keep the morning trade plan unless live evidence clearly invalidates it.
 
 Do not invent new trades. Do not broaden the watchlist. Do not do fresh discovery.
+Long-only rule: `sell` means exit or trim an active long position only. Do not use
+`sell` to express a new bearish/short trade; use `watch` or `hold` instead.
 
 Respond with ONLY valid JSON:
 {{
@@ -244,27 +294,35 @@ Respond with ONLY valid JSON:
 }}"""
 
 
-EVENING_REFLECTION_PROMPT = """You are reflecting on today's trading session. Review what happened and extract learnings.
+EVENING_REFLECTION_PROMPT = """You are reflecting on today's swing-trading session. Review what happened and extract learnings.
 
 If this is an early trading day with few or no prior observations, be extra thorough extracting
 patterns and lessons — your future self will rely on what you document today. Start from what
 you actually observed, not assumptions.
 
+MORNING PLAN / THESES:
+{morning_context}
+
+TODAY'S TRADES:
 {todays_trades}
 
+MARKET REGIME / DAY CONTEXT:
 {market_regime_summary}
 
+ACTIVE SWING POSITIONS:
 {active_positions}
 
+RECENT OBSERVATIONS:
 {recent_observations}
 
 YOUR TASK:
-1. Review each trade: was the entry good? Did the thesis play out?
-2. Log patterns you observed today (gap_and_go, RSI bounce, breakout, etc.)
-3. Calibrate confidence: were high-confidence calls more accurate?
-4. Update swing position outlook
-5. Note anything forward-looking (events tomorrow, regime shifts)
-6. SELF-IMPROVEMENT: Think critically about your own system. What would make you better?
+1. Review each trade: was the swing thesis valid, and was the entry early/fair/late/chasing?
+2. Review the morning theories: which were confirmed, weakened, invalidated, or still pending?
+3. Build next-session scenarios: what could happen tomorrow or over the next 2-10 trading days?
+4. Log patterns you observed today (gap_and_go, RSI bounce, breakout, crowding fade, etc.)
+5. Calibrate confidence: were high-confidence calls actually better?
+6. Update swing position outlook, including invalidation levels and catalyst dependencies.
+7. SELF-IMPROVEMENT: Think critically about your own system. What would make you better?
    - Do you need access to more data sources? Which ones specifically?
    - Are there strategies you wish you could run but can't? (e.g., pairs trading, options flow)
    - Would more web searches during research help? How many, and for what?
@@ -274,13 +332,24 @@ YOUR TASK:
    - Any code changes that would make your analysis more effective?
    Write these as concrete, actionable proposals — you are your own product manager.
 
+Be deep but concise: write dense, decision-useful sentences, not long essays.
+
 Respond with ONLY valid JSON:
 {{
     "date": "{today_date}",
     "market_regime": "risk_on" | "risk_off" | "neutral",
-    "market_summary": "1-2 sentence summary of today",
+    "market_summary": "2-4 dense sentences: what happened, why, and what it means for swing trades",
     "sector_leaders": ["sector1", "sector2"],
     "sector_laggards": ["sector1"],
+    "key_drivers": ["driver 1", "driver 2"],
+    "thesis_review": [
+        {{
+            "thesis": "morning thesis or implied theory",
+            "status": "confirmed" | "weakened" | "invalidated" | "pending",
+            "evidence": "what today's tape proved",
+            "entry_quality_lesson": "what this teaches about timing and avoiding crowd-following"
+        }}
+    ],
     "trades_review": [
         {{
             "symbol": "AAPL",
@@ -289,6 +358,8 @@ Respond with ONLY valid JSON:
             "exit": 187.20,
             "pnl_pct": 0.92,
             "confidence": 0.75,
+            "entry_quality": "early" | "fair" | "late" | "chasing",
+            "thesis_quality": "valid" | "partly_valid" | "invalid" | "unproven",
             "assessment": "Good entry at support, volume confirmed"
         }}
     ],
@@ -312,10 +383,24 @@ Respond with ONLY valid JSON:
             "symbol": "SYMBOL",
             "action": "hold" | "close" | "tighten_stop",
             "current_pnl_pct": 0.0,
-            "reason": "why"
+            "reason": "why",
+            "next_check": "specific condition to monitor next session"
         }}
     ],
-    "forward_outlook": "what to watch for tomorrow",
+    "next_session_theses": [
+        {{
+            "name": "short thesis name",
+            "theory": "falsifiable 2-10 day theory",
+            "symbols_to_watch": ["SYM1", "SYM2"],
+            "drivers_to_monitor": ["macro/commodity/sector/company driver"],
+            "confirmation_signals": ["what strengthens the thesis"],
+            "invalidation_signals": ["what proves the thesis wrong"],
+            "preferred_entry_style": "pullback|opening_range_hold|breakout_retest|avoid_if_gap_extended",
+            "crowding_risk": "low|medium|high",
+            "confidence": 0.0
+        }}
+    ],
+    "forward_outlook": "what to watch for tomorrow and over the next 2-10 trading days",
     "lessons": ["lesson 1", "lesson 2"],
     "self_improvement_proposals": [
         {{
@@ -1144,10 +1229,12 @@ class ResearchAgent(BaseAgent):
                 f"  - Current market regime hint: {market_context.get('market_regime', 'unknown')}.",
             ]
         )
+        commodity_context = self._format_relevant_commodities(candidate_symbols, market_context)
 
         return {
             "morning_plans": "\n".join(plan_lines),
             "current_state": "\n".join(state_lines),
+            "commodity_context": commodity_context,
             "active_positions": "\n".join(pos_lines),
             "strategy_signals": "  Gate runs before the deterministic strategy engine. Use this check only to approve or reject planned setups.",
             "decision_rules": decision_rules,
@@ -1653,6 +1740,25 @@ class ResearchAgent(BaseAgent):
         if treasury:
             lines.append(f"10Y Treasury: {treasury['yield_pct']}%")
 
+        commodities = ctx.get("commodities") or {}
+        if commodities:
+            formatted = []
+            for name, data in commodities.items():
+                if not isinstance(data, dict):
+                    continue
+                label = name.replace("_", " ").title()
+                price = self._safe_float(data.get("price"))
+                change_pct = data.get("change_pct")
+                source = data.get("source", "unknown")
+                if price is None:
+                    continue
+                if isinstance(change_pct, (int, float)):
+                    formatted.append(f"{label}: ${price:.2f} ({change_pct:+.2f}%, {source})")
+                else:
+                    formatted.append(f"{label}: ${price:.2f} ({source})")
+            if formatted:
+                lines.append("Commodities: " + ", ".join(formatted))
+
         # Sector rotation
         sectors = ctx.get("sector_performance", {})
         if sectors:
@@ -1694,6 +1800,41 @@ class ResearchAgent(BaseAgent):
                 )
 
         return "\n".join(lines) if lines else "Market context unavailable."
+
+    def _format_relevant_commodities(self, symbols: list[str], market_context: dict) -> str:
+        commodities = market_context.get("commodities") or {}
+        if not commodities:
+            return "No commodity snapshot available."
+
+        wanted = []
+        seen = set()
+        for symbol in symbols:
+            for key in COMMODITY_RELEVANCE.get(str(symbol).upper(), ()):
+                if key not in seen:
+                    wanted.append(key)
+                    seen.add(key)
+
+        if not wanted:
+            return "No direct commodity driver mapped for current candidates."
+
+        lines = []
+        for key in wanted:
+            data = commodities.get(key)
+            if not isinstance(data, dict):
+                continue
+            price = self._safe_float(data.get("price"))
+            if price is None:
+                continue
+            label = key.replace("_", " ").title()
+            change_pct = data.get("change_pct")
+            timestamp = data.get("timestamp", "unknown time")
+            source = data.get("source", "unknown")
+            if isinstance(change_pct, (int, float)):
+                lines.append(f"  {label}: ${price:.2f} ({change_pct:+.2f}%, {source}, {timestamp})")
+            else:
+                lines.append(f"  {label}: ${price:.2f} ({source}, {timestamp})")
+
+        return "\n".join(lines) if lines else "No relevant commodity quotes available for current candidates."
 
     def _format_screener_context(self, screener_results: dict | None) -> str:
         if not screener_results:
@@ -1872,6 +2013,8 @@ class ResearchAgent(BaseAgent):
                 "market_summary": template_note,
                 "sector_leaders": [],
                 "sector_laggards": [],
+                "key_drivers": [],
+                "thesis_review": [],
                 "trades_review": [],
                 "patterns_detected": [],
                 "confidence_calibration": {
@@ -1882,6 +2025,19 @@ class ResearchAgent(BaseAgent):
                     "assessment": "Debug template mode; calibration skipped.",
                 },
                 "swing_updates": [],
+                "next_session_theses": [
+                    {
+                        "name": "debug_template_thesis",
+                        "theory": "Debug template mode active; no forward market thesis generated.",
+                        "symbols_to_watch": [],
+                        "drivers_to_monitor": [],
+                        "confirmation_signals": [],
+                        "invalidation_signals": ["RUN_MODE remains debug."],
+                        "preferred_entry_style": "avoid_if_gap_extended",
+                        "crowding_risk": "medium",
+                        "confidence": 0.0,
+                    }
+                ],
                 "forward_outlook": "Debug template mode active; no model-generated outlook.",
                 "lessons": [
                     "Debug template mode is enabled, so this reflection is deterministic."
@@ -2002,6 +2158,12 @@ class ResearchAgent(BaseAgent):
             "overall_sentiment": "neutral",
             "market_summary": template_note,
             "market_regime": "neutral",
+            "market_thesis": {
+                "primary_swing_theory": "Debug template mode; no model-generated swing theory.",
+                "drivers": [],
+                "what_would_change_my_mind": ["RUN_MODE=paper enables live inference."],
+                "crowding_assessment": "medium; template output is not an edge signal.",
+            },
             "best_opportunities": best_opportunities,
             "stocks": stocks,
             "self_reflection": (
@@ -2025,6 +2187,15 @@ class ResearchAgent(BaseAgent):
         return {
             "sentiment": "neutral",
             "confidence": 0.5,
+            "swing_thesis": {
+                "theory": f"Template swing thesis for {symbol}; no model inference in debug mode.",
+                "driver": "debug_template",
+                "expected_timeframe": "swing_2_5_days",
+                "confirmation_signals": ["Switch RUN_MODE=paper for live confirmation logic."],
+                "invalidation_signals": ["Template mode remains enabled."],
+                "crowding_risk": "medium",
+                "entry_quality": "fair",
+            },
             "key_observations": [
                 (
                     f"Template baseline for {symbol}: price {price:.2f}, "
@@ -2408,6 +2579,7 @@ class ResearchAgent(BaseAgent):
         market_regime_summary = data.get("market_regime_summary", "No regime data.")
         active_positions = data.get("active_positions", "No active swing positions.")
         recent_observations = data.get("recent_observations", "No prior observations.")
+        morning_context = data.get("morning_context", "No morning research context.")
         today_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         prompt = EVENING_REFLECTION_PROMPT.format(
@@ -2415,6 +2587,7 @@ class ResearchAgent(BaseAgent):
             market_regime_summary=market_regime_summary,
             active_positions=active_positions,
             recent_observations=recent_observations,
+            morning_context=morning_context,
             today_date=today_date,
         )
 

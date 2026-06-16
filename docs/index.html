@@ -174,6 +174,16 @@
     .conf-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--good)); }
     .news-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
     .news-chip { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .thesis-card { background: linear-gradient(160deg, var(--surface2) 0%, var(--surface) 100%); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; margin-bottom: 16px; }
+    .thesis-title { font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
+    .thesis-main { font-size: 14px; line-height: 1.55; font-weight: 650; }
+    .thesis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 12px; }
+    .thesis-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 11px 13px; }
+    .thesis-box strong { display: block; font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .thesis-box div, .thesis-box li { font-size: 12px; line-height: 1.45; color: var(--muted); }
+    .thesis-box ul { list-style: none; display: grid; gap: 4px; }
+    .thesis-box li { position: relative; padding-left: 12px; }
+    .thesis-box li::before { content: '-'; position: absolute; left: 0; color: var(--faint); }
 
     /* TRADES */
     .trade-row { cursor: pointer; transition: background .1s; }
@@ -223,6 +233,14 @@
     .disc-sym { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
     .disc-reason { font-size: 11px; color: var(--muted); line-height: 1.4; }
     .analyst-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 11px; border-radius: var(--r-sm); background: var(--surface2); border: 1px solid var(--border); margin-bottom: 6px; }
+    .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+    .audit-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; }
+    .audit-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+    .audit-title { font-size: 13px; font-weight: 850; }
+    .audit-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .audit-note { font-size: 12px; color: var(--muted); line-height: 1.45; margin-top: 8px; }
+    .audit-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+    .audit-link { font-size: 11px; font-weight: 750; color: var(--accent); padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border2); background: var(--accent-dim); }
 
     /* KNOWLEDGE */
     .kb-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
@@ -257,6 +275,7 @@
     .obs-lessons { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
     .obs-lesson { font-size: 12px; color: var(--muted); padding-left: 14px; position: relative; }
     .obs-lesson::before { content: 'Â·'; position: absolute; left: 0; color: var(--faint); }
+    .obs-thesis { margin-top: 10px; display: grid; gap: 8px; }
 
     .proposal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
     .proposal-card { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: var(--r-sm); padding: 16px; }
@@ -376,6 +395,7 @@
       <div id="profileTabs" class="profile-strip"></div>
     </div>
     <div class="kpi-strip" id="kpiStrip"></div>
+    <div id="marketThesis"></div>
     <div class="overview-grid">
       <div class="card">
         <div class="card-hd">
@@ -463,6 +483,16 @@
         <div class="card-hd"><h3>Market Regime</h3></div>
         <p id="marketSummaryText" style="font-size:13px;color:var(--muted);line-height:1.6"></p>
         <div class="regime-chips" id="regimeChips"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-hd">
+          <div>
+            <h3>News Context Audit</h3>
+            <p>Saved morning, monitor, and evening news/search context used by the strategist.</p>
+          </div>
+        </div>
+        <div class="mini-grid" id="newsAuditSummary" style="margin-bottom:12px"></div>
+        <div id="newsAudit"></div>
       </div>
       <div class="news-grid">
         <div>
@@ -600,6 +630,58 @@
   const miniTile = (l, v, c = "") => `<div class="mini-tile"><strong>${esc(l)}</strong><span class="${c}">${esc(String(v ?? "â€“"))}</span></div>`;
   const voiceStateClass = v => String(v || "").toLowerCase().replace(/_/g, "-");
   const renderVoiceList = items => arr(items).length ? `<ul class="voice-list">${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="voice-history-summary">None noted.</div>`;
+  const thesisList = items => arr(items).length ? `<ul>${arr(items).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div>None recorded.</div>`;
+
+  function renderMarketThesis(research) {
+    const thesis = obj(research.market_thesis);
+    if (!Object.keys(thesis).length) return "";
+    const main = thesis.primary_swing_theory || thesis.theory || "";
+    const drivers = arr(thesis.drivers);
+    const disconfirm = arr(thesis.what_would_change_my_mind || thesis.invalidation_signals);
+    const crowding = thesis.crowding_assessment || thesis.crowding_risk || "";
+    return `<div class="thesis-card">
+      <div class="thesis-title">Current Swing Market Thesis</div>
+      <div class="thesis-main">${esc(main || "No top-level market thesis recorded.")}</div>
+      <div class="thesis-grid">
+        <div class="thesis-box"><strong>Drivers</strong>${thesisList(drivers)}</div>
+        <div class="thesis-box"><strong>What Changes The Thesis</strong>${thesisList(disconfirm)}</div>
+        <div class="thesis-box"><strong>Crowding</strong><div>${esc(crowding || "No crowding assessment recorded.")}</div></div>
+      </div>
+    </div>`;
+  }
+
+  function renderSwingThesis(analysis) {
+    const thesis = obj(analysis.swing_thesis);
+    if (!Object.keys(thesis).length) return "";
+    return `<div class="dec-sec">
+      <div class="dec-sec-lbl">Swing Thesis</div>
+      <div class="thesis-box">
+        <strong>${esc(thesis.expected_timeframe || "2-10 day theory")}</strong>
+        <div>${esc(thesis.theory || "No swing thesis text recorded.")}</div>
+        <div class="news-chips">
+          ${thesis.driver ? `<div class="news-chip">Driver: ${esc(thesis.driver)}</div>` : ""}
+          ${thesis.crowding_risk ? `<div class="news-chip">Crowding: ${esc(thesis.crowding_risk)}</div>` : ""}
+          ${thesis.entry_quality ? `<div class="news-chip">Entry: ${esc(thesis.entry_quality)}</div>` : ""}
+        </div>
+      </div>
+      <div class="thesis-grid">
+        <div class="thesis-box"><strong>Confirm</strong>${thesisList(thesis.confirmation_signals)}</div>
+        <div class="thesis-box"><strong>Invalidate</strong>${thesisList(thesis.invalidation_signals)}</div>
+      </div>
+    </div>`;
+  }
+
+  function renderObservationTheses(obs) {
+    const reviews = arr(obs.thesis_review);
+    const next = arr(obs.next_session_theses);
+    if (!reviews.length && !next.length) return "";
+    const reviewHtml = reviews.slice(0, 3).map(x => {
+      const status = x.status ? ` [${x.status}]` : "";
+      return `<div class="thesis-box"><strong>Review${esc(status)}</strong><div>${esc(x.thesis || "No thesis text.")}</div>${x.evidence ? `<div style="margin-top:5px">${esc(x.evidence)}</div>` : ""}${x.entry_quality_lesson ? `<div style="margin-top:5px;color:var(--accent)">${esc(x.entry_quality_lesson)}</div>` : ""}</div>`;
+    }).join("");
+    const nextHtml = next.slice(0, 3).map(x => `<div class="thesis-box"><strong>${esc(x.name || "Next Session Thesis")}</strong><div>${esc(x.theory || "No theory recorded.")}</div><div class="news-chips">${x.crowding_risk ? `<div class="news-chip">Crowding: ${esc(x.crowding_risk)}</div>` : ""}${x.preferred_entry_style ? `<div class="news-chip">Entry: ${esc(x.preferred_entry_style)}</div>` : ""}${x.confidence !== undefined ? `<div class="news-chip">Conf: ${esc(Math.round(Number(x.confidence) * 100))}%</div>` : ""}</div><div class="thesis-grid"><div class="thesis-box"><strong>Confirm</strong>${thesisList(x.confirmation_signals)}</div><div class="thesis-box"><strong>Invalidate</strong>${thesisList(x.invalidation_signals)}</div></div></div>`).join("");
+    return `<div class="obs-thesis">${reviewHtml}${nextHtml}</div>`;
+  }
 
   let BUNDLE = null, ACTIVE = null, CHART = null, HISTORY = [], R_BY_SYM = {}, M_BY_SYM = {}, N_BY_SYM = {}, OPEN_ROW = null, DEC_FILTER = "all", INTERACTION_DAY = "";
 
@@ -621,7 +703,7 @@
     const ps = obj(b.profiles);
     if (Object.keys(ps).length) return ps;
     const fp = obj(b.profile), pid = fp.id || b.active_profile || "default";
-    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), monitor: obj(b.monitor), llm: obj(b.llm), context: obj(b.context), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice), evolution: obj(b.evolution) } };
+    return { [pid]: { profile: { id: pid, label: fp.label || labelOf(pid) }, latest: obj(b.latest), history: arr(b.history), trades: arr(b.trades), research: obj(b.research), monitor: obj(b.monitor), llm: obj(b.llm), context: obj(b.context), news_audit: obj(b.news_audit), reports: obj(b.reports), artifacts: obj(b.artifacts), knowledge: obj(b.knowledge), interactions: obj(b.interactions), voice: obj(b.voice), evolution: obj(b.evolution) } };
   }
 
   function getComparison(b, ps) {
@@ -744,6 +826,7 @@
           return `<div class="decision-card" data-rec="${esc(rec)}">
             <div class="dec-top"><div><div class="dec-sym">${esc(sym)}</div><div class="dec-desc">${esc(trunc(a.reasoning || a.technical_setup || a.news_summary || "", 140))}</div></div><span class="rec-badge ${esc(rec)}">${esc(rec)}</span></div>
             ${confP !== null ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;color:var(--muted)">Confidence</span><div class="conf-bar" style="flex:1"><div class="conf-fill" style="width:${clamp(confP,0,100)}%"></div></div><span style="font-size:12px;font-weight:700">${confP}%</span></div>` : ""}
+            ${renderSwingThesis(a)}
             <div class="dec-sec"><div class="dec-sec-lbl">Execution Gate</div><div class="news-chips"><div class="news-chip">${esc(gateLabel)}</div>${gate.monitor_reason ? `<div class="news-chip" title="${esc(gate.monitor_reason)}">${esc(trunc(gate.monitor_reason, 90))}</div>` : ""}</div></div>
             <div class="dec-plan">${[["Entry",fmtM(plan.entry)],["Stop",fmtM(plan.stop_loss)],["Target",fmtM(plan.target)],["R/R",plan.risk_reward_ratio !== undefined ? Number(plan.risk_reward_ratio).toFixed(2)+"Ã—":"â€“"]].map(([l,v])=>`<div class="plan-cell"><div class="lbl">${esc(l)}</div><div class="val">${v}</div></div>`).join("")}</div>
             ${arr(a.key_observations).length ? `<div class="dec-sec"><div class="dec-sec-lbl">Key Observations</div><ul class="dec-bullets">${arr(a.key_observations).slice(0,3).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
@@ -765,6 +848,7 @@
       <div class="td-block">
         <h4>Why We ${esc(String(t.action || "Traded").toUpperCase())} ${esc(sym)}</h4>
         ${t.reasoning ? `<p>${esc(trunc(t.reasoning, 280))}</p>` : (a.news_summary ? `<p>${esc(trunc(a.news_summary, 280))}</p>` : "")}
+        ${renderSwingThesis(a)}
         ${obs.length ? `<ul>${obs.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : ""}
         ${cats.length ? `<div style="margin-top:10px"><div style="font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Catalysts</div><ul>${cats.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
         ${risks.length ? `<div style="margin-top:8px"><div style="font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--bad);margin-bottom:6px">Risks</div><ul>${risks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
@@ -812,10 +896,65 @@
     OPEN_ROW = wasOpen ? null : idx;
   };
 
+  function renderNewsAudit(pb) {
+    const audit = obj(pb.news_audit), counts = obj(audit.counts), entries = arr(audit.entries);
+    const summaryEl = document.getElementById("newsAuditSummary");
+    const auditEl = document.getElementById("newsAudit");
+    if (!summaryEl || !auditEl) return;
+    summaryEl.innerHTML = [
+      ["Saved Entries", counts.entries ?? entries.length],
+      ["Days Covered", counts.days ?? 0],
+      ["Articles / Markers", counts.articles ?? 0],
+      ["Unique Sources", counts.sources ?? 0],
+      ["URLs", counts.urls ?? 0],
+      ["Searches", counts.searches ?? 0],
+    ].map(([l, v]) => miniTile(l, v)).join("");
+    const artifactUrl = v => {
+      const s = String(v || "").trim();
+      if (!s) return "";
+      if (safeUrl(s)) return s;
+      return /^(data\/|\.\/|\/)/.test(s) ? s : "";
+    };
+    if (!entries.length) {
+      auditEl.innerHTML = emptyEl("No saved news audit entries yet.");
+      return;
+    }
+    auditEl.innerHTML = `<div class="audit-grid">${entries.slice(0, 9).map(entry => {
+      const q = String(entry.quality_label || "unknown").toLowerCase();
+      const qCls = q === "high" ? "buy" : q === "medium" ? "watch" : q === "low" ? "hold" : "dry";
+      const sources = arr(entry.sources).slice(0, 5);
+      const symbols = arr(entry.symbols).slice(0, 6);
+      const links = arr(entry.links).map(link => {
+        const url = artifactUrl(link.url);
+        return url ? `<a class="audit-link" href="${esc(url)}" target="_blank" rel="noreferrer">${esc(link.label || "Open")}</a>` : "";
+      }).join("");
+      return `<div class="audit-card">
+        <div class="audit-top">
+          <div>
+            <div class="audit-title">${esc(entry.phase_label || entry.phase_group || "News Context")}</div>
+            <div class="audit-meta">${esc(dtFull(entry.timestamp) || entry.day || "No timestamp")} - ${esc(entry.source_kind || "saved context")}</div>
+          </div>
+          <span class="badge ${qCls}">${esc(q)}</span>
+        </div>
+        <div class="news-chips">
+          <div class="news-chip">${esc(String(entry.article_count || 0))} articles/markers</div>
+          <div class="news-chip">${esc(String(entry.source_count || 0))} sources</div>
+          <div class="news-chip">${esc(String(entry.url_count || 0))} urls</div>
+          <div class="news-chip">${esc(String(entry.search_count || 0))} searches</div>
+          ${symbols.length ? `<div class="news-chip">Symbols: ${esc(symbols.join(", "))}</div>` : ""}
+        </div>
+        ${sources.length ? `<div class="audit-note">Sources: ${esc(sources.join(", "))}</div>` : ""}
+        <div class="audit-note">${esc(entry.notes || entry.summary || "No audit notes saved.")}</div>
+        ${links ? `<div class="audit-links">${links}</div>` : ""}
+      </div>`;
+    }).join("")}</div>`;
+  }
+
   function renderNews(pb) {
     const ctx = obj(pb.context), prompt = obj(ctx.prompt_sections), ni = obj(prompt.news_inputs), mc = obj(prompt.market_context);
     const res = Object.keys(obj(pb.research)).length ? obj(pb.research) : {};
     const disc = arr(ni.news_discoveries), hot = arr(ni.hot_stocks), hl = arr(ni.market_headlines), analyst = arr(obj(ni.finviz).analyst_changes);
+    renderNewsAudit(pb);
 
     document.getElementById("marketSummaryText").textContent = res.market_summary || "No market summary available.";
     const chips = [];
@@ -854,7 +993,7 @@
       : emptyEl("No patterns yet â€” they appear after weekly reviews.");
 
     document.getElementById("obsCards").innerHTML = obs.length
-      ? obs.map(o => `<div class="obs-card"><div class="obs-hd"><span class="obs-date">${esc(o.date || "?")}</span>${o.market_regime ? `<span class="obs-regime">${esc(o.market_regime)}</span>` : ""}</div><div class="obs-summary">${esc(o.market_summary || "No summary.")}</div>${arr(o.lessons).length ? `<div class="obs-lessons">${arr(o.lessons).slice(0,3).map(l=>`<div class="obs-lesson">${esc(l)}</div>`).join("")}</div>` : ""}</div>`).join("")
+      ? obs.map(o => `<div class="obs-card"><div class="obs-hd"><span class="obs-date">${esc(o.date || "?")}</span>${o.market_regime ? `<span class="obs-regime">${esc(o.market_regime)}</span>` : ""}</div><div class="obs-summary">${esc(o.market_summary || "No summary.")}</div>${renderObservationTheses(o)}${arr(o.lessons).length ? `<div class="obs-lessons">${arr(o.lessons).slice(0,3).map(l=>`<div class="obs-lesson">${esc(l)}</div>`).join("")}</div>` : ""}</div>`).join("")
       : emptyEl("No observations yet â€” run the evening reflection phase to start.");
 
     document.getElementById("proposalCards").innerHTML = proposals.length
@@ -1040,6 +1179,7 @@
     const best = arr(res.best_opportunities);
     document.getElementById("activeLabel").textContent = profile.label || labelOf(profile.id || ACTIVE);
     document.getElementById("heroSummary").textContent = [res.market_summary, res.market_regime ? "Regime: " + res.market_regime : "", best.length ? "Top picks: " + best.join(", ") : ""].filter(Boolean).join(" Â· ") || "No research data yet.";
+    document.getElementById("marketThesis").innerHTML = renderMarketThesis(res);
 
     const rt = obj(llm.runtime) || {};
     const runUrl = rt.github?.run_url || ctx.llm_meta?.runtime?.github?.run_url || "";

@@ -130,8 +130,9 @@ def test_select_monitor_candidates_prefers_active_and_near_entry_symbols(
         assert [item["symbol"] for item in candidates] == ["LMT", "CVX"]
 
 
-def test_lean_monitor_context_includes_quote_provenance(message_bus, monkeypatch):
+def test_lean_monitor_context_includes_quote_provenance(message_bus, monkeypatch, tmp_path):
     monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
     reset_settings()
     agent = ResearchAgent(message_bus)
 
@@ -162,6 +163,58 @@ def test_lean_monitor_context_includes_quote_provenance(message_bus, monkeypatch
     assert context["candidate_symbols"] == ["AAPL"]
     assert "yahoo_1m" in context["current_state"]
     assert "42s" in context["current_state"]
+
+
+def test_lean_monitor_context_includes_relevant_commodities(message_bus, monkeypatch, tmp_path):
+    monkeypatch.setattr(research_module, "PerformanceTracker", DummyTracker)
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    reset_settings()
+    agent = ResearchAgent(message_bus)
+
+    context = agent._build_lean_monitor_context(
+        {
+            "UAL": {
+                "latest_price": 118.25,
+                "price_change_pct": 1.7,
+                "volume": 1_000_000,
+                "indicators": {"rsi_14": 58.0},
+                "price_history": [],
+                "quote_source": "yahoo_1m",
+                "quote_age_seconds": 30,
+            }
+        },
+        {
+            "stocks": {
+                "UAL": {
+                    "recommendation": "buy",
+                    "trade_plan": {"entry": 118.0, "stop_loss": 114.5, "target": 124.0},
+                }
+            }
+        },
+        {},
+        {
+            "market_regime": "risk_on",
+            "commodities": {
+                "wti_crude": {
+                    "symbol": "CL=F",
+                    "price": 79.5,
+                    "change_pct": -3.05,
+                    "timestamp": "2026-06-15T14:35:00+00:00",
+                    "source": "yahoo_1m",
+                },
+                "brent_crude": {
+                    "symbol": "BZ=F",
+                    "price": 83.2,
+                    "change_pct": -2.5,
+                    "timestamp": "2026-06-15T14:35:00+00:00",
+                    "source": "yahoo_1m",
+                },
+            },
+        },
+    )
+
+    assert "Wti Crude: $79.50" in context["commodity_context"]
+    assert "Brent Crude: $83.20" in context["commodity_context"]
 
 
 def test_research_agent_collects_web_context_for_high_value_symbols(

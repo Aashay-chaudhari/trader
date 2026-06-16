@@ -363,6 +363,7 @@ class Orchestrator:
                     "signals": strategy_data.get("signals", []),
                     "market_data": market_data,
                     "symbols": watchlist,
+                    "active_positions": active_positions,
                 })
             )
             if response and response.type == MessageType.RESULT:
@@ -805,6 +806,7 @@ class Orchestrator:
                         "signals": strategy_data.get("signals", []),
                         "market_data": market_data,
                         "symbols": decision_symbols,
+                        "active_positions": active_positions,
                     },
                 )
             )
@@ -1032,6 +1034,10 @@ morning execution conditions and the live snapshot.
 
 {prompt_sections.get("current_state", "(unavailable)")}
 
+## Relevant Commodity Snapshot
+
+{prompt_sections.get("commodity_context", "No direct commodity driver mapped for current candidates.")}
+
 ## Active Positions
 
 {prompt_sections.get("active_positions", "(none)")}
@@ -1173,6 +1179,10 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
             regime = morning.get("market_regime", "unknown")
             summary = morning.get("market_summary", "")
             market_regime_summary = f"Regime: {regime}. {summary}"
+        morning_context = (
+            json.dumps(morning, indent=2, default=str)
+            if morning else "No morning research context."
+        )
 
         # Active swing positions
         active_positions = st.get_summary_for_prompt(token_budget=300)
@@ -1198,6 +1208,7 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
                     "market_data": {},  # Required by research agent
                     "todays_trades": todays_trades,
                     "market_regime_summary": market_regime_summary,
+                    "morning_context": morning_context,
                     "active_positions": active_positions,
                     "recent_observations": recent_observations,
                     "symbols": self._today_watchlist or self._load_watchlist(),

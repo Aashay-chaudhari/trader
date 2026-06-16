@@ -29,13 +29,14 @@ class RiskAgent(BaseAgent):
     async def process(self, message: Message) -> Any:
         signals = message.data.get("signals", [])
         market_data = message.data.get("market_data", {})
+        active_positions = self._active_position_symbols(message.data)
         settings = get_settings()
 
         approved = []
         rejected = []
 
         for signal in signals:
-            checks = self._run_checks(signal, market_data, settings)
+            checks = self._run_checks(signal, market_data, settings, active_positions)
             failures = [c for c in checks if not c["passed"]]
 
             if failures:
@@ -59,25 +60,75 @@ class RiskAgent(BaseAgent):
             "rejected_trades": rejected,
             "symbols": message.data.get("symbols", []),
             "market_data": market_data,
+            "active_positions": sorted(active_positions),
         }
 
-    def _run_checks(self, signal: dict, market_data: dict, settings) -> list[dict]:
+    def _run_checks(
+        self,
+        signal: dict,
+        market_data: dict,
+        settings,
+        active_positions: set[str],
+    ) -> list[dict]:
         """Run all risk checks on a single trade signal."""
         checks = []
 
-        # Check 1: Minimum signal strength
+        # Check 1: Long-only enforcement
+        checks.append(self._check_long_only_exit(signal, active_positions))
+
+        # Check 2: Minimum signal strength
         checks.append(self._check_signal_strength(signal, settings))
 
-        # Check 2: Position size limit
+        # Check 3: Position size limit
         checks.append(self._check_position_size(signal, settings))
 
-        # Check 3: Price sanity (is the stock trading normally?)
+        # Check 4: Price sanity (is the stock trading normally?)
         checks.append(self._check_price_sanity(signal, market_data))
 
-        # Check 4: Volume check (enough liquidity?)
+        # Check 5: Volume check (enough liquidity?)
         checks.append(self._check_volume(signal, market_data))
 
         return checks
+
+    def _active_position_symbols(self, data: dict) -> set[str]:
+        """Normalize held long symbols from orchestrator payloads."""
+        symbols: set[str] = set()
+
+        for item in data.get("active_positions", []) or []:
+            if isinstance(item, str) and item.strip():
+                symbols.add(item.strip().upper())
+            elif isinstance(item, dict):
+                symbol = str(item.get("symbol") or "").strip().upper()
+                if symbol:
+                    symbols.add(symbol)
+
+        for item in data.get("positions", []) or []:
+            if not isinstance(item, dict):
+                continue
+            symbol = str(item.get("symbol") or "").strip().upper()
+            shares = item.get("shares", item.get("quantity", 0))
+            try:
+                share_count = float(shares or 0)
+            except (TypeError, ValueError):
+                share_count = 0.0
+            if symbol and share_count > 0:
+                symbols.add(symbol)
+
+        return symbols
+
+    def _check_long_only_exit(self, signal: dict, active_positions: set[str]) -> dict:
+        """Sells are exits only; short sales are disabled."""
+        action = str(signal.get("action", "")).lower()
+        symbol = str(signal.get("symbol", "")).upper()
+        passed = action != "sell" or symbol in active_positions
+        return {
+            "check": "long_only_exit",
+            "passed": passed,
+            "reason": (
+                f"{symbol} sell is only allowed to exit an existing long position; "
+                "shorts are disabled"
+            ),
+        }
 
     def _check_signal_strength(self, signal: dict, settings) -> dict:
         """Reject signals that aren't strong enough."""

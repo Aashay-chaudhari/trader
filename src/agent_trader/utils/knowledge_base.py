@@ -393,6 +393,13 @@ class KnowledgeBase:
             lines.append(line)
             used += len(line)
 
+            forward_bits = self._format_forward_bits(obs)
+            for forward_line in forward_bits:
+                if used + len(forward_line) > char_budget:
+                    break
+                lines.append(forward_line)
+                used += len(forward_line)
+
         # Add weekly thesis if room
         weekly = self.get_latest_weekly_review()
         if weekly and used < char_budget - 200:
@@ -403,6 +410,37 @@ class KnowledgeBase:
                 lines.append(line)
 
         return "\n".join(lines) if len(lines) > 1 else ""
+
+    def _format_forward_bits(self, obs: dict) -> list[str]:
+        lines = []
+
+        thesis_reviews = obs.get("thesis_review") or []
+        for review in thesis_reviews[:2]:
+            if not isinstance(review, dict):
+                continue
+            thesis = str(review.get("thesis") or "").strip()
+            status = str(review.get("status") or "").strip()
+            lesson = str(review.get("entry_quality_lesson") or review.get("evidence") or "").strip()
+            if thesis:
+                lines.append(f"    Thesis {status}: {thesis[:160]} | {lesson[:160]}")
+
+        next_theses = obs.get("next_session_theses") or []
+        for thesis in next_theses[:2]:
+            if not isinstance(thesis, dict):
+                continue
+            name = str(thesis.get("name") or "next_session_thesis").strip()
+            theory = str(thesis.get("theory") or "").strip()
+            confirm = "; ".join(str(x) for x in thesis.get("confirmation_signals", [])[:2])
+            invalidate = "; ".join(str(x) for x in thesis.get("invalidation_signals", [])[:2])
+            if theory:
+                line = f"    Next thesis {name}: {theory[:180]}"
+                if confirm:
+                    line += f" | Confirm: {confirm[:140]}"
+                if invalidate:
+                    line += f" | Invalidate: {invalidate[:140]}"
+                lines.append(line)
+
+        return lines
 
     # ── Archival ───────────────────────────────────────────────────────
 

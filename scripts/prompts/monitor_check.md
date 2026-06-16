@@ -28,6 +28,8 @@ Rules:
 - Prefer `ready_to_trade=false` when evidence is mixed, incomplete, stale, or
   only roughly close to the setup.
 - Keep the morning trade plan unless the live snapshot clearly invalidates it.
+- Long-only rule: `sell` may only exit or trim an active long position already
+  listed in the context. Do not use `sell` for a new bearish/short trade.
 - Do not call external APIs or search the web for this monitor gate.
 
 Decision schema:

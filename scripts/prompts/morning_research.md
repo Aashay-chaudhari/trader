@@ -10,6 +10,9 @@ knowledge, positions, lessons, and observations.
 
 > Spend time on web research. The quality of today's trades depends on it.
 
+> Long-only rule: never open shorts. Use `sell` only to exit or trim an
+> existing long position; bearish new ideas should be `watch` or `hold`.
+
 ## Operating mode (important for CLI runs)
 
 - Run autonomously. Do not ask the user permission or "how should I proceed?" questions unless you are completely blocked from reading/writing required files.
@@ -84,10 +87,13 @@ The goal is to develop a **thesis for today** grounded in real data.
 - Hard maximum is 10 web searches unless the runner explicitly provides a different cap.
 - Prioritize highest-signal searches first (index regime, macro driver, movers, catalysts) before lower-priority exploration.
 
-**Synthesize**: After searching, form a clear thesis:
+**Synthesize**: After searching, form a clear swing thesis:
 - What is today's regime? (risk_on / risk_off / neutral)
 - What's the primary narrative driving markets?
 - Where are the opportunities given this regime + your strategy effectiveness data?
+- What should happen over the next 2-10 trading days if your theory is right?
+- What would prove the theory wrong?
+- Is the setup already crowded/obvious and therefore likely to have poor entry quality?
 
 ### Required visible research log (for terminal transparency)
 
@@ -115,12 +121,17 @@ Based on your research, pick stocks. Apply these filters:
 For each selected stock, determine:
 - **recommendation**: `buy`, `sell`, `hold`, or `watch`
 - **confidence**: 0.0 to 1.0 — be honest, reference your calibration history
+- **swing_thesis**: falsifiable 2-10 day theory, primary driver, confirmation signals, invalidation signals, crowding risk, and entry quality
 - **execution_condition**: 1 sentence in natural language describing what must still be true intraday before the trade should actually fire
 - **trade_plan**: specific entry, stop_loss, target
 - **reasoning**: 2-3 sentences explaining WHY, not just what
 - **catalysts**: what could move this today
 - **risks**: what could go wrong
 - **supporting_articles**: links from your research
+
+If nothing offers a disciplined swing entry, keep it on `watch`. Do not force a trade just because the market is open.
+Do not mark a new bearish idea as `sell`; this system is long-only, so `sell`
+is reserved for exiting or trimming a position already held by this strategist.
 
 **Price anchoring requirement (strict):**
 - Anchor every `trade_plan.entry` to the latest real quote or most recent market close you can verify today.
@@ -132,7 +143,7 @@ For each selected stock, determine:
 
 ## Step 4b — Live quote verification (required before writing files)
 
-For every stock you plan to mark as **`buy` or `sell`**, do a final live quote check
+For every stock you plan to mark as **`buy` or exit-`sell`**, do a final live quote check
 **before** writing any files. This is a hard requirement, not optional.
 
 For each buy/sell candidate:
@@ -168,12 +179,27 @@ File: `data/profiles/{{PROFILE}}/cache/morning_research.json`
     "overall_sentiment": "bullish|neutral|bearish",
     "market_regime": "risk_on|risk_off|neutral",
     "market_summary": "2-3 sentences about today's market from your research",
+    "market_thesis": {
+        "primary_swing_theory": "main 2-10 day market theory",
+        "drivers": ["driver 1", "driver 2"],
+        "what_would_change_my_mind": ["disconfirming evidence"],
+        "crowding_assessment": "low|medium|high plus 1 sentence"
+    },
     "best_opportunities": ["SYM1", "SYM2"],
     "stocks": {
         "SYM1": {
             "sentiment": "bullish|neutral|bearish",
             "confidence": 0.75,
             "recommendation": "buy|sell|hold|watch",
+            "swing_thesis": {
+                "theory": "falsifiable 2-10 day thesis",
+                "driver": "primary macro/commodity/sector/company driver",
+                "expected_timeframe": "swing_2_5_days|swing_1_2_weeks",
+                "confirmation_signals": ["specific evidence required before entry"],
+                "invalidation_signals": ["specific evidence that cancels the trade"],
+                "crowding_risk": "low|medium|high",
+                "entry_quality": "early|fair|late|chasing"
+            },
             "execution_condition": "Natural-language intraday trigger the monitor should verify before executing",
             "reasoning": "Why this is a good/bad setup today — be specific",
             "catalysts": ["Catalyst 1", "Catalyst 2"],

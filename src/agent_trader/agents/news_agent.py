@@ -63,6 +63,14 @@ SECTOR_ETFS = {
     "Real Estate": "XLRE",
 }
 
+COMMODITY_FUTURES = {
+    "wti_crude": "CL=F",
+    "brent_crude": "BZ=F",
+    "natural_gas": "NG=F",
+    "gold": "GC=F",
+    "copper": "HG=F",
+}
+
 
 class NewsAgent(BaseAgent):
     """Unified multi-source news aggregation and market context."""
@@ -456,6 +464,7 @@ class NewsAgent(BaseAgent):
             "sector_performance": {},
             "sector_leaders": [],
             "sector_laggards": [],
+            "commodities": {},
             "market_regime": "neutral",
             "breadth": None,
         }
@@ -536,6 +545,8 @@ class NewsAgent(BaseAgent):
         except Exception:
             pass
 
+        context["commodities"] = self._gather_commodity_context()
+
         # Sector rotation
         sector_changes = {}
         for sector, etf in SECTOR_ETFS.items():
@@ -575,6 +586,52 @@ class NewsAgent(BaseAgent):
             context["market_regime"] = "neutral"
 
         return context
+
+    def _gather_commodity_context(self) -> dict:
+        """Fetch commodity futures that drive catalyst-sensitive stock theses."""
+        commodities = {}
+        for name, ticker_symbol in COMMODITY_FUTURES.items():
+            quote = self._fetch_commodity_quote(ticker_symbol)
+            if quote:
+                commodities[name] = quote
+        return commodities
+
+    def _fetch_commodity_quote(self, ticker_symbol: str) -> dict | None:
+        try:
+            ticker = yf.Ticker(ticker_symbol)
+            intraday = ticker.history(period="1d", interval="1m", prepost=True)
+            daily = ticker.history(period="5d")
+        except Exception:
+            return None
+
+        price = None
+        timestamp = None
+        source = None
+        if not intraday.empty:
+            price = float(intraday["Close"].iloc[-1])
+            timestamp = intraday.index[-1].isoformat()
+            source = "yahoo_1m"
+        elif not daily.empty:
+            price = float(daily["Close"].iloc[-1])
+            timestamp = daily.index[-1].isoformat()
+            source = "yahoo_daily_fallback"
+
+        if price is None:
+            return None
+
+        change_pct = None
+        if len(daily) >= 2:
+            prev = float(daily["Close"].iloc[-2])
+            if prev:
+                change_pct = round((price - prev) / prev * 100, 2)
+
+        return {
+            "symbol": ticker_symbol,
+            "price": round(price, 2),
+            "change_pct": change_pct,
+            "timestamp": timestamp,
+            "source": source,
+        }
 
 
 # ── Module-level helpers ──────────────────────────────────────

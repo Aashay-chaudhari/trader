@@ -595,6 +595,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
     _write_json(data_out / "monitor.json", bundle["monitor"])
     _write_json(data_out / "llm.json", bundle["llm"])
     _write_json(data_out / "context.json", bundle["context"])
+    _write_json(data_out / "news_audit.json", bundle["news_audit"])
     _write_json(data_out / "knowledge.json", bundle["knowledge"])
     _write_json(data_out / "interactions.json", bundle["interactions"])
     _write_json(data_out / "voice.json", bundle["voice"])
@@ -637,6 +638,7 @@ def generate_dashboard(data_dir: str = "data", docs_dir: str = "docs") -> None:
         _write_json(profile_out / "monitor.json", profile_bundle["monitor"])
         _write_json(profile_out / "llm.json", profile_bundle["llm"])
         _write_json(profile_out / "context.json", profile_bundle["context"])
+        _write_json(profile_out / "news_audit.json", profile_bundle["news_audit"])
         _write_json(profile_out / "knowledge.json", profile_bundle["knowledge"])
         _write_json(profile_out / "interactions.json", profile_bundle["interactions"])
         _write_json(profile_out / "voice.json", profile_bundle["voice"])
@@ -725,6 +727,7 @@ def _build_dashboard_bundle(
         "monitor": active_bundle["monitor"],
         "llm": active_bundle["llm"],
         "context": active_bundle["context"],
+        "news_audit": active_bundle["news_audit"],
         "knowledge": active_bundle["knowledge"],
         "interactions": active_bundle["interactions"],
         "voice": active_bundle["voice"],
@@ -770,6 +773,19 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         context,
         research,
     )
+    interactions = _load_interaction_bundle(
+        data_root,
+        profile_id=profile["id"],
+        multi_profile=multi_profile,
+    )
+    news_audit = _build_news_audit(
+        data_root,
+        context=context,
+        research=research,
+        interactions=interactions,
+        profile_id=profile["id"],
+        multi_profile=multi_profile,
+    )
     return {
         "profile": profile,
         "latest": _load_latest_snapshot(data_root, profile=profile),
@@ -779,8 +795,9 @@ def _build_profile_bundle(data_root: Path, *, profile_id: str, multi_profile: bo
         "monitor": monitor,
         "llm": llm,
         "context": context,
+        "news_audit": news_audit,
         "knowledge": _load_knowledge_bundle(data_root),
-        "interactions": _load_interaction_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
+        "interactions": interactions,
         "voice": _load_voice_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "evolution": _load_evolution_bundle(data_root, profile_id=profile["id"], multi_profile=multi_profile),
         "reports": {"research": research_report, "monitor": monitor_report},
@@ -925,11 +942,13 @@ def _load_interaction_bundle(data_root: Path, *, profile_id: str, multi_profile:
             "summary": payload.get("summary", ""),
             "prompt_file": payload.get("prompt_file", ""),
             "transcript_file": payload.get("transcript_file", ""),
+            "context_file": payload.get("context_file", ""),
             "metadata_file": str(path).replace("\\", "/"),
             "raw_log_file": payload.get("raw_log_file", ""),
             "prompt_source": payload.get("prompt_source", ""),
             "prompt_url": _public_interaction_path(payload.get("prompt_file", ""), profile_id=profile_id, multi_profile=multi_profile),
             "transcript_url": _public_interaction_path(payload.get("transcript_file", ""), profile_id=profile_id, multi_profile=multi_profile),
+            "context_url": _public_interaction_path(payload.get("context_file", ""), profile_id=profile_id, multi_profile=multi_profile),
             "metadata_url": _public_interaction_path(str(path).replace("\\", "/"), profile_id=profile_id, multi_profile=multi_profile),
             "prompt_source_url": _public_repo_path(payload.get("prompt_source", "")),
         }
@@ -963,6 +982,460 @@ def _empty_interaction_bundle() -> dict[str, Any]:
         "recent": [],
         "days": [],
     }
+
+
+def _empty_news_audit_bundle() -> dict[str, Any]:
+    return {
+        "counts": {
+            "days": 0,
+            "entries": 0,
+            "headlines": 0,
+            "articles": 0,
+            "urls": 0,
+            "sources": 0,
+            "searches": 0,
+        },
+        "latest": {},
+        "entries": [],
+        "days": [],
+    }
+
+
+def _build_news_audit(
+    data_root: Path,
+    *,
+    context: dict[str, Any],
+    research: dict[str, Any],
+    interactions: dict[str, Any],
+    profile_id: str,
+    multi_profile: bool,
+) -> dict[str, Any]:
+    entries: list[dict[str, Any]] = []
+    prompt = context.get("prompt_sections", {}) if isinstance(context, dict) else {}
+    news_inputs = prompt.get("news_inputs", {}) if isinstance(prompt, dict) else {}
+    if not isinstance(news_inputs, dict) or not any(news_inputs.values()):
+        news_inputs = _build_news_inputs_from_research(research if isinstance(research, dict) else {})
+
+    latest_by_phase = interactions.get("latest_by_phase", {}) if isinstance(interactions, dict) else {}
+    morning_latest = (
+        latest_by_phase.get("morning") or latest_by_phase.get("research")
+        if isinstance(latest_by_phase, dict)
+        else {}
+    )
+    timestamp = (
+        context.get("timestamp")
+        if isinstance(context, dict)
+        else ""
+    ) or (morning_latest.get("timestamp") if isinstance(morning_latest, dict) else "")
+    structured_entry = _news_audit_entry_from_inputs(
+        news_inputs,
+        phase=str(context.get("phase") or "research") if isinstance(context, dict) else "research",
+        timestamp=str(timestamp or ""),
+        source_kind="saved_prompt_context",
+        links=[
+            {
+                "label": "Prompt context JSON",
+                "url": _profile_artifact_url(
+                    "context.json",
+                    profile_id=profile_id,
+                    multi_profile=multi_profile,
+                ),
+            },
+            {
+                "label": "News audit JSON",
+                "url": _profile_artifact_url(
+                    "news_audit.json",
+                    profile_id=profile_id,
+                    multi_profile=multi_profile,
+                ),
+            },
+        ],
+    )
+    if structured_entry:
+        entries.append(structured_entry)
+
+    for item in _safe_list(interactions.get("recent") if isinstance(interactions, dict) else []):
+        if not isinstance(item, dict):
+            continue
+        if item.get("phase_group") not in {"morning", "monitor", "evening"}:
+            continue
+        interaction_entry = _news_audit_entry_from_interaction(
+            data_root,
+            item,
+            profile_id=profile_id,
+        )
+        if interaction_entry:
+            entries.append(interaction_entry)
+
+    entries.sort(key=lambda item: str(item.get("timestamp") or item.get("day") or ""), reverse=True)
+    entries = _select_news_audit_entries(_dedupe_news_audit_entries(entries))
+    counts = _news_audit_counts(entries)
+    return {
+        "counts": counts,
+        "latest": entries[0] if entries else {},
+        "entries": entries,
+        "days": _group_news_audit_by_day(entries),
+    }
+
+
+def _profile_artifact_url(filename: str, *, profile_id: str, multi_profile: bool) -> str:
+    base = f"data/profiles/{profile_id}" if multi_profile else "data"
+    return f"{base}/{filename}"
+
+
+def _news_audit_entry_from_inputs(
+    news_inputs: dict[str, Any],
+    *,
+    phase: str,
+    timestamp: str,
+    source_kind: str,
+    links: list[dict[str, str]] | None = None,
+) -> dict[str, Any]:
+    summary = _summarize_news_inputs(news_inputs)
+    if summary["article_count"] == 0 and summary["headline_count"] == 0:
+        return {}
+
+    phase_group = _interaction_phase_group(phase)
+    day = _timestamp_day(timestamp)
+    score = _score_news_audit(
+        headline_count=summary["headline_count"],
+        article_count=summary["article_count"],
+        source_count=summary["source_count"],
+        url_count=summary["url_count"],
+        search_count=0,
+        structured=True,
+    )
+    return {
+        "id": f"{day or 'latest'}:{phase_group}:{source_kind}",
+        "timestamp": timestamp,
+        "day": day,
+        "phase": phase,
+        "phase_group": phase_group,
+        "phase_label": _interaction_phase_label(phase),
+        "source_kind": source_kind,
+        "quality_score": score,
+        "quality_label": _news_quality_label(score),
+        "headline_count": summary["headline_count"],
+        "article_count": summary["article_count"],
+        "url_count": summary["url_count"],
+        "source_count": summary["source_count"],
+        "search_count": 0,
+        "symbols": summary["symbols"][:20],
+        "sources": summary["sources"][:16],
+        "notes": (
+            f"Structured saved news context: {summary['article_count']} article/headline "
+            f"items across {summary['source_count']} sources."
+        ),
+        "links": links or [],
+    }
+
+
+def _summarize_news_inputs(news_inputs: dict[str, Any]) -> dict[str, Any]:
+    articles: list[dict[str, Any]] = []
+    symbols: set[str] = set()
+
+    per_symbol = news_inputs.get("per_symbol", {})
+    if isinstance(per_symbol, dict):
+        for symbol, payload in per_symbol.items():
+            if symbol:
+                symbols.add(str(symbol).upper())
+            if not isinstance(payload, dict):
+                continue
+            articles.extend(
+                item
+                for item in _safe_list(payload.get("news_headlines"))
+                if isinstance(item, dict)
+            )
+
+    market_headlines = [
+        item
+        for item in _safe_list(news_inputs.get("market_headlines"))
+        if isinstance(item, dict)
+    ]
+    articles.extend(market_headlines)
+
+    web_influence = news_inputs.get("web_influence", {})
+    if isinstance(web_influence, dict):
+        by_symbol = web_influence.get("articles_by_symbol", {})
+        if isinstance(by_symbol, dict):
+            for symbol, items in by_symbol.items():
+                if symbol:
+                    symbols.add(str(symbol).upper())
+                articles.extend(item for item in _safe_list(items) if isinstance(item, dict))
+
+    for collection_name in ("news_discoveries", "hot_stocks"):
+        for item in _safe_list(news_inputs.get(collection_name)):
+            if isinstance(item, dict) and item.get("symbol"):
+                symbols.add(str(item.get("symbol")).upper())
+
+    for item in _safe_list((news_inputs.get("finviz") or {}).get("analyst_changes") if isinstance(news_inputs.get("finviz"), dict) else []):
+        if isinstance(item, dict) and item.get("symbol"):
+            symbols.add(str(item.get("symbol")).upper())
+            articles.append(item)
+
+    sources = sorted(
+        {
+            str(item.get("source") or item.get("publisher") or item.get("firm") or "").strip()
+            for item in articles
+            if isinstance(item, dict)
+            and str(item.get("source") or item.get("publisher") or item.get("firm") or "").strip()
+        }
+    )
+    urls = sorted(
+        {
+            str(item.get("url") or item.get("top_headline_url") or "").strip()
+            for item in articles
+            if isinstance(item, dict)
+            and str(item.get("url") or item.get("top_headline_url") or "").strip()
+        }
+    )
+
+    return {
+        "headline_count": len(market_headlines)
+        + sum(
+            len(_safe_list(payload.get("news_headlines")))
+            for payload in (per_symbol.values() if isinstance(per_symbol, dict) else [])
+            if isinstance(payload, dict)
+        ),
+        "article_count": len(articles),
+        "url_count": len(urls),
+        "source_count": len(sources),
+        "symbols": sorted(symbols),
+        "sources": sources,
+    }
+
+
+def _news_audit_entry_from_interaction(
+    data_root: Path,
+    item: dict[str, Any],
+    *,
+    profile_id: str,
+) -> dict[str, Any]:
+    prompt_text = _read_artifact_text(
+        _resolve_profile_artifact_path(data_root, str(item.get("prompt_file", "")), profile_id=profile_id)
+    )
+    transcript_text = _read_artifact_text(
+        _resolve_profile_artifact_path(data_root, str(item.get("transcript_file", "")), profile_id=profile_id)
+    )
+    combined = f"{prompt_text}\n{transcript_text}".strip()
+    urls = _extract_urls(combined)
+    sources = sorted({_url_domain(url) for url in urls if _url_domain(url)})
+    search_count = len(re.findall(r"\bSearch\s*#\d+", combined, flags=re.IGNORECASE))
+    if search_count == 0:
+        search_count = len(re.findall(r"\b(search_query|web search|web.run)\b", combined, flags=re.IGNORECASE))
+    article_markers = len(
+        re.findall(r"\b(title|headline|source|publisher|supporting_articles)\b", combined, flags=re.IGNORECASE)
+    )
+    prompt_present = bool(str(item.get("prompt_url", "")).strip())
+    transcript_present = bool(str(item.get("transcript_url", "")).strip())
+    if not combined and not prompt_present and not transcript_present:
+        return {}
+
+    score = _score_news_audit(
+        headline_count=article_markers,
+        article_count=max(len(urls), article_markers),
+        source_count=len(sources),
+        url_count=len(urls),
+        search_count=search_count,
+        structured=False,
+    )
+    links = [
+        {"label": "Prompt", "url": str(item.get("prompt_url") or "")},
+        {"label": "Transcript", "url": str(item.get("transcript_url") or "")},
+        {"label": "Metadata", "url": str(item.get("metadata_url") or "")},
+    ]
+    links = [link for link in links if link.get("url")]
+    return {
+        "id": f"{item.get('day') or 'unknown'}:{item.get('phase_group') or 'other'}:{item.get('timestamp') or item.get('metadata_file')}",
+        "timestamp": item.get("timestamp", ""),
+        "day": item.get("day") or _timestamp_day(str(item.get("timestamp") or "")),
+        "phase": item.get("phase", "unknown"),
+        "phase_group": item.get("phase_group", "other"),
+        "phase_label": item.get("phase_label") or _interaction_phase_label(str(item.get("phase") or "")),
+        "source_kind": "interaction_prompt_transcript",
+        "quality_score": score,
+        "quality_label": _news_quality_label(score),
+        "headline_count": article_markers,
+        "article_count": max(len(urls), article_markers),
+        "url_count": len(urls),
+        "source_count": len(sources),
+        "search_count": search_count,
+        "symbols": [],
+        "sources": sources[:16],
+        "notes": (
+            f"Prompt/transcript scan found {search_count} search marker(s), "
+            f"{len(urls)} URL(s), and {article_markers} news/source text marker(s)."
+        ),
+        "summary": item.get("summary", ""),
+        "status": item.get("status", "unknown"),
+        "links": links,
+    }
+
+
+def _resolve_profile_artifact_path(data_root: Path, raw_path: str, *, profile_id: str) -> Path:
+    text = str(raw_path or "").replace("\\", "/").strip()
+    if not text:
+        return Path("")
+    path = Path(text)
+    if path.is_absolute() or path.exists():
+        return path
+    profile_prefix = f"data/profiles/{profile_id}/"
+    if text.startswith(profile_prefix):
+        return data_root / text[len(profile_prefix):]
+    if text.startswith("data/"):
+        return data_root / text[len("data/"):]
+    if "interactions/" in text:
+        return data_root / text.split("interactions/", 1)[1]
+    return data_root / text
+
+
+def _read_artifact_text(path: Path, *, limit: int = 180_000) -> str:
+    if not path or not path.exists() or not path.is_file():
+        return ""
+    try:
+        return path.read_text(encoding="utf-8", errors="ignore")[:limit]
+    except OSError:
+        return ""
+
+
+def _extract_urls(text: str) -> list[str]:
+    urls = re.findall(r"https?://[^\s\])>\"']+", text or "")
+    return sorted({url.rstrip(".,;:") for url in urls})
+
+
+def _url_domain(url: str) -> str:
+    match = re.match(r"https?://([^/]+)", str(url or ""), flags=re.IGNORECASE)
+    if not match:
+        return ""
+    return match.group(1).lower().removeprefix("www.")
+
+
+def _score_news_audit(
+    *,
+    headline_count: int,
+    article_count: int,
+    source_count: int,
+    url_count: int,
+    search_count: int,
+    structured: bool,
+) -> int:
+    score = 10 if structured else 0
+    score += min(30, max(headline_count, article_count) * 4)
+    score += min(25, source_count * 7)
+    score += min(20, url_count * 3)
+    score += min(15, search_count * 4)
+    return min(100, score)
+
+
+def _news_quality_label(score: int) -> str:
+    if score >= 75:
+        return "high"
+    if score >= 45:
+        return "medium"
+    if score > 0:
+        return "low"
+    return "unknown"
+
+
+def _timestamp_day(timestamp: str) -> str:
+    text = str(timestamp or "").strip()
+    return text[:10] if len(text) >= 10 else ""
+
+
+def _dedupe_news_audit_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    deduped: list[dict[str, Any]] = []
+    for entry in entries:
+        key = str(entry.get("id") or "")
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(entry)
+    return deduped
+
+
+def _select_news_audit_entries(entries: list[dict[str, Any]], *, limit: int = 24) -> list[dict[str, Any]]:
+    """Keep the audit readable without losing morning/evening provenance."""
+    sorted_entries = sorted(
+        entries,
+        key=lambda item: str(item.get("timestamp") or item.get("day") or ""),
+        reverse=True,
+    )
+    selected: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def add(entry: dict[str, Any]) -> None:
+        key = str(entry.get("id") or "")
+        if key in seen or len(selected) >= limit:
+            return
+        seen.add(key)
+        selected.append(entry)
+
+    for entry in sorted_entries:
+        if entry.get("source_kind") == "saved_prompt_context":
+            add(entry)
+
+    for phase_group in ("morning", "evening"):
+        phase_count = 0
+        for entry in sorted_entries:
+            if entry.get("phase_group") != phase_group:
+                continue
+            add(entry)
+            phase_count += 1
+            if phase_count >= 3:
+                break
+
+    monitor_count = 0
+    for entry in sorted_entries:
+        if entry.get("phase_group") == "monitor":
+            if monitor_count >= 12:
+                continue
+            monitor_count += 1
+        add(entry)
+
+    return sorted(
+        selected,
+        key=lambda item: str(item.get("timestamp") or item.get("day") or ""),
+        reverse=True,
+    )
+
+
+def _news_audit_counts(entries: list[dict[str, Any]]) -> dict[str, int]:
+    return {
+        "days": len({str(item.get("day") or "") for item in entries if item.get("day")}),
+        "entries": len(entries),
+        "headlines": sum(int(item.get("headline_count") or 0) for item in entries),
+        "articles": sum(int(item.get("article_count") or 0) for item in entries),
+        "urls": sum(int(item.get("url_count") or 0) for item in entries),
+        "sources": len(
+            {
+                source
+                for item in entries
+                for source in _safe_list(item.get("sources"))
+                if source
+            }
+        ),
+        "searches": sum(int(item.get("search_count") or 0) for item in entries),
+    }
+
+
+def _group_news_audit_by_day(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for entry in entries:
+        day = str(entry.get("day") or "unknown")
+        grouped.setdefault(day, []).append(entry)
+    return [
+        {
+            "date": day,
+            "count": len(items),
+            "entries": sorted(
+                items,
+                key=lambda item: str(item.get("timestamp") or ""),
+                reverse=True,
+            ),
+        }
+        for day, items in sorted(grouped.items(), reverse=True)
+    ]
 
 
 def _interaction_day(payload: dict[str, Any], path: Path) -> str:
@@ -1390,6 +1863,7 @@ def _build_profile_artifacts(profile_id: str, *, multi_profile: bool) -> dict[st
         "monitor_json": f"{base}/monitor.json",
         "llm_json": f"{base}/llm.json",
         "context_json": f"{base}/context.json",
+        "news_audit_json": f"{base}/news_audit.json",
         "knowledge_json": f"{base}/knowledge.json",
         "interactions_json": f"{base}/interactions.json",
         "voice_json": f"{base}/voice.json",
@@ -1469,6 +1943,7 @@ def _empty_profile_bundle(profile_id: str) -> dict[str, Any]:
         "monitor": {},
         "llm": {},
         "context": {},
+        "news_audit": _empty_news_audit_bundle(),
         "knowledge": _empty_knowledge_bundle(),
         "interactions": _empty_interaction_bundle(),
         "voice": _empty_voice_bundle(),

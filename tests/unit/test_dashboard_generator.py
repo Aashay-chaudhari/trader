@@ -152,6 +152,7 @@ def test_generate_dashboard_writes_context_rich_bundle():
         assert "Today's Decisions" in html
         assert "Strategist Comparison" in html
         assert "Market Intelligence" in html
+        assert "News Context Audit" in html
         assert "foldout" in html
         assert "Actions" in html
         assert bundle["profiles"]["default"]["profile"]["id"] == "default"
@@ -159,9 +160,158 @@ def test_generate_dashboard_writes_context_rich_bundle():
         assert bundle["context"]["prompt_sections"]["news_inputs"]["per_symbol"]["ABBV"]["news_headlines"][0]["title"] == (
             "AbbVie signs new antibody discovery deal"
         )
+        audit = bundle["profiles"]["default"]["news_audit"]
+        assert audit["counts"]["entries"] >= 1
+        assert audit["counts"]["articles"] >= 2
+        assert audit["entries"][0]["source_kind"] == "saved_prompt_context"
+        assert "news_audit" in bundle
+        assert (docs_dir / "data" / "news_audit.json").exists()
         assert bundle["reports"]["research"]["run_id"] == "20260321_175214"
         assert (docs_dir / "data" / "report_research.md").exists()
         assert (docs_dir / "data" / "report_monitor.md").exists()
+
+
+def test_generate_dashboard_audits_interaction_news_context():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+
+        (data_dir / "snapshots").mkdir(parents=True)
+        (data_dir / "research").mkdir(parents=True)
+        (data_dir / "analytics").mkdir(parents=True)
+        (data_dir / "context").mkdir(parents=True)
+        interaction_dir = data_dir / "interactions" / "2026-03-21"
+        interaction_dir.mkdir(parents=True)
+
+        (data_dir / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-21T20:10:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (data_dir / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (data_dir / "research" / "2026-03-21_research_2010.json").write_text(
+            json.dumps({"stocks": {}, "best_opportunities": []}),
+            encoding="utf-8",
+        )
+        (data_dir / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (data_dir / "context" / "latest_research.json").write_text(
+            json.dumps({"phase": "research", "prompt_sections": {}}),
+            encoding="utf-8",
+        )
+
+        prompt_file = interaction_dir / "201000_evening_prompt.md"
+        transcript_file = interaction_dir / "201000_evening_transcript.txt"
+        metadata_file = interaction_dir / "201000_evening_interaction.json"
+        prompt_file.write_text(
+            "RESEARCH LOG\nSearch #1 stock market close today\nhttps://example.com/close\n",
+            encoding="utf-8",
+        )
+        transcript_file.write_text(
+            "Search #2 top stock movers today\nHeadline: movers expanded\nSource: MarketWatch\nhttps://example.com/movers\n",
+            encoding="utf-8",
+        )
+        metadata_file.write_text(
+            json.dumps(
+                {
+                    "timestamp": "2026-03-21T20:10:00Z",
+                    "profile": "default",
+                    "phase": "evening",
+                    "tool": "codex",
+                    "status": "success",
+                    "prompt_file": str(prompt_file),
+                    "transcript_file": str(transcript_file),
+                    "summary": "Evening reflection completed.",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        entries = bundle["profiles"]["default"]["news_audit"]["entries"]
+        evening = next(entry for entry in entries if entry["phase_group"] == "evening")
+
+        assert evening["search_count"] >= 2
+        assert evening["url_count"] >= 2
+        assert evening["source_kind"] == "interaction_prompt_transcript"
+        assert any(link["label"] == "Prompt" for link in evening["links"])
+
+
+def test_news_audit_keeps_structured_context_when_monitor_history_is_long():
+    with tempfile.TemporaryDirectory(dir=".", ignore_cleanup_errors=True) as temp_dir:
+        from pathlib import Path
+
+        root = Path(temp_dir).resolve()
+        data_dir = root / "data"
+        docs_dir = root / "docs"
+        interaction_dir = data_dir / "interactions" / "2026-03-21"
+
+        for path in (
+            data_dir / "snapshots",
+            data_dir / "research",
+            data_dir / "analytics",
+            data_dir / "context",
+            interaction_dir,
+        ):
+            path.mkdir(parents=True)
+
+        (data_dir / "snapshots" / "latest.json").write_text(
+            json.dumps({"timestamp": "2026-03-21T20:10:00Z", "positions": [], "position_count": 0}),
+            encoding="utf-8",
+        )
+        (data_dir / "snapshots" / "history.json").write_text(json.dumps([]), encoding="utf-8")
+        (data_dir / "research" / "2026-03-21_research_2010.json").write_text(
+            json.dumps({"stocks": {}, "best_opportunities": []}),
+            encoding="utf-8",
+        )
+        (data_dir / "analytics" / "latest_llm.json").write_text(json.dumps({}), encoding="utf-8")
+        (data_dir / "context" / "latest_research.json").write_text(
+            json.dumps(
+                {
+                    "phase": "research",
+                    "timestamp": "2026-03-21T08:00:00Z",
+                    "prompt_sections": {
+                        "news_inputs": {
+                            "per_symbol": {},
+                            "market_headlines": [
+                                {"title": "Morning market setup", "source": "Example"}
+                            ],
+                        }
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        for i in range(20):
+            stamp = f"2026-03-21T{10 + i // 2:02d}:{(i % 2) * 30:02d}:00Z"
+            prompt_file = interaction_dir / f"{i:06d}_monitor_prompt.md"
+            transcript_file = interaction_dir / f"{i:06d}_monitor_transcript.txt"
+            prompt_file.write_text(f"Monitor prompt {i}\nhttps://example.com/{i}\n", encoding="utf-8")
+            transcript_file.write_text("Headline: monitor context\nSource: Example\n", encoding="utf-8")
+            (interaction_dir / f"{i:06d}_monitor_interaction.json").write_text(
+                json.dumps(
+                    {
+                        "timestamp": stamp,
+                        "phase": "monitor",
+                        "status": "success",
+                        "prompt_file": str(prompt_file),
+                        "transcript_file": str(transcript_file),
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+        generate_dashboard(data_dir=str(data_dir), docs_dir=str(docs_dir))
+
+        bundle = json.loads((docs_dir / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        entries = bundle["profiles"]["default"]["news_audit"]["entries"]
+
+        assert any(entry["source_kind"] == "saved_prompt_context" for entry in entries)
+        assert sum(1 for entry in entries if entry["phase_group"] == "monitor") <= 12
 
 
 def test_generate_dashboard_backfills_legacy_news_context():
