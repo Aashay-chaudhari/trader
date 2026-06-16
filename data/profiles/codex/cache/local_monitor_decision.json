@@ -1,0 +1,66 @@
+{
+  "run_id": "20260616_133516",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions are broadly risk-on, but the prepared trade gates are not clearly confirmed because GM lacks VWAP confirmation, QCOM is above its buy range, and HOOD remains below its plan levels.",
+  "stocks": {
+    "GM": {
+      "recommendation": "watch",
+      "confidence": 0.58,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "GM is trading within the 84.00 to 86.00 buy range",
+        "Broader market regime is risk-on"
+      ],
+      "failed_conditions": [
+        "Holding above VWAP is not confirmed in the live snapshot"
+      ],
+      "monitor_reason": "GM is near the planned entry in a risk-on tape, but the VWAP condition is not clearly satisfied.",
+      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
+      "trade_plan": {
+        "entry": 85.0,
+        "stop_loss": 82.5,
+        "target": 90.0
+      }
+    },
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.52,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "QCOM has strong positive intraday momentum"
+      ],
+      "failed_conditions": [
+        "QCOM is trading above the 224.00 to 229.50 buy range",
+        "Holding above VWAP is not confirmed in the live snapshot",
+        "Semiconductor ETF rollover status is not confirmed in the live snapshot"
+      ],
+      "monitor_reason": "QCOM has overshot the planned entry range, so approving the buy would chase beyond the morning plan.",
+      "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
+      "trade_plan": {
+        "entry": 226.5,
+        "stop_loss": 220.5,
+        "target": 238.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.4,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "HOOD is only a watch setup in the morning plan"
+      ],
+      "failed_conditions": [
+        "HOOD is trading well below the 124.00 watch entry level",
+        "Opening-range hold is not confirmed in the live snapshot",
+        "Fintech and crypto risk appetite confirmation is not provided in the live snapshot"
+      ],
+      "monitor_reason": "HOOD remains a watch because the snapshot does not show an opening-range hold or constructive sector confirmation.",
+      "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
+      "trade_plan": {
+        "entry": 124.0,
+        "stop_loss": 120.0,
+        "target": 132.0
+      }
+    }
+  }
+}
