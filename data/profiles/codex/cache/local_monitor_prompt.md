@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260616_180514
-Candidate symbols: GM, QCOM, HOOD
+Run id: 20260616_183513
+Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -10,23 +10,23 @@ morning execution conditions and the live snapshot.
 
 ## Monitor Candidates
 
-  GM: buy | entry=$85.0 stop=$82.5 target=$90.0
-    Execution condition: Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.
-    Why it is being checked now: price is within 1.9% of entry; 9 fresh headline(s)
   QCOM: buy | entry=$226.5 stop=$220.5 target=$238.0
     Execution condition: Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.
     Why it is being checked now: price is near stop loss; 9 fresh headline(s)
   HOOD: watch | entry=$124.0 stop=$120.0 target=$132.0
     Execution condition: Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.
     Why it is being checked now: price is near stop loss; 13 fresh headline(s)
+  GM: buy | entry=$85.0 stop=$82.5 target=$90.0
+    Execution condition: Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.
+    Why it is being checked now: price is near stop loss; 9 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| GM    | $   83.37 |  +2.3% |  59 |     0.5x | yahoo_1m | 17s |         9 |
-| QCOM  | $  219.96 |  +3.9% |  54 |     0.6x | yahoo_1m | 17s |         9 |
-| HOOD  | $   96.92 |  -1.2% |  64 |     0.7x | yahoo_1m | 20s |        13 |
+| QCOM  | $  218.60 |  -1.0% |  53 |     0.6x | yahoo_1m | 16s |         9 |
+| HOOD  | $   96.39 |  -1.7% |  63 |     0.8x | yahoo_1m | 19s |        13 |
+| GM    | $   83.06 |  +1.9% |  58 |     0.6x | yahoo_1m | 17s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -51,7 +51,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260616_180514",
+  "run_id": "20260616_183513",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
