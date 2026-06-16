@@ -1,24 +1,24 @@
 # Trading Journal — 2026-06-16
 
-**Run ID:** `20260616_133516`  
+**Run ID:** `20260616_173517`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 13:38 UTC  
+**Time:** 17:37 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Live conditions are broadly risk-on, but the prepared trade gates are not clearly confirmed because GM lacks VWAP confirmation, QCOM is above its buy range, and HOOD remains below its plan levels.
+> Live conditions weaken the morning thesis because the candidates are either outside their required execution ranges or lack clear confirmation of the setup.
 
 ### GM [?]
-- **Sentiment:** N/A | **Confidence:** 58% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 35% | **Recommendation:** watch
 
 ### QCOM [?]
-- **Sentiment:** N/A | **Confidence:** 52% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 25% | **Recommendation:** watch
 
 ### HOOD [?]
-- **Sentiment:** N/A | **Confidence:** 40% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 20% | **Recommendation:** watch
 
 ## LLM Telemetry
 
@@ -37,46 +37,46 @@
 
 ### Market Headlines
 
+- **Opening the Strait Eases Oil Prices, Imports & Housing Starts Report** [yfinance:SPY]
+- **This Vanguard ETF Is Quietly Outpacing the S&P 500 in 2026 and Costs Just 0.04 Percent** [yfinance:SPY]
 - **VOO vs. IWO: What's the Difference for S&P 500 Investors in 2026?** [yfinance:SPY]
-- **Stock Market Today: Indexes Mixed As Housing Starts Data Disappoints; SpaceX Continues To Soar (Live Coverage)** [yfinance:SPY]
 - **Exchange-Traded Funds, Equity Futures Higher Pre-Bell Tuesday Ahead of Fed Policy Meeting** [yfinance:SPY]
-- **Why Dave Ramsey Chooses $5,000 Index Funds Over SpaceX: The Math Explained** [yfinance:SPY]
-- **QTUM vs. QQQ: Does the Quantum-Computing ETF Beat Just Buying the Nasdaq-100?** [yfinance:QQQ]
+- **Exchange-Traded Funds Fall, US Equities Mixed After Midday** [yfinance:QQQ]
 
 ### QCOM Headlines
 
+- **Trending: Robinhood cuts 10% of workforce, Yum Brands sells Pizza Hut, Qualcomm's AI deal** [Yahoo Finance Video]
 - **Microsoft debuts Surface Laptop and Surface Pro amid AI-driven memory shortage** [Yahoo Finance]
-- **SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing** [MT Newswires]
-- **Exchange-Traded Funds, Equity Futures Higher Pre-Bell Tuesday Ahead of Fed Policy Meeting** [MT Newswires]
+- **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
+- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
 
 ### GM Headlines
 
-- **GM Is Not Just a Car Company. It’s Getting Into the Weapons Business.** [Barrons.com]
-- **Why GM's Newest Strategy Could Top Rival Ford** [Motley Fool]
-- **GM in Talks to Supply Weapons Parts to Lockheed Martin** [The Wall Street Journal]
-- **Global Electric Vehicle Outlook Weaker Than Previously Expected, BloombergNEF Says** [MT Newswires]
+- **GM reveals new Silverado pickup as Ford F-150 sales falter** [Yahoo Finance]
+- **GM, Lockheed in talks to collaborate as US scales weapons stockpile** [Detroit Free Press]
+- **Trump Invokes Defense Production Act. GM, Lockheed Discuss Partnership.** [Investor's Business Daily]
+- **Gas Prices Pushing Some Car Buyers Away From Pickup Trucks, GM Exec Says** [The Wall Street Journal]
 
 ### WDC Headlines
 
-- **SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing** [MT Newswires]
-- **Western Digital, Micron, Sandisk hover at all-time highs as AI trade reignites** [Yahoo Finance]
-- **Western Digital Jumps 7% on Morgan Stanley’s 33% Price-Target Hike, Seagate Gains 5% as the AI Storage Boom Rolls On** [24/7 Wall St.]
+- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
+- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
+- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
+- **Stock Market Today: Dow Hits A High, Nasdaq Lags; SpaceX Surges, Aerospace Play Breaks Out (Live Coverage)** [Investor's Business Daily]
 
 ### MU Headlines
 
-- **SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing** [MT Newswires]
 - **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
-- **Western Digital, Micron, Sandisk hover at all-time highs as AI trade reignites** [Yahoo Finance]
+- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
+- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
+- **Chip stocks surge, oil slides closer to $80 on US-Iran deal, Fox to acquire Roku** [Yahoo Finance Video]
 
 ### HOOD Headlines
 
 - **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
 - **Robinhood to let go 10% of staff as it seeks to become leaner** [Yahoo Finance]
 - **Thanks to the World Cup, Robinhood's 2026 prediction markets revenue could skyrocket** [Yahoo Finance Video]
-- **Robinhood Is Cutting 10% of Its Workforce but It’s Not Why You Think** [Barrons.com]
+- **Stock Market Today, June 16: SpaceX Overtakes Amazon as Valuation Tops $2.8 Trillion** [Motley Fool]
 
 ### A Headlines
 
@@ -87,17 +87,17 @@
 
 ### CYTK Headlines
 
+- **Edgewise Bounds Between Double-Digit Losses And Gain — What's Going On?** [Investor's Business Daily]
 - **Cytokinetics (CYTK) Launches MYQORZO in Germany for Obstructive HCM Treatment** [Insider Monkey]
 - **First MYQORZO Launch In Germany Might Change The Case For Investing In Cytokinetics (CYTK)** [Simply Wall St.]
 - **Why Is Cytokinetics (CYTK) Down 5.5% Since Last Earnings Report?** [Zacks]
-- **Citi Calls Cytokinetics, Incorporated (CYTK) a “Top Pick” Among Small-to-Mid Cap Biotech Stocks** [Insider Monkey]
 
 ### TSLA Headlines
 
-- **Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing** [MT Newswires]
-- **Elon Musk's SpaceX is already closing in on Microsoft's market cap and a big Apple milestone** [Yahoo Finance]
-- **Tech stocks today: SpaceX becomes more valuable than Tesla** [Yahoo Finance]
-- **SpaceX stock gains: What its IPO signals about its future success** [Yahoo Finance Video]
+- **The Mag 7 plus these three AI companies make up the new Fab 10** [Yahoo Finance Video]
+- **What SpaceX's $1.2 billion bitcoin holdings mean for investors** [Yahoo Finance Video]
+- **High gas prices have more Americans opting for EVs: ChargePoint data** [Yahoo Finance]
+- **4 Reasons to Think Twice Before Buying SpaceX Stock Right Now** [Motley Fool]
 
 ## Trade Signals
 

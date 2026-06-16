@@ -1,5 +1,5 @@
 {
-  "run_id": "20260616_133516",
+  "run_id": "20260616_173517",
   "phase": "monitor",
   "profile": {
     "id": "codex",
@@ -9,26 +9,27 @@
     "dry_run": false,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-06-16T13:38:15.012893+00:00",
+  "timestamp": "2026-06-16T17:37:55.727225+00:00",
   "screener": null,
   "research": {
     "research": {
-      "run_id": "20260616_133516",
+      "run_id": "20260616_173517",
       "overall_sentiment": "neutral",
-      "market_summary": "Live conditions are broadly risk-on, but the prepared trade gates are not clearly confirmed because GM lacks VWAP confirmation, QCOM is above its buy range, and HOOD remains below its plan levels.",
+      "market_summary": "Live conditions weaken the morning thesis because the candidates are either outside their required execution ranges or lack clear confirmation of the setup.",
       "stocks": {
         "GM": {
           "recommendation": "watch",
-          "confidence": 0.58,
+          "confidence": 0.35,
           "ready_to_trade": false,
           "matched_conditions": [
-            "GM is trading within the 84.00 to 86.00 buy range",
-            "Broader market regime is risk-on"
+            "GM is positive on the day"
           ],
           "failed_conditions": [
-            "Holding above VWAP is not confirmed in the live snapshot"
+            "GM is trading below the required 84.00 to 86.00 entry range",
+            "VWAP hold is not confirmed in the live snapshot",
+            "broader market regime hint is neutral rather than clearly risk-on"
           ],
-          "monitor_reason": "GM is near the planned entry in a risk-on tape, but the VWAP condition is not clearly satisfied.",
+          "monitor_reason": "GM is close but still below the required buy band and lacks clear VWAP and risk-on confirmation.",
           "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
           "trade_plan": {
             "entry": 85.0,
@@ -38,17 +39,17 @@
         },
         "QCOM": {
           "recommendation": "watch",
-          "confidence": 0.52,
+          "confidence": 0.25,
           "ready_to_trade": false,
           "matched_conditions": [
-            "QCOM has strong positive intraday momentum"
+            "QCOM is positive on the day"
           ],
           "failed_conditions": [
-            "QCOM is trading above the 224.00 to 229.50 buy range",
-            "Holding above VWAP is not confirmed in the live snapshot",
-            "Semiconductor ETF rollover status is not confirmed in the live snapshot"
+            "QCOM is trading below the required 224.00 to 229.50 entry range",
+            "VWAP hold is not confirmed in the live snapshot",
+            "semiconductor ETF confirmation is not provided in the live snapshot"
           ],
-          "monitor_reason": "QCOM has overshot the planned entry range, so approving the buy would chase beyond the morning plan.",
+          "monitor_reason": "QCOM is below the planned entry band and near the stop area, so the buy condition is not satisfied.",
           "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
           "trade_plan": {
             "entry": 226.5,
@@ -58,17 +59,16 @@
         },
         "HOOD": {
           "recommendation": "watch",
-          "confidence": 0.4,
+          "confidence": 0.2,
           "ready_to_trade": false,
-          "matched_conditions": [
-            "HOOD is only a watch setup in the morning plan"
-          ],
+          "matched_conditions": [],
           "failed_conditions": [
-            "HOOD is trading well below the 124.00 watch entry level",
-            "Opening-range hold is not confirmed in the live snapshot",
-            "Fintech and crypto risk appetite confirmation is not provided in the live snapshot"
+            "HOOD is negative on the day",
+            "HOOD is far below the planned 124.00 entry and 120.00 stop levels",
+            "opening range hold is not confirmed in the live snapshot",
+            "fintech and crypto risk appetite confirmation is not provided in the live snapshot"
           ],
-          "monitor_reason": "HOOD remains a watch because the snapshot does not show an opening-range hold or constructive sector confirmation.",
+          "monitor_reason": "HOOD remains a watch because price action does not confirm the continuation setup.",
           "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
           "trade_plan": {
             "entry": 124.0,
@@ -109,10 +109,10 @@
             "workflow": "Codex Decision Execution",
             "event_name": "push",
             "actor": "Aashay-chaudhari",
-            "run_id": "27621593433",
+            "run_id": "27636360232",
             "run_attempt": "1",
-            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27621593433",
-            "sha": "0641189c7be3ed59f583dd43de5d1efdf1dc521e",
+            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27636360232",
+            "sha": "6ea18d72124325e4679e009d8a92b5cf402c8986",
             "ref": "refs/heads/main"
           }
         }
@@ -129,28 +129,28 @@
         "info": {
           "name": "QUALCOMM Incorporated",
           "sector": "Technology",
-          "market_cap": 243442384896,
-          "pe_ratio": 24.835484,
+          "market_cap": 231126401024,
+          "pe_ratio": 23.579033,
           "dividend_yield": 1.67,
           "fifty_two_week_high": 259.92,
           "fifty_two_week_low": 121.99
         },
-        "latest_price": 226.21,
-        "quote_timestamp": "2026-06-16T13:38:13.377117+00:00",
+        "latest_price": 216.4,
+        "quote_timestamp": "2026-06-16T17:37:55.525735+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
-        "quote_age_seconds": 1,
+        "quote_age_seconds": 0,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 8.964668249625484,
-        "volume": 1725176,
+        "price_change_pct": 3.5731165680092123,
+        "volume": 10562314,
         "indicators": {
-          "rsi_14": 56.633982281180515,
-          "sma_20": 222.89307327270507,
-          "sma_50": 185.55000701904297,
-          "macd": 6.551255455680661,
-          "macd_signal": 11.13434442597347,
-          "bb_upper": 260.6866387868856,
-          "bb_lower": 185.0995077585245
+          "rsi_14": 53.30489594781711,
+          "sma_20": 222.32232360839845,
+          "sma_50": 185.32170715332032,
+          "macd": 5.640657700661535,
+          "macd_signal": 10.952224874969644,
+          "bb_upper": 259.97155461469237,
+          "bb_lower": 184.67309260210453
         },
         "price_history": [
           {
@@ -388,47 +388,47 @@
           {
             "date": "2026-06-16T00:00:00-04:00",
             "open": 225.8300018310547,
-            "high": 230.98989868164062,
-            "low": 222.80430603027344,
-            "close": 230.6999969482422,
-            "volume": 1725176
+            "high": 231.19000244140625,
+            "low": 218.01010131835938,
+            "close": 219.28500366210938,
+            "volume": 10562314
           }
         ],
-        "fetch_time_ms": 3075,
-        "last_trade_price": 227.82,
-        "last_trade_timestamp": "2026-06-16T13:37:57.966405+00:00",
-        "bid_price": 224.46,
-        "ask_price": 227.96,
+        "fetch_time_ms": 2926,
+        "last_trade_price": 218.76,
+        "last_trade_timestamp": "2026-06-16T17:37:13.852093+00:00",
+        "bid_price": 209.8,
+        "ask_price": 223.0,
         "bid_size": 100.0,
         "ask_size": 100.0,
-        "bid_ask_timestamp": "2026-06-16T13:38:13.377117+00:00"
+        "bid_ask_timestamp": "2026-06-16T17:37:55.525735+00:00"
       },
       "GM": {
         "info": {
           "name": "General Motors Company",
           "sector": "Consumer Cyclical",
-          "market_cap": 76181692416,
-          "pe_ratio": 30.835766,
+          "market_cap": 75370192896,
+          "pe_ratio": 30.507298,
           "dividend_yield": 0.86,
           "fifty_two_week_high": 87.62,
           "fifty_two_week_low": 47.63
         },
-        "latest_price": 86.975,
-        "quote_timestamp": "2026-06-16T13:38:14.390957+00:00",
+        "latest_price": 83.565,
+        "quote_timestamp": "2026-06-16T17:37:55.171991+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
         "quote_age_seconds": 0,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 3.6687090353000382,
-        "volume": 271301,
+        "price_change_pct": 2.5644126845283743,
+        "volume": 3816907,
         "indicators": {
-          "rsi_14": 60.75548172259401,
-          "sma_20": 80.61666755676269,
-          "sma_50": 78.52195999145508,
-          "macd": 1.4016110662295773,
-          "macd_signal": 1.3974321373611969,
-          "bb_upper": 87.61135354607154,
-          "bb_lower": 73.62198156745384
+          "rsi_14": 58.9729885857931,
+          "sma_20": 80.57166748046875,
+          "sma_50": 78.5039599609375,
+          "macd": 1.3298160727121626,
+          "macd_signal": 1.3830731386577138,
+          "bb_upper": 87.47710963403638,
+          "bb_lower": 73.66622532690111
         },
         "price_history": [
           {
@@ -665,58 +665,50 @@
           },
           {
             "date": "2026-06-16T00:00:00-04:00",
-            "open": 82.63999938964844,
-            "high": 85.0999984741211,
-            "low": 84.16500091552734,
-            "close": 84.48999786376953,
-            "volume": 271301
+            "open": 84.6500015258789,
+            "high": 85.41000366210938,
+            "low": 83.06999969482422,
+            "close": 83.58999633789062,
+            "volume": 3816907
           }
         ],
-        "fetch_time_ms": 564,
-        "last_trade_price": 84.99,
-        "last_trade_timestamp": "2026-06-16T13:37:51.284279+00:00",
-        "bid_price": 85.03,
-        "ask_price": 88.92,
+        "fetch_time_ms": 563,
+        "last_trade_price": 83.57,
+        "last_trade_timestamp": "2026-06-16T17:37:54.118998+00:00",
+        "bid_price": 83.54,
+        "ask_price": 83.59,
         "bid_size": 100.0,
         "ask_size": 100.0,
-        "bid_ask_timestamp": "2026-06-16T13:38:14.390957+00:00"
+        "bid_ask_timestamp": "2026-06-16T17:37:55.171991+00:00"
       },
       "WDC": {
         "info": {
           "name": "Western Digital Corporation",
           "sector": "Technology",
-          "market_cap": 243161202688,
-          "pe_ratio": 42.167667,
+          "market_cap": 239469641728,
+          "pe_ratio": 41.527496,
           "dividend_yield": 0.09,
-          "fifty_two_week_high": 705.93,
+          "fifty_two_week_high": 729.92,
           "fifty_two_week_low": 57.88
         },
-        "latest_price": 705.4650268554688,
-        "quote_timestamp": "2026-06-16T13:35:00+00:00",
+        "latest_price": 694.7550048828125,
+        "quote_timestamp": "2026-06-16T17:35:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 20,
+        "quote_age_seconds": 21,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 25.37438557439544,
-        "volume": 1901157,
+        "price_change_pct": 6.308046109264627,
+        "volume": 10792642,
         "indicators": {
-          "rsi_14": 75.0004249753844,
-          "sma_20": 529.2041320800781,
-          "sma_50": 457.23683044433596,
-          "macd": 37.04125854628421,
-          "macd_signal": 31.163805253201247,
-          "bb_upper": 639.8237427050885,
-          "bb_lower": 418.58452145506766
+          "rsi_14": 74.50780620396145,
+          "sma_20": 538.4018615722656,
+          "sma_50": 464.0057165527344,
+          "macd": 42.0878170447578,
+          "macd_signal": 32.681840784589475,
+          "bb_upper": 653.457935669545,
+          "bb_lower": 423.3457874749862
         },
         "price_history": [
-          {
-            "date": "2026-05-04T00:00:00-04:00",
-            "open": 430.61774677860643,
-            "high": 453.7117016546064,
-            "low": 428.3983241725153,
-            "close": 442.24468994140625,
-            "volume": 10175700
-          },
           {
             "date": "2026-05-05T00:00:00-04:00",
             "open": 455.68117683117976,
@@ -942,52 +934,52 @@
             "volume": 6285300
           },
           {
+            "date": "2026-06-15T00:00:00-04:00",
+            "open": 618.780029296875,
+            "high": 658.7999877929688,
+            "low": 612.0,
+            "close": 653.530029296875,
+            "volume": 9488500
+          },
+          {
             "date": "2026-06-16T00:00:00-04:00",
             "open": 686.7750244140625,
-            "high": 705.9299926757812,
-            "low": 685.0,
-            "close": 705.77001953125,
-            "volume": 1901157
+            "high": 729.9199829101562,
+            "low": 667.3499755859375,
+            "close": 694.7550048828125,
+            "volume": 10792642
           }
         ],
-        "fetch_time_ms": 556
+        "fetch_time_ms": 568
       },
       "MU": {
         "info": {
           "name": "Micron Technology, Inc.",
           "sector": "Technology",
-          "market_cap": 1238037692416,
-          "pe_ratio": 51.734688,
+          "market_cap": 1175313055744,
+          "pe_ratio": 49.11357,
           "dividend_yield": 0.06,
-          "fifty_two_week_high": 1100.0,
+          "fifty_two_week_high": 1110.3999,
           "fifty_two_week_low": 103.38
         },
-        "latest_price": 1097.8900146484375,
-        "quote_timestamp": "2026-06-16T13:35:00+00:00",
+        "latest_price": 1042.18994140625,
+        "quote_timestamp": "2026-06-16T17:35:00+00:00",
         "quote_source": "yahoo_1m",
         "quote_age_seconds": 21,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 11.804586519003218,
-        "volume": 4770264,
+        "price_change_pct": -4.209602040388143,
+        "volume": 30231387,
         "indicators": {
-          "rsi_14": 67.01321580990161,
-          "sma_20": 911.7687438964844,
-          "sma_50": 692.2717010498047,
-          "macd": 90.14628258374,
-          "macd_signal": 93.85175395368007,
-          "bb_upper": 1159.9635018213974,
-          "bb_lower": 663.5739859715713
+          "rsi_14": 62.29982679072061,
+          "sma_20": 929.3264923095703,
+          "sma_50": 705.3703997802735,
+          "macd": 89.13791366928501,
+          "macd_signal": 92.78779621553328,
+          "bb_upper": 1158.4140337286615,
+          "bb_lower": 700.2389508904791
         },
         "price_history": [
-          {
-            "date": "2026-05-04T00:00:00-04:00",
-            "open": 560.5999755859375,
-            "high": 592.7999877929688,
-            "low": 557.760009765625,
-            "close": 576.4500122070312,
-            "volume": 46043700
-          },
           {
             "date": "2026-05-05T00:00:00-04:00",
             "open": 609.780029296875,
@@ -1213,42 +1205,50 @@
             "volume": 40785200
           },
           {
+            "date": "2026-06-15T00:00:00-04:00",
+            "open": 1055.8900146484375,
+            "high": 1097.469970703125,
+            "low": 1051.5,
+            "close": 1087.989990234375,
+            "volume": 44741600
+          },
+          {
             "date": "2026-06-16T00:00:00-04:00",
             "open": 1099.3800048828125,
-            "high": 1100.0,
-            "low": 1084.5,
-            "close": 1097.4849853515625,
-            "volume": 4770264
+            "high": 1110.39990234375,
+            "low": 1020.0,
+            "close": 1042.18994140625,
+            "volume": 30231387
           }
         ],
-        "fetch_time_ms": 493
+        "fetch_time_ms": 644
       },
       "HOOD": {
         "info": {
           "name": "Robinhood Markets, Inc.",
           "sector": "Financial Services",
-          "market_cap": 89518489600,
-          "pe_ratio": 48.256897,
+          "market_cap": 86836248576,
+          "pe_ratio": 46.810974,
           "dividend_yield": null,
           "fifty_two_week_high": 153.86,
           "fifty_two_week_low": 63.515
         },
-        "latest_price": 96.88,
-        "quote_timestamp": "2026-06-16T13:38:14.976941+00:00",
+        "latest_price": 96.27000000000001,
+        "quote_timestamp": "2026-06-16T17:37:53.687868+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
-        "quote_age_seconds": 0,
+        "quote_age_seconds": 2,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 1.3139011343397777,
-        "volume": 3172889,
+        "price_change_pct": -1.7217689277909551,
+        "volume": 22403021,
         "indicators": {
-          "rsi_14": 66.4865419543822,
-          "sma_20": 84.97996101379394,
-          "sma_50": 81.41908432006836,
-          "macd": 4.363899617766336,
-          "macd_signal": 2.8998564024138185,
-          "bb_upper": 100.88110210268259,
-          "bb_lower": 69.07881992490529
+          "rsi_14": 63.10066513467278,
+          "sma_20": 84.83103103637696,
+          "sma_50": 81.35951232910156,
+          "macd": 4.126290536987071,
+          "macd_signal": 2.8523345862579657,
+          "bb_upper": 100.23688724336107,
+          "bb_lower": 69.42517482939284
         },
         "price_history": [
           {
@@ -1487,56 +1487,48 @@
             "date": "2026-06-16T00:00:00-04:00",
             "open": 100.2699966430664,
             "high": 101.87999725341797,
-            "low": 98.55000305175781,
-            "close": 99.4092025756836,
-            "volume": 3172889
+            "low": 94.56999969482422,
+            "close": 96.43060302734375,
+            "volume": 22403021
           }
         ],
-        "fetch_time_ms": 589,
-        "last_trade_price": 98.525,
-        "last_trade_timestamp": "2026-06-16T13:38:12.302300+00:00",
-        "bid_price": 95.14,
-        "ask_price": 98.62,
-        "bid_size": 100.0,
-        "ask_size": 200.0,
-        "bid_ask_timestamp": "2026-06-16T13:38:14.976941+00:00"
+        "fetch_time_ms": 544,
+        "last_trade_price": 96.42,
+        "last_trade_timestamp": "2026-06-16T17:37:20.728821+00:00",
+        "bid_price": 96.25,
+        "ask_price": 96.29,
+        "bid_size": 200.0,
+        "ask_size": 100.0,
+        "bid_ask_timestamp": "2026-06-16T17:37:53.687868+00:00"
       },
       "A": {
         "info": {
           "name": "Agilent Technologies, Inc.",
           "sector": "Healthcare",
-          "market_cap": 37111554048,
-          "pe_ratio": 26.38554,
+          "market_cap": 36690735104,
+          "pe_ratio": 26.086346,
           "dividend_yield": 0.78,
           "fifty_two_week_high": 160.27,
           "fifty_two_week_low": 108.35
         },
-        "latest_price": 131.39999389648438,
-        "quote_timestamp": "2026-06-16T13:34:00+00:00",
+        "latest_price": 129.91000366210938,
+        "quote_timestamp": "2026-06-16T17:34:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 82,
+        "quote_age_seconds": 81,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 1.2014768966367437,
-        "volume": 27431,
+        "price_change_pct": -0.5207080900912396,
+        "volume": 1021107,
         "indicators": {
-          "rsi_14": 58.86625519509571,
-          "sma_20": 127.04299888610839,
-          "sma_50": 120.4761994934082,
-          "macd": 4.175844434099417,
-          "macd_signal": 4.5381685378822185,
-          "bb_upper": 146.9614504911334,
-          "bb_lower": 107.12454728108337
+          "rsi_14": 56.39646547865368,
+          "sma_20": 127.8924991607666,
+          "sma_50": 120.7613996887207,
+          "macd": 3.752472596827701,
+          "macd_signal": 4.370690919293823,
+          "bb_upper": 146.59070025958945,
+          "bb_lower": 109.19429806194377
         },
         "price_history": [
-          {
-            "date": "2026-05-04T00:00:00-04:00",
-            "open": 113.4800033569336,
-            "high": 114.87000274658203,
-            "low": 111.83000183105469,
-            "close": 112.18000030517578,
-            "volume": 1948800
-          },
           {
             "date": "2026-05-05T00:00:00-04:00",
             "open": 115.38999938964844,
@@ -1762,52 +1754,52 @@
             "volume": 2288100
           },
           {
-            "date": "2026-06-16T00:00:00-04:00",
+            "date": "2026-06-15T00:00:00-04:00",
             "open": 130.9199981689453,
-            "high": 131.63999938964844,
-            "low": 130.8800048828125,
-            "close": 131.39999389648438,
-            "volume": 27431
+            "high": 132.1699981689453,
+            "low": 129.41000366210938,
+            "close": 130.58999633789062,
+            "volume": 1530100
+          },
+          {
+            "date": "2026-06-16T00:00:00-04:00",
+            "open": 130.97999572753906,
+            "high": 131.97000122070312,
+            "low": 128.6199951171875,
+            "close": 129.91000366210938,
+            "volume": 1021107
           }
         ],
-        "fetch_time_ms": 739
+        "fetch_time_ms": 460
       },
       "CYTK": {
         "info": {
           "name": "Cytokinetics, Incorporated",
           "sector": "Healthcare",
-          "market_cap": 10340288512,
+          "market_cap": 10341645312,
           "pe_ratio": null,
           "dividend_yield": null,
           "fifty_two_week_high": 80.2,
           "fifty_two_week_low": 31.99
         },
-        "latest_price": 76.16000366210938,
-        "quote_timestamp": "2026-06-16T13:35:00+00:00",
+        "latest_price": 76.16999816894531,
+        "quote_timestamp": "2026-06-16T17:35:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 23,
+        "quote_age_seconds": 22,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": 8.567358525307132,
-        "volume": 452248,
+        "price_change_pct": 6.710564723786086,
+        "volume": 2327141,
         "indicators": {
-          "rsi_14": 58.99306891995119,
-          "sma_20": 73.52400016784668,
-          "sma_50": 70.30560005187988,
-          "macd": -0.221584365528102,
-          "macd_signal": 0.17151000738356367,
-          "bb_upper": 80.85981998309832,
-          "bb_lower": 66.18818035259504
+          "rsi_14": 59.589133509697966,
+          "sma_20": 73.33449974060059,
+          "sma_50": 70.43459983825683,
+          "macd": -0.14254219539532187,
+          "macd_signal": 0.04768979842055679,
+          "bb_upper": 80.6865097598125,
+          "bb_lower": 65.98248972138869
         },
         "price_history": [
-          {
-            "date": "2026-05-04T00:00:00-04:00",
-            "open": 63.0,
-            "high": 67.05000305175781,
-            "low": 63.0,
-            "close": 66.05000305175781,
-            "volume": 2156300
-          },
           {
             "date": "2026-05-05T00:00:00-04:00",
             "open": 74.69000244140625,
@@ -2033,42 +2025,50 @@
             "volume": 1292900
           },
           {
+            "date": "2026-06-15T00:00:00-04:00",
+            "open": 70.1500015258789,
+            "high": 71.37999725341797,
+            "low": 68.83999633789062,
+            "close": 71.37999725341797,
+            "volume": 1012300
+          },
+          {
             "date": "2026-06-16T00:00:00-04:00",
             "open": 73.0,
             "high": 77.0,
             "low": 72.1500015258789,
-            "close": 76.16000366210938,
-            "volume": 452248
+            "close": 76.16999816894531,
+            "volume": 2327141
           }
         ],
-        "fetch_time_ms": 517
+        "fetch_time_ms": 467
       },
       "TSLA": {
         "info": {
           "name": "Tesla, Inc.",
           "sector": "Consumer Cyclical",
-          "market_cap": 1507318431744,
-          "pe_ratio": 361.56665,
+          "market_cap": 1518589313024,
+          "pe_ratio": 364.27026,
           "dividend_yield": null,
           "fifty_two_week_high": 498.83,
           "fifty_two_week_low": 288.77
         },
-        "latest_price": 401.3599853515625,
-        "quote_timestamp": "2026-06-16T13:35:00+00:00",
+        "latest_price": 404.4198913574219,
+        "quote_timestamp": "2026-06-16T17:35:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 23,
+        "quote_age_seconds": 22,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-16T00:00:00-04:00",
-        "price_change_pct": -1.2572629704777736,
-        "volume": 3195533,
+        "price_change_pct": -0.49457504480061343,
+        "volume": 28465820,
         "indicators": {
-          "rsi_14": 47.18265976246723,
-          "sma_20": 414.69750518798827,
-          "sma_50": 399.1146032714844,
-          "macd": -2.415397063059686,
-          "macd_signal": 1.3890865367060776,
-          "bb_upper": 446.8617091086675,
-          "bb_lower": 382.533301267309
+          "rsi_14": 48.22221397944052,
+          "sma_20": 414.85249481201174,
+          "sma_50": 399.1765991210938,
+          "macd": -2.168120170030818,
+          "macd_signal": 1.4385419153118513,
+          "bb_upper": 446.7864077574177,
+          "bb_lower": 382.9185818666058
         },
         "price_history": [
           {
@@ -2306,19 +2306,35 @@
           {
             "date": "2026-06-16T00:00:00-04:00",
             "open": 404.1099853515625,
-            "high": 404.44000244140625,
+            "high": 412.4200134277344,
             "low": 400.5400085449219,
-            "close": 401.3200988769531,
-            "volume": 3195533
+            "close": 404.4198913574219,
+            "volume": 28465820
           }
         ],
-        "fetch_time_ms": 559
+        "fetch_time_ms": 621
       }
     },
     "news": {
       "QCOM": {
         "symbol": "QCOM",
         "news_headlines": [
+          {
+            "title": "Trending: Robinhood cuts 10% of workforce, Yum Brands sells Pizza Hut, Qualcomm's AI deal",
+            "source": "yfinance",
+            "published": "2026-06-16T14:57:24Z",
+            "symbols": [
+              "QCOM"
+            ],
+            "sentiment": -0.33,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/video/trending-robinhood-cuts-10-of-workforce-yum-brands-sells-pizza-hut-qualcomms-ai-deal-145724697.html",
+            "summary": "Yahoo Finance's Julie Hyman takes a closer look at some of Tuesday's trending tickers and stories, including Yum Brands' (YUM) sale of Pizza Hut, Qualcomm's (QCOM) reported interest in acquiring an AI chip company, Robinhood (HOOD) cutting 10% of its workforce, and Rackspace's (RXT) job cuts.",
+            "publisher": "Yahoo Finance Video",
+            "metadata": {
+              "type": "VIDEO"
+            }
+          },
           {
             "title": "Microsoft debuts Surface Laptop and Surface Pro amid AI-driven memory shortage",
             "source": "yfinance",
@@ -2336,9 +2352,27 @@
             }
           },
           {
-            "title": "SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today\u2019s Market",
+            "title": "Stocks to Watch: SpaceX, Qualcomm, Robinhood",
             "source": "yfinance",
-            "published": "2026-06-16T13:05:00Z",
+            "published": "2026-06-16T16:27:39Z",
+            "symbols": [
+              "QCOM",
+              "MU",
+              "HOOD"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/stocks-to-watch-spacex-qualcomm-dave-buster-s-6q5CjGNVDDA4CigySAs4?siteid=yhoof2&yptr=yahoo",
+            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares rose 12% in afternoon trading.",
+            "publisher": "The Wall Street Journal",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "SpaceX, Western Digital, Micron, and More Stocks That Explain Today\u2019s Market",
+            "source": "yfinance",
+            "published": "2026-06-16T14:31:00Z",
             "symbols": [
               "QCOM",
               "WDC",
@@ -2354,14 +2388,43 @@
             }
           },
           {
+            "title": "Qualcomm Stock Rises Ahead of Fresh Target Catalyst",
+            "source": "yfinance",
+            "published": "2026-06-16T13:49:00Z",
+            "symbols": [
+              "QCOM"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.barrons.com/articles/qualcomm-stock-price-target-catalyst-d878e040?siteid=yhoof2&yptr=yahoo",
+            "summary": "Qualcomm stock has risen 68% in three months ahead of an expected unveiling of its data-center chip plans and it could be lining up an acquisition to bolster its strategy.",
+            "publisher": "Barrons.com",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Focus on 5 AI Behemoths Carving a Niche in the Server CPU Chip Market",
+            "source": "yfinance",
+            "published": "2026-06-16T12:52:00Z",
+            "symbols": [
+              "QCOM"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/technology/ai/articles/focus-5-ai-behemoths-carving-125200676.html",
+            "summary": "AMD, INTC, ARM, NVDA and QCOM are ramping AI server CPU efforts as agentic AI fuels a market projected to exceed $170 billion by 2030.",
+            "publisher": "Zacks",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
             "title": "Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing",
             "source": "yfinance",
             "published": "2026-06-16T12:51:19Z",
             "symbols": [
-              "QCOM",
-              "WDC",
-              "MU",
-              "TSLA"
+              "QCOM"
             ],
             "sentiment": 1.0,
             "category": "headline",
@@ -2390,72 +2453,6 @@
             }
           },
           {
-            "title": "Qualcomm Stock Rises Ahead of Fresh Target Catalyst",
-            "source": "yfinance",
-            "published": "2026-06-16T12:20:00Z",
-            "symbols": [
-              "QCOM"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://www.barrons.com/articles/qualcomm-stock-price-target-catalyst-d878e040?siteid=yhoof2&yptr=yahoo",
-            "summary": "Qualcomm stock has risen 68% in three months ahead of an expected unveiling of its data-center chip plans and it could be lining up an acquisition to bolster its strategy.",
-            "publisher": "Barrons.com",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Stocks to Watch: SpaceX, Qualcomm, Robinhood",
-            "source": "yfinance",
-            "published": "2026-06-16T12:12:50Z",
-            "symbols": [
-              "QCOM",
-              "MU",
-              "HOOD"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/stocks-to-watch-spacex-qualcomm-dave-buster-s-6q5CjGNVDDA4CigySAs4?siteid=yhoof2&yptr=yahoo",
-            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares advanced about 5% premarket.",
-            "publisher": "The Wall Street Journal",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Qualcomm Is a Rare AI Chip Value Play",
-            "source": "yfinance",
-            "published": "2026-06-16T09:30:00Z",
-            "symbols": [
-              "QCOM"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.wsj.com/tech/qualcomm-is-a-rare-ai-chip-value-play-3e09f70b",
-            "summary": "Smartphone exposure haunts the stock despite diversifying into cars and data centers.",
-            "publisher": "The Wall Street Journal",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Qualcomm\u2019s Reported Tenstorrent Talks Test Lofty Valuation And AI Ambitions",
-            "source": "yfinance",
-            "published": "2026-06-16T03:20:26Z",
-            "symbols": [
-              "QCOM"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/technology/ai/articles/qualcomm-reported-tenstorrent-talks-test-032026695.html",
-            "summary": "Qualcomm, ticker NasdaqGS:QCOM, is reportedly in talks to acquire AI chip startup Tenstorrent for US$8b to US$10b. The potential deal would extend Qualcomm's reach into dedicated AI accelerators and data center hardware. This development has not been covered in recent Simply Wall St articles on Nasd",
-            "publisher": "Simply Wall St.",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
             "title": "SEC 4: QCOM \u2014 Palkhiwala Akash J. SOLD 2,500 shares ($493,380)",
             "source": "sec_edgar",
             "published": "2026-06-11",
@@ -2474,7 +2471,7 @@
             }
           }
         ],
-        "sentiment_score": 0.32,
+        "sentiment_score": 0.29,
         "sentiment": "bullish",
         "source_count": 2,
         "analyst_recommendations": {
@@ -2504,9 +2501,89 @@
         "symbol": "GM",
         "news_headlines": [
           {
+            "title": "GM reveals new Silverado pickup as Ford F-150 sales falter",
+            "source": "yfinance",
+            "published": "2026-06-16T15:38:31Z",
+            "symbols": [
+              "GM"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/article/gm-reveals-new-silverado-pickup-as-ford-f-150-sales-falter-153831714.html",
+            "summary": "GM revealed its next-generation 2027 Chevrolet Silverado pickup, calling it the most powerful and advanced Silverado ever \u2014 and rolling it out just as crosstown rival Ford struggles to keep its bestselling F-150 on dealer lots.",
+            "publisher": "Yahoo Finance",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "GM, Lockheed in talks to collaborate as US scales weapons stockpile",
+            "source": "yfinance",
+            "published": "2026-06-16T17:12:50Z",
+            "symbols": [
+              "GM"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.freep.com/story/money/cars/general-motors/2026/06/16/lockheed-taps-gm-for-supply-chain-know-how-to-boost-weapon-stockpile/90573552007/",
+            "summary": "GM Defense and Lockheed Martin leaders say it is too early to know if GM manufacturing plants will be tapped to build munitions.",
+            "publisher": "Detroit Free Press",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Trump Invokes Defense Production Act. GM, Lockheed Discuss Partnership.",
+            "source": "yfinance",
+            "published": "2026-06-16T16:44:55Z",
+            "symbols": [
+              "GM"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.investors.com/news/general-motors-gm-stock-defense-production-discussions-lockheed-martin-lmt/?src=A00220&yptr=yahoo",
+            "summary": "President Trump looks to bolster defense production. General Motors may start making some components for Lockheed Martin, reports say.",
+            "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Gas Prices Pushing Some Car Buyers Away From Pickup Trucks, GM Exec Says",
+            "source": "yfinance",
+            "published": "2026-06-16T15:02:03Z",
+            "symbols": [
+              "GM"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/gas-prices-pushing-some-car-buyers-away-from-pickup-trucks-gm-exec-says-cCGi3cRHkAsnaZvRjg3Q?siteid=yhoof2&yptr=yahoo",
+            "summary": "General Motors is seeing consumer preferences shift away from pickup trucks, full-size utility vehicles and its more gas-reliant vehicles following fuel price increases, GM\u2019s North American chief Duncan Aldred said.  Aldred cautioned that GM isn\u2019t convinced that the shift will be permanent.  It\u2019s hi",
+            "publisher": "The Wall Street Journal",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Tesla Stock Traded Its Affordable Car Dream For An AI Moonshot",
+            "source": "yfinance",
+            "published": "2026-06-16T14:45:47Z",
+            "symbols": [
+              "GM"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.trefis.com/articles/603120/tesla-stock-traded-its-affordable-car-dream-for-an-ai-moonshot/2026-06-16",
+            "summary": "As the company's core auto business shrinks, management has gone quiet on its promise of cheaper EVs, betting everything on a future that's years away and will cost billions.",
+            "publisher": "Trefis",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
             "title": "GM Is Not Just a Car Company. It\u2019s Getting Into the Weapons Business.",
             "source": "yfinance",
-            "published": "2026-06-16T12:46:00Z",
+            "published": "2026-06-16T13:59:00Z",
             "symbols": [
               "GM"
             ],
@@ -2536,97 +2613,17 @@
             }
           },
           {
-            "title": "GM in Talks to Supply Weapons Parts to Lockheed Martin",
+            "title": "Peak Energy, GM partner to scale domestic sodium-ion battery supplies",
             "source": "yfinance",
-            "published": "2026-06-16T10:02:00Z",
+            "published": "2026-06-16T12:20:18Z",
             "symbols": [
               "GM"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://www.wsj.com/business/autos/gm-in-talks-to-supply-weapons-parts-to-lockheed-martin-61c32cf5?siteid=yhoof2&yptr=yahoo",
-            "summary": "The automaker seeks to grow its defense subsidiary as the U.S. aims to replenish munitions supplies.",
-            "publisher": "The Wall Street Journal",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Global Electric Vehicle Outlook Weaker Than Previously Expected, BloombergNEF Says",
-            "source": "yfinance",
-            "published": "2026-06-16T09:47:01Z",
-            "symbols": [
-              "GM"
-            ],
-            "sentiment": -1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/energy/articles/global-electric-vehicle-outlook-weaker-094701584.html",
-            "summary": "Global electric vehicle sales are expected to be slower than previously expected, especially in the",
-            "publisher": "MT Newswires",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "General Motors, Lucid, and Goodyear Stocks Trade Up, What You Need To Know",
-            "source": "yfinance",
-            "published": "2026-06-16T03:08:07Z",
-            "symbols": [
-              "GM"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/general-motors-lucid-goodyear-stocks-030807286.html",
-            "summary": "A number of stocks jumped in the afternoon session after the Trump administration announced a new peace deal that would lead to the reopening of the Strait of Hormuz.",
-            "publisher": "StockStory",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "EV target takes unexpected turn in one of the world's top markets",
-            "source": "yfinance",
-            "published": "2026-06-16T02:33:00Z",
-            "symbols": [
-              "GM"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.thestreet.com/automotive/uk-ev-target-plan-backlash",
-            "summary": "For over a decade, the U.S. has been playing catch-up with Europe when it comes to electric vehicle adoption. But low demand here in the states has original equipment manufacturers like Ford, GM and Stellantis reassessing their respective EV game plans. U.S. EV demand fell off a cliff in 2025 after ",
-            "publisher": "TheStreet",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "GM, LMT Stocks Gain Overnight: General Motors, Lockheed Martin Reportedly Working On Weapons Parts Partnership",
-            "source": "yfinance",
-            "published": "2026-06-16T01:47:23Z",
-            "symbols": [
-              "GM"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://stocktwits.com/news-articles/markets/equity/gm-lmt-stocks-gain-overnight-general-motors-lockheed-martin-reportedly-weapons-parts-partnership/cZKW7siR7Eb",
-            "summary": "The development comes amid growing worries over America\u2019s missile reserves.",
-            "publisher": "Stocktwits",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "GM in talks to supply weapons parts to Lockheed Martin- WSJ",
-            "source": "yfinance",
-            "published": "2026-06-16T01:07:29Z",
-            "symbols": [
-              "GM"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/economy/policy/articles/gm-talks-supply-weapons-parts-010729759.html",
-            "summary": "Investing.com-- General Motors (NYSE:GM) is in talks with Lockheed Martin (NYSE:LMT) to manufacture components for the defense contractor\u2019s weapons systems, the Wall Street Journal reported on Tuesday, citing people familiar with the matter.",
-            "publisher": "Investing.com",
+            "url": "https://www.utilitydive.com/news/peak-energy-gm-partner-to-scale-domestic-sodium-ion-battery-supplies/823050/",
+            "summary": "Peak cofounder and CEO Landon Mossburg told Utility Dive the technology is \u201cpurpose-built\u201d for AI data centers and grid-scale applications.",
+            "publisher": "Utility Dive",
             "metadata": {
               "type": "STORY"
             }
@@ -2650,7 +2647,7 @@
             }
           }
         ],
-        "sentiment_score": -0.01,
+        "sentiment_score": 0.1,
         "sentiment": "neutral",
         "source_count": 2,
         "analyst_recommendations": {
@@ -2680,9 +2677,9 @@
         "symbol": "WDC",
         "news_headlines": [
           {
-            "title": "SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today\u2019s Market",
+            "title": "SpaceX, Western Digital, Micron, and More Stocks That Explain Today\u2019s Market",
             "source": "yfinance",
-            "published": "2026-06-16T13:05:00Z",
+            "published": "2026-06-16T14:31:00Z",
             "symbols": [
               "QCOM",
               "WDC",
@@ -2698,37 +2695,98 @@
             }
           },
           {
-            "title": "Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing",
+            "title": "Oil and US gas prices retreat on US-Iran ceasefire",
             "source": "yfinance",
-            "published": "2026-06-16T12:51:19Z",
+            "published": "2026-06-16T14:37:04Z",
             "symbols": [
-              "QCOM",
               "WDC",
-              "MU",
-              "TSLA"
+              "MU"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/video/oil-and-us-gas-prices-retreat-on-us-iran-ceasefire-143704940.html",
+            "summary": "While US stocks (^DJI, ^IXIC, ^GSPC) are mixed as investors continue to digest the Trump administration's reported peace deal with Iran, oil prices (CL=F, BZ=F) have sunk below $80 per barrel but remain elevated above pre-war prices. Yahoo Finance Senior Reporters Brooke DiPalma and Ines Ferr\u00e9 asses",
+            "publisher": "Yahoo Finance Video",
+            "metadata": {
+              "type": "VIDEO"
+            }
+          },
+          {
+            "title": "Western Digital stock jumps as AI trade reignites",
+            "source": "yfinance",
+            "published": "2026-06-16T13:21:54Z",
+            "symbols": [
+              "WDC"
             ],
             "sentiment": 1.0,
             "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-largely-flat-125119658.html",
-            "summary": "(Updates with economic data, recent oil price movement, world markets' overview and corporate stock",
-            "publisher": "MT Newswires",
+            "url": "https://finance.yahoo.com/markets/article/western-digital-stock-jumps-as-ai-trade-reignites-132154187.html",
+            "summary": "Western Digital stock jumped again on Tuesday as the AI memory and storage trade reignited.",
+            "publisher": "Yahoo Finance",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Western Digital, Micron, Sandisk hover at all-time highs as AI trade reignites",
+            "title": "Stock Market Today: Dow Hits A High, Nasdaq Lags; SpaceX Surges, Aerospace Play Breaks Out (Live Coverage)",
             "source": "yfinance",
-            "published": "2026-06-16T13:21:54Z",
+            "published": "2026-06-16T16:18:41Z",
             "symbols": [
-              "WDC",
-              "MU"
+              "WDC"
             ],
             "sentiment": 1.0,
             "category": "headline",
-            "url": "https://finance.yahoo.com/markets/article/western-digital-micron-sandisk-hover-at-all-time-highs-as-ai-trade-reignites-132154187.html",
-            "summary": "Western Digital jumped again on Tuesday as the AI memory and storage trade reignited.",
-            "publisher": "Yahoo Finance",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-fed-meeting-spacex-stock-spcx/?src=A00220&yptr=yahoo",
+            "summary": "Stock Market Today: The Dow Jones index rises as the Nasdaq retreats. SpaceX stock rallies while an aerospace name broke out.",
+            "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Intel Tumbles 7% Despite BoA Double Upgrade, AMD Slides 6% as AI Infrastructure Deal Can\u2019t Stop Profit-Taking",
+            "source": "yfinance",
+            "published": "2026-06-16T15:55:46Z",
+            "symbols": [
+              "WDC"
+            ],
+            "sentiment": 0.5,
+            "category": "headline",
+            "url": "https://247wallst.com/investing/2026/06/16/intel-tumbles-7-despite-boa-double-upgrade-amd-slides-6-as-ai-infrastructure-deal-cant-stop-profit-taking/",
+            "summary": "Shares of Intel (NASDAQ:INTC) are down 7% at midday on Tuesday, while Advanced Micro Devices (NASDAQ:AMD) stock is sliding 6%. The pullback comes after a torrid multi-session rally in both names. Intel stock closed yesterday at $127.86, having climbed 18% over the past month. AMD stock ended Monday ",
+            "publisher": "24/7 Wall St.",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Hyperscaler\u2019s Multiyear Commitment with Western Digital (WDC) Highlights Robust Demand",
+            "source": "yfinance",
+            "published": "2026-06-16T14:55:23Z",
+            "symbols": [
+              "WDC"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/hyperscaler-multiyear-commitment-western-digital-145523194.html",
+            "summary": "Columbia Threadneedle Investments, an investment management company, released its first-quarter 2026 investor letter for the \u201cColumbia Global Technology Growth Fund\u201d. A copy of the letter is available to download here. In Q1 2026, the Fund\u2019s institutional Class shares fell \u20136.05%, outperforming the ",
+            "publisher": "Insider Monkey",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Western Digital, Seagate Stocks Keep Soaring. Why They\u2019re Morgan Stanley\u2019s Top Picks.",
+            "source": "yfinance",
+            "published": "2026-06-16T14:54:00Z",
+            "symbols": [
+              "WDC"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.barrons.com/articles/western-digital-seagate-stock-price-morgan-stanleys-top-picks-fdbd6a5d?siteid=yhoof2&yptr=yahoo",
+            "summary": "Morgan Stanley reiterates Overweight ratings on the hard-disk drive makers in a pair of research notes Monday.",
+            "publisher": "Barrons.com",
             "metadata": {
               "type": "STORY"
             }
@@ -2738,78 +2796,13 @@
             "source": "yfinance",
             "published": "2026-06-16T13:26:39Z",
             "symbols": [
-              "WDC",
-              "MU"
+              "WDC"
             ],
             "sentiment": 1.0,
             "category": "headline",
             "url": "https://247wallst.com/investing/2026/06/16/western-digital-jumps-7-on-morgan-stanleys-33-price-target-hike-seagate-gains-5-as-the-ai-storage-boom-rolls-on/",
             "summary": "Western Digital (NASDAQ:WDC) stock is up 7% in Tuesday morning trading, changing hands near $701 and setting a fresh all-time high. The catalyst is a Morgan Stanley note that reiterated an Overweight rating and lifted its WDC price target by 33%. The upgrade extends a powerful run. Western Digital s",
             "publisher": "24/7 Wall St.",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "SanDisk RSI Hits Record 99, Fueling AI Bubble Fears Across Markets",
-            "source": "yfinance",
-            "published": "2026-06-16T12:17:53Z",
-            "symbols": [
-              "WDC"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://beincrypto.com/sandisk-rsi-record-99-ai-bubble-fears-2/",
-            "summary": "SanDisk's RSI crossed 99, a record for any public stock. SNDK is up 620% YTD on AI memory demand, but overbought signals are mounting.",
-            "publisher": "BeInCrypto",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Company News for Jun 16, 2026",
-            "source": "yfinance",
-            "published": "2026-06-16T11:44:00Z",
-            "symbols": [
-              "WDC"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/company-news-jun-16-2026-114400255.html",
-            "summary": "Companies In The Article Are:XOM,FOX,RCL,WDC, ROKU",
-            "publisher": "Zacks",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Nasdaq, Dow futures inch up with focus on Fed; SpaceX jumps for third day",
-            "source": "yfinance",
-            "published": "2026-06-16T11:34:16Z",
-            "symbols": [
-              "WDC"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-futures-subdued-focus-103147314.html",
-            "summary": "By Sruthi Shankar and Twesha Dikshit June 16 (Reuters) - Nasdaq and Dow futures ticked higher on Tuesday as investors switched focus to the first interest rate decision under new Federal Reserve Chair",
-            "publisher": "Reuters",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Hard Disk Drive Market Growth Bodes Well for Western Digital (WDC)",
-            "source": "yfinance",
-            "published": "2026-06-16T11:03:01Z",
-            "symbols": [
-              "WDC"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/hard-disk-drive-market-growth-110301846.html",
-            "summary": "Western Digital Corp. (NASDAQ:WDC) is one of the 10 best computer hardware stocks to buy for the next 5 years. On May 27, Barclays analyst Tom O\u2019Malley increased the price target on Western Digital Corp. (NASDAQ:WDC) from $450 to $620. The firm maintained an Overweight rating on the stock, which now",
-            "publisher": "Insider Monkey",
             "metadata": {
               "type": "STORY"
             }
@@ -2869,7 +2862,7 @@
             }
           }
         ],
-        "sentiment_score": 0.44,
+        "sentiment_score": 0.39,
         "sentiment": "bullish",
         "source_count": 2,
         "analyst_recommendations": {
@@ -2910,9 +2903,27 @@
         "symbol": "MU",
         "news_headlines": [
           {
-            "title": "SpaceX, Western Digital, Qualcomm, Marvell, and More Stocks That Explain Today\u2019s Market",
+            "title": "Stocks to Watch: SpaceX, Qualcomm, Robinhood",
             "source": "yfinance",
-            "published": "2026-06-16T13:05:00Z",
+            "published": "2026-06-16T16:27:39Z",
+            "symbols": [
+              "QCOM",
+              "MU",
+              "HOOD"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/stocks-to-watch-spacex-qualcomm-dave-buster-s-6q5CjGNVDDA4CigySAs4?siteid=yhoof2&yptr=yahoo",
+            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares rose 12% in afternoon trading.",
+            "publisher": "The Wall Street Journal",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "SpaceX, Western Digital, Micron, and More Stocks That Explain Today\u2019s Market",
+            "source": "yfinance",
+            "published": "2026-06-16T14:31:00Z",
             "symbols": [
               "QCOM",
               "WDC",
@@ -2928,74 +2939,20 @@
             }
           },
           {
-            "title": "Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing",
+            "title": "Oil and US gas prices retreat on US-Iran ceasefire",
             "source": "yfinance",
-            "published": "2026-06-16T12:51:19Z",
+            "published": "2026-06-16T14:37:04Z",
             "symbols": [
-              "QCOM",
               "WDC",
-              "MU",
-              "TSLA"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-largely-flat-125119658.html",
-            "summary": "(Updates with economic data, recent oil price movement, world markets' overview and corporate stock",
-            "publisher": "MT Newswires",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Stocks to Watch: SpaceX, Qualcomm, Robinhood",
-            "source": "yfinance",
-            "published": "2026-06-16T12:12:50Z",
-            "symbols": [
-              "QCOM",
-              "MU",
-              "HOOD"
+              "MU"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/stocks-to-watch-spacex-qualcomm-dave-buster-s-6q5CjGNVDDA4CigySAs4?siteid=yhoof2&yptr=yahoo",
-            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares advanced about 5% premarket.",
-            "publisher": "The Wall Street Journal",
+            "url": "https://finance.yahoo.com/video/oil-and-us-gas-prices-retreat-on-us-iran-ceasefire-143704940.html",
+            "summary": "While US stocks (^DJI, ^IXIC, ^GSPC) are mixed as investors continue to digest the Trump administration's reported peace deal with Iran, oil prices (CL=F, BZ=F) have sunk below $80 per barrel but remain elevated above pre-war prices. Yahoo Finance Senior Reporters Brooke DiPalma and Ines Ferr\u00e9 asses",
+            "publisher": "Yahoo Finance Video",
             "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Western Digital, Micron, Sandisk hover at all-time highs as AI trade reignites",
-            "source": "yfinance",
-            "published": "2026-06-16T13:21:54Z",
-            "symbols": [
-              "WDC",
-              "MU"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/article/western-digital-micron-sandisk-hover-at-all-time-highs-as-ai-trade-reignites-132154187.html",
-            "summary": "Western Digital jumped again on Tuesday as the AI memory and storage trade reignited.",
-            "publisher": "Yahoo Finance",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Western Digital Jumps 7% on Morgan Stanley\u2019s 33% Price-Target Hike, Seagate Gains 5% as the AI Storage Boom Rolls On",
-            "source": "yfinance",
-            "published": "2026-06-16T13:26:39Z",
-            "symbols": [
-              "WDC",
-              "MU"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://247wallst.com/investing/2026/06/16/western-digital-jumps-7-on-morgan-stanleys-33-price-target-hike-seagate-gains-5-as-the-ai-storage-boom-rolls-on/",
-            "summary": "Western Digital (NASDAQ:WDC) stock is up 7% in Tuesday morning trading, changing hands near $701 and setting a fresh all-time high. The catalyst is a Morgan Stanley note that reiterated an Overweight rating and lifted its WDC price target by 33%. The upgrade extends a powerful run. Western Digital s",
-            "publisher": "24/7 Wall St.",
-            "metadata": {
-              "type": "STORY"
+              "type": "VIDEO"
             }
           },
           {
@@ -3015,33 +2972,65 @@
             }
           },
           {
-            "title": "Prediction: This Artificial Intelligence (AI) Infrastructure Stock Will Skyrocket in June (Hint: It's Not Micron Technology)",
+            "title": "Why Is the US Stock Market Down Today?",
             "source": "yfinance",
-            "published": "2026-06-16T12:35:00Z",
+            "published": "2026-06-16T17:21:11Z",
             "symbols": [
               "MU"
             ],
-            "sentiment": 0.0,
+            "sentiment": -1.0,
             "category": "headline",
-            "url": "https://www.fool.com/investing/2026/06/16/prediction-this-artificial-intelligence-ai-infrast/",
-            "summary": "The healthy demand for AI servers and data center components is driving strong growth for this company.",
-            "publisher": "Motley Fool",
+            "url": "https://beincrypto.com/why-is-the-us-stock-market-down-today/",
+            "summary": "US stocks split as the Iran oil deal lifted the Dow to a record while chip selling dragged the S&P 500 and Nasdaq lower.",
+            "publisher": "BeInCrypto",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Micron Stock Rises Toward New High and Could Reach This Level",
+            "title": "Micron Stock Slips From Record High. Where It Goes Next.",
             "source": "yfinance",
-            "published": "2026-06-16T12:24:00Z",
+            "published": "2026-06-16T16:22:00Z",
             "symbols": [
               "MU"
             ],
-            "sentiment": 1.0,
+            "sentiment": 0.0,
             "category": "headline",
             "url": "https://www.barrons.com/articles/micron-stock-price-new-high-analyst-fc450072?siteid=yhoof2&yptr=yahoo",
-            "summary": "Micron stock is setting records and Wall Street is racing to raise price targets for the memory-chip maker.",
+            "summary": "Micron stock has had 34 record closes so far in 2026 and Wall Street is racing to raise price targets for the memory-chip maker.",
             "publisher": "Barrons.com",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "You Missed Micron\u2019s 811% Run \u2014 but There\u2019s Still 40% More Upside, According to Wall Street",
+            "source": "yfinance",
+            "published": "2026-06-16T15:56:26Z",
+            "symbols": [
+              "MU"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://247wallst.com/investing/2026/06/16/you-missed-microns-811-run-but-theres-still-40-more-upside-according-to-wall-street/",
+            "summary": "The AI boom has created a small group of companies that sit at the center of an enormous spending wave. Most investors immediately think of Nvidia (NASDAQ:NVDA) when they hear that story. Yet memory chips have quietly become just as critical to AI infrastructure as GPUs. Every AI server requires mas",
+            "publisher": "24/7 Wall St.",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Micron Technology (MU) Skyrocketed on Explosive Demand For High-Bandwidth Memory",
+            "source": "yfinance",
+            "published": "2026-06-16T15:04:56Z",
+            "symbols": [
+              "MU"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/micron-technology-mu-skyrocketed-explosive-150456301.html",
+            "summary": "Columbia Threadneedle Investments, an investment management company, released its first-quarter 2026 investor letter for the \u201cColumbia Global Technology Growth Fund\u201d. A copy of the letter is available to download here. In Q1 2026, the Fund\u2019s institutional Class shares fell \u20136.05%, outperforming the ",
+            "publisher": "Insider Monkey",
             "metadata": {
               "type": "STORY"
             }
@@ -3083,8 +3072,8 @@
             }
           }
         ],
-        "sentiment_score": 0.54,
-        "sentiment": "bullish",
+        "sentiment_score": 0.04,
+        "sentiment": "neutral",
         "source_count": 2,
         "analyst_recommendations": {
           "strong_buy": 9,
@@ -3126,7 +3115,7 @@
           {
             "title": "Stocks to Watch: SpaceX, Qualcomm, Robinhood",
             "source": "yfinance",
-            "published": "2026-06-16T12:12:50Z",
+            "published": "2026-06-16T16:27:39Z",
             "symbols": [
               "QCOM",
               "MU",
@@ -3135,7 +3124,7 @@
             "sentiment": 0.0,
             "category": "headline",
             "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-16-2026/card/stocks-to-watch-spacex-qualcomm-dave-buster-s-6q5CjGNVDDA4CigySAs4?siteid=yhoof2&yptr=yahoo",
-            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares advanced about 5% premarket.",
+            "summary": "\u2197\ufe0f SpaceX (SPCX): Shares of Elon Musk\u2019s rocket company are poised for another day of gains, following a two-day rally that pushed the stock up about 43% from its IPO price. Shares rose 12% in afternoon trading.",
             "publisher": "The Wall Street Journal",
             "metadata": {
               "type": "STORY"
@@ -3174,65 +3163,49 @@
             }
           },
           {
-            "title": "Robinhood Is Cutting 10% of Its Workforce but It\u2019s Not Why You Think",
+            "title": "Stock Market Today, June 16: SpaceX Overtakes Amazon as Valuation Tops $2.8 Trillion",
             "source": "yfinance",
-            "published": "2026-06-16T12:37:00Z",
+            "published": "2026-06-16T17:02:55Z",
             "symbols": [
               "HOOD"
             ],
-            "sentiment": -1.0,
+            "sentiment": 1.0,
             "category": "headline",
-            "url": "https://www.barrons.com/articles/robinhood-stock-price-layoffs-2026-a262d01c?siteid=yhoof2&yptr=yahoo",
-            "summary": "Robinhood Markets  stock was gaining early Tuesday after the trading platform said it would cut around a tenth of its employees.  It\u2019s just the latest technology company to announce significant cuts to its workforce.  Robinhood said it would cut about 10% of its full-time employees and close a small",
-            "publisher": "Barrons.com",
+            "url": "https://www.fool.com/coverage/stock-market-today/2026/06/16/stock-market-today-june-16-spacex-overtakes-amazon-as-valuation-tops-usd2-8-trillion/",
+            "summary": "On June 16, 2026, SpaceX\u2019s AI deal reshaped Nasdaq leadership and intensified momentum around high\u2011growth tech.",
+            "publisher": "Motley Fool",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Robinhood cuts 10% of staff as CEO Tenev pushes for \u2019lean\u2019 team",
+            "title": "A Trillion-Dollar Prediction Markets Boom Is Great For Wall Street. For Retail Investors? Not So Much.",
             "source": "yfinance",
-            "published": "2026-06-16T12:16:09Z",
-            "symbols": [
-              "HOOD"
-            ],
-            "sentiment": -1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/robinhood-cuts-10-staff-ceo-121609719.html",
-            "summary": "Investing.com -- Robinhood Markets (NASDAQ:HOOD) shares rose 2% on Tuesday after the trading platform announced it would cut 10% of its full-time workforce, or approximately 290 roles, as part of efforts to streamline operations and flatten management layers.",
-            "publisher": "Investing.com",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Forget the Chips. Half of Every AI Datacenter Dollar Goes Somewhere Else",
-            "source": "yfinance",
-            "published": "2026-06-16T12:04:00Z",
+            "published": "2026-06-16T16:42:17Z",
             "symbols": [
               "HOOD"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://247wallst.com/investing/2026/06/16/forget-the-chips-half-of-every-ai-datacenter-dollar-goes-somewhere-else/",
-            "summary": "Everyone is watching NVIDIA (NASDAQ:NVDA) because it remains the default proxy for every AI headline that hits the wire. But here\u2019s what you should actually be watching. The chip story is the most crowded trade on Earth. Every retirement portfolio, every momentum fund, every cab driver with a Robinh",
-            "publisher": "24/7 Wall St.",
+            "url": "https://www.investors.com/news/a-trillion-dollar-prediction-markets-boom-is-great-for-wall-street-for-retail-investors-not-so-much/?src=A00220&yptr=yahoo",
+            "summary": "Prediction markets are transitioning from a forecasting tool into a substantial financial asset class. But what exactly are investors buying?",
+            "publisher": "Investor's Business Daily",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Robinhood Slashes 10% Of Workforce, Says Layoffs Come 'From A Position Of Business Strength'",
+            "title": "2026 Layoffs Tracker: Robinhood, Walmart and Meta Among Companies Cutting Jobs",
             "source": "yfinance",
-            "published": "2026-06-16T11:21:16Z",
+            "published": "2026-06-16T16:37:00Z",
             "symbols": [
               "HOOD"
             ],
             "sentiment": -1.0,
             "category": "headline",
-            "url": "https://stocktwits.com/news-articles/markets/equity/hood-stock-robinhood-layoffs-workforce-reduction-june-2026/cZKWF5aR7Ep",
-            "summary": "The brokerage expects roughly $20 million in cash restructuring charges tied to severance and benefits.",
-            "publisher": "Stocktwits",
+            "url": "https://www.wsj.com/economy/jobs/layoffs-2026-tracker-784ea69f?siteid=yhoof2&yptr=yahoo",
+            "summary": "ECONOMY There is a lot of concern about how artificial intelligence is affecting work as each new month brings a wave of job-cut announcements from large employers, including Meta Platforms, Walmart and Morgan Stanley  A notable June layoff: Robinhood Markets which is cutting 10% of its workforce.",
+            "publisher": "The Wall Street Journal",
             "metadata": {
               "type": "STORY"
             }
@@ -3240,15 +3213,31 @@
           {
             "title": "Robinhood to Cut 10% of Workforce in Restructuring",
             "source": "yfinance",
-            "published": "2026-06-16T11:18:00Z",
+            "published": "2026-06-16T16:27:00Z",
             "symbols": [
               "HOOD"
             ],
             "sentiment": -1.0,
             "category": "headline",
             "url": "https://www.wsj.com/business/robinhood-markets-to-cut-10-of-workforce-in-restructuring-15900954?siteid=yhoof2&yptr=yahoo",
-            "summary": "Robinhood Markets will lay off about 10% of its workforce, representing roughly 290 jobs, aiming to cut costs and work more efficiently.",
+            "summary": "Robinhood Markets  said Tuesday it will slash 10% of its workforce, its first major layoff in three years, in a bid to keep the brokerage firm lean and \u201cmaximize its talent density.\u201d  In a note to employees, Chief Executive Officer  Vlad Tenev  wrote Tuesday that Robinhood\u2019s business has never been ",
             "publisher": "The Wall Street Journal",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "A new technology is learning how to move money",
+            "source": "yfinance",
+            "published": "2026-06-16T16:01:28Z",
+            "symbols": [
+              "HOOD"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.thestreet.com/markets/a-new-technology-is-learning-how-to-move-money",
+            "summary": "For the past two years, the story of AI on Wall Street has mostly been about speed. Faster research, faster summaries, faster answers to questions an analyst would otherwise spend an afternoon on. That story is now changing shape. The systems now being built are not just answering questions about ..",
+            "publisher": "TheStreet",
             "metadata": {
               "type": "STORY"
             }
@@ -3344,8 +3333,8 @@
             }
           }
         ],
-        "sentiment_score": -0.3,
-        "sentiment": "bearish",
+        "sentiment_score": -0.07,
+        "sentiment": "neutral",
         "source_count": 2,
         "analyst_recommendations": {
           "strong_buy": 4,
@@ -3543,6 +3532,22 @@
         "symbol": "CYTK",
         "news_headlines": [
           {
+            "title": "Edgewise Bounds Between Double-Digit Losses And Gain \u2014 What's Going On?",
+            "source": "yfinance",
+            "published": "2026-06-16T14:25:25Z",
+            "symbols": [
+              "CYTK"
+            ],
+            "sentiment": -1.0,
+            "category": "headline",
+            "url": "https://www.investors.com/news/technology/edgewise-therapeutics-hcm-bristol-myers-squibb-cytokinetics/?src=A00220&yptr=yahoo",
+            "summary": "Edgewise Therapeutics shares yo-yoed Tuesday as investors compared the results of its experimental heart disease treatment to approved drugs.",
+            "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
             "title": "Cytokinetics (CYTK) Launches MYQORZO in Germany for Obstructive HCM Treatment",
             "source": "yfinance",
             "published": "2026-06-13T19:34:47Z",
@@ -3655,22 +3660,6 @@
             }
           },
           {
-            "title": "StubHub, Jazz Pharmaceuticals upgraded: Wall Street's top analyst calls",
-            "source": "yfinance",
-            "published": "2026-05-19T13:34:39Z",
-            "symbols": [
-              "CYTK"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/stubhub-jazz-pharmaceuticals-upgraded-wall-133439141.html",
-            "summary": "StubHub, Jazz Pharmaceuticals upgraded: Wall Street's top analyst calls",
-            "publisher": "The Fly",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
             "title": "SEC 4: CYTK \u2014 Blum Robert I SOLD 7,500 shares ($528,450)",
             "source": "sec_edgar",
             "published": "2026-06-15",
@@ -3707,8 +3696,8 @@
             }
           }
         ],
-        "sentiment_score": 0.28,
-        "sentiment": "bullish",
+        "sentiment_score": 0.08,
+        "sentiment": "neutral",
         "source_count": 2,
         "analyst_recommendations": {
           "strong_buy": 7,
@@ -3737,132 +3726,129 @@
         "symbol": "TSLA",
         "news_headlines": [
           {
-            "title": "Update: US Equity Futures Largely Flat as Dow Climbs to New Record Amid Anticipated US-Iran Peace Deal Signing",
+            "title": "The Mag 7 plus these three AI companies make up the new Fab 10",
             "source": "yfinance",
-            "published": "2026-06-16T12:51:19Z",
-            "symbols": [
-              "QCOM",
-              "WDC",
-              "MU",
-              "TSLA"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-largely-flat-125119658.html",
-            "summary": "(Updates with economic data, recent oil price movement, world markets' overview and corporate stock",
-            "publisher": "MT Newswires",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Elon Musk's SpaceX is already closing in on Microsoft's market cap and a big Apple milestone",
-            "source": "yfinance",
-            "published": "2026-06-16T11:27:01Z",
+            "published": "2026-06-16T15:00:00Z",
             "symbols": [
               "TSLA"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://finance.yahoo.com/markets/article/elon-musks-spacex-is-already-closing-in-on-microsofts-market-cap-and-a-big-apple-milestone-112701154.html",
-            "summary": "SpaceX is close to overtaking Microsoft in its valuation.",
-            "publisher": "Yahoo Finance",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Tech stocks today: SpaceX becomes more valuable than Tesla",
-            "source": "yfinance",
-            "published": "2026-06-15T10:00:00Z",
-            "symbols": [
-              "TSLA"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/sectors/technology/live/tech-stocks-today-spacex-becomes-more-valuable-than-tesla-100000563.html",
-            "summary": "What to watch from SpaceX and other tech stocks during the holiday-shortened week.",
-            "publisher": "Yahoo Finance",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "SpaceX stock gains: What its IPO signals about its future success",
-            "source": "yfinance",
-            "published": "2026-06-15T13:51:49Z",
-            "symbols": [
-              "TSLA"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/video/spacex-stock-gains-what-its-ipo-signals-about-its-future-success-135149957.html",
-            "summary": "SpaceX stock (SPCX) continues rising in Monday's pre-market trading (maintaining gains at the session open at the time of this video's posting) ahead of the space company's first full day of trading since its historic IPO last Friday. Morning Brief Host Julie Hyman and Barron's Investor Circle Newsl",
+            "url": "https://finance.yahoo.com/video/mag-7-plus-three-ai-150000435.html",
+            "summary": "The Magnificent Seven plus SpaceX (SPCX), Anthropic (ANTH.PVT), and OpenAI (OPAI.PVT) equal the Fab 10. Could this trio of AI mega-IPOs bring enthusiasm back to the tech space previously dominated by the Mag 7? Yahoo Finance Senior Reporter Ines Ferr\u00e9 and Innovator From Goldman Sachs Asset Managemen",
             "publisher": "Yahoo Finance Video",
             "metadata": {
               "type": "VIDEO"
             }
           },
           {
-            "title": "Elon Musk Calls This \"The Greatest Company in Europe\"",
+            "title": "What SpaceX's $1.2 billion bitcoin holdings mean for investors",
             "source": "yfinance",
-            "published": "2026-06-16T13:20:00Z",
+            "published": "2026-06-15T19:15:00Z",
             "symbols": [
               "TSLA"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://www.fool.com/investing/2026/06/16/this-is-the-best-company-in-europe-according-to-el/",
-            "summary": "On social media, Musk recently boasted about a tech giant in Europe, saying that it \"should be treasured.\"",
+            "url": "https://finance.yahoo.com/video/spacexs-1-2-billion-bitcoin-191500422.html",
+            "summary": "Scott Melker discusses SpaceX (SPCX) IPO and examines the company's growing bitcoin holdings. The space giant now owns roughly 19,000 bitcoin (BTC-USD), valued at roughly $1.2 billion. \"The Daily Wolf with Scott Melker\" airs every day at 12:00 p.m. Tune in for your daily dose of all things crypto. M",
+            "publisher": "Yahoo Finance Video",
+            "metadata": {
+              "type": "VIDEO"
+            }
+          },
+          {
+            "title": "High gas prices have more Americans opting for EVs: ChargePoint data",
+            "source": "yfinance",
+            "published": "2026-06-15T19:11:20Z",
+            "symbols": [
+              "TSLA"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/sectors/technology/article/high-gas-prices-have-more-americans-opting-for-evs-chargepoint-data-191120446.html",
+            "summary": "Rising fuel costs are changing the way Americans think about EVs, and ChargePoint says charging data is proving it.",
+            "publisher": "Yahoo Finance",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "4 Reasons to Think Twice Before Buying SpaceX Stock Right Now",
+            "source": "yfinance",
+            "published": "2026-06-16T17:13:00Z",
+            "symbols": [
+              "TSLA"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.fool.com/investing/2026/06/16/4-reasons-to-think-twice-before-buying-spacex/",
+            "summary": "If you're on the fence about diving into this name in the middle of the hype, this might help you sort out your decision.",
             "publisher": "Motley Fool",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Price Prediction: How Much Upside Is Left in Tesla?",
+            "title": "Famed Venture Capital Fund Says this Stock is Like Buying Nvidia in 2023",
             "source": "yfinance",
-            "published": "2026-06-16T13:16:13Z",
+            "published": "2026-06-16T17:09:14Z",
             "symbols": [
               "TSLA"
             ],
             "sentiment": 1.0,
             "category": "headline",
-            "url": "https://247wallst.com/investing/2026/06/16/price-prediction-how-much-upside-is-left-in-tesla/",
-            "summary": "I\u2019m going to put the verdict at the top. Our Tesla (NASDAQ:TSLA) work points to a stock trading right at fair value heading into the back half of 2026. The 24/7 Wall St. price target for Tesla is $417.62, against a current price of $420.55. That implies -0.7% downside over the next 12 months. Our ..",
+            "url": "https://247wallst.com/investing/2026/06/16/famed-venture-capital-fund-says-this-stock-is-like-buying-nvidia-in-2023/",
+            "summary": "When a Sequoia Capital partner compares a freshly public stock to NVIDIA (NASDAQ:NVDA) three years ago, investors pay attention. That is exactly what Sean MacGuire did on CNBC this week, arguing that \u201cSpaceX right now is more like Nvidia three years ago than Tesla.\u201d He went further on his personal p",
             "publisher": "24/7 Wall St.",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Cathie Wood Cleans House: Another Day Of Heavy Sales",
+            "title": "Elon Musk could lose nearly $1 trillion and still be the world's richest person",
             "source": "yfinance",
-            "published": "2026-06-16T13:10:58Z",
+            "published": "2026-06-16T16:35:00Z",
             "symbols": [
               "TSLA"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://www.investors.com/news/cathie-wood-spacex-ipo-elon-musk-ark-invest-roku-amd-etf/?src=A00220&yptr=yahoo",
-            "summary": "Monday's sales follow a major liquidation last week that was used to fund purchases of SpaceX stock.",
-            "publisher": "Investor's Business Daily",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/elon-musk-could-lose-nearly-163500207.html",
+            "summary": "Tuesday's spike in SpaceX stock boosted the fortune of the world's richest man by a cool $110 billion.",
+            "publisher": "Moneywise",
             "metadata": {
               "type": "STORY"
             }
           },
           {
-            "title": "Tesla Stock Can\u2019t Escape SpaceX\u2019s Gravity",
+            "title": "Paying 50x Earnings Can Still Be Cheap \u2014 If You Know This One Thing",
             "source": "yfinance",
-            "published": "2026-06-16T12:43:00Z",
+            "published": "2026-06-16T15:34:09Z",
             "symbols": [
               "TSLA"
             ],
             "sentiment": 0.0,
             "category": "headline",
-            "url": "https://www.barrons.com/articles/tesla-stock-price-spacex-musk-7347d378?siteid=yhoof2&yptr=yahoo",
-            "summary": "Investors will get new fundamental information for Tesla when it reports second quarter deliveries in early July.",
-            "publisher": "Barrons.com",
+            "url": "https://247wallst.com/investing/2026/06/16/paying-50x-earnings-can-still-be-cheap-if-you-know-this-one-thing/",
+            "summary": "On a recent episode of The Investing for Beginners Podcast, value investor Daniel Levy reframed a question that trips up nearly every retail investor: when is a high P/E actually expensive? His answer flips the math. A P/E of 50 equals an earnings yield of just 2%, which sounds punishing. But that y",
+            "publisher": "24/7 Wall St.",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Tesla (TSLA) Stock Gets Fair Value Bump As Analysts Debate AI And Demand",
+            "source": "yfinance",
+            "published": "2026-06-16T15:09:41Z",
+            "symbols": [
+              "TSLA"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-tsla-stock-gets-fair-150941909.html",
+            "summary": "Tesla now carries an updated fair value estimate of about US$420.55 per share, up from roughly US$415.30, a modest shift that still matters if you are tracking long term assumptions. The change sits against a split analyst backdrop, with some pointing to autonomy and physical AI to justify higher ta",
+            "publisher": "Simply Wall St.",
             "metadata": {
               "type": "STORY"
             }
@@ -3886,7 +3872,7 @@
             }
           }
         ],
-        "sentiment_score": 0.32,
+        "sentiment_score": 0.21,
         "sentiment": "bullish",
         "source_count": 2,
         "analyst_recommendations": {
@@ -3915,6 +3901,34 @@
     },
     "market_headlines": [
       {
+        "title": "Opening the Strait Eases Oil Prices, Imports & Housing Starts Report",
+        "source": "rss",
+        "published": "2026-06-16T14:31:00Z",
+        "symbols": [
+          "SPY"
+        ],
+        "sentiment": 0.0,
+        "category": "headline",
+        "url": "https://finance.yahoo.com/energy/articles/opening-strait-eases-oil-prices-143100338.html",
+        "summary": "The MOU is huge for the flow of 20% of the world's daily oil supply, where no tolls, restrictions or blockades will impede tankers from traveling the Strait.",
+        "publisher": "yfinance:SPY",
+        "metadata": {}
+      },
+      {
+        "title": "This Vanguard ETF Is Quietly Outpacing the S&P 500 in 2026 and Costs Just 0.04 Percent",
+        "source": "rss",
+        "published": "2026-06-16T13:47:22Z",
+        "symbols": [
+          "SPY"
+        ],
+        "sentiment": 0.0,
+        "category": "headline",
+        "url": "https://247wallst.com/investing/2026/06/16/this-vanguard-etf-is-quietly-outpacing-the-sp-500-in-2026-and-costs-just-0-04-percent/",
+        "summary": "The Vanguard Growth ETF (NYSEARCA:VUG) trades near $86 after a brutal five-day stretch that lopped 4.5% off the price. Year to date, VUG is up 6.2%, currently trailing the S&P 500\u2019s 8.4% gain as megac",
+        "publisher": "yfinance:SPY",
+        "metadata": {}
+      },
+      {
         "title": "VOO vs. IWO: What's the Difference for S&P 500 Investors in 2026?",
         "source": "rss",
         "published": "2026-06-16T13:20:01Z",
@@ -3925,20 +3939,6 @@
         "category": "headline",
         "url": "https://www.fool.com/coverage/etfs/2026/06/16/voo-vs-iwo-what-s-the-difference-for-s-and-p-500-investors-in-2026/",
         "summary": "Sector allocations and top holdings remain nearly identical, but one fund commands a much larger asset base and has lower fees.",
-        "publisher": "yfinance:SPY",
-        "metadata": {}
-      },
-      {
-        "title": "Stock Market Today: Indexes Mixed As Housing Starts Data Disappoints; SpaceX Continues To Soar (Live Coverage)",
-        "source": "rss",
-        "published": "2026-06-16T13:04:17Z",
-        "symbols": [
-          "SPY"
-        ],
-        "sentiment": 0.0,
-        "category": "headline",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-fed-meeting-spacex-stock-spcx/?src=A00220&yptr=yahoo",
-        "summary": "Stock Market Today: The Dow Jones index rose Tuesday ahead of the Fed's two-day policy meeting. SpaceX stock surged in premarket trading.",
         "publisher": "yfinance:SPY",
         "metadata": {}
       },
@@ -3957,30 +3957,31 @@
         "metadata": {}
       },
       {
-        "title": "Why Dave Ramsey Chooses $5,000 Index Funds Over SpaceX: The Math Explained",
+        "title": "Exchange-Traded Funds Fall, US Equities Mixed After Midday",
         "source": "rss",
-        "published": "2026-06-16T12:16:55Z",
+        "published": "2026-06-16T17:27:03Z",
         "symbols": [
-          "SPY"
+          "IWM",
+          "QQQ"
         ],
         "sentiment": 0.0,
         "category": "headline",
-        "url": "https://247wallst.com/personal-finance/2026/06/16/why-dave-ramsey-chooses-5000-index-funds-over-spacex-the-math-explained/",
-        "summary": "On the June 12 episode of The Ramsey Show, a debt-free single woman with a roughly $250,000 net worth called in asking whether to buy 10 to 100 shares of SpaceX at about $162 each because a friend tol",
-        "publisher": "yfinance:SPY",
+        "url": "https://finance.yahoo.com/markets/articles/exchange-traded-funds-fall-us-172703049.html",
+        "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV were lower Tuesday. Active",
+        "publisher": "yfinance:QQQ",
         "metadata": {}
       },
       {
-        "title": "QTUM vs. QQQ: Does the Quantum-Computing ETF Beat Just Buying the Nasdaq-100?",
+        "title": "SpaceX Softens the Nasdaq's Fall While the Dow Keeps Climbing",
         "source": "rss",
-        "published": "2026-06-16T12:47:46Z",
+        "published": "2026-06-16T17:03:46Z",
         "symbols": [
           "QQQ"
         ],
-        "sentiment": 1.0,
+        "sentiment": 0.0,
         "category": "headline",
-        "url": "https://247wallst.com/investing/2026/06/16/qtum-vs-qqq-does-the-quantum-computing-etf-beat-just-buying-the-nasdaq-100/",
-        "summary": "Both Defiance Quantum ETF (NYSEARCA:QTUM) and Invesco QQQ Trust (NASDAQ:QQQ) get pitched as ways to own the future of computing, but they are not interchangeable. QTUM is marketed around quantum, yet ",
+        "url": "https://www.fool.com/investing/2026/06/16/spacex-softens-the-nasdaq-fall-while-the-dow-rises/",
+        "summary": "The Dow and Nasdaq went opposite directions Tuesday. SpaceX and falling oil prices explain why.",
         "publisher": "yfinance:QQQ",
         "metadata": {}
       },
@@ -4025,22 +4026,6 @@
         "category": "headline",
         "url": "https://finance.yahoo.com/economy/policy/articles/peace-agreement-sends-pre-market-143900709.html",
         "summary": "The pending Memorandum of Understanding comes directly ahead of a new G7 summit this week.",
-        "publisher": "yfinance:DIA",
-        "metadata": {}
-      },
-      {
-        "title": "Stocks Soar on US-Iran Peace Agreement",
-        "source": "rss",
-        "published": "2026-06-15T14:15:30Z",
-        "symbols": [
-          "SPY",
-          "DIA",
-          "QQQ"
-        ],
-        "sentiment": 0.0,
-        "category": "headline",
-        "url": "https://www.barchart.com/story/news/2473927/stocks-soar-on-us-iran-peace-agreement",
-        "summary": "The S&P 500 Index ($SPX ) (SPY ) today is up +1.62%, the Dow Jones Industrial Average ($DOWI ) (DIA ) is up +1.09%, and the Nasdaq 100 Index ($IUXX ) (QQQ ) is up +2.73%. June E-mini S&P futures (ESM2",
         "publisher": "yfinance:DIA",
         "metadata": {}
       },
@@ -4103,20 +4088,6 @@
         "metadata": {}
       },
       {
-        "title": "Which Is the Better Tech ETF for Artificial Intelligence (AI) Stocks, State Street's XLK or Vanguard's VGT?",
-        "source": "rss",
-        "published": "2026-06-15T17:25:47Z",
-        "symbols": [
-          "XLK"
-        ],
-        "sentiment": 0.0,
-        "category": "headline",
-        "url": "https://www.fool.com/coverage/etfs/2026/06/15/which-is-the-better-tech-etf-for-artificial-intelligence-ai-stocks-state-street-s-xlk-or-vanguard-s-vgt/",
-        "summary": "Compare portfolio concentration, cost, and sector exposure as two top tech ETFs take different approaches to capturing industry gains.",
-        "publisher": "yfinance:XLK",
-        "metadata": {}
-      },
-      {
         "title": "Sector Update: Financial Stocks Advance Late Afternoon",
         "source": "rss",
         "published": "2026-06-15T19:55:06Z",
@@ -4129,160 +4100,146 @@
         "summary": "Financial stocks were higher late Monday afternoon trading, with the NYSE Financial Index rising 0.4",
         "publisher": "yfinance:XLF",
         "metadata": {}
-      },
-      {
-        "title": "Sector Update: Financial Stocks Advance in Afternoon Trading",
-        "source": "rss",
-        "published": "2026-06-15T17:44:04Z",
-        "symbols": [
-          "XLF"
-        ],
-        "sentiment": 0.0,
-        "category": "headline",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/sector-financial-stocks-advance-afternoon-174404549.html",
-        "summary": "Financial stocks were higher Monday afternoon trading, with the NYSE Financial Index rising 0.7% and",
-        "publisher": "yfinance:XLF",
-        "metadata": {}
       }
     ],
     "market_context": {
       "sp500": {
-        "price": 755.28,
-        "change_pct": 1.82,
-        "five_day_pct": 4.12,
+        "price": 752.03,
+        "change_pct": -0.37,
+        "five_day_pct": 3.67,
         "trend": "up"
       },
       "nasdaq": {
-        "price": 742.56,
-        "change_pct": -0.19
+        "price": 733.27,
+        "change_pct": -1.44
       },
       "vix": {
-        "value": 16.08,
-        "change": -6.14,
+        "value": 15.94,
+        "change": -6.28,
         "level": "normal",
         "interpretation": "Normal conditions \u2014 standard position sizing"
       },
       "treasury_10y": {
-        "yield_pct": 4.45
+        "yield_pct": 4.43
       },
       "sector_performance": {
         "Technology": {
-          "daily_pct": 3.46,
-          "weekly_pct": 8.24
+          "daily_pct": -1.97,
+          "weekly_pct": 6.45
         },
         "Healthcare": {
-          "daily_pct": -0.21,
-          "weekly_pct": 0.41
+          "daily_pct": 0.18,
+          "weekly_pct": 0.21
         },
         "Financial": {
-          "daily_pct": 1.51,
-          "weekly_pct": 3.67
+          "daily_pct": 1.43,
+          "weekly_pct": 4.01
         },
         "Energy": {
-          "daily_pct": -4.13,
-          "weekly_pct": -5.28
+          "daily_pct": -0.71,
+          "weekly_pct": -5.31
         },
         "Consumer Disc.": {
-          "daily_pct": 1.76,
-          "weekly_pct": 4.55
+          "daily_pct": 0.06,
+          "weekly_pct": 4.54
         },
         "Consumer Staples": {
-          "daily_pct": 0.02,
-          "weekly_pct": 0.41
+          "daily_pct": 0.14,
+          "weekly_pct": 0.13
         },
         "Industrial": {
-          "daily_pct": 2.6,
-          "weekly_pct": 6.54
+          "daily_pct": 1.21,
+          "weekly_pct": 6.6
         },
         "Communication": {
-          "daily_pct": 0.1,
-          "weekly_pct": 1.16
+          "daily_pct": -0.37,
+          "weekly_pct": 0.69
         },
         "Materials": {
-          "daily_pct": 1.46,
-          "weekly_pct": 6.73
+          "daily_pct": 0.63,
+          "weekly_pct": 6.51
         },
         "Utilities": {
-          "daily_pct": 1.52,
-          "weekly_pct": 2.74
+          "daily_pct": 0.68,
+          "weekly_pct": 2.37
         },
         "Real Estate": {
-          "daily_pct": 0.91,
-          "weekly_pct": 0.91
+          "daily_pct": 0.27,
+          "weekly_pct": 0.27
         }
       },
       "sector_leaders": [
         {
-          "sector": "Technology",
-          "daily_pct": 3.46,
-          "weekly_pct": 8.24
+          "sector": "Financial",
+          "daily_pct": 1.43,
+          "weekly_pct": 4.01
         },
         {
           "sector": "Industrial",
-          "daily_pct": 2.6,
-          "weekly_pct": 6.54
+          "daily_pct": 1.21,
+          "weekly_pct": 6.6
         },
         {
-          "sector": "Consumer Disc.",
-          "daily_pct": 1.76,
-          "weekly_pct": 4.55
+          "sector": "Utilities",
+          "daily_pct": 0.68,
+          "weekly_pct": 2.37
         }
       ],
       "sector_laggards": [
         {
-          "sector": "Consumer Staples",
-          "daily_pct": 0.02,
-          "weekly_pct": 0.41
-        },
-        {
-          "sector": "Healthcare",
-          "daily_pct": -0.21,
-          "weekly_pct": 0.41
+          "sector": "Communication",
+          "daily_pct": -0.37,
+          "weekly_pct": 0.69
         },
         {
           "sector": "Energy",
-          "daily_pct": -4.13,
-          "weekly_pct": -5.28
+          "daily_pct": -0.71,
+          "weekly_pct": -5.31
+        },
+        {
+          "sector": "Technology",
+          "daily_pct": -1.97,
+          "weekly_pct": 6.45
         }
       ],
       "commodities": {
         "wti_crude": {
           "symbol": "CL=F",
-          "price": 76.8,
-          "change_pct": -4.89,
-          "timestamp": "2026-06-16T09:25:00-04:00",
+          "price": 75.09,
+          "change_pct": -7.01,
+          "timestamp": "2026-06-16T13:25:00-04:00",
           "source": "yahoo_1m"
         },
         "brent_crude": {
           "symbol": "BZ=F",
-          "price": 80.52,
-          "change_pct": -3.19,
-          "timestamp": "2026-06-16T09:25:00-04:00",
+          "price": 78.79,
+          "change_pct": -5.27,
+          "timestamp": "2026-06-16T13:25:00-04:00",
           "source": "yahoo_1m"
         },
         "natural_gas": {
           "symbol": "NG=F",
-          "price": 3.16,
-          "change_pct": 0.41,
-          "timestamp": "2026-06-16T09:25:00-04:00",
+          "price": 3.25,
+          "change_pct": 3.27,
+          "timestamp": "2026-06-16T13:25:00-04:00",
           "source": "yahoo_1m"
         },
         "gold": {
           "symbol": "GC=F",
-          "price": 4359.7,
-          "change_pct": 0.73,
-          "timestamp": "2026-06-16T09:25:00-04:00",
+          "price": 4350.1,
+          "change_pct": 0.51,
+          "timestamp": "2026-06-16T13:25:00-04:00",
           "source": "yahoo_1m"
         },
         "copper": {
           "symbol": "HG=F",
-          "price": 6.51,
-          "change_pct": 0.49,
-          "timestamp": "2026-06-16T09:25:00-04:00",
+          "price": 6.49,
+          "change_pct": 0.16,
+          "timestamp": "2026-06-16T13:25:00-04:00",
           "source": "yahoo_1m"
         }
       },
-      "market_regime": "risk_on",
+      "market_regime": "neutral",
       "breadth": null
     }
   },
@@ -4291,28 +4248,28 @@
       "info": {
         "name": "QUALCOMM Incorporated",
         "sector": "Technology",
-        "market_cap": 243442384896,
-        "pe_ratio": 24.835484,
+        "market_cap": 231126401024,
+        "pe_ratio": 23.579033,
         "dividend_yield": 1.67,
         "fifty_two_week_high": 259.92,
         "fifty_two_week_low": 121.99
       },
-      "latest_price": 226.21,
-      "quote_timestamp": "2026-06-16T13:38:13.377117+00:00",
+      "latest_price": 216.4,
+      "quote_timestamp": "2026-06-16T17:37:55.525735+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
-      "quote_age_seconds": 1,
+      "quote_age_seconds": 0,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 8.964668249625484,
-      "volume": 1725176,
+      "price_change_pct": 3.5731165680092123,
+      "volume": 10562314,
       "indicators": {
-        "rsi_14": 56.633982281180515,
-        "sma_20": 222.89307327270507,
-        "sma_50": 185.55000701904297,
-        "macd": 6.551255455680661,
-        "macd_signal": 11.13434442597347,
-        "bb_upper": 260.6866387868856,
-        "bb_lower": 185.0995077585245
+        "rsi_14": 53.30489594781711,
+        "sma_20": 222.32232360839845,
+        "sma_50": 185.32170715332032,
+        "macd": 5.640657700661535,
+        "macd_signal": 10.952224874969644,
+        "bb_upper": 259.97155461469237,
+        "bb_lower": 184.67309260210453
       },
       "price_history": [
         {
@@ -4550,47 +4507,47 @@
         {
           "date": "2026-06-16T00:00:00-04:00",
           "open": 225.8300018310547,
-          "high": 230.98989868164062,
-          "low": 222.80430603027344,
-          "close": 230.6999969482422,
-          "volume": 1725176
+          "high": 231.19000244140625,
+          "low": 218.01010131835938,
+          "close": 219.28500366210938,
+          "volume": 10562314
         }
       ],
-      "fetch_time_ms": 3075,
-      "last_trade_price": 227.82,
-      "last_trade_timestamp": "2026-06-16T13:37:57.966405+00:00",
-      "bid_price": 224.46,
-      "ask_price": 227.96,
+      "fetch_time_ms": 2926,
+      "last_trade_price": 218.76,
+      "last_trade_timestamp": "2026-06-16T17:37:13.852093+00:00",
+      "bid_price": 209.8,
+      "ask_price": 223.0,
       "bid_size": 100.0,
       "ask_size": 100.0,
-      "bid_ask_timestamp": "2026-06-16T13:38:13.377117+00:00"
+      "bid_ask_timestamp": "2026-06-16T17:37:55.525735+00:00"
     },
     "GM": {
       "info": {
         "name": "General Motors Company",
         "sector": "Consumer Cyclical",
-        "market_cap": 76181692416,
-        "pe_ratio": 30.835766,
+        "market_cap": 75370192896,
+        "pe_ratio": 30.507298,
         "dividend_yield": 0.86,
         "fifty_two_week_high": 87.62,
         "fifty_two_week_low": 47.63
       },
-      "latest_price": 86.975,
-      "quote_timestamp": "2026-06-16T13:38:14.390957+00:00",
+      "latest_price": 83.565,
+      "quote_timestamp": "2026-06-16T17:37:55.171991+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
       "quote_age_seconds": 0,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 3.6687090353000382,
-      "volume": 271301,
+      "price_change_pct": 2.5644126845283743,
+      "volume": 3816907,
       "indicators": {
-        "rsi_14": 60.75548172259401,
-        "sma_20": 80.61666755676269,
-        "sma_50": 78.52195999145508,
-        "macd": 1.4016110662295773,
-        "macd_signal": 1.3974321373611969,
-        "bb_upper": 87.61135354607154,
-        "bb_lower": 73.62198156745384
+        "rsi_14": 58.9729885857931,
+        "sma_20": 80.57166748046875,
+        "sma_50": 78.5039599609375,
+        "macd": 1.3298160727121626,
+        "macd_signal": 1.3830731386577138,
+        "bb_upper": 87.47710963403638,
+        "bb_lower": 73.66622532690111
       },
       "price_history": [
         {
@@ -4827,58 +4784,50 @@
         },
         {
           "date": "2026-06-16T00:00:00-04:00",
-          "open": 82.63999938964844,
-          "high": 85.0999984741211,
-          "low": 84.16500091552734,
-          "close": 84.48999786376953,
-          "volume": 271301
+          "open": 84.6500015258789,
+          "high": 85.41000366210938,
+          "low": 83.06999969482422,
+          "close": 83.58999633789062,
+          "volume": 3816907
         }
       ],
-      "fetch_time_ms": 564,
-      "last_trade_price": 84.99,
-      "last_trade_timestamp": "2026-06-16T13:37:51.284279+00:00",
-      "bid_price": 85.03,
-      "ask_price": 88.92,
+      "fetch_time_ms": 563,
+      "last_trade_price": 83.57,
+      "last_trade_timestamp": "2026-06-16T17:37:54.118998+00:00",
+      "bid_price": 83.54,
+      "ask_price": 83.59,
       "bid_size": 100.0,
       "ask_size": 100.0,
-      "bid_ask_timestamp": "2026-06-16T13:38:14.390957+00:00"
+      "bid_ask_timestamp": "2026-06-16T17:37:55.171991+00:00"
     },
     "WDC": {
       "info": {
         "name": "Western Digital Corporation",
         "sector": "Technology",
-        "market_cap": 243161202688,
-        "pe_ratio": 42.167667,
+        "market_cap": 239469641728,
+        "pe_ratio": 41.527496,
         "dividend_yield": 0.09,
-        "fifty_two_week_high": 705.93,
+        "fifty_two_week_high": 729.92,
         "fifty_two_week_low": 57.88
       },
-      "latest_price": 705.4650268554688,
-      "quote_timestamp": "2026-06-16T13:35:00+00:00",
+      "latest_price": 694.7550048828125,
+      "quote_timestamp": "2026-06-16T17:35:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 20,
+      "quote_age_seconds": 21,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 25.37438557439544,
-      "volume": 1901157,
+      "price_change_pct": 6.308046109264627,
+      "volume": 10792642,
       "indicators": {
-        "rsi_14": 75.0004249753844,
-        "sma_20": 529.2041320800781,
-        "sma_50": 457.23683044433596,
-        "macd": 37.04125854628421,
-        "macd_signal": 31.163805253201247,
-        "bb_upper": 639.8237427050885,
-        "bb_lower": 418.58452145506766
+        "rsi_14": 74.50780620396145,
+        "sma_20": 538.4018615722656,
+        "sma_50": 464.0057165527344,
+        "macd": 42.0878170447578,
+        "macd_signal": 32.681840784589475,
+        "bb_upper": 653.457935669545,
+        "bb_lower": 423.3457874749862
       },
       "price_history": [
-        {
-          "date": "2026-05-04T00:00:00-04:00",
-          "open": 430.61774677860643,
-          "high": 453.7117016546064,
-          "low": 428.3983241725153,
-          "close": 442.24468994140625,
-          "volume": 10175700
-        },
         {
           "date": "2026-05-05T00:00:00-04:00",
           "open": 455.68117683117976,
@@ -5104,52 +5053,52 @@
           "volume": 6285300
         },
         {
+          "date": "2026-06-15T00:00:00-04:00",
+          "open": 618.780029296875,
+          "high": 658.7999877929688,
+          "low": 612.0,
+          "close": 653.530029296875,
+          "volume": 9488500
+        },
+        {
           "date": "2026-06-16T00:00:00-04:00",
           "open": 686.7750244140625,
-          "high": 705.9299926757812,
-          "low": 685.0,
-          "close": 705.77001953125,
-          "volume": 1901157
+          "high": 729.9199829101562,
+          "low": 667.3499755859375,
+          "close": 694.7550048828125,
+          "volume": 10792642
         }
       ],
-      "fetch_time_ms": 556
+      "fetch_time_ms": 568
     },
     "MU": {
       "info": {
         "name": "Micron Technology, Inc.",
         "sector": "Technology",
-        "market_cap": 1238037692416,
-        "pe_ratio": 51.734688,
+        "market_cap": 1175313055744,
+        "pe_ratio": 49.11357,
         "dividend_yield": 0.06,
-        "fifty_two_week_high": 1100.0,
+        "fifty_two_week_high": 1110.3999,
         "fifty_two_week_low": 103.38
       },
-      "latest_price": 1097.8900146484375,
-      "quote_timestamp": "2026-06-16T13:35:00+00:00",
+      "latest_price": 1042.18994140625,
+      "quote_timestamp": "2026-06-16T17:35:00+00:00",
       "quote_source": "yahoo_1m",
       "quote_age_seconds": 21,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 11.804586519003218,
-      "volume": 4770264,
+      "price_change_pct": -4.209602040388143,
+      "volume": 30231387,
       "indicators": {
-        "rsi_14": 67.01321580990161,
-        "sma_20": 911.7687438964844,
-        "sma_50": 692.2717010498047,
-        "macd": 90.14628258374,
-        "macd_signal": 93.85175395368007,
-        "bb_upper": 1159.9635018213974,
-        "bb_lower": 663.5739859715713
+        "rsi_14": 62.29982679072061,
+        "sma_20": 929.3264923095703,
+        "sma_50": 705.3703997802735,
+        "macd": 89.13791366928501,
+        "macd_signal": 92.78779621553328,
+        "bb_upper": 1158.4140337286615,
+        "bb_lower": 700.2389508904791
       },
       "price_history": [
-        {
-          "date": "2026-05-04T00:00:00-04:00",
-          "open": 560.5999755859375,
-          "high": 592.7999877929688,
-          "low": 557.760009765625,
-          "close": 576.4500122070312,
-          "volume": 46043700
-        },
         {
           "date": "2026-05-05T00:00:00-04:00",
           "open": 609.780029296875,
@@ -5375,42 +5324,50 @@
           "volume": 40785200
         },
         {
+          "date": "2026-06-15T00:00:00-04:00",
+          "open": 1055.8900146484375,
+          "high": 1097.469970703125,
+          "low": 1051.5,
+          "close": 1087.989990234375,
+          "volume": 44741600
+        },
+        {
           "date": "2026-06-16T00:00:00-04:00",
           "open": 1099.3800048828125,
-          "high": 1100.0,
-          "low": 1084.5,
-          "close": 1097.4849853515625,
-          "volume": 4770264
+          "high": 1110.39990234375,
+          "low": 1020.0,
+          "close": 1042.18994140625,
+          "volume": 30231387
         }
       ],
-      "fetch_time_ms": 493
+      "fetch_time_ms": 644
     },
     "HOOD": {
       "info": {
         "name": "Robinhood Markets, Inc.",
         "sector": "Financial Services",
-        "market_cap": 89518489600,
-        "pe_ratio": 48.256897,
+        "market_cap": 86836248576,
+        "pe_ratio": 46.810974,
         "dividend_yield": null,
         "fifty_two_week_high": 153.86,
         "fifty_two_week_low": 63.515
       },
-      "latest_price": 96.88,
-      "quote_timestamp": "2026-06-16T13:38:14.976941+00:00",
+      "latest_price": 96.27000000000001,
+      "quote_timestamp": "2026-06-16T17:37:53.687868+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
-      "quote_age_seconds": 0,
+      "quote_age_seconds": 2,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 1.3139011343397777,
-      "volume": 3172889,
+      "price_change_pct": -1.7217689277909551,
+      "volume": 22403021,
       "indicators": {
-        "rsi_14": 66.4865419543822,
-        "sma_20": 84.97996101379394,
-        "sma_50": 81.41908432006836,
-        "macd": 4.363899617766336,
-        "macd_signal": 2.8998564024138185,
-        "bb_upper": 100.88110210268259,
-        "bb_lower": 69.07881992490529
+        "rsi_14": 63.10066513467278,
+        "sma_20": 84.83103103637696,
+        "sma_50": 81.35951232910156,
+        "macd": 4.126290536987071,
+        "macd_signal": 2.8523345862579657,
+        "bb_upper": 100.23688724336107,
+        "bb_lower": 69.42517482939284
       },
       "price_history": [
         {
@@ -5649,56 +5606,48 @@
           "date": "2026-06-16T00:00:00-04:00",
           "open": 100.2699966430664,
           "high": 101.87999725341797,
-          "low": 98.55000305175781,
-          "close": 99.4092025756836,
-          "volume": 3172889
+          "low": 94.56999969482422,
+          "close": 96.43060302734375,
+          "volume": 22403021
         }
       ],
-      "fetch_time_ms": 589,
-      "last_trade_price": 98.525,
-      "last_trade_timestamp": "2026-06-16T13:38:12.302300+00:00",
-      "bid_price": 95.14,
-      "ask_price": 98.62,
-      "bid_size": 100.0,
-      "ask_size": 200.0,
-      "bid_ask_timestamp": "2026-06-16T13:38:14.976941+00:00"
+      "fetch_time_ms": 544,
+      "last_trade_price": 96.42,
+      "last_trade_timestamp": "2026-06-16T17:37:20.728821+00:00",
+      "bid_price": 96.25,
+      "ask_price": 96.29,
+      "bid_size": 200.0,
+      "ask_size": 100.0,
+      "bid_ask_timestamp": "2026-06-16T17:37:53.687868+00:00"
     },
     "A": {
       "info": {
         "name": "Agilent Technologies, Inc.",
         "sector": "Healthcare",
-        "market_cap": 37111554048,
-        "pe_ratio": 26.38554,
+        "market_cap": 36690735104,
+        "pe_ratio": 26.086346,
         "dividend_yield": 0.78,
         "fifty_two_week_high": 160.27,
         "fifty_two_week_low": 108.35
       },
-      "latest_price": 131.39999389648438,
-      "quote_timestamp": "2026-06-16T13:34:00+00:00",
+      "latest_price": 129.91000366210938,
+      "quote_timestamp": "2026-06-16T17:34:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 82,
+      "quote_age_seconds": 81,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 1.2014768966367437,
-      "volume": 27431,
+      "price_change_pct": -0.5207080900912396,
+      "volume": 1021107,
       "indicators": {
-        "rsi_14": 58.86625519509571,
-        "sma_20": 127.04299888610839,
-        "sma_50": 120.4761994934082,
-        "macd": 4.175844434099417,
-        "macd_signal": 4.5381685378822185,
-        "bb_upper": 146.9614504911334,
-        "bb_lower": 107.12454728108337
+        "rsi_14": 56.39646547865368,
+        "sma_20": 127.8924991607666,
+        "sma_50": 120.7613996887207,
+        "macd": 3.752472596827701,
+        "macd_signal": 4.370690919293823,
+        "bb_upper": 146.59070025958945,
+        "bb_lower": 109.19429806194377
       },
       "price_history": [
-        {
-          "date": "2026-05-04T00:00:00-04:00",
-          "open": 113.4800033569336,
-          "high": 114.87000274658203,
-          "low": 111.83000183105469,
-          "close": 112.18000030517578,
-          "volume": 1948800
-        },
         {
           "date": "2026-05-05T00:00:00-04:00",
           "open": 115.38999938964844,
@@ -5924,52 +5873,52 @@
           "volume": 2288100
         },
         {
-          "date": "2026-06-16T00:00:00-04:00",
+          "date": "2026-06-15T00:00:00-04:00",
           "open": 130.9199981689453,
-          "high": 131.63999938964844,
-          "low": 130.8800048828125,
-          "close": 131.39999389648438,
-          "volume": 27431
+          "high": 132.1699981689453,
+          "low": 129.41000366210938,
+          "close": 130.58999633789062,
+          "volume": 1530100
+        },
+        {
+          "date": "2026-06-16T00:00:00-04:00",
+          "open": 130.97999572753906,
+          "high": 131.97000122070312,
+          "low": 128.6199951171875,
+          "close": 129.91000366210938,
+          "volume": 1021107
         }
       ],
-      "fetch_time_ms": 739
+      "fetch_time_ms": 460
     },
     "CYTK": {
       "info": {
         "name": "Cytokinetics, Incorporated",
         "sector": "Healthcare",
-        "market_cap": 10340288512,
+        "market_cap": 10341645312,
         "pe_ratio": null,
         "dividend_yield": null,
         "fifty_two_week_high": 80.2,
         "fifty_two_week_low": 31.99
       },
-      "latest_price": 76.16000366210938,
-      "quote_timestamp": "2026-06-16T13:35:00+00:00",
+      "latest_price": 76.16999816894531,
+      "quote_timestamp": "2026-06-16T17:35:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 23,
+      "quote_age_seconds": 22,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": 8.567358525307132,
-      "volume": 452248,
+      "price_change_pct": 6.710564723786086,
+      "volume": 2327141,
       "indicators": {
-        "rsi_14": 58.99306891995119,
-        "sma_20": 73.52400016784668,
-        "sma_50": 70.30560005187988,
-        "macd": -0.221584365528102,
-        "macd_signal": 0.17151000738356367,
-        "bb_upper": 80.85981998309832,
-        "bb_lower": 66.18818035259504
+        "rsi_14": 59.589133509697966,
+        "sma_20": 73.33449974060059,
+        "sma_50": 70.43459983825683,
+        "macd": -0.14254219539532187,
+        "macd_signal": 0.04768979842055679,
+        "bb_upper": 80.6865097598125,
+        "bb_lower": 65.98248972138869
       },
       "price_history": [
-        {
-          "date": "2026-05-04T00:00:00-04:00",
-          "open": 63.0,
-          "high": 67.05000305175781,
-          "low": 63.0,
-          "close": 66.05000305175781,
-          "volume": 2156300
-        },
         {
           "date": "2026-05-05T00:00:00-04:00",
           "open": 74.69000244140625,
@@ -6195,42 +6144,50 @@
           "volume": 1292900
         },
         {
+          "date": "2026-06-15T00:00:00-04:00",
+          "open": 70.1500015258789,
+          "high": 71.37999725341797,
+          "low": 68.83999633789062,
+          "close": 71.37999725341797,
+          "volume": 1012300
+        },
+        {
           "date": "2026-06-16T00:00:00-04:00",
           "open": 73.0,
           "high": 77.0,
           "low": 72.1500015258789,
-          "close": 76.16000366210938,
-          "volume": 452248
+          "close": 76.16999816894531,
+          "volume": 2327141
         }
       ],
-      "fetch_time_ms": 517
+      "fetch_time_ms": 467
     },
     "TSLA": {
       "info": {
         "name": "Tesla, Inc.",
         "sector": "Consumer Cyclical",
-        "market_cap": 1507318431744,
-        "pe_ratio": 361.56665,
+        "market_cap": 1518589313024,
+        "pe_ratio": 364.27026,
         "dividend_yield": null,
         "fifty_two_week_high": 498.83,
         "fifty_two_week_low": 288.77
       },
-      "latest_price": 401.3599853515625,
-      "quote_timestamp": "2026-06-16T13:35:00+00:00",
+      "latest_price": 404.4198913574219,
+      "quote_timestamp": "2026-06-16T17:35:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 23,
+      "quote_age_seconds": 22,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-16T00:00:00-04:00",
-      "price_change_pct": -1.2572629704777736,
-      "volume": 3195533,
+      "price_change_pct": -0.49457504480061343,
+      "volume": 28465820,
       "indicators": {
-        "rsi_14": 47.18265976246723,
-        "sma_20": 414.69750518798827,
-        "sma_50": 399.1146032714844,
-        "macd": -2.415397063059686,
-        "macd_signal": 1.3890865367060776,
-        "bb_upper": 446.8617091086675,
-        "bb_lower": 382.533301267309
+        "rsi_14": 48.22221397944052,
+        "sma_20": 414.85249481201174,
+        "sma_50": 399.1765991210938,
+        "macd": -2.168120170030818,
+        "macd_signal": 1.4385419153118513,
+        "bb_upper": 446.7864077574177,
+        "bb_lower": 382.9185818666058
       },
       "price_history": [
         {
@@ -6468,20 +6425,20 @@
         {
           "date": "2026-06-16T00:00:00-04:00",
           "open": 404.1099853515625,
-          "high": 404.44000244140625,
+          "high": 412.4200134277344,
           "low": 400.5400085449219,
-          "close": 401.3200988769531,
-          "volume": 3195533
+          "close": 404.4198913574219,
+          "volume": 28465820
         }
       ],
-      "fetch_time_ms": 559
+      "fetch_time_ms": 621
     }
   },
   "signals": [],
   "risk": {},
   "executed": [],
   "portfolio": {
-    "timestamp": "2026-06-16T13:38:15.008958+00:00",
+    "timestamp": "2026-06-16T17:37:55.723084+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
