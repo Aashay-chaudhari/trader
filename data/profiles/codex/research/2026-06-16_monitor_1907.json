@@ -1,0 +1,105 @@
+{
+  "run_id": "20260616_190511",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions weaken the morning thesis because QCOM and GM are below their required entry ranges and HOOD remains watch-only without clear constructive confirmation.",
+  "stocks": {
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.35,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "fresh live quote available"
+      ],
+      "failed_conditions": [
+        "price is below the required 224.00 to 229.50 buy range",
+        "VWAP and semiconductor ETF confirmation are not provided in the live snapshot"
+      ],
+      "monitor_reason": "QCOM is near the stop area and below the planned trigger range, so the buy gate is not satisfied.",
+      "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
+      "trade_plan": {
+        "entry": 226.5,
+        "stop_loss": 220.5,
+        "target": 238.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.3,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "fresh live quote available"
+      ],
+      "failed_conditions": [
+        "price is far below the morning plan entry",
+        "opening range hold and fintech/crypto risk appetite confirmation are not provided in the live snapshot"
+      ],
+      "monitor_reason": "HOOD remains watch-only and the live snapshot does not clearly confirm the required risk-on setup.",
+      "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
+      "trade_plan": {
+        "entry": 124.0,
+        "stop_loss": 120.0,
+        "target": 132.0
+      }
+    },
+    "GM": {
+      "recommendation": "watch",
+      "confidence": 0.35,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "fresh live quote available",
+        "price change is positive intraday"
+      ],
+      "failed_conditions": [
+        "price is below the required 84.00 to 86.00 buy range",
+        "VWAP and broader risk-on confirmation are not provided in the live snapshot"
+      ],
+      "monitor_reason": "GM is positive on the day but below the planned entry range, so the buy gate is not clearly satisfied.",
+      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
+      "trade_plan": {
+        "entry": 85.0,
+        "stop_loss": 82.5,
+        "target": 90.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27641390509",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27641390509",
+        "sha": "cc6a98738b275ca112fa9c01c73b9190356e044e",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
