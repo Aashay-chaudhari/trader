@@ -1,21 +1,21 @@
 {
-  "run_id": "20260616_183513",
+  "run_id": "20260616_193402",
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions weaken the morning thesis because the listed buy setups are below their required entry windows and confirmation signals are incomplete.",
+  "market_summary": "Live conditions weaken the morning thesis because the candidates are below their required entry zones and the regime hint is risk_off.",
   "stocks": {
     "QCOM": {
       "recommendation": "watch",
-      "confidence": 0.18,
+      "confidence": 0.78,
       "ready_to_trade": false,
       "matched_conditions": [
-        "fresh live quote available"
+        "fresh quote available"
       ],
       "failed_conditions": [
-        "price is below the required 224.00 to 229.50 entry range",
-        "holding above VWAP is not confirmed",
-        "semiconductor ETF support is not confirmed"
+        "price is below the 224.00 to 229.50 execution range",
+        "VWAP confirmation is not provided",
+        "semiconductor ETF rollover confirmation is not provided"
       ],
-      "monitor_reason": "QCOM is below the planned buy zone and below the stop, so the entry condition is not satisfied.",
+      "monitor_reason": "QCOM is below the buy zone at 218.04, so the planned long entry is not confirmed.",
       "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
       "trade_plan": {
         "entry": 226.5,
@@ -25,17 +25,17 @@
     },
     "HOOD": {
       "recommendation": "watch",
-      "confidence": 0.15,
+      "confidence": 0.82,
       "ready_to_trade": false,
       "matched_conditions": [
-        "fresh live quote available"
+        "fresh quote available"
       ],
       "failed_conditions": [
-        "price is far below the morning entry and stop levels",
-        "holding the opening range is not confirmed",
-        "constructive fintech/crypto risk appetite is not confirmed"
+        "opening range hold confirmation is not provided",
+        "fintech/crypto risk appetite confirmation is not provided",
+        "price is far below the morning reference entry"
       ],
-      "monitor_reason": "HOOD remains a watch-only candidate with the live snapshot failing to confirm the required setup.",
+      "monitor_reason": "HOOD remains a watch because the snapshot does not confirm an opening range hold or constructive risk appetite.",
       "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
       "trade_plan": {
         "entry": 124.0,
@@ -45,18 +45,17 @@
     },
     "GM": {
       "recommendation": "watch",
-      "confidence": 0.22,
+      "confidence": 0.8,
       "ready_to_trade": false,
       "matched_conditions": [
-        "fresh live quote available",
-        "price is positive on the day"
+        "fresh quote available"
       ],
       "failed_conditions": [
-        "price is below the required 84.00 to 86.00 entry range",
-        "holding above VWAP is not confirmed",
-        "broader market risk-on confirmation is not established"
+        "price is below the 84.00 to 86.00 execution range",
+        "VWAP confirmation is not provided",
+        "broader market risk-on condition is not satisfied"
       ],
-      "monitor_reason": "GM is showing intraday strength but remains below the buy zone and lacks required confirmation.",
+      "monitor_reason": "GM is below the buy zone at 82.37 and the market regime hint is risk_off.",
       "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
       "trade_plan": {
         "entry": 85.0,
@@ -97,10 +96,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "27639667310",
+        "run_id": "27643032276",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27639667310",
-        "sha": "06cd5acbb34331cdb4c55a7f628609c30d29ff0e",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27643032276",
+        "sha": "ea8ce600032a940e071b6f3809e126899dfdad4c",
         "ref": "refs/heads/main"
       }
     }

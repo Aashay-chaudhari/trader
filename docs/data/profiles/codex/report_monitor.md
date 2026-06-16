@@ -1,24 +1,24 @@
 # Trading Journal — 2026-06-16
 
-**Run ID:** `20260616_183513`  
+**Run ID:** `20260616_193402`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 18:37 UTC  
+**Time:** 19:36 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Live conditions weaken the morning thesis because the listed buy setups are below their required entry windows and confirmation signals are incomplete.
+> Live conditions weaken the morning thesis because the candidates are below their required entry zones and the regime hint is risk_off.
 
 ### QCOM [?]
-- **Sentiment:** N/A | **Confidence:** 18% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 78% | **Recommendation:** watch
 
 ### HOOD [?]
-- **Sentiment:** N/A | **Confidence:** 15% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 82% | **Recommendation:** watch
 
 ### GM [?]
-- **Sentiment:** N/A | **Confidence:** 22% | **Recommendation:** watch
+- **Sentiment:** N/A | **Confidence:** 80% | **Recommendation:** watch
 
 ## LLM Telemetry
 
@@ -41,34 +41,34 @@
 - **Opening the Strait Eases Oil Prices, Imports & Housing Starts Report** [yfinance:SPY]
 - **This Vanguard ETF Is Quietly Outpacing the S&P 500 in 2026 and Costs Just 0.04 Percent** [yfinance:SPY]
 - **VOO vs. IWO: What's the Difference for S&P 500 Investors in 2026?** [yfinance:SPY]
-- **Exchange-Traded Funds Fall, US Equities Mixed After Midday** [yfinance:QQQ]
+- **QQQI’s 13.8 Percent Monthly Yield Comes With a Hidden Cost Most Income Investors Miss** [yfinance:QQQ]
 
 ### QCOM Headlines
 
 - **Trending: Robinhood cuts 10% of workforce, Yum Brands sells Pizza Hut, Qualcomm's AI deal** [Yahoo Finance Video]
 - **Microsoft debuts Surface Laptop and Surface Pro amid AI-driven memory shortage** [Yahoo Finance]
-- **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
-- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
+- **Qualcomm Stock Jumps -- CEO Unveils Bold AI Wearables Push** [GuruFocus.com]
+- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
 
 ### GM Headlines
 
 - **GM reveals new Silverado pickup as Ford F-150 sales falter** [Yahoo Finance]
+- **General Motors Is Joining Forces With Lockheed Martin. How the New Defense Deal Impacts the Stock.** [Barrons.com]
 - **General Motors (GM) Stock Could Be 31% Below Fair Value After Recent Run Up** [Simply Wall St.]
 - **GM in Talks to Supply Weapons Parts to Lockheed Martin** [The Wall Street Journal]
-- **GM, Lockheed in talks to collaborate as US scales weapons stockpile** [Detroit Free Press]
 
 ### WDC Headlines
 
-- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
+- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
 - **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
-- **Stock Market Today: Dow Tops 52,000; SpaceX Rockets Higher, Cancer Test Name Breaks Out (Live Coverage)** [Investor's Business Daily]
+- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
+- **Stock Market Today: Dow Conquers 52,000 Level; SpaceX Blasts Higher, Taiwan Semi Lifts This Name (Live Coverage)** [Investor's Business Daily]
 
 ### MU Headlines
 
+- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
 - **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
-- **SpaceX, Western Digital, Micron, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
+- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
 - **Chip stocks surge, oil slides closer to $80 on US-Iran deal, Fox to acquire Roku** [Yahoo Finance Video]
 
 ### HOOD Headlines
@@ -76,7 +76,7 @@
 - **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
 - **Robinhood to let go 10% of staff as it seeks to become leaner** [Yahoo Finance]
 - **Thanks to the World Cup, Robinhood's 2026 prediction markets revenue could skyrocket** [Yahoo Finance Video]
-- **Sector Update: Financial Stocks Rise Tuesday Afternoon** [MT Newswires]
+- **Robinhood stock slides after layoff announcement** [TheStreet]
 
 ### A Headlines
 
@@ -94,10 +94,10 @@
 
 ### TSLA Headlines
 
+- **Qualcomm Is Eyeing a Massive AI Pivot. Why Wall Street Is Still Cautious.** [Barrons.com]
 - **The Mag 7 plus these three AI companies make up the new Fab 10** [Yahoo Finance Video]
-- **What SpaceX's $1.2 billion bitcoin holdings mean for investors** [Yahoo Finance Video]
-- **High gas prices have more Americans opting for EVs: ChargePoint data** [Yahoo Finance]
-- **Sector Update: Consumer Stocks Edge Higher Tuesday Afternoon** [MT Newswires]
+- **What Led JPMorgan to Revisit Its Tesla Inc (TSLA) Stock Rating?** [Insider Monkey]
+- **SpaceX Rally Lifts Valor's Stake to Nearly $97 Billion After 43% Gain** [GuruFocus.com]
 
 ## Trade Signals
 
