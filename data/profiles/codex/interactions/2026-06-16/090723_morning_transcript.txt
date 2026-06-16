@@ -1,0 +1,25 @@
+Morning research completed and staged.
+
+Wrote:
+- [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)
+- [watchlist.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/watchlist.json)
+
+Key output:
+- Regime: `risk_on`
+- Sentiment: `bullish`
+- Buy candidates: `QCOM`, `GM`
+- Watchlist: `QCOM`, `GM`, `WDC`, `MU`, `HOOD`, `A`, `CYTK`, `TSLA`
+- Live quote checks completed for both buys:
+  - `QCOM` entry `226.50`, quote range checked around `220.81-229.65`
+  - `GM` entry `85.00`, quote range checked around `84.00-85.17`
+
+Validation:
+- JSON parse passed for both files using `python3 -m json.tool`
+- Staged exactly the two required cache files with `git add`
+- No commit or push performed
+
+Notable constraints:
+- `portfolio_state.json`, `snapshots/latest.json`, and previous watchlist were missing for this profile, so position-aware logic was conservative.
+- `jq` was unavailable, so validation used Python read-only parsing.
+
+Primary sources used included MarketWatch, Barron’s, Investopedia, Cboe, Yahoo Finance, Robinhood, TradingView, Nasdaq, Fidelity, and Lance Roberts’ daily market update.
