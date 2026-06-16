@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T14:06:47.125498+00:00",
+  "generated_at": "2026-06-16T14:07:44.991002+00:00",
   "active_profile": "codex",
   "profiles": {
     "codex": {
@@ -12,7 +12,7 @@
         "paper_portfolio_value": 100000.0
       },
       "latest": {
-        "timestamp": "2026-06-16T13:38:15.008958+00:00",
+        "timestamp": "2026-06-16T14:07:44.013532+00:00",
         "profile": "codex",
         "profile_label": "Codex Strategist",
         "portfolio_value": 100000.0,
@@ -28,6 +28,20 @@
       "history": [
         {
           "timestamp": "2026-06-16T13:38:15.008958+00:00",
+          "profile": "codex",
+          "profile_label": "Codex Strategist",
+          "portfolio_value": 100000.0,
+          "cash": 100000.0,
+          "invested": 0,
+          "unrealized_pnl": 0,
+          "total_pnl": 0,
+          "realized_pnl": 0,
+          "total_pnl_pct": 0.0,
+          "positions": [],
+          "position_count": 0
+        },
+        {
+          "timestamp": "2026-06-16T14:07:44.013532+00:00",
           "profile": "codex",
           "profile_label": "Codex Strategist",
           "portfolio_value": 100000.0,
@@ -609,7 +623,7 @@
         }
       },
       "llm": {
-        "timestamp": "2026-06-16T13:38:15.006759+00:00",
+        "timestamp": "2026-06-16T14:07:44.011332+00:00",
         "phase": "monitor",
         "symbols": [
           "GM",
@@ -650,10 +664,10 @@
             "workflow": "Codex Decision Execution",
             "event_name": "push",
             "actor": "Aashay-chaudhari",
-            "run_id": "27621593433",
+            "run_id": "27623450863",
             "run_attempt": "1",
-            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27621593433",
-            "sha": "0641189c7be3ed59f583dd43de5d1efdf1dc521e",
+            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27623450863",
+            "sha": "782cb6e1c7ee6e7a9c81e625fa2a297847e816e7",
             "ref": "refs/heads/main"
           }
         }
@@ -1399,16 +1413,16 @@
       "news_audit": {
         "counts": {
           "days": 1,
-          "entries": 5,
-          "headlines": 38,
-          "articles": 53,
-          "urls": 12,
+          "entries": 6,
+          "headlines": 42,
+          "articles": 57,
+          "urls": 13,
           "sources": 7,
           "searches": 0
         },
         "latest": {
-          "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
-          "timestamp": "2026-06-16T13:38:15.005497+00:00",
+          "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+          "timestamp": "2026-06-16T14:07:44.010087+00:00",
           "day": "2026-06-16",
           "phase": "monitor",
           "phase_group": "monitor",
@@ -1426,24 +1440,61 @@
             "github.com"
           ],
           "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-          "summary": "Evaluated: GM, QCOM, HOOD | Live conditions are broadly risk-on, but the prepared trade gates are not clearly confirmed because GM lacks VWAP confirmation, QCOM is above its buy range, and HOOD remains below  | codex / codex-cli",
+          "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
           "status": "success",
           "links": [
             {
               "label": "Prompt",
-              "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_prompt.md"
+              "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
             },
             {
               "label": "Transcript",
-              "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_transcript.txt"
+              "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
             },
             {
               "label": "Metadata",
-              "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_interaction.json"
+              "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
             }
           ]
         },
         "entries": [
+          {
+            "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+            "timestamp": "2026-06-16T14:07:44.010087+00:00",
+            "day": "2026-06-16",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "source_kind": "interaction_prompt_transcript",
+            "quality_score": 26,
+            "quality_label": "low",
+            "headline_count": 4,
+            "article_count": 4,
+            "url_count": 1,
+            "source_count": 1,
+            "search_count": 0,
+            "symbols": [],
+            "sources": [
+              "github.com"
+            ],
+            "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+            "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+            "status": "success",
+            "links": [
+              {
+                "label": "Prompt",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
+              },
+              {
+                "label": "Transcript",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
+              },
+              {
+                "label": "Metadata",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
+              }
+            ]
+          },
           {
             "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
             "timestamp": "2026-06-16T13:38:15.005497+00:00",
@@ -1635,8 +1686,45 @@
         "days": [
           {
             "date": "2026-06-16",
-            "count": 5,
+            "count": 6,
             "entries": [
+              {
+                "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+                "timestamp": "2026-06-16T14:07:44.010087+00:00",
+                "day": "2026-06-16",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "source_kind": "interaction_prompt_transcript",
+                "quality_score": 26,
+                "quality_label": "low",
+                "headline_count": 4,
+                "article_count": 4,
+                "url_count": 1,
+                "source_count": 1,
+                "search_count": 0,
+                "symbols": [],
+                "sources": [
+                  "github.com"
+                ],
+                "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+                "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+                "status": "success",
+                "links": [
+                  {
+                    "label": "Prompt",
+                    "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
+                  },
+                  {
+                    "label": "Transcript",
+                    "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
+                  },
+                  {
+                    "label": "Metadata",
+                    "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
+                  }
+                ]
+              },
               {
                 "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
                 "timestamp": "2026-06-16T13:38:15.005497+00:00",
@@ -1882,53 +1970,53 @@
       },
       "interactions": {
         "counts": {
-          "total": 4,
-          "recent": 4,
+          "total": 5,
+          "recent": 5,
           "days": 1
         },
         "latest": {
-          "timestamp": "2026-06-16T10:06:40.081997-04:00",
+          "timestamp": "2026-06-16T14:07:44.010087+00:00",
           "day": "2026-06-16",
           "profile": "codex",
           "phase": "monitor",
           "phase_group": "monitor",
           "phase_label": "Monitor Evaluations",
-          "tool": "codex",
+          "tool": "codex-loop",
           "status": "success",
-          "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` with run_id `20260616_140508`. | Decision: neutral, no trades approved. GM and QCOM are near/inside price bands, but required VWAP and sector confirmation were not clearly present in the live snapshot; HOOD remains watch-only. | Validated successfully with `python3 -m json.tool`.",
-          "prompt_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-          "transcript_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-          "context_file": "",
-          "metadata_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
-          "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-16_100532.log",
+          "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+          "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+          "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+          "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+          "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+          "raw_log_file": "",
           "prompt_source": "scripts/prompts/monitor_check.md",
-          "prompt_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-          "transcript_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-          "context_url": "",
-          "metadata_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
+          "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+          "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+          "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+          "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
           "prompt_source_url": ""
         },
         "latest_by_phase": {
           "monitor": {
-            "timestamp": "2026-06-16T10:06:40.081997-04:00",
+            "timestamp": "2026-06-16T14:07:44.010087+00:00",
             "day": "2026-06-16",
             "profile": "codex",
             "phase": "monitor",
             "phase_group": "monitor",
             "phase_label": "Monitor Evaluations",
-            "tool": "codex",
+            "tool": "codex-loop",
             "status": "success",
-            "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` with run_id `20260616_140508`. | Decision: neutral, no trades approved. GM and QCOM are near/inside price bands, but required VWAP and sector confirmation were not clearly present in the live snapshot; HOOD remains watch-only. | Validated successfully with `python3 -m json.tool`.",
-            "prompt_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-            "transcript_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-            "context_file": "",
-            "metadata_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
-            "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-16_100532.log",
+            "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+            "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+            "raw_log_file": "",
             "prompt_source": "scripts/prompts/monitor_check.md",
-            "prompt_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-            "transcript_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-            "context_url": "",
-            "metadata_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+            "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
             "prompt_source_url": ""
           },
           "morning": {
@@ -1955,10 +2043,32 @@
           }
         },
         "phase_counts": {
-          "monitor": 3,
+          "monitor": 4,
           "morning": 1
         },
         "recent": [
+          {
+            "timestamp": "2026-06-16T14:07:44.010087+00:00",
+            "day": "2026-06-16",
+            "profile": "codex",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "tool": "codex-loop",
+            "status": "success",
+            "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+            "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+            "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+            "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+            "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+            "raw_log_file": "",
+            "prompt_source": "scripts/prompts/monitor_check.md",
+            "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+            "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+            "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+            "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+            "prompt_source_url": ""
+          },
           {
             "timestamp": "2026-06-16T10:06:40.081997-04:00",
             "day": "2026-06-16",
@@ -2051,7 +2161,7 @@
         "days": [
           {
             "date": "2026-06-16",
-            "count": 4,
+            "count": 5,
             "phases": [
               {
                 "key": "morning",
@@ -2085,6 +2195,28 @@
                 "key": "monitor",
                 "label": "Monitor Evaluations",
                 "items": [
+                  {
+                    "timestamp": "2026-06-16T14:07:44.010087+00:00",
+                    "day": "2026-06-16",
+                    "profile": "codex",
+                    "phase": "monitor",
+                    "phase_group": "monitor",
+                    "phase_label": "Monitor Evaluations",
+                    "tool": "codex-loop",
+                    "status": "success",
+                    "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+                    "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+                    "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+                    "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+                    "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+                    "raw_log_file": "",
+                    "prompt_source": "scripts/prompts/monitor_check.md",
+                    "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+                    "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+                    "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+                    "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+                    "prompt_source_url": ""
+                  },
                   {
                     "timestamp": "2026-06-16T13:38:15.005497+00:00",
                     "day": "2026-06-16",
@@ -8705,7 +8837,7 @@
       {
         "profile": "codex",
         "label": "Codex Strategist",
-        "last_updated": "2026-06-16T13:38:15.008958+00:00",
+        "last_updated": "2026-06-16T14:07:44.013532+00:00",
         "portfolio_value": 100000.0,
         "total_pnl": 0,
         "total_pnl_pct": 0.0,
@@ -8733,7 +8865,7 @@
     "paper_portfolio_value": 100000.0
   },
   "latest": {
-    "timestamp": "2026-06-16T13:38:15.008958+00:00",
+    "timestamp": "2026-06-16T14:07:44.013532+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
@@ -8749,6 +8881,20 @@
   "history": [
     {
       "timestamp": "2026-06-16T13:38:15.008958+00:00",
+      "profile": "codex",
+      "profile_label": "Codex Strategist",
+      "portfolio_value": 100000.0,
+      "cash": 100000.0,
+      "invested": 0,
+      "unrealized_pnl": 0,
+      "total_pnl": 0,
+      "realized_pnl": 0,
+      "total_pnl_pct": 0.0,
+      "positions": [],
+      "position_count": 0
+    },
+    {
+      "timestamp": "2026-06-16T14:07:44.013532+00:00",
       "profile": "codex",
       "profile_label": "Codex Strategist",
       "portfolio_value": 100000.0,
@@ -9330,7 +9476,7 @@
     }
   },
   "llm": {
-    "timestamp": "2026-06-16T13:38:15.006759+00:00",
+    "timestamp": "2026-06-16T14:07:44.011332+00:00",
     "phase": "monitor",
     "symbols": [
       "GM",
@@ -9371,10 +9517,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "27621593433",
+        "run_id": "27623450863",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27621593433",
-        "sha": "0641189c7be3ed59f583dd43de5d1efdf1dc521e",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27623450863",
+        "sha": "782cb6e1c7ee6e7a9c81e625fa2a297847e816e7",
         "ref": "refs/heads/main"
       }
     }
@@ -10120,16 +10266,16 @@
   "news_audit": {
     "counts": {
       "days": 1,
-      "entries": 5,
-      "headlines": 38,
-      "articles": 53,
-      "urls": 12,
+      "entries": 6,
+      "headlines": 42,
+      "articles": 57,
+      "urls": 13,
       "sources": 7,
       "searches": 0
     },
     "latest": {
-      "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
-      "timestamp": "2026-06-16T13:38:15.005497+00:00",
+      "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+      "timestamp": "2026-06-16T14:07:44.010087+00:00",
       "day": "2026-06-16",
       "phase": "monitor",
       "phase_group": "monitor",
@@ -10147,24 +10293,61 @@
         "github.com"
       ],
       "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-      "summary": "Evaluated: GM, QCOM, HOOD | Live conditions are broadly risk-on, but the prepared trade gates are not clearly confirmed because GM lacks VWAP confirmation, QCOM is above its buy range, and HOOD remains below  | codex / codex-cli",
+      "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
       "status": "success",
       "links": [
         {
           "label": "Prompt",
-          "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_prompt.md"
+          "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
         },
         {
           "label": "Transcript",
-          "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_transcript.txt"
+          "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
         },
         {
           "label": "Metadata",
-          "url": "data/profiles/codex/interactions/2026-06-16/133815_monitor_interaction.json"
+          "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
         }
       ]
     },
     "entries": [
+      {
+        "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+        "timestamp": "2026-06-16T14:07:44.010087+00:00",
+        "day": "2026-06-16",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "source_kind": "interaction_prompt_transcript",
+        "quality_score": 26,
+        "quality_label": "low",
+        "headline_count": 4,
+        "article_count": 4,
+        "url_count": 1,
+        "source_count": 1,
+        "search_count": 0,
+        "symbols": [],
+        "sources": [
+          "github.com"
+        ],
+        "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+        "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+        "status": "success",
+        "links": [
+          {
+            "label": "Prompt",
+            "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
+          },
+          {
+            "label": "Transcript",
+            "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
+          },
+          {
+            "label": "Metadata",
+            "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
+          }
+        ]
+      },
       {
         "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
         "timestamp": "2026-06-16T13:38:15.005497+00:00",
@@ -10356,8 +10539,45 @@
     "days": [
       {
         "date": "2026-06-16",
-        "count": 5,
+        "count": 6,
         "entries": [
+          {
+            "id": "2026-06-16:monitor:2026-06-16T14:07:44.010087+00:00",
+            "timestamp": "2026-06-16T14:07:44.010087+00:00",
+            "day": "2026-06-16",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "source_kind": "interaction_prompt_transcript",
+            "quality_score": 26,
+            "quality_label": "low",
+            "headline_count": 4,
+            "article_count": 4,
+            "url_count": 1,
+            "source_count": 1,
+            "search_count": 0,
+            "symbols": [],
+            "sources": [
+              "github.com"
+            ],
+            "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+            "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+            "status": "success",
+            "links": [
+              {
+                "label": "Prompt",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md"
+              },
+              {
+                "label": "Transcript",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt"
+              },
+              {
+                "label": "Metadata",
+                "url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json"
+              }
+            ]
+          },
           {
             "id": "2026-06-16:monitor:2026-06-16T13:38:15.005497+00:00",
             "timestamp": "2026-06-16T13:38:15.005497+00:00",
@@ -10603,53 +10823,53 @@
   },
   "interactions": {
     "counts": {
-      "total": 4,
-      "recent": 4,
+      "total": 5,
+      "recent": 5,
       "days": 1
     },
     "latest": {
-      "timestamp": "2026-06-16T10:06:40.081997-04:00",
+      "timestamp": "2026-06-16T14:07:44.010087+00:00",
       "day": "2026-06-16",
       "profile": "codex",
       "phase": "monitor",
       "phase_group": "monitor",
       "phase_label": "Monitor Evaluations",
-      "tool": "codex",
+      "tool": "codex-loop",
       "status": "success",
-      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` with run_id `20260616_140508`. | Decision: neutral, no trades approved. GM and QCOM are near/inside price bands, but required VWAP and sector confirmation were not clearly present in the live snapshot; HOOD remains watch-only. | Validated successfully with `python3 -m json.tool`.",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-      "context_file": "",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-16_100532.log",
+      "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+      "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+      "raw_log_file": "",
       "prompt_source": "scripts/prompts/monitor_check.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-      "context_url": "",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+      "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
       "monitor": {
-        "timestamp": "2026-06-16T10:06:40.081997-04:00",
+        "timestamp": "2026-06-16T14:07:44.010087+00:00",
         "day": "2026-06-16",
         "profile": "codex",
         "phase": "monitor",
         "phase_group": "monitor",
         "phase_label": "Monitor Evaluations",
-        "tool": "codex",
+        "tool": "codex-loop",
         "status": "success",
-        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` with run_id `20260616_140508`. | Decision: neutral, no trades approved. GM and QCOM are near/inside price bands, but required VWAP and sector confirmation were not clearly present in the live snapshot; HOOD remains watch-only. | Validated successfully with `python3 -m json.tool`.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-        "context_file": "",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-16_100532.log",
+        "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+        "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+        "raw_log_file": "",
         "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_transcript.txt",
-        "context_url": "",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-16/100532_monitor_interaction.json",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+        "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
         "prompt_source_url": ""
       },
       "morning": {
@@ -10676,10 +10896,32 @@
       }
     },
     "phase_counts": {
-      "monitor": 3,
+      "monitor": 4,
       "morning": 1
     },
     "recent": [
+      {
+        "timestamp": "2026-06-16T14:07:44.010087+00:00",
+        "day": "2026-06-16",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex-loop",
+        "status": "success",
+        "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+        "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+        "raw_log_file": "",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+        "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       {
         "timestamp": "2026-06-16T10:06:40.081997-04:00",
         "day": "2026-06-16",
@@ -10772,7 +11014,7 @@
     "days": [
       {
         "date": "2026-06-16",
-        "count": 4,
+        "count": 5,
         "phases": [
           {
             "key": "morning",
@@ -10806,6 +11048,28 @@
             "key": "monitor",
             "label": "Monitor Evaluations",
             "items": [
+              {
+                "timestamp": "2026-06-16T14:07:44.010087+00:00",
+                "day": "2026-06-16",
+                "profile": "codex",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "codex-loop",
+                "status": "success",
+                "summary": "Evaluated: GM, QCOM, HOOD | Live prices are near the morning setups and the regime hint is risk-on, but required intraday confirmations are incomplete. | codex / codex-cli",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+                "context_file": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+                "raw_log_file": "",
+                "prompt_source": "scripts/prompts/monitor_check.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_transcript.txt",
+                "context_url": "data/profiles/codex/context/2026-06-16_monitor_140744.json",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-16/140744_monitor_interaction.json",
+                "prompt_source_url": ""
+              },
               {
                 "timestamp": "2026-06-16T13:38:15.005497+00:00",
                 "day": "2026-06-16",
