@@ -1,32 +1,54 @@
 {
   "counts": {
-    "total": 19,
-    "recent": 19,
-    "days": 1
+    "total": 20,
+    "recent": 20,
+    "days": 2
   },
   "latest": {
-    "timestamp": "2026-06-16T16:21:24.979499-04:00",
-    "day": "2026-06-16",
+    "timestamp": "2026-06-17T09:37:52.957469-04:00",
+    "day": "2026-06-17",
     "profile": "codex",
-    "phase": "voice",
-    "phase_group": "voice",
-    "phase_label": "Voice",
+    "phase": "monitor",
+    "phase_group": "monitor",
+    "phase_label": "Monitor Evaluations",
     "tool": "codex",
     "status": "success",
-    "summary": "Done. I wrote and staged: | - [latest_voice.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/voice/latest_voice.json) | - [voice_2026-06-16.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/voice/voice_2026-06-16.json)",
-    "prompt_file": "data/profiles/codex/interactions/2026-06-16/161921_voice_prompt.md",
-    "transcript_file": "data/profiles/codex/interactions/2026-06-16/161921_voice_transcript.txt",
+    "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: neutral overall, no trades approved. `QCOM`, `HOOD`, and `GM` are all `ready_to_trade=false` because their invalidated setups have not shown clear repair/reclaim evidence, and live prices/regime do not satisfy the stated execution conditions.",
+    "prompt_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+    "transcript_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
     "context_file": "",
-    "metadata_file": "data/profiles/codex/interactions/2026-06-16/161921_voice_interaction.json",
-    "raw_log_file": ".tmp/cli_logs/codex_voice_2026-06-16_161921.log",
-    "prompt_source": "scripts/prompts/strategist_voice.md",
-    "prompt_url": "data/profiles/codex/interactions/2026-06-16/161921_voice_prompt.md",
-    "transcript_url": "data/profiles/codex/interactions/2026-06-16/161921_voice_transcript.txt",
+    "metadata_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+    "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_093622.log",
+    "prompt_source": "scripts/prompts/monitor_check.md",
+    "prompt_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+    "transcript_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
     "context_url": "",
-    "metadata_url": "data/profiles/codex/interactions/2026-06-16/161921_voice_interaction.json",
+    "metadata_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
     "prompt_source_url": ""
   },
   "latest_by_phase": {
+    "monitor": {
+      "timestamp": "2026-06-17T09:37:52.957469-04:00",
+      "day": "2026-06-17",
+      "profile": "codex",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "tool": "codex",
+      "status": "success",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: neutral overall, no trades approved. `QCOM`, `HOOD`, and `GM` are all `ready_to_trade=false` because their invalidated setups have not shown clear repair/reclaim evidence, and live prices/regime do not satisfy the stated execution conditions.",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+      "context_file": "",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_093622.log",
+      "prompt_source": "scripts/prompts/monitor_check.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+      "context_url": "",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+      "prompt_source_url": ""
+    },
     "voice": {
       "timestamp": "2026-06-16T16:21:24.979499-04:00",
       "day": "2026-06-16",
@@ -71,28 +93,6 @@
       "metadata_url": "data/profiles/codex/interactions/2026-06-16/161452_evening_interaction.json",
       "prompt_source_url": ""
     },
-    "monitor": {
-      "timestamp": "2026-06-16T19:36:17.813080+00:00",
-      "day": "2026-06-16",
-      "profile": "codex",
-      "phase": "monitor",
-      "phase_group": "monitor",
-      "phase_label": "Monitor Evaluations",
-      "tool": "codex-loop",
-      "status": "success",
-      "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the candidates are below their required entry zones and the regime hint is risk_off. | codex / codex-cli",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-16/193617_monitor_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-16/193617_monitor_transcript.txt",
-      "context_file": "data/profiles/codex/context/2026-06-16_monitor_193617.json",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-16/193617_monitor_interaction.json",
-      "raw_log_file": "",
-      "prompt_source": "scripts/prompts/monitor_check.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-16/193617_monitor_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-16/193617_monitor_transcript.txt",
-      "context_url": "data/profiles/codex/context/2026-06-16_monitor_193617.json",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-16/193617_monitor_interaction.json",
-      "prompt_source_url": ""
-    },
     "morning": {
       "timestamp": "2026-06-16T09:12:49.339037-04:00",
       "day": "2026-06-16",
@@ -117,12 +117,34 @@
     }
   },
   "phase_counts": {
+    "monitor": 17,
     "voice": 1,
     "evening": 1,
-    "monitor": 16,
     "morning": 1
   },
   "recent": [
+    {
+      "timestamp": "2026-06-17T09:37:52.957469-04:00",
+      "day": "2026-06-17",
+      "profile": "codex",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "tool": "codex",
+      "status": "success",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: neutral overall, no trades approved. `QCOM`, `HOOD`, and `GM` are all `ready_to_trade=false` because their invalidated setups have not shown clear repair/reclaim evidence, and live prices/regime do not satisfy the stated execution conditions.",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+      "context_file": "",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_093622.log",
+      "prompt_source": "scripts/prompts/monitor_check.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+      "context_url": "",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+      "prompt_source_url": ""
+    },
     {
       "timestamp": "2026-06-16T16:21:24.979499-04:00",
       "day": "2026-06-16",
@@ -543,6 +565,40 @@
     }
   ],
   "days": [
+    {
+      "date": "2026-06-17",
+      "count": 1,
+      "phases": [
+        {
+          "key": "monitor",
+          "label": "Monitor Evaluations",
+          "items": [
+            {
+              "timestamp": "2026-06-17T09:37:52.957469-04:00",
+              "day": "2026-06-17",
+              "profile": "codex",
+              "phase": "monitor",
+              "phase_group": "monitor",
+              "phase_label": "Monitor Evaluations",
+              "tool": "codex",
+              "status": "success",
+              "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: neutral overall, no trades approved. `QCOM`, `HOOD`, and `GM` are all `ready_to_trade=false` because their invalidated setups have not shown clear repair/reclaim evidence, and live prices/regime do not satisfy the stated execution conditions.",
+              "prompt_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+              "transcript_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+              "context_file": "",
+              "metadata_file": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+              "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_093622.log",
+              "prompt_source": "scripts/prompts/monitor_check.md",
+              "prompt_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_prompt.md",
+              "transcript_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_transcript.txt",
+              "context_url": "",
+              "metadata_url": "data/profiles/codex/interactions/2026-06-17/093622_monitor_interaction.json",
+              "prompt_source_url": ""
+            }
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-06-16",
       "count": 19,
