@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_163806
+Run id: 20260617_171425
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  219.28 |  +2.4% |  53 |     0.3x | yahoo_1m | 68s |         9 |
-| HOOD  | $  107.48 | +11.1% |  71 |     1.1x | yahoo_1m | 11s |        12 |
-| GM    | $   82.02 |  -0.6% |  54 |     0.3x | yahoo_1m | 69s |         9 |
+| QCOM  | $  218.13 |  +1.9% |  53 |     0.3x | yahoo_1m | 28s |         9 |
+| HOOD  | $  108.93 | +12.6% |  72 |     1.2x | yahoo_1m | 30s |        12 |
+| GM    | $   81.61 |  -1.1% |  53 |     0.3x | yahoo_1m | 28s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -46,10 +46,10 @@ No regime scorecard available.
 Live scorecard:
 Computed regime: neutral (score=1, bullish=2, bearish=1, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: neutral (0); SPY change=0.02, trend=up
-- qqq_trend: bullish (1); QQQ change=0.52
+- sp500_trend: neutral (0); SPY change=-0.12, trend=up
+- qqq_trend: bullish (1); QQQ change=0.29
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-2.64
+- vix_direction: bullish (1); VIX level=normal, change=-2.55
 - ten_year_yield: neutral (0); 10Y yield=4.43, change=None
 - sector_breadth: bearish (-1); 4 sectors positive, 7 sectors negative
 - candidate_relative_strength: unknown (0); not available
@@ -85,7 +85,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260617_163806",
+  "run_id": "20260617_171425",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
