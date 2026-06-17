@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_153635
+Run id: 20260617_160719
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  217.10 |  +1.4% |  52 |     0.2x | yahoo_1m | 38s |         9 |
-| HOOD  | $  107.01 |  +9.0% |  71 |     0.8x | yahoo_1m | 40s |        12 |
-| GM    | $   82.37 |  -0.2% |  55 |     0.2x | yahoo_1m | 38s |         9 |
+| QCOM  | $  218.24 |  +1.9% |  53 |     0.2x | yahoo_1m | 22s |         9 |
+| HOOD  | $  108.36 | +12.1% |  71 |     0.9x | yahoo_1m | 24s |        12 |
+| GM    | $   82.24 |  -0.3% |  55 |     0.3x | yahoo_1m | 23s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -47,10 +47,10 @@ Live scorecard:
 Computed regime: neutral (score=1, bullish=2, bearish=1, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
 - sp500_trend: neutral (0); SPY change=0.03, trend=up
-- qqq_trend: bullish (1); QQQ change=0.42
+- qqq_trend: bullish (1); QQQ change=0.47
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-2.56
-- ten_year_yield: neutral (0); 10Y yield=4.43, change=None
+- vix_direction: bullish (1); VIX level=normal, change=-2.62
+- ten_year_yield: neutral (0); 10Y yield=4.44, change=None
 - sector_breadth: bearish (-1); 4 sectors positive, 7 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: neutral (0); declared regime=neutral
@@ -85,7 +85,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260617_153635",
+  "run_id": "20260617_160719",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
