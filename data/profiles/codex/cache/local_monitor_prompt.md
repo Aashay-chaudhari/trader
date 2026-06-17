@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_150543
+Run id: 20260617_153635
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  216.85 |  +1.3% |  52 |     0.2x | yahoo_1m | 44s |         9 |
-| HOOD  | $  104.81 |  +6.9% |  70 |     0.6x | yahoo_1m | 47s |        12 |
-| GM    | $   81.96 |  -0.7% |  54 |     0.2x | yahoo_1m | 44s |         9 |
+| QCOM  | $  217.10 |  +1.4% |  52 |     0.2x | yahoo_1m | 38s |         9 |
+| HOOD  | $  107.01 |  +9.0% |  71 |     0.8x | yahoo_1m | 40s |        12 |
+| GM    | $   82.37 |  -0.2% |  55 |     0.2x | yahoo_1m | 38s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -46,11 +46,11 @@ No regime scorecard available.
 Live scorecard:
 Computed regime: neutral (score=1, bullish=2, bearish=1, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: neutral (0); SPY change=-0.17, trend=up
-- qqq_trend: bullish (1); QQQ change=0.27
+- sp500_trend: neutral (0); SPY change=0.03, trend=up
+- qqq_trend: bullish (1); QQQ change=0.42
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-2.61
-- ten_year_yield: neutral (0); 10Y yield=4.44, change=None
+- vix_direction: bullish (1); VIX level=normal, change=-2.56
+- ten_year_yield: neutral (0); 10Y yield=4.43, change=None
 - sector_breadth: bearish (-1); 4 sectors positive, 7 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: neutral (0); declared regime=neutral
@@ -85,7 +85,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260617_150543",
+  "run_id": "20260617_153635",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
