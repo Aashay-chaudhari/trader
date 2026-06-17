@@ -1,0 +1,23 @@
+{
+  "date": "2026-06-17",
+  "phase": "monitor",
+  "status": "failed_after_retry",
+  "time_utc": "2026-06-17T19:46:10Z",
+  "time_et": "2026-06-17 15:46:10 EDT",
+  "reason": "Local Codex strategist hit account usage limit before writing local_monitor_decision.json.",
+  "retry_policy": {
+    "waited_minutes": 5,
+    "retried_once": true,
+    "retry_result": "same usage-limit error"
+  },
+  "safety": {
+    "direct_api_monitor_used": false,
+    "local_broker_orders_submitted": false
+  },
+  "artifacts": [
+    "data/profiles/codex/cache/local_monitor_context.json",
+    "data/profiles/codex/cache/local_monitor_prompt.md",
+    "data/profiles/codex/interactions/2026-06-17/153932_monitor_transcript.txt",
+    "data/profiles/codex/interactions/2026-06-17/154544_monitor_transcript.txt"
+  ]
+}

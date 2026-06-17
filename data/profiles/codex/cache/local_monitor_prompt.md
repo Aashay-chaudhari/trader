@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_191255
+Run id: 20260617_194515
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  216.99 |  +1.4% |  52 |     0.4x | yahoo_1m | 58s |         9 |
-| HOOD  | $  108.46 | +12.2% |  71 |     1.6x | yahoo_1m | 60s |        12 |
-| GM    | $   80.48 |  -2.5% |  50 |     0.6x | yahoo_1m | 58s |         9 |
+| QCOM  | $  214.11 |  +0.0% |  51 |     0.5x | yahoo_1m | 22s |         9 |
+| HOOD  | $  105.80 |  +9.4% |  70 |     1.7x | yahoo_1m | 25s |        12 |
+| GM    | $   79.43 |  -3.7% |  48 |     0.7x | yahoo_1m | 23s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -44,14 +44,14 @@ Morning scorecard:
 No regime scorecard available.
 
 Live scorecard:
-Computed regime: risk_off (score=-2, bullish=1, bearish=3, unknown=2).
+Computed regime: risk_off (score=-3, bullish=1, bearish=4, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bearish (-1); SPY change=-0.63, trend=up
-- qqq_trend: neutral (0); QQQ change=-0.03
+- sp500_trend: bearish (-1); SPY change=-1.31, trend=flat
+- qqq_trend: bearish (-1); QQQ change=-0.99
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-2.14
+- vix_direction: bullish (1); VIX level=normal, change=-1.13
 - ten_year_yield: neutral (0); 10Y yield=4.46, change=None
-- sector_breadth: bearish (-1); 2 sectors positive, 9 sectors negative
+- sector_breadth: bearish (-1); 0 sectors positive, 11 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: bearish (-1); declared regime=risk_off
 
@@ -85,7 +85,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260617_191255",
+  "run_id": "20260617_194515",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
