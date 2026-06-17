@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_174221
+Run id: 20260617_181407
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  218.06 |  +1.9% |  53 |     0.3x | yahoo_1m | 24s |         9 |
-| HOOD  | $  108.32 | +12.0% |  71 |     1.2x | yahoo_1m | 25s |        12 |
-| GM    | $   81.61 |  -1.1% |  53 |     0.4x | yahoo_1m | 22s |         9 |
+| QCOM  | $  215.79 |  +0.8% |  52 |     0.3x | yahoo_1m | 10s |         9 |
+| HOOD  | $  107.78 | +11.4% |  71 |     1.3x | yahoo_1m | 13s |        12 |
+| GM    | $   80.55 |  -2.4% |  50 |     0.5x | yahoo_1m | 11s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -44,16 +44,16 @@ Morning scorecard:
 No regime scorecard available.
 
 Live scorecard:
-Computed regime: neutral (score=1, bullish=2, bearish=1, unknown=2).
+Computed regime: risk_off (score=-2, bullish=1, bearish=3, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: neutral (0); SPY change=-0.12, trend=up
-- qqq_trend: bullish (1); QQQ change=0.35
+- sp500_trend: bearish (-1); SPY change=-0.52, trend=up
+- qqq_trend: neutral (0); QQQ change=-0.16
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-2.6
+- vix_direction: bullish (1); VIX level=normal, change=-2.87
 - ten_year_yield: neutral (0); 10Y yield=4.43, change=None
-- sector_breadth: bearish (-1); 4 sectors positive, 7 sectors negative
+- sector_breadth: bearish (-1); 3 sectors positive, 8 sectors negative
 - candidate_relative_strength: unknown (0); not available
-- headline_risk: neutral (0); declared regime=neutral
+- headline_risk: bearish (-1); declared regime=risk_off
 
 ## Watchlist Buckets
 
@@ -79,13 +79,13 @@ Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish fac
   - If setup_state is invalidated or repair_watch, require explicit repair/reclaim evidence before any buy.
   - Use action_confidence.entry for buy readiness; high action_confidence.avoid means stay out.
   - If live regime scorecard is not risk_on, do not approve growth/cyclical longs that require a risk-on tape.
-  - Current market regime hint: neutral.
+  - Current market regime hint: risk_off.
 
 Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json` with this schema:
 
 ```json
 {
-  "run_id": "20260617_174221",
+  "run_id": "20260617_181407",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
