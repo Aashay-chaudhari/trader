@@ -1,0 +1,126 @@
+Phase: monitor
+Provider: codex
+Model: codex-cli
+Status: success
+Total tokens: 0
+
+Market Summary:
+Live conditions weaken the morning thesis because the regime is neutral and the invalidated setups have not reclaimed their required entry zones.
+
+Stocks:
+- QCOM: watch | QCOM remains below the repair entry band, so the invalidated setup is not ready for a long entry.
+- HOOD: watch | HOOD is only a watch because the invalidated setup has not repaired and entry confidence remains weak.
+- GM: watch | GM is below its required entry band and the neutral regime blocks a cyclical long that depends on risk-on confirmation.
+
+Response JSON:
+{
+  "run_id": "20260617_133551",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions weaken the morning thesis because the regime is neutral and the invalidated setups have not reclaimed their required entry zones.",
+  "stocks": {
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.68,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "quote is fresh",
+        "price is positive on the day"
+      ],
+      "failed_conditions": [
+        "price is below the required 224.00 to 229.50 entry band",
+        "setup is invalidated and lacks clear repair/reclaim evidence",
+        "semiconductor ETF rollover/VWAP confirmation is not established in the snapshot"
+      ],
+      "monitor_reason": "QCOM remains below the repair entry band, so the invalidated setup is not ready for a long entry.",
+      "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
+      "trade_plan": {
+        "entry": 226.5,
+        "stop_loss": 220.5,
+        "target": 238.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.55,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "quote is fresh",
+        "price is slightly positive on the day"
+      ],
+      "failed_conditions": [
+        "price is far below the 124.00 trade plan entry",
+        "setup is invalidated and lacks clear repair/reclaim evidence",
+        "opening range hold and constructive fintech/crypto risk appetite are not established in the snapshot",
+        "avoid confidence is elevated relative to entry confidence"
+      ],
+      "monitor_reason": "HOOD is only a watch because the invalidated setup has not repaired and entry confidence remains weak.",
+      "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
+      "trade_plan": {
+        "entry": 124.0,
+        "stop_loss": 120.0,
+        "target": 132.0
+      }
+    },
+    "GM": {
+      "recommendation": "watch",
+      "confidence": 0.64,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "quote is fresh"
+      ],
+      "failed_conditions": [
+        "price is below the required 84.00 to 86.00 entry band",
+        "setup is invalidated and lacks clear repair/reclaim evidence",
+        "broader market is neutral rather than risk-on",
+        "VWAP confirmation is not established in the snapshot"
+      ],
+      "monitor_reason": "GM is below its required entry band and the neutral regime blocks a cyclical long that depends on risk-on confirmation.",
+      "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
+      "trade_plan": {
+        "entry": 85.0,
+        "stop_loss": 82.5,
+        "target": 90.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27693151445",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27693151445",
+        "sha": "e9c0c1b4e71e2cd1eca04831f04af63e95521b78",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
