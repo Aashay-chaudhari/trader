@@ -1,6 +1,6 @@
 # Local Codex Monitor Gate
 
-Run id: 20260617_133551
+Run id: 20260617_140803
 Candidate symbols: QCOM, HOOD, GM
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
@@ -21,7 +21,7 @@ morning execution conditions and the live snapshot.
     Execution condition: Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.
     Why it is being checked now: price is near stop loss; 12 fresh headline(s)
   GM: buy | entry=$85.0 stop=$82.5 target=$90.0
-    Setup state: invalidated | bucket: repair_watch | top blocker: setup invalidated; require repair before any long entry
+    Setup state: eligible | bucket: buy_today_if_confirmed | top blocker: awaiting execution-condition confirmation
     Action confidence: long_thesis=0.64 entry=0.64 avoid=0.36 data_quality=0.5
     Execution condition: Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.
     Why it is being checked now: price is near stop loss; 9 fresh headline(s)
@@ -30,9 +30,9 @@ morning execution conditions and the live snapshot.
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  218.46 |  +2.0% |  53 |     0.0x | yahoo_1m | 58s |         9 |
-| HOOD  | $   98.33 |  +0.3% |  66 |     0.0x | yahoo_1m | 61s |        12 |
-| GM    | $   82.30 |  -0.3% |  55 |     0.0x | yahoo_1m | 59s |         9 |
+| QCOM  | $  218.96 |  +2.3% |  53 |     0.1x | yahoo_1m | 6s |         9 |
+| HOOD  | $  100.93 |  +2.9% |  68 |     0.2x | yahoo_1m | 8s |        12 |
+| GM    | $   83.00 |  +0.6% |  56 |     0.1x | yahoo_1m | 6s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -44,14 +44,14 @@ Morning scorecard:
 No regime scorecard available.
 
 Live scorecard:
-Computed regime: neutral (score=2, bullish=2, bearish=0, unknown=2).
+Computed regime: neutral (score=1, bullish=2, bearish=1, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: neutral (0); SPY change=0.04, trend=up
-- qqq_trend: bullish (1); QQQ change=0.42
+- sp500_trend: neutral (0); SPY change=0.09, trend=up
+- qqq_trend: bullish (1); QQQ change=0.41
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-3.38
+- vix_direction: bullish (1); VIX level=normal, change=-3.07
 - ten_year_yield: neutral (0); 10Y yield=4.43, change=None
-- sector_breadth: neutral (0); 5 sectors positive, 5 sectors negative
+- sector_breadth: bearish (-1); 4 sectors positive, 7 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: neutral (0); declared regime=neutral
 
@@ -85,7 +85,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260617_133551",
+  "run_id": "20260617_140803",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {

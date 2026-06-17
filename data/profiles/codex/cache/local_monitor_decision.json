@@ -1,25 +1,26 @@
 {
-  "run_id": "20260617_133551",
+  "run_id": "20260617_140803",
   "overall_sentiment": "neutral",
-  "market_summary": "Live conditions weaken the morning thesis because the regime is neutral and the invalidated setups have not reclaimed their required entry zones.",
+  "market_summary": "Live conditions weaken the morning thesis because candidate prices are below their execution ranges and the regime is neutral rather than risk-on.",
   "stocks": {
     "QCOM": {
       "recommendation": "watch",
-      "confidence": 0.68,
+      "confidence": 0.32,
       "ready_to_trade": false,
       "matched_conditions": [
-        "quote is fresh",
-        "price is positive on the day"
+        "fresh quote",
+        "positive intraday price change"
       ],
       "failed_conditions": [
-        "price is below the required 224.00 to 229.50 entry band",
-        "setup is invalidated and lacks clear repair/reclaim evidence",
-        "semiconductor ETF rollover/VWAP confirmation is not established in the snapshot"
+        "price is below the 224.00 to 229.50 buy range",
+        "setup is invalidated and lacks clear repair or reclaim evidence",
+        "VWAP hold is not confirmed",
+        "semiconductor ETF confirmation is not provided"
       ],
-      "monitor_reason": "QCOM remains below the repair entry band, so the invalidated setup is not ready for a long entry.",
+      "monitor_reason": "QCOM is below the planned entry zone with an invalidated setup, so no long entry is approved.",
       "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
       "setup_state": "invalidated",
-      "watchlist_bucket": "buy_today_if_confirmed",
+      "watchlist_bucket": "repair_watch",
       "top_blocker": "setup invalidated; require repair before any long entry",
       "action_confidence": {
         "long_thesis": 0.68,
@@ -38,19 +39,20 @@
       "confidence": 0.55,
       "ready_to_trade": false,
       "matched_conditions": [
-        "quote is fresh",
-        "price is slightly positive on the day"
+        "fresh quote",
+        "positive intraday price change"
       ],
       "failed_conditions": [
-        "price is far below the 124.00 trade plan entry",
-        "setup is invalidated and lacks clear repair/reclaim evidence",
-        "opening range hold and constructive fintech/crypto risk appetite are not established in the snapshot",
-        "avoid confidence is elevated relative to entry confidence"
+        "setup is invalidated and lacks clear repair or reclaim evidence",
+        "price is far below the planned 124.00 entry",
+        "opening range hold is not confirmed",
+        "fintech or crypto risk appetite confirmation is not provided",
+        "avoid confidence is elevated"
       ],
-      "monitor_reason": "HOOD is only a watch because the invalidated setup has not repaired and entry confidence remains weak.",
+      "monitor_reason": "HOOD remains a watch-only setup with elevated avoid confidence and no clear reclaim evidence.",
       "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
       "setup_state": "invalidated",
-      "watchlist_bucket": "event_watch",
+      "watchlist_bucket": "repair_watch",
       "top_blocker": "setup invalidated; require repair before any long entry",
       "action_confidence": {
         "long_thesis": 0.55,
@@ -66,22 +68,22 @@
     },
     "GM": {
       "recommendation": "watch",
-      "confidence": 0.64,
+      "confidence": 0.36,
       "ready_to_trade": false,
       "matched_conditions": [
-        "quote is fresh"
+        "fresh quote",
+        "positive intraday price change"
       ],
       "failed_conditions": [
-        "price is below the required 84.00 to 86.00 entry band",
-        "setup is invalidated and lacks clear repair/reclaim evidence",
-        "broader market is neutral rather than risk-on",
-        "VWAP confirmation is not established in the snapshot"
+        "price is below the 84.00 to 86.00 buy range",
+        "VWAP hold is not confirmed",
+        "broader market is neutral, not risk-on"
       ],
-      "monitor_reason": "GM is below its required entry band and the neutral regime blocks a cyclical long that depends on risk-on confirmation.",
+      "monitor_reason": "GM is eligible but fails the price-range and risk-on requirements, so the planned buy is not confirmed.",
       "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
-      "setup_state": "invalidated",
+      "setup_state": "eligible",
       "watchlist_bucket": "buy_today_if_confirmed",
-      "top_blocker": "setup invalidated; require repair before any long entry",
+      "top_blocker": "awaiting execution-condition confirmation",
       "action_confidence": {
         "long_thesis": 0.64,
         "entry": 0.64,
