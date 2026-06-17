@@ -1,12 +1,13 @@
 {
-  "timestamp": "2026-06-17T11:07:18.522489-04:00",
+  "timestamp": "2026-06-17T15:08:19.991614+00:00",
   "profile": "codex",
   "phase": "monitor",
-  "tool": "codex",
+  "tool": "codex-loop",
   "status": "success",
   "prompt_source": "scripts/prompts/monitor_check.md",
-  "prompt_file": "data/profiles/codex/interactions/2026-06-17/110604_monitor_prompt.md",
-  "transcript_file": "data/profiles/codex/interactions/2026-06-17/110604_monitor_transcript.txt",
-  "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_110604.log",
-  "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` for run `20260617_150543`. | Decision: no trades approved. QCOM, HOOD, and GM are all `ready_to_trade=false`; the setups are invalidated, required repair evidence is missing, and GM\u2019s risk-on condition is not met under the neutral live regime. | Validated successfully with `python3 -m json.tool`."
+  "prompt_file": "data/profiles/codex/interactions/2026-06-17/150819_monitor_prompt.md",
+  "transcript_file": "data/profiles/codex/interactions/2026-06-17/150819_monitor_transcript.txt",
+  "context_file": "data/profiles/codex/context/2026-06-17_monitor_150819.json",
+  "raw_log_file": "",
+  "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the monitored setups are invalidated, QCOM and GM are below their buy ranges, and the live regime is neutral rather than risk-on. | codex / codex-cli"
 }

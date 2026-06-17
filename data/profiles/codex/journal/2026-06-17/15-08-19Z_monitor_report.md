@@ -1,0 +1,121 @@
+# Trading Journal — 2026-06-17
+
+**Run ID:** `20260617_150543`  
+**Phase:** monitor  
+**Strategist:** Codex Strategist  
+**Time:** 15:08 UTC  
+
+## Research Analysis
+
+**Overall Sentiment:** neutral
+
+> Live conditions weaken the morning thesis because the monitored setups are invalidated, QCOM and GM are below their buy ranges, and the live regime is neutral rather than risk-on.
+
+### QCOM [?]
+- **Sentiment:** N/A | **Confidence:** 25% | **Recommendation:** watch
+
+### HOOD [?]
+- **Sentiment:** N/A | **Confidence:** 35% | **Recommendation:** watch
+
+### GM [?]
+- **Sentiment:** N/A | **Confidence:** 20% | **Recommendation:** watch
+
+## LLM Telemetry
+
+- **Platform:** github_actions
+- **Provider Preference:** auto
+- **Selected Provider:** codex
+- **Selected Model:** codex-cli
+- **Token Usage:** input=0, output=0, total=0
+- **LLM Latency:** 0.0 ms
+
+### Provider Attempts
+
+- codex | codex-cli | success
+
+## News Inputs Seen By The LLM
+
+### Market Headlines
+
+- **Exchange-Traded Funds Higher, Equity Futures Mixed Pre-Bell Wednesday Ahead of Fed Rates Announcement** [yfinance:SPY]
+- **Tech ETFs Are Doing Something Unprecedented Right Now. Should Investors Buy or Wait?** [yfinance:SPY]
+- **S&P 500, Nasdaq, Dow Futures Edge Higher Ahead Of Fed Rate Decision: INTC, SNAP, SOFI, RUM In Focus** [yfinance:SPY]
+- **Target Hiked Its Dividend by 1.8%. It’s Not Enough to Change the Thesis for TGT Stock.** [yfinance:SPY]
+- **This Small-Cap ETF Is Outperforming QQQ -- Is It Still a Good Buy?** [yfinance:QQQ]
+
+### QCOM Headlines
+
+- **Microsoft debuts Surface Laptop and Surface Pro amid AI-driven memory shortage** [Yahoo Finance]
+- **Microsoft reveals new Surface laptops starting at $1,499** [Yahoo Finance Video]
+- **Is Micron Stock's Data Center Engine Stalling, Or Just Drowned Out By AI?** [Trefis]
+- **The Trump Phone Is More Novelty Than Serious Smartphone Contender** [Bloomberg]
+
+### GM Headlines
+
+- **GM unveils new Silverado amid growing pickup truck challenges** [Yahoo Finance Video]
+- **GM reveals new Silverado pickup as Ford F-150 sales falter** [Yahoo Finance]
+- **Tesla Defies Auto Industry Sales Slump, Goldman Raises Q2 Delivery Forecast** [Investor's Business Daily]
+- **GM Defense Talks Could Reshape Munitions Supply Chains** [GuruFocus.com]
+
+### WDC Headlines
+
+- **Is Micron Stock's Data Center Engine Stalling, Or Just Drowned Out By AI?** [Trefis]
+- **Netflix reportedly tried & failed to buy Roku, Western Digital is the new AI play** [Yahoo Finance Video]
+- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
+- **Western Digital (WDC) Moves 4.2% Higher: Will This Strength Last?** [Zacks]
+
+### MU Headlines
+
+- **Is Micron Stock's Data Center Engine Stalling, Or Just Drowned Out By AI?** [Trefis]
+- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
+- **SpaceX's near $3 trillion rally comes with one big catch: Chart of the Day** [Yahoo Finance]
+- **3 Reasons Why Micron Is a Smart Buy Before June 24** [Motley Fool]
+
+### HOOD Headlines
+
+- **HOOD Stock Gets A New $105 Price Target — Here's What Bulls Think The Market Is Missing** [Stocktwits]
+- **Robinhood Trims Workforce to Stay Agile Amid Record Trading Activities** [Zacks]
+- **Trading app Robinhood to shed 10% of staff** [Private Banker International]
+- **Robinhood CEO Vlad Tenev Has A Plan To Build Wealth: 'Make Everyone An Owner'** [Benzinga]
+
+### A Headlines
+
+- **Madison Large Cap Fund Maintains Position on Agilent Technologies (A) Amid AI Fears** [Insider Monkey]
+- **1 Profitable Stock to Target This Week and 2 We Avoid** [StockStory]
+- **Strength in Technology Enabled Products Drives Roper: Can the Momentum Sustain?** [Zacks]
+- **SpaceX initiated, Intel upgraded: Wall Street's top analyst calls** [The Fly]
+
+### CYTK Headlines
+
+- **Edgewise Bounds Between Double-Digit Losses And Gain — What's Going On?** [Investor's Business Daily]
+- **Cytokinetics (CYTK) Launches MYQORZO in Germany for Obstructive HCM Treatment** [Insider Monkey]
+- **First MYQORZO Launch In Germany Might Change The Case For Investing In Cytokinetics (CYTK)** [Simply Wall St.]
+- **Why Is Cytokinetics (CYTK) Down 5.5% Since Last Earnings Report?** [Zacks]
+
+### TSLA Headlines
+
+- **Microsoft dips below 200-day moving average: Buy, hold, or sell?** [Yahoo Finance Video]
+- **Why robotics will be the next great investment theme** [Yahoo Finance Video]
+- **What investors should know before hopping on SpaceX options trades** [Yahoo Finance Video]
+- **Jim Cramer Remembers How He Was Criticized After Tesla, Inc. (TSLA)’s IPO** [Insider Monkey]
+
+## Trade Signals
+
+*No signals generated this run.*
+
+## Execution
+
+*No trades executed.*
+
+## Portfolio Snapshot
+
+| Metric | Value |
+|--------|------:|
+| **Total Value** | $100,000.00 |
+| **Cash** | $100,000.00 |
+| **Invested** | $0.00 |
+| **Total P&L** | $+0.00 (+0.00%) |
+| **Positions** | 0 |
+
+---
+*Generated by Agent Trader v0.1.0*
