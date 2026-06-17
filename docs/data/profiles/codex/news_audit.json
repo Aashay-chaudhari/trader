@@ -1,16 +1,16 @@
 {
   "counts": {
     "days": 2,
-    "entries": 15,
-    "headlines": 65,
-    "articles": 80,
+    "entries": 14,
+    "headlines": 60,
+    "articles": 75,
     "urls": 18,
     "sources": 7,
     "searches": 0
   },
   "latest": {
-    "id": "2026-06-17:monitor:2026-06-17T14:11:17.711546+00:00",
-    "timestamp": "2026-06-17T14:11:17.711546+00:00",
+    "id": "2026-06-17:monitor:2026-06-17T14:42:16.211412+00:00",
+    "timestamp": "2026-06-17T14:42:16.211412+00:00",
     "day": "2026-06-17",
     "phase": "monitor",
     "phase_group": "monitor",
@@ -28,24 +28,61 @@
       "github.com"
     ],
     "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-    "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because candidate prices are below their execution ranges and the regime is neutral rather than risk-on. | codex / codex-cli",
+    "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
     "status": "success",
     "links": [
       {
         "label": "Prompt",
-        "url": "data/profiles/codex/interactions/2026-06-17/141117_monitor_prompt.md"
+        "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md"
       },
       {
         "label": "Transcript",
-        "url": "data/profiles/codex/interactions/2026-06-17/141117_monitor_transcript.txt"
+        "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt"
       },
       {
         "label": "Metadata",
-        "url": "data/profiles/codex/interactions/2026-06-17/141117_monitor_interaction.json"
+        "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json"
       }
     ]
   },
   "entries": [
+    {
+      "id": "2026-06-17:monitor:2026-06-17T14:42:16.211412+00:00",
+      "timestamp": "2026-06-17T14:42:16.211412+00:00",
+      "day": "2026-06-17",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "source_kind": "interaction_prompt_transcript",
+      "quality_score": 26,
+      "quality_label": "low",
+      "headline_count": 4,
+      "article_count": 4,
+      "url_count": 1,
+      "source_count": 1,
+      "search_count": 0,
+      "symbols": [],
+      "sources": [
+        "github.com"
+      ],
+      "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+      "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
+      "status": "success",
+      "links": [
+        {
+          "label": "Prompt",
+          "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md"
+        },
+        {
+          "label": "Transcript",
+          "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt"
+        },
+        {
+          "label": "Metadata",
+          "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json"
+        }
+      ]
+    },
     {
       "id": "2026-06-17:monitor:2026-06-17T14:11:17.711546+00:00",
       "timestamp": "2026-06-17T14:11:17.711546+00:00",
@@ -481,41 +518,6 @@
       ]
     },
     {
-      "id": "2026-06-16:monitor:2026-06-16T15:06:29.077809-04:00",
-      "timestamp": "2026-06-16T15:06:29.077809-04:00",
-      "day": "2026-06-16",
-      "phase": "monitor",
-      "phase_group": "monitor",
-      "phase_label": "Monitor Evaluations",
-      "source_kind": "interaction_prompt_transcript",
-      "quality_score": 0,
-      "quality_label": "unknown",
-      "headline_count": 0,
-      "article_count": 0,
-      "url_count": 0,
-      "source_count": 0,
-      "search_count": 0,
-      "symbols": [],
-      "sources": [],
-      "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
-      "summary": "Wrote [local_monitor_decision.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/local_monitor_decision.json) with run ID `20260616_190511`. | Validated successfully with `python3 -m json.tool`. `jq` was not installed, but the JSON parse check passed.",
-      "status": "success",
-      "links": [
-        {
-          "label": "Prompt",
-          "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_prompt.md"
-        },
-        {
-          "label": "Transcript",
-          "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_transcript.txt"
-        },
-        {
-          "label": "Metadata",
-          "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_interaction.json"
-        }
-      ]
-    },
-    {
       "id": "2026-06-16:morning:saved_prompt_context",
       "timestamp": "2026-06-16T09:12:49.339037-04:00",
       "day": "2026-06-16",
@@ -559,48 +561,50 @@
           "url": "data/profiles/codex/news_audit.json"
         }
       ]
-    },
-    {
-      "id": "2026-06-16:morning:2026-06-16T09:12:49.339037-04:00",
-      "timestamp": "2026-06-16T09:12:49.339037-04:00",
-      "day": "2026-06-16",
-      "phase": "morning",
-      "phase_group": "morning",
-      "phase_label": "Morning",
-      "source_kind": "interaction_prompt_transcript",
-      "quality_score": 33,
-      "quality_label": "low",
-      "headline_count": 9,
-      "article_count": 9,
-      "url_count": 1,
-      "source_count": 0,
-      "search_count": 0,
-      "symbols": [],
-      "sources": [],
-      "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 9 news/source text marker(s).",
-      "summary": "Morning research completed and staged. | Wrote: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
-      "status": "success",
-      "links": [
-        {
-          "label": "Prompt",
-          "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_prompt.md"
-        },
-        {
-          "label": "Transcript",
-          "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_transcript.txt"
-        },
-        {
-          "label": "Metadata",
-          "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_interaction.json"
-        }
-      ]
     }
   ],
   "days": [
     {
       "date": "2026-06-17",
-      "count": 5,
+      "count": 6,
       "entries": [
+        {
+          "id": "2026-06-17:monitor:2026-06-17T14:42:16.211412+00:00",
+          "timestamp": "2026-06-17T14:42:16.211412+00:00",
+          "day": "2026-06-17",
+          "phase": "monitor",
+          "phase_group": "monitor",
+          "phase_label": "Monitor Evaluations",
+          "source_kind": "interaction_prompt_transcript",
+          "quality_score": 26,
+          "quality_label": "low",
+          "headline_count": 4,
+          "article_count": 4,
+          "url_count": 1,
+          "source_count": 1,
+          "search_count": 0,
+          "symbols": [],
+          "sources": [
+            "github.com"
+          ],
+          "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
+          "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
+          "status": "success",
+          "links": [
+            {
+              "label": "Prompt",
+              "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md"
+            },
+            {
+              "label": "Transcript",
+              "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt"
+            },
+            {
+              "label": "Metadata",
+              "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json"
+            }
+          ]
+        },
         {
           "id": "2026-06-17:monitor:2026-06-17T14:11:17.711546+00:00",
           "timestamp": "2026-06-17T14:11:17.711546+00:00",
@@ -784,7 +788,7 @@
     },
     {
       "date": "2026-06-16",
-      "count": 10,
+      "count": 8,
       "entries": [
         {
           "id": "2026-06-16:monitor:2026-06-16T19:36:17.813080+00:00",
@@ -1042,41 +1046,6 @@
           ]
         },
         {
-          "id": "2026-06-16:monitor:2026-06-16T15:06:29.077809-04:00",
-          "timestamp": "2026-06-16T15:06:29.077809-04:00",
-          "day": "2026-06-16",
-          "phase": "monitor",
-          "phase_group": "monitor",
-          "phase_label": "Monitor Evaluations",
-          "source_kind": "interaction_prompt_transcript",
-          "quality_score": 0,
-          "quality_label": "unknown",
-          "headline_count": 0,
-          "article_count": 0,
-          "url_count": 0,
-          "source_count": 0,
-          "search_count": 0,
-          "symbols": [],
-          "sources": [],
-          "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
-          "summary": "Wrote [local_monitor_decision.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/local_monitor_decision.json) with run ID `20260616_190511`. | Validated successfully with `python3 -m json.tool`. `jq` was not installed, but the JSON parse check passed.",
-          "status": "success",
-          "links": [
-            {
-              "label": "Prompt",
-              "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_prompt.md"
-            },
-            {
-              "label": "Transcript",
-              "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_transcript.txt"
-            },
-            {
-              "label": "Metadata",
-              "url": "data/profiles/codex/interactions/2026-06-16/150534_monitor_interaction.json"
-            }
-          ]
-        },
-        {
           "id": "2026-06-16:morning:saved_prompt_context",
           "timestamp": "2026-06-16T09:12:49.339037-04:00",
           "day": "2026-06-16",
@@ -1118,41 +1087,6 @@
             {
               "label": "News audit JSON",
               "url": "data/profiles/codex/news_audit.json"
-            }
-          ]
-        },
-        {
-          "id": "2026-06-16:morning:2026-06-16T09:12:49.339037-04:00",
-          "timestamp": "2026-06-16T09:12:49.339037-04:00",
-          "day": "2026-06-16",
-          "phase": "morning",
-          "phase_group": "morning",
-          "phase_label": "Morning",
-          "source_kind": "interaction_prompt_transcript",
-          "quality_score": 33,
-          "quality_label": "low",
-          "headline_count": 9,
-          "article_count": 9,
-          "url_count": 1,
-          "source_count": 0,
-          "search_count": 0,
-          "symbols": [],
-          "sources": [],
-          "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 9 news/source text marker(s).",
-          "summary": "Morning research completed and staged. | Wrote: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
-          "status": "success",
-          "links": [
-            {
-              "label": "Prompt",
-              "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_prompt.md"
-            },
-            {
-              "label": "Transcript",
-              "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_transcript.txt"
-            },
-            {
-              "label": "Metadata",
-              "url": "data/profiles/codex/interactions/2026-06-16/090723_morning_interaction.json"
             }
           ]
         }
