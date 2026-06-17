@@ -1,12 +1,13 @@
 {
-  "timestamp": "2026-06-17T12:39:33.145504-04:00",
+  "timestamp": "2026-06-17T16:40:42.496708+00:00",
   "profile": "codex",
   "phase": "monitor",
-  "tool": "codex",
+  "tool": "codex-loop",
   "status": "success",
   "prompt_source": "scripts/prompts/monitor_check.md",
-  "prompt_file": "data/profiles/codex/interactions/2026-06-17/123829_monitor_prompt.md",
-  "transcript_file": "data/profiles/codex/interactions/2026-06-17/123829_monitor_transcript.txt",
-  "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_123829.log",
-  "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision: neutral overall, no trades approved. QCOM, HOOD, and GM are all `ready_to_trade: false` because the setups are invalidated and the live snapshot does not clearly satisfy the required repair and execution conditions."
+  "prompt_file": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md",
+  "transcript_file": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt",
+  "context_file": "data/profiles/codex/context/2026-06-17_monitor_164042.json",
+  "raw_log_file": "",
+  "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli"
 }
