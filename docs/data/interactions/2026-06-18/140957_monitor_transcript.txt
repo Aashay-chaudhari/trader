@@ -1,0 +1,154 @@
+Phase: monitor
+Provider: codex
+Model: codex-cli
+Status: success
+Total tokens: 0
+
+Market Summary:
+Live risk-on conditions support the morning semiconductor thesis, but the candidate-specific VWAP and peer-confirmation requirements are not clearly satisfied in the snapshot.
+
+Stocks:
+- QCOM: watch | QCOM has reclaimed the price zone, but the repair setup still lacks VWAP and SMH confirmation and avoid confidence remains elevated.
+- MU: watch | MU remains the best candidate, but the live snapshot does not clearly prove the VWAP and peer-confirmation conditions needed to avoid chasing.
+- HOOD: watch | HOOD is close to the setup but lacks the required reclaim, VWAP, and peer risk-appetite confirmation.
+
+Response JSON:
+{
+  "run_id": "20260618_140555",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live risk-on conditions support the morning semiconductor thesis, but the candidate-specific VWAP and peer-confirmation requirements are not clearly satisfied in the snapshot.",
+  "stocks": {
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.28,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is above the 220.50-224.00 reclaim zone",
+        "live regime is risk_on"
+      ],
+      "failed_conditions": [
+        "VWAP hold after the first hour is not shown",
+        "outperformance versus SMH is not shown",
+        "repair_watch setup requires clearer reclaim evidence before a buy"
+      ],
+      "monitor_reason": "QCOM has reclaimed the price zone, but the repair setup still lacks VWAP and SMH confirmation and avoid confidence remains elevated.",
+      "execution_condition": "Watch only unless QCOM reclaims 220.50-224.00, holds VWAP, and outperforms SMH after the first hour.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Prior AI/Tenstorrent gap failed; QCOM must reclaim the old failed zone before any new long thesis is actionable.",
+      "action_confidence": {
+        "long_thesis": 0.49,
+        "entry": 0.28,
+        "avoid": 0.62,
+        "data_quality": 0.64
+      },
+      "trade_plan": {
+        "entry": 224.0,
+        "stop_loss": 217.5,
+        "target": 238.0
+      }
+    },
+    "MU": {
+      "recommendation": "watch",
+      "confidence": 0.58,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is near the 1085.00-1105.00 planned entry zone",
+        "live regime is risk_on",
+        "semiconductor sector breadth is constructive"
+      ],
+      "failed_conditions": [
+        "price is slightly above the stated entry range",
+        "VWAP hold after the first hour is not shown",
+        "WDC/STX/SMH confirmation is not explicitly shown"
+      ],
+      "monitor_reason": "MU remains the best candidate, but the live snapshot does not clearly prove the VWAP and peer-confirmation conditions needed to avoid chasing.",
+      "execution_condition": "Buy only if MU trades near 1085.00-1105.00, holds VWAP after the first hour, and WDC/STX/SMH remain constructive rather than fading the premarket gap.",
+      "setup_state": "eligible",
+      "watchlist_bucket": "buy_today_if_confirmed",
+      "top_blocker": "Parabolic memory-stock run makes entry quality only fair unless MU holds VWAP and avoids chasing above the first-hour range.",
+      "action_confidence": {
+        "long_thesis": 0.73,
+        "entry": 0.58,
+        "avoid": 0.3,
+        "data_quality": 0.72
+      },
+      "trade_plan": {
+        "entry": 1090.0,
+        "stop_loss": 1050.0,
+        "target": 1150.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.34,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price remains near the planned 107.00 entry area",
+        "live regime is risk_on"
+      ],
+      "failed_conditions": [
+        "price is below the planned entry",
+        "VWAP hold after the first hour is not shown",
+        "crypto and fintech peer confirmation is not shown",
+        "repair_watch setup requires clearer live repair evidence before a buy"
+      ],
+      "monitor_reason": "HOOD is close to the setup but lacks the required reclaim, VWAP, and peer risk-appetite confirmation.",
+      "execution_condition": "Watch only unless HOOD holds its 200-day reclaim and VWAP after the first hour while crypto/fintech peers confirm risk appetite.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "The restructuring/200-day reclaim narrative needs proof of fintech and crypto risk appetite before it is buyable.",
+      "action_confidence": {
+        "long_thesis": 0.52,
+        "entry": 0.34,
+        "avoid": 0.58,
+        "data_quality": 0.62
+      },
+      "trade_plan": {
+        "entry": 107.0,
+        "stop_loss": 103.0,
+        "target": 116.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27765390095",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27765390095",
+        "sha": "f321abc80e3cae624cfa43b6bd633fbb3647ca73",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
