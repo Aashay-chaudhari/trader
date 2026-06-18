@@ -1463,56 +1463,83 @@
     "counts": {
       "days": 2,
       "entries": 16,
-      "headlines": 70,
-      "articles": 82,
-      "urls": 17,
+      "headlines": 66,
+      "articles": 78,
+      "urls": 16,
       "sources": 7,
       "searches": 0
     },
     "latest": {
-      "id": "2026-06-18:morning:saved_prompt_context",
-      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "id": "2026-06-18:monitor:2026-06-18T09:38:43.378234-04:00",
+      "timestamp": "2026-06-18T09:38:43.378234-04:00",
       "day": "2026-06-18",
-      "phase": "research",
-      "phase_group": "morning",
-      "phase_label": "Morning Research",
-      "source_kind": "saved_prompt_context",
-      "quality_score": 85,
-      "quality_label": "high",
-      "headline_count": 22,
-      "article_count": 34,
-      "url_count": 11,
-      "source_count": 6,
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "source_kind": "interaction_prompt_transcript",
+      "quality_score": 0,
+      "quality_label": "unknown",
+      "headline_count": 0,
+      "article_count": 0,
+      "url_count": 0,
+      "source_count": 0,
       "search_count": 0,
-      "symbols": [
-        "HOOD",
-        "INTC",
-        "MU",
-        "QCOM",
-        "QURE",
-        "WDC"
-      ],
-      "sources": [
-        "Investing.com",
-        "Investor's Business Daily",
-        "MarketWatch",
-        "StockTitan",
-        "Wall Street Journal",
-        "Yahoo Finance"
-      ],
-      "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
+      "symbols": [],
+      "sources": [],
+      "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+      "status": "success",
       "links": [
         {
-          "label": "Prompt context JSON",
-          "url": "data/profiles/codex/context.json"
+          "label": "Prompt",
+          "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md"
         },
         {
-          "label": "News audit JSON",
-          "url": "data/profiles/codex/news_audit.json"
+          "label": "Transcript",
+          "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt"
+        },
+        {
+          "label": "Metadata",
+          "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json"
         }
       ]
     },
     "entries": [
+      {
+        "id": "2026-06-18:monitor:2026-06-18T09:38:43.378234-04:00",
+        "timestamp": "2026-06-18T09:38:43.378234-04:00",
+        "day": "2026-06-18",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "source_kind": "interaction_prompt_transcript",
+        "quality_score": 0,
+        "quality_label": "unknown",
+        "headline_count": 0,
+        "article_count": 0,
+        "url_count": 0,
+        "source_count": 0,
+        "search_count": 0,
+        "symbols": [],
+        "sources": [],
+        "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+        "status": "success",
+        "links": [
+          {
+            "label": "Prompt",
+            "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md"
+          },
+          {
+            "label": "Transcript",
+            "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt"
+          },
+          {
+            "label": "Metadata",
+            "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json"
+          }
+        ]
+      },
       {
         "id": "2026-06-18:morning:saved_prompt_context",
         "timestamp": "2026-06-18T09:12:56.378744-04:00",
@@ -1950,43 +1977,6 @@
         ]
       },
       {
-        "id": "2026-06-17:monitor:2026-06-17T14:42:16.211412+00:00",
-        "timestamp": "2026-06-17T14:42:16.211412+00:00",
-        "day": "2026-06-17",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "source_kind": "interaction_prompt_transcript",
-        "quality_score": 26,
-        "quality_label": "low",
-        "headline_count": 4,
-        "article_count": 4,
-        "url_count": 1,
-        "source_count": 1,
-        "search_count": 0,
-        "symbols": [],
-        "sources": [
-          "github.com"
-        ],
-        "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-        "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
-        "status": "success",
-        "links": [
-          {
-            "label": "Prompt",
-            "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md"
-          },
-          {
-            "label": "Transcript",
-            "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt"
-          },
-          {
-            "label": "Metadata",
-            "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json"
-          }
-        ]
-      },
-      {
         "id": "2026-06-17:monitor:2026-06-17T14:42:00.703300-04:00",
         "timestamp": "2026-06-17T14:42:00.703300-04:00",
         "day": "2026-06-17",
@@ -2095,8 +2085,43 @@
     "days": [
       {
         "date": "2026-06-18",
-        "count": 2,
+        "count": 3,
         "entries": [
+          {
+            "id": "2026-06-18:monitor:2026-06-18T09:38:43.378234-04:00",
+            "timestamp": "2026-06-18T09:38:43.378234-04:00",
+            "day": "2026-06-18",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "source_kind": "interaction_prompt_transcript",
+            "quality_score": 0,
+            "quality_label": "unknown",
+            "headline_count": 0,
+            "article_count": 0,
+            "url_count": 0,
+            "source_count": 0,
+            "search_count": 0,
+            "symbols": [],
+            "sources": [],
+            "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+            "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+            "status": "success",
+            "links": [
+              {
+                "label": "Prompt",
+                "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md"
+              },
+              {
+                "label": "Transcript",
+                "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt"
+              },
+              {
+                "label": "Metadata",
+                "url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json"
+              }
+            ]
+          },
           {
             "id": "2026-06-18:morning:saved_prompt_context",
             "timestamp": "2026-06-18T09:12:56.378744-04:00",
@@ -2179,7 +2204,7 @@
       },
       {
         "date": "2026-06-17",
-        "count": 14,
+        "count": 13,
         "entries": [
           {
             "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
@@ -2536,43 +2561,6 @@
               {
                 "label": "Metadata",
                 "url": "data/profiles/codex/interactions/2026-06-17/150746_monitor_interaction.json"
-              }
-            ]
-          },
-          {
-            "id": "2026-06-17:monitor:2026-06-17T14:42:16.211412+00:00",
-            "timestamp": "2026-06-17T14:42:16.211412+00:00",
-            "day": "2026-06-17",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "source_kind": "interaction_prompt_transcript",
-            "quality_score": 26,
-            "quality_label": "low",
-            "headline_count": 4,
-            "article_count": 4,
-            "url_count": 1,
-            "source_count": 1,
-            "search_count": 0,
-            "symbols": [],
-            "sources": [
-              "github.com"
-            ],
-            "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-            "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
-            "status": "success",
-            "links": [
-              {
-                "label": "Prompt",
-                "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md"
-              },
-              {
-                "label": "Transcript",
-                "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt"
-              },
-              {
-                "label": "Metadata",
-                "url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json"
               }
             ]
           },
@@ -3034,33 +3022,55 @@
   },
   "interactions": {
     "counts": {
-      "total": 48,
+      "total": 49,
       "recent": 24,
       "days": 3
     },
     "latest": {
-      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "timestamp": "2026-06-18T09:38:43.378234-04:00",
       "day": "2026-06-18",
       "profile": "codex",
-      "phase": "morning",
-      "phase_group": "morning",
-      "phase_label": "Morning",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
       "tool": "codex",
       "status": "success",
-      "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
       "context_file": "",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-18_090730.log",
-      "prompt_source": "scripts/prompts/morning_research.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-18_093619.log",
+      "prompt_source": "scripts/prompts/monitor_check.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
       "context_url": "",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
+      "monitor": {
+        "timestamp": "2026-06-18T09:38:43.378234-04:00",
+        "day": "2026-06-18",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+        "context_file": "",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-18_093619.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+        "context_url": "",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       "morning": {
         "timestamp": "2026-06-18T09:12:56.378744-04:00",
         "day": "2026-06-18",
@@ -3105,28 +3115,6 @@
         "metadata_url": "data/profiles/codex/interactions/2026-06-17/162021_evening_interaction.json",
         "prompt_source_url": ""
       },
-      "monitor": {
-        "timestamp": "2026-06-17T15:46:03.982512-04:00",
-        "day": "2026-06-17",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "failed",
-        "summary": "",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-17/154544_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-17/154544_monitor_transcript.txt",
-        "context_file": "",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-17/154544_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_154544.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-17/154544_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-17/154544_monitor_transcript.txt",
-        "context_url": "",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-17/154544_monitor_interaction.json",
-        "prompt_source_url": ""
-      },
       "voice": {
         "timestamp": "2026-06-16T16:21:24.979499-04:00",
         "day": "2026-06-16",
@@ -3151,12 +3139,34 @@
       }
     },
     "phase_counts": {
+      "monitor": 43,
       "morning": 2,
       "evening": 3,
-      "monitor": 42,
       "voice": 1
     },
     "recent": [
+      {
+        "timestamp": "2026-06-18T09:38:43.378234-04:00",
+        "day": "2026-06-18",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+        "context_file": "",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-18_093619.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+        "context_url": "",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       {
         "timestamp": "2026-06-18T09:12:56.378744-04:00",
         "day": "2026-06-18",
@@ -3662,34 +3672,12 @@
         "context_url": "",
         "metadata_url": "data/profiles/codex/interactions/2026-06-17/110604_monitor_interaction.json",
         "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-17T14:42:16.211412+00:00",
-        "day": "2026-06-17",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because the regime is neutral and all monitored names are outside their required execution ranges. | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt",
-        "context_file": "data/profiles/codex/context/2026-06-17_monitor_144216.json",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_transcript.txt",
-        "context_url": "data/profiles/codex/context/2026-06-17_monitor_144216.json",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json",
-        "prompt_source_url": ""
       }
     ],
     "days": [
       {
         "date": "2026-06-18",
-        "count": 1,
+        "count": 2,
         "phases": [
           {
             "key": "morning",
@@ -3715,6 +3703,34 @@
                 "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
                 "context_url": "",
                 "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          },
+          {
+            "key": "monitor",
+            "label": "Monitor Evaluations",
+            "items": [
+              {
+                "timestamp": "2026-06-18T09:38:43.378234-04:00",
+                "day": "2026-06-18",
+                "profile": "codex",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON. | Decision: no trades approved. MU remains a watch because price and regime confirm part of the setup, but VWAP/first-hour and peer confirmation were not explicit. HOOD and QCOM remain repair-watch names with no clear reclaim evidence.",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+                "context_file": "",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-18_093619.log",
+                "prompt_source": "scripts/prompts/monitor_check.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_transcript.txt",
+                "context_url": "",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-18/093619_monitor_interaction.json",
                 "prompt_source_url": ""
               }
             ]
