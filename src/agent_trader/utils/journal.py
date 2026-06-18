@@ -35,6 +35,7 @@ def create_journal_entry(
     executed: list | None = None,
     portfolio_snapshot: dict | None = None,
     market_data: dict | None = None,
+    decision_journal: dict | None = None,
     data_dir: str | None = None,
     profile: dict | None = None,
 ) -> str:
@@ -275,6 +276,45 @@ def create_journal_entry(
         lines.append("*No trades executed.*")
         lines.append("")
 
+    # ── Decision Evidence Section ───────────────────────────────
+    if decision_journal:
+        summary = decision_journal.get("summary", {})
+        lines.append("## Decision Evidence")
+        lines.append("")
+        lines.append(
+            f"- **Reviewed:** {summary.get('symbols_reviewed', 0)} symbols"
+            f" | **Executed:** {summary.get('executed', 0)}"
+            f" | **Risk rejected:** {summary.get('risk_rejected', 0)}"
+            f" | **Skipped:** {summary.get('skipped', 0)}"
+        )
+        regime = decision_journal.get("regime_scorecard", {})
+        if regime:
+            lines.append(
+                f"- **Regime scorecard:** {regime.get('computed_regime', 'unknown')} "
+                f"({regime.get('bullish_factors', 0)} bullish / "
+                f"{regime.get('bearish_factors', 0)} bearish)"
+            )
+        path = decision_journal.get("path")
+        if path:
+            lines.append(f"- **Structured file:** `{path}`")
+        decisions = decision_journal.get("decisions", [])
+        if decisions:
+            lines.append("")
+            lines.append("| Symbol | Outcome | State | Bucket | Entry Conf | Avoid Conf | Blocker |")
+            lines.append("|--------|---------|-------|--------|-----------:|-----------:|---------|")
+            for item in decisions[:12]:
+                action_conf = item.get("action_confidence") or {}
+                lines.append(
+                    f"| **{item.get('symbol', '?')}** "
+                    f"| {item.get('outcome', 'unknown')} "
+                    f"| {item.get('setup_state', 'unknown')} "
+                    f"| {item.get('watchlist_bucket', 'unknown')} "
+                    f"| {action_conf.get('entry', 'n/a')} "
+                    f"| {action_conf.get('avoid', 'n/a')} "
+                    f"| {str(item.get('top_blocker') or 'none')[:80]} |"
+                )
+            lines.append("")
+
     # ── Portfolio Snapshot ────────────────────────────────────────
     if portfolio_snapshot:
         lines.append("## Portfolio Snapshot")
@@ -328,6 +368,7 @@ def create_journal_entry(
         "screener": screener_results,
         "research": research_results,
         "market_data": market_data,
+        "decision_journal": decision_journal,
         "signals": signals,
         "risk": risk_results,
         "executed": executed,

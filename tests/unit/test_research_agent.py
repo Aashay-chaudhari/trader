@@ -163,6 +163,10 @@ def test_lean_monitor_context_includes_quote_provenance(message_bus, monkeypatch
     assert context["candidate_symbols"] == ["AAPL"]
     assert "yahoo_1m" in context["current_state"]
     assert "42s" in context["current_state"]
+    assert "Computed regime" in context["regime_scorecard"]
+    assert "buy_today_if_confirmed" in context["watchlist_buckets"]
+    assert "Setup state:" in context["morning_plans"]
+    assert "Action confidence:" in context["morning_plans"]
 
 
 def test_lean_monitor_context_includes_relevant_commodities(message_bus, monkeypatch, tmp_path):

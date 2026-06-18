@@ -28,6 +28,7 @@ Read ALL of these. Understand the full picture before writing anything.
 7. `data/profiles/{{PROFILE}}/observations/daily/` — last 3 daily observations
 8. `data/profiles/{{PROFILE}}/cache/morning_research.json` — what you planned this morning
 9. `data/profiles/{{PROFILE}}/cache/watchlist.json` — the stocks you were watching
+10. `data/profiles/{{PROFILE}}/decision_journal/<TODAY>/` — structured monitor decisions, including skipped and rejected setups
 
 If any files don't exist (early days), note what's missing and work with what's there.
 
@@ -79,7 +80,14 @@ Work through these questions honestly. Don't rush to write files.
 7. **Confidence calibration**: Were our high-confidence calls (>0.7) actually better
    than low-confidence (<0.5)? Be honest.
 
-8. **Forward scenarios**: Create 2-4 falsifiable theses for tomorrow / the next
+8. **Decision journal review**: For every approved, rejected, and skipped monitor setup:
+   - Did `action_confidence.entry` map to actual entry quality?
+   - Did high `action_confidence.avoid` correctly keep us out?
+   - Which skipped setups later worked anyway?
+   - Which avoided setups later failed, validating the blocker?
+   - Did provider health, source count, or quote quality limit the decision?
+
+9. **Forward scenarios**: Create 2-4 falsifiable theses for tomorrow / the next
    2-10 trading days. Include confirmation, invalidation, preferred entry style,
    and crowding risk. These will be injected into the next morning research.
 
@@ -134,7 +142,16 @@ File: `data/profiles/{{PROFILE}}/observations/daily/obs_YYYY-MM-DD.json`
         "high_conf_win_rate": 0.0,
         "medium_conf_win_rate": 0.0,
         "low_conf_win_rate": 0.0,
+        "entry_confidence_assessment": "How well entry confidence mapped to later opportunity quality",
+        "avoid_confidence_assessment": "Whether avoid confidence kept us away from bad setups",
         "assessment": "Honest assessment of confidence accuracy"
+    },
+    "decision_journal_review": {
+        "skipped_setups_assessment": "Were skipped setups correctly skipped?",
+        "approved_setups_assessment": "Were approved/executed setups high quality?",
+        "missed_winner_candidates": ["Ticker that worked despite being skipped"],
+        "avoided_loser_candidates": ["Ticker correctly avoided"],
+        "data_quality_notes": "Provider/source/quote gaps that affected decisions"
     },
     "missed_opportunities": [
         {

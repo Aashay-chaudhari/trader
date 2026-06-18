@@ -212,7 +212,11 @@ validate_morning_cache() {
 import subprocess
 import sys
 
-from agent_trader.utils.morning_sanity import demote_stale_entries, validate_morning_research_file
+from agent_trader.utils.morning_sanity import (
+    demote_stale_entries,
+    enrich_morning_theory_fields,
+    validate_morning_research_file,
+)
 
 profile = sys.argv[1]
 data_dir = f"data/profiles/{profile}"
@@ -222,6 +226,16 @@ demoted, ref_prices = demote_stale_entries(data_dir)
 if demoted:
     print(f"[sanity] Auto-demoted to watch (stale entry): {', '.join(demoted)}")
     # Re-stage the corrected file so the commit picks up the fix.
+    subprocess.run(
+        ["git", "add", f"{data_dir}/cache/morning_research.json"],
+        check=False,
+    )
+
+enriched = enrich_morning_theory_fields(data_dir, reference_prices=ref_prices)
+if enriched:
+    preview = ", ".join(enriched[:8])
+    suffix = "..." if len(enriched) > 8 else ""
+    print(f"[sanity] Enriched theory metadata: {preview}{suffix}")
     subprocess.run(
         ["git", "add", f"{data_dir}/cache/morning_research.json"],
         check=False,

@@ -43,6 +43,13 @@ from agent_trader.utils.research_context import (
 )
 from agent_trader.utils.knowledge_base import KnowledgeBase
 from agent_trader.utils.swing_tracker import SwingTracker
+from agent_trader.utils.theory import (
+    build_regime_scorecard,
+    build_watchlist_buckets,
+    format_regime_scorecard,
+    format_watchlist_buckets,
+    normalize_stock_theory,
+)
 
 
 COMMODITY_RELEVANCE = {
@@ -134,6 +141,12 @@ IMPORTANT RULES:
 - Prefer watch over buy when the thesis is right but the entry is late.
 - Every buy or exit-sell must have at least 2 confirming signals and 1 explicit invalidation trigger.
 - For commodity-dependent theses, include the relevant commodity condition in execution_condition.
+- Build an 8-factor regime scorecard before using `risk_on`. Risk-on requires
+  broad confirmation, not just low oil/VIX or one strong index.
+- Split confidence into action-specific scores: long_thesis, entry, avoid, and
+  data_quality. High confidence to avoid must not look like high confidence to buy.
+- Assign every stock a setup_state and watchlist_bucket so the monitor can track
+  when a thesis is planned, eligible, invalidated, or only a repair watch.
 
 Respond with ONLY valid JSON:
 {{
@@ -146,11 +159,46 @@ Respond with ONLY valid JSON:
         "what_would_change_my_mind": ["disconfirming evidence"],
         "crowding_assessment": "low|medium|high plus 1 sentence"
     }},
+    "regime_scorecard": {{
+        "computed_regime": "risk_on" | "risk_off" | "neutral",
+        "declared_regime": "risk_on" | "risk_off" | "neutral",
+        "score": 0,
+        "bullish_factors": 0,
+        "bearish_factors": 0,
+        "unknown_factors": 0,
+        "rule": "risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.",
+        "factors": {{
+            "sp500_trend": {{"state": "bullish|bearish|neutral|unknown", "score": 1, "evidence": "specific source/observation"}},
+            "qqq_trend": {{"state": "bullish|bearish|neutral|unknown", "score": 1, "evidence": "specific source/observation"}},
+            "small_cap_breadth": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}},
+            "vix_direction": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}},
+            "ten_year_yield": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}},
+            "sector_breadth": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}},
+            "candidate_relative_strength": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}},
+            "headline_risk": {{"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}}
+        }}
+    }},
+    "watchlist_buckets": {{
+        "buy_today_if_confirmed": ["SYMBOL1"],
+        "repair_watch": [],
+        "do_not_chase": [],
+        "event_watch": [],
+        "avoid_until_new_thesis": []
+    }},
     "best_opportunities": ["SYMBOL1", "SYMBOL2"],
     "stocks": {{
         "<SYMBOL>": {{
             "sentiment": "bullish" | "bearish" | "neutral",
             "confidence": 0.0-1.0,
+            "action_confidence": {{
+                "long_thesis": 0.0-1.0,
+                "entry": 0.0-1.0,
+                "avoid": 0.0-1.0,
+                "data_quality": 0.0-1.0
+            }},
+            "setup_state": "planned" | "eligible" | "triggered" | "invalidated" | "repair_watch" | "retired",
+            "watchlist_bucket": "buy_today_if_confirmed" | "repair_watch" | "do_not_chase" | "event_watch" | "avoid_until_new_thesis",
+            "top_blocker": "single biggest blocker to action, or awaiting execution-condition confirmation",
             "swing_thesis": {{
                 "theory": "falsifiable 2-10 day thesis",
                 "driver": "primary macro/commodity/sector/company driver",
@@ -234,6 +282,10 @@ For each candidate symbol:
 2. If the setup is confirmed right now, set `ready_to_trade=true`.
 3. If the setup is not confirmed, set `ready_to_trade=false` and explain what is missing.
 4. Keep the morning trade plan unless live evidence clearly invalidates it.
+5. If setup_state is `invalidated` or `repair_watch`, do not approve a buy unless
+   live data clearly satisfies the stated repair/reclaim condition.
+6. Use action-specific confidence: `confidence` should describe the current
+   action, not the stale morning long thesis.
 
 Do not invent new trades. Do not broaden the watchlist. Do not do fresh discovery.
 Long-only rule: `sell` means exit or trim an active long position only. Do not use
@@ -252,6 +304,15 @@ Respond with ONLY valid JSON:
             "failed_conditions": ["condition still missing"],
             "monitor_reason": "1 concise sentence",
             "execution_condition": "repeat the condition you evaluated",
+            "setup_state": "planned" | "eligible" | "triggered" | "invalidated" | "repair_watch" | "retired",
+            "watchlist_bucket": "buy_today_if_confirmed" | "repair_watch" | "do_not_chase" | "event_watch" | "avoid_until_new_thesis",
+            "top_blocker": "single biggest blocker, or none",
+            "action_confidence": {{
+                "long_thesis": 0.0-1.0,
+                "entry": 0.0-1.0,
+                "avoid": 0.0-1.0,
+                "data_quality": 0.0-1.0
+            }},
             "trade_plan": {{"entry": 0.00, "stop_loss": 0.00, "target": 0.00}}
         }}
     }}
@@ -306,6 +367,9 @@ MORNING PLAN / THESES:
 TODAY'S TRADES:
 {todays_trades}
 
+MONITOR DECISION EVIDENCE:
+{decision_evidence}
+
 MARKET REGIME / DAY CONTEXT:
 {market_regime_summary}
 
@@ -321,8 +385,10 @@ YOUR TASK:
 3. Build next-session scenarios: what could happen tomorrow or over the next 2-10 trading days?
 4. Log patterns you observed today (gap_and_go, RSI bounce, breakout, crowding fade, etc.)
 5. Calibrate confidence: were high-confidence calls actually better?
-6. Update swing position outlook, including invalidation levels and catalyst dependencies.
-7. SELF-IMPROVEMENT: Think critically about your own system. What would make you better?
+6. Review skipped and rejected setups: were we correctly avoiding weak entries, or were we too strict?
+7. Identify missed-winner / avoided-loser evidence from monitor decisions and watched stocks.
+8. Update swing position outlook, including invalidation levels and catalyst dependencies.
+9. SELF-IMPROVEMENT: Think critically about your own system. What would make you better?
    - Do you need access to more data sources? Which ones specifically?
    - Are there strategies you wish you could run but can't? (e.g., pairs trading, options flow)
    - Would more web searches during research help? How many, and for what?
@@ -376,7 +442,16 @@ Respond with ONLY valid JSON:
         "high_conf_win_rate": 0.0,
         "medium_conf_count": 0,
         "medium_conf_win_rate": 0.0,
+        "entry_confidence_assessment": "how well entry confidence mapped to good entry opportunities",
+        "avoid_confidence_assessment": "whether high avoid confidence correctly kept us out",
         "assessment": "description of calibration"
+    }},
+    "decision_journal_review": {{
+        "skipped_setups_assessment": "were skipped setups correctly skipped?",
+        "approved_setups_assessment": "were approved/executed setups high quality?",
+        "missed_winner_candidates": ["symbols that worked despite being skipped, if any"],
+        "avoided_loser_candidates": ["symbols correctly avoided, if any"],
+        "data_quality_notes": "provider/source/quote gaps that affected decisions"
     }},
     "swing_updates": [
         {{
@@ -1104,6 +1179,28 @@ class ResearchAgent(BaseAgent):
                     or morning_info.get("execution_condition")
                     or ""
                 ),
+                "setup_state": str(
+                    payload.get("setup_state")
+                    or morning_info.get("setup_state")
+                    or "planned"
+                ),
+                "watchlist_bucket": str(
+                    payload.get("watchlist_bucket")
+                    or morning_info.get("watchlist_bucket")
+                    or "event_watch"
+                ),
+                "top_blocker": str(
+                    payload.get("top_blocker")
+                    or morning_info.get("top_blocker")
+                    or ""
+                ),
+                "action_confidence": (
+                    payload.get("action_confidence")
+                    if isinstance(payload.get("action_confidence"), dict)
+                    else morning_info.get("action_confidence")
+                    if isinstance(morning_info.get("action_confidence"), dict)
+                    else {}
+                ),
                 "trade_plan": {
                     "entry": (
                         self._safe_float(morning_plan.get("entry"))
@@ -1147,6 +1244,22 @@ class ResearchAgent(BaseAgent):
     ) -> dict:
         """Build ultra-concise monitor context for a candidate-only execution gate."""
         morning_stocks = morning_context.get("stocks", {}) if isinstance(morning_context, dict) else {}
+        morning_regime_scorecard = (
+            morning_context.get("regime_scorecard")
+            if isinstance(morning_context.get("regime_scorecard"), dict)
+            else None
+        )
+        live_regime_scorecard = build_regime_scorecard(
+            market_context,
+            declared_regime=market_context.get("market_regime")
+            if isinstance(market_context, dict)
+            else None,
+        )
+        watchlist_buckets = (
+            morning_context.get("watchlist_buckets")
+            if isinstance(morning_context.get("watchlist_buckets"), dict)
+            else build_watchlist_buckets(morning_stocks)
+        )
         candidates = self._select_monitor_candidates(market_summary, morning_context, news_data)
         candidate_symbols = [c["symbol"] for c in candidates]
 
@@ -1154,6 +1267,11 @@ class ResearchAgent(BaseAgent):
         for candidate in candidates:
             sym = candidate["symbol"]
             info = morning_stocks.get(sym, {})
+            if isinstance(info, dict):
+                data = market_summary.get(sym, {}) if isinstance(market_summary, dict) else {}
+                info = normalize_stock_theory(info, current_price=self._safe_float(data.get("latest_price")))
+            else:
+                info = {}
             rec = info.get("recommendation", "watch")
             tp = info.get("trade_plan", {}) if isinstance(info, dict) else {}
             entry = tp.get("entry", "—")
@@ -1164,8 +1282,15 @@ class ResearchAgent(BaseAgent):
                 or f"Only act if {sym} is near the planned level and the thesis is still intact."
             )
             trigger_summary = "; ".join(candidate.get("reasons", []))
+            action_conf = info.get("action_confidence", {}) if isinstance(info.get("action_confidence"), dict) else {}
             plan_lines.append(
                 f"  {sym}: {rec} | entry=${entry} stop=${stop} target=${target}\n"
+                f"    Setup state: {info.get('setup_state', 'planned')} | "
+                f"bucket: {info.get('watchlist_bucket', 'event_watch')} | "
+                f"top blocker: {info.get('top_blocker', 'unknown')}\n"
+                f"    Action confidence: long_thesis={action_conf.get('long_thesis', 'n/a')} "
+                f"entry={action_conf.get('entry', 'n/a')} avoid={action_conf.get('avoid', 'n/a')} "
+                f"data_quality={action_conf.get('data_quality', 'n/a')}\n"
                 f"    Execution condition: {condition}\n"
                 f"    Why it is being checked now: {trigger_summary}"
             )
@@ -1226,6 +1351,9 @@ class ResearchAgent(BaseAgent):
                 "  - Approve only when the natural-language execution condition is clearly satisfied now.",
                 "  - Prefer 'ready_to_trade=false' when evidence is mixed or incomplete.",
                 "  - Never invent a new setup that was not part of the morning plan.",
+                "  - If setup_state is invalidated or repair_watch, require explicit repair/reclaim evidence before any buy.",
+                "  - Use action_confidence.entry for buy readiness; high action_confidence.avoid means stay out.",
+                "  - If live regime scorecard is not risk_on, do not approve growth/cyclical longs that require a risk-on tape.",
                 f"  - Current market regime hint: {market_context.get('market_regime', 'unknown')}.",
             ]
         )
@@ -1235,6 +1363,13 @@ class ResearchAgent(BaseAgent):
             "morning_plans": "\n".join(plan_lines),
             "current_state": "\n".join(state_lines),
             "commodity_context": commodity_context,
+            "regime_scorecard": (
+                "Morning scorecard:\n"
+                + format_regime_scorecard(morning_regime_scorecard)
+                + "\n\nLive scorecard:\n"
+                + format_regime_scorecard(live_regime_scorecard)
+            ),
+            "watchlist_buckets": format_watchlist_buckets(watchlist_buckets),
             "active_positions": "\n".join(pos_lines),
             "strategy_signals": "  Gate runs before the deterministic strategy engine. Use this check only to approve or reject planned setups.",
             "decision_rules": decision_rules,
@@ -2580,6 +2715,10 @@ class ResearchAgent(BaseAgent):
         active_positions = data.get("active_positions", "No active swing positions.")
         recent_observations = data.get("recent_observations", "No prior observations.")
         morning_context = data.get("morning_context", "No morning research context.")
+        decision_evidence = data.get(
+            "decision_evidence",
+            "No monitor decision journal entries were captured today.",
+        )
         today_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         prompt = EVENING_REFLECTION_PROMPT.format(
@@ -2588,6 +2727,7 @@ class ResearchAgent(BaseAgent):
             active_positions=active_positions,
             recent_observations=recent_observations,
             morning_context=morning_context,
+            decision_evidence=decision_evidence,
             today_date=today_date,
         )
 

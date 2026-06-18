@@ -71,11 +71,19 @@ The goal is to develop a **thesis for today** grounded in real data.
 - "VIX today" — what's the fear gauge saying?
 - "stock market news today" — major headlines, earnings, macro events
 - "sector performance today premarket" — who's leading, who's lagging?
+- Check enough evidence to fill an 8-factor regime scorecard: SPY/S&P trend,
+  QQQ/Nasdaq trend, small-cap or breadth signal, VIX direction, 10Y yield
+  direction, sector breadth, candidate relative strength, and headline risk.
+  Use `"unknown"` for factors you cannot verify; do not let two bullish macro
+  inputs alone create a `risk_on` label.
 
 **Stock discovery** (at least 3 searches):
 - "top stock movers today premarket" — what's gapping up/down and why?
 - "stock earnings today" — any earnings plays?
 - "unusual volume stocks today" — volume precedes price
+- "FDA stock movers today" or "biotech FDA catalyst today" — catch regulatory catalysts
+- "analyst upgrades downgrades today" — catch fresh analyst-driven moves
+- "M&A strategic partnership stocks today" — catch deal and supply-chain catalysts
 - Search for each stock in previous watchlist — any overnight news?
 
 **Pattern recognition** (at least 1 search):
@@ -120,8 +128,15 @@ Based on your research, pick stocks. Apply these filters:
 
 For each selected stock, determine:
 - **recommendation**: `buy`, `sell`, `hold`, or `watch`
-- **confidence**: 0.0 to 1.0 — be honest, reference your calibration history
+- **confidence**: 0.0 to 1.0 — legacy overall confidence; be honest, reference your calibration history
+- **action_confidence**: split confidence into `long_thesis`, `entry`, `avoid`,
+  and `data_quality`. High confidence to avoid/watch must not masquerade as
+  high confidence to buy.
 - **swing_thesis**: falsifiable 2-10 day theory, primary driver, confirmation signals, invalidation signals, crowding risk, and entry quality
+- **setup_state**: `planned`, `eligible`, `triggered`, `invalidated`,
+  `repair_watch`, or `retired`
+- **watchlist_bucket**: `buy_today_if_confirmed`, `repair_watch`, `do_not_chase`,
+  `event_watch`, or `avoid_until_new_thesis`
 - **execution_condition**: 1 sentence in natural language describing what must still be true intraday before the trade should actually fire
 - **trade_plan**: specific entry, stop_loss, target
 - **reasoning**: 2-3 sentences explaining WHY, not just what
@@ -185,12 +200,47 @@ File: `data/profiles/{{PROFILE}}/cache/morning_research.json`
         "what_would_change_my_mind": ["disconfirming evidence"],
         "crowding_assessment": "low|medium|high plus 1 sentence"
     },
+    "regime_scorecard": {
+        "computed_regime": "risk_on|risk_off|neutral",
+        "declared_regime": "risk_on|risk_off|neutral",
+        "score": 0,
+        "bullish_factors": 0,
+        "bearish_factors": 0,
+        "unknown_factors": 0,
+        "rule": "risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.",
+        "factors": {
+            "sp500_trend": {"state": "bullish|bearish|neutral|unknown", "score": 1, "evidence": "specific source/observation"},
+            "qqq_trend": {"state": "bullish|bearish|neutral|unknown", "score": 1, "evidence": "specific source/observation"},
+            "small_cap_breadth": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"},
+            "vix_direction": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"},
+            "ten_year_yield": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"},
+            "sector_breadth": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"},
+            "candidate_relative_strength": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"},
+            "headline_risk": {"state": "bullish|bearish|neutral|unknown", "score": 0, "evidence": "specific source/observation"}
+        }
+    },
+    "watchlist_buckets": {
+        "buy_today_if_confirmed": ["SYM1"],
+        "repair_watch": ["SYM2"],
+        "do_not_chase": ["SYM3"],
+        "event_watch": ["SYM4"],
+        "avoid_until_new_thesis": []
+    },
     "best_opportunities": ["SYM1", "SYM2"],
     "stocks": {
         "SYM1": {
             "sentiment": "bullish|neutral|bearish",
             "confidence": 0.75,
+            "action_confidence": {
+                "long_thesis": 0.75,
+                "entry": 0.65,
+                "avoid": 0.20,
+                "data_quality": 0.70
+            },
             "recommendation": "buy|sell|hold|watch",
+            "setup_state": "planned|eligible|triggered|invalidated|repair_watch|retired",
+            "watchlist_bucket": "buy_today_if_confirmed|repair_watch|do_not_chase|event_watch|avoid_until_new_thesis",
+            "top_blocker": "single biggest blocker to action, or awaiting execution-condition confirmation",
             "swing_thesis": {
                 "theory": "falsifiable 2-10 day thesis",
                 "driver": "primary macro/commodity/sector/company driver",
@@ -231,6 +281,9 @@ File: `data/profiles/{{PROFILE}}/cache/watchlist.json`
 ["SYM1", "SYM2", "SYM3", "SYM4", "SYM5"]
 ```
 
+Keep this file as the flat symbol list for compatibility. Put bucket details in
+`morning_research.json.watchlist_buckets` and per-stock `watchlist_bucket`.
+
 ---
 
 ## Step 6 — Stage files (DO NOT commit or push)
@@ -247,7 +300,10 @@ git add data/profiles/{{PROFILE}}/cache/morning_research.json \
 ## Quality checklist
 
 - [ ] Did at least 6 web searches covering regime, news, movers, and watchlist
+- [ ] Filled the regime scorecard; `risk_on` requires broad confirmation, not just low oil/VIX
 - [ ] Ran live quote check (Step 4b) for every buy/sell — confirmed entry within 15% or demoted to watch
+- [ ] Separated `action_confidence.entry` from `action_confidence.avoid`
+- [ ] Assigned `setup_state` and `watchlist_bucket` for every stock
 - [ ] Every buy has a specific entry price within today's realistic range
 - [ ] Stop losses give 2-3% room (not so tight they trigger on noise)
 - [ ] Risk/reward ratio is at least 1.5:1 for every buy

@@ -515,6 +515,10 @@ async def test_apply_local_monitor_decision_runs_trade_pipeline(monkeypatch):
             (cache_dir / "local_monitor_applied.json").read_text(encoding="utf-8")
         )
         assert applied["status"] == "completed"
+        decision_journal = next((Path(temp_dir) / "decision_journal").rglob("*.json"))
+        decision_payload = json.loads(decision_journal.read_text(encoding="utf-8"))
+        assert decision_payload["decisions"][0]["symbol"] == "AAPL"
+        assert decision_payload["decisions"][0]["outcome"] == "executed"
 
         repeated = await orch.run_local_monitor_decision()
         assert repeated["skipped"] == "already_applied"

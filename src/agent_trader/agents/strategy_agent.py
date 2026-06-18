@@ -178,6 +178,19 @@ class StrategyAgent(BaseAgent):
         if not stock_research.get("ready_to_trade", False):
             return False
         recommendation = str(stock_research.get("recommendation", "")).lower()
+        setup_state = str(stock_research.get("setup_state", "")).lower()
+        if recommendation == "buy" and setup_state in {"invalidated", "repair_watch", "retired"}:
+            return False
+        action_confidence = stock_research.get("action_confidence")
+        if recommendation == "buy" and isinstance(action_confidence, dict):
+            try:
+                entry_confidence = float(action_confidence.get("entry", 0.0) or 0.0)
+                avoid_confidence = float(action_confidence.get("avoid", 0.0) or 0.0)
+            except (TypeError, ValueError):
+                entry_confidence = 0.0
+                avoid_confidence = 0.0
+            if avoid_confidence > entry_confidence:
+                return False
         if symbol in active_positions:
             if recommendation == "sell":
                 return True

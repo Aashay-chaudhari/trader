@@ -25,6 +25,15 @@ Rules:
   decision with neutral sentiment and an empty `stocks` object.
 - Approve a trade only when the morning execution condition is clearly satisfied
   by the live snapshot.
+- Use the setup state, watchlist bucket, regime scorecard, top blocker, and
+  action-specific confidence from the prepared prompt/context.
+- If `setup_state` is `invalidated` or `repair_watch`, approve a buy only after
+  clear live repair/reclaim evidence is present.
+- Use `action_confidence.entry` for buy readiness. High `action_confidence.avoid`
+  means the correct action is to stay out even if the old long thesis still has
+  narrative appeal.
+- If the live regime scorecard is not `risk_on`, do not approve growth/cyclical
+  longs whose execution condition depends on a risk-on tape.
 - Prefer `ready_to_trade=false` when evidence is mixed, incomplete, stale, or
   only roughly close to the setup.
 - Keep the morning trade plan unless the live snapshot clearly invalidates it.
@@ -48,6 +57,15 @@ Decision schema:
       "failed_conditions": ["condition still missing"],
       "monitor_reason": "1 concise sentence",
       "execution_condition": "condition evaluated",
+      "setup_state": "planned | eligible | triggered | invalidated | repair_watch | retired",
+      "watchlist_bucket": "buy_today_if_confirmed | repair_watch | do_not_chase | event_watch | avoid_until_new_thesis",
+      "top_blocker": "single biggest blocker, or none",
+      "action_confidence": {
+        "long_thesis": 0.0,
+        "entry": 0.0,
+        "avoid": 0.0,
+        "data_quality": 0.0
+      },
       "trade_plan": {
         "entry": 0.0,
         "stop_loss": 0.0,

@@ -34,9 +34,20 @@ from agent_trader.config.settings import get_settings
 from agent_trader.core.base_agent import BaseAgent, AgentRole
 from agent_trader.core.message_bus import MessageBus, Message, MessageType
 from agent_trader.utils.llm_analytics import build_runtime_metadata, record_llm_analytics
+from agent_trader.utils.decision_journal import (
+    build_decision_journal,
+    format_decision_journals_for_prompt,
+    load_recent_decision_journals,
+    write_decision_journal,
+)
 from agent_trader.utils.market_quotes import refresh_with_alpaca_iex
 from agent_trader.utils.profiles import build_profile_metadata
 from agent_trader.utils.research_context import save_prompt_context_snapshot
+from agent_trader.utils.theory import (
+    build_regime_scorecard,
+    build_watchlist_buckets,
+    normalize_stock_theory,
+)
 
 console = Console()
 
@@ -68,6 +79,7 @@ class Orchestrator:
         self._agents: dict[str, BaseAgent] = {}
         self._today_watchlist: list[str] = []
         self._morning_research: dict | None = None
+        self._latest_market_context: dict[str, Any] = {}
 
     def register(self, agent: BaseAgent) -> None:
         key = getattr(agent, "role_name", agent.role.value)
@@ -132,6 +144,7 @@ class Orchestrator:
                 hot_stocks = response.data.get("hot_stocks", [])
                 finviz_data = response.data.get("finviz", {})
                 market_context = response.data.get("market_context", {})
+                self._latest_market_context = market_context if isinstance(market_context, dict) else {}
                 results["news_discovery"] = {
                     "discoveries": len(news_discoveries),
                     "hot_stocks": len(hot_stocks),
@@ -200,6 +213,7 @@ class Orchestrator:
                 market_headlines = response.data.get("market_headlines", [])
                 # Update market context with fresh data
                 market_context = response.data.get("market_context", {}) or market_context
+                self._latest_market_context = market_context if isinstance(market_context, dict) else {}
                 results["news"] = response.data
                 headline_count = sum(len(v.get("news_headlines", [])) for v in news_data.values())
                 source_stats = response.data.get("source_stats", {})
@@ -306,6 +320,7 @@ class Orchestrator:
                 news_data = response.data.get("news", {})
                 market_context = response.data.get("market_context", {})
                 market_headlines = response.data.get("market_headlines", [])
+                results["news"] = response.data
 
         # Step 3: Monitor-time strategist check
         research_data = {}
@@ -403,6 +418,22 @@ class Orchestrator:
                 results["portfolio"] = {"status": "ok", "data": response.data}
                 val = response.data.get("portfolio_value", 0)
                 console.print(f"  [green]Done[/green] portfolio ${val:,.0f}")
+
+        decision_journal = self._write_decision_journal(
+            run_id=run_id,
+            symbols=watchlist,
+            morning_context=morning_context,
+            monitor_research=research_data,
+            market_data=market_data,
+            market_context=market_context,
+            news_data=news_data,
+            news_results=results.get("news", {}),
+            strategy_data=strategy_data,
+            risk_data=risk_data,
+            execution_data=execution_data,
+        )
+        if decision_journal:
+            results["decision_journal"] = decision_journal
 
         self._write_journal(run_id, "monitor", results)
         self._print_monitor_summary(results)
@@ -861,6 +892,22 @@ class Orchestrator:
             if response and response.type == MessageType.RESULT:
                 results["portfolio"] = {"status": "ok", "data": response.data}
 
+        decision_journal = self._write_decision_journal(
+            run_id=run_id,
+            symbols=decision_symbols,
+            morning_context=morning_context,
+            monitor_research=analysis,
+            market_data=market_data,
+            market_context=market_context,
+            news_data=news_data,
+            news_results=context.get("prepare_results", {}).get("news", {}),
+            strategy_data=strategy_data,
+            risk_data=risk_data,
+            execution_data=execution_data,
+        )
+        if decision_journal:
+            results["decision_journal"] = decision_journal
+
         self._write_journal(run_id, "monitor", results)
         applied = self._write_local_monitor_applied(
             path=applied_file,
@@ -1038,6 +1085,14 @@ morning execution conditions and the live snapshot.
 
 {prompt_sections.get("commodity_context", "No direct commodity driver mapped for current candidates.")}
 
+## Regime Scorecard
+
+{prompt_sections.get("regime_scorecard", "No structured regime scorecard available.")}
+
+## Watchlist Buckets
+
+{prompt_sections.get("watchlist_buckets", "No structured watchlist buckets available.")}
+
 ## Active Positions
 
 {prompt_sections.get("active_positions", "(none)")}
@@ -1066,6 +1121,15 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
       "failed_conditions": ["condition still missing"],
       "monitor_reason": "1 concise sentence",
       "execution_condition": "condition evaluated",
+      "setup_state": "planned | eligible | triggered | invalidated | repair_watch | retired",
+      "watchlist_bucket": "buy_today_if_confirmed | repair_watch | do_not_chase | event_watch | avoid_until_new_thesis",
+      "top_blocker": "single biggest blocker, or none",
+      "action_confidence": {{
+        "long_thesis": 0.0,
+        "entry": 0.0,
+        "avoid": 0.0,
+        "data_quality": 0.0
+      }},
       "trade_plan": {{"entry": 0.0, "stop_loss": 0.0, "target": 0.0}}
     }}
   }}
@@ -1115,10 +1179,14 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
             "current_state": "\n".join(state_lines),
             "active_positions": ", ".join(active_positions) or "  (none)",
             "strategy_signals": "Local fallback context; strategy engine runs after this gate.",
+            "regime_scorecard": "Local fallback context did not build a structured regime scorecard.",
+            "watchlist_buckets": "Local fallback context did not build structured watchlist buckets.",
             "decision_rules": "\n".join(
                 [
                     "  - Approve only when the morning execution condition is clearly satisfied.",
                     "  - Prefer ready_to_trade=false when evidence is mixed.",
+                    "  - If setup_state is invalidated or repair_watch, require explicit repair/reclaim evidence before any buy.",
+                    "  - Use action_confidence.entry for buy readiness; high action_confidence.avoid means stay out.",
                     f"  - Current market regime hint: {market_context.get('market_regime', 'unknown')}.",
                 ]
             ),
@@ -1171,6 +1239,8 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
 
         # Today's trades from journal
         todays_trades = self._load_todays_journal_summary()
+        decision_journals = load_recent_decision_journals(data_dir=settings.data_dir)
+        decision_evidence = format_decision_journals_for_prompt(decision_journals)
 
         # Market regime from morning research
         morning = self._morning_research or self._load_morning_context()
@@ -1207,6 +1277,7 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
                     "phase": "evening_reflection",
                     "market_data": {},  # Required by research agent
                     "todays_trades": todays_trades,
+                    "decision_evidence": decision_evidence,
                     "market_regime_summary": market_regime_summary,
                     "morning_context": morning_context,
                     "active_positions": active_positions,
@@ -1348,6 +1419,47 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
 
     # ── Journal ──────────────────────────────────────────────────
 
+    def _write_decision_journal(
+        self,
+        *,
+        run_id: str,
+        symbols: list[str],
+        morning_context: dict[str, Any] | None,
+        monitor_research: dict[str, Any] | None,
+        market_data: dict[str, Any] | None,
+        market_context: dict[str, Any] | None,
+        news_data: dict[str, Any] | None,
+        news_results: dict[str, Any] | None,
+        strategy_data: dict[str, Any] | None,
+        risk_data: dict[str, Any] | None,
+        execution_data: dict[str, Any] | None,
+    ) -> dict[str, Any] | None:
+        try:
+            settings = get_settings()
+            news_payload = news_results if isinstance(news_results, dict) else {}
+            payload = build_decision_journal(
+                run_id=run_id,
+                symbols=symbols,
+                morning_context=morning_context,
+                monitor_research=monitor_research,
+                market_data=market_data,
+                market_context=market_context,
+                news_data=news_data,
+                source_stats=news_payload.get("source_stats", {}),
+                provider_health=news_payload.get("provider_health", {}),
+                warnings=news_payload.get("warnings", []),
+                signals=(strategy_data or {}).get("signals", []) if strategy_data else [],
+                risk_data=risk_data,
+                execution_data=execution_data,
+            )
+            path = write_decision_journal(payload, data_dir=settings.data_dir)
+            payload["path"] = path
+            console.print(f"  [dim]Decision journal: {path}[/dim]")
+            return payload
+        except Exception as exc:
+            console.print(f"  [yellow]Decision journal failed: {exc}[/yellow]")
+            return None
+
     def _write_journal(self, run_id, phase, results, screener_results=None):
         try:
             from agent_trader.utils.journal import create_journal_entry
@@ -1374,6 +1486,7 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
                 executed=execution_data.get("executed") if execution_data else None,
                 portfolio_snapshot=portfolio_data,
                 market_data=strategy_data.get("market_data") if strategy_data else None,
+                decision_journal=results.get("decision_journal"),
                 data_dir=settings.data_dir,
                 profile=build_profile_metadata(settings),
             )
@@ -1388,6 +1501,17 @@ Write ONLY valid JSON to `{decision_path}` with this schema:
             return
         ctx_dir = Path(get_settings().data_dir) / "cache"
         ctx_dir.mkdir(parents=True, exist_ok=True)
+        stocks = self._morning_research.get("stocks", {})
+        if isinstance(stocks, dict):
+            for symbol, stock in list(stocks.items()):
+                if isinstance(stock, dict):
+                    stocks[symbol] = normalize_stock_theory(stock)
+            self._morning_research["watchlist_buckets"] = build_watchlist_buckets(stocks)
+        if not isinstance(self._morning_research.get("regime_scorecard"), dict):
+            self._morning_research["regime_scorecard"] = build_regime_scorecard(
+                self._latest_market_context,
+                declared_regime=str(self._morning_research.get("market_regime") or ""),
+            )
         (ctx_dir / "morning_research.json").write_text(
             json.dumps(self._morning_research, indent=2, default=str))
         (ctx_dir / "watchlist.json").write_text(json.dumps(self._today_watchlist))

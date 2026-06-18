@@ -11,6 +11,11 @@ from typing import Any
 import yfinance as yf
 
 from agent_trader.utils.runtime import configure_yfinance_cache
+from agent_trader.utils.theory import (
+    build_regime_scorecard,
+    build_watchlist_buckets,
+    normalize_stock_theory,
+)
 
 MAX_ENTRY_DEVIATION_PCT = 15.0
 MAX_TARGET_DEVIATION_PCT = 35.0
@@ -201,6 +206,60 @@ def demote_stale_entries(
         cache_path.write_text(json.dumps(payload, indent=4), encoding="utf-8")
 
     return demoted, live_prices
+
+
+def enrich_morning_theory_fields(
+    data_dir: str | Path,
+    *,
+    reference_prices: dict[str, float] | None = None,
+) -> list[str]:
+    """Populate operational theory metadata in morning_research.json.
+
+    The morning prompt asks for these fields, but this normalizer keeps older or
+    imperfect LLM output usable. It preserves any strategist-provided values and
+    fills only missing setup state, watchlist bucket, action confidence, top
+    blocker, watchlist buckets, and a conservative regime scorecard shell.
+    """
+
+    root = Path(data_dir)
+    cache_path = root / "cache" / "morning_research.json"
+    payload = json.loads(cache_path.read_text(encoding="utf-8-sig"))
+    if not isinstance(payload, dict):
+        return []
+
+    stocks = payload.get("stocks", {})
+    if not isinstance(stocks, dict):
+        return []
+
+    changed: list[str] = []
+    reference_prices = reference_prices or {}
+    for symbol, stock_data in stocks.items():
+        if not isinstance(stock_data, dict):
+            continue
+        normalized = normalize_stock_theory(
+            stock_data,
+            current_price=reference_prices.get(str(symbol).upper())
+            or reference_prices.get(str(symbol)),
+        )
+        if normalized != stock_data:
+            stocks[symbol] = normalized
+            changed.append(str(symbol).upper())
+
+    buckets = build_watchlist_buckets(stocks)
+    if payload.get("watchlist_buckets") != buckets:
+        payload["watchlist_buckets"] = buckets
+        changed.append("watchlist_buckets")
+
+    if not isinstance(payload.get("regime_scorecard"), dict):
+        payload["regime_scorecard"] = build_regime_scorecard(
+            {},
+            declared_regime=str(payload.get("market_regime") or ""),
+        )
+        changed.append("regime_scorecard")
+
+    if changed:
+        cache_path.write_text(json.dumps(payload, indent=4), encoding="utf-8")
+    return changed
 
 
 def fetch_reference_prices(symbols: list[str]) -> dict[str, float]:
