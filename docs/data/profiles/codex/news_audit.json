@@ -1,51 +1,135 @@
 {
   "counts": {
     "days": 2,
-    "entries": 15,
-    "headlines": 55,
-    "articles": 70,
-    "urls": 15,
+    "entries": 16,
+    "headlines": 70,
+    "articles": 82,
+    "urls": 17,
     "sources": 7,
     "searches": 0
   },
   "latest": {
-    "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
-    "timestamp": "2026-06-17T16:40:42.496708+00:00",
-    "day": "2026-06-17",
-    "phase": "monitor",
-    "phase_group": "monitor",
-    "phase_label": "Monitor Evaluations",
-    "source_kind": "interaction_prompt_transcript",
-    "quality_score": 26,
-    "quality_label": "low",
-    "headline_count": 4,
-    "article_count": 4,
-    "url_count": 1,
-    "source_count": 1,
+    "id": "2026-06-18:morning:saved_prompt_context",
+    "timestamp": "2026-06-18T09:12:56.378744-04:00",
+    "day": "2026-06-18",
+    "phase": "research",
+    "phase_group": "morning",
+    "phase_label": "Morning Research",
+    "source_kind": "saved_prompt_context",
+    "quality_score": 85,
+    "quality_label": "high",
+    "headline_count": 22,
+    "article_count": 34,
+    "url_count": 11,
+    "source_count": 6,
     "search_count": 0,
-    "symbols": [],
-    "sources": [
-      "github.com"
+    "symbols": [
+      "HOOD",
+      "INTC",
+      "MU",
+      "QCOM",
+      "QURE",
+      "WDC"
     ],
-    "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-    "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli",
-    "status": "success",
+    "sources": [
+      "Investing.com",
+      "Investor's Business Daily",
+      "MarketWatch",
+      "StockTitan",
+      "Wall Street Journal",
+      "Yahoo Finance"
+    ],
+    "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
     "links": [
       {
-        "label": "Prompt",
-        "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md"
+        "label": "Prompt context JSON",
+        "url": "data/profiles/codex/context.json"
       },
       {
-        "label": "Transcript",
-        "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt"
-      },
-      {
-        "label": "Metadata",
-        "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json"
+        "label": "News audit JSON",
+        "url": "data/profiles/codex/news_audit.json"
       }
     ]
   },
   "entries": [
+    {
+      "id": "2026-06-18:morning:saved_prompt_context",
+      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "day": "2026-06-18",
+      "phase": "research",
+      "phase_group": "morning",
+      "phase_label": "Morning Research",
+      "source_kind": "saved_prompt_context",
+      "quality_score": 85,
+      "quality_label": "high",
+      "headline_count": 22,
+      "article_count": 34,
+      "url_count": 11,
+      "source_count": 6,
+      "search_count": 0,
+      "symbols": [
+        "HOOD",
+        "INTC",
+        "MU",
+        "QCOM",
+        "QURE",
+        "WDC"
+      ],
+      "sources": [
+        "Investing.com",
+        "Investor's Business Daily",
+        "MarketWatch",
+        "StockTitan",
+        "Wall Street Journal",
+        "Yahoo Finance"
+      ],
+      "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
+      "links": [
+        {
+          "label": "Prompt context JSON",
+          "url": "data/profiles/codex/context.json"
+        },
+        {
+          "label": "News audit JSON",
+          "url": "data/profiles/codex/news_audit.json"
+        }
+      ]
+    },
+    {
+      "id": "2026-06-18:morning:2026-06-18T09:12:56.378744-04:00",
+      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "day": "2026-06-18",
+      "phase": "morning",
+      "phase_group": "morning",
+      "phase_label": "Morning",
+      "source_kind": "interaction_prompt_transcript",
+      "quality_score": 33,
+      "quality_label": "low",
+      "headline_count": 18,
+      "article_count": 18,
+      "url_count": 1,
+      "source_count": 0,
+      "search_count": 0,
+      "symbols": [],
+      "sources": [],
+      "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 18 news/source text marker(s).",
+      "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+      "status": "success",
+      "links": [
+        {
+          "label": "Prompt",
+          "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md"
+        },
+        {
+          "label": "Transcript",
+          "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt"
+        },
+        {
+          "label": "Metadata",
+          "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json"
+        }
+      ]
+    },
     {
       "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
       "timestamp": "2026-06-17T16:40:42.496708+00:00",
@@ -545,54 +629,93 @@
           "url": "data/profiles/codex/interactions/2026-06-17/141429_monitor_interaction.json"
         }
       ]
-    },
-    {
-      "id": "2026-06-16:morning:saved_prompt_context",
-      "timestamp": "2026-06-16T09:12:49.339037-04:00",
-      "day": "2026-06-16",
-      "phase": "research",
-      "phase_group": "morning",
-      "phase_label": "Morning Research",
-      "source_kind": "saved_prompt_context",
-      "quality_score": 85,
-      "quality_label": "high",
-      "headline_count": 25,
-      "article_count": 40,
-      "url_count": 10,
-      "source_count": 6,
-      "search_count": 0,
-      "symbols": [
-        "A",
-        "CYTK",
-        "GM",
-        "HOOD",
-        "MU",
-        "QCOM",
-        "TSLA",
-        "WDC"
-      ],
-      "sources": [
-        "Barron's",
-        "Investopedia",
-        "MarketWatch",
-        "Nasdaq",
-        "Robinhood",
-        "Yahoo Finance"
-      ],
-      "notes": "Structured saved news context: 40 article/headline items across 6 sources.",
-      "links": [
-        {
-          "label": "Prompt context JSON",
-          "url": "data/profiles/codex/context.json"
-        },
-        {
-          "label": "News audit JSON",
-          "url": "data/profiles/codex/news_audit.json"
-        }
-      ]
     }
   ],
   "days": [
+    {
+      "date": "2026-06-18",
+      "count": 2,
+      "entries": [
+        {
+          "id": "2026-06-18:morning:saved_prompt_context",
+          "timestamp": "2026-06-18T09:12:56.378744-04:00",
+          "day": "2026-06-18",
+          "phase": "research",
+          "phase_group": "morning",
+          "phase_label": "Morning Research",
+          "source_kind": "saved_prompt_context",
+          "quality_score": 85,
+          "quality_label": "high",
+          "headline_count": 22,
+          "article_count": 34,
+          "url_count": 11,
+          "source_count": 6,
+          "search_count": 0,
+          "symbols": [
+            "HOOD",
+            "INTC",
+            "MU",
+            "QCOM",
+            "QURE",
+            "WDC"
+          ],
+          "sources": [
+            "Investing.com",
+            "Investor's Business Daily",
+            "MarketWatch",
+            "StockTitan",
+            "Wall Street Journal",
+            "Yahoo Finance"
+          ],
+          "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
+          "links": [
+            {
+              "label": "Prompt context JSON",
+              "url": "data/profiles/codex/context.json"
+            },
+            {
+              "label": "News audit JSON",
+              "url": "data/profiles/codex/news_audit.json"
+            }
+          ]
+        },
+        {
+          "id": "2026-06-18:morning:2026-06-18T09:12:56.378744-04:00",
+          "timestamp": "2026-06-18T09:12:56.378744-04:00",
+          "day": "2026-06-18",
+          "phase": "morning",
+          "phase_group": "morning",
+          "phase_label": "Morning",
+          "source_kind": "interaction_prompt_transcript",
+          "quality_score": 33,
+          "quality_label": "low",
+          "headline_count": 18,
+          "article_count": 18,
+          "url_count": 1,
+          "source_count": 0,
+          "search_count": 0,
+          "symbols": [],
+          "sources": [],
+          "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 18 news/source text marker(s).",
+          "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+          "status": "success",
+          "links": [
+            {
+              "label": "Prompt",
+              "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md"
+            },
+            {
+              "label": "Transcript",
+              "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt"
+            },
+            {
+              "label": "Metadata",
+              "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json"
+            }
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-06-17",
       "count": 14,
@@ -1094,57 +1217,6 @@
             {
               "label": "Metadata",
               "url": "data/profiles/codex/interactions/2026-06-17/141429_monitor_interaction.json"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "date": "2026-06-16",
-      "count": 1,
-      "entries": [
-        {
-          "id": "2026-06-16:morning:saved_prompt_context",
-          "timestamp": "2026-06-16T09:12:49.339037-04:00",
-          "day": "2026-06-16",
-          "phase": "research",
-          "phase_group": "morning",
-          "phase_label": "Morning Research",
-          "source_kind": "saved_prompt_context",
-          "quality_score": 85,
-          "quality_label": "high",
-          "headline_count": 25,
-          "article_count": 40,
-          "url_count": 10,
-          "source_count": 6,
-          "search_count": 0,
-          "symbols": [
-            "A",
-            "CYTK",
-            "GM",
-            "HOOD",
-            "MU",
-            "QCOM",
-            "TSLA",
-            "WDC"
-          ],
-          "sources": [
-            "Barron's",
-            "Investopedia",
-            "MarketWatch",
-            "Nasdaq",
-            "Robinhood",
-            "Yahoo Finance"
-          ],
-          "notes": "Structured saved news context: 40 article/headline items across 6 sources.",
-          "links": [
-            {
-              "label": "Prompt context JSON",
-              "url": "data/profiles/codex/context.json"
-            },
-            {
-              "label": "News audit JSON",
-              "url": "data/profiles/codex/news_audit.json"
             }
           ]
         }

@@ -221,460 +221,478 @@
   ],
   "trades": [],
   "research": {
-    "overall_sentiment": "bullish",
-    "market_regime": "risk_on",
-    "market_summary": "U.S. equities enter June 16, 2026 with a risk-on tone after a sharp three-day S&P 500 rebound driven by U.S.-Iran relief, lower oil, lower yields, and easing volatility. The setup favors selective liquid long ideas in AI/chips and durable catalyst names, but entry quality is mixed because many leaders already gapped hard and the Fed decision plus triple-witching risk can amplify reversals.",
+    "overall_sentiment": "neutral",
+    "market_regime": "neutral",
+    "market_summary": "U.S. futures are rebounding on June 18 after Wednesday's Fed-driven selloff, with S&P 500 and Nasdaq 100 futures higher while VIX is back near 17 and the 10-year yield is slightly lower around 4.44%. The setup is constructive for selective long trades in liquid, catalyst-backed semiconductors, but the cash-market backdrop is still damaged by hawkish Fed repricing and yesterday's broad index losses, so this is not a broad risk-on day.",
     "market_thesis": {
-      "primary_swing_theory": "Over the next 2-10 trading days, relief from energy/geopolitical stress should keep buyers engaged in liquid growth and industrial/defense-adjacent names if oil stays contained, VIX remains near the mid-teens, and indexes hold the post-relief breakout range.",
+      "primary_swing_theory": "Over the next 2-10 trading days, liquid semiconductor and memory names can lead a relief bounce if the Fed shock stops pushing yields higher, VIX keeps fading, and AI/memory demand catalysts attract fresh institutional buying. The thesis fails if Nasdaq futures strength reverses after the open, VIX reclaims the high teens, or semis lose VWAP while rates rise.",
       "drivers": [
-        "U.S.-Iran/Strait of Hormuz relief lowering oil and volatility",
-        "Lower Treasury yields supporting growth and chip multiples",
-        "AI infrastructure and defense-production catalysts in individual large caps",
-        "Fed decision and options-expiration positioning creating intraday volatility"
+        "Fed held rates but signaled possible future hikes, creating a rebound-with-rate-risk tape.",
+        "Intel has a fresh Apple domestic-chip manufacturing headline and memory names are supported by Apple price-increase commentary tied to memory/storage costs.",
+        "VIX is down near 17 and the 10-year yield is slightly lower, supporting a selective relief bid.",
+        "Juneteenth closure tomorrow can compress activity and increase late-day position trimming."
       ],
       "what_would_change_my_mind": [
-        "VIX reclaims the high teens with broad index weakness",
-        "Oil reverses sharply higher on renewed Strait of Hormuz risk",
-        "The S&P 500 loses the prior relief-rally breakout and breadth deteriorates",
-        "Fed communication reprices yields higher and pressures growth leadership"
+        "S&P 500 and Nasdaq 100 give back the premarket bounce and trade below the first-hour range.",
+        "VIX reverses above 18.5 while the 10-year yield pushes back above 4.50%.",
+        "SMH/semiconductor leaders lose VWAP in the first hour despite positive catalysts.",
+        "Intel or Micron trade below their planned stop references on volume."
       ],
-      "crowding_assessment": "medium: the relief rally is obvious and several AI/storage names are extended, so entries need intraday confirmation rather than open-market chasing."
+      "crowding_assessment": "medium: the semiconductor bounce is visible in premarket mover lists and analyst headlines, so entries must require VWAP and opening-range confirmation rather than chasing the first print."
+    },
+    "regime_scorecard": {
+      "computed_regime": "neutral",
+      "declared_regime": "neutral",
+      "score": 3,
+      "bullish_factors": 4,
+      "bearish_factors": 2,
+      "unknown_factors": 2,
+      "rule": "risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.",
+      "factors": {
+        "sp500_trend": {
+          "state": "neutral",
+          "score": 0,
+          "evidence": "Investopedia reported S&P 500 futures +0.8% early June 18, but Barron's reported the S&P 500 fell 1.2% on June 17 after the Fed."
+        },
+        "qqq_trend": {
+          "state": "neutral",
+          "score": 0,
+          "evidence": "Investopedia reported Nasdaq 100 futures +1.4%, but Barron's reported the Nasdaq fell 1.3% on June 17 and the profile's last observation warned that Nasdaq weakness can coexist with low VIX."
+        },
+        "small_cap_breadth": {
+          "state": "unknown",
+          "score": 0,
+          "evidence": "No reliable June 18 small-cap breadth source was verified within the 10-search budget."
+        },
+        "vix_direction": {
+          "state": "bullish",
+          "score": 1,
+          "evidence": "Yahoo Finance showed VIX near 17.13, down about 7.1%, and Investing.com showed S&P 500 VIX 17.13, down about 7.05%."
+        },
+        "ten_year_yield": {
+          "state": "bullish",
+          "score": 1,
+          "evidence": "Investing.com showed the U.S. 10Y around 4.437%, down about 0.020, while Investors.com cited 4.46% premarket."
+        },
+        "sector_breadth": {
+          "state": "bullish",
+          "score": 1,
+          "evidence": "Premarket leadership was concentrated but broad within semiconductors and storage: Investing.com listed INTC, ON, WDC, LRCX, KLAC, AMAT, TER, STX; MarketWatch highlighted Intel, Micron, and Marvell gains."
+        },
+        "candidate_relative_strength": {
+          "state": "bullish",
+          "score": 1,
+          "evidence": "INTC was reported up roughly 6-10% premarket and MU around 4-6% premarket on fresh company/analyst catalysts."
+        },
+        "headline_risk": {
+          "state": "bearish",
+          "score": -1,
+          "evidence": "Guardian and Barron's reported that the Fed held rates but signaled possible hikes and unsettled markets; Juneteenth closure tomorrow may also reduce follow-through."
+        }
+      }
+    },
+    "watchlist_buckets": {
+      "event_watch": [],
+      "do_not_chase": [
+        "QURE",
+        "WDC"
+      ],
+      "repair_watch": [
+        "HOOD",
+        "QCOM"
+      ],
+      "avoid_until_new_thesis": [],
+      "buy_today_if_confirmed": [
+        "INTC",
+        "MU"
+      ]
     },
     "best_opportunities": [
-      "QCOM",
-      "GM"
+      "INTC",
+      "MU"
     ],
     "stocks": {
-      "QCOM": {
+      "INTC": {
         "sentiment": "bullish",
         "confidence": 0.68,
+        "action_confidence": {
+          "long_thesis": 0.72,
+          "entry": 0.64,
+          "avoid": 0.22,
+          "data_quality": 0.74
+        },
         "recommendation": "buy",
+        "setup_state": "eligible",
+        "watchlist_bucket": "buy_today_if_confirmed",
+        "top_blocker": "Awaiting first-hour VWAP/opening-range confirmation after a large premarket headline gap.",
         "swing_thesis": {
-          "theory": "QCOM can extend over the next 2-5 trading days if AI-chip acquisition speculation and semiconductor risk appetite hold while the stock stays above today's post-news support zone.",
-          "driver": "AI infrastructure narrative plus reports of Tenstorrent acquisition talks and broad chip-sector momentum.",
+          "theory": "INTC can extend over 2-5 trading days if the Apple domestic-chip manufacturing headline pulls institutional rotation into U.S. semiconductor manufacturing while Nasdaq stabilizes after the Fed selloff.",
+          "driver": "Apple-related domestic chip manufacturing catalyst plus semiconductor relief leadership.",
           "expected_timeframe": "swing_2_5_days",
           "confirmation_signals": [
-            "Price holds above 224 after the first hour",
-            "Relative strength versus the Nasdaq and SMH remains positive",
-            "Volume remains above normal without a failed breakout below VWAP"
+            "INTC holds above 126.50 after the first 30-60 minutes.",
+            "Price remains above VWAP with rising relative volume.",
+            "SMH and QQQ remain green after the open."
           ],
           "invalidation_signals": [
-            "Breaks below 220.50 on expanding volume",
-            "Semiconductor leadership fades while indexes remain flat or lower",
-            "Deal speculation is denied or reframed negatively"
+            "INTC loses 122.50 on volume.",
+            "The Apple headline is denied, diluted, or treated as non-material.",
+            "Nasdaq reverses lower while VIX rises above 18.5."
           ],
           "crowding_risk": "medium",
           "entry_quality": "fair"
         },
-        "execution_condition": "Buy only if QCOM is trading between 224.00 and 229.50, holding above VWAP, and semiconductor ETFs are not rolling over.",
-        "reasoning": "QCOM has a fresh catalyst tied to AI infrastructure expansion and was quote-checked today around 220.81-226.93, with premarket indications near 229.65; the 226.50 entry is in the current market neighborhood. The setup is not early after the gap, so the monitor should require intraday support and avoid paying up above the planned range.",
+        "execution_condition": "Buy only if INTC trades in the 126.00-129.50 area, holds above VWAP after the first 30-60 minutes, and SMH/QQQ are not reversing lower.",
+        "reasoning": "MarketWatch showed INTC near 128.89 premarket while Yahoo historical data showed the latest close near 121.10, so the 126.50 entry is anchored within today's realistic quote range and passed the live quote check. The catalyst is fresh and liquid, but the profile's lesson on crowded gaps requires VWAP confirmation before execution.",
         "catalysts": [
-          "Reports of Qualcomm acquisition talks with AI chip start-up Tenstorrent",
-          "Semiconductor momentum from the broader AI/storage bid",
-          "Lower yields supporting growth multiples"
+          "President Trump announced an Apple-Intel domestic chip design/manufacturing collaboration.",
+          "Semiconductor group rebound after the Fed-driven selloff.",
+          "U.S. manufacturing and supply-chain narrative attracting attention."
         ],
         "risks": [
-          "Headline-driven move fades if acquisition speculation cools",
-          "Fed decision risk raises yields and pressures growth stocks",
-          "Crowded chip momentum reverses after the relief rally"
+          "Premarket gap fades if traders sell the headline after the open.",
+          "Fed-rate worries push Nasdaq and SMH back below opening ranges.",
+          "Headline lacks concrete economics or is walked back."
         ],
         "trade_plan": {
-          "entry": 226.5,
-          "stop_loss": 220.5,
-          "target": 238.0
+          "entry": 126.5,
+          "stop_loss": 122.5,
+          "target": 135.0
         },
         "supporting_articles": [
           {
-            "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "source": "Barron's",
+            "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
+            "source": "Wall Street Journal",
             "kind": "news",
-            "reason": "Identifies QCOM as a notable mover on AI-chip acquisition speculation."
+            "reason": "Identifies the Apple-Intel headline driving INTC's premarket move."
           },
           {
-            "title": "Qualcomm: QCOM Stock Price Quote & News",
-            "url": "https://robinhood.com/us/en/stocks/QCOM/",
-            "source": "Robinhood",
-            "kind": "web",
-            "reason": "Used for live quote verification and intraday range anchoring."
+            "title": "Stock Market Today: Dow Brushes Off Fed, Rises Ahead Of Jobless Claims; Trump Spurs Intel Shares",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-jobless-claims-intel-stock-intc-trump/",
+            "source": "Investor's Business Daily",
+            "kind": "news",
+            "reason": "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context."
           },
           {
-            "title": "Qualcomm Inc. Stock Quote",
-            "url": "https://www.marketwatch.com/investing/stock/qcom",
+            "title": "Intel Corp. Stock Quote",
+            "url": "https://www.marketwatch.com/investing/stock/intc",
             "source": "MarketWatch",
             "kind": "web",
-            "reason": "Cross-check for current quote neighborhood."
-          }
-        ]
-      },
-      "GM": {
-        "sentiment": "bullish",
-        "confidence": 0.64,
-        "recommendation": "buy",
-        "swing_thesis": {
-          "theory": "GM can grind higher over the next 1-2 weeks if defense-production headlines add a new institutional narrative while lower oil supports autos and the stock holds near its current breakout range.",
-          "driver": "Reports that GM is in talks with Lockheed Martin to supply weapons components, combined with lower oil and a risk-on tape.",
-          "expected_timeframe": "swing_1_2_weeks",
-          "confirmation_signals": [
-            "Price holds above 84.00 after the open",
-            "Automaker and industrial peers are not broadly weak",
-            "Volume confirms interest without a failed move below VWAP"
-          ],
-          "invalidation_signals": [
-            "Breaks below 82.50 on heavy volume",
-            "Defense-supply headline is denied or lacks follow-through",
-            "Oil rebounds sharply and cyclicals sell off"
-          ],
-          "crowding_risk": "low",
-          "entry_quality": "fair"
-        },
-        "execution_condition": "Buy only if GM is trading between 84.00 and 86.00, holding above VWAP, and the broader market remains risk-on.",
-        "reasoning": "GM's defense-manufacturing discussion gives it a differentiated catalyst beyond ordinary auto beta, and today's live quote check showed the stock around 84-85.17, matching the 85.00 entry. The stop gives about 3% room and the target offers roughly 2:1 reward/risk if the catalyst earns follow-through.",
-        "catalysts": [
-          "Reported talks with Lockheed Martin to supply weapons components",
-          "Lower oil and supply-chain relief supporting auto sentiment",
-          "Risk-on tape after geopolitical de-escalation"
-        ],
-        "risks": [
-          "Auto cyclicals remain sensitive to rates and consumer demand",
-          "Defense headline may not translate into material near-term revenue",
-          "Stock is near its 52-week high and could reject breakout levels"
-        ],
-        "trade_plan": {
-          "entry": 85.0,
-          "stop_loss": 82.5,
-          "target": 90.0
-        },
-        "supporting_articles": [
-          {
-            "title": "5 Things to Know Before the Stock Market Opens",
-            "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
-            "source": "Investopedia",
-            "kind": "news",
-            "reason": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop."
-          },
-          {
-            "title": "GM Stock Price Quote & News",
-            "url": "https://robinhood.com/us/en/stocks/GM/",
-            "source": "Robinhood",
-            "kind": "web",
-            "reason": "Used for live quote verification and today's intraday range."
-          },
-          {
-            "title": "General Motors Company Common Stock",
-            "url": "https://www.nasdaq.com/market-activity/stocks/gm",
-            "source": "Nasdaq",
-            "kind": "web",
-            "reason": "Secondary quote and market-data reference."
-          }
-        ]
-      },
-      "WDC": {
-        "sentiment": "bullish",
-        "confidence": 0.58,
-        "recommendation": "watch",
-        "swing_thesis": {
-          "theory": "WDC can remain a leadership watch over the next 2-5 days if storage momentum persists, but the current gap is too extended for a disciplined new long without a pullback or base.",
-          "driver": "AI/data-storage demand and strong premarket momentum in memory/storage stocks.",
-          "expected_timeframe": "swing_2_5_days",
-          "confirmation_signals": [
-            "Pulls back toward 600-620 and then reclaims VWAP",
-            "MU and STX remain bid",
-            "Volume dries up on pullbacks instead of accelerating lower"
-          ],
-          "invalidation_signals": [
-            "Failed gap with close below 590",
-            "Storage peers reverse sharply",
-            "Market breadth weakens despite low VIX"
-          ],
-          "crowding_risk": "high",
-          "entry_quality": "chasing"
-        },
-        "execution_condition": "Watch only unless WDC digests the gap and stabilizes near 600-620 with relative strength returning.",
-        "reasoning": "WDC is a clear momentum leader, but the move followed a large prior-day surge and today's premarket strength, making the entry crowded. It belongs on watch for continuation after consolidation rather than a new buy at stretched levels.",
-        "catalysts": [
-          "Strong storage-sector momentum",
-          "AI/data-center demand narrative",
-          "Premarket leadership"
-        ],
-        "risks": [
-          "Gap-and-fade after a very extended move",
-          "Crowded AI/storage trade unwinds",
-          "Fed or options-expiration volatility hits high-beta leaders"
-        ],
-        "trade_plan": {
-          "entry": 610.0,
-          "stop_loss": 592.0,
-          "target": 660.0
-        },
-        "supporting_articles": [
-          {
-            "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "source": "Barron's",
-            "kind": "news",
-            "reason": "Identifies WDC as a major premarket gainer."
-          },
-          {
-            "title": "Top Stock Gainers Today",
-            "url": "https://finance.yahoo.com/markets/stocks/gainers/",
-            "source": "Yahoo Finance",
-            "kind": "web",
-            "reason": "Shows WDC among top gainers and helps frame crowding risk."
+            "reason": "Used for the live quote check before marking INTC as a buy."
           }
         ]
       },
       "MU": {
         "sentiment": "bullish",
-        "confidence": 0.57,
-        "recommendation": "watch",
+        "confidence": 0.66,
+        "action_confidence": {
+          "long_thesis": 0.73,
+          "entry": 0.58,
+          "avoid": 0.3,
+          "data_quality": 0.72
+        },
+        "recommendation": "buy",
+        "setup_state": "eligible",
+        "watchlist_bucket": "buy_today_if_confirmed",
+        "top_blocker": "Parabolic memory-stock run makes entry quality only fair unless MU holds VWAP and avoids chasing above the first-hour range.",
         "swing_thesis": {
-          "theory": "MU remains a viable continuation watch if memory stocks consolidate constructively, but the immediate setup is late after a sharp prior-session gain and another premarket bid.",
-          "driver": "Memory and AI infrastructure momentum.",
+          "theory": "MU can continue leading for 2-5 trading days if Apple's memory-cost commentary and UBS's large price-target raise keep buyers focused on AI memory pricing while the Nasdaq rebound holds.",
+          "driver": "Memory supercycle demand, Apple price-increase commentary tied to memory/storage costs, and fresh analyst target support.",
           "expected_timeframe": "swing_2_5_days",
           "confirmation_signals": [
-            "Holds above the prior breakout area after the first hour",
-            "WDC and STX stay firm",
-            "Semiconductor breadth remains positive"
+            "MU holds 1085-1100 without losing VWAP.",
+            "Volume stays above normal while WDC/STX remain firm.",
+            "QQQ stays green and VIX remains below 18.5."
           ],
           "invalidation_signals": [
-            "Breaks below VWAP and fails to reclaim it",
-            "AI/storage leaders reverse together",
-            "Nasdaq loses the relief-rally range"
+            "MU falls below 1050 after entry.",
+            "Semiconductor/storage peers reverse despite positive news.",
+            "The market treats the UBS target as exhaustion rather than new sponsorship."
+          ],
+          "crowding_risk": "high",
+          "entry_quality": "fair"
+        },
+        "execution_condition": "Buy only if MU trades near 1085.00-1105.00, holds VWAP after the first hour, and WDC/STX/SMH remain constructive rather than fading the premarket gap.",
+        "reasoning": "MarketWatch showed MU around 1088.17, Kraken showed roughly 1088.50-1090.00 premarket, and Robinhood showed 1095.38, so the 1090.00 entry is anchored to current quote evidence and passed the quote check. The long thesis is strong, but the profile's anti-chase rule keeps confidence below high conviction because MU has already run sharply.",
+        "catalysts": [
+          "UBS reportedly more than tripled its MU price target to 1625.",
+          "Apple price-increase commentary highlights memory and storage cost inflation.",
+          "Premarket semiconductor rebound after Wednesday's Fed selloff."
+        ],
+        "risks": [
+          "High crowding after a large multi-day move can trigger a sharp reversal.",
+          "Memory names are cyclical and sensitive to any sign of demand peaking.",
+          "A Nasdaq reversal or higher yields can overpower the stock-specific catalyst."
+        ],
+        "trade_plan": {
+          "entry": 1090.0,
+          "stop_loss": 1050.0,
+          "target": 1150.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Semiconductor stocks rise premarket as investor sentiment boosted",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+            "source": "Yahoo Finance",
+            "kind": "analyst",
+            "reason": "Reports the UBS target increase and MU's premarket leadership."
+          },
+          {
+            "title": "Premarket movers: Intel jumps, Micron and Marvell gain",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-nasdaq-s-p-500-fed-interest-rate-hike-suggestion-oil-us-iran-deal/card/premarket-movers-intel-jumps-micron-and-marvell-gain-MARFdysQC5bbgRzoYfMs",
+            "source": "MarketWatch",
+            "kind": "news",
+            "reason": "Confirms MU/semiconductor premarket strength."
+          },
+          {
+            "title": "Micron Technology Inc. Stock Quote",
+            "url": "https://www.marketwatch.com/investing/stock/mu?eafs_enabled=false",
+            "source": "MarketWatch",
+            "kind": "web",
+            "reason": "Used for the live quote check before marking MU as a buy."
+          }
+        ]
+      },
+      "WDC": {
+        "sentiment": "bullish",
+        "confidence": 0.6,
+        "action_confidence": {
+          "long_thesis": 0.69,
+          "entry": 0.38,
+          "avoid": 0.55,
+          "data_quality": 0.68
+        },
+        "recommendation": "watch",
+        "setup_state": "planned",
+        "watchlist_bucket": "do_not_chase",
+        "top_blocker": "High crowding and a large premarket move make the entry late unless WDC digests or forms a tight base.",
+        "swing_thesis": {
+          "theory": "WDC can remain a 1-2 week AI-storage leader if Apple's memory/storage-cost comments and the storage group bid persist, but new longs should wait for a pullback or base rather than chase a premarket gap.",
+          "driver": "AI data-center storage demand and Apple memory/storage cost pressure.",
+          "expected_timeframe": "swing_1_2_weeks",
+          "confirmation_signals": [
+            "WDC holds above its prior breakout area after the first hour.",
+            "Pullbacks are lower volume and stay above VWAP.",
+            "STX and MU remain firm."
+          ],
+          "invalidation_signals": [
+            "WDC loses the premarket gap range.",
+            "MU strength reverses and spreads to storage leaders.",
+            "Nasdaq breadth deteriorates."
           ],
           "crowding_risk": "high",
           "entry_quality": "late"
         },
-        "execution_condition": "Watch only unless MU pulls back without distribution and then reclaims intraday VWAP with sector confirmation.",
-        "reasoning": "MU has the right sector tailwind, but the cleanest trade was before the latest acceleration. A disciplined entry needs a reset or a tight consolidation, not a chase after storage/memory headlines.",
+        "execution_condition": "Watch only unless WDC pulls back into a controlled 720.00-735.00 support test and then reclaims VWAP with MU/STX still green.",
+        "reasoning": "Investing.com listed WDC among the strongest premarket gainers near the mid-700s, confirming leadership but also highlighting crowding. The profile's storage-leadership lesson says WDC/STX can work only after digestion, so this remains watch-only despite a bullish thesis.",
         "catalysts": [
-          "Memory-sector momentum",
-          "AI infrastructure demand",
-          "Lower yields supporting chip multiples"
+          "Apple memory/storage cost commentary.",
+          "AI data-center storage demand narrative.",
+          "Storage peers STX and MU showing premarket strength."
         ],
         "risks": [
-          "High-beta chip reversal",
-          "Crowded momentum after large gains",
-          "Fed communication pressures growth stocks"
+          "High crowding after repeated AI/storage moves.",
+          "A failed MU or Nasdaq reversal can drag WDC lower.",
+          "Chasing above the premarket range creates poor risk/reward."
         ],
         "trade_plan": {
-          "entry": 164.0,
-          "stop_loss": 159.0,
-          "target": 174.0
+          "entry": 725.0,
+          "stop_loss": 700.0,
+          "target": 780.0
         },
         "supporting_articles": [
           {
-            "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "source": "Barron's",
-            "kind": "news",
-            "reason": "Describes memory and data-storage leadership including MU."
+            "title": "Pre-market Movers",
+            "url": "https://www.investing.com/equities/pre-market",
+            "source": "Investing.com",
+            "kind": "web",
+            "reason": "Shows WDC as a premarket storage leader."
           },
           {
-            "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-            "source": "MarketWatch",
+            "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
+            "source": "Wall Street Journal",
             "kind": "news",
-            "reason": "Confirms chip-sector premarket strength."
+            "reason": "Links memory/storage cost pressure to the day's semiconductor/storage move."
+          }
+        ]
+      },
+      "QURE": {
+        "sentiment": "bullish",
+        "confidence": 0.57,
+        "action_confidence": {
+          "long_thesis": 0.67,
+          "entry": 0.22,
+          "avoid": 0.72,
+          "data_quality": 0.69
+        },
+        "recommendation": "watch",
+        "setup_state": "planned",
+        "watchlist_bucket": "do_not_chase",
+        "top_blocker": "The FDA/regulatory catalyst is powerful but the stock already jumped about 78%, making the opening entry quality chasing.",
+        "swing_thesis": {
+          "theory": "QURE can remain a biotech event leader for 1-2 weeks if investors keep repricing FDA leniency toward Huntington's disease data resubmission, but the first disciplined long entry requires digestion rather than a chase of the initial gap.",
+          "driver": "FDA allowing UniQure to resubmit based on three-year Huntington's disease gene-therapy data.",
+          "expected_timeframe": "swing_1_2_weeks",
+          "confirmation_signals": [
+            "QURE holds at least half of the news gap for a full session.",
+            "Biotech ETF and peer event names stay firm.",
+            "Volume remains constructive on pullbacks rather than panic-selling."
+          ],
+          "invalidation_signals": [
+            "QURE gives back most of the FDA-leniency gap.",
+            "FDA commentary is clarified as less supportive than initially reported.",
+            "Biotech risk appetite fades while small-cap breadth weakens."
+          ],
+          "crowding_risk": "high",
+          "entry_quality": "chasing"
+        },
+        "execution_condition": "Watch only unless QURE forms a multi-hour base after the gap and then reclaims VWAP from a controlled pullback rather than extending vertically.",
+        "reasoning": "Investors.com reported QURE up about 78.4% on the FDA resubmission shift, which is too extended for a new long under the profile's no-chase lesson. The catalyst belongs on the event watchlist, but the correct action is to wait for digestion.",
+        "catalysts": [
+          "FDA allowing resubmission based on three-year Huntington's disease data.",
+          "Broader biotech optimism after multiple companies received more supportive FDA signals.",
+          "Potential follow-through from regulatory-leniency narrative."
+        ],
+        "risks": [
+          "Gap exhaustion after a massive one-day repricing.",
+          "Regulatory interpretation changes or disappointment in resubmission timeline.",
+          "Small-cap/biotech liquidity can vanish quickly if risk appetite fades."
+        ],
+        "trade_plan": {
+          "entry": 44.0,
+          "stop_loss": 40.5,
+          "target": 53.0
+        },
+        "supporting_articles": [
+          {
+            "title": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+            "url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
+            "source": "Investor's Business Daily",
+            "kind": "news",
+            "reason": "Primary source for the QURE FDA catalyst and magnitude of the move."
+          },
+          {
+            "title": "Today's FDA Approvals & Drug Decisions",
+            "url": "https://www.stocktitan.net/news/fda-approvals.html",
+            "source": "StockTitan",
+            "kind": "web",
+            "reason": "General FDA catalyst feed used to verify the biotech catalyst category."
           }
         ]
       },
       "HOOD": {
-        "sentiment": "bullish",
-        "confidence": 0.55,
-        "recommendation": "watch",
-        "swing_thesis": {
-          "theory": "HOOD can benefit over the next 2-5 days if risk appetite and trading activity remain strong, but a workforce-reduction pop is not enough alone for a high-conviction buy.",
-          "driver": "Retail trading activity, crypto/risk appetite, and cost-efficiency headlines.",
-          "expected_timeframe": "swing_2_5_days",
-          "confirmation_signals": [
-            "Risk assets and crypto remain stable",
-            "HOOD holds above the prior day's close after the first hour",
-            "Volume confirms accumulation rather than a one-bar news pop"
-          ],
-          "invalidation_signals": [
-            "Falls below VWAP and underperforms fintech peers",
-            "Crypto weakens materially",
-            "Cost-cut headline is viewed as demand weakness rather than efficiency"
-          ],
-          "crowding_risk": "medium",
-          "entry_quality": "fair"
-        },
-        "execution_condition": "Watch only unless HOOD holds the opening range and fintech/crypto risk appetite remains constructive.",
-        "reasoning": "HOOD has momentum leverage to a risk-on tape, but the catalyst is more ambiguous than QCOM or GM. It is worth monitoring for continuation but does not justify using one of the limited buy slots today.",
-        "catalysts": [
-          "Workforce reduction aimed at efficiency",
-          "Risk-on market tone",
-          "Options and trading activity into a busy expiration week"
-        ],
-        "risks": [
-          "Cost cuts interpreted as slowing growth",
-          "Crypto weakness hits sentiment",
-          "High-beta fintech reverses if volatility picks up"
-        ],
-        "trade_plan": {
-          "entry": 124.0,
-          "stop_loss": 120.0,
-          "target": 132.0
-        },
-        "supporting_articles": [
-          {
-            "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "source": "Barron's",
-            "kind": "news",
-            "reason": "Notes HOOD's premarket move after workforce-reduction news."
-          },
-          {
-            "title": "Options traders are bracing for a very busy week",
-            "url": "https://www.marketwatch.com/story/options-traders-are-bracing-for-a-very-busy-week-with-june-triple-witching-and-launch-of-spacex-contracts-on-deck-b38fbf62",
-            "source": "MarketWatch",
-            "kind": "news",
-            "reason": "Supports the trading-activity backdrop but also highlights volatility risk."
-          }
-        ]
-      },
-      "A": {
-        "sentiment": "bullish",
-        "confidence": 0.54,
-        "recommendation": "watch",
-        "swing_thesis": {
-          "theory": "Agilent can continue if its premarket strength is backed by institutional buying, but without a clearer catalyst from today's research it should be watched rather than bought.",
-          "driver": "Large premarket move and broad risk-on tape.",
-          "expected_timeframe": "swing_2_5_days",
-          "confirmation_signals": [
-            "Holds above the premarket breakout level after the open",
-            "Volume remains meaningfully above average",
-            "Healthcare/tools peers confirm strength"
-          ],
-          "invalidation_signals": [
-            "Gives back most of the premarket gain",
-            "No follow-through volume",
-            "Defensive sectors lag badly in a narrow tech-led tape"
-          ],
-          "crowding_risk": "medium",
-          "entry_quality": "late"
-        },
-        "execution_condition": "Watch only unless A holds its opening range with above-average volume and no broad sector fade.",
-        "reasoning": "A appeared among the premarket leaders, but the catalyst clarity is weaker than the best opportunities. The plan keeps it available for follow-through while avoiding a forced entry.",
-        "catalysts": [
-          "Premarket leadership",
-          "Potential sector rotation into quality healthcare tools",
-          "Lower-yield backdrop"
-        ],
-        "risks": [
-          "Unclear catalyst reduces follow-through quality",
-          "Premarket gap fades",
-          "Capital rotates back into higher-beta tech instead"
-        ],
-        "trade_plan": {
-          "entry": 153.0,
-          "stop_loss": 148.5,
-          "target": 162.0
-        },
-        "supporting_articles": [
-          {
-            "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "source": "Barron's",
-            "kind": "news",
-            "reason": "Identifies Agilent as a major premarket gainer."
-          }
-        ]
-      },
-      "CYTK": {
-        "sentiment": "bullish",
-        "confidence": 0.53,
-        "recommendation": "watch",
-        "swing_thesis": {
-          "theory": "CYTK can follow through if biotech risk appetite improves, but the catalyst from today's screen is mostly momentum and therefore needs a cleaner intraday base.",
-          "driver": "Premarket strength in a risk-on tape.",
-          "expected_timeframe": "swing_2_5_days",
-          "confirmation_signals": [
-            "Biotech ETF strength confirms the move",
-            "CYTK holds above VWAP for the first two hours",
-            "Volume expands on upside attempts"
-          ],
-          "invalidation_signals": [
-            "Biotech breadth is weak",
-            "CYTK loses VWAP and fails to reclaim it",
-            "Market shifts from risk-on to defensive"
-          ],
-          "crowding_risk": "medium",
-          "entry_quality": "late"
-        },
-        "execution_condition": "Watch only unless CYTK holds above VWAP and biotech breadth is positive.",
-        "reasoning": "CYTK showed meaningful premarket strength, but without a specific confirmed catalyst in the research set, conviction is lower. It stays on the watchlist for intraday confirmation rather than a morning buy.",
-        "catalysts": [
-          "Premarket gain",
-          "Risk-on appetite for biotech",
-          "Potential follow-through from momentum screens"
-        ],
-        "risks": [
-          "Biotech reversals can be abrupt without fresh news",
-          "Momentum fades after the open",
-          "Broad market risk-off shift hits speculative growth"
-        ],
-        "trade_plan": {
-          "entry": 58.0,
-          "stop_loss": 56.2,
-          "target": 62.0
-        },
-        "supporting_articles": [
-          {
-            "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "source": "Barron's",
-            "kind": "news",
-            "reason": "Identifies Cytokinetics as a notable premarket gainer."
-          }
-        ]
-      },
-      "TSLA": {
         "sentiment": "neutral",
-        "confidence": 0.5,
+        "confidence": 0.55,
+        "action_confidence": {
+          "long_thesis": 0.52,
+          "entry": 0.34,
+          "avoid": 0.58,
+          "data_quality": 0.62
+        },
         "recommendation": "watch",
+        "setup_state": "repair_watch",
+        "watchlist_bucket": "repair_watch",
+        "top_blocker": "The restructuring/200-day reclaim narrative needs proof of fintech and crypto risk appetite before it is buyable.",
         "swing_thesis": {
-          "theory": "TSLA should be watched for relative-strength repair, but today's premarket weakness versus SpaceX and chip leaders argues against a fresh long until it reclaims momentum.",
-          "driver": "Elon-linked sentiment divergence, risk-on tape, and high-beta EV positioning.",
+          "theory": "HOOD can repair over 2-5 days if the 200-day moving average reclaim holds and risk appetite broadens into fintech/crypto beta, but prior profile lessons require an opening-range hold before any long.",
+          "driver": "Robinhood strength after crossing its 200-day line and job-cut efficiency headline.",
           "expected_timeframe": "swing_2_5_days",
           "confirmation_signals": [
-            "Reclaims VWAP after the first hour",
-            "Outperforms the Nasdaq intraday",
-            "EV/mega-cap growth breadth improves"
+            "HOOD holds above the 200-day reclaim level after the first hour.",
+            "Bitcoin and fintech peers are stable or higher.",
+            "Price holds VWAP with expanding volume."
           ],
           "invalidation_signals": [
-            "Continues to lag while risk assets rally",
-            "Breaks below prior-day support",
-            "High-beta momentum reverses broadly"
+            "HOOD loses VWAP and falls back below the 200-day line.",
+            "Bitcoin weakens materially while high-beta fintech fades.",
+            "The market treats job cuts as growth stress rather than efficiency."
           ],
           "crowding_risk": "medium",
           "entry_quality": "fair"
         },
-        "execution_condition": "Watch only unless TSLA stops lagging the Nasdaq and reclaims VWAP with improving relative strength.",
-        "reasoning": "The risk-on backdrop would normally help TSLA, but today's research showed it slipping while other Elon-linked and chip names rallied. That relative weakness makes it a watch, not a buy.",
+        "execution_condition": "Watch only unless HOOD holds its 200-day reclaim and VWAP after the first hour while crypto/fintech peers confirm risk appetite.",
+        "reasoning": "IBD reported HOOD surged after crossing its 200-day line, but the profile already learned that layoffs/restructuring headlines are not enough without market-confirmed accumulation. Long-only rules also prevent bearish new action, so this is a repair watch rather than a sell.",
         "catalysts": [
-          "Risk-on growth appetite",
-          "SpaceX-related sentiment spillover",
-          "Potential rebound from premarket weakness"
+          "200-day moving average reclaim.",
+          "Job-cut/efficiency headline.",
+          "Potential fintech/crypto beta rebound if broader risk appetite improves."
         ],
         "risks": [
-          "Relative weakness persists",
-          "Rotation favors chips/storage over EVs",
-          "High-beta selling resumes around Fed risk"
+          "Efficiency headlines can signal growth pressure.",
+          "Bitcoin near 64000 in IBD's report is soft, which can weigh on HOOD sentiment.",
+          "A failed 200-day reclaim can create trapped buyers."
         ],
         "trade_plan": {
-          "entry": 300.0,
-          "stop_loss": 291.0,
-          "target": 318.0
+          "entry": 107.0,
+          "stop_loss": 103.0,
+          "target": 116.0
         },
         "supporting_articles": [
           {
-            "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-            "source": "MarketWatch",
+            "title": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
+            "source": "Investor's Business Daily",
             "kind": "news",
-            "reason": "Highlights Tesla's relative weakness against other risk-on movers."
+            "reason": "Confirms HOOD's jump and 200-day-line context."
+          }
+        ]
+      },
+      "QCOM": {
+        "sentiment": "neutral",
+        "confidence": 0.54,
+        "action_confidence": {
+          "long_thesis": 0.49,
+          "entry": 0.28,
+          "avoid": 0.62,
+          "data_quality": 0.64
+        },
+        "recommendation": "watch",
+        "setup_state": "repair_watch",
+        "watchlist_bucket": "repair_watch",
+        "top_blocker": "Prior AI/Tenstorrent gap failed; QCOM must reclaim the old failed zone before any new long thesis is actionable.",
+        "swing_thesis": {
+          "theory": "QCOM can become a repair long only if Tenstorrent AI-expansion speculation gets fresh follow-through and price reclaims the failed 220.50-224.00 support area with semiconductor breadth behind it.",
+          "driver": "Potential AI acquisition/partnership speculation tied to Tenstorrent, plus semiconductor group tone.",
+          "expected_timeframe": "swing_2_5_days",
+          "confirmation_signals": [
+            "QCOM reclaims 220.50-224.00 and holds VWAP.",
+            "SMH outperforms QQQ.",
+            "Volume expands on upside attempts rather than only on fades."
+          ],
+          "invalidation_signals": [
+            "QCOM remains below 220.50.",
+            "Tenstorrent speculation is denied or repriced as too expensive.",
+            "Semiconductor breadth narrows to only INTC/MU while QCOM lags."
+          ],
+          "crowding_risk": "high",
+          "entry_quality": "late"
+        },
+        "execution_condition": "Watch only unless QCOM reclaims 220.50-224.00, holds VWAP, and outperforms SMH after the first hour.",
+        "reasoning": "Yahoo Finance linked QCOM to AI expansion through possible Tenstorrent activity, but the profile's last observation says QCOM's prior gap failed and must repair above 220.50-224.00 before it is eligible. This is explicitly not a buy today unless the old failed zone is reclaimed.",
+        "catalysts": [
+          "Potential Tenstorrent AI-chip acquisition speculation.",
+          "Semiconductor relief bounce.",
+          "AI data-center narrative if buyers broaden beyond memory."
+        ],
+        "risks": [
+          "Prior failed gap left trapped buyers.",
+          "Deal speculation can fade quickly without confirmed terms.",
+          "QCOM may lag if today's semiconductor bid concentrates in INTC/MU/WDC."
+        ],
+        "trade_plan": {
+          "entry": 224.0,
+          "stop_loss": 217.5,
+          "target": 238.0
+        },
+        "supporting_articles": [
+          {
+            "title": "QUALCOMM Incorporated Stock Price, News, Quote & History",
+            "url": "https://finance.yahoo.com/quote/QCOM/",
+            "source": "Yahoo Finance",
+            "kind": "web",
+            "reason": "Shows current QCOM news context around AI expansion and Tenstorrent speculation."
           }
         ]
       }
@@ -841,33 +859,33 @@
     "prompt_sections": {
       "news_inputs": {
         "per_symbol": {
-          "QCOM": {
-            "symbol": "QCOM",
+          "INTC": {
+            "symbol": "INTC",
             "news_headlines": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies QCOM as a notable mover on AI-chip acquisition speculation.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Identifies the Apple-Intel headline driving INTC's premarket move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Qualcomm: QCOM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and intraday range anchoring.",
-                "url": "https://robinhood.com/us/en/stocks/QCOM/",
-                "category": "web",
-                "kind": "web"
+                "title": "Stock Market Today: Dow Brushes Off Fed, Rises Ahead Of Jobless Claims; Trump Spurs Intel Shares",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-jobless-claims-intel-stock-intc-trump/",
+                "category": "news",
+                "kind": "news"
               },
               {
-                "title": "Qualcomm Inc. Stock Quote",
+                "title": "Intel Corp. Stock Quote",
                 "publisher": "MarketWatch",
                 "source": "MarketWatch",
-                "summary": "Cross-check for current quote neighborhood.",
-                "url": "https://www.marketwatch.com/investing/stock/qcom",
+                "summary": "Used for the live quote check before marking INTC as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/intc",
                 "category": "web",
                 "kind": "web"
               }
@@ -875,58 +893,33 @@
             "sentiment": "bullish",
             "source_count": 3
           },
-          "GM": {
-            "symbol": "GM",
+          "MU": {
+            "symbol": "MU",
             "news_headlines": [
               {
-                "title": "5 Things to Know Before the Stock Market Opens",
-                "publisher": "Investopedia",
-                "source": "Investopedia",
-                "summary": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop.",
-                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "GM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and today's intraday range.",
-                "url": "https://robinhood.com/us/en/stocks/GM/",
-                "category": "web",
-                "kind": "web"
-              },
-              {
-                "title": "General Motors Company Common Stock",
-                "publisher": "Nasdaq",
-                "source": "Nasdaq",
-                "summary": "Secondary quote and market-data reference.",
-                "url": "https://www.nasdaq.com/market-activity/stocks/gm",
-                "category": "web",
-                "kind": "web"
-              }
-            ],
-            "sentiment": "bullish",
-            "source_count": 3
-          },
-          "WDC": {
-            "symbol": "WDC",
-            "news_headlines": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies WDC as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Top Stock Gainers Today",
+                "title": "Semiconductor stocks rise premarket as investor sentiment boosted",
                 "publisher": "Yahoo Finance",
                 "source": "Yahoo Finance",
-                "summary": "Shows WDC among top gainers and helps frame crowding risk.",
-                "url": "https://finance.yahoo.com/markets/stocks/gainers/",
+                "summary": "Reports the UBS target increase and MU's premarket leadership.",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+                "category": "analyst",
+                "kind": "analyst"
+              },
+              {
+                "title": "Premarket movers: Intel jumps, Micron and Marvell gain",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Confirms MU/semiconductor premarket strength.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-nasdaq-s-p-500-fed-interest-rate-hike-suggestion-oil-us-iran-deal/card/premarket-movers-intel-jumps-micron-and-marvell-gain-MARFdysQC5bbgRzoYfMs",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Micron Technology Inc. Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Used for the live quote check before marking MU as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/mu?eafs_enabled=false",
                 "category": "web",
                 "kind": "web"
               }
@@ -934,26 +927,51 @@
             "sentiment": "bullish",
             "source_count": 2
           },
-          "MU": {
-            "symbol": "MU",
+          "WDC": {
+            "symbol": "WDC",
             "news_headlines": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Describes memory and data-storage leadership including MU.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+                "title": "Pre-market Movers",
+                "publisher": "Investing.com",
+                "source": "Investing.com",
+                "summary": "Shows WDC as a premarket storage leader.",
+                "url": "https://www.investing.com/equities/pre-market",
+                "category": "web",
+                "kind": "web"
+              },
+              {
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Links memory/storage cost pressure to the day's semiconductor/storage move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
+                "category": "news",
+                "kind": "news"
+              }
+            ],
+            "sentiment": "bullish",
+            "source_count": 2
+          },
+          "QURE": {
+            "symbol": "QURE",
+            "news_headlines": [
+              {
+                "title": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Primary source for the QURE FDA catalyst and magnitude of the move.",
+                "url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Confirms chip-sector premarket strength.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-                "category": "news",
-                "kind": "news"
+                "title": "Today's FDA Approvals & Drug Decisions",
+                "publisher": "StockTitan",
+                "source": "StockTitan",
+                "summary": "General FDA catalyst feed used to verify the biotech catalyst category.",
+                "url": "https://www.stocktitan.net/news/fda-approvals.html",
+                "category": "web",
+                "kind": "web"
               }
             ],
             "sentiment": "bullish",
@@ -963,70 +981,29 @@
             "symbol": "HOOD",
             "news_headlines": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Notes HOOD's premarket move after workforce-reduction news.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Options traders are bracing for a very busy week",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Supports the trading-activity backdrop but also highlights volatility risk.",
-                "url": "https://www.marketwatch.com/story/options-traders-are-bracing-for-a-very-busy-week-with-june-triple-witching-and-launch-of-spacex-contracts-on-deck-b38fbf62",
+                "title": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms HOOD's jump and 200-day-line context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
                 "category": "news",
                 "kind": "news"
               }
             ],
-            "sentiment": "bullish",
-            "source_count": 2
-          },
-          "A": {
-            "symbol": "A",
-            "news_headlines": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Agilent as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ],
-            "sentiment": "bullish",
+            "sentiment": "neutral",
             "source_count": 1
           },
-          "CYTK": {
-            "symbol": "CYTK",
+          "QCOM": {
+            "symbol": "QCOM",
             "news_headlines": [
               {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Cytokinetics as a notable premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ],
-            "sentiment": "bullish",
-            "source_count": 1
-          },
-          "TSLA": {
-            "symbol": "TSLA",
-            "news_headlines": [
-              {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Highlights Tesla's relative weakness against other risk-on movers.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-                "category": "news",
-                "kind": "news"
+                "title": "QUALCOMM Incorporated Stock Price, News, Quote & History",
+                "publisher": "Yahoo Finance",
+                "source": "Yahoo Finance",
+                "summary": "Shows current QCOM news context around AI expansion and Tenstorrent speculation.",
+                "url": "https://finance.yahoo.com/quote/QCOM/",
+                "category": "web",
+                "kind": "web"
               }
             ],
             "sentiment": "neutral",
@@ -1035,222 +1012,210 @@
         },
         "market_headlines": [
           {
-            "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "publisher": "Barron's",
-            "source": "Barron's",
-            "summary": "Identifies QCOM as a notable mover on AI-chip acquisition speculation.",
-            "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+            "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+            "publisher": "Wall Street Journal",
+            "source": "Wall Street Journal",
+            "summary": "Identifies the Apple-Intel headline driving INTC's premarket move.",
+            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
             "category": "news",
             "kind": "news"
           },
           {
-            "title": "Qualcomm: QCOM Stock Price Quote & News",
-            "publisher": "Robinhood",
-            "source": "Robinhood",
-            "summary": "Used for live quote verification and intraday range anchoring.",
-            "url": "https://robinhood.com/us/en/stocks/QCOM/",
-            "category": "web",
-            "kind": "web"
+            "title": "Stock Market Today: Dow Brushes Off Fed, Rises Ahead Of Jobless Claims; Trump Spurs Intel Shares",
+            "publisher": "Investor's Business Daily",
+            "source": "Investor's Business Daily",
+            "summary": "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context.",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-jobless-claims-intel-stock-intc-trump/",
+            "category": "news",
+            "kind": "news"
           },
           {
-            "title": "Qualcomm Inc. Stock Quote",
+            "title": "Intel Corp. Stock Quote",
             "publisher": "MarketWatch",
             "source": "MarketWatch",
-            "summary": "Cross-check for current quote neighborhood.",
-            "url": "https://www.marketwatch.com/investing/stock/qcom",
+            "summary": "Used for the live quote check before marking INTC as a buy.",
+            "url": "https://www.marketwatch.com/investing/stock/intc",
             "category": "web",
             "kind": "web"
           },
           {
-            "title": "5 Things to Know Before the Stock Market Opens",
-            "publisher": "Investopedia",
-            "source": "Investopedia",
-            "summary": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop.",
-            "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
-            "category": "news",
-            "kind": "news"
-          },
-          {
-            "title": "GM Stock Price Quote & News",
-            "publisher": "Robinhood",
-            "source": "Robinhood",
-            "summary": "Used for live quote verification and today's intraday range.",
-            "url": "https://robinhood.com/us/en/stocks/GM/",
-            "category": "web",
-            "kind": "web"
-          },
-          {
-            "title": "General Motors Company Common Stock",
-            "publisher": "Nasdaq",
-            "source": "Nasdaq",
-            "summary": "Secondary quote and market-data reference.",
-            "url": "https://www.nasdaq.com/market-activity/stocks/gm",
-            "category": "web",
-            "kind": "web"
-          },
-          {
-            "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "publisher": "Barron's",
-            "source": "Barron's",
-            "summary": "Identifies WDC as a major premarket gainer.",
-            "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "category": "news",
-            "kind": "news"
-          },
-          {
-            "title": "Top Stock Gainers Today",
+            "title": "Semiconductor stocks rise premarket as investor sentiment boosted",
             "publisher": "Yahoo Finance",
             "source": "Yahoo Finance",
-            "summary": "Shows WDC among top gainers and helps frame crowding risk.",
-            "url": "https://finance.yahoo.com/markets/stocks/gainers/",
-            "category": "web",
-            "kind": "web"
+            "summary": "Reports the UBS target increase and MU's premarket leadership.",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+            "category": "analyst",
+            "kind": "analyst"
           },
           {
-            "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
+            "title": "Premarket movers: Intel jumps, Micron and Marvell gain",
             "publisher": "MarketWatch",
             "source": "MarketWatch",
-            "summary": "Confirms chip-sector premarket strength.",
-            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
+            "summary": "Confirms MU/semiconductor premarket strength.",
+            "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-nasdaq-s-p-500-fed-interest-rate-hike-suggestion-oil-us-iran-deal/card/premarket-movers-intel-jumps-micron-and-marvell-gain-MARFdysQC5bbgRzoYfMs",
             "category": "news",
             "kind": "news"
           },
           {
-            "title": "Options traders are bracing for a very busy week",
+            "title": "Micron Technology Inc. Stock Quote",
             "publisher": "MarketWatch",
             "source": "MarketWatch",
-            "summary": "Supports the trading-activity backdrop but also highlights volatility risk.",
-            "url": "https://www.marketwatch.com/story/options-traders-are-bracing-for-a-very-busy-week-with-june-triple-witching-and-launch-of-spacex-contracts-on-deck-b38fbf62",
+            "summary": "Used for the live quote check before marking MU as a buy.",
+            "url": "https://www.marketwatch.com/investing/stock/mu?eafs_enabled=false",
+            "category": "web",
+            "kind": "web"
+          },
+          {
+            "title": "Pre-market Movers",
+            "publisher": "Investing.com",
+            "source": "Investing.com",
+            "summary": "Shows WDC as a premarket storage leader.",
+            "url": "https://www.investing.com/equities/pre-market",
+            "category": "web",
+            "kind": "web"
+          },
+          {
+            "title": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+            "publisher": "Investor's Business Daily",
+            "source": "Investor's Business Daily",
+            "summary": "Primary source for the QURE FDA catalyst and magnitude of the move.",
+            "url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
+            "category": "news",
+            "kind": "news"
+          },
+          {
+            "title": "Today's FDA Approvals & Drug Decisions",
+            "publisher": "StockTitan",
+            "source": "StockTitan",
+            "summary": "General FDA catalyst feed used to verify the biotech catalyst category.",
+            "url": "https://www.stocktitan.net/news/fda-approvals.html",
+            "category": "web",
+            "kind": "web"
+          },
+          {
+            "title": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+            "publisher": "Investor's Business Daily",
+            "source": "Investor's Business Daily",
+            "summary": "Confirms HOOD's jump and 200-day-line context.",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
             "category": "news",
             "kind": "news"
           }
         ],
         "news_discoveries": [
           {
-            "symbol": "QCOM",
-            "top_headline": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "top_headline_url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "discovery_reason": "Identifies QCOM as a notable mover on AI-chip acquisition speculation."
-          },
-          {
-            "symbol": "GM",
-            "top_headline": "5 Things to Know Before the Stock Market Opens",
-            "top_headline_url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
-            "discovery_reason": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop."
-          },
-          {
-            "symbol": "WDC",
-            "top_headline": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "top_headline_url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "discovery_reason": "Identifies WDC as a major premarket gainer."
+            "symbol": "INTC",
+            "top_headline": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+            "top_headline_url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
+            "discovery_reason": "Identifies the Apple-Intel headline driving INTC's premarket move."
           },
           {
             "symbol": "MU",
-            "top_headline": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "top_headline_url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "discovery_reason": "Describes memory and data-storage leadership including MU."
+            "top_headline": "Semiconductor stocks rise premarket as investor sentiment boosted",
+            "top_headline_url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+            "discovery_reason": "Reports the UBS target increase and MU's premarket leadership."
+          },
+          {
+            "symbol": "WDC",
+            "top_headline": "Pre-market Movers",
+            "top_headline_url": "https://www.investing.com/equities/pre-market",
+            "discovery_reason": "Shows WDC as a premarket storage leader."
+          },
+          {
+            "symbol": "QURE",
+            "top_headline": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+            "top_headline_url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
+            "discovery_reason": "Primary source for the QURE FDA catalyst and magnitude of the move."
           },
           {
             "symbol": "HOOD",
-            "top_headline": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-            "top_headline_url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-            "discovery_reason": "Notes HOOD's premarket move after workforce-reduction news."
+            "top_headline": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+            "top_headline_url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
+            "discovery_reason": "Confirms HOOD's jump and 200-day-line context."
           },
           {
-            "symbol": "A",
-            "top_headline": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "top_headline_url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "discovery_reason": "Identifies Agilent as a major premarket gainer."
-          },
-          {
-            "symbol": "CYTK",
-            "top_headline": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-            "top_headline_url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-            "discovery_reason": "Identifies Cytokinetics as a notable premarket gainer."
-          },
-          {
-            "symbol": "TSLA",
-            "top_headline": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-            "top_headline_url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-            "discovery_reason": "Highlights Tesla's relative weakness against other risk-on movers."
+            "symbol": "QCOM",
+            "top_headline": "QUALCOMM Incorporated Stock Price, News, Quote & History",
+            "top_headline_url": "https://finance.yahoo.com/quote/QCOM/",
+            "discovery_reason": "Shows current QCOM news context around AI expansion and Tenstorrent speculation."
           }
         ],
         "hot_stocks": [
           {
-            "symbol": "QCOM",
+            "symbol": "INTC",
             "sentiment": "bullish",
             "source_count": 3,
             "mention_count": 3,
             "reasons": [
-              "Identifies QCOM as a notable mover on AI-chip acquisition speculation.",
-              "Used for live quote verification and intraday range anchoring.",
-              "Cross-check for current quote neighborhood."
+              "Identifies the Apple-Intel headline driving INTC's premarket move.",
+              "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context.",
+              "Used for the live quote check before marking INTC as a buy."
             ],
             "articles": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies QCOM as a notable mover on AI-chip acquisition speculation.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Identifies the Apple-Intel headline driving INTC's premarket move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Qualcomm: QCOM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and intraday range anchoring.",
-                "url": "https://robinhood.com/us/en/stocks/QCOM/",
-                "category": "web",
-                "kind": "web"
+                "title": "Stock Market Today: Dow Brushes Off Fed, Rises Ahead Of Jobless Claims; Trump Spurs Intel Shares",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-jobless-claims-intel-stock-intc-trump/",
+                "category": "news",
+                "kind": "news"
               },
               {
-                "title": "Qualcomm Inc. Stock Quote",
+                "title": "Intel Corp. Stock Quote",
                 "publisher": "MarketWatch",
                 "source": "MarketWatch",
-                "summary": "Cross-check for current quote neighborhood.",
-                "url": "https://www.marketwatch.com/investing/stock/qcom",
+                "summary": "Used for the live quote check before marking INTC as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/intc",
                 "category": "web",
                 "kind": "web"
               }
             ]
           },
           {
-            "symbol": "GM",
+            "symbol": "MU",
             "sentiment": "bullish",
-            "source_count": 3,
+            "source_count": 2,
             "mention_count": 3,
             "reasons": [
-              "Reports GM's talks with Lockheed Martin and frames the broader market backdrop.",
-              "Used for live quote verification and today's intraday range.",
-              "Secondary quote and market-data reference."
+              "Reports the UBS target increase and MU's premarket leadership.",
+              "Confirms MU/semiconductor premarket strength.",
+              "Used for the live quote check before marking MU as a buy."
             ],
             "articles": [
               {
-                "title": "5 Things to Know Before the Stock Market Opens",
-                "publisher": "Investopedia",
-                "source": "Investopedia",
-                "summary": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop.",
-                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
+                "title": "Semiconductor stocks rise premarket as investor sentiment boosted",
+                "publisher": "Yahoo Finance",
+                "source": "Yahoo Finance",
+                "summary": "Reports the UBS target increase and MU's premarket leadership.",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+                "category": "analyst",
+                "kind": "analyst"
+              },
+              {
+                "title": "Premarket movers: Intel jumps, Micron and Marvell gain",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Confirms MU/semiconductor premarket strength.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-nasdaq-s-p-500-fed-interest-rate-hike-suggestion-oil-us-iran-deal/card/premarket-movers-intel-jumps-micron-and-marvell-gain-MARFdysQC5bbgRzoYfMs",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "GM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and today's intraday range.",
-                "url": "https://robinhood.com/us/en/stocks/GM/",
-                "category": "web",
-                "kind": "web"
-              },
-              {
-                "title": "General Motors Company Common Stock",
-                "publisher": "Nasdaq",
-                "source": "Nasdaq",
-                "summary": "Secondary quote and market-data reference.",
-                "url": "https://www.nasdaq.com/market-activity/stocks/gm",
+                "title": "Micron Technology Inc. Stock Quote",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Used for the live quote check before marking MU as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/mu?eafs_enabled=false",
                 "category": "web",
                 "kind": "web"
               }
@@ -1262,147 +1227,97 @@
             "source_count": 2,
             "mention_count": 2,
             "reasons": [
-              "Identifies WDC as a major premarket gainer.",
-              "Shows WDC among top gainers and helps frame crowding risk."
+              "Shows WDC as a premarket storage leader.",
+              "Links memory/storage cost pressure to the day's semiconductor/storage move."
             ],
             "articles": [
               {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies WDC as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
+                "title": "Pre-market Movers",
+                "publisher": "Investing.com",
+                "source": "Investing.com",
+                "summary": "Shows WDC as a premarket storage leader.",
+                "url": "https://www.investing.com/equities/pre-market",
+                "category": "web",
+                "kind": "web"
+              },
+              {
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Links memory/storage cost pressure to the day's semiconductor/storage move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
+                "category": "news",
+                "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "QURE",
+            "sentiment": "bullish",
+            "source_count": 2,
+            "mention_count": 2,
+            "reasons": [
+              "Primary source for the QURE FDA catalyst and magnitude of the move.",
+              "General FDA catalyst feed used to verify the biotech catalyst category."
+            ],
+            "articles": [
+              {
+                "title": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Primary source for the QURE FDA catalyst and magnitude of the move.",
+                "url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Top Stock Gainers Today",
-                "publisher": "Yahoo Finance",
-                "source": "Yahoo Finance",
-                "summary": "Shows WDC among top gainers and helps frame crowding risk.",
-                "url": "https://finance.yahoo.com/markets/stocks/gainers/",
+                "title": "Today's FDA Approvals & Drug Decisions",
+                "publisher": "StockTitan",
+                "source": "StockTitan",
+                "summary": "General FDA catalyst feed used to verify the biotech catalyst category.",
+                "url": "https://www.stocktitan.net/news/fda-approvals.html",
                 "category": "web",
                 "kind": "web"
               }
             ]
           },
           {
-            "symbol": "MU",
-            "sentiment": "bullish",
-            "source_count": 2,
-            "mention_count": 2,
-            "reasons": [
-              "Describes memory and data-storage leadership including MU.",
-              "Confirms chip-sector premarket strength."
-            ],
-            "articles": [
-              {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Describes memory and data-storage leadership including MU.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Confirms chip-sector premarket strength.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-                "category": "news",
-                "kind": "news"
-              }
-            ]
-          },
-          {
             "symbol": "HOOD",
-            "sentiment": "bullish",
-            "source_count": 2,
-            "mention_count": 2,
-            "reasons": [
-              "Notes HOOD's premarket move after workforce-reduction news.",
-              "Supports the trading-activity backdrop but also highlights volatility risk."
-            ],
-            "articles": [
-              {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Notes HOOD's premarket move after workforce-reduction news.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Options traders are bracing for a very busy week",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Supports the trading-activity backdrop but also highlights volatility risk.",
-                "url": "https://www.marketwatch.com/story/options-traders-are-bracing-for-a-very-busy-week-with-june-triple-witching-and-launch-of-spacex-contracts-on-deck-b38fbf62",
-                "category": "news",
-                "kind": "news"
-              }
-            ]
-          },
-          {
-            "symbol": "A",
-            "sentiment": "bullish",
-            "source_count": 1,
-            "mention_count": 1,
-            "reasons": [
-              "Identifies Agilent as a major premarket gainer."
-            ],
-            "articles": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Agilent as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ]
-          },
-          {
-            "symbol": "CYTK",
-            "sentiment": "bullish",
-            "source_count": 1,
-            "mention_count": 1,
-            "reasons": [
-              "Identifies Cytokinetics as a notable premarket gainer."
-            ],
-            "articles": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Cytokinetics as a notable premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ]
-          },
-          {
-            "symbol": "TSLA",
             "sentiment": "neutral",
             "source_count": 1,
             "mention_count": 1,
             "reasons": [
-              "Highlights Tesla's relative weakness against other risk-on movers."
+              "Confirms HOOD's jump and 200-day-line context."
             ],
             "articles": [
               {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Highlights Tesla's relative weakness against other risk-on movers.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
+                "title": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms HOOD's jump and 200-day-line context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
                 "category": "news",
                 "kind": "news"
+              }
+            ]
+          },
+          {
+            "symbol": "QCOM",
+            "sentiment": "neutral",
+            "source_count": 1,
+            "mention_count": 1,
+            "reasons": [
+              "Shows current QCOM news context around AI expansion and Tenstorrent speculation."
+            ],
+            "articles": [
+              {
+                "title": "QUALCOMM Incorporated Stock Price, News, Quote & History",
+                "publisher": "Yahoo Finance",
+                "source": "Yahoo Finance",
+                "summary": "Shows current QCOM news context around AI expansion and Tenstorrent speculation.",
+                "url": "https://finance.yahoo.com/quote/QCOM/",
+                "category": "web",
+                "kind": "web"
               }
             ]
           }
@@ -1412,155 +1327,124 @@
         },
         "web_influence": {
           "articles_by_symbol": {
-            "QCOM": [
+            "INTC": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies QCOM as a notable mover on AI-chip acquisition speculation.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Identifies the Apple-Intel headline driving INTC's premarket move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Qualcomm: QCOM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and intraday range anchoring.",
-                "url": "https://robinhood.com/us/en/stocks/QCOM/",
-                "category": "web",
-                "kind": "web"
+                "title": "Stock Market Today: Dow Brushes Off Fed, Rises Ahead Of Jobless Claims; Trump Spurs Intel Shares",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms market backdrop, Intel premarket strength, 10-year yield, and futures context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-jobless-claims-intel-stock-intc-trump/",
+                "category": "news",
+                "kind": "news"
               },
               {
-                "title": "Qualcomm Inc. Stock Quote",
+                "title": "Intel Corp. Stock Quote",
                 "publisher": "MarketWatch",
                 "source": "MarketWatch",
-                "summary": "Cross-check for current quote neighborhood.",
-                "url": "https://www.marketwatch.com/investing/stock/qcom",
-                "category": "web",
-                "kind": "web"
-              }
-            ],
-            "GM": [
-              {
-                "title": "5 Things to Know Before the Stock Market Opens",
-                "publisher": "Investopedia",
-                "source": "Investopedia",
-                "summary": "Reports GM's talks with Lockheed Martin and frames the broader market backdrop.",
-                "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-june-16-2026-11999021",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "GM Stock Price Quote & News",
-                "publisher": "Robinhood",
-                "source": "Robinhood",
-                "summary": "Used for live quote verification and today's intraday range.",
-                "url": "https://robinhood.com/us/en/stocks/GM/",
-                "category": "web",
-                "kind": "web"
-              },
-              {
-                "title": "General Motors Company Common Stock",
-                "publisher": "Nasdaq",
-                "source": "Nasdaq",
-                "summary": "Secondary quote and market-data reference.",
-                "url": "https://www.nasdaq.com/market-activity/stocks/gm",
-                "category": "web",
-                "kind": "web"
-              }
-            ],
-            "WDC": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies WDC as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Top Stock Gainers Today",
-                "publisher": "Yahoo Finance",
-                "source": "Yahoo Finance",
-                "summary": "Shows WDC among top gainers and helps frame crowding risk.",
-                "url": "https://finance.yahoo.com/markets/stocks/gainers/",
+                "summary": "Used for the live quote check before marking INTC as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/intc",
                 "category": "web",
                 "kind": "web"
               }
             ],
             "MU": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Describes memory and data-storage leadership including MU.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
+                "title": "Semiconductor stocks rise premarket as investor sentiment boosted",
+                "publisher": "Yahoo Finance",
+                "source": "Yahoo Finance",
+                "summary": "Reports the UBS target increase and MU's premarket leadership.",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-stocks-rise-premarket-investor-120054770.html",
+                "category": "analyst",
+                "kind": "analyst"
+              },
+              {
+                "title": "Premarket movers: Intel jumps, Micron and Marvell gain",
+                "publisher": "MarketWatch",
+                "source": "MarketWatch",
+                "summary": "Confirms MU/semiconductor premarket strength.",
+                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-jones-nasdaq-s-p-500-fed-interest-rate-hike-suggestion-oil-us-iran-deal/card/premarket-movers-intel-jumps-micron-and-marvell-gain-MARFdysQC5bbgRzoYfMs",
                 "category": "news",
                 "kind": "news"
               },
               {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
+                "title": "Micron Technology Inc. Stock Quote",
                 "publisher": "MarketWatch",
                 "source": "MarketWatch",
-                "summary": "Confirms chip-sector premarket strength.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
+                "summary": "Used for the live quote check before marking MU as a buy.",
+                "url": "https://www.marketwatch.com/investing/stock/mu?eafs_enabled=false",
+                "category": "web",
+                "kind": "web"
+              }
+            ],
+            "WDC": [
+              {
+                "title": "Pre-market Movers",
+                "publisher": "Investing.com",
+                "source": "Investing.com",
+                "summary": "Shows WDC as a premarket storage leader.",
+                "url": "https://www.investing.com/equities/pre-market",
+                "category": "web",
+                "kind": "web"
+              },
+              {
+                "title": "Stocks to Watch: Intel, Apple, Smith & Wesson",
+                "publisher": "Wall Street Journal",
+                "source": "Wall Street Journal",
+                "summary": "Links memory/storage cost pressure to the day's semiconductor/storage move.",
+                "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-18-2026/card/stocks-to-watch-intel-apple-smith-wesson-CPWrDsktYLV7juQ6yYSl",
                 "category": "news",
                 "kind": "news"
+              }
+            ],
+            "QURE": [
+              {
+                "title": "Biotech Stocks Surge As UniQure 'Nail-Biting Journey' Comes To An End",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Primary source for the QURE FDA catalyst and magnitude of the move.",
+                "url": "https://www.investors.com/news/technology/biotech-stocks-regulatory-leniency-uniqure-atara-repliumne-biohaven-moderna/",
+                "category": "news",
+                "kind": "news"
+              },
+              {
+                "title": "Today's FDA Approvals & Drug Decisions",
+                "publisher": "StockTitan",
+                "source": "StockTitan",
+                "summary": "General FDA catalyst feed used to verify the biotech catalyst category.",
+                "url": "https://www.stocktitan.net/news/fda-approvals.html",
+                "category": "web",
+                "kind": "web"
               }
             ],
             "HOOD": [
               {
-                "title": "SpaceX, Western Digital, Robinhood, and More Stocks That Explain Today's Market",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Notes HOOD's premarket move after workforce-reduction news.",
-                "url": "https://www.barrons.com/articles/stock-movers-7af19f53",
-                "category": "news",
-                "kind": "news"
-              },
-              {
-                "title": "Options traders are bracing for a very busy week",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Supports the trading-activity backdrop but also highlights volatility risk.",
-                "url": "https://www.marketwatch.com/story/options-traders-are-bracing-for-a-very-busy-week-with-june-triple-witching-and-launch-of-spacex-contracts-on-deck-b38fbf62",
+                "title": "Dow Jones Futures Rise After Warsh's Fed Hits Stocks; SpaceX Falls As Robinhood Jumps",
+                "publisher": "Investor's Business Daily",
+                "source": "Investor's Business Daily",
+                "summary": "Confirms HOOD's jump and 200-day-line context.",
+                "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-fed-rate-hike-spacex-robinhood/",
                 "category": "news",
                 "kind": "news"
               }
             ],
-            "A": [
+            "QCOM": [
               {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Agilent as a major premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ],
-            "CYTK": [
-              {
-                "title": "S&P 500 Futures Rise in Premarket Trading; Western Digital, Agilent Technologies Lead",
-                "publisher": "Barron's",
-                "source": "Barron's",
-                "summary": "Identifies Cytokinetics as a notable premarket gainer.",
-                "url": "https://www.barrons.com/articles/s-p-500-futures-rise-in-premarket-trading-western-digital-agilent-technologies-lead-16f2277d",
-                "category": "news",
-                "kind": "news"
-              }
-            ],
-            "TSLA": [
-              {
-                "title": "Premarket movers: SpaceX stock continues to climb on day three; chip stocks jump; Tesla slips",
-                "publisher": "MarketWatch",
-                "source": "MarketWatch",
-                "summary": "Highlights Tesla's relative weakness against other risk-on movers.",
-                "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-set-to-rise-nasdaq-set-to-ease/card/premarket-movers-spacex-stock-continues-to-climb-on-day-three-chip-stocks-jump-tesla-slips-jZpLQXvy7SdgL2SyjODR",
-                "category": "news",
-                "kind": "news"
+                "title": "QUALCOMM Incorporated Stock Price, News, Quote & History",
+                "publisher": "Yahoo Finance",
+                "source": "Yahoo Finance",
+                "summary": "Shows current QCOM news context around AI expansion and Tenstorrent speculation.",
+                "url": "https://finance.yahoo.com/quote/QCOM/",
+                "category": "web",
+                "kind": "web"
               }
             ]
           }
@@ -1578,51 +1462,135 @@
   "news_audit": {
     "counts": {
       "days": 2,
-      "entries": 15,
-      "headlines": 55,
-      "articles": 70,
-      "urls": 15,
+      "entries": 16,
+      "headlines": 70,
+      "articles": 82,
+      "urls": 17,
       "sources": 7,
       "searches": 0
     },
     "latest": {
-      "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
-      "timestamp": "2026-06-17T16:40:42.496708+00:00",
-      "day": "2026-06-17",
-      "phase": "monitor",
-      "phase_group": "monitor",
-      "phase_label": "Monitor Evaluations",
-      "source_kind": "interaction_prompt_transcript",
-      "quality_score": 26,
-      "quality_label": "low",
-      "headline_count": 4,
-      "article_count": 4,
-      "url_count": 1,
-      "source_count": 1,
+      "id": "2026-06-18:morning:saved_prompt_context",
+      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "day": "2026-06-18",
+      "phase": "research",
+      "phase_group": "morning",
+      "phase_label": "Morning Research",
+      "source_kind": "saved_prompt_context",
+      "quality_score": 85,
+      "quality_label": "high",
+      "headline_count": 22,
+      "article_count": 34,
+      "url_count": 11,
+      "source_count": 6,
       "search_count": 0,
-      "symbols": [],
-      "sources": [
-        "github.com"
+      "symbols": [
+        "HOOD",
+        "INTC",
+        "MU",
+        "QCOM",
+        "QURE",
+        "WDC"
       ],
-      "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-      "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli",
-      "status": "success",
+      "sources": [
+        "Investing.com",
+        "Investor's Business Daily",
+        "MarketWatch",
+        "StockTitan",
+        "Wall Street Journal",
+        "Yahoo Finance"
+      ],
+      "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
       "links": [
         {
-          "label": "Prompt",
-          "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md"
+          "label": "Prompt context JSON",
+          "url": "data/profiles/codex/context.json"
         },
         {
-          "label": "Transcript",
-          "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt"
-        },
-        {
-          "label": "Metadata",
-          "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json"
+          "label": "News audit JSON",
+          "url": "data/profiles/codex/news_audit.json"
         }
       ]
     },
     "entries": [
+      {
+        "id": "2026-06-18:morning:saved_prompt_context",
+        "timestamp": "2026-06-18T09:12:56.378744-04:00",
+        "day": "2026-06-18",
+        "phase": "research",
+        "phase_group": "morning",
+        "phase_label": "Morning Research",
+        "source_kind": "saved_prompt_context",
+        "quality_score": 85,
+        "quality_label": "high",
+        "headline_count": 22,
+        "article_count": 34,
+        "url_count": 11,
+        "source_count": 6,
+        "search_count": 0,
+        "symbols": [
+          "HOOD",
+          "INTC",
+          "MU",
+          "QCOM",
+          "QURE",
+          "WDC"
+        ],
+        "sources": [
+          "Investing.com",
+          "Investor's Business Daily",
+          "MarketWatch",
+          "StockTitan",
+          "Wall Street Journal",
+          "Yahoo Finance"
+        ],
+        "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
+        "links": [
+          {
+            "label": "Prompt context JSON",
+            "url": "data/profiles/codex/context.json"
+          },
+          {
+            "label": "News audit JSON",
+            "url": "data/profiles/codex/news_audit.json"
+          }
+        ]
+      },
+      {
+        "id": "2026-06-18:morning:2026-06-18T09:12:56.378744-04:00",
+        "timestamp": "2026-06-18T09:12:56.378744-04:00",
+        "day": "2026-06-18",
+        "phase": "morning",
+        "phase_group": "morning",
+        "phase_label": "Morning",
+        "source_kind": "interaction_prompt_transcript",
+        "quality_score": 33,
+        "quality_label": "low",
+        "headline_count": 18,
+        "article_count": 18,
+        "url_count": 1,
+        "source_count": 0,
+        "search_count": 0,
+        "symbols": [],
+        "sources": [],
+        "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 18 news/source text marker(s).",
+        "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+        "status": "success",
+        "links": [
+          {
+            "label": "Prompt",
+            "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md"
+          },
+          {
+            "label": "Transcript",
+            "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt"
+          },
+          {
+            "label": "Metadata",
+            "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json"
+          }
+        ]
+      },
       {
         "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
         "timestamp": "2026-06-17T16:40:42.496708+00:00",
@@ -2122,54 +2090,93 @@
             "url": "data/profiles/codex/interactions/2026-06-17/141429_monitor_interaction.json"
           }
         ]
-      },
-      {
-        "id": "2026-06-16:morning:saved_prompt_context",
-        "timestamp": "2026-06-16T09:12:49.339037-04:00",
-        "day": "2026-06-16",
-        "phase": "research",
-        "phase_group": "morning",
-        "phase_label": "Morning Research",
-        "source_kind": "saved_prompt_context",
-        "quality_score": 85,
-        "quality_label": "high",
-        "headline_count": 25,
-        "article_count": 40,
-        "url_count": 10,
-        "source_count": 6,
-        "search_count": 0,
-        "symbols": [
-          "A",
-          "CYTK",
-          "GM",
-          "HOOD",
-          "MU",
-          "QCOM",
-          "TSLA",
-          "WDC"
-        ],
-        "sources": [
-          "Barron's",
-          "Investopedia",
-          "MarketWatch",
-          "Nasdaq",
-          "Robinhood",
-          "Yahoo Finance"
-        ],
-        "notes": "Structured saved news context: 40 article/headline items across 6 sources.",
-        "links": [
-          {
-            "label": "Prompt context JSON",
-            "url": "data/profiles/codex/context.json"
-          },
-          {
-            "label": "News audit JSON",
-            "url": "data/profiles/codex/news_audit.json"
-          }
-        ]
       }
     ],
     "days": [
+      {
+        "date": "2026-06-18",
+        "count": 2,
+        "entries": [
+          {
+            "id": "2026-06-18:morning:saved_prompt_context",
+            "timestamp": "2026-06-18T09:12:56.378744-04:00",
+            "day": "2026-06-18",
+            "phase": "research",
+            "phase_group": "morning",
+            "phase_label": "Morning Research",
+            "source_kind": "saved_prompt_context",
+            "quality_score": 85,
+            "quality_label": "high",
+            "headline_count": 22,
+            "article_count": 34,
+            "url_count": 11,
+            "source_count": 6,
+            "search_count": 0,
+            "symbols": [
+              "HOOD",
+              "INTC",
+              "MU",
+              "QCOM",
+              "QURE",
+              "WDC"
+            ],
+            "sources": [
+              "Investing.com",
+              "Investor's Business Daily",
+              "MarketWatch",
+              "StockTitan",
+              "Wall Street Journal",
+              "Yahoo Finance"
+            ],
+            "notes": "Structured saved news context: 34 article/headline items across 6 sources.",
+            "links": [
+              {
+                "label": "Prompt context JSON",
+                "url": "data/profiles/codex/context.json"
+              },
+              {
+                "label": "News audit JSON",
+                "url": "data/profiles/codex/news_audit.json"
+              }
+            ]
+          },
+          {
+            "id": "2026-06-18:morning:2026-06-18T09:12:56.378744-04:00",
+            "timestamp": "2026-06-18T09:12:56.378744-04:00",
+            "day": "2026-06-18",
+            "phase": "morning",
+            "phase_group": "morning",
+            "phase_label": "Morning",
+            "source_kind": "interaction_prompt_transcript",
+            "quality_score": 33,
+            "quality_label": "low",
+            "headline_count": 18,
+            "article_count": 18,
+            "url_count": 1,
+            "source_count": 0,
+            "search_count": 0,
+            "symbols": [],
+            "sources": [],
+            "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 18 news/source text marker(s).",
+            "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+            "status": "success",
+            "links": [
+              {
+                "label": "Prompt",
+                "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md"
+              },
+              {
+                "label": "Transcript",
+                "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt"
+              },
+              {
+                "label": "Metadata",
+                "url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json"
+              }
+            ]
+          }
+        ]
+      },
       {
         "date": "2026-06-17",
         "count": 14,
@@ -2675,57 +2682,6 @@
             ]
           }
         ]
-      },
-      {
-        "date": "2026-06-16",
-        "count": 1,
-        "entries": [
-          {
-            "id": "2026-06-16:morning:saved_prompt_context",
-            "timestamp": "2026-06-16T09:12:49.339037-04:00",
-            "day": "2026-06-16",
-            "phase": "research",
-            "phase_group": "morning",
-            "phase_label": "Morning Research",
-            "source_kind": "saved_prompt_context",
-            "quality_score": 85,
-            "quality_label": "high",
-            "headline_count": 25,
-            "article_count": 40,
-            "url_count": 10,
-            "source_count": 6,
-            "search_count": 0,
-            "symbols": [
-              "A",
-              "CYTK",
-              "GM",
-              "HOOD",
-              "MU",
-              "QCOM",
-              "TSLA",
-              "WDC"
-            ],
-            "sources": [
-              "Barron's",
-              "Investopedia",
-              "MarketWatch",
-              "Nasdaq",
-              "Robinhood",
-              "Yahoo Finance"
-            ],
-            "notes": "Structured saved news context: 40 article/headline items across 6 sources.",
-            "links": [
-              {
-                "label": "Prompt context JSON",
-                "url": "data/profiles/codex/context.json"
-              },
-              {
-                "label": "News audit JSON",
-                "url": "data/profiles/codex/news_audit.json"
-              }
-            ]
-          }
-        ]
       }
     ]
   },
@@ -3078,33 +3034,55 @@
   },
   "interactions": {
     "counts": {
-      "total": 47,
+      "total": 48,
       "recent": 24,
-      "days": 2
+      "days": 3
     },
     "latest": {
-      "timestamp": "2026-06-17T16:20:29.762183-04:00",
-      "day": "2026-06-17",
+      "timestamp": "2026-06-18T09:12:56.378744-04:00",
+      "day": "2026-06-18",
       "profile": "codex",
-      "phase": "evening",
-      "phase_group": "evening",
-      "phase_label": "Evening",
+      "phase": "morning",
+      "phase_group": "morning",
+      "phase_label": "Morning",
       "tool": "codex",
-      "status": "failed",
-      "summary": "",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-17/162021_evening_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-17/162021_evening_transcript.txt",
+      "status": "success",
+      "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
       "context_file": "",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-17/162021_evening_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_evening_2026-06-17_162021.log",
-      "prompt_source": "scripts/prompts/evening_reflection.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-17/162021_evening_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-17/162021_evening_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-18_090730.log",
+      "prompt_source": "scripts/prompts/morning_research.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
       "context_url": "",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-17/162021_evening_interaction.json",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
+      "morning": {
+        "timestamp": "2026-06-18T09:12:56.378744-04:00",
+        "day": "2026-06-18",
+        "profile": "codex",
+        "phase": "morning",
+        "phase_group": "morning",
+        "phase_label": "Morning",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+        "context_file": "",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-18_090730.log",
+        "prompt_source": "scripts/prompts/morning_research.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+        "context_url": "",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+        "prompt_source_url": ""
+      },
       "evening": {
         "timestamp": "2026-06-17T16:20:29.762183-04:00",
         "day": "2026-06-17",
@@ -3170,37 +3148,37 @@
         "context_url": "",
         "metadata_url": "data/profiles/codex/interactions/2026-06-16/161921_voice_interaction.json",
         "prompt_source_url": ""
-      },
-      "morning": {
-        "timestamp": "2026-06-16T09:12:49.339037-04:00",
-        "day": "2026-06-16",
+      }
+    },
+    "phase_counts": {
+      "morning": 2,
+      "evening": 3,
+      "monitor": 42,
+      "voice": 1
+    },
+    "recent": [
+      {
+        "timestamp": "2026-06-18T09:12:56.378744-04:00",
+        "day": "2026-06-18",
         "profile": "codex",
         "phase": "morning",
         "phase_group": "morning",
         "phase_label": "Morning",
         "tool": "codex",
         "status": "success",
-        "summary": "Morning research completed and staged. | Wrote: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-16/090723_morning_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-16/090723_morning_transcript.txt",
+        "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
         "context_file": "",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-16/090723_morning_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-16_090723.log",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-18_090730.log",
         "prompt_source": "scripts/prompts/morning_research.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-16/090723_morning_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-16/090723_morning_transcript.txt",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
         "context_url": "",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-16/090723_morning_interaction.json",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
         "prompt_source_url": ""
-      }
-    },
-    "phase_counts": {
-      "evening": 3,
-      "monitor": 42,
-      "voice": 1,
-      "morning": 1
-    },
-    "recent": [
+      },
       {
         "timestamp": "2026-06-17T16:20:29.762183-04:00",
         "day": "2026-06-17",
@@ -3706,31 +3684,43 @@
         "context_url": "data/profiles/codex/context/2026-06-17_monitor_144216.json",
         "metadata_url": "data/profiles/codex/interactions/2026-06-17/144216_monitor_interaction.json",
         "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-17T10:41:06.948496-04:00",
-        "day": "2026-06-17",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "success",
-        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` with run_id `20260617_143932`. | Decision: neutral/no trades. QCOM, HOOD, and GM are all `ready_to_trade=false`. | Validation: `python3 -m json.tool` passed.",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-17/103955_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-17/103955_monitor_transcript.txt",
-        "context_file": "",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-17/103955_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-17_103955.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-17/103955_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-17/103955_monitor_transcript.txt",
-        "context_url": "",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-17/103955_monitor_interaction.json",
-        "prompt_source_url": ""
       }
     ],
     "days": [
+      {
+        "date": "2026-06-18",
+        "count": 1,
+        "phases": [
+          {
+            "key": "morning",
+            "label": "Morning",
+            "items": [
+              {
+                "timestamp": "2026-06-18T09:12:56.378744-04:00",
+                "day": "2026-06-18",
+                "profile": "codex",
+                "phase": "morning",
+                "phase_group": "morning",
+                "phase_label": "Morning",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Morning research completed and staged. | Wrote and validated: | - [morning_research.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/cache/morning_research.json)",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+                "context_file": "",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_morning_2026-06-18_090730.log",
+                "prompt_source": "scripts/prompts/morning_research.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_transcript.txt",
+                "context_url": "",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-18/090730_morning_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          }
+        ]
+      },
       {
         "date": "2026-06-17",
         "count": 28,
