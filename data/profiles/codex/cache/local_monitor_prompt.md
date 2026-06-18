@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260618_140555
-Candidate symbols: QCOM, MU, HOOD
+Run id: 20260618_144109
+Candidate symbols: QCOM, HOOD, WDC
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -14,25 +14,25 @@ morning execution conditions and the live snapshot.
     Setup state: repair_watch | bucket: repair_watch | top blocker: Prior AI/Tenstorrent gap failed; QCOM must reclaim the old failed zone before any new long thesis is actionable.
     Action confidence: long_thesis=0.49 entry=0.28 avoid=0.62 data_quality=0.64
     Execution condition: Watch only unless QCOM reclaims 220.50-224.00, holds VWAP, and outperforms SMH after the first hour.
-    Why it is being checked now: price is within 1.0% of entry; 9 fresh headline(s)
-  MU: buy | entry=$1090.0 stop=$1050.0 target=$1150.0
-    Setup state: eligible | bucket: buy_today_if_confirmed | top blocker: Parabolic memory-stock run makes entry quality only fair unless MU holds VWAP and avoids chasing above the first-hour range.
-    Action confidence: long_thesis=0.73 entry=0.58 avoid=0.3 data_quality=0.72
-    Execution condition: Buy only if MU trades near 1085.00-1105.00, holds VWAP after the first hour, and WDC/STX/SMH remain constructive rather than fading the premarket gap.
-    Why it is being checked now: price is within 1.6% of entry; 9 fresh headline(s)
+    Why it is being checked now: price is within 0.1% of entry; 9 fresh headline(s)
   HOOD: watch | entry=$107.0 stop=$103.0 target=$116.0
     Setup state: repair_watch | bucket: repair_watch | top blocker: The restructuring/200-day reclaim narrative needs proof of fintech and crypto risk appetite before it is buyable.
     Action confidence: long_thesis=0.52 entry=0.34 avoid=0.58 data_quality=0.62
     Execution condition: Watch only unless HOOD holds its 200-day reclaim and VWAP after the first hour while crypto/fintech peers confirm risk appetite.
-    Why it is being checked now: price is within 1.8% of entry; 11 fresh headline(s)
+    Why it is being checked now: price is within 0.2% of entry; 11 fresh headline(s)
+  WDC: watch | entry=$725.0 stop=$700.0 target=$780.0
+    Setup state: planned | bucket: do_not_chase | top blocker: High crowding and a large premarket move make the entry late unless WDC digests or forms a tight base.
+    Action confidence: long_thesis=0.69 entry=0.38 avoid=0.55 data_quality=0.68
+    Execution condition: Watch only unless WDC pulls back into a controlled 720.00-735.00 support test and then reclaims VWAP with MU/STX still green.
+    Why it is being checked now: price is near target; 11 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  226.14 |  +6.1% |  55 |     0.3x | yahoo_1m | 5s |         9 |
-| MU    | $ 1107.05 |  +6.1% |  65 |     0.2x | yahoo_1m | 63s |         9 |
-| HOOD  | $  105.06 |  -0.1% |  69 |     0.2x | yahoo_1m | 64s |        11 |
+| QCOM  | $  224.24 |  +5.3% |  55 |     0.4x | yahoo_1m | 12s |         9 |
+| HOOD  | $  106.76 |  +1.5% |  71 |     0.3x | yahoo_1m | 12s |        11 |
+| WDC   | $  773.75 |  +8.7% |  80 |     0.6x | yahoo_1m | 13s |        11 |
 
 ## Relevant Commodity Snapshot
 
@@ -55,12 +55,12 @@ Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish fac
 Live scorecard:
 Computed regime: risk_on (score=5, bullish=5, bearish=0, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bullish (1); SPY change=0.59, trend=flat
-- qqq_trend: bullish (1); QQQ change=1.9
+- sp500_trend: bullish (1); SPY change=0.7, trend=up
+- qqq_trend: bullish (1); QQQ change=1.94
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-0.58
+- vix_direction: bullish (1); VIX level=normal, change=-0.62
 - ten_year_yield: neutral (0); 10Y yield=4.43, change=None
-- sector_breadth: bullish (1); 7 sectors positive, 4 sectors negative
+- sector_breadth: bullish (1); 7 sectors positive, 3 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: bullish (1); declared regime=risk_on
 
@@ -94,7 +94,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260618_140555",
+  "run_id": "20260618_144109",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
