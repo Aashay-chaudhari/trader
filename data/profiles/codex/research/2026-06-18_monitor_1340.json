@@ -1,0 +1,138 @@
+{
+  "run_id": "20260618_133553",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live risk-on conditions support the morning semiconductor thesis, but the prepared snapshot does not clearly confirm the required VWAP/first-hour execution evidence for a trade.",
+  "stocks": {
+    "MU": {
+      "recommendation": "watch",
+      "confidence": 0.58,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "Price is within the 1085.00-1105.00 planned entry band",
+        "Live regime scorecard is risk_on"
+      ],
+      "failed_conditions": [
+        "VWAP hold after the first hour is not explicitly confirmed",
+        "WDC/STX/SMH constructive peer confirmation is not explicitly confirmed",
+        "Entry quality remains only fair after a parabolic memory-stock run"
+      ],
+      "monitor_reason": "MU is close to the planned entry and tape support is positive, but the required anti-chase VWAP and peer confirmation evidence is incomplete.",
+      "execution_condition": "Buy only if MU trades near 1085.00-1105.00, holds VWAP after the first hour, and WDC/STX/SMH remain constructive rather than fading the premarket gap.",
+      "setup_state": "eligible",
+      "watchlist_bucket": "buy_today_if_confirmed",
+      "top_blocker": "Parabolic memory-stock run makes entry quality only fair unless MU holds VWAP and avoids chasing above the first-hour range.",
+      "action_confidence": {
+        "long_thesis": 0.73,
+        "entry": 0.58,
+        "avoid": 0.3,
+        "data_quality": 0.72
+      },
+      "trade_plan": {
+        "entry": 1090.0,
+        "stop_loss": 1050.0,
+        "target": 1150.0
+      }
+    },
+    "HOOD": {
+      "recommendation": "watch",
+      "confidence": 0.34,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "Live regime scorecard is risk_on"
+      ],
+      "failed_conditions": [
+        "Price is below the 107.00 planned entry level",
+        "200-day reclaim hold after the first hour is not clearly confirmed",
+        "VWAP hold is not explicitly confirmed",
+        "Crypto/fintech peer confirmation is not explicitly confirmed",
+        "Repair-watch setup has elevated avoid confidence"
+      ],
+      "monitor_reason": "HOOD remains a repair watch because the live snapshot does not prove the 200-day/VWAP hold or fintech and crypto confirmation needed for a buy.",
+      "execution_condition": "Watch only unless HOOD holds its 200-day reclaim and VWAP after the first hour while crypto/fintech peers confirm risk appetite.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "The restructuring/200-day reclaim narrative needs proof of fintech and crypto risk appetite before it is buyable.",
+      "action_confidence": {
+        "long_thesis": 0.52,
+        "entry": 0.34,
+        "avoid": 0.58,
+        "data_quality": 0.62
+      },
+      "trade_plan": {
+        "entry": 107.0,
+        "stop_loss": 103.0,
+        "target": 116.0
+      }
+    },
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.28,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "Live regime scorecard is risk_on"
+      ],
+      "failed_conditions": [
+        "Price has not reclaimed the 220.50-224.00 failed zone",
+        "VWAP hold is not explicitly confirmed",
+        "Outperformance versus SMH after the first hour is not explicitly confirmed",
+        "Repair-watch setup has high avoid confidence"
+      ],
+      "monitor_reason": "QCOM is still below the required reclaim zone, so the prior failed-gap repair thesis is not actionable.",
+      "execution_condition": "Watch only unless QCOM reclaims 220.50-224.00, holds VWAP, and outperforms SMH after the first hour.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Prior AI/Tenstorrent gap failed; QCOM must reclaim the old failed zone before any new long thesis is actionable.",
+      "action_confidence": {
+        "long_thesis": 0.49,
+        "entry": 0.28,
+        "avoid": 0.62,
+        "data_quality": 0.64
+      },
+      "trade_plan": {
+        "entry": 224.0,
+        "stop_loss": 217.5,
+        "target": 238.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "27763566678",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/27763566678",
+        "sha": "80fee79be73aa74d91e15e96a7875f0f1a958389",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
