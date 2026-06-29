@@ -1,17 +1,44 @@
 {
   "risk_on": {
-    "description": "",
-    "indicators": [],
-    "rules": []
+    "description": "Constructive market regime where macro relief, contained volatility, and broad participation support selective long exposure.",
+    "indicators": [
+      "VIX near or below the mid-teens and not rising intraday",
+      "Oil and Treasury yields stable or falling when inflation risk is the market's main concern",
+      "SPY and QQQ both firm, with breadth expanding beyond one crowded theme",
+      "Sector leadership includes cyclicals or growth with peer confirmation rather than isolated headline gaps"
+    ],
+    "rules": [
+      "Do not label the tape risk_on from oil and VIX alone; require breadth and index-relative confirmation.",
+      "In risk_on tapes, prefer pullbacks, retests, or first-hour VWAP holds over buying extended gaps.",
+      "If leadership is concentrated in AI or memory, require peer ETF confirmation before approving semiconductor longs."
+    ]
   },
   "risk_off": {
-    "description": "",
-    "indicators": [],
-    "rules": []
+    "description": "Defensive regime where volatility, oil/yield stress, or broad selling makes long-only entries unattractive.",
+    "indicators": [
+      "VIX rising toward or above the high teens",
+      "QQQ underperforming SPY and DIA with weak market breadth",
+      "Candidate watchlist names failing VWAP, entry ranges, or stop references",
+      "Energy, inflation, or Fed-hike pressure forcing multiple expansion lower"
+    ],
+    "rules": [
+      "Stay mostly cash when candidate-specific gates fail in a risk_off tape.",
+      "Do not bottom-fish failed catalyst gaps below their stop reference.",
+      "Require a fresh thesis and reclaim setup before reconsidering invalidated longs."
+    ]
   },
   "neutral": {
-    "description": "",
-    "indicators": [],
-    "rules": []
+    "description": "Mixed regime where macro inputs may be supportive, but breadth, leadership, or execution evidence is insufficient for broad long exposure.",
+    "indicators": [
+      "Major indexes mixed or leadership split between Dow cyclicals and Nasdaq growth",
+      "Contained VIX but incomplete breadth or QQQ/SPY confirmation",
+      "Watchlist names near plans but missing VWAP, peer, or opening-range confirmation",
+      "Fed or earnings catalysts close enough to increase gap and reversal risk"
+    ],
+    "rules": [
+      "Treat neutral as cash-first unless a stock satisfies price range, VWAP, peer confirmation, and catalyst quality.",
+      "Use action-specific confidence in neutral regimes because high confidence may mean confidence to avoid.",
+      "Broaden screens to regulatory, off-cycle earnings, and supplier-deal catalysts when index leadership is choppy."
+    ]
   }
 }

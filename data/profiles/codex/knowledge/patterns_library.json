@@ -2,37 +2,67 @@
   {
     "name": "crowded_ai_gap_requires_vwap_confirmation",
     "description": "Avoiding QCOM after it failed VWAP/range confirmation prevented buying a catalyst gap that later fell below the planned stop reference.",
-    "occurrences": 1,
-    "sample_size": 1,
+    "occurrences": 2,
+    "sample_size": 2,
     "win_rate": 1.0,
     "symbols_seen": [
-      "QCOM"
+      "QCOM",
+      "MU"
     ],
-    "last_seen": "2026-06-16",
-    "notes": "Avoiding QCOM after it failed VWAP/range confirmation prevented buying a catalyst gap that later fell below the planned stop reference."
+    "last_seen": "2026-06-18",
+    "notes": "Avoiding QCOM after it failed VWAP/range confirmation prevented buying a catalyst gap; MU was also kept watch-only because VWAP and peer confirmation were not explicit after a parabolic memory-stock move."
   },
   {
     "name": "headline_without_opening_range_hold_is_avoid",
     "description": "HOOD had a public restructuring headline but never confirmed constructive opening-range or fintech/crypto risk appetite, so watch-only was correct.",
-    "occurrences": 1,
-    "sample_size": 1,
+    "occurrences": 2,
+    "sample_size": 2,
     "win_rate": 1.0,
     "symbols_seen": [
       "HOOD"
     ],
-    "last_seen": "2026-06-16",
-    "notes": "HOOD had a public restructuring headline but never confirmed constructive opening-range or fintech/crypto risk appetite, so watch-only was correct."
+    "last_seen": "2026-06-18",
+    "notes": "HOOD repeatedly had headline or repair-watch interest but never confirmed constructive opening-range, VWAP, or fintech/crypto risk appetite, so watch-only was correct."
   },
   {
     "name": "industrial_narrative_needs_vwap_hold",
     "description": "The Lockheed/defense-supply narrative remains plausible, but today showed it should not be bought unless price holds the entry band with VWAP support.",
-    "occurrences": 1,
-    "sample_size": 1,
-    "win_rate": 0.0,
+    "occurrences": 2,
+    "sample_size": 2,
+    "win_rate": 0.5,
     "symbols_seen": [
       "GM"
     ],
-    "last_seen": "2026-06-16",
-    "notes": "The Lockheed/defense-supply narrative remains plausible, but today showed it should not be bought unless price holds the entry band with VWAP support."
+    "last_seen": "2026-06-17",
+    "notes": "GM never provided the required entry-band and VWAP hold after the defense-supply headline; avoiding it after the failed range improved the pattern record, but the initial thesis was not strong enough."
+  },
+  {
+    "name": "failed_buy_range_requires_fresh_thesis",
+    "description": "Once a planned long trades below its buy range or stop reference before entry, it must move to invalidated or repair-watch status until a fresh setup appears.",
+    "occurrences": 3,
+    "sample_size": 3,
+    "win_rate": 1.0,
+    "symbols_seen": [
+      "QCOM",
+      "GM",
+      "HOOD"
+    ],
+    "last_seen": "2026-06-18",
+    "notes": "QCOM, GM, and HOOD all stayed invalidated or repair-watch after failing original buy references; the profile avoided recycling stale longs."
+  },
+  {
+    "name": "action_specific_confidence_needed",
+    "description": "Monitor confidence must specify whether it refers to entry, avoid, thesis, or data quality so high avoid confidence is not mistaken for bullish conviction.",
+    "occurrences": 3,
+    "sample_size": 3,
+    "win_rate": 1.0,
+    "symbols_seen": [
+      "QCOM",
+      "GM",
+      "HOOD",
+      "MU"
+    ],
+    "last_seen": "2026-06-18",
+    "notes": "Late high confidence on 2026-06-16 and 2026-06-17 reflected avoid/watch confidence, while 2026-06-18 introduced clearer action_confidence fields for MU, QCOM, and HOOD."
   }
 ]
