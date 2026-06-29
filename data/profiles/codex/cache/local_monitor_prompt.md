@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260629_183542
-Candidate symbols: NKE, MU, QCOM
+Run id: 20260629_190550
+Candidate symbols: NKE, AVAV, QURE
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -15,24 +15,24 @@ morning execution conditions and the live snapshot.
     Action confidence: long_thesis=0.52 entry=0.3 avoid=0.57 data_quality=0.76
     Execution condition: Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.
     Why it is being checked now: price is within 0.9% of entry; 10 fresh headline(s)
-  MU: watch | entry=$1150.0 stop=$1115.0 target=$1225.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.
-    Action confidence: long_thesis=0.64 entry=0.28 avoid=0.62 data_quality=0.7
-    Execution condition: Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.
-    Why it is being checked now: price is within 1.9% of entry; 9 fresh headline(s)
-  QCOM: watch | entry=$195.0 stop=$189.0 target=$207.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: Prior failed-gap lesson and current quote weakness require repair above VWAP before any new long.
-    Action confidence: long_thesis=0.62 entry=0.34 avoid=0.58 data_quality=0.74
-    Execution condition: Do not buy today unless QCOM repairs above 194.00 and holds VWAP with SMH outperforming QQQ.
-    Why it is being checked now: price is within 1.9% of entry; 9 fresh headline(s)
+  AVAV: buy | entry=$138.5 stop=$134.5 target=$147.0
+    Setup state: planned | bucket: buy_today_if_confirmed | top blocker: After-close earnings create event risk, so the setup needs price strength and smaller sizing discipline.
+    Action confidence: long_thesis=0.66 entry=0.58 avoid=0.31 data_quality=0.69
+    Execution condition: Buy only if AVAV is trading around 138.50, holds VWAP through the first hour, and the position can be kept small ahead of after-close earnings.
+    Why it is being checked now: price is within 1.3% of entry; 10 fresh headline(s)
+  QURE: watch | entry=$49.0 stop=$47.4 target=$52.5
+    Setup state: retired | bucket: avoid_until_new_thesis | top blocker: No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.
+    Action confidence: long_thesis=0.28 entry=0.18 avoid=0.7 data_quality=0.45
+    Execution condition: Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.
+    Why it is being checked now: price is near stop loss; 14 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| NKE   | $   41.58 |  +2.0% |  41 |     0.6x | yahoo_1m | 49s |        10 |
-| MU    | $ 1128.62 |  -0.3% |  59 |     0.8x | yahoo_1m | 47s |         9 |
-| QCOM  | $  191.32 |  +1.0% |  43 |     0.5x | yahoo_1m | 46s |         9 |
+| NKE   | $   41.58 |  +2.0% |  41 |     0.7x | yahoo_1m | 56s |        10 |
+| AVAV  | $  140.32 |  +1.7% |  34 |     0.6x | yahoo_1m | 53s |        10 |
+| QURE  | $   47.80 |  +0.6% |  74 |     0.4x | yahoo_1m | 56s |        14 |
 
 ## Relevant Commodity Snapshot
 
@@ -55,12 +55,12 @@ Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish fac
 Live scorecard:
 Computed regime: risk_on (score=5, bullish=5, bearish=0, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bullish (1); SPY change=1.62, trend=up
-- qqq_trend: bullish (1); QQQ change=2.39
+- sp500_trend: bullish (1); SPY change=1.6, trend=up
+- qqq_trend: bullish (1); QQQ change=2.34
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-1.8
+- vix_direction: bullish (1); VIX level=normal, change=-1.88
 - ten_year_yield: neutral (0); 10Y yield=4.38, change=None
-- sector_breadth: bullish (1); 7 sectors positive, 4 sectors negative
+- sector_breadth: bullish (1); 6 sectors positive, 4 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: bullish (1); declared regime=risk_on
 
@@ -94,7 +94,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260629_183542",
+  "run_id": "20260629_190550",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
