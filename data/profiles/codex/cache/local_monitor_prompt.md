@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260629_193552
-Candidate symbols: NKE, MU, AVAV
+Run id: 20260629_195551
+Candidate symbols: NKE, AVAV, MU
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -15,24 +15,24 @@ morning execution conditions and the live snapshot.
     Action confidence: long_thesis=0.52 entry=0.3 avoid=0.57 data_quality=0.76
     Execution condition: Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.
     Why it is being checked now: price is within 0.1% of entry; 10 fresh headline(s)
-  MU: watch | entry=$1150.0 stop=$1115.0 target=$1225.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.
-    Action confidence: long_thesis=0.64 entry=0.28 avoid=0.62 data_quality=0.7
-    Execution condition: Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.
-    Why it is being checked now: price is within 1.0% of entry; 9 fresh headline(s)
   AVAV: buy | entry=$138.5 stop=$134.5 target=$147.0
     Setup state: planned | bucket: buy_today_if_confirmed | top blocker: After-close earnings create event risk, so the setup needs price strength and smaller sizing discipline.
     Action confidence: long_thesis=0.66 entry=0.58 avoid=0.31 data_quality=0.69
     Execution condition: Buy only if AVAV is trading around 138.50, holds VWAP through the first hour, and the position can be kept small ahead of after-close earnings.
-    Why it is being checked now: price is within 1.2% of entry; 10 fresh headline(s)
+    Why it is being checked now: price is within 0.9% of entry; 10 fresh headline(s)
+  MU: watch | entry=$1150.0 stop=$1115.0 target=$1225.0
+    Setup state: repair_watch | bucket: repair_watch | top blocker: Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.
+    Action confidence: long_thesis=0.64 entry=0.28 avoid=0.62 data_quality=0.7
+    Execution condition: Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.
+    Why it is being checked now: price is within 1.3% of entry; 9 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| NKE   | $   41.24 |  +1.2% |  39 |     0.7x | yahoo_1m | 60s |        10 |
-| MU    | $ 1138.84 |  +0.6% |  59 |     0.9x | yahoo_1m | 58s |         9 |
-| AVAV  | $  140.21 |  +1.6% |  34 |     0.7x | yahoo_1m | 56s |        10 |
+| NKE   | $   41.26 |  +1.2% |  39 |     0.8x | yahoo_1m | 57s |        10 |
+| AVAV  | $  139.71 |  +1.3% |  33 |     0.8x | yahoo_1m | 54s |        10 |
+| MU    | $ 1135.29 |  +0.3% |  59 |     0.9x | yahoo_1m | 55s |         9 |
 
 ## Relevant Commodity Snapshot
 
@@ -55,10 +55,10 @@ Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish fac
 Live scorecard:
 Computed regime: neutral (score=4, bullish=4, bearish=0, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bullish (1); SPY change=1.59, trend=up
-- qqq_trend: bullish (1); QQQ change=2.38
+- sp500_trend: bullish (1); SPY change=1.56, trend=up
+- qqq_trend: bullish (1); QQQ change=2.34
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-1.93
+- vix_direction: bullish (1); VIX level=normal, change=-1.9
 - ten_year_yield: neutral (0); 10Y yield=4.37, change=None
 - sector_breadth: neutral (0); 6 sectors positive, 5 sectors negative
 - candidate_relative_strength: unknown (0); not available
@@ -94,7 +94,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260629_193552",
+  "run_id": "20260629_195551",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
