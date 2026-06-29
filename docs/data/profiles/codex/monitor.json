@@ -1,22 +1,20 @@
 {
-  "run_id": "20260629_140538",
+  "run_id": "20260629_195551",
   "overall_sentiment": "neutral",
-  "market_summary": "The live regime has improved to risk-on, but the listed candidates do not clearly satisfy their morning execution conditions.",
+  "market_summary": "Live tape improved versus the morning thesis, but only AVAV is near enough to its planned setup while NKE and MU still have event or repair blockers.",
   "stocks": {
     "NKE": {
       "recommendation": "watch",
       "confidence": 0.57,
       "ready_to_trade": false,
       "matched_conditions": [
-        "live regime is risk_on",
-        "price is near the planned entry area"
+        "price is holding above 41"
       ],
       "failed_conditions": [
         "earnings event has not cleared",
-        "price is below 41",
-        "no constructive post-guidance reaction is available"
+        "constructive guidance reaction is not yet available"
       ],
-      "monitor_reason": "NKE remains a pre-earnings event watch and has not cleared the required 41-plus constructive reaction condition.",
+      "monitor_reason": "NKE is near the planned level but remains watch-only until after earnings and a constructive post-event reaction.",
       "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
       "setup_state": "planned",
       "watchlist_bucket": "event_watch",
@@ -33,64 +31,60 @@
         "target": 44.5
       }
     },
-    "QURE": {
-      "recommendation": "hold",
-      "confidence": 0.7,
-      "ready_to_trade": false,
+    "AVAV": {
+      "recommendation": "buy",
+      "confidence": 0.58,
+      "ready_to_trade": true,
       "matched_conditions": [
-        "do-not-buy condition remains in force",
-        "price is near the old entry area"
+        "price is trading around 138.50",
+        "live tape is risk_on",
+        "planned trade allows small sizing ahead of after-close earnings"
       ],
-      "failed_conditions": [
-        "no new verified catalyst is present",
-        "regular-session volume confirmation is missing",
-        "setup is retired"
-      ],
-      "monitor_reason": "QURE remains retired and low-volume, so proximity to the old entry is not actionable.",
-      "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
-      "setup_state": "retired",
-      "watchlist_bucket": "avoid_until_new_thesis",
-      "top_blocker": "No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.",
+      "failed_conditions": [],
+      "monitor_reason": "AVAV is close to the planned entry with supportive live regime conditions, so the morning buy setup is confirmed for small sizing.",
+      "execution_condition": "Buy only if AVAV is trading around 138.50, holds VWAP through the first hour, and the position can be kept small ahead of after-close earnings.",
+      "setup_state": "planned",
+      "watchlist_bucket": "buy_today_if_confirmed",
+      "top_blocker": "After-close earnings create event risk, so the setup needs price strength and smaller sizing discipline.",
       "action_confidence": {
-        "long_thesis": 0.28,
-        "entry": 0.18,
-        "avoid": 0.7,
-        "data_quality": 0.45
+        "long_thesis": 0.66,
+        "entry": 0.58,
+        "avoid": 0.31,
+        "data_quality": 0.69
       },
       "trade_plan": {
-        "entry": 49.0,
-        "stop_loss": 47.4,
-        "target": 52.5
+        "entry": 138.5,
+        "stop_loss": 134.5,
+        "target": 147.0
       }
     },
-    "WDC": {
+    "MU": {
       "recommendation": "watch",
-      "confidence": 0.66,
+      "confidence": 0.62,
       "ready_to_trade": false,
       "matched_conditions": [
-        "live regime is risk_on",
-        "price is near the planned reclaim level"
+        "price is above 1130"
       ],
       "failed_conditions": [
-        "price has not reclaimed 600",
-        "VWAP support is not confirmed in the provided snapshot",
-        "MU group drag has not been shown as resolved"
+        "tight base above 1130 is not confirmed",
+        "VWAP hold is not confirmed",
+        "entry confidence remains low and avoid confidence is high"
       ],
-      "monitor_reason": "WDC is still a repair watch because it remains below 600 without explicit reclaim or VWAP support evidence.",
-      "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
+      "monitor_reason": "MU has reclaimed the price threshold but remains repair-watch without clear base and VWAP confirmation.",
+      "execution_condition": "Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.",
       "setup_state": "repair_watch",
       "watchlist_bucket": "repair_watch",
-      "top_blocker": "Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.",
+      "top_blocker": "Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.",
       "action_confidence": {
-        "long_thesis": 0.6,
-        "entry": 0.25,
-        "avoid": 0.66,
-        "data_quality": 0.68
+        "long_thesis": 0.64,
+        "entry": 0.28,
+        "avoid": 0.62,
+        "data_quality": 0.7
       },
       "trade_plan": {
-        "entry": 602.0,
-        "stop_loss": 584.0,
-        "target": 640.0
+        "entry": 1150.0,
+        "stop_loss": 1115.0,
+        "target": 1225.0
       }
     }
   },
@@ -126,10 +120,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "28378082882",
+        "run_id": "28398862734",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28378082882",
-        "sha": "9838702396cdce5e3a4a95367db138bd14bcc8ce",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28398862734",
+        "sha": "c0dec14f2d51054259933bd02f03a0a2209e6af9",
         "ref": "refs/heads/main"
       }
     }

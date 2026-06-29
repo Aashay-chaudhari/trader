@@ -1,0 +1,206 @@
+{
+  "run_id": "20260629_195551",
+  "phase": "monitor",
+  "timestamp": "2026-06-29T19:58:32.485529+00:00",
+  "symbols": [
+    "NKE",
+    "AVAV",
+    "MU"
+  ],
+  "regime_scorecard": {
+    "computed_regime": "neutral",
+    "declared_regime": "neutral",
+    "score": 3,
+    "bullish_factors": 3,
+    "bearish_factors": 0,
+    "unknown_factors": 2,
+    "factors": {
+      "sp500_trend": {
+        "state": "bullish",
+        "score": 1,
+        "evidence": "SPY change=1.56, trend=up"
+      },
+      "qqq_trend": {
+        "state": "bullish",
+        "score": 1,
+        "evidence": "QQQ change=2.34"
+      },
+      "small_cap_breadth": {
+        "state": "unknown",
+        "score": 0,
+        "evidence": "not available"
+      },
+      "vix_direction": {
+        "state": "bullish",
+        "score": 1,
+        "evidence": "VIX level=normal, change=-1.9"
+      },
+      "ten_year_yield": {
+        "state": "neutral",
+        "score": 0,
+        "evidence": "10Y yield=4.37, change=None"
+      },
+      "sector_breadth": {
+        "state": "neutral",
+        "score": 0,
+        "evidence": "6 sectors positive, 5 sectors negative"
+      },
+      "candidate_relative_strength": {
+        "state": "unknown",
+        "score": 0,
+        "evidence": "not available"
+      },
+      "headline_risk": {
+        "state": "neutral",
+        "score": 0,
+        "evidence": "declared regime=neutral"
+      }
+    },
+    "rule": "risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off."
+  },
+  "news_quality": {
+    "source_stats": {
+      "yfinance": 72,
+      "analyst": 0,
+      "rss": 18,
+      "sec_edgar": 17
+    },
+    "provider_health": {
+      "yfinance": {
+        "status": "ok",
+        "items": 72,
+        "latency_ms": 1542
+      },
+      "analyst": {
+        "status": "ok",
+        "items": 0,
+        "latency_ms": 2328
+      },
+      "rss": {
+        "status": "ok",
+        "items": 18,
+        "latency_ms": 1455
+      },
+      "sec_edgar": {
+        "status": "ok",
+        "items": 17,
+        "latency_ms": 4376
+      }
+    },
+    "warnings": []
+  },
+  "summary": {
+    "symbols_reviewed": 3,
+    "executed": 1,
+    "approved_not_executed": 0,
+    "risk_rejected": 0,
+    "skipped": 2
+  },
+  "decisions": [
+    {
+      "symbol": "NKE",
+      "outcome": "skipped",
+      "morning_recommendation": "watch",
+      "monitor_recommendation": "watch",
+      "ready_to_trade": false,
+      "setup_state": "planned",
+      "watchlist_bucket": "event_watch",
+      "top_blocker": "Earnings are Tuesday after the close and expectations are mixed after a large YTD decline.",
+      "action_confidence": {
+        "long_thesis": 0.52,
+        "entry": 0.3,
+        "avoid": 0.57,
+        "data_quality": 0.76
+      },
+      "confidence": 0.57,
+      "monitor_reason": "NKE is near the planned level but remains watch-only until after earnings and a constructive post-event reaction.",
+      "matched_conditions": [
+        "price is holding above 41"
+      ],
+      "failed_conditions": [
+        "earnings event has not cleared",
+        "constructive guidance reaction is not yet available"
+      ],
+      "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
+      "price": 41.385000000000005,
+      "entry": 41.2,
+      "stop_loss": 39.8,
+      "target": 44.5,
+      "pct_from_entry": 0.45,
+      "pct_from_stop": 3.98,
+      "pct_from_target": -7.0,
+      "headline_count": 10,
+      "source_count": 3
+    },
+    {
+      "symbol": "AVAV",
+      "outcome": "executed",
+      "morning_recommendation": "buy",
+      "monitor_recommendation": "buy",
+      "ready_to_trade": true,
+      "setup_state": "planned",
+      "watchlist_bucket": "buy_today_if_confirmed",
+      "top_blocker": "After-close earnings create event risk, so the setup needs price strength and smaller sizing discipline.",
+      "action_confidence": {
+        "long_thesis": 0.66,
+        "entry": 0.58,
+        "avoid": 0.31,
+        "data_quality": 0.69
+      },
+      "confidence": 0.58,
+      "monitor_reason": "AVAV is close to the planned entry with supportive live regime conditions, so the morning buy setup is confirmed for small sizing.",
+      "matched_conditions": [
+        "price is trading around 138.50",
+        "live tape is risk_on",
+        "planned trade allows small sizing ahead of after-close earnings"
+      ],
+      "failed_conditions": [],
+      "execution_condition": "Buy only if AVAV is trading around 138.50, holds VWAP through the first hour, and the position can be kept small ahead of after-close earnings.",
+      "price": 139.72,
+      "entry": 138.5,
+      "stop_loss": 134.5,
+      "target": 147.0,
+      "pct_from_entry": 0.88,
+      "pct_from_stop": 3.88,
+      "pct_from_target": -4.95,
+      "headline_count": 10,
+      "source_count": 2
+    },
+    {
+      "symbol": "MU",
+      "outcome": "skipped",
+      "morning_recommendation": "watch",
+      "monitor_recommendation": "watch",
+      "ready_to_trade": false,
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.",
+      "action_confidence": {
+        "long_thesis": 0.64,
+        "entry": 0.28,
+        "avoid": 0.62,
+        "data_quality": 0.7
+      },
+      "confidence": 0.62,
+      "monitor_reason": "MU has reclaimed the price threshold but remains repair-watch without clear base and VWAP confirmation.",
+      "matched_conditions": [
+        "price is above 1130"
+      ],
+      "failed_conditions": [
+        "tight base above 1130 is not confirmed",
+        "VWAP hold is not confirmed",
+        "entry confidence remains low and avoid confidence is high"
+      ],
+      "execution_condition": "Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.",
+      "price": 1139.005,
+      "entry": 1150.0,
+      "stop_loss": 1115.0,
+      "target": 1225.0,
+      "pct_from_entry": -0.96,
+      "pct_from_stop": 2.15,
+      "pct_from_target": -7.02,
+      "headline_count": 9,
+      "source_count": 2
+    }
+  ]
+}
