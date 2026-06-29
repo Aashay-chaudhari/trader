@@ -1966,63 +1966,83 @@
     "counts": {
       "days": 3,
       "entries": 17,
-      "headlines": 89,
-      "articles": 108,
-      "urls": 16,
+      "headlines": 85,
+      "articles": 104,
+      "urls": 15,
       "sources": 11,
       "searches": 0
     },
     "latest": {
-      "id": "2026-06-29:morning:saved_prompt_context",
-      "timestamp": "2026-06-29T09:08:04.699256-04:00",
+      "id": "2026-06-29:monitor:2026-06-29T09:36:54.804595-04:00",
+      "timestamp": "2026-06-29T09:36:54.804595-04:00",
       "day": "2026-06-29",
-      "phase": "research",
-      "phase_group": "morning",
-      "phase_label": "Morning Research",
-      "source_kind": "saved_prompt_context",
-      "quality_score": 85,
-      "quality_label": "high",
-      "headline_count": 29,
-      "article_count": 48,
-      "url_count": 11,
-      "source_count": 10,
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
+      "source_kind": "interaction_prompt_transcript",
+      "quality_score": 0,
+      "quality_label": "unknown",
+      "headline_count": 0,
+      "article_count": 0,
+      "url_count": 0,
+      "source_count": 0,
       "search_count": 0,
-      "symbols": [
-        "AVAV",
-        "CHTR",
-        "CMCSA",
-        "MU",
-        "NKE",
-        "PLTR",
-        "QCOM",
-        "QURE",
-        "WDC"
-      ],
-      "sources": [
-        "Barron's",
-        "BiopharmaWatch",
-        "Investing.com",
-        "Investopedia",
-        "Kiplinger",
-        "MarketWatch",
-        "Qualcomm Investor Relations",
-        "StockAnalysis",
-        "The Motley Fool",
-        "Yahoo Finance"
-      ],
-      "notes": "Structured saved news context: 48 article/headline items across 10 sources.",
+      "symbols": [],
+      "sources": [],
+      "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+      "status": "success",
       "links": [
         {
-          "label": "Prompt context JSON",
-          "url": "data/profiles/codex/context.json"
+          "label": "Prompt",
+          "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md"
         },
         {
-          "label": "News audit JSON",
-          "url": "data/profiles/codex/news_audit.json"
+          "label": "Transcript",
+          "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt"
+        },
+        {
+          "label": "Metadata",
+          "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json"
         }
       ]
     },
     "entries": [
+      {
+        "id": "2026-06-29:monitor:2026-06-29T09:36:54.804595-04:00",
+        "timestamp": "2026-06-29T09:36:54.804595-04:00",
+        "day": "2026-06-29",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "source_kind": "interaction_prompt_transcript",
+        "quality_score": 0,
+        "quality_label": "unknown",
+        "headline_count": 0,
+        "article_count": 0,
+        "url_count": 0,
+        "source_count": 0,
+        "search_count": 0,
+        "symbols": [],
+        "sources": [],
+        "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+        "status": "success",
+        "links": [
+          {
+            "label": "Prompt",
+            "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md"
+          },
+          {
+            "label": "Transcript",
+            "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt"
+          },
+          {
+            "label": "Metadata",
+            "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json"
+          }
+        ]
+      },
       {
         "id": "2026-06-29:morning:saved_prompt_context",
         "timestamp": "2026-06-29T09:08:04.699256-04:00",
@@ -2358,43 +2378,6 @@
         ]
       },
       {
-        "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
-        "timestamp": "2026-06-17T16:40:42.496708+00:00",
-        "day": "2026-06-17",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "source_kind": "interaction_prompt_transcript",
-        "quality_score": 26,
-        "quality_label": "low",
-        "headline_count": 4,
-        "article_count": 4,
-        "url_count": 1,
-        "source_count": 1,
-        "search_count": 0,
-        "symbols": [],
-        "sources": [
-          "github.com"
-        ],
-        "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-        "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli",
-        "status": "success",
-        "links": [
-          {
-            "label": "Prompt",
-            "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md"
-          },
-          {
-            "label": "Transcript",
-            "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt"
-          },
-          {
-            "label": "Metadata",
-            "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json"
-          }
-        ]
-      },
-      {
         "id": "2026-06-17:evening:2026-06-17T16:20:29.762183-04:00",
         "timestamp": "2026-06-17T16:20:29.762183-04:00",
         "day": "2026-06-17",
@@ -2643,8 +2626,43 @@
     "days": [
       {
         "date": "2026-06-29",
-        "count": 2,
+        "count": 3,
         "entries": [
+          {
+            "id": "2026-06-29:monitor:2026-06-29T09:36:54.804595-04:00",
+            "timestamp": "2026-06-29T09:36:54.804595-04:00",
+            "day": "2026-06-29",
+            "phase": "monitor",
+            "phase_group": "monitor",
+            "phase_label": "Monitor Evaluations",
+            "source_kind": "interaction_prompt_transcript",
+            "quality_score": 0,
+            "quality_label": "unknown",
+            "headline_count": 0,
+            "article_count": 0,
+            "url_count": 0,
+            "source_count": 0,
+            "search_count": 0,
+            "symbols": [],
+            "sources": [],
+            "notes": "Prompt/transcript scan found 0 search marker(s), 0 URL(s), and 0 news/source text marker(s).",
+            "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+            "status": "success",
+            "links": [
+              {
+                "label": "Prompt",
+                "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md"
+              },
+              {
+                "label": "Transcript",
+                "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt"
+              },
+              {
+                "label": "Metadata",
+                "url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json"
+              }
+            ]
+          },
           {
             "id": "2026-06-29:morning:saved_prompt_context",
             "timestamp": "2026-06-29T09:08:04.699256-04:00",
@@ -2989,45 +3007,8 @@
       },
       {
         "date": "2026-06-17",
-        "count": 8,
+        "count": 7,
         "entries": [
-          {
-            "id": "2026-06-17:monitor:2026-06-17T16:40:42.496708+00:00",
-            "timestamp": "2026-06-17T16:40:42.496708+00:00",
-            "day": "2026-06-17",
-            "phase": "monitor",
-            "phase_group": "monitor",
-            "phase_label": "Monitor Evaluations",
-            "source_kind": "interaction_prompt_transcript",
-            "quality_score": 26,
-            "quality_label": "low",
-            "headline_count": 4,
-            "article_count": 4,
-            "url_count": 1,
-            "source_count": 1,
-            "search_count": 0,
-            "symbols": [],
-            "sources": [
-              "github.com"
-            ],
-            "notes": "Prompt/transcript scan found 0 search marker(s), 1 URL(s), and 4 news/source text marker(s).",
-            "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli",
-            "status": "success",
-            "links": [
-              {
-                "label": "Prompt",
-                "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md"
-              },
-              {
-                "label": "Transcript",
-                "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt"
-              },
-              {
-                "label": "Metadata",
-                "url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json"
-              }
-            ]
-          },
           {
             "id": "2026-06-17:evening:2026-06-17T16:20:29.762183-04:00",
             "timestamp": "2026-06-17T16:20:29.762183-04:00",
@@ -3862,33 +3843,55 @@
   },
   "interactions": {
     "counts": {
-      "total": 56,
+      "total": 57,
       "recent": 24,
       "days": 4
     },
     "latest": {
-      "timestamp": "2026-06-29T09:13:05.704115-04:00",
+      "timestamp": "2026-06-29T09:36:54.804595-04:00",
       "day": "2026-06-29",
       "profile": "codex",
-      "phase": "weekly",
-      "phase_group": "weekly",
-      "phase_label": "Weekly Review",
+      "phase": "monitor",
+      "phase_group": "monitor",
+      "phase_label": "Monitor Evaluations",
       "tool": "codex",
       "status": "success",
-      "summary": "Completed the weekly review for the codex profile only. | Wrote and staged: | - [week_2026-06-18.json](/mnt/c/Users/aasha/Desktop/trader/data/profiles/codex/observations/weekly/week_2026-06-18.json)",
-      "prompt_file": "data/profiles/codex/interactions/2026-06-29/090919_weekly_prompt.md",
-      "transcript_file": "data/profiles/codex/interactions/2026-06-29/090919_weekly_transcript.txt",
+      "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+      "prompt_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+      "transcript_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
       "context_file": "",
-      "metadata_file": "data/profiles/codex/interactions/2026-06-29/090919_weekly_interaction.json",
-      "raw_log_file": ".tmp/cli_logs/codex_weekly_2026-06-29_090919.log",
-      "prompt_source": "scripts/prompts/weekly_review.md",
-      "prompt_url": "data/profiles/codex/interactions/2026-06-29/090919_weekly_prompt.md",
-      "transcript_url": "data/profiles/codex/interactions/2026-06-29/090919_weekly_transcript.txt",
+      "metadata_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+      "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-29_093606.log",
+      "prompt_source": "scripts/prompts/monitor_check.md",
+      "prompt_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+      "transcript_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
       "context_url": "",
-      "metadata_url": "data/profiles/codex/interactions/2026-06-29/090919_weekly_interaction.json",
+      "metadata_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
       "prompt_source_url": ""
     },
     "latest_by_phase": {
+      "monitor": {
+        "timestamp": "2026-06-29T09:36:54.804595-04:00",
+        "day": "2026-06-29",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+        "context_file": "",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-29_093606.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+        "context_url": "",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       "weekly": {
         "timestamp": "2026-06-29T09:13:05.704115-04:00",
         "day": "2026-06-29",
@@ -3931,28 +3934,6 @@
         "transcript_url": "data/profiles/codex/interactions/2026-06-29/090230_morning_transcript.txt",
         "context_url": "",
         "metadata_url": "data/profiles/codex/interactions/2026-06-29/090230_morning_interaction.json",
-        "prompt_source_url": ""
-      },
-      "monitor": {
-        "timestamp": "2026-06-18T10:41:41.401142-04:00",
-        "day": "2026-06-18",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex",
-        "status": "failed",
-        "summary": "",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-18/104128_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-18/104128_monitor_transcript.txt",
-        "context_file": "",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-18/104128_monitor_interaction.json",
-        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-18_104128.log",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-18/104128_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-18/104128_monitor_transcript.txt",
-        "context_url": "",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-18/104128_monitor_interaction.json",
         "prompt_source_url": ""
       },
       "evening": {
@@ -4001,13 +3982,35 @@
       }
     },
     "phase_counts": {
+      "monitor": 49,
       "weekly": 1,
       "morning": 3,
-      "monitor": 48,
       "evening": 3,
       "voice": 1
     },
     "recent": [
+      {
+        "timestamp": "2026-06-29T09:36:54.804595-04:00",
+        "day": "2026-06-29",
+        "profile": "codex",
+        "phase": "monitor",
+        "phase_group": "monitor",
+        "phase_label": "Monitor Evaluations",
+        "tool": "codex",
+        "status": "success",
+        "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+        "prompt_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+        "transcript_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+        "context_file": "",
+        "metadata_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+        "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-29_093606.log",
+        "prompt_source": "scripts/prompts/monitor_check.md",
+        "prompt_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+        "transcript_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+        "context_url": "",
+        "metadata_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+        "prompt_source_url": ""
+      },
       {
         "timestamp": "2026-06-29T09:13:05.704115-04:00",
         "day": "2026-06-29",
@@ -4513,34 +4516,12 @@
         "context_url": "",
         "metadata_url": "data/profiles/codex/interactions/2026-06-17/130904_monitor_interaction.json",
         "prompt_source_url": ""
-      },
-      {
-        "timestamp": "2026-06-17T16:40:42.496708+00:00",
-        "day": "2026-06-17",
-        "profile": "codex",
-        "phase": "monitor",
-        "phase_group": "monitor",
-        "phase_label": "Monitor Evaluations",
-        "tool": "codex-loop",
-        "status": "success",
-        "summary": "Evaluated: QCOM, HOOD, GM | Live conditions weaken the morning thesis because all checked setups are invalidated, prices do not clearly satisfy entry bands, and the regime scorecard is neutral rather than ris | codex / codex-cli",
-        "prompt_file": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md",
-        "transcript_file": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt",
-        "context_file": "data/profiles/codex/context/2026-06-17_monitor_164042.json",
-        "metadata_file": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json",
-        "raw_log_file": "",
-        "prompt_source": "scripts/prompts/monitor_check.md",
-        "prompt_url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_prompt.md",
-        "transcript_url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_transcript.txt",
-        "context_url": "data/profiles/codex/context/2026-06-17_monitor_164042.json",
-        "metadata_url": "data/profiles/codex/interactions/2026-06-17/164042_monitor_interaction.json",
-        "prompt_source_url": ""
       }
     ],
     "days": [
       {
         "date": "2026-06-29",
-        "count": 2,
+        "count": 3,
         "phases": [
           {
             "key": "morning",
@@ -4566,6 +4547,34 @@
                 "transcript_url": "data/profiles/codex/interactions/2026-06-29/090230_morning_transcript.txt",
                 "context_url": "",
                 "metadata_url": "data/profiles/codex/interactions/2026-06-29/090230_morning_interaction.json",
+                "prompt_source_url": ""
+              }
+            ]
+          },
+          {
+            "key": "monitor",
+            "label": "Monitor Evaluations",
+            "items": [
+              {
+                "timestamp": "2026-06-29T09:36:54.804595-04:00",
+                "day": "2026-06-29",
+                "profile": "codex",
+                "phase": "monitor",
+                "phase_group": "monitor",
+                "phase_label": "Monitor Evaluations",
+                "tool": "codex",
+                "status": "success",
+                "summary": "Wrote `data/profiles/codex/cache/local_monitor_decision.json` and validated it parses as JSON with `python3 -m json.tool`. | Decision is neutral/no-trade: NKE, WDC, and QURE are all `ready_to_trade=false` based on the prepared monitor gates.",
+                "prompt_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+                "transcript_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+                "context_file": "",
+                "metadata_file": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
+                "raw_log_file": ".tmp/cli_logs/codex_monitor_2026-06-29_093606.log",
+                "prompt_source": "scripts/prompts/monitor_check.md",
+                "prompt_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_prompt.md",
+                "transcript_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_transcript.txt",
+                "context_url": "",
+                "metadata_url": "data/profiles/codex/interactions/2026-06-29/093606_monitor_interaction.json",
                 "prompt_source_url": ""
               }
             ]

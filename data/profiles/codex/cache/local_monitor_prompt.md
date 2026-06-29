@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260618_144109
-Candidate symbols: QCOM, HOOD, WDC
+Run id: 20260629_133541
+Candidate symbols: NKE, WDC, QURE
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -10,29 +10,29 @@ morning execution conditions and the live snapshot.
 
 ## Monitor Candidates
 
-  QCOM: watch | entry=$224.0 stop=$217.5 target=$238.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: Prior AI/Tenstorrent gap failed; QCOM must reclaim the old failed zone before any new long thesis is actionable.
-    Action confidence: long_thesis=0.49 entry=0.28 avoid=0.62 data_quality=0.64
-    Execution condition: Watch only unless QCOM reclaims 220.50-224.00, holds VWAP, and outperforms SMH after the first hour.
-    Why it is being checked now: price is within 0.1% of entry; 9 fresh headline(s)
-  HOOD: watch | entry=$107.0 stop=$103.0 target=$116.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: The restructuring/200-day reclaim narrative needs proof of fintech and crypto risk appetite before it is buyable.
-    Action confidence: long_thesis=0.52 entry=0.34 avoid=0.58 data_quality=0.62
-    Execution condition: Watch only unless HOOD holds its 200-day reclaim and VWAP after the first hour while crypto/fintech peers confirm risk appetite.
-    Why it is being checked now: price is within 0.2% of entry; 11 fresh headline(s)
-  WDC: watch | entry=$725.0 stop=$700.0 target=$780.0
-    Setup state: planned | bucket: do_not_chase | top blocker: High crowding and a large premarket move make the entry late unless WDC digests or forms a tight base.
-    Action confidence: long_thesis=0.69 entry=0.38 avoid=0.55 data_quality=0.68
-    Execution condition: Watch only unless WDC pulls back into a controlled 720.00-735.00 support test and then reclaims VWAP with MU/STX still green.
-    Why it is being checked now: price is near target; 11 fresh headline(s)
+  NKE: watch | entry=$41.2 stop=$39.8 target=$44.5
+    Setup state: planned | bucket: event_watch | top blocker: Earnings are Tuesday after the close and expectations are mixed after a large YTD decline.
+    Action confidence: long_thesis=0.52 entry=0.3 avoid=0.57 data_quality=0.76
+    Execution condition: Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.
+    Why it is being checked now: price is within 0.5% of entry; 10 fresh headline(s)
+  WDC: watch | entry=$602.0 stop=$584.0 target=$640.0
+    Setup state: repair_watch | bucket: repair_watch | top blocker: Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.
+    Action confidence: long_thesis=0.6 entry=0.25 avoid=0.66 data_quality=0.68
+    Execution condition: Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.
+    Why it is being checked now: price is within 0.6% of entry; 14 fresh headline(s)
+  QURE: watch | entry=$49.0 stop=$47.4 target=$52.5
+    Setup state: retired | bucket: avoid_until_new_thesis | top blocker: No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.
+    Action confidence: long_thesis=0.28 entry=0.18 avoid=0.7 data_quality=0.45
+    Execution condition: Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.
+    Why it is being checked now: price is within 1.2% of entry; 14 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| QCOM  | $  224.24 |  +5.3% |  55 |     0.4x | yahoo_1m | 12s |         9 |
-| HOOD  | $  106.76 |  +1.5% |  71 |     0.3x | yahoo_1m | 12s |        11 |
-| WDC   | $  773.75 |  +8.7% |  80 |     0.6x | yahoo_1m | 13s |        11 |
+| NKE   | $   40.99 |  +0.6% |  37 |     0.1x | yahoo_1m | 48s |        10 |
+| WDC   | $  605.69 |  +3.3% |  52 |     0.1x | yahoo_1m | 46s |        14 |
+| QURE  | $   48.42 |  +1.9% |  74 |     0.0x | yahoo_1m | 49s |        14 |
 
 ## Relevant Commodity Snapshot
 
@@ -41,36 +41,36 @@ No direct commodity driver mapped for current candidates.
 ## Regime Scorecard
 
 Morning scorecard:
-Computed regime: neutral (score=3, bullish=4, bearish=2, unknown=2).
+Computed regime: neutral (score=1, bullish=3, bearish=2, unknown=1).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: neutral (0); Investopedia reported S&P 500 futures +0.8% early June 18, but Barron's reported the S&P 500 fell 1.2% on June 17 after the Fed.
-- qqq_trend: neutral (0); Investopedia reported Nasdaq 100 futures +1.4%, but Barron's reported the Nasdaq fell 1.3% on June 17 and the profile's last observation warned that Nasdaq weakness can coexist with low VIX.
-- small_cap_breadth: unknown (0); No reliable June 18 small-cap breadth source was verified within the 10-search budget.
-- vix_direction: bullish (1); Yahoo Finance showed VIX near 17.13, down about 7.1%, and Investing.com showed S&P 500 VIX 17.13, down about 7.05%.
-- ten_year_yield: bullish (1); Investing.com showed the U.S. 10Y around 4.437%, down about 0.020, while Investors.com cited 4.46% premarket.
-- sector_breadth: bullish (1); Premarket leadership was concentrated but broad within semiconductors and storage: Investing.com listed INTC, ON, WDC, LRCX, KLAC, AMAT, TER, STX; MarketWatch highlighted Intel, Micron, and Marvell gains.
-- candidate_relative_strength: bullish (1); INTC was reported up roughly 6-10% premarket and MU around 4-6% premarket on fresh company/analyst catalysts.
-- headline_risk: bearish (-1); Guardian and Barron's reported that the Fed held rates but signaled possible hikes and unsettled markets; Juneteenth closure tomorrow may also reduce follow-through.
+- sp500_trend: neutral (0); StreetStats showed the S&P 500 near its 50-day average at 7354.02 versus a 50-day average of 7363.43, above the 200-day but with neutral RSI; finance quote showed SPY slightly lower at 728.99 during premarket.
+- qqq_trend: bearish (-1); IBD/Barron's described recent Nasdaq weakness and a sharp tech pullback; finance quote showed QQQ down 1.35% at 706.52.
+- small_cap_breadth: bearish (-1); Investing.com premarket data showed IWM lagging at -0.16% while QQQ/SPY futures were higher; finance quote showed IWM slightly lower at 299.83.
+- vix_direction: bullish (1); Yahoo/MarketWatch/Investing.com showed VIX around 18.4-18.6, down versus the prior 19.7 area.
+- ten_year_yield: bullish (1); Kapitales market summary reported the U.S. 10-year Treasury yield declined for a fourth straight session to 4.37%, its lowest since May 8.
+- sector_breadth: unknown (0); Yahoo sector and Schwab calendar sources did not provide a clean real-time sector-leadership read; available evidence showed stock-specific movers rather than broad sector confirmation.
+- candidate_relative_strength: bullish (1); Premarket sources showed CMCSA/CHTR/PLTR among active gainers, and finance quote showed PLTR up 5.2% and AVAV up 1.0% before the open.
+- headline_risk: neutral (0); U.S.-Iran de-escalation reduced immediate oil/geopolitical risk, but Thursday jobs data and Fed-rate expectations remain unresolved macro risks.
 
 Live scorecard:
 Computed regime: risk_on (score=5, bullish=5, bearish=0, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bullish (1); SPY change=0.7, trend=up
-- qqq_trend: bullish (1); QQQ change=1.94
+- sp500_trend: bullish (1); SPY change=1.24, trend=up
+- qqq_trend: bullish (1); QQQ change=1.37
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-0.62
-- ten_year_yield: neutral (0); 10Y yield=4.43, change=None
-- sector_breadth: bullish (1); 7 sectors positive, 3 sectors negative
+- vix_direction: bullish (1); VIX level=normal, change=-1.26
+- ten_year_yield: neutral (0); 10Y yield=4.38, change=None
+- sector_breadth: bullish (1); 9 sectors positive, 2 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: bullish (1); declared regime=risk_on
 
 ## Watchlist Buckets
 
-- avoid_until_new_thesis: (none)
-- buy_today_if_confirmed: INTC, MU
-- do_not_chase: QURE, WDC
-- event_watch: (none)
-- repair_watch: HOOD, QCOM
+- avoid_until_new_thesis: QURE
+- buy_today_if_confirmed: AVAV, PLTR
+- do_not_chase: CHTR, CMCSA
+- event_watch: NKE
+- repair_watch: MU, QCOM, WDC
 
 ## Active Positions
 
@@ -94,7 +94,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260618_144109",
+  "run_id": "20260629_133541",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
