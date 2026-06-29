@@ -1,0 +1,251 @@
+{
+  "date": "2026-06-29",
+  "market_regime": "risk_on",
+  "market_summary": "U.S. equities staged a selective risk-on rebound after easing U.S.-Iran tension and renewed mega-cap/AI buying: SPY finished up about 1.7%, QQQ about 2.5%, and DIA about 0.8%, while IWM slipped slightly. VIX closed in the high-17s/near 18 area, so fear compressed but breadth was not clean enough to treat every growth setup as approved.",
+  "sector_leaders": [
+    "Technology",
+    "Communication Services"
+  ],
+  "sector_laggards": [
+    "Small Caps",
+    "Materials"
+  ],
+  "key_drivers": [
+    "U.S.-Iran de-escalation and lower volatility encouraged a rebound after the S&P 500 and Nasdaq had been on five-day losing streaks.",
+    "Mega-cap technology, AI, memory/storage, satellite, and cable/communications headlines drove the tape more than broad participation.",
+    "Thursday jobs data and a holiday-shortened week kept macro risk in front of the market despite the strong index close."
+  ],
+  "thesis_review": [
+    {
+      "thesis": "Neutral relief regime: geopolitical de-escalation can stabilize indexes, but longs should be conditional because QQQ/breadth repair was not proven in the morning.",
+      "status": "confirmed",
+      "evidence": "The market did repair aggressively in headline indexes, especially QQQ, while IWM lagged and sector participation was mixed; the neutral morning label was directionally cautious but under-called the magnitude of the tech rebound.",
+      "entry_quality_lesson": "When index momentum accelerates and VIX compresses, avoid staying mechanically neutral, but still require symbol-level proof before buying crowded setups."
+    },
+    {
+      "thesis": "AVAV can work into after-close earnings if it holds the 138 area with VWAP support and position size stays small.",
+      "status": "pending",
+      "evidence": "AVAV traded above the 138.50 plan intraday and the system bought 71 shares at 139.72 near the close, but the earnings catalyst had not resolved in the available profile snapshot and post-close source checks mainly confirmed the scheduled call.",
+      "entry_quality_lesson": "The price was fair versus the plan, but entering minutes before a binary earnings event leaves little room to react; event-gated buys need a stricter late-day cutoff or explicit earnings-hold rule."
+    },
+    {
+      "thesis": "WDC/MU storage and memory leadership needs digestion, base/VWAP confirmation, and no MU group drag before new long exposure.",
+      "status": "weakened",
+      "evidence": "MU and QCOM caution was reasonable, but WDC reclaimed and then closed around 651.75, far above the 602 plan and near the session high, making the blanket repair-watch stance too conservative for the strongest storage leader.",
+      "entry_quality_lesson": "Missing explicit VWAP data should not automatically block a liquid leader when price reclaims the trigger, sector narrative is active, and the stock is closing on relative strength."
+    },
+    {
+      "thesis": "NKE should remain event-watch only until June 30 earnings clear and price holds above 41 with constructive guidance reaction.",
+      "status": "confirmed",
+      "evidence": "NKE closed near 41.48 and held above the reference area, but the catalyst remains tomorrow after the close, so skipping pre-event exposure respected the morning thesis.",
+      "entry_quality_lesson": "For mixed-turnaround earnings, a technically fair price before the print is still not a clean entry unless the plan explicitly accepts gap risk."
+    },
+    {
+      "thesis": "CMCSA/CHTR should not be chased after large cable/SpaceX/M&A headline gaps without regular-session confirmation.",
+      "status": "confirmed",
+      "evidence": "CHTR and CMCSA were major movers, but both had very wide intraday ranges; CHTR faded from a 171.50 high to 146.16 and CMCSA faded from 29.66 to 24.19, validating the do-not-chase label.",
+      "entry_quality_lesson": "Gap headlines tied to speculative M&A or partnership narratives need opening-range risk control because headline buyers can be late even on a green close."
+    }
+  ],
+  "trades_review": [
+    {
+      "symbol": "AVAV",
+      "action": "buy",
+      "entry_price": 139.72,
+      "current_price": 139.59,
+      "pnl_pct": -0.09,
+      "strategy": "combined(vwap+news_catalyst)",
+      "entry_quality": "fair",
+      "thesis_quality": "unproven",
+      "assessment": "The entry was close to the planned level and sized near 10%, but buying immediately before after-close earnings makes the thesis unproven rather than a clean confirmed swing."
+    }
+  ],
+  "patterns_detected": [
+    {
+      "name": "late_day_event_entry_needs_cutoff",
+      "symbol": "AVAV",
+      "outcome": "pending",
+      "notes": "A fair technical entry became lower quality because it was submitted minutes before a scheduled earnings call."
+    },
+    {
+      "name": "storage_leader_reclaim_can_override_missing_vwap",
+      "symbol": "WDC",
+      "outcome": "lost",
+      "notes": "WDC was skipped for missing VWAP/group confirmation even though it reclaimed the plan and closed far above target, showing the system needs an alternate relative-strength override."
+    },
+    {
+      "name": "speculative_cable_gap_fades_intraday",
+      "symbol": "CHTR",
+      "outcome": "won",
+      "notes": "CHTR and CMCSA finished green but far below intraday highs after SpaceX/M&A headlines, validating the do-not-chase bucket."
+    },
+    {
+      "name": "retired_biotech_needs_fresh_liquid_catalyst",
+      "symbol": "QURE",
+      "outcome": "won",
+      "notes": "QURE stayed weak after being repeatedly skipped for no fresh verified catalyst and weak volume confirmation."
+    }
+  ],
+  "confidence_calibration": {
+    "high_conf_win_rate": 0.0,
+    "medium_conf_win_rate": 0.5,
+    "low_conf_win_rate": 0.0,
+    "entry_confidence_assessment": "The only executed entry had medium entry confidence and was technically fair, but the late earnings timing means it should not be treated as a clean win yet.",
+    "avoid_confidence_assessment": "High avoid confidence worked for QURE and the cable chase risk, but it failed on WDC because missing VWAP evidence was overweighted against live price reclaim and relative strength.",
+    "assessment": "Confidence was directionally useful for filtering stale/retired setups, but not calibrated enough to distinguish unavailable confirmation data from actual failed confirmation."
+  },
+  "decision_journal_review": {
+    "skipped_setups_assessment": "Most skips were correct: NKE was still pre-earnings, QURE was retired, QCOM lacked repair, and CMCSA/CHTR were chase-risk headlines. WDC was the clear missed winner because the system stayed too rigid on VWAP/base proof after price reclaimed the planned level.",
+    "approved_setups_assessment": "AVAV was approved with moderate conviction and small sizing, but the approval came too close to after-close earnings for a clean swing entry unless the strategy explicitly accepts binary event risk.",
+    "missed_winner_candidates": [
+      "WDC",
+      "PLTR",
+      "ASTS",
+      "RKLB"
+    ],
+    "avoided_loser_candidates": [
+      "QURE",
+      "QCOM"
+    ],
+    "data_quality_notes": "The analyst provider returned zero items, several decisions had only two sources, and missing explicit VWAP/relative-strength fields caused the monitor to treat unknown confirmation as failed confirmation."
+  },
+  "missed_opportunities": [
+    {
+      "symbol": "WDC",
+      "move_pct": 11.24,
+      "why_missed": "Repair-watch logic required explicit VWAP and MU-drag relief even after WDC reclaimed the plan and showed clear storage-leader relative strength."
+    },
+    {
+      "symbol": "ASTS",
+      "move_pct": 21.34,
+      "why_missed": "The screen captured SpaceX/telecom disruption through CHTR/CMCSA but did not map the same satellite-mobile theme to the cleaner high-beta winner."
+    },
+    {
+      "symbol": "RKLB",
+      "move_pct": 15.89,
+      "why_missed": "Rocket Lab's Iridium acquisition was a large company-specific aerospace/satellite catalyst outside the morning watchlist."
+    },
+    {
+      "symbol": "PLTR",
+      "move_pct": 2.43,
+      "why_missed": "PLTR was a best-opportunity buy candidate but never entered the monitor's final execution set despite meeting the broad AI/software rebound theme."
+    }
+  ],
+  "next_session_theses": [
+    {
+      "name": "avav_post_earnings_resolution",
+      "theory": "AVAV is actionable over the next 2-5 sessions only if the earnings call confirms backlog/revenue strength and price holds above 139-140; otherwise the near-close entry should be trimmed or exited quickly as an event-risk mistake.",
+      "symbols_to_watch": [
+        "AVAV"
+      ],
+      "drivers_to_monitor": [
+        "fiscal Q4 results",
+        "funded backlog",
+        "FY2027 guidance",
+        "defense/drone demand commentary"
+      ],
+      "confirmation_signals": [
+        "post-earnings trade holds above 140",
+        "volume expands on upside",
+        "management confirms durable backlog or margin improvement"
+      ],
+      "invalidation_signals": [
+        "gap below 134.50 stop",
+        "guidance disappoints",
+        "stock fails below VWAP after the first hour"
+      ],
+      "preferred_entry_style": "opening_range_hold",
+      "crowding_risk": "medium",
+      "confidence": 0.52
+    },
+    {
+      "name": "storage_leadership_second_chance",
+      "theory": "WDC can remain a 2-10 day leader if it digests above the 640-652 breakout area while MU avoids renewed distribution; chase risk is high after today's move, so only a pullback or breakout retest is acceptable.",
+      "symbols_to_watch": [
+        "WDC",
+        "MU",
+        "SMH"
+      ],
+      "drivers_to_monitor": [
+        "AI storage demand",
+        "memory-chip follow-through",
+        "SMH versus QQQ relative strength"
+      ],
+      "confirmation_signals": [
+        "WDC holds above 640 on lower-volume pullbacks",
+        "MU stabilizes above 1130",
+        "SMH outperforms QQQ"
+      ],
+      "invalidation_signals": [
+        "WDC loses 625",
+        "MU breaks 1115",
+        "AI-memory headlines reverse into sector distribution"
+      ],
+      "preferred_entry_style": "breakout_retest",
+      "crowding_risk": "high",
+      "confidence": 0.6
+    },
+    {
+      "name": "nke_wait_for_print",
+      "theory": "NKE should stay watch-only until June 30 earnings; a long is valid only if guidance reaction holds above 41-42 with improving volume, while a weak print becomes an avoidance rule rather than a short.",
+      "symbols_to_watch": [
+        "NKE",
+        "XLY"
+      ],
+      "drivers_to_monitor": [
+        "Q4 earnings",
+        "margin commentary",
+        "brand turnaround evidence",
+        "consumer discretionary breadth"
+      ],
+      "confirmation_signals": [
+        "post-earnings hold above 42",
+        "analyst revisions stabilize",
+        "XLY participates"
+      ],
+      "invalidation_signals": [
+        "gap below 39.80",
+        "management cuts guidance",
+        "rally fades below opening range"
+      ],
+      "preferred_entry_style": "opening_range_hold",
+      "crowding_risk": "medium",
+      "confidence": 0.55
+    },
+    {
+      "name": "space_satellite_theme_after_gap",
+      "theory": "The SpaceX/mobile/satellite theme can continue if ASTS, RKLB, and CHTR hold above post-news ranges, but after today's extension the only acceptable long entries are pullbacks or retests, not opening chases.",
+      "symbols_to_watch": [
+        "ASTS",
+        "RKLB",
+        "CHTR",
+        "CMCSA"
+      ],
+      "drivers_to_monitor": [
+        "SpaceX Nasdaq-100 inclusion",
+        "Charter-SpaceX partnership reports",
+        "Rocket Lab-Iridium acquisition reaction"
+      ],
+      "confirmation_signals": [
+        "leaders hold above prior close after first hour",
+        "volume remains elevated without full gap fade",
+        "theme breadth includes more than one name"
+      ],
+      "invalidation_signals": [
+        "gap-and-fade below prior close",
+        "partnership reports are denied",
+        "market rotates out of speculative growth"
+      ],
+      "preferred_entry_style": "pullback",
+      "crowding_risk": "high",
+      "confidence": 0.5
+    }
+  ],
+  "forward_outlook": "Tomorrow starts with an open AVAV event-risk position and a market that looks risk-on in indexes but not uniformly broad. Manage AVAV around the post-earnings opening range, watch WDC only on a retest after its missed breakout, keep NKE gated until its June 30 print, and avoid chasing extended SpaceX/satellite/cable winners unless they build a new base.",
+  "lessons": [
+    "Missing explicit VWAP data is not the same as failed VWAP confirmation; for liquid leaders like WDC, add a relative-strength override when price reclaims the plan and closes near highs.",
+    "Do not initiate a new earnings-catalyst long in the final minutes before the report unless the trade plan explicitly says to hold through the print.",
+    "A strong QQQ rebound with falling VIX can turn a neutral morning into a risk-on afternoon, but small-cap lag means entries still need symbol-level confirmation.",
+    "Speculative M&A or partnership gaps can close green while still punishing late buyers; judge chase risk by intraday range fade, not just closing return."
+  ]
+}

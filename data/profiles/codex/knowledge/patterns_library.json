@@ -64,5 +64,53 @@
     ],
     "last_seen": "2026-06-18",
     "notes": "Late high confidence on 2026-06-16 and 2026-06-17 reflected avoid/watch confidence, while 2026-06-18 introduced clearer action_confidence fields for MU, QCOM, and HOOD."
+  },
+  {
+    "name": "late_day_event_entry_needs_cutoff",
+    "description": "A technically fair entry loses quality when submitted immediately before a known binary earnings event.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 0.5,
+    "symbols_seen": [
+      "AVAV"
+    ],
+    "last_seen": "2026-06-29",
+    "notes": "AVAV was bought near the planned level but minutes before after-close earnings, so future event setups need an explicit hold-through-print flag or cutoff."
+  },
+  {
+    "name": "storage_leader_reclaim_can_override_missing_vwap",
+    "description": "A liquid storage/AI leader that reclaims its plan and closes near highs can be missed if absent VWAP evidence is treated as failure.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 0.0,
+    "symbols_seen": [
+      "WDC"
+    ],
+    "last_seen": "2026-06-29",
+    "notes": "WDC was skipped for missing VWAP/group confirmation yet closed far above the planned 602 entry and 640 target."
+  },
+  {
+    "name": "speculative_cable_gap_fades_intraday",
+    "description": "Speculative cable/SpaceX/M&A gap winners can close green but fade enough intraday to punish chase entries.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 1.0,
+    "symbols_seen": [
+      "CHTR"
+    ],
+    "last_seen": "2026-06-29",
+    "notes": "CHTR and CMCSA had large headline gains but closed far below intraday highs, validating do-not-chase discipline."
+  },
+  {
+    "name": "retired_biotech_needs_fresh_liquid_catalyst",
+    "description": "Retired biotech setups should stay avoided until fresh verified catalyst and volume confirmation appear.",
+    "occurrences": 1,
+    "sample_size": 1,
+    "win_rate": 1.0,
+    "symbols_seen": [
+      "QURE"
+    ],
+    "last_seen": "2026-06-29",
+    "notes": "QURE stayed weak and failed to justify a new long despite being near old reference levels earlier in the day."
   }
 ]

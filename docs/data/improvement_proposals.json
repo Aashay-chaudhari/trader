@@ -43,5 +43,41 @@
     "description": "Missed opportunities came from regulatory catalysts, newly public mega-cap momentum, and overlooked semiconductor packaging news. Store missed-mover reason codes so screening gaps can be measured over multiple reflections.",
     "expected_impact": "Turns anecdotal missed opportunities into a prioritized data-source backlog.",
     "status": "proposed"
+  },
+  {
+    "date": "2026-06-29",
+    "category": "data_source",
+    "priority": "high",
+    "title": "Distinguish missing VWAP from failed VWAP",
+    "description": "WDC was skipped because VWAP support was not shown, yet it reclaimed the plan and closed far above target. The monitor should mark unavailable VWAP/relative-strength evidence as unknown and apply alternate checks such as close-near-high, sector leadership, and trigger reclaim.",
+    "expected_impact": "Would have kept WDC eligible after reclaim instead of treating absent confirmation as a blocker.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-29",
+    "category": "risk_management",
+    "priority": "high",
+    "title": "Add late-day earnings-entry cutoff",
+    "description": "AVAV was bought minutes before its scheduled after-close earnings call. Event setups should require an explicit hold-through-earnings flag or block new entries in the final 30 minutes before a binary report.",
+    "expected_impact": "Prevents technically fair entries from becoming unmanaged overnight event bets.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-29",
+    "category": "screening",
+    "priority": "medium",
+    "title": "Map headline themes to adjacent liquid winners",
+    "description": "The system saw SpaceX and cable headlines through CHTR/CMCSA but missed ASTS and RKLB, the cleaner satellite/aerospace momentum winners. Theme extraction should expand watch candidates to adjacent liquid tickers with confirmed volume.",
+    "expected_impact": "Improves capture of real top movers when the original headline names are extended or messy.",
+    "status": "proposed"
+  },
+  {
+    "date": "2026-06-29",
+    "category": "strategy",
+    "priority": "medium",
+    "title": "Add afternoon regime escalation check",
+    "description": "The morning neutral call was prudent, but QQQ and SPY strengthened materially while VIX fell. The monitor should reclassify neutral-to-risk-on when index gains, VIX compression, and leader close-near-high behavior align, while still respecting symbol gates.",
+    "expected_impact": "Allows the system to participate in confirmed afternoon trend days without abandoning entry discipline.",
+    "status": "proposed"
   }
 ]

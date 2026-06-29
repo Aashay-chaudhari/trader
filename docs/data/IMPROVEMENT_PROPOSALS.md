@@ -1,3 +1,21 @@
+## 2026-06-29 — Evening Reflection
+
+### [HIGH] [data_source] Distinguish missing VWAP from failed VWAP
+WDC was skipped because VWAP support was not shown, yet it reclaimed the plan and closed far above target. The monitor should mark unavailable VWAP/relative-strength evidence as unknown and apply alternate checks such as close-near-high, sector leadership, and trigger reclaim.
+**Expected impact:** Would have kept WDC eligible after reclaim instead of treating absent confirmation as a blocker.
+
+### [HIGH] [risk_management] Add late-day earnings-entry cutoff
+AVAV was bought minutes before its scheduled after-close earnings call. Event setups should require an explicit hold-through-earnings flag or block new entries in the final 30 minutes before a binary report.
+**Expected impact:** Prevents technically fair entries from becoming unmanaged overnight event bets.
+
+### [MEDIUM] [screening] Map headline themes to adjacent liquid winners
+The system saw SpaceX and cable headlines through CHTR/CMCSA but missed ASTS and RKLB, the cleaner satellite/aerospace momentum winners. Theme extraction should expand watch candidates to adjacent liquid tickers with confirmed volume.
+**Expected impact:** Improves capture of real top movers when the original headline names are extended or messy.
+
+### [MEDIUM] [strategy] Add afternoon regime escalation check
+The morning neutral call was prudent, but QQQ and SPY strengthened materially while VIX fell. The monitor should reclassify neutral-to-risk-on when index gains, VIX compression, and leader close-near-high behavior align, while still respecting symbol gates.
+**Expected impact:** Allows the system to participate in confirmed afternoon trend days without abandoning entry discipline.
+
 ## 2026-06-16 — Evening Reflection
 
 ### [HIGH] [strategy] Separate buy confidence from avoid confidence
