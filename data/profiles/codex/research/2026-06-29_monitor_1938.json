@@ -1,0 +1,133 @@
+{
+  "run_id": "20260629_193552",
+  "overall_sentiment": "neutral",
+  "market_summary": "Live conditions improved versus the morning tape, but the listed setups still lack complete candidate-specific execution confirmation.",
+  "stocks": {
+    "NKE": {
+      "recommendation": "watch",
+      "confidence": 0.3,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is holding above 41"
+      ],
+      "failed_conditions": [
+        "earnings event has not cleared",
+        "constructive guidance reaction is not yet available"
+      ],
+      "monitor_reason": "NKE is near the trigger level, but the plan is event-gated until after earnings and guidance reaction.",
+      "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
+      "setup_state": "planned",
+      "watchlist_bucket": "event_watch",
+      "top_blocker": "Earnings are Tuesday after the close and expectations are mixed after a large YTD decline.",
+      "action_confidence": {
+        "long_thesis": 0.52,
+        "entry": 0.3,
+        "avoid": 0.57,
+        "data_quality": 0.76
+      },
+      "trade_plan": {
+        "entry": 41.2,
+        "stop_loss": 39.8,
+        "target": 44.5
+      }
+    },
+    "MU": {
+      "recommendation": "watch",
+      "confidence": 0.28,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is above 1130",
+        "QQQ is stabilizing in the live snapshot"
+      ],
+      "failed_conditions": [
+        "tight base above 1130 is not confirmed",
+        "VWAP hold evidence is not provided"
+      ],
+      "monitor_reason": "MU has partial repair evidence, but entry confidence remains low and avoid confidence is high without a confirmed base and VWAP hold.",
+      "execution_condition": "Watch only unless MU forms a tight base above 1130 and holds VWAP while QQQ stabilizes.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Post-earnings AI-memory thesis is strong, but current quote action shows high crowding and poor entry quality.",
+      "action_confidence": {
+        "long_thesis": 0.64,
+        "entry": 0.28,
+        "avoid": 0.62,
+        "data_quality": 0.7
+      },
+      "trade_plan": {
+        "entry": 1150.0,
+        "stop_loss": 1115.0,
+        "target": 1225.0
+      }
+    },
+    "AVAV": {
+      "recommendation": "watch",
+      "confidence": 0.58,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is near the planned entry area",
+        "live tape has improved"
+      ],
+      "failed_conditions": [
+        "VWAP hold through the first hour is not explicitly confirmed",
+        "after-close earnings event risk remains"
+      ],
+      "monitor_reason": "AVAV remains the closest planned buy setup, but the live snapshot does not clearly prove the required VWAP hold before earnings.",
+      "execution_condition": "Buy only if AVAV is trading around 138.50, holds VWAP through the first hour, and the position can be kept small ahead of after-close earnings.",
+      "setup_state": "planned",
+      "watchlist_bucket": "buy_today_if_confirmed",
+      "top_blocker": "After-close earnings create event risk, so the setup needs price strength and smaller sizing discipline.",
+      "action_confidence": {
+        "long_thesis": 0.66,
+        "entry": 0.58,
+        "avoid": 0.31,
+        "data_quality": 0.69
+      },
+      "trade_plan": {
+        "entry": 138.5,
+        "stop_loss": 134.5,
+        "target": 147.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "28397774095",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28397774095",
+        "sha": "835d39215cfe6b90b145e6def4e96dcec0e4559f",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
