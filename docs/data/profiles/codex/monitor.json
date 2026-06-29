@@ -1,21 +1,22 @@
 {
-  "run_id": "20260629_133541",
+  "run_id": "20260629_140538",
   "overall_sentiment": "neutral",
-  "market_summary": "Live risk-on conditions improve the backdrop, but the candidate-specific morning execution gates remain unconfirmed.",
+  "market_summary": "The live regime has improved to risk-on, but the listed candidates do not clearly satisfy their morning execution conditions.",
   "stocks": {
     "NKE": {
       "recommendation": "watch",
-      "confidence": 0.3,
+      "confidence": 0.57,
       "ready_to_trade": false,
       "matched_conditions": [
-        "Live price is near the planned 41.2 entry area"
+        "live regime is risk_on",
+        "price is near the planned entry area"
       ],
       "failed_conditions": [
-        "Earnings event has not cleared",
-        "Price is below 41",
-        "No constructive post-guidance reaction is available"
+        "earnings event has not cleared",
+        "price is below 41",
+        "no constructive post-guidance reaction is available"
       ],
-      "monitor_reason": "NKE remains a pre-earnings event watch with price close but the required event-clearance and hold above 41 missing.",
+      "monitor_reason": "NKE remains a pre-earnings event watch and has not cleared the required 41-plus constructive reaction condition.",
       "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
       "setup_state": "planned",
       "watchlist_bucket": "event_watch",
@@ -32,49 +33,20 @@
         "target": 44.5
       }
     },
-    "WDC": {
-      "recommendation": "watch",
-      "confidence": 0.25,
-      "ready_to_trade": false,
-      "matched_conditions": [
-        "Live price has reclaimed 600"
-      ],
-      "failed_conditions": [
-        "VWAP support is not shown in the live snapshot",
-        "MU group-drag relief is not confirmed",
-        "High avoid confidence favors staying out until repair is clearer"
-      ],
-      "monitor_reason": "WDC reclaimed the price trigger but repair-watch status requires clearer VWAP and group confirmation before a buy.",
-      "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
-      "setup_state": "repair_watch",
-      "watchlist_bucket": "repair_watch",
-      "top_blocker": "Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.",
-      "action_confidence": {
-        "long_thesis": 0.6,
-        "entry": 0.25,
-        "avoid": 0.66,
-        "data_quality": 0.68
-      },
-      "trade_plan": {
-        "entry": 602.0,
-        "stop_loss": 584.0,
-        "target": 640.0
-      }
-    },
     "QURE": {
-      "recommendation": "watch",
-      "confidence": 0.18,
+      "recommendation": "hold",
+      "confidence": 0.7,
       "ready_to_trade": false,
       "matched_conditions": [
-        "Live price is near the planned 49.0 reference level"
+        "do-not-buy condition remains in force",
+        "price is near the old entry area"
       ],
       "failed_conditions": [
-        "Setup is retired",
-        "No new verified catalyst is present",
-        "Regular-session volume confirmation is absent",
-        "Data quality is weak and avoid confidence is high"
+        "no new verified catalyst is present",
+        "regular-session volume confirmation is missing",
+        "setup is retired"
       ],
-      "monitor_reason": "QURE remains retired and should not be bought without a new verified catalyst and volume confirmation.",
+      "monitor_reason": "QURE remains retired and low-volume, so proximity to the old entry is not actionable.",
       "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
       "setup_state": "retired",
       "watchlist_bucket": "avoid_until_new_thesis",
@@ -89,6 +61,36 @@
         "entry": 49.0,
         "stop_loss": 47.4,
         "target": 52.5
+      }
+    },
+    "WDC": {
+      "recommendation": "watch",
+      "confidence": 0.66,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "live regime is risk_on",
+        "price is near the planned reclaim level"
+      ],
+      "failed_conditions": [
+        "price has not reclaimed 600",
+        "VWAP support is not confirmed in the provided snapshot",
+        "MU group drag has not been shown as resolved"
+      ],
+      "monitor_reason": "WDC is still a repair watch because it remains below 600 without explicit reclaim or VWAP support evidence.",
+      "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.",
+      "action_confidence": {
+        "long_thesis": 0.6,
+        "entry": 0.25,
+        "avoid": 0.66,
+        "data_quality": 0.68
+      },
+      "trade_plan": {
+        "entry": 602.0,
+        "stop_loss": 584.0,
+        "target": 640.0
       }
     }
   },
@@ -124,10 +126,10 @@
         "workflow": "Codex Decision Execution",
         "event_name": "push",
         "actor": "Aashay-chaudhari",
-        "run_id": "28376150338",
+        "run_id": "28378082882",
         "run_attempt": "1",
-        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28376150338",
-        "sha": "1dd25e1d59f937eaea53120ca3a7338a2bcbd8c5",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28378082882",
+        "sha": "9838702396cdce5e3a4a95367db138bd14bcc8ce",
         "ref": "refs/heads/main"
       }
     }

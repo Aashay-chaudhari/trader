@@ -1,5 +1,5 @@
 {
-  "run_id": "20260629_133541",
+  "run_id": "20260629_140538",
   "phase": "monitor",
   "profile": {
     "id": "codex",
@@ -9,27 +9,28 @@
     "dry_run": false,
     "paper_portfolio_value": 100000.0
   },
-  "timestamp": "2026-06-29T13:38:09.508138+00:00",
+  "timestamp": "2026-06-29T14:08:06.025107+00:00",
   "screener": null,
   "research": {
     "research": {
-      "run_id": "20260629_133541",
+      "run_id": "20260629_140538",
       "overall_sentiment": "neutral",
-      "market_summary": "Live risk-on conditions improve the backdrop, but the candidate-specific morning execution gates remain unconfirmed.",
+      "market_summary": "The live regime has improved to risk-on, but the listed candidates do not clearly satisfy their morning execution conditions.",
       "stocks": {
         "NKE": {
           "recommendation": "watch",
-          "confidence": 0.3,
+          "confidence": 0.57,
           "ready_to_trade": false,
           "matched_conditions": [
-            "Live price is near the planned 41.2 entry area"
+            "live regime is risk_on",
+            "price is near the planned entry area"
           ],
           "failed_conditions": [
-            "Earnings event has not cleared",
-            "Price is below 41",
-            "No constructive post-guidance reaction is available"
+            "earnings event has not cleared",
+            "price is below 41",
+            "no constructive post-guidance reaction is available"
           ],
-          "monitor_reason": "NKE remains a pre-earnings event watch with price close but the required event-clearance and hold above 41 missing.",
+          "monitor_reason": "NKE remains a pre-earnings event watch and has not cleared the required 41-plus constructive reaction condition.",
           "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
           "setup_state": "planned",
           "watchlist_bucket": "event_watch",
@@ -46,49 +47,20 @@
             "target": 44.5
           }
         },
-        "WDC": {
-          "recommendation": "watch",
-          "confidence": 0.25,
-          "ready_to_trade": false,
-          "matched_conditions": [
-            "Live price has reclaimed 600"
-          ],
-          "failed_conditions": [
-            "VWAP support is not shown in the live snapshot",
-            "MU group-drag relief is not confirmed",
-            "High avoid confidence favors staying out until repair is clearer"
-          ],
-          "monitor_reason": "WDC reclaimed the price trigger but repair-watch status requires clearer VWAP and group confirmation before a buy.",
-          "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
-          "setup_state": "repair_watch",
-          "watchlist_bucket": "repair_watch",
-          "top_blocker": "Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.",
-          "action_confidence": {
-            "long_thesis": 0.6,
-            "entry": 0.25,
-            "avoid": 0.66,
-            "data_quality": 0.68
-          },
-          "trade_plan": {
-            "entry": 602.0,
-            "stop_loss": 584.0,
-            "target": 640.0
-          }
-        },
         "QURE": {
-          "recommendation": "watch",
-          "confidence": 0.18,
+          "recommendation": "hold",
+          "confidence": 0.7,
           "ready_to_trade": false,
           "matched_conditions": [
-            "Live price is near the planned 49.0 reference level"
+            "do-not-buy condition remains in force",
+            "price is near the old entry area"
           ],
           "failed_conditions": [
-            "Setup is retired",
-            "No new verified catalyst is present",
-            "Regular-session volume confirmation is absent",
-            "Data quality is weak and avoid confidence is high"
+            "no new verified catalyst is present",
+            "regular-session volume confirmation is missing",
+            "setup is retired"
           ],
-          "monitor_reason": "QURE remains retired and should not be bought without a new verified catalyst and volume confirmation.",
+          "monitor_reason": "QURE remains retired and low-volume, so proximity to the old entry is not actionable.",
           "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
           "setup_state": "retired",
           "watchlist_bucket": "avoid_until_new_thesis",
@@ -103,6 +75,36 @@
             "entry": 49.0,
             "stop_loss": 47.4,
             "target": 52.5
+          }
+        },
+        "WDC": {
+          "recommendation": "watch",
+          "confidence": 0.66,
+          "ready_to_trade": false,
+          "matched_conditions": [
+            "live regime is risk_on",
+            "price is near the planned reclaim level"
+          ],
+          "failed_conditions": [
+            "price has not reclaimed 600",
+            "VWAP support is not confirmed in the provided snapshot",
+            "MU group drag has not been shown as resolved"
+          ],
+          "monitor_reason": "WDC is still a repair watch because it remains below 600 without explicit reclaim or VWAP support evidence.",
+          "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
+          "setup_state": "repair_watch",
+          "watchlist_bucket": "repair_watch",
+          "top_blocker": "Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.",
+          "action_confidence": {
+            "long_thesis": 0.6,
+            "entry": 0.25,
+            "avoid": 0.66,
+            "data_quality": 0.68
+          },
+          "trade_plan": {
+            "entry": 602.0,
+            "stop_loss": 584.0,
+            "target": 640.0
           }
         }
       },
@@ -138,10 +140,10 @@
             "workflow": "Codex Decision Execution",
             "event_name": "push",
             "actor": "Aashay-chaudhari",
-            "run_id": "28376150338",
+            "run_id": "28378082882",
             "run_attempt": "1",
-            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28376150338",
-            "sha": "1dd25e1d59f937eaea53120ca3a7338a2bcbd8c5",
+            "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28378082882",
+            "sha": "9838702396cdce5e3a4a95367db138bd14bcc8ce",
             "ref": "refs/heads/main"
           }
         }
@@ -150,36 +152,36 @@
     "phase": "monitor",
     "symbols": [
       "NKE",
-      "WDC",
-      "QURE"
+      "QURE",
+      "WDC"
     ],
     "market_data": {
       "PLTR": {
         "info": {
           "name": "Palantir Technologies Inc.",
           "sector": "Technology",
-          "market_cap": 278834479104,
-          "pe_ratio": 130.68686,
+          "market_cap": 281808830464,
+          "pe_ratio": 132.0809,
           "dividend_yield": null,
           "fifty_two_week_high": 207.52,
           "fifty_two_week_low": 106.37
         },
-        "latest_price": 116.26119995117188,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 117.56999969482422,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 44,
+        "quote_age_seconds": 41,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 2.9398739802111358,
-        "volume": 5639357,
+        "price_change_pct": 4.108739375816488,
+        "volume": 12239561,
         "indicators": {
-          "rsi_14": 38.34104995210782,
-          "sma_20": 130.16400032043458,
-          "sma_50": 135.92629989624024,
-          "macd": -6.870666948194099,
-          "macd_signal": -4.833198541016981,
-          "bb_upper": 156.20272230787214,
-          "bb_lower": 104.12527833299701
+          "rsi_14": 39.756436404062065,
+          "sma_20": 130.2300003051758,
+          "sma_50": 135.95269989013673,
+          "macd": -6.765367827239487,
+          "macd_signal": -4.812138716826059,
+          "bb_upper": 156.1336585046519,
+          "bb_lower": 104.3263421056997
         },
         "price_history": [
           {
@@ -417,40 +419,40 @@
           {
             "date": "2026-06-29T00:00:00-04:00",
             "open": 116.2300033569336,
-            "high": 117.4000015258789,
+            "high": 119.08000183105469,
             "low": 115.6010971069336,
-            "close": 116.25,
-            "volume": 5639357
+            "close": 117.56999969482422,
+            "volume": 12239561
           }
         ],
-        "fetch_time_ms": 2522
+        "fetch_time_ms": 2901
       },
       "AVAV": {
         "info": {
           "name": "AeroVironment, Inc.",
           "sector": "Industrials",
-          "market_cap": 7324578304,
+          "market_cap": 7318505472,
           "pe_ratio": null,
           "dividend_yield": null,
           "fifty_two_week_high": 417.86,
           "fifty_two_week_low": 135.2
         },
-        "latest_price": 144.81500244140625,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 144.6199951171875,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 44,
+        "quote_age_seconds": 41,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 4.92207951803684,
-        "volume": 136329,
+        "price_change_pct": 4.835083955418894,
+        "volume": 258238,
         "indicators": {
-          "rsi_14": 37.14866441972246,
-          "sma_20": 170.79799880981446,
-          "sma_50": 177.20019927978515,
-          "macd": -10.89588512910413,
-          "macd_signal": -6.960960555526121,
-          "bb_upper": 213.31880042489877,
-          "bb_lower": 128.27719719473015
+          "rsi_14": 37.06523998789186,
+          "sma_20": 170.79199829101563,
+          "sma_50": 177.19779907226564,
+          "macd": -10.905458606389999,
+          "macd_signal": -6.962875250983295,
+          "bb_upper": 213.32753870479868,
+          "bb_lower": 128.25645787723258
         },
         "price_history": [
           {
@@ -690,38 +692,38 @@
             "open": 144.04800415039062,
             "high": 146.93710327148438,
             "low": 142.7949981689453,
-            "close": 144.74000549316406,
-            "volume": 136329
+            "close": 144.6199951171875,
+            "volume": 258238
           }
         ],
-        "fetch_time_ms": 642
+        "fetch_time_ms": 434
       },
       "QCOM": {
         "info": {
           "name": "QUALCOMM Incorporated",
           "sector": "Technology",
-          "market_cap": 201898967040,
-          "pe_ratio": 20.597311,
+          "market_cap": 197972819968,
+          "pe_ratio": 20.196774,
           "dividend_yield": 1.94,
           "fifty_two_week_high": 259.92,
           "fifty_two_week_low": 121.99
         },
-        "latest_price": 191.55499267578125,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 187.8000030517578,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 45,
+        "quote_age_seconds": 42,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 1.056021968660144,
-        "volume": 1637961,
+        "price_change_pct": -0.8395355314508387,
+        "volume": 3953517,
         "indicators": {
-          "rsi_14": 43.46098501531253,
-          "sma_20": 214.3925552368164,
-          "sma_50": 199.38892700195314,
-          "macd": -2.1804380217092216,
-          "macd_signal": 2.4435313089431268,
-          "bb_upper": 247.51520962797474,
-          "bb_lower": 181.26990084565807
+          "rsi_14": 42.099014501916464,
+          "sma_20": 214.2130554199219,
+          "sma_50": 199.31712707519532,
+          "macd": -2.466819495956912,
+          "macd_signal": 2.3862550140935888,
+          "bb_upper": 247.86703890511507,
+          "bb_lower": 180.5590719347287
         },
         "price_history": [
           {
@@ -960,39 +962,39 @@
             "date": "2026-06-29T00:00:00-04:00",
             "open": 193.02999877929688,
             "high": 194.58999633789062,
-            "low": 190.61000061035156,
-            "close": 191.38999938964844,
-            "volume": 1637961
+            "low": 187.42999267578125,
+            "close": 187.8000030517578,
+            "volume": 3953517
           }
         ],
-        "fetch_time_ms": 624
+        "fetch_time_ms": 503
       },
       "MU": {
         "info": {
           "name": "Micron Technology, Inc.",
           "sector": "Technology",
-          "market_cap": 1260068405248,
-          "pe_ratio": 25.20226,
+          "market_cap": 1188641112064,
+          "pe_ratio": 23.77366,
           "dividend_yield": 0.05,
           "fifty_two_week_high": 1255.0,
           "fifty_two_week_low": 103.38
         },
-        "latest_price": 1115.6099853515625,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 1052.4200439453125,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 46,
+        "quote_age_seconds": 42,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": -1.6435018063190063,
-        "volume": 4146492,
+        "price_change_pct": -7.057122500565165,
+        "volume": 11657210,
         "indicators": {
-          "rsi_14": 57.781983325063486,
-          "sma_20": 1042.5455017089844,
-          "sma_50": 815.2690020751953,
-          "macd": 91.04757186762049,
-          "macd_signal": 94.25158711583083,
-          "bb_upper": 1225.0246773237702,
-          "bb_lower": 860.0663260941985
+          "rsi_14": 54.04776873902409,
+          "sma_20": 1039.4804992675781,
+          "sma_50": 814.0430010986328,
+          "macd": 86.15753948247107,
+          "macd_signal": 93.27358063880095,
+          "bb_upper": 1219.111814486906,
+          "bb_lower": 859.8491840482502
         },
         "price_history": [
           {
@@ -1231,39 +1233,39 @@
             "date": "2026-06-29T00:00:00-04:00",
             "open": 1128.699951171875,
             "high": 1128.699951171875,
-            "low": 1104.6300048828125,
-            "close": 1113.7200927734375,
-            "volume": 4146492
+            "low": 1051.31005859375,
+            "close": 1052.4200439453125,
+            "volume": 11657210
           }
         ],
-        "fetch_time_ms": 502
+        "fetch_time_ms": 637
       },
       "WDC": {
         "info": {
           "name": "Western Digital Corporation",
           "sector": "Technology",
-          "market_cap": 208770531328,
-          "pe_ratio": 36.247158,
+          "market_cap": 204387893248,
+          "pe_ratio": 35.486237,
           "dividend_yield": 0.1,
           "fifty_two_week_high": 799.87,
           "fifty_two_week_low": 62.94
         },
-        "latest_price": 604.76,
-        "quote_timestamp": "2026-06-29T13:38:08.871631+00:00",
+        "latest_price": 593.085,
+        "quote_timestamp": "2026-06-29T14:08:05.256701+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
         "quote_age_seconds": 0,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 3.2807553642922955,
-        "volume": 694633,
+        "price_change_pct": 1.1126205547085533,
+        "volume": 1722375,
         "indicators": {
-          "rsi_14": 52.2883341594122,
-          "sma_20": 606.2347961425781,
-          "sma_50": 515.706083984375,
-          "macd": 41.50501025735571,
-          "macd_signal": 48.99470466861663,
-          "bb_upper": 758.757550777108,
-          "bb_lower": 453.7120415080483
+          "rsi_14": 50.875509677292605,
+          "sma_20": 605.5990447998047,
+          "sma_50": 515.4517834472656,
+          "macd": 40.49070612073717,
+          "macd_signal": 48.791843841292916,
+          "bb_upper": 758.2315418979953,
+          "bb_lower": 452.9665477016141
         },
         "price_history": [
           {
@@ -1501,47 +1503,47 @@
           {
             "date": "2026-06-29T00:00:00-04:00",
             "open": 600.4199829101562,
-            "high": 606.8499755859375,
+            "high": 609.8800048828125,
             "low": 590.0,
-            "close": 605.6900024414062,
-            "volume": 694633
+            "close": 592.9749755859375,
+            "volume": 1722375
           }
         ],
-        "fetch_time_ms": 550,
-        "last_trade_price": 596.51,
-        "last_trade_timestamp": "2026-06-29T13:37:50.834529+00:00",
-        "bid_price": 594.42,
-        "ask_price": 615.1,
+        "fetch_time_ms": 459,
+        "last_trade_price": 592.91,
+        "last_trade_timestamp": "2026-06-29T14:08:01.046343+00:00",
+        "bid_price": 591.68,
+        "ask_price": 594.49,
         "bid_size": 40.0,
         "ask_size": 40.0,
-        "bid_ask_timestamp": "2026-06-29T13:38:08.871631+00:00"
+        "bid_ask_timestamp": "2026-06-29T14:08:05.256701+00:00"
       },
       "CMCSA": {
         "info": {
           "name": "Comcast Corporation",
           "sector": "Communication Services",
-          "market_cap": 90913218560,
-          "pe_ratio": 4.990196,
+          "market_cap": 90341662720,
+          "pe_ratio": 4.9588237,
           "dividend_yield": 5.7,
           "fifty_two_week_high": 34.358013,
           "fifty_two_week_low": 22.13
         },
-        "latest_price": 25.450000762939453,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 25.290000915527344,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 47,
+        "quote_age_seconds": 45,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 9.84031367776411,
-        "volume": 28516260,
+        "price_change_pct": 9.149766216023655,
+        "volume": 50591968,
         "indicators": {
-          "rsi_14": 61.6506338821843,
-          "sma_20": 23.62199993133545,
-          "sma_50": 25.345399894714355,
-          "macd": -0.4922066758899639,
-          "macd_signal": -0.700054299488472,
-          "bb_upper": 25.349884223154902,
-          "bb_lower": 21.894115639515995
+          "rsi_14": 60.67367655417526,
+          "sma_20": 23.613999938964845,
+          "sma_50": 25.342199897766115,
+          "macd": -0.5049701964812456,
+          "macd_signal": -0.7026070036067283,
+          "bb_upper": 25.30912712445528,
+          "bb_lower": 21.91887275347441
         },
         "price_history": [
           {
@@ -1780,39 +1782,39 @@
             "date": "2026-06-29T00:00:00-04:00",
             "open": 27.045000076293945,
             "high": 27.097999572753906,
-            "low": 24.969999313354492,
-            "close": 25.450000762939453,
-            "volume": 28516260
+            "low": 24.81999969482422,
+            "close": 25.290000915527344,
+            "volume": 50591968
           }
         ],
-        "fetch_time_ms": 689
+        "fetch_time_ms": 487
       },
       "CHTR": {
         "info": {
           "name": "Charter Communications, Inc.",
           "sector": "Communication Services",
-          "market_cap": 24161372160,
-          "pe_ratio": 4.172349,
+          "market_cap": 24084598784,
+          "pe_ratio": 4.159091,
           "dividend_yield": null,
           "fifty_two_week_high": 422.29,
           "fifty_two_week_low": 124.05
         },
-        "latest_price": 154.2100067138672,
-        "quote_timestamp": "2026-06-29T13:35:00+00:00",
+        "latest_price": 153.72000122070312,
+        "quote_timestamp": "2026-06-29T14:05:00+00:00",
         "quote_source": "yahoo_1m",
-        "quote_age_seconds": 47,
+        "quote_age_seconds": 45,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 15.392103725055891,
-        "volume": 2962820,
+        "price_change_pct": 15.0216978748334,
+        "volume": 5068132,
         "indicators": {
-          "rsi_14": 60.01218833325411,
-          "sma_20": 135.66500015258788,
-          "sma_50": 155.42779968261718,
-          "macd": -4.438467240479298,
-          "macd_signal": -7.055431627487677,
-          "bb_upper": 149.99225517959587,
-          "bb_lower": 121.33774512557989
+          "rsi_14": 59.715969961811076,
+          "sma_20": 135.64024963378907,
+          "sma_50": 155.41789947509767,
+          "macd": -4.477955247679716,
+          "macd_signal": -7.063329228927762,
+          "bb_upper": 149.8404188244189,
+          "bb_lower": 121.44008044315925
         },
         "price_history": [
           {
@@ -2051,39 +2053,39 @@
             "date": "2026-06-29T00:00:00-04:00",
             "open": 168.11000061035156,
             "high": 168.11000061035156,
-            "low": 153.02000427246094,
-            "close": 154.2100067138672,
-            "volume": 2962820
+            "low": 146.49009704589844,
+            "close": 153.71499633789062,
+            "volume": 5068132
           }
         ],
-        "fetch_time_ms": 473
+        "fetch_time_ms": 513
       },
       "NKE": {
         "info": {
           "name": "Nike, Inc.",
           "sector": "Consumer Cyclical",
-          "market_cap": 60708962304,
-          "pe_ratio": 26.970394,
+          "market_cap": 60575682560,
+          "pe_ratio": 26.911184,
           "dividend_yield": 4.02,
           "fifty_two_week_high": 80.17,
           "fifty_two_week_low": 40.0
         },
-        "latest_price": 41.09,
-        "quote_timestamp": "2026-06-29T13:38:09.427476+00:00",
+        "latest_price": 40.795,
+        "quote_timestamp": "2026-06-29T14:08:05.977992+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
         "quote_age_seconds": 0,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 0.5889611741516487,
-        "volume": 2052533,
+        "price_change_pct": 0.38036510256901845,
+        "volume": 4428078,
         "indicators": {
-          "rsi_14": 37.16404431317102,
-          "sma_20": 43.623000144958496,
-          "sma_50": 43.80714767456055,
-          "macd": -0.7608357512674289,
-          "macd_signal": -0.32340941688315605,
-          "bb_upper": 46.75869177998454,
-          "bb_lower": 40.487308509932454
+          "rsi_14": 36.6365911118156,
+          "sma_20": 43.61875,
+          "sma_50": 43.80544761657715,
+          "macd": -0.7676166093208749,
+          "macd_signal": -0.3247655884938453,
+          "bb_upper": 46.768902357407775,
+          "bb_lower": 40.46859764259222
         },
         "price_history": [
           {
@@ -2320,48 +2322,48 @@
           },
           {
             "date": "2026-06-29T00:00:00-04:00",
-            "open": 40.06999969482422,
+            "open": 41.13999938964844,
             "high": 41.4900016784668,
-            "low": 40.93000030517578,
-            "close": 40.9900016784668,
-            "volume": 2052533
+            "low": 40.790000915527344,
+            "close": 40.904998779296875,
+            "volume": 4428078
           }
         ],
-        "fetch_time_ms": 641,
-        "last_trade_price": 41.08,
-        "last_trade_timestamp": "2026-06-29T13:38:08.344102+00:00",
-        "bid_price": 41.07,
-        "ask_price": 41.11,
-        "bid_size": 800.0,
-        "ask_size": 500.0,
-        "bid_ask_timestamp": "2026-06-29T13:38:09.427476+00:00"
+        "fetch_time_ms": 430,
+        "last_trade_price": 40.79,
+        "last_trade_timestamp": "2026-06-29T14:08:04.810459+00:00",
+        "bid_price": 40.79,
+        "ask_price": 40.8,
+        "bid_size": 200.0,
+        "ask_size": 300.0,
+        "bid_ask_timestamp": "2026-06-29T14:08:05.977992+00:00"
       },
       "QURE": {
         "info": {
           "name": "uniQure N.V.",
           "sector": "Healthcare",
-          "market_cap": 3329082880,
+          "market_cap": 3333895936,
           "pe_ratio": null,
           "dividend_yield": null,
           "fifty_two_week_high": 71.5,
           "fifty_two_week_low": 8.73
         },
-        "latest_price": 48.42,
-        "quote_timestamp": "2026-06-29T13:37:36.033004+00:00",
+        "latest_price": 48.879999999999995,
+        "quote_timestamp": "2026-06-29T14:07:42.795268+00:00",
         "quote_source": "alpaca_iex_quote_midpoint",
-        "quote_age_seconds": 33,
+        "quote_age_seconds": 23,
         "quote_is_fresh": true,
         "last_trade_date": "2026-06-29T00:00:00-04:00",
-        "price_change_pct": 1.9153859809750096,
-        "volume": 82649,
+        "price_change_pct": 2.062730775743727,
+        "volume": 333051,
         "indicators": {
-          "rsi_14": 74.25959445711065,
-          "sma_20": 35.52949962615967,
-          "sma_50": 27.856399917602538,
-          "macd": 6.467927568770364,
-          "macd_signal": 4.991993914028326,
-          "bb_upper": 55.58365721771514,
-          "bb_lower": 15.475342034604196
+          "rsi_14": 74.32299190684458,
+          "sma_20": 35.53299980163574,
+          "sma_50": 27.85779998779297,
+          "macd": 6.473511894316239,
+          "macd_signal": 4.993110779137501,
+          "bb_upper": 55.59617801086491,
+          "bb_lower": 15.469821592406568
         },
         "price_history": [
           {
@@ -2599,20 +2601,20 @@
           {
             "date": "2026-06-29T00:00:00-04:00",
             "open": 48.40999984741211,
-            "high": 49.0,
-            "low": 48.2599983215332,
-            "close": 48.41999816894531,
-            "volume": 82649
+            "high": 49.689998626708984,
+            "low": 48.099998474121094,
+            "close": 48.4900016784668,
+            "volume": 333051
           }
         ],
-        "fetch_time_ms": 495,
-        "last_trade_price": 48.95,
-        "last_trade_timestamp": "2026-06-29T13:37:36.089316+00:00",
-        "bid_price": 41.2,
-        "ask_price": 55.64,
+        "fetch_time_ms": 603,
+        "last_trade_price": 48.63,
+        "last_trade_timestamp": "2026-06-29T14:07:42.795405+00:00",
+        "bid_price": 42.21,
+        "ask_price": 55.55,
         "bid_size": 100.0,
         "ask_size": 100.0,
-        "bid_ask_timestamp": "2026-06-29T13:37:36.033004+00:00"
+        "bid_ask_timestamp": "2026-06-29T14:07:42.795268+00:00"
       }
     },
     "news": {
@@ -2999,8 +3001,7 @@
             "source": "yfinance",
             "published": "2026-06-29T11:33:14Z",
             "symbols": [
-              "QCOM",
-              "MU"
+              "QCOM"
             ],
             "sentiment": 0.0,
             "category": "headline",
@@ -3171,11 +3172,7 @@
           "consensus_score": 0.12,
           "consensus": "hold"
         },
-        "insider_signal": {
-          "recent_buys": 0,
-          "recent_sells": 9,
-          "signal": "insider_selling"
-        },
+        "insider_signal": null,
         "upcoming_events": [
           {
             "date": "2026-07-29",
@@ -3199,23 +3196,6 @@
         "symbol": "MU",
         "news_headlines": [
           {
-            "title": "New leader board: Citi refreshes AI compute semiconductor picks",
-            "source": "yfinance",
-            "published": "2026-06-29T11:33:14Z",
-            "symbols": [
-              "QCOM",
-              "MU"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/technology/ai/articles/leader-board-citi-refreshes-ai-113314260.html",
-            "summary": "Investing.com -- Citi analysts have updated the firm\u2019s AI compute semiconductor stock rankings following the latest quarterly earnings updates, telling investors in a note that AI compute demand remains undersupplied.",
-            "publisher": "Investing.com",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
             "title": "Nvidia, Micron, and Broadcom hold the stock market's fate in the palm of their hands",
             "source": "yfinance",
             "published": "2026-06-29T13:07:53Z",
@@ -3227,6 +3207,38 @@
             "url": "https://finance.yahoo.com/markets/article/nvidia-micron-and-broadcom-hold-the-stock-markets-fate-in-the-palm-of-their-hands-130753236.html",
             "summary": "Big things are expected of Micron and Nvidia.",
             "publisher": "Yahoo Finance",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Mizuho says ignore Apple noise, flags key catalyst for Micron and memory in H2",
+            "source": "yfinance",
+            "published": "2026-06-29T13:54:07Z",
+            "symbols": [
+              "MU"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/mizuho-says-ignore-apple-noise-135407498.html",
+            "summary": "The first bear catalyst is a report that Apple is seeking U.S. government approval to source DRAM from Chinese chipmaker CXMT, which appears on the Commerce Department's Entity List. Apple's interest in Chinese memory is a symptom of industry-wide scarcity, not a Micron-specific problem.",
+            "publisher": "Investing.com",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Micron Technology Stock: Is It Heading for a $2 Trillion Valuation?",
+            "source": "yfinance",
+            "published": "2026-06-29T13:50:00Z",
+            "symbols": [
+              "MU"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://www.fool.com/investing/2026/06/29/micron-technology-stock-is-it-heading-for-a-2-tril/",
+            "summary": "Although the stock is up big, its valuation still looks modest.",
+            "publisher": "Motley Fool",
             "metadata": {
               "type": "STORY"
             }
@@ -3307,22 +3319,6 @@
             "url": "https://www.barrons.com/articles/stock-market-rotation-tech-ai-3b8b00dc?siteid=yhoof2&yptr=yahoo",
             "summary": "The stock market is broadening beyond tech as investors look for new market leadership into the summer months and over the back half of the year.  Healthcare, industrials, and financials are the market\u2019s three leading sectors over the past month as investors execute a quiet rotation out of tech and ",
             "publisher": "Barrons.com",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Latest News In AI Chips - WNSTN Joins Google Marketplace Elevating Financial AI Compliance",
-            "source": "yfinance",
-            "published": "2026-06-29T11:37:38Z",
-            "symbols": [
-              "MU"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://finance.yahoo.com/technology/ai/articles/latest-news-ai-chips-wnstn-113738370.html",
-            "summary": "WNSTN.ai has expanded its presence in the AI chips sector by joining Google Cloud Marketplace with an enterprise API designed to enhance compliance while accelerating AI adoption in financial institutions. This integration allows brokerages and regulated firms to efficiently deploy AI-driven persona",
-            "publisher": "Simply Wall St.",
             "metadata": {
               "type": "STORY"
             }
@@ -3650,6 +3646,57 @@
         "symbol": "CMCSA",
         "news_headlines": [
           {
+            "title": "Comcast Pares Gains Amid Company Split. Is More M&A Coming?",
+            "source": "yfinance",
+            "published": "2026-06-29T13:54:57Z",
+            "symbols": [
+              "CMCSA",
+              "CHTR"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.investors.com/news/technology/comcast-stock-soars-on-company-split-as-cable-tv-giants-makeover-continues/?src=A00220&yptr=yahoo",
+            "summary": "Comcast announced plans to separate into two companies through a tax-free spinoff of NBCUniversal and Sky. Comcast stock popped on the news.",
+            "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Stock Market Today: Dow Rises On U.S.-Iran News; SpaceX Rallies On Index Addition (Live Coverage)",
+            "source": "yfinance",
+            "published": "2026-06-29T13:47:52Z",
+            "symbols": [
+              "CMCSA",
+              "SPY"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-spacex-spcx-stock-nasdaq-100/?src=A00220&yptr=yahoo",
+            "summary": "The Dow Jones index rises Monday on U.S.-Iran news. SpaceX stock climbs on its addition to the Nasdaq-100 index.",
+            "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Comcast shares surge 23% on blockbuster plan to spin off NBCUniversal and Sky",
+            "source": "yfinance",
+            "published": "2026-06-29T13:46:23Z",
+            "symbols": [
+              "CMCSA",
+              "CHTR"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/comcast-shares-surge-23-blockbuster-134623766.html",
+            "summary": "Investing.com -- Comcast Corporation (NASDAQ:CMCSA) shares surged 23% on Monday, marking a historic trading session after the telecom and media behemoth announced a definitive plan to dismantle its conglomerate structure. Through a tax-free spin-off expected to close in approximately one year, Comca",
+            "publisher": "Investing.com",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
             "title": "Comcast Plans Company Split, Sending Shares Soaring 22%",
             "source": "yfinance",
             "published": "2026-06-29T13:17:00Z",
@@ -3730,55 +3777,6 @@
             }
           },
           {
-            "title": "Comcast Soars On Company Split. Is More M&A Coming?",
-            "source": "yfinance",
-            "published": "2026-06-29T12:35:56Z",
-            "symbols": [
-              "CMCSA",
-              "CHTR"
-            ],
-            "sentiment": 1.0,
-            "category": "headline",
-            "url": "https://www.investors.com/news/technology/comcast-stock-soars-on-company-split-as-cable-tv-giants-makeover-continues/?src=A00220&yptr=yahoo",
-            "summary": "Comcast announced plans to separate into two companies through a tax-free spinoff of NBCUniversal and Sky. Comcast stock soared on the news.",
-            "publisher": "Investor's Business Daily",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Comcast Stock Rockets on Split Plans",
-            "source": "yfinance",
-            "published": "2026-06-29T12:34:41Z",
-            "symbols": [
-              "CMCSA"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-06-29-2026/card/comcast-stock-rockets-on-split-plans-XJRp2SFDGCQo16qAqC7E?siteid=yhoof2&yptr=yahoo",
-            "summary": "Shares in the conglomerate soared more than 20% premarket after it said it plans to separate its media and connectivity businesses, creating two separate companies it hopes will be better positioned to grow or pursue deals in rapidly evolving industries.  The cable giant plans to complete a tax-free",
-            "publisher": "The Wall Street Journal",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Comcast plans to split into 2 companies, spinning off NBCUniversal",
-            "source": "yfinance",
-            "published": "2026-06-29T12:28:57Z",
-            "symbols": [
-              "CMCSA"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.cbsnews.com/news/comcast-nbcuniversal-sky-spinoff/",
-            "summary": "Current shareholders would receive shares in both companies under the planned split, Comcast said Monday.",
-            "publisher": "CBS News",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
             "title": "SEC 8-K: CMCSA \u2014 Filed 2026-06-29",
             "source": "sec_edgar",
             "published": "2026-06-29",
@@ -3797,7 +3795,7 @@
             }
           }
         ],
-        "sentiment_score": 0.44,
+        "sentiment_score": 0.67,
         "sentiment": "bullish",
         "source_count": 2,
         "analyst_recommendations": {
@@ -3838,9 +3836,9 @@
         "symbol": "CHTR",
         "news_headlines": [
           {
-            "title": "Comcast Soars On Company Split. Is More M&A Coming?",
+            "title": "Comcast Pares Gains Amid Company Split. Is More M&A Coming?",
             "source": "yfinance",
-            "published": "2026-06-29T12:35:56Z",
+            "published": "2026-06-29T13:54:57Z",
             "symbols": [
               "CMCSA",
               "CHTR"
@@ -3848,8 +3846,25 @@
             "sentiment": 1.0,
             "category": "headline",
             "url": "https://www.investors.com/news/technology/comcast-stock-soars-on-company-split-as-cable-tv-giants-makeover-continues/?src=A00220&yptr=yahoo",
-            "summary": "Comcast announced plans to separate into two companies through a tax-free spinoff of NBCUniversal and Sky. Comcast stock soared on the news.",
+            "summary": "Comcast announced plans to separate into two companies through a tax-free spinoff of NBCUniversal and Sky. Comcast stock popped on the news.",
             "publisher": "Investor's Business Daily",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Comcast shares surge 23% on blockbuster plan to spin off NBCUniversal and Sky",
+            "source": "yfinance",
+            "published": "2026-06-29T13:46:23Z",
+            "symbols": [
+              "CMCSA",
+              "CHTR"
+            ],
+            "sentiment": 1.0,
+            "category": "headline",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/comcast-shares-surge-23-blockbuster-134623766.html",
+            "summary": "Investing.com -- Comcast Corporation (NASDAQ:CMCSA) shares surged 23% on Monday, marking a historic trading session after the telecom and media behemoth announced a definitive plan to dismantle its conglomerate structure. Through a tax-free spin-off expected to close in approximately one year, Comca",
+            "publisher": "Investing.com",
             "metadata": {
               "type": "STORY"
             }
@@ -3949,25 +3964,9 @@
             "metadata": {
               "type": "STORY"
             }
-          },
-          {
-            "title": "Nasdaq-100 Onboards 5 New Stocks in AI-Fueled Rebalancing",
-            "source": "yfinance",
-            "published": "2026-06-22T04:01:00Z",
-            "symbols": [
-              "CHTR"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://www.thedailyupside.com/investments/equities/five-new-stocks-join-the-nasdaq-100-in-ai-fueled-rebalancing/",
-            "summary": "This morning, the Nasdaq-100 is getting its quarterly rebalance with five firms getting the boot and five taking their place.",
-            "publisher": "The Daily Upside",
-            "metadata": {
-              "type": "STORY"
-            }
           }
         ],
-        "sentiment_score": 0.25,
+        "sentiment_score": 0.38,
         "sentiment": "bullish",
         "source_count": 1,
         "analyst_recommendations": {
@@ -4009,6 +4008,22 @@
             "url": "https://finance.yahoo.com/markets/stocks/articles/stocks-rise-pre-bell-us-112243590.html",
             "summary": "The benchmark US stock measures were tracking in the green before the opening bell Monday as the US",
             "publisher": "MT Newswires",
+            "metadata": {
+              "type": "STORY"
+            }
+          },
+          {
+            "title": "Five Market Events Investors Will Be Watching This Week",
+            "source": "yfinance",
+            "published": "2026-06-29T13:30:28Z",
+            "symbols": [
+              "NKE"
+            ],
+            "sentiment": 0.0,
+            "category": "headline",
+            "url": "https://investorshub.advfn.com/market-news/article/31094/five-market-events-investors-will-be-watching-this-week",
+            "summary": "A packed calendar of economic releases and central bank events will dominate investor attention this week, despite a shortened trading schedule as U. S.",
+            "publisher": "InvestorsHub",
             "metadata": {
               "type": "STORY"
             }
@@ -4105,22 +4120,6 @@
             "url": "https://finance.yahoo.com/markets/stocks/articles/earnings-watch-nike-nke-reports-030052713.html",
             "summary": "Athletic apparel brand Nike (NYSE:NKE) will be reporting results this Tuesday after market hours. Here\u2019s what investors should know.",
             "publisher": "StockStory",
-            "metadata": {
-              "type": "STORY"
-            }
-          },
-          {
-            "title": "Why Did MSTR, BABA, NKE Stocks Tumble To 52-Week Lows Last Week?",
-            "source": "yfinance",
-            "published": "2026-06-29T02:32:41Z",
-            "symbols": [
-              "NKE"
-            ],
-            "sentiment": 0.0,
-            "category": "headline",
-            "url": "https://stocktwits.com/news-articles/markets/equity/why-did-mstr-baba-nke-stocks-tumble-to-52-week-lows-last-week/cZ1BMDJR7WC",
-            "summary": "Strategy, Alibaba Group and Nike shares slumped to 52-week lows last week amid declining Bitcoin prices, an accusation from Anthropic, and a series of price target cuts, respectively.",
-            "publisher": "Stocktwits",
             "metadata": {
               "type": "STORY"
             }
@@ -4487,16 +4486,16 @@
     },
     "market_headlines": [
       {
-        "title": "Stock Market Today: Dow Rises On U.S.-Iran News; SpaceX Rallies On Addition To Nasdaq-100 Index (Live Coverage)",
+        "title": "Stock Market Today: Dow Rises On U.S.-Iran News; SpaceX Rallies On Index Addition (Live Coverage)",
         "source": "rss",
-        "published": "2026-06-29T13:15:49Z",
+        "published": "2026-06-29T13:47:52Z",
         "symbols": [
           "SPY"
         ],
         "sentiment": 1.0,
         "category": "headline",
         "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-spacex-spcx-stock-nasdaq-100/?src=A00220&yptr=yahoo",
-        "summary": "Stock Market Today: The Dow Jones index rose Monday on U.S.-Iran news. SpaceX stock rallied on its addition to the Nasdaq-100 index.",
+        "summary": "The Dow Jones index rises Monday on U.S.-Iran news. SpaceX stock climbs on its addition to the Nasdaq-100 index.",
         "publisher": "yfinance:SPY",
         "metadata": {}
       },
@@ -4544,6 +4543,20 @@
         "metadata": {}
       },
       {
+        "title": "'Magnificent 7' stocks are having a dreadful year",
+        "source": "rss",
+        "published": "2026-06-29T13:43:33Z",
+        "symbols": [
+          "QQQ"
+        ],
+        "sentiment": 0.0,
+        "category": "headline",
+        "url": "https://finance.yahoo.com/markets/article/magnificent-7-stocks-are-having-a-dreadful-year-134333813.html",
+        "summary": "It's been a horrid year so far for the Magnificent Seven.",
+        "publisher": "yfinance:QQQ",
+        "metadata": {}
+      },
+      {
         "title": "SpaceX Is Joining the Russell 1000. Will It Help the Stock Reverse Course?",
         "source": "rss",
         "published": "2026-06-29T13:02:00Z",
@@ -4554,20 +4567,6 @@
         "category": "headline",
         "url": "https://www.barrons.com/articles/spacex-stock-russell-1000-nasdaq-musk-433036f4?siteid=yhoof2&yptr=yahoo",
         "summary": "The shares should be getting a boost Monday as it\u2019s set to begin trading in a major stock index for the first time, after joining the Russell 1000 after the close Friday.",
-        "publisher": "yfinance:QQQ",
-        "metadata": {}
-      },
-      {
-        "title": "SpaceX Is Joining Another Big Index: It's Headed to the Nasdaq 100",
-        "source": "rss",
-        "published": "2026-06-29T09:54:16Z",
-        "symbols": [
-          "QQQ"
-        ],
-        "sentiment": 0.0,
-        "category": "headline",
-        "url": "https://www.investopedia.com/spcx-12008041",
-        "summary": "Nasdaq last week said SpaceX will join the Nasdaq 100 index in July.",
         "publisher": "yfinance:QQQ",
         "metadata": {}
       },
@@ -4764,18 +4763,18 @@
     ],
     "market_context": {
       "sp500": {
-        "price": 738.03,
-        "change_pct": 1.24,
-        "five_day_pct": 0.61,
-        "trend": "up"
+        "price": 735.82,
+        "change_pct": 0.94,
+        "five_day_pct": 0.31,
+        "trend": "flat"
       },
       "nasdaq": {
-        "price": 716.18,
-        "change_pct": 1.37
+        "price": 710.95,
+        "change_pct": 0.63
       },
       "vix": {
-        "value": 18.23,
-        "change": -1.26,
+        "value": 18.14,
+        "change": -1.35,
         "level": "normal",
         "interpretation": "Normal conditions \u2014 standard position sizing"
       },
@@ -4784,118 +4783,118 @@
       },
       "sector_performance": {
         "Technology": {
-          "daily_pct": 1.17,
-          "weekly_pct": -0.52
+          "daily_pct": -0.04,
+          "weekly_pct": -1.71
         },
         "Healthcare": {
-          "daily_pct": 0.19,
-          "weekly_pct": 5.56
+          "daily_pct": 0.09,
+          "weekly_pct": 5.46
         },
         "Financial": {
           "daily_pct": 0.49,
           "weekly_pct": -0.09
         },
         "Energy": {
-          "daily_pct": 0.54,
-          "weekly_pct": -0.61
+          "daily_pct": 0.25,
+          "weekly_pct": -0.89
         },
         "Consumer Disc.": {
-          "daily_pct": 0.94,
-          "weekly_pct": 1.48
+          "daily_pct": 1.93,
+          "weekly_pct": 2.48
         },
         "Consumer Staples": {
-          "daily_pct": 0.04,
-          "weekly_pct": 1.22
+          "daily_pct": 0.15,
+          "weekly_pct": 1.34
         },
         "Industrial": {
-          "daily_pct": 0.78,
-          "weekly_pct": 2.51
+          "daily_pct": 0.91,
+          "weekly_pct": 2.64
         },
         "Communication": {
-          "daily_pct": 1.64,
-          "weekly_pct": 0.61
+          "daily_pct": 1.91,
+          "weekly_pct": 0.88
         },
         "Materials": {
-          "daily_pct": -0.93,
-          "weekly_pct": 0.49
+          "daily_pct": -1.38,
+          "weekly_pct": 0.04
         },
         "Utilities": {
-          "daily_pct": 0.21,
-          "weekly_pct": 2.72
+          "daily_pct": -0.01,
+          "weekly_pct": 2.5
         },
         "Real Estate": {
-          "daily_pct": -0.31,
-          "weekly_pct": 1.03
+          "daily_pct": -0.4,
+          "weekly_pct": 0.94
         }
       },
       "sector_leaders": [
         {
-          "sector": "Communication",
-          "daily_pct": 1.64,
-          "weekly_pct": 0.61
-        },
-        {
-          "sector": "Technology",
-          "daily_pct": 1.17,
-          "weekly_pct": -0.52
-        },
-        {
           "sector": "Consumer Disc.",
-          "daily_pct": 0.94,
-          "weekly_pct": 1.48
+          "daily_pct": 1.93,
+          "weekly_pct": 2.48
+        },
+        {
+          "sector": "Communication",
+          "daily_pct": 1.91,
+          "weekly_pct": 0.88
+        },
+        {
+          "sector": "Industrial",
+          "daily_pct": 0.91,
+          "weekly_pct": 2.64
         }
       ],
       "sector_laggards": [
         {
-          "sector": "Consumer Staples",
-          "daily_pct": 0.04,
-          "weekly_pct": 1.22
+          "sector": "Technology",
+          "daily_pct": -0.04,
+          "weekly_pct": -1.71
         },
         {
           "sector": "Real Estate",
-          "daily_pct": -0.31,
-          "weekly_pct": 1.03
+          "daily_pct": -0.4,
+          "weekly_pct": 0.94
         },
         {
           "sector": "Materials",
-          "daily_pct": -0.93,
-          "weekly_pct": 0.49
+          "daily_pct": -1.38,
+          "weekly_pct": 0.04
         }
       ],
       "commodities": {
         "wti_crude": {
           "symbol": "CL=F",
-          "price": 70.23,
-          "change_pct": 1.44,
-          "timestamp": "2026-06-29T09:26:00-04:00",
+          "price": 70.2,
+          "change_pct": 1.4,
+          "timestamp": "2026-06-29T09:56:00-04:00",
           "source": "yahoo_1m"
         },
         "brent_crude": {
           "symbol": "BZ=F",
-          "price": 73.46,
-          "change_pct": 2.04,
-          "timestamp": "2026-06-29T09:25:00-04:00",
+          "price": 73.42,
+          "change_pct": 1.99,
+          "timestamp": "2026-06-29T09:55:00-04:00",
           "source": "yahoo_1m"
         },
         "natural_gas": {
           "symbol": "NG=F",
           "price": 3.2,
-          "change_pct": -1.08,
-          "timestamp": "2026-06-29T09:25:00-04:00",
+          "change_pct": -0.96,
+          "timestamp": "2026-06-29T09:56:00-04:00",
           "source": "yahoo_1m"
         },
         "gold": {
           "symbol": "GC=F",
-          "price": 4055.5,
-          "change_pct": -0.57,
-          "timestamp": "2026-06-29T09:26:00-04:00",
+          "price": 4044.2,
+          "change_pct": -0.85,
+          "timestamp": "2026-06-29T09:56:00-04:00",
           "source": "yahoo_1m"
         },
         "copper": {
           "symbol": "HG=F",
-          "price": 6.17,
-          "change_pct": 0.49,
-          "timestamp": "2026-06-29T09:25:00-04:00",
+          "price": 6.15,
+          "change_pct": 0.15,
+          "timestamp": "2026-06-29T09:56:00-04:00",
           "source": "yahoo_1m"
         }
       },
@@ -4908,28 +4907,28 @@
       "info": {
         "name": "Palantir Technologies Inc.",
         "sector": "Technology",
-        "market_cap": 278834479104,
-        "pe_ratio": 130.68686,
+        "market_cap": 281808830464,
+        "pe_ratio": 132.0809,
         "dividend_yield": null,
         "fifty_two_week_high": 207.52,
         "fifty_two_week_low": 106.37
       },
-      "latest_price": 116.26119995117188,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 117.56999969482422,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 44,
+      "quote_age_seconds": 41,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 2.9398739802111358,
-      "volume": 5639357,
+      "price_change_pct": 4.108739375816488,
+      "volume": 12239561,
       "indicators": {
-        "rsi_14": 38.34104995210782,
-        "sma_20": 130.16400032043458,
-        "sma_50": 135.92629989624024,
-        "macd": -6.870666948194099,
-        "macd_signal": -4.833198541016981,
-        "bb_upper": 156.20272230787214,
-        "bb_lower": 104.12527833299701
+        "rsi_14": 39.756436404062065,
+        "sma_20": 130.2300003051758,
+        "sma_50": 135.95269989013673,
+        "macd": -6.765367827239487,
+        "macd_signal": -4.812138716826059,
+        "bb_upper": 156.1336585046519,
+        "bb_lower": 104.3263421056997
       },
       "price_history": [
         {
@@ -5167,40 +5166,40 @@
         {
           "date": "2026-06-29T00:00:00-04:00",
           "open": 116.2300033569336,
-          "high": 117.4000015258789,
+          "high": 119.08000183105469,
           "low": 115.6010971069336,
-          "close": 116.25,
-          "volume": 5639357
+          "close": 117.56999969482422,
+          "volume": 12239561
         }
       ],
-      "fetch_time_ms": 2522
+      "fetch_time_ms": 2901
     },
     "AVAV": {
       "info": {
         "name": "AeroVironment, Inc.",
         "sector": "Industrials",
-        "market_cap": 7324578304,
+        "market_cap": 7318505472,
         "pe_ratio": null,
         "dividend_yield": null,
         "fifty_two_week_high": 417.86,
         "fifty_two_week_low": 135.2
       },
-      "latest_price": 144.81500244140625,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 144.6199951171875,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 44,
+      "quote_age_seconds": 41,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 4.92207951803684,
-      "volume": 136329,
+      "price_change_pct": 4.835083955418894,
+      "volume": 258238,
       "indicators": {
-        "rsi_14": 37.14866441972246,
-        "sma_20": 170.79799880981446,
-        "sma_50": 177.20019927978515,
-        "macd": -10.89588512910413,
-        "macd_signal": -6.960960555526121,
-        "bb_upper": 213.31880042489877,
-        "bb_lower": 128.27719719473015
+        "rsi_14": 37.06523998789186,
+        "sma_20": 170.79199829101563,
+        "sma_50": 177.19779907226564,
+        "macd": -10.905458606389999,
+        "macd_signal": -6.962875250983295,
+        "bb_upper": 213.32753870479868,
+        "bb_lower": 128.25645787723258
       },
       "price_history": [
         {
@@ -5440,38 +5439,38 @@
           "open": 144.04800415039062,
           "high": 146.93710327148438,
           "low": 142.7949981689453,
-          "close": 144.74000549316406,
-          "volume": 136329
+          "close": 144.6199951171875,
+          "volume": 258238
         }
       ],
-      "fetch_time_ms": 642
+      "fetch_time_ms": 434
     },
     "QCOM": {
       "info": {
         "name": "QUALCOMM Incorporated",
         "sector": "Technology",
-        "market_cap": 201898967040,
-        "pe_ratio": 20.597311,
+        "market_cap": 197972819968,
+        "pe_ratio": 20.196774,
         "dividend_yield": 1.94,
         "fifty_two_week_high": 259.92,
         "fifty_two_week_low": 121.99
       },
-      "latest_price": 191.55499267578125,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 187.8000030517578,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 45,
+      "quote_age_seconds": 42,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 1.056021968660144,
-      "volume": 1637961,
+      "price_change_pct": -0.8395355314508387,
+      "volume": 3953517,
       "indicators": {
-        "rsi_14": 43.46098501531253,
-        "sma_20": 214.3925552368164,
-        "sma_50": 199.38892700195314,
-        "macd": -2.1804380217092216,
-        "macd_signal": 2.4435313089431268,
-        "bb_upper": 247.51520962797474,
-        "bb_lower": 181.26990084565807
+        "rsi_14": 42.099014501916464,
+        "sma_20": 214.2130554199219,
+        "sma_50": 199.31712707519532,
+        "macd": -2.466819495956912,
+        "macd_signal": 2.3862550140935888,
+        "bb_upper": 247.86703890511507,
+        "bb_lower": 180.5590719347287
       },
       "price_history": [
         {
@@ -5710,39 +5709,39 @@
           "date": "2026-06-29T00:00:00-04:00",
           "open": 193.02999877929688,
           "high": 194.58999633789062,
-          "low": 190.61000061035156,
-          "close": 191.38999938964844,
-          "volume": 1637961
+          "low": 187.42999267578125,
+          "close": 187.8000030517578,
+          "volume": 3953517
         }
       ],
-      "fetch_time_ms": 624
+      "fetch_time_ms": 503
     },
     "MU": {
       "info": {
         "name": "Micron Technology, Inc.",
         "sector": "Technology",
-        "market_cap": 1260068405248,
-        "pe_ratio": 25.20226,
+        "market_cap": 1188641112064,
+        "pe_ratio": 23.77366,
         "dividend_yield": 0.05,
         "fifty_two_week_high": 1255.0,
         "fifty_two_week_low": 103.38
       },
-      "latest_price": 1115.6099853515625,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 1052.4200439453125,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 46,
+      "quote_age_seconds": 42,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": -1.6435018063190063,
-      "volume": 4146492,
+      "price_change_pct": -7.057122500565165,
+      "volume": 11657210,
       "indicators": {
-        "rsi_14": 57.781983325063486,
-        "sma_20": 1042.5455017089844,
-        "sma_50": 815.2690020751953,
-        "macd": 91.04757186762049,
-        "macd_signal": 94.25158711583083,
-        "bb_upper": 1225.0246773237702,
-        "bb_lower": 860.0663260941985
+        "rsi_14": 54.04776873902409,
+        "sma_20": 1039.4804992675781,
+        "sma_50": 814.0430010986328,
+        "macd": 86.15753948247107,
+        "macd_signal": 93.27358063880095,
+        "bb_upper": 1219.111814486906,
+        "bb_lower": 859.8491840482502
       },
       "price_history": [
         {
@@ -5981,39 +5980,39 @@
           "date": "2026-06-29T00:00:00-04:00",
           "open": 1128.699951171875,
           "high": 1128.699951171875,
-          "low": 1104.6300048828125,
-          "close": 1113.7200927734375,
-          "volume": 4146492
+          "low": 1051.31005859375,
+          "close": 1052.4200439453125,
+          "volume": 11657210
         }
       ],
-      "fetch_time_ms": 502
+      "fetch_time_ms": 637
     },
     "WDC": {
       "info": {
         "name": "Western Digital Corporation",
         "sector": "Technology",
-        "market_cap": 208770531328,
-        "pe_ratio": 36.247158,
+        "market_cap": 204387893248,
+        "pe_ratio": 35.486237,
         "dividend_yield": 0.1,
         "fifty_two_week_high": 799.87,
         "fifty_two_week_low": 62.94
       },
-      "latest_price": 604.76,
-      "quote_timestamp": "2026-06-29T13:38:08.871631+00:00",
+      "latest_price": 593.085,
+      "quote_timestamp": "2026-06-29T14:08:05.256701+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
       "quote_age_seconds": 0,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 3.2807553642922955,
-      "volume": 694633,
+      "price_change_pct": 1.1126205547085533,
+      "volume": 1722375,
       "indicators": {
-        "rsi_14": 52.2883341594122,
-        "sma_20": 606.2347961425781,
-        "sma_50": 515.706083984375,
-        "macd": 41.50501025735571,
-        "macd_signal": 48.99470466861663,
-        "bb_upper": 758.757550777108,
-        "bb_lower": 453.7120415080483
+        "rsi_14": 50.875509677292605,
+        "sma_20": 605.5990447998047,
+        "sma_50": 515.4517834472656,
+        "macd": 40.49070612073717,
+        "macd_signal": 48.791843841292916,
+        "bb_upper": 758.2315418979953,
+        "bb_lower": 452.9665477016141
       },
       "price_history": [
         {
@@ -6251,47 +6250,47 @@
         {
           "date": "2026-06-29T00:00:00-04:00",
           "open": 600.4199829101562,
-          "high": 606.8499755859375,
+          "high": 609.8800048828125,
           "low": 590.0,
-          "close": 605.6900024414062,
-          "volume": 694633
+          "close": 592.9749755859375,
+          "volume": 1722375
         }
       ],
-      "fetch_time_ms": 550,
-      "last_trade_price": 596.51,
-      "last_trade_timestamp": "2026-06-29T13:37:50.834529+00:00",
-      "bid_price": 594.42,
-      "ask_price": 615.1,
+      "fetch_time_ms": 459,
+      "last_trade_price": 592.91,
+      "last_trade_timestamp": "2026-06-29T14:08:01.046343+00:00",
+      "bid_price": 591.68,
+      "ask_price": 594.49,
       "bid_size": 40.0,
       "ask_size": 40.0,
-      "bid_ask_timestamp": "2026-06-29T13:38:08.871631+00:00"
+      "bid_ask_timestamp": "2026-06-29T14:08:05.256701+00:00"
     },
     "CMCSA": {
       "info": {
         "name": "Comcast Corporation",
         "sector": "Communication Services",
-        "market_cap": 90913218560,
-        "pe_ratio": 4.990196,
+        "market_cap": 90341662720,
+        "pe_ratio": 4.9588237,
         "dividend_yield": 5.7,
         "fifty_two_week_high": 34.358013,
         "fifty_two_week_low": 22.13
       },
-      "latest_price": 25.450000762939453,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 25.290000915527344,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 47,
+      "quote_age_seconds": 45,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 9.84031367776411,
-      "volume": 28516260,
+      "price_change_pct": 9.149766216023655,
+      "volume": 50591968,
       "indicators": {
-        "rsi_14": 61.6506338821843,
-        "sma_20": 23.62199993133545,
-        "sma_50": 25.345399894714355,
-        "macd": -0.4922066758899639,
-        "macd_signal": -0.700054299488472,
-        "bb_upper": 25.349884223154902,
-        "bb_lower": 21.894115639515995
+        "rsi_14": 60.67367655417526,
+        "sma_20": 23.613999938964845,
+        "sma_50": 25.342199897766115,
+        "macd": -0.5049701964812456,
+        "macd_signal": -0.7026070036067283,
+        "bb_upper": 25.30912712445528,
+        "bb_lower": 21.91887275347441
       },
       "price_history": [
         {
@@ -6530,39 +6529,39 @@
           "date": "2026-06-29T00:00:00-04:00",
           "open": 27.045000076293945,
           "high": 27.097999572753906,
-          "low": 24.969999313354492,
-          "close": 25.450000762939453,
-          "volume": 28516260
+          "low": 24.81999969482422,
+          "close": 25.290000915527344,
+          "volume": 50591968
         }
       ],
-      "fetch_time_ms": 689
+      "fetch_time_ms": 487
     },
     "CHTR": {
       "info": {
         "name": "Charter Communications, Inc.",
         "sector": "Communication Services",
-        "market_cap": 24161372160,
-        "pe_ratio": 4.172349,
+        "market_cap": 24084598784,
+        "pe_ratio": 4.159091,
         "dividend_yield": null,
         "fifty_two_week_high": 422.29,
         "fifty_two_week_low": 124.05
       },
-      "latest_price": 154.2100067138672,
-      "quote_timestamp": "2026-06-29T13:35:00+00:00",
+      "latest_price": 153.72000122070312,
+      "quote_timestamp": "2026-06-29T14:05:00+00:00",
       "quote_source": "yahoo_1m",
-      "quote_age_seconds": 47,
+      "quote_age_seconds": 45,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 15.392103725055891,
-      "volume": 2962820,
+      "price_change_pct": 15.0216978748334,
+      "volume": 5068132,
       "indicators": {
-        "rsi_14": 60.01218833325411,
-        "sma_20": 135.66500015258788,
-        "sma_50": 155.42779968261718,
-        "macd": -4.438467240479298,
-        "macd_signal": -7.055431627487677,
-        "bb_upper": 149.99225517959587,
-        "bb_lower": 121.33774512557989
+        "rsi_14": 59.715969961811076,
+        "sma_20": 135.64024963378907,
+        "sma_50": 155.41789947509767,
+        "macd": -4.477955247679716,
+        "macd_signal": -7.063329228927762,
+        "bb_upper": 149.8404188244189,
+        "bb_lower": 121.44008044315925
       },
       "price_history": [
         {
@@ -6801,39 +6800,39 @@
           "date": "2026-06-29T00:00:00-04:00",
           "open": 168.11000061035156,
           "high": 168.11000061035156,
-          "low": 153.02000427246094,
-          "close": 154.2100067138672,
-          "volume": 2962820
+          "low": 146.49009704589844,
+          "close": 153.71499633789062,
+          "volume": 5068132
         }
       ],
-      "fetch_time_ms": 473
+      "fetch_time_ms": 513
     },
     "NKE": {
       "info": {
         "name": "Nike, Inc.",
         "sector": "Consumer Cyclical",
-        "market_cap": 60708962304,
-        "pe_ratio": 26.970394,
+        "market_cap": 60575682560,
+        "pe_ratio": 26.911184,
         "dividend_yield": 4.02,
         "fifty_two_week_high": 80.17,
         "fifty_two_week_low": 40.0
       },
-      "latest_price": 41.09,
-      "quote_timestamp": "2026-06-29T13:38:09.427476+00:00",
+      "latest_price": 40.795,
+      "quote_timestamp": "2026-06-29T14:08:05.977992+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
       "quote_age_seconds": 0,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 0.5889611741516487,
-      "volume": 2052533,
+      "price_change_pct": 0.38036510256901845,
+      "volume": 4428078,
       "indicators": {
-        "rsi_14": 37.16404431317102,
-        "sma_20": 43.623000144958496,
-        "sma_50": 43.80714767456055,
-        "macd": -0.7608357512674289,
-        "macd_signal": -0.32340941688315605,
-        "bb_upper": 46.75869177998454,
-        "bb_lower": 40.487308509932454
+        "rsi_14": 36.6365911118156,
+        "sma_20": 43.61875,
+        "sma_50": 43.80544761657715,
+        "macd": -0.7676166093208749,
+        "macd_signal": -0.3247655884938453,
+        "bb_upper": 46.768902357407775,
+        "bb_lower": 40.46859764259222
       },
       "price_history": [
         {
@@ -7070,48 +7069,48 @@
         },
         {
           "date": "2026-06-29T00:00:00-04:00",
-          "open": 40.06999969482422,
+          "open": 41.13999938964844,
           "high": 41.4900016784668,
-          "low": 40.93000030517578,
-          "close": 40.9900016784668,
-          "volume": 2052533
+          "low": 40.790000915527344,
+          "close": 40.904998779296875,
+          "volume": 4428078
         }
       ],
-      "fetch_time_ms": 641,
-      "last_trade_price": 41.08,
-      "last_trade_timestamp": "2026-06-29T13:38:08.344102+00:00",
-      "bid_price": 41.07,
-      "ask_price": 41.11,
-      "bid_size": 800.0,
-      "ask_size": 500.0,
-      "bid_ask_timestamp": "2026-06-29T13:38:09.427476+00:00"
+      "fetch_time_ms": 430,
+      "last_trade_price": 40.79,
+      "last_trade_timestamp": "2026-06-29T14:08:04.810459+00:00",
+      "bid_price": 40.79,
+      "ask_price": 40.8,
+      "bid_size": 200.0,
+      "ask_size": 300.0,
+      "bid_ask_timestamp": "2026-06-29T14:08:05.977992+00:00"
     },
     "QURE": {
       "info": {
         "name": "uniQure N.V.",
         "sector": "Healthcare",
-        "market_cap": 3329082880,
+        "market_cap": 3333895936,
         "pe_ratio": null,
         "dividend_yield": null,
         "fifty_two_week_high": 71.5,
         "fifty_two_week_low": 8.73
       },
-      "latest_price": 48.42,
-      "quote_timestamp": "2026-06-29T13:37:36.033004+00:00",
+      "latest_price": 48.879999999999995,
+      "quote_timestamp": "2026-06-29T14:07:42.795268+00:00",
       "quote_source": "alpaca_iex_quote_midpoint",
-      "quote_age_seconds": 33,
+      "quote_age_seconds": 23,
       "quote_is_fresh": true,
       "last_trade_date": "2026-06-29T00:00:00-04:00",
-      "price_change_pct": 1.9153859809750096,
-      "volume": 82649,
+      "price_change_pct": 2.062730775743727,
+      "volume": 333051,
       "indicators": {
-        "rsi_14": 74.25959445711065,
-        "sma_20": 35.52949962615967,
-        "sma_50": 27.856399917602538,
-        "macd": 6.467927568770364,
-        "macd_signal": 4.991993914028326,
-        "bb_upper": 55.58365721771514,
-        "bb_lower": 15.475342034604196
+        "rsi_14": 74.32299190684458,
+        "sma_20": 35.53299980163574,
+        "sma_50": 27.85779998779297,
+        "macd": 6.473511894316239,
+        "macd_signal": 4.993110779137501,
+        "bb_upper": 55.59617801086491,
+        "bb_lower": 15.469821592406568
       },
       "price_history": [
         {
@@ -7349,30 +7348,30 @@
         {
           "date": "2026-06-29T00:00:00-04:00",
           "open": 48.40999984741211,
-          "high": 49.0,
-          "low": 48.2599983215332,
-          "close": 48.41999816894531,
-          "volume": 82649
+          "high": 49.689998626708984,
+          "low": 48.099998474121094,
+          "close": 48.4900016784668,
+          "volume": 333051
         }
       ],
-      "fetch_time_ms": 495,
-      "last_trade_price": 48.95,
-      "last_trade_timestamp": "2026-06-29T13:37:36.089316+00:00",
-      "bid_price": 41.2,
-      "ask_price": 55.64,
+      "fetch_time_ms": 603,
+      "last_trade_price": 48.63,
+      "last_trade_timestamp": "2026-06-29T14:07:42.795405+00:00",
+      "bid_price": 42.21,
+      "ask_price": 55.55,
       "bid_size": 100.0,
       "ask_size": 100.0,
-      "bid_ask_timestamp": "2026-06-29T13:37:36.033004+00:00"
+      "bid_ask_timestamp": "2026-06-29T14:07:42.795268+00:00"
     }
   },
   "decision_journal": {
-    "run_id": "20260629_133541",
+    "run_id": "20260629_140538",
     "phase": "monitor",
-    "timestamp": "2026-06-29T13:38:09.503498+00:00",
+    "timestamp": "2026-06-29T14:08:06.020176+00:00",
     "symbols": [
       "NKE",
-      "WDC",
-      "QURE"
+      "QURE",
+      "WDC"
     ],
     "regime_scorecard": {
       "computed_regime": "neutral",
@@ -7385,12 +7384,12 @@
         "sp500_trend": {
           "state": "bullish",
           "score": 1,
-          "evidence": "SPY change=1.24, trend=up"
+          "evidence": "SPY change=0.94, trend=flat"
         },
         "qqq_trend": {
           "state": "bullish",
           "score": 1,
-          "evidence": "QQQ change=1.37"
+          "evidence": "QQQ change=0.63"
         },
         "small_cap_breadth": {
           "state": "unknown",
@@ -7400,7 +7399,7 @@
         "vix_direction": {
           "state": "bullish",
           "score": 1,
-          "evidence": "VIX level=normal, change=-1.26"
+          "evidence": "VIX level=normal, change=-1.35"
         },
         "ten_year_yield": {
           "state": "neutral",
@@ -7410,7 +7409,7 @@
         "sector_breadth": {
           "state": "bullish",
           "score": 1,
-          "evidence": "9 sectors positive, 2 sectors negative"
+          "evidence": "7 sectors positive, 4 sectors negative"
         },
         "candidate_relative_strength": {
           "state": "unknown",
@@ -7436,22 +7435,22 @@
         "yfinance": {
           "status": "ok",
           "items": 72,
-          "latency_ms": 1557
+          "latency_ms": 1605
         },
         "analyst": {
           "status": "ok",
           "items": 0,
-          "latency_ms": 2295
+          "latency_ms": 2391
         },
         "rss": {
           "status": "ok",
           "items": 19,
-          "latency_ms": 1415
+          "latency_ms": 1180
         },
         "sec_edgar": {
           "status": "ok",
           "items": 17,
-          "latency_ms": 3597
+          "latency_ms": 6105
         }
       },
       "warnings": []
@@ -7479,26 +7478,64 @@
           "avoid": 0.57,
           "data_quality": 0.76
         },
-        "confidence": 0.3,
-        "monitor_reason": "NKE remains a pre-earnings event watch with price close but the required event-clearance and hold above 41 missing.",
+        "confidence": 0.57,
+        "monitor_reason": "NKE remains a pre-earnings event watch and has not cleared the required 41-plus constructive reaction condition.",
         "matched_conditions": [
-          "Live price is near the planned 41.2 entry area"
+          "live regime is risk_on",
+          "price is near the planned entry area"
         ],
         "failed_conditions": [
-          "Earnings event has not cleared",
-          "Price is below 41",
-          "No constructive post-guidance reaction is available"
+          "earnings event has not cleared",
+          "price is below 41",
+          "no constructive post-guidance reaction is available"
         ],
         "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
-        "price": 41.09,
+        "price": 40.795,
         "entry": 41.2,
         "stop_loss": 39.8,
         "target": 44.5,
-        "pct_from_entry": -0.27,
-        "pct_from_stop": 3.24,
-        "pct_from_target": -7.66,
+        "pct_from_entry": -0.98,
+        "pct_from_stop": 2.5,
+        "pct_from_target": -8.33,
         "headline_count": 10,
         "source_count": 3
+      },
+      {
+        "symbol": "QURE",
+        "outcome": "skipped",
+        "morning_recommendation": "watch",
+        "monitor_recommendation": "hold",
+        "ready_to_trade": false,
+        "setup_state": "retired",
+        "watchlist_bucket": "avoid_until_new_thesis",
+        "top_blocker": "No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.",
+        "action_confidence": {
+          "long_thesis": 0.28,
+          "entry": 0.18,
+          "avoid": 0.7,
+          "data_quality": 0.45
+        },
+        "confidence": 0.7,
+        "monitor_reason": "QURE remains retired and low-volume, so proximity to the old entry is not actionable.",
+        "matched_conditions": [
+          "do-not-buy condition remains in force",
+          "price is near the old entry area"
+        ],
+        "failed_conditions": [
+          "no new verified catalyst is present",
+          "regular-session volume confirmation is missing",
+          "setup is retired"
+        ],
+        "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
+        "price": 48.879999999999995,
+        "entry": 49.0,
+        "stop_loss": 47.4,
+        "target": 52.5,
+        "pct_from_entry": -0.24,
+        "pct_from_stop": 3.12,
+        "pct_from_target": -6.9,
+        "headline_count": 14,
+        "source_count": 2
       },
       {
         "symbol": "WDC",
@@ -7515,72 +7552,36 @@
           "avoid": 0.66,
           "data_quality": 0.68
         },
-        "confidence": 0.25,
-        "monitor_reason": "WDC reclaimed the price trigger but repair-watch status requires clearer VWAP and group confirmation before a buy.",
+        "confidence": 0.66,
+        "monitor_reason": "WDC is still a repair watch because it remains below 600 without explicit reclaim or VWAP support evidence.",
         "matched_conditions": [
-          "Live price has reclaimed 600"
+          "live regime is risk_on",
+          "price is near the planned reclaim level"
         ],
         "failed_conditions": [
-          "VWAP support is not shown in the live snapshot",
-          "MU group-drag relief is not confirmed",
-          "High avoid confidence favors staying out until repair is clearer"
+          "price has not reclaimed 600",
+          "VWAP support is not confirmed in the provided snapshot",
+          "MU group drag has not been shown as resolved"
         ],
         "execution_condition": "Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.",
-        "price": 604.76,
+        "price": 593.085,
         "entry": 602.0,
         "stop_loss": 584.0,
         "target": 640.0,
-        "pct_from_entry": 0.46,
-        "pct_from_stop": 3.55,
-        "pct_from_target": -5.51,
+        "pct_from_entry": -1.48,
+        "pct_from_stop": 1.56,
+        "pct_from_target": -7.33,
         "headline_count": 14,
         "source_count": 3
-      },
-      {
-        "symbol": "QURE",
-        "outcome": "skipped",
-        "morning_recommendation": "watch",
-        "monitor_recommendation": "watch",
-        "ready_to_trade": false,
-        "setup_state": "retired",
-        "watchlist_bucket": "avoid_until_new_thesis",
-        "top_blocker": "No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.",
-        "action_confidence": {
-          "long_thesis": 0.28,
-          "entry": 0.18,
-          "avoid": 0.7,
-          "data_quality": 0.45
-        },
-        "confidence": 0.18,
-        "monitor_reason": "QURE remains retired and should not be bought without a new verified catalyst and volume confirmation.",
-        "matched_conditions": [
-          "Live price is near the planned 49.0 reference level"
-        ],
-        "failed_conditions": [
-          "Setup is retired",
-          "No new verified catalyst is present",
-          "Regular-session volume confirmation is absent",
-          "Data quality is weak and avoid confidence is high"
-        ],
-        "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
-        "price": 48.42,
-        "entry": 49.0,
-        "stop_loss": 47.4,
-        "target": 52.5,
-        "pct_from_entry": -1.18,
-        "pct_from_stop": 2.15,
-        "pct_from_target": -7.77,
-        "headline_count": 14,
-        "source_count": 2
       }
     ],
-    "path": "data/profiles/codex/decision_journal/2026-06-29/13-38-09_20260629_133541.json"
+    "path": "data/profiles/codex/decision_journal/2026-06-29/14-08-06_20260629_140538.json"
   },
   "signals": [],
   "risk": {},
   "executed": [],
   "portfolio": {
-    "timestamp": "2026-06-29T13:38:09.502507+00:00",
+    "timestamp": "2026-06-29T14:08:06.019082+00:00",
     "profile": "codex",
     "profile_label": "Codex Strategist",
     "portfolio_value": 100000.0,
