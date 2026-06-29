@@ -1,0 +1,146 @@
+Phase: monitor
+Provider: codex
+Model: codex-cli
+Status: success
+Total tokens: 0
+
+Market Summary:
+The live risk-on tape improves the backdrop, but the listed candidates still do not clearly satisfy their stock-specific morning execution conditions.
+
+Stocks:
+- NKE: watch | NKE is near the planned level, but the plan explicitly requires waiting until after earnings and a constructive post-event hold above 41.
+- QURE: watch | QURE remains a retired setup with weak data quality and no verified catalyst or volume confirmation.
+- QCOM: watch | QCOM is still below the required 194 repair level and lacks explicit VWAP and SMH-vs-QQQ confirmation.
+
+Response JSON:
+{
+  "run_id": "20260629_180648",
+  "overall_sentiment": "neutral",
+  "market_summary": "The live risk-on tape improves the backdrop, but the listed candidates still do not clearly satisfy their stock-specific morning execution conditions.",
+  "stocks": {
+    "NKE": {
+      "recommendation": "watch",
+      "confidence": 0.3,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "price is above the 41 level"
+      ],
+      "failed_conditions": [
+        "earnings event has not cleared",
+        "constructive guidance reaction is not yet available"
+      ],
+      "monitor_reason": "NKE is near the planned level, but the plan explicitly requires waiting until after earnings and a constructive post-event hold above 41.",
+      "execution_condition": "Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.",
+      "setup_state": "planned",
+      "watchlist_bucket": "event_watch",
+      "top_blocker": "Earnings are Tuesday after the close and expectations are mixed after a large YTD decline.",
+      "action_confidence": {
+        "long_thesis": 0.52,
+        "entry": 0.3,
+        "avoid": 0.57,
+        "data_quality": 0.76
+      },
+      "trade_plan": {
+        "entry": 41.2,
+        "stop_loss": 39.8,
+        "target": 44.5
+      }
+    },
+    "QURE": {
+      "recommendation": "watch",
+      "confidence": 0.18,
+      "ready_to_trade": false,
+      "matched_conditions": [],
+      "failed_conditions": [
+        "new verified catalyst is not present",
+        "regular-session volume confirmation is not present",
+        "setup is retired and bucketed avoid_until_new_thesis"
+      ],
+      "monitor_reason": "QURE remains a retired setup with weak data quality and no verified catalyst or volume confirmation.",
+      "execution_condition": "Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.",
+      "setup_state": "retired",
+      "watchlist_bucket": "avoid_until_new_thesis",
+      "top_blocker": "No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.",
+      "action_confidence": {
+        "long_thesis": 0.28,
+        "entry": 0.18,
+        "avoid": 0.7,
+        "data_quality": 0.45
+      },
+      "trade_plan": {
+        "entry": 49.0,
+        "stop_loss": 47.4,
+        "target": 52.5
+      }
+    },
+    "QCOM": {
+      "recommendation": "watch",
+      "confidence": 0.34,
+      "ready_to_trade": false,
+      "matched_conditions": [
+        "live regime is risk_on"
+      ],
+      "failed_conditions": [
+        "price has not repaired above 194.00",
+        "VWAP hold evidence is not provided",
+        "SMH outperforming QQQ evidence is not provided"
+      ],
+      "monitor_reason": "QCOM is still below the required 194 repair level and lacks explicit VWAP and SMH-vs-QQQ confirmation.",
+      "execution_condition": "Do not buy today unless QCOM repairs above 194.00 and holds VWAP with SMH outperforming QQQ.",
+      "setup_state": "repair_watch",
+      "watchlist_bucket": "repair_watch",
+      "top_blocker": "Prior failed-gap lesson and current quote weakness require repair above VWAP before any new long.",
+      "action_confidence": {
+        "long_thesis": 0.62,
+        "entry": 0.34,
+        "avoid": 0.58,
+        "data_quality": 0.74
+      },
+      "trade_plan": {
+        "entry": 195.0,
+        "stop_loss": 189.0,
+        "target": 207.0
+      }
+    }
+  },
+  "_meta": {
+    "status": "success",
+    "execution_mode": "codex_loop",
+    "provider": "codex",
+    "model": "codex-cli",
+    "duration_ms": 0.0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "total_tokens": 0
+    },
+    "attempts": [
+      {
+        "mode": "codex_loop",
+        "provider": "codex",
+        "model": "codex-cli",
+        "status": "success"
+      }
+    ],
+    "quota_issue_detected": false,
+    "quota_note": null,
+    "runtime": {
+      "platform": "github_actions",
+      "python_version": "3.12.13",
+      "os": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "agent_profile": "codex",
+      "agent_label": "Codex Strategist",
+      "github": {
+        "repository": "Aashay-chaudhari/trader",
+        "workflow": "Codex Decision Execution",
+        "event_name": "push",
+        "actor": "Aashay-chaudhari",
+        "run_id": "28392862819",
+        "run_attempt": "1",
+        "run_url": "https://github.com/Aashay-chaudhari/trader/actions/runs/28392862819",
+        "sha": "bea7a3df3681ac325b7968947c33eb75f9d9c295",
+        "ref": "refs/heads/main"
+      }
+    }
+  }
+}
