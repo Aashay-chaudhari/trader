@@ -1,7 +1,7 @@
 # Local Codex Monitor Gate
 
-Run id: 20260629_133541
-Candidate symbols: NKE, WDC, QURE
+Run id: 20260629_140538
+Candidate symbols: NKE, QURE, WDC
 Decision output: `data/profiles/codex/cache/local_monitor_decision.json`
 
 You are an intraday execution gate. Do not re-research the market, broaden the
@@ -14,25 +14,25 @@ morning execution conditions and the live snapshot.
     Setup state: planned | bucket: event_watch | top blocker: Earnings are Tuesday after the close and expectations are mixed after a large YTD decline.
     Action confidence: long_thesis=0.52 entry=0.3 avoid=0.57 data_quality=0.76
     Execution condition: Watch only before earnings; consider action only after NKE clears the event and holds above 41 with constructive guidance reaction.
-    Why it is being checked now: price is within 0.5% of entry; 10 fresh headline(s)
-  WDC: watch | entry=$602.0 stop=$584.0 target=$640.0
-    Setup state: repair_watch | bucket: repair_watch | top blocker: Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.
-    Action confidence: long_thesis=0.6 entry=0.25 avoid=0.66 data_quality=0.68
-    Execution condition: Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.
-    Why it is being checked now: price is within 0.6% of entry; 14 fresh headline(s)
+    Why it is being checked now: price is within 0.7% of entry; 10 fresh headline(s)
   QURE: watch | entry=$49.0 stop=$47.4 target=$52.5
     Setup state: retired | bucket: avoid_until_new_thesis | top blocker: No fresh liquid, high-quality catalyst was found today, and the profile should avoid low-volume biotech traps.
     Action confidence: long_thesis=0.28 entry=0.18 avoid=0.7 data_quality=0.45
     Execution condition: Do not buy QURE today; wait for a new verified catalyst and regular-session volume confirmation.
-    Why it is being checked now: price is within 1.2% of entry; 14 fresh headline(s)
+    Why it is being checked now: price is within 1.0% of entry; 14 fresh headline(s)
+  WDC: watch | entry=$602.0 stop=$584.0 target=$640.0
+    Setup state: repair_watch | bucket: repair_watch | top blocker: Storage-leadership thesis remains crowded, and the current live quote shows a large giveback.
+    Action confidence: long_thesis=0.6 entry=0.25 avoid=0.66 data_quality=0.68
+    Execution condition: Watch only unless WDC reclaims 600 with VWAP support and MU stops acting as a drag on the group.
+    Why it is being checked now: price is within 1.5% of entry; 14 fresh headline(s)
 
 ## Live Market Snapshot
 
 | Stock | Price | Chg% | RSI | VolRatio | Quote source | Quote age | Headlines |
 |-------|-------|------|-----|----------|--------------|-----------|-----------|
-| NKE   | $   40.99 |  +0.6% |  37 |     0.1x | yahoo_1m | 48s |        10 |
-| WDC   | $  605.69 |  +3.3% |  52 |     0.1x | yahoo_1m | 46s |        14 |
-| QURE  | $   48.42 |  +1.9% |  74 |     0.0x | yahoo_1m | 49s |        14 |
+| NKE   | $   40.90 |  +0.4% |  37 |     0.2x | yahoo_1m | 46s |        10 |
+| QURE  | $   48.49 |  +2.1% |  74 |     0.1x | yahoo_1m | 46s |        14 |
+| WDC   | $  592.76 |  +1.1% |  51 |     0.1x | yahoo_1m | 44s |        14 |
 
 ## Relevant Commodity Snapshot
 
@@ -55,12 +55,12 @@ Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish fac
 Live scorecard:
 Computed regime: risk_on (score=5, bullish=5, bearish=0, unknown=2).
 Rule: risk_on requires at least 5 bullish factors and no more than 1 bearish factor; otherwise use neutral/risk_off.
-- sp500_trend: bullish (1); SPY change=1.24, trend=up
-- qqq_trend: bullish (1); QQQ change=1.37
+- sp500_trend: bullish (1); SPY change=0.94, trend=flat
+- qqq_trend: bullish (1); QQQ change=0.63
 - small_cap_breadth: unknown (0); not available
-- vix_direction: bullish (1); VIX level=normal, change=-1.26
+- vix_direction: bullish (1); VIX level=normal, change=-1.35
 - ten_year_yield: neutral (0); 10Y yield=4.38, change=None
-- sector_breadth: bullish (1); 9 sectors positive, 2 sectors negative
+- sector_breadth: bullish (1); 7 sectors positive, 4 sectors negative
 - candidate_relative_strength: unknown (0); not available
 - headline_risk: bullish (1); declared regime=risk_on
 
@@ -94,7 +94,7 @@ Write ONLY valid JSON to `data/profiles/codex/cache/local_monitor_decision.json`
 
 ```json
 {
-  "run_id": "20260629_133541",
+  "run_id": "20260629_140538",
   "overall_sentiment": "bullish | bearish | neutral",
   "market_summary": "1 sentence on whether live conditions confirm or weaken the morning thesis",
   "stocks": {
