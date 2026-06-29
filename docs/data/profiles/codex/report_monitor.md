@@ -1,24 +1,24 @@
-# Trading Journal — 2026-06-16
+# Trading Journal — 2026-06-29
 
-**Run ID:** `20260616_193402`  
+**Run ID:** `20260629_133541`  
 **Phase:** monitor  
 **Strategist:** Codex Strategist  
-**Time:** 19:36 UTC  
+**Time:** 13:38 UTC  
 
 ## Research Analysis
 
 **Overall Sentiment:** neutral
 
-> Live conditions weaken the morning thesis because the candidates are below their required entry zones and the regime hint is risk_off.
+> Live risk-on conditions improve the backdrop, but the candidate-specific morning execution gates remain unconfirmed.
 
-### QCOM [?]
-- **Sentiment:** N/A | **Confidence:** 78% | **Recommendation:** watch
+### NKE [?]
+- **Sentiment:** N/A | **Confidence:** 30% | **Recommendation:** watch
 
-### HOOD [?]
-- **Sentiment:** N/A | **Confidence:** 82% | **Recommendation:** watch
+### WDC [?]
+- **Sentiment:** N/A | **Confidence:** 25% | **Recommendation:** watch
 
-### GM [?]
-- **Sentiment:** N/A | **Confidence:** 80% | **Recommendation:** watch
+### QURE [?]
+- **Sentiment:** N/A | **Confidence:** 18% | **Recommendation:** watch
 
 ## LLM Telemetry
 
@@ -37,67 +37,74 @@
 
 ### Market Headlines
 
-- **Wall Street Analyst Calls for S&P 500 Soaring to 9000. Here’s Why the Stock Market Melt Up Could Be Just Beginning.** [yfinance:SPY]
-- **Opening the Strait Eases Oil Prices, Imports & Housing Starts Report** [yfinance:SPY]
-- **This Vanguard ETF Is Quietly Outpacing the S&P 500 in 2026 and Costs Just 0.04 Percent** [yfinance:SPY]
-- **VOO vs. IWO: What's the Difference for S&P 500 Investors in 2026?** [yfinance:SPY]
-- **QQQI’s 13.8 Percent Monthly Yield Comes With a Hidden Cost Most Income Investors Miss** [yfinance:QQQ]
+- **Stock Market Today: Dow Rises On U.S.-Iran News; SpaceX Rallies On Addition To Nasdaq-100 Index (Live Coverage)** [yfinance:SPY]
+- **Exchange-Traded Funds, Equity Futures Higher Pre-Bell Monday Amid Hopes for Renewed US-Iran Diplomacy** [yfinance:SPY]
+- **“You’re Gonna Get That $200,000 Back in Tax-Free Growth So Freaking Fast”: Ramsey Host Explains Why Paying Taxes Now Can Leave More for Your Kids** [yfinance:SPY]
+- **S&P 500, Dow, Nasdaq Futures Climb As US, Iran Reportedly Agree To Pause Further Escalation: SLS, WEN, MSTR, WDC Stocks In Focus** [yfinance:SPY]
+- **SpaceX Is Joining the Russell 1000. Will It Help the Stock Reverse Course?** [yfinance:QQQ]
+
+### PLTR Headlines
+
+- **Meet the Artificial Intelligence (AI) Software Stock That's Quietly Outperforming Palantir Technologies in 2026 (Hint: It's Significantly Cheaper)** [Motley Fool]
+- **Palantir Teams Up With Nvidia for Government AI. Why the Stock Is Bouncing Back.** [Barrons.com]
+- **Sector Update: Tech Stocks Rise Premarket Monday** [MT Newswires]
+- **SRFM Stock Heads Toward Best Day In A Year – What’s The Palantir Connection?** [Stocktwits]
+
+### AVAV Headlines
+
+- **Stocks Rise Pre-Bell as US-Iran Agree to Halt Renewed Hostilities; Traders Await Fresh Labor Data** [MT Newswires]
+- **AeroVironment (AVAV) Q1 Earnings Report Preview: What To Look For** [StockStory]
+- **Stock Market Week Ahead: Rotating, For Now, Away From The AI Boom** [Investor's Business Daily]
+- **Earnings Calendar and Analysis for This Week (June 29-July 3)** [Kiplinger]
 
 ### QCOM Headlines
 
-- **Trending: Robinhood cuts 10% of workforce, Yum Brands sells Pizza Hut, Qualcomm's AI deal** [Yahoo Finance Video]
-- **Microsoft debuts Surface Laptop and Surface Pro amid AI-driven memory shortage** [Yahoo Finance]
-- **Qualcomm Stock Jumps -- CEO Unveils Bold AI Wearables Push** [GuruFocus.com]
-- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
-
-### GM Headlines
-
-- **GM reveals new Silverado pickup as Ford F-150 sales falter** [Yahoo Finance]
-- **General Motors Is Joining Forces With Lockheed Martin. How the New Defense Deal Impacts the Stock.** [Barrons.com]
-- **General Motors (GM) Stock Could Be 31% Below Fair Value After Recent Run Up** [Simply Wall St.]
-- **GM in Talks to Supply Weapons Parts to Lockheed Martin** [The Wall Street Journal]
-
-### WDC Headlines
-
-- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
-- **Oil and US gas prices retreat on US-Iran ceasefire** [Yahoo Finance Video]
-- **Stock Market Today: Dow Conquers 52,000 Level; SpaceX Blasts Higher, Taiwan Semi Lifts This Name (Live Coverage)** [Investor's Business Daily]
+- **New leader board: Citi refreshes AI compute semiconductor picks** [Investing.com]
+- **Magic Formula Showdown: Why CVS Beats Qualcomm and Valero for Retirees** [24/7 Wall St.]
+- **Qualcomm Is Remaking Itself Into an AI Company. Its Shares Look Dirt Cheap.** [Motley Fool]
+- **Stock Market’s Risk Appetite Is Shifting as AI, Iran, and Fed Fears Linger** [Barrons.com]
 
 ### MU Headlines
 
-- **SpaceX, Western Digital, Moderna, and More Stocks That Explain Today’s Market** [Barrons.com]
-- **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
-- **Western Digital stock jumps as AI trade reignites** [Yahoo Finance]
-- **Chip stocks surge, oil slides closer to $80 on US-Iran deal, Fox to acquire Roku** [Yahoo Finance Video]
+- **New leader board: Citi refreshes AI compute semiconductor picks** [Investing.com]
+- **Nvidia, Micron, and Broadcom hold the stock market's fate in the palm of their hands** [Yahoo Finance]
+- **Samsung, SK Hynix, Micron face antitrust class action lawsuit** [Quartz]
+- **AI Memory Crunch Hits Hardware Makers** [GuruFocus.com]
 
-### HOOD Headlines
+### WDC Headlines
 
-- **Stocks to Watch: SpaceX, Qualcomm, Robinhood** [The Wall Street Journal]
-- **Robinhood to let go 10% of staff as it seeks to become leaner** [Yahoo Finance]
-- **Thanks to the World Cup, Robinhood's 2026 prediction markets revenue could skyrocket** [Yahoo Finance Video]
-- **Robinhood stock slides after layoff announcement** [TheStreet]
+- **US Equity Investors to Watch Out for Big-Tech Performance This Week While Awaiting Nonfarm Payrolls, Warsh's Speech** [MT Newswires]
+- **US Stock Market Today: S&P 500 Futures Slip As Sticky Inflation Keeps Fed Cautious** [Simply Wall St.]
+- **Why Is Micron Stock Rising Nearly 1% Overnight?** [Stocktwits]
+- **Western Digital (WDC) Stock Rallies As Micron’s $100 Billion AI Deals Lift Storage Demand** [Simply Wall St.]
 
-### A Headlines
+### CMCSA Headlines
 
-- **Madison Large Cap Fund Maintains Position on Agilent Technologies (A) Amid AI Fears** [Insider Monkey]
-- **1 Profitable Stock to Target This Week and 2 We Avoid** [StockStory]
-- **Strength in Technology Enabled Products Drives Roper: Can the Momentum Sustain?** [Zacks]
-- **SpaceX initiated, Intel upgraded: Wall Street's top analyst calls** [The Fly]
+- **Comcast Plans Company Split, Sending Shares Soaring 22%** [The Wall Street Journal]
+- **Comcast to Separate Media and Technology Businesses in Spinoff** [MT Newswires]
+- **Comcast Soars on Split Plan** [GuruFocus.com]
+- **Wall St set to climb as US, Iran halt attacks; Comcast surges on spin-off plan** [Reuters]
 
-### CYTK Headlines
+### CHTR Headlines
 
-- **Edgewise Bounds Between Double-Digit Losses And Gain — What's Going On?** [Investor's Business Daily]
-- **Cytokinetics (CYTK) Launches MYQORZO in Germany for Obstructive HCM Treatment** [Insider Monkey]
-- **First MYQORZO Launch In Germany Might Change The Case For Investing In Cytokinetics (CYTK)** [Simply Wall St.]
-- **Why Is Cytokinetics (CYTK) Down 5.5% Since Last Earnings Report?** [Zacks]
+- **Comcast Soars On Company Split. Is More M&A Coming?** [Investor's Business Daily]
+- **SpaceX Stock Will Join The Nasdaq-100 Index On July 7** [Investor's Business Daily]
+- **CHTR Stock Gains Premarket: What's The SpaceX Connection?** [Stocktwits]
+- **Elon Musk's SpaceX Could Acquire T-Mobile In Wireless Push, Says Analyst** [Investor's Business Daily]
 
-### TSLA Headlines
+### NKE Headlines
 
-- **Qualcomm Is Eyeing a Massive AI Pivot. Why Wall Street Is Still Cautious.** [Barrons.com]
-- **The Mag 7 plus these three AI companies make up the new Fab 10** [Yahoo Finance Video]
-- **What Led JPMorgan to Revisit Its Tesla Inc (TSLA) Stock Rating?** [Insider Monkey]
-- **SpaceX Rally Lifts Valor's Stake to Nearly $97 Billion After 43% Gain** [GuruFocus.com]
+- **Stocks Rise Pre-Bell as US-Iran Agree to Halt Renewed Hostilities; Traders Await Fresh Labor Data** [MT Newswires]
+- **5 Things to Know Before the Stock Market Opens** [Investopedia]
+- **Shuffle Board: Gap Inc. Has a New Sustainability Head, and Nike Plans for CFO Transition** [Sourcing Journal]
+- **The Dow Jones Industrial Average Changes Forever Today: Google Parent Alphabet Is In, Verizon Is Out, and a Longtime Component Is on Thin Ice** [Motley Fool]
+
+### QURE Headlines
+
+- **UniQure N.V. (QURE) Upgraded to Overweight as Huntington’s Disease Program Advances** [Insider Monkey]
+- **QURE Announces Initial Data on Gene therapy for Temporal Lobe Epilepsy** [Zacks]
+- **QURE Soars as FDA Backs AMT-130 Data for Accelerated Approval** [Zacks]
+- **QURE Was Just the Beginning: 5 Biotech Catalysts I’m Watching Now** [InvestorPlace]
 
 ## Trade Signals
 
@@ -106,6 +113,18 @@
 ## Execution
 
 *No trades executed.*
+
+## Decision Evidence
+
+- **Reviewed:** 3 symbols | **Executed:** 0 | **Risk rejected:** 0 | **Skipped:** 3
+- **Regime scorecard:** neutral (4 bullish / 0 bearish)
+- **Structured file:** `data/profiles/codex/decision_journal/2026-06-29/13-38-09_20260629_133541.json`
+
+| Symbol | Outcome | State | Bucket | Entry Conf | Avoid Conf | Blocker |
+|--------|---------|-------|--------|-----------:|-----------:|---------|
+| **NKE** | skipped | planned | event_watch | 0.3 | 0.57 | Earnings are Tuesday after the close and expectations are mixed after a large YT |
+| **WDC** | skipped | repair_watch | repair_watch | 0.25 | 0.66 | Storage-leadership thesis remains crowded, and the current live quote shows a la |
+| **QURE** | skipped | retired | avoid_until_new_thesis | 0.18 | 0.7 | No fresh liquid, high-quality catalyst was found today, and the profile should a |
 
 ## Portfolio Snapshot
 
