@@ -1,0 +1,81 @@
+{
+  "date": "2026-06-29",
+  "profile": "codex",
+  "status": "focused_upgrade_window",
+  "summary": "The profile has enough repeated evidence to tighten risk and decision-labeling rules, but not enough executed trade history to claim a trading edge. The clearest immediate issue is process risk: the only open position, AVAV, was initiated minutes before scheduled earnings without an explicit hold-through-print rule. Broader missed-mover ideas are useful backlog items, but they are still mostly one-session observations.",
+  "top_priority": {
+    "title": "Block Unplanned Late Earnings Entries",
+    "category": "risk",
+    "why_now": "AVAV created real overnight event exposure from a technically fair entry placed minutes before an after-close earnings call. This is a process-control failure with asymmetric downside and does not require more samples to justify a guardrail.",
+    "expected_impact": "Prevents future monitor cycles from converting normal technical entries into unmanaged binary-event bets."
+  },
+  "priority_queue": [
+    {
+      "title": "Block Unplanned Late Earnings Entries",
+      "category": "risk",
+      "priority": "high",
+      "action_type": "implement_now",
+      "reason": "The current portfolio has one AVAV position opened immediately before earnings; a cutoff or explicit hold-through flag is a low-complexity guardrail against repeat event-risk mistakes."
+    },
+    {
+      "title": "Separate Entry, Avoid, Thesis, and Data Confidence",
+      "category": "prompt",
+      "priority": "high",
+      "action_type": "prepare",
+      "reason": "This has repeated support across QCOM, GM, HOOD, and MU and is already reflected in weekly observations and lessons. It should be implemented as a prompt/output-schema change, not mixed with scanner changes."
+    },
+    {
+      "title": "Invalidate Failed Buy Ranges Until Fresh Setup Forms",
+      "category": "config",
+      "priority": "high",
+      "action_type": "prepare",
+      "reason": "Repeated evidence across QCOM, GM, and HOOD shows the rule prevented stale bullish recycling. It belongs in execution gating or monitor configuration."
+    },
+    {
+      "title": "Treat Missing VWAP as Unknown, Not Failed",
+      "category": "data",
+      "priority": "medium",
+      "action_type": "prepare",
+      "reason": "WDC is a meaningful miss, and data-quality notes support the diagnosis, but this has only one clear occurrence. Prepare a narrow data-quality flag and alternate confirmation path rather than broadly weakening VWAP discipline."
+    },
+    {
+      "title": "Expand Theme Mapping to Adjacent Liquid Winners",
+      "category": "data",
+      "priority": "low",
+      "action_type": "defer",
+      "reason": "ASTS, RKLB, SPCX, MRNA, and AMKR show screening gaps, but the sample is still a small set of missed movers. Track reason codes first so the scanner backlog is ranked by recurrence."
+    },
+    {
+      "title": "Add Afternoon Regime Escalation",
+      "category": "strategy",
+      "priority": "low",
+      "action_type": "defer",
+      "reason": "June 29 under-called the strength of QQQ/SPY, but the existing regime library already supports selective risk-on escalation. More sessions are needed before changing regime logic beyond enforcing the current criteria."
+    }
+  ],
+  "strong_signals": [
+    "Action-specific confidence is repeatedly supported: high confidence often meant avoid/watch confidence, not buy confidence, across QCOM, GM, HOOD, and MU.",
+    "Failed buy ranges should not be recycled without a fresh setup; QCOM, GM, and HOOD all supported this rule with three recorded occurrences and no adverse trade outcome.",
+    "VWAP, opening-range, and peer confirmation prevented several low-quality entries during mixed or crowded tapes.",
+    "There is still almost no realized trade sample; snapshots show mostly cash until one AVAV entry on 2026-06-29."
+  ],
+  "weak_signals": [
+    "The WDC missing-VWAP miss is important but currently one clear occurrence, so it supports a data-quality distinction rather than a wholesale relaxation of VWAP rules.",
+    "Theme expansion to ASTS/RKLB/SPCX/MRNA/AMKR is plausible, but the evidence is a small missed-opportunity set rather than a measured recurring scanner failure.",
+    "Afternoon risk-on escalation is based mainly on one strong QQQ/SPY rebound with small-cap lag.",
+    "Strategy effectiveness has only one recorded trade sample, AVAV, and its outcome is unresolved in the profile state."
+  ],
+  "recommended_changes_now": [
+    "Add a hard block on new entries during the final 30 minutes before scheduled earnings unless an explicit hold-through-earnings flag is present.",
+    "Require the next monitor cycle to resolve AVAV first using post-earnings price action and the predeclared stop/hold criteria.",
+    "Prepare prompt/schema changes so confidence is labeled separately for entry, avoid, thesis, and data quality.",
+    "Prepare execution gating so a breached pre-entry stop reference forces invalidated or repair-watch status until a fresh setup forms."
+  ],
+  "changes_to_avoid_now": [
+    "Do not broaden watchlists aggressively just because several adjacent winners were missed in one session.",
+    "Do not weaken VWAP confirmation globally; only distinguish unavailable data from failed confirmation.",
+    "Do not promote neutral-to-risk-on escalation into an automatic buy permission without symbol-level gates.",
+    "Do not judge strategy edge from the current PnL sample because there is only one unresolved executed position."
+  ],
+  "operator_note": "Implement the earnings cutoff first and manage AVAV before optimizing opportunity capture. The next best upgrade is schema discipline around confidence and failed-setup state; scanner expansion should wait for tracked missed-mover reason codes."
+}
