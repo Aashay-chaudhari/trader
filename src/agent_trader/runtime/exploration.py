@@ -275,29 +275,26 @@ def record_report(store, report, day, *, morning=True):
 def validation_prompt(store):
     from .research import BASE
 
-    return (
-        BASE
-        + "\nROLE: independent research validator, not the original researcher. Check EVERY hypothesis; unverified claims need work.\n"
-        + json.dumps(
-            {
-                "draft": {
-                    k: v
-                    for k, v in store.get("exploration_draft", {}).items()
-                    if k not in ("shadow_plans", "experiments")
-                },
-                "screen_trial_ids": [
-                    t["id"] for t in store.get("historical_screen", {}).get("trials", [])
-                ],
-                "instructions": "Use up to 4 live searches to check the key cited primary sources and important counterevidence. "
-                "For EVERY hypothesis return exactly one verdict. Accept for testing only when cited evidence supports its "
-                "mechanism, the falsification test is concrete, and its free-data limitations are explicit. Reject fabricated "
-                "citations, historical performance claims not supported by the recorded screen, or conflation of options "
-                "indicative quotes with fills. Unverifiable claims need work. Never certify profitability: accepted_for_testing "
-                "means source/method review only, not forward validation. Return ResearchValidation JSON.",
-            },
-            default=str,
-        )[:24000]
-    )
+    draft = store.get("exploration_draft", {})
+    context = {
+        "revision": draft.get("revision"),
+        "hypotheses": draft.get("hypotheses", []),
+        "sources": draft.get("sources", []),
+        "historical_screen": store.get("historical_screen", {}),
+    }
+    instructions = """
+ROLE: independent research validator, not the original researcher.
+Use up to 4 live searches to check primary sources and important counterevidence.
+For EVERY hypothesis return exactly one verdict. Accept for testing only when cited
+evidence supports the mechanism, falsification is concrete, and free-data limits
+are explicit. Reject fabricated citations and historical claims unsupported by the
+attached screen. Screen metrics are horizon returns averaged across unit opportunities,
+grouped by entry session; five-session swing returns are NOT daily portfolio returns.
+Do not accept that unit confusion, annualization, or fabricated executable fills.
+Unverifiable claims need work. Acceptance means source/method review only, never
+profitability validation. Return ResearchValidation JSON.
+"""
+    return BASE + instructions + json.dumps(context, default=str, separators=(",", ":"))
 
 
 def record_validation(store, result):
@@ -336,6 +333,15 @@ def record_validation(store, result):
         accepted = (
             verdict["verdict"] == "accepted_for_testing" and citation_ok and dates_ok and links_ok
         )
+        gate_issues = []
+        if not citation_ok:
+            gate_issues.append(
+                "A cited URL is missing from the supplied evidence list or is not HTTPS."
+            )
+        if not dates_ok:
+            gate_issues.append("A cited observation is dated in the future.")
+        if not links_ok:
+            gate_issues.append("A referenced historical trial does not exist.")
         state = (
             "reviewed_for_testing"
             if accepted
@@ -346,7 +352,10 @@ def record_validation(store, result):
         card = {
             **h,
             "state": state,
-            "review_reason": verdict["reason"],
+            "review_reason": verdict["reason"]
+            + (" Automated checks: " + " ".join(gate_issues) if gate_issues else ""),
+            "reviewer_verdict": verdict["verdict"],
+            "automated_check_issues": gate_issues,
             "reviewed_at": utc_now(),
             "expires_at": (now + timedelta(days=30)).isoformat(),
             "sources": [sources[url] for url in h["source_urls"] if url in sources],

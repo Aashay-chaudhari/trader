@@ -155,3 +155,35 @@ No order can be sent before regular-market opening and execution verification.
   reconfirmed zero positions/open orders. Execution stays gated until market open.
 - Completion notification sent through the configured ntfy destination; delivery
   is server-accepted, while phone receipt can only be confirmed by the user.
+
+## Research sprint and daily knowledge handoff — October 29 morning
+
+- Replaced the single-shadow slot with up to six concurrent challengers per equity
+  branch. Eight initial paired filter experiments are registered (four per branch).
+  Dedicated research shadow plans never enter the broker execution plan table.
+- Historical integration froze 30 instruments / twelve fixed rule-horizon trials,
+  September 4, 2025–October 28, 2026, with a June 4, 2026 chronological split,
+  boundary-label purge, and 20bp/50bp assumed cost checks. Dataset hash and raw bars
+  are private. Every trial is reported; none counts as forward promotion evidence.
+- Real research generated nine hypotheses with thirteen cited sources. A reviewer
+  in a separate persistent thread inspected source/method claims and recorded four
+  needs-work verdicts. Of five accepted-for-testing verdicts, one failed the exact
+  citation-reference check. Four knowledge cards are currently eligible for reuse;
+  all other hypotheses and their rejection/hold reasons remain in the catalogue.
+- Clarified the generated draft's historical return units before full-data review:
+  holding-horizon unit-opportunity averages grouped by entry session, never daily
+  portfolio returns. The original draft is retained privately.
+- The morning prompt explicitly retrieves reviewed cards, counterevidence and joined
+  experiment states. Actual fresh-data prompt fit the 28,000-character ceiling;
+  historical/market evidence remains present. Observation blobs no longer crowd
+  reviewed knowledge or current market data out of the prompt.
+- First ten research mornings: discovery from 08:35, separate validation, and a
+  same-morning brief refresh before the open. Positions take priority in session;
+  daily/weekly quota ceilings and broker risk policies remain fixed.
+- Promotions retain minimum twenty sessions / thirty samples, require positive
+  absolute net results, include a trial-family penalty and use doubling-session
+  review looks. Superseded-parent candidates become stale.
+- Full suite: 241 passed; active lint and JavaScript syntax passed. Browser checks
+  cover six views at desktop/mobile widths, all twelve screens and actual reviewed
+  research cards. CI passed the initial source and separate-reviewer commits;
+  final prompt/check metadata is verified in the next CI release.

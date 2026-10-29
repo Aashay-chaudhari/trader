@@ -312,3 +312,15 @@ def test_research_validator_uses_its_own_persistent_thread(config, monkeypatch):
     assert s.get("thread:" + day) == "researcher-thread"
     assert s.get("thread:research_validation:" + day) == "reviewer-thread"
     s.close()
+
+
+def test_validator_receives_actual_screen_metrics_not_only_trial_names(store):
+    from agent_trader.runtime.exploration import validation_prompt
+
+    store.set(
+        "historical_screen",
+        {"trials": [{"id": "swing-reversal", "holdout": {"mean_daily_net": 0.00123}}]},
+    )
+    prompt = validation_prompt(store)
+    assert "0.00123" in prompt
+    assert "five-session swing returns are NOT daily portfolio returns" in prompt
