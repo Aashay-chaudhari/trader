@@ -311,7 +311,13 @@ def run_task(config, role, prompt, response_model, model, effort, day, *, search
                 (utc_now(), day, role, model, dumps({"state": "started"})),
             )
             usage_id = usage_cursor.lastrowid
-            thread_id = store.get(f"thread:{day}")
+            # Give the reviewer fresh context rather than the researcher's thread.
+            thread_key = (
+                f"thread:research_validation:{day}"
+                if role == "research_validation"
+                else f"thread:{day}"
+            )
+            thread_id = store.get(thread_key)
             t, payload, usage, counters = rpc.run(
                 thread_id,
                 prompt[: config.max_input_chars],
@@ -321,7 +327,7 @@ def run_task(config, role, prompt, response_model, model, effort, day, *, search
                 max_searches=searches,
                 max_cycles=cycles,
             )
-            store.set(f"thread:{day}", t)
+            store.set(thread_key, t)
             parsed = response_model.model_validate(payload)
             available = [m.get("id") for m in rpc.models()]
             readiness = store.get("readiness", {})

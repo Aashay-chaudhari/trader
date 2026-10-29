@@ -250,3 +250,65 @@ def test_morning_prompt_keeps_reviewed_research_and_market_data_in_budget(store)
     )
     assert "hypothesis-one" in prompt and '"AAPL"' in prompt and len(prompt) < 28000
     assert "obsolete_brief" not in prompt
+
+
+def test_research_validator_uses_its_own_persistent_thread(config, monkeypatch):
+    from agent_trader.runtime import agent
+    from agent_trader.runtime.models import ResearchValidation
+    from agent_trader.runtime.store import Store
+
+    day = (
+        datetime.now(timezone.utc)
+        .astimezone(__import__("zoneinfo").ZoneInfo("America/New_York"))
+        .date()
+        .isoformat()
+    )
+    s = Store(config.state_dir / "trader.sqlite3")
+    s.set("thread:" + day, "researcher-thread")
+    seen = []
+
+    class RPC:
+        def __init__(self, config):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def rate_limits(self):
+            return {
+                "ordinary_usage_allowed": True,
+                "windows": [
+                    {
+                        "usedPercent": 10,
+                        "windowDurationMins": 10080,
+                        "resetsAt": int(
+                            (datetime.now(timezone.utc) + timedelta(days=5)).timestamp()
+                        ),
+                    }
+                ],
+            }
+
+        def run(self, thread_id, *args, **kwargs):
+            seen.append(thread_id)
+            return "reviewer-thread", {"summary": "Independent check", "hypotheses": []}, {}, {}
+
+        def models(self):
+            return [{"id": model} for model in (config.research_model, config.light_model)]
+
+    monkeypatch.setattr(agent, "CodexRPC", RPC)
+    agent.run_task(
+        config,
+        "research_validation",
+        "Review the supplied evidence",
+        ResearchValidation,
+        config.research_model,
+        "medium",
+        day,
+    )
+    assert seen == [None]
+    assert s.get("thread:" + day) == "researcher-thread"
+    assert s.get("thread:research_validation:" + day) == "reviewer-thread"
+    s.close()
