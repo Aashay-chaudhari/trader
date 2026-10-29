@@ -1,17 +1,17 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T23:04:02.868507+00:00",
+  "generated_at": "2026-10-29T23:05:08.420407+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T19:04:02.338020-04:00",
+  "heartbeat": "2026-10-29T19:04:59.640067-04:00",
   "watchdog": {
-    "checked_at": "2026-10-29T23:02:04.6347683+00:00",
+    "checked_at": "2026-10-29T23:04:05.5143275+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
     "models_paused": false
   },
-  "status": "Market closed. Reconciling and reviewing the session.",
+  "status": "Local supervisor stopped; independent watchdog owns recovery.",
   "next_action": "Daily retrospective, experiment evaluation, and validated maintenance.",
   "readiness": {
     "at": "2026-10-29T22:49:39.255247+00:00",
@@ -91,19 +91,19 @@
   ],
   "equity": [
     {
-      "at": "2026-10-29T19:04:02.338020-04:00",
+      "at": "2026-10-29T19:04:59.640067-04:00",
       "day": "2026-10-29",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T19:04:02.338020-04:00",
+      "at": "2026-10-29T19:04:59.640067-04:00",
       "day": "2026-10-29",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T19:04:02.338020-04:00",
+      "at": "2026-10-29T19:04:59.640067-04:00",
       "day": "2026-10-29",
       "branch": "intraday",
       "value": 10000.0
@@ -7278,6 +7278,25 @@
   "plans": [],
   "events": [
     {
+      "id": 84,
+      "at": "2026-10-29T23:05:06.175622+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 201138
+      }
+    },
+    {
+      "id": 83,
+      "at": "2026-10-29T23:05:05.259072+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 201138
+      }
+    },
+    {
       "id": 82,
       "at": "2026-10-29T23:02:38.159422+00:00",
       "kind": "notification_sent",
@@ -7285,6 +7304,26 @@
       "payload": {
         "key": "research-probe:adhoc-20261029-1900:done",
         "title": "Trader - research check passed"
+      }
+    },
+    {
+      "id": 81,
+      "at": "2026-10-29T23:02:37.930048+00:00",
+      "kind": "research_probe_completed",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research check passed: data, inference and schema validation; no orders authorized.",
+        "id": "adhoc-20261029-1900",
+        "kind": "full",
+        "state": "passed",
+        "scheduled_for": "2026-10-29T19:00:00-04:00",
+        "started_at": "2026-10-29T22:59:59.624042+00:00",
+        "orders_authorized": false,
+        "research_sources": 9,
+        "hypotheses": 2,
+        "reviewed_for_testing": 0,
+        "morning_handoff_verified": true,
+        "completed_at": "2026-10-29T23:02:37.916786+00:00"
       }
     },
     {
@@ -7334,6 +7373,21 @@
       }
     },
     {
+      "id": 76,
+      "at": "2026-10-29T22:59:59.629483+00:00",
+      "kind": "research_probe_started",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated full research check started; no orders authorized.",
+        "id": "adhoc-20261029-1900",
+        "kind": "full",
+        "state": "running",
+        "scheduled_for": "2026-10-29T19:00:00-04:00",
+        "started_at": "2026-10-29T22:59:59.624042+00:00",
+        "orders_authorized": false
+      }
+    },
+    {
       "id": 75,
       "at": "2026-10-29T22:59:59.225391+00:00",
       "kind": "notification_sent",
@@ -7341,6 +7395,25 @@
       "payload": {
         "key": "research-probe:dummy-hypotheses-20261029:done",
         "title": "Trader - research check passed"
+      }
+    },
+    {
+      "id": 74,
+      "at": "2026-10-29T22:59:58.442245+00:00",
+      "kind": "research_probe_completed",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research check passed: data, inference and schema validation; no orders authorized.",
+        "id": "dummy-hypotheses-20261029",
+        "kind": "hypotheses",
+        "state": "passed",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:58:51.759093+00:00",
+        "orders_authorized": false,
+        "hypotheses": 2,
+        "reviewed_for_testing": 2,
+        "morning_handoff_verified": true,
+        "completed_at": "2026-10-29T22:59:58.430405+00:00"
       }
     },
     {
@@ -7363,6 +7436,23 @@
       "payload": {
         "key": "research-probe:dummy-research-20261029:done",
         "title": "Trader - research check passed"
+      }
+    },
+    {
+      "id": 71,
+      "at": "2026-10-29T22:59:53.251881+00:00",
+      "kind": "research_probe_completed",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research check passed: data, inference and schema validation; no orders authorized.",
+        "id": "dummy-research-20261029",
+        "kind": "research",
+        "state": "passed",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:58:50.595891+00:00",
+        "orders_authorized": false,
+        "research_sources": 7,
+        "completed_at": "2026-10-29T22:59:53.238588+00:00"
       }
     },
     {
@@ -7390,6 +7480,36 @@
       }
     },
     {
+      "id": 68,
+      "at": "2026-10-29T22:58:51.763448+00:00",
+      "kind": "research_probe_started",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated hypotheses research check started; no orders authorized.",
+        "id": "dummy-hypotheses-20261029",
+        "kind": "hypotheses",
+        "state": "running",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:58:51.759093+00:00",
+        "orders_authorized": false
+      }
+    },
+    {
+      "id": 67,
+      "at": "2026-10-29T22:58:50.603580+00:00",
+      "kind": "research_probe_started",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research research check started; no orders authorized.",
+        "id": "dummy-research-20261029",
+        "kind": "research",
+        "state": "running",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:58:50.595891+00:00",
+        "orders_authorized": false
+      }
+    },
+    {
       "id": 66,
       "at": "2026-10-29T22:57:44.539156+00:00",
       "kind": "notification_sent",
@@ -7397,6 +7517,23 @@
       "payload": {
         "key": "research-probe:dummy-hypotheses-20261029:failed",
         "title": "Trader - research check failed"
+      }
+    },
+    {
+      "id": 65,
+      "at": "2026-10-29T22:57:44.319765+00:00",
+      "kind": "research_probe_failed",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research check failed (AgentUnavailable); production trading state untouched.",
+        "id": "dummy-hypotheses-20261029",
+        "kind": "hypotheses",
+        "state": "failed",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:57:31.353966+00:00",
+        "orders_authorized": false,
+        "completed_at": "2026-10-29T22:57:44.309774+00:00",
+        "error_type": "AgentUnavailable"
       }
     },
     {
@@ -7410,6 +7547,21 @@
       }
     },
     {
+      "id": 63,
+      "at": "2026-10-29T22:57:31.359988+00:00",
+      "kind": "research_probe_started",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated hypotheses research check started; no orders authorized.",
+        "id": "dummy-hypotheses-20261029",
+        "kind": "hypotheses",
+        "state": "running",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:57:31.353966+00:00",
+        "orders_authorized": false
+      }
+    },
+    {
       "id": 62,
       "at": "2026-10-29T22:57:13.545019+00:00",
       "kind": "notification_sent",
@@ -7420,6 +7572,23 @@
       }
     },
     {
+      "id": 61,
+      "at": "2026-10-29T22:57:13.278229+00:00",
+      "kind": "research_probe_failed",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research check failed (AgentUnavailable); production trading state untouched.",
+        "id": "dummy-research-20261029",
+        "kind": "research",
+        "state": "failed",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:56:52.542839+00:00",
+        "orders_authorized": false,
+        "completed_at": "2026-10-29T22:57:13.261891+00:00",
+        "error_type": "AgentUnavailable"
+      }
+    },
+    {
       "id": 60,
       "at": "2026-10-29T22:56:53.418261+00:00",
       "kind": "notification_sent",
@@ -7427,6 +7596,35 @@
       "payload": {
         "key": "research-probe:dummy-research-20261029:start",
         "title": "Trader - research check started"
+      }
+    },
+    {
+      "id": 59,
+      "at": "2026-10-29T22:56:52.548785+00:00",
+      "kind": "research_probe_started",
+      "branch": null,
+      "payload": {
+        "summary": "Isolated research research check started; no orders authorized.",
+        "id": "dummy-research-20261029",
+        "kind": "research",
+        "state": "running",
+        "scheduled_for": null,
+        "started_at": "2026-10-29T22:56:52.542839+00:00",
+        "orders_authorized": false
+      }
+    },
+    {
+      "id": 58,
+      "at": "2026-10-29T22:56:31.114665+00:00",
+      "kind": "research_probe_scheduled",
+      "branch": null,
+      "payload": {
+        "summary": "Ad hoc non-trading research scheduled for 2026-10-29T19:00:00-04:00",
+        "id": "adhoc-20261029-1900",
+        "kind": "full",
+        "state": "scheduled",
+        "scheduled_for": "2026-10-29T19:00:00-04:00",
+        "orders_authorized": false
       }
     },
     {
@@ -9004,6 +9202,45 @@
     "code_changes": [],
     "no_change_reason": "No forward performance observations were recorded, operational repairs are already reported, and the truncated payload cannot establish an additional implementation defect. No new contract, promotion or code-change request is warranted."
   },
+  "research_probes": [
+    {
+      "id": "dummy-hypotheses-20261029",
+      "kind": "hypotheses",
+      "state": "passed",
+      "scheduled_for": null,
+      "started_at": "2026-10-29T22:58:51.759093+00:00",
+      "orders_authorized": false,
+      "hypotheses": 2,
+      "reviewed_for_testing": 2,
+      "morning_handoff_verified": true,
+      "completed_at": "2026-10-29T22:59:58.430405+00:00",
+      "handoff_result": "reviewed_cards_retrieved"
+    },
+    {
+      "id": "adhoc-20261029-1900",
+      "kind": "full",
+      "state": "passed",
+      "scheduled_for": "2026-10-29T19:00:00-04:00",
+      "started_at": "2026-10-29T22:59:59.624042+00:00",
+      "orders_authorized": false,
+      "research_sources": 9,
+      "hypotheses": 2,
+      "reviewed_for_testing": 0,
+      "morning_handoff_verified": false,
+      "completed_at": "2026-10-29T23:02:37.916786+00:00",
+      "handoff_result": "no_cards_approved"
+    },
+    {
+      "id": "dummy-research-20261029",
+      "kind": "research",
+      "state": "passed",
+      "scheduled_for": null,
+      "started_at": "2026-10-29T22:58:50.595891+00:00",
+      "orders_authorized": false,
+      "research_sources": 7,
+      "completed_at": "2026-10-29T22:59:53.238588+00:00"
+    }
+  ],
   "period_reviews": [],
   "lessons": [
     {
