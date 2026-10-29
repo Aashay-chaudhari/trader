@@ -32,6 +32,8 @@ PUBLIC_EVENTS = {
     "entry_blocked",
     "release",
     "startup",
+    "supervisor_stopping",
+    "supervisor_stopped",
     "daily_summary",
     "pulse",
     "period_review",
@@ -75,6 +77,12 @@ def snapshot(config, store):
     from .experiments import Experiments
 
     progress = Experiments(store).progress()
+    try:
+        watchdog = json.loads(
+            (config.state_dir / "watchdog-state.json").read_text(encoding="utf-8-sig")
+        )
+    except (OSError, ValueError):
+        watchdog = {}
 
     positions = store.rows("SELECT * FROM holdings")
     broker = {p["symbol"]: p for p in store.get("broker_positions", [])}
@@ -118,6 +126,13 @@ def snapshot(config, store):
             "start_date": config.start_date,
             "mode": store.get("mode", "research_shadow"),
             "heartbeat": store.get("heartbeat"),
+            "watchdog": {
+                "checked_at": watchdog.get("checkedAt"),
+                "incident": bool(watchdog.get("incident", False)),
+                "last_restart": watchdog.get("lastRestart"),
+                "service_owner": "systemd user service",
+                "models_paused": (config.state_dir / "agent-pause.flag").exists(),
+            },
             "status": store.get("status", "Preparing a new experiment"),
             "next_action": store.get("next_action"),
             "readiness": store.get("readiness", {}),
@@ -247,7 +262,7 @@ def git_run(config, args, timeout=60):
         capture_output=True,
         text=True,
         timeout=timeout,
-        env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "Never"},
     )
 
 
@@ -278,18 +293,23 @@ def publish(config, store):
         if result.returncode:
             raise RuntimeError("Dashboard commit failed")
     # Never force-push or reset user edits. Failed synchronization is retried later.
-    result = git_run(config, ["push", "origin", "HEAD:main"])
-    if result.returncode:
-        binary = "/mnt/c/Program Files/Git/cmd/git.exe"
-        if os.path.exists(binary):
-            result = subprocess.run(
-                [binary, "push", "origin", "HEAD:main"],
-                cwd=config.root,
-                capture_output=True,
-                text=True,
-                timeout=80,
-                env={**os.environ, "GCM_INTERACTIVE": "Never"},
-            )
+    binary = "/mnt/c/Windows/System32/wscript.exe"
+    if os.path.exists(binary) and str(config.root).startswith("/mnt/c/"):
+        # Windows credential helpers can allocate a console when called from WSL.
+        # Keep the complete push/authentication chain inside the hidden GUI host.
+        launcher = "C:\\" + str(config.root / "scripts/runtime/hidden-launch.vbs")[7:].replace(
+            "/", "\\"
+        )
+        result = subprocess.run(
+            [binary, "//B", "//NoLogo", launcher, "publish"],
+            cwd=config.root,
+            capture_output=True,
+            text=True,
+            timeout=80,
+            env={**os.environ, "GCM_INTERACTIVE": "Never"},
+        )
+    else:
+        result = git_run(config, ["push", "origin", "HEAD:main"])
     if result.returncode:
         raise RuntimeError("GitHub push failed; local trading remains independent")
     store.set("last_published", utc_now())

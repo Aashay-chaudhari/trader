@@ -196,3 +196,28 @@ reviewed knowledge cards and eight shadow experiments. Windows task was re-regis
 and started after a reload interruption; fresh 07:45 ET preflight confirmed models,
 broker reconciliation and funding. The 07:45 startup notification was server-accepted.
 No new trading/runtime incidents or broker positions were introduced.
+
+## Console interruption and independent recovery repair — October 29 evening
+
+- Original Windows launcher recorded 0xC000013A; the initiating source is not
+  established. Task history was disabled. Morning heartbeat stopped at 08:12 ET,
+  before the first scheduled research; broker directly confirmed $30,000, no
+  fills/positions/open orders. Today was an operational miss, not a strategy result.
+- Direct interactive console task is disabled. `agent-trader.service` now owns the
+  process under systemd's lingering user manager with Restart=always. A hidden
+  Windows WSL host keeps the distribution alive; a separate hidden watchdog runs
+  every two minutes, checks an independent heartbeat, recovers and alerts via ntfy.
+- Native Windows Git/authentication and diagnostic launches also use the hidden
+  GUI host; no bare PowerShell/WSL console is used by the active scheduled tasks.
+- Actual interruption drill: SIGINT changed service PID 198817→199204; hard-crash
+  drill: SIGKILL changed 199204→199266, each with a fresh heartbeat after restart.
+- Independent Windows drill: an intentional full service stop recovered under the
+  scheduled watchdog in 72 seconds (PID 199266→199742). Incident and subsequent
+  recovery notifications were accepted by ntfy. The recovery-confirmed log recorded
+  a fresh 21-second heartbeat. No broker orders were introduced by these drills.
+- Heartbeats are atomic and written before broker checks or publication. Signals
+  and graceful stops are journaled. Windows watchdog/host logs survive Python loss.
+- Operational model work was temporarily paused with a local flag during the drills;
+  it is removed after validation. The Windows watchdog remains enabled throughout.
+- New tests cover independent heartbeat output during broker failure and the hidden
+  Windows publication path; native PowerShell parser checks reported zero errors.

@@ -30,3 +30,10 @@ pass produced nine hypotheses from thirteen sources; four cards passed review an
 automated reference checks for morning reuse. Twelve historical screens and eight
 parallel shadow challengers are recorded. These are exploratory findings, not
 proven strategies. See RESEARCH_WORKFLOW.md for the explicit daily handoff.
+
+October 29 evening correction: the unattended process stopped at 08:12 ET and
+missed the session. No fills, positions or forward shadow samples occurred. The
+original visible task is disabled. A lingering systemd service, hidden WSL host
+and independent two-minute Windows watchdog now own execution/recovery. Actual
+interrupt, crash and stopped-service recovery drills passed. The initiating morning
+termination source remains unconfirmed. See the implementation log for evidence.

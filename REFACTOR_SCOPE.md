@@ -405,3 +405,15 @@ requires positive net challenger performance, a penalty for the recorded trial
 family and predeclared doubling-session review looks. Siblings with a superseded
 parent become stale; arbitrary repeated daily significance checks are disabled.
 Options remain research-only with no simulated executable fills from indicative data.
+
+
+## October 29 operational correction
+
+The first unattended session was missed after an interruption at 08:12 ET. No
+trades or forward shadow samples occurred. The initiating termination source is
+unconfirmed; Windows recorded a control-exit status and detailed task history was
+disabled. Replace direct console ownership with a lingering systemd user service,
+a hidden WSL host and an independent two-minute Windows heartbeat watchdog. Record
+signals/stops, preserve independent health logs and verify actual interruption,
+crash and stopped-service recovery. Do not claim a successful trading day from
+a healthy installation, passing unit tests or a startup notification alone.

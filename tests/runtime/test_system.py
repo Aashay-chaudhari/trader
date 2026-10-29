@@ -115,9 +115,7 @@ def proposal():
     }
 
 
-def test_experiment_contract_immutable_duplicate_and_no_day_one_promotion(
-    store, plan, quote, now
-):
+def test_experiment_contract_immutable_duplicate_and_no_day_one_promotion(store, plan, quote, now):
     e = Experiments(store)
     assert e.register(proposal())
     assert not e.register({**proposal(), "id": "another"})
@@ -164,7 +162,11 @@ def test_supported_challenger_promotes_only_after_contract_passes(store):
     e = Experiments(store)
     e.register(proposal())
     for i in range(40):
-        p = {"day": f"2026-09-{i // 2 + 1:02d}", "incumbent_return": 0.005, "challenger_return": 0.01}
+        p = {
+            "day": f"2026-09-{i // 2 + 1:02d}",
+            "incumbent_return": 0.005,
+            "challenger_return": 0.01,
+        }
         store.db.execute(
             "INSERT INTO shadow VALUES(?,?,?,?,?,?)",
             (str(i), "test-filter", "AAPL", "intraday", "closed", dumps(p)),
@@ -433,3 +435,71 @@ def test_position_review_worker_requests_batched_schema(config, monkeypatch):
     result = supervisor.worker(config, "position_review", {"positions": []}, "2026-10-29")
     assert captured["schema"] is PortfolioReview
     assert result == {"decisions": []}
+
+
+def test_watchdog_heartbeat_written_before_broker_preflight_and_independent_of_export(
+    config, broker, monkeypatch, now
+):
+    import json
+    import os
+    from agent_trader.runtime import supervisor
+
+    monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
+    s = supervisor.Supervisor(config)
+    try:
+        s.preflight = lambda: (_ for _ in ()).throw(RuntimeError("simulated broker outage"))
+        s.store.set(
+            "calendar:" + now.astimezone(supervisor.ET).date().isoformat(),
+            [{"open": "09:30", "close": "16:00"}],
+        )
+        with pytest.raises(RuntimeError, match="simulated broker outage"):
+            s.tick(now)
+        heartbeat = json.loads((config.state_dir / "heartbeat.json").read_text())
+        assert heartbeat["pid"] == os.getpid()
+        assert heartbeat["schema"] == 1
+        assert heartbeat["at"] == now.astimezone(supervisor.ET).isoformat()
+        assert not (config.root / "docs/data/lab.json").exists()
+    finally:
+        s.pool.shutdown(wait=False)
+        s.publisher_pool.shutdown(wait=False)
+        s.store.close()
+
+
+def test_windows_push_and_authentication_use_hidden_gui_launcher(config, store, monkeypatch):
+    from dataclasses import replace
+    from pathlib import Path
+    from types import SimpleNamespace
+    from agent_trader.runtime import publish as module
+
+    c = replace(config, root=Path("/mnt/c/Users/test/trader"), publish=True)
+    calls = []
+    git_calls = []
+    monkeypatch.setattr(module, "export", lambda *args: None)
+    monkeypatch.setattr(module.os.path, "exists", lambda path: True)
+    monkeypatch.setattr(
+        module,
+        "git_run",
+        lambda config, args: (
+            git_calls.append(args)
+            or SimpleNamespace(
+                returncode=0,
+                stdout="revision" if args[0] == "rev-parse" else "",
+            )
+        ),
+    )
+    monkeypatch.setattr(
+        module.subprocess,
+        "run",
+        lambda args, **kwargs: calls.append(args) or SimpleNamespace(returncode=0),
+    )
+    assert module.publish(c, store)["status"] == "pushed"
+    assert not any(args[0] == "push" for args in git_calls)
+    assert calls == [
+        [
+            "/mnt/c/Windows/System32/wscript.exe",
+            "//B",
+            "//NoLogo",
+            r"C:\Users\test\trader\scripts\runtime\hidden-launch.vbs",
+            "publish",
+        ]
+    ]

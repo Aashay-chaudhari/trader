@@ -12,7 +12,7 @@ are implemented. Operational activation evidence is recorded in IMPLEMENTATION_L
   and recovery of the same thread after restarting the CLI process.
 - Free data integration: 30 market snapshots, 30 daily indicator sets, five dated
   FRED macro series, 30 indicative option samples; no paid fallback.
-- 241 regression tests (including 71 active-runtime tests), active-runtime/test
+- 243 regression tests (including 73 active-runtime tests), active-runtime/test
   lint and JavaScript syntax checks. One legacy dependency deprecation warning.
 - Chromium checks of six dashboard views at desktop and 390px mobile widths,
   including populated research/options, long text and escaped HTML fixtures.
@@ -50,3 +50,13 @@ challengers are registered, and four independently reviewed knowledge cards are
 available to the morning brief. Nine hypotheses and thirteen sources were assessed;
 reviewer approval plus automated reference checks gate reuse. None is labeled
 forward-validated or proven profitable. See RESEARCH_WORKFLOW.md.
+
+## October 29 reliability correction
+
+The first unattended trading session failed operationally: heartbeat stopped at
+08:12 ET. No trades/forward shadow observations occurred. The initiating control-
+exit source is unknown. Runtime ownership is now a lingering systemd user service
+plus a hidden Windows WSL host and an independent two-minute heartbeat watchdog.
+Actual SIGINT, SIGKILL and stopped-service recovery drills passed (the Windows
+watchdog recovered the fully stopped service within 72 seconds). This verifies
+recovery paths, not a completed unattended trading day.

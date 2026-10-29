@@ -3,7 +3,9 @@ from __future__ import annotations
 import concurrent.futures
 import json
 import logging
+import os
 import signal
+import tempfile
 import time
 from datetime import UTC, datetime, timedelta
 
@@ -177,6 +179,8 @@ class Supervisor:
         )
 
     def launch(self, key, role, context, day):
+        if (self.config.state_dir / "agent-pause.flag").exists():
+            return False
         if self.future or not self.store.job_start(key):
             return False
         self.store.set("active_task", {"key": key, "role": role, "started": utc_now()})
@@ -579,6 +583,14 @@ class Supervisor:
         now = now.astimezone(ET)
         day = now.date().isoformat()
         self.store.set("heartbeat", now.isoformat())
+        # The Windows watchdog reads this directly even when Pages/export fail.
+        self.config.state_dir.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(
+            mode="w", dir=self.config.state_dir, suffix=".tmp", delete=False
+        ) as handle:
+            json.dump({"at": now.isoformat(), "pid": os.getpid(), "schema": 1}, handle)
+            heartbeat_temp = handle.name
+        os.replace(heartbeat_temp, self.config.state_dir / "heartbeat.json")
         self.finish_task()
         if self.store.retry_failed_jobs((now.astimezone(UTC) - timedelta(minutes=30)).isoformat()):
             self.store.set("needs_research", True)
@@ -1005,7 +1017,9 @@ class Supervisor:
             "startup", {"summary": "Local supervisor started; recovering durable state."}
         )
 
-        def stop(*_):
+        def stop(signum, *_):
+            LOG.info("Supervisor received signal %s; stopping", signum)
+            self.store.event("supervisor_stopping", {"signal": signum, "pid": os.getpid()})
             self.stopping = True
 
         signal.signal(signal.SIGTERM, stop)
@@ -1033,6 +1047,8 @@ class Supervisor:
                 time.sleep(1)
         self.pool.shutdown(wait=False, cancel_futures=True)
         self.publisher_pool.shutdown(wait=False, cancel_futures=True)
+        self.store.set("status", "Local supervisor stopped; independent watchdog owns recovery.")
+        self.store.event("supervisor_stopped", {"pid": os.getpid()})
         lock.close()
 
     def launch_position_review(self, now):

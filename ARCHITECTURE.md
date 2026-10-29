@@ -45,3 +45,14 @@ Only `docs/index.html`, `style.css`, `app.js`, `data/lab.json`, and `.nojekyll` 
 published. Raw credentials, SQLite files and session artifacts are excluded.
 Publisher failures do not stop trading protection. GitHub is not a runtime dependency
 for order handling. See `SYSTEM_GUIDE.md` for failure recovery and current limits.
+
+## Runtime ownership and independent recovery
+
+The systemd user service owns Python. A GUI-hosted Windows task anchors WSL without
+a terminal window. A separate GUI-hosted task checks heartbeat/service state every
+two minutes and can restart the host/service and alert through ntfy without Python.
+The heartbeat file is written before broker checks and does not depend on GitHub
+publication. Graceful signal exits and forced crashes are covered by systemd's
+Restart=always; an intentional service stop is covered by the Windows watchdog.
+User lingering is enabled. This remains a local-PC design requiring Windows sign-in
+after reboot; complete power/network outages cannot self-report immediately.

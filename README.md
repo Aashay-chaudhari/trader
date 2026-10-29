@@ -105,3 +105,8 @@ historical screens and up to six parallel shadow challengers per equity branch.
 Independently reviewed research cards feed the morning brief; historical results
 and source review remain distinct from forward-validated evidence. See
 [RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md).
+
+The October 29 runtime interruption exposed a console-lifetime/recovery gap. The
+active owner is now `agent-trader.service` with automatic restarts, a hidden WSL
+keepalive host and a separate Windows heartbeat watchdog. The old visible-console
+task is disabled. See SYSTEM_GUIDE.md for hidden installation and recovery commands.

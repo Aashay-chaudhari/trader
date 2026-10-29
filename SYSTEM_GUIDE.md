@@ -2,33 +2,55 @@
 
 ## Daily operation
 
-The Windows task `AgentTrader-LocalSupervisor` launches
-`scripts/runtime/launch.sh` in WSL Ubuntu. It starts at 07:40 Windows local time and
-at sign-in, wakes the PC where supported, restarts failures, and ignores duplicate
-instances. The Python loop uses Eastern market-calendar times. The task can run
-with the desktop locked. A reboot requires signing into the Windows user account.
+The `agent-trader.service` **systemd user service** owns the Python supervisor.
+It restarts after clean exits and crashes, independently of terminal windows. User
+lingering is enabled. A hidden Windows task, `AgentTrader-WSLHost`, keeps the WSL
+instance alive; services alone do not prevent WSL's idle shutdown.
 
-The supervisor starts early and stays running. Before the configured first trading
-date it publishes preparation status without placing orders or running daily research.
-It sends the morning ntfy notification at/after 07:45 ET. A missed startup sends it
-when the process next starts, rather than pretending it ran earlier.
+`AgentTrader-IndependentWatchdog` runs every two minutes and at sign-in, through a
+GUI launcher that opens no console. It checks `.runtime/heartbeat.json` and the
+service, restores a stopped host/service, restarts a service with a stale heartbeat,
+and sends deduplicated ntfy incident/recovery alerts directly from Windows.
+The old visible `AgentTrader-LocalSupervisor` task is disabled.
 
-Start/check/stop from Windows PowerShell:
+The desktop can be locked. Sign in after a Windows reboot; keep power/network
+available. Both the service and its Windows recovery mechanism remain local to
+this PC, so neither can report a complete power/network outage in real time.
 
-```powershell
-Start-ScheduledTask -TaskName AgentTrader-LocalSupervisor
-Get-ScheduledTaskInfo -TaskName AgentTrader-LocalSupervisor
-Stop-ScheduledTask -TaskName AgentTrader-LocalSupervisor
-```
-
-After `Stop-ScheduledTask`, verify the WSL child stopped before restarting or resetting:
+Install/update from WSL:
 
 ```bash
-pgrep -af 'python -m agent_trader run'
+bash scripts/runtime/install-service.sh
+/mnt/c/Windows/System32/wscript.exe //B //NoLogo 'C:\Users\aasha\Desktop\trader\scripts\runtime\hidden-launch.vbs' install
 ```
 
-If necessary send SIGTERM to the identified supervisor PID. Do not kill unrelated
-Python or Codex processes. The file lock is automatically released on process exit.
+Inspect without opening a PowerShell console:
+
+```bash
+systemctl --user status agent-trader.service
+journalctl --user -u agent-trader.service -n 40
+/mnt/c/Windows/System32/wscript.exe //B //NoLogo 'C:\Users\aasha\Desktop\trader\scripts\runtime\hidden-launch.vbs' status
+cat .runtime/windows-inspection.json
+```
+
+For an intentional maintenance stop, pause the watchdog **before** stopping the
+service; otherwise the watchdog correctly restores it:
+
+```bash
+touch .runtime/maintenance.flag
+systemctl --user stop agent-trader.service
+# perform maintenance
+rm .runtime/maintenance.flag
+systemctl --user start agent-trader.service
+```
+
+`.runtime/agent-pause.flag` pauses new model jobs only, preserving Python broker
+reconciliation and closing. Remove it to resume research/review. The watchdog
+remains active during this model pause.
+
+The supervisor uses Eastern market-calendar times: startup notification at/after
+07:45 ET, research from 08:15, and broker-calendar closing routines. A late startup
+reports its actual time; it cannot recreate a missed trading session.
 
 ## Operator commands (from repo root in WSL)
 
@@ -39,7 +61,8 @@ Python or Codex processes. The file lock is automatically released on process ex
 .venv/bin/python -m agent_trader publish
 ```
 
-Read `.runtime/supervisor.log` and `.runtime/launcher.log` locally. Private state
+Read `.runtime/supervisor.log`, `.runtime/launcher.log`, `.runtime/watchdog.log`
+and `journalctl --user -u agent-trader.service` locally. Private state
 must never be pasted into a public issue or committed wholesale.
 
 ## Launch gates
@@ -71,7 +94,8 @@ prices. Their allocation remains reserved. No live trading is supported.
 - An isolated maintenance candidate that fails validation cannot become active.
 
 A local PC/power/network outage can still prevent scheduled actions. Waking a PC is
-not a guarantee against outages. No always-on external monitor is included.
+not a guarantee against outages. The independent Windows watchdog covers the Python/WSL process, but no external
+always-on monitor is included.
 
 ## Emergency entry pause
 
