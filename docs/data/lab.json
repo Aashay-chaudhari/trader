@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T05:02:06.656652+00:00",
+  "generated_at": "2026-10-29T05:04:49.671168+00:00",
   "start_date": "2026-10-30",
   "mode": "research_shadow",
-  "heartbeat": null,
-  "status": "Fresh experiment prepared. First trading session: 2026-10-30.",
-  "next_action": "07:45 ET startup notification; 08:15 ET morning research.",
+  "heartbeat": "2026-10-29T01:04:48.029328-04:00",
+  "status": "Fresh experiment prepared. Trading starts 2026-10-30.",
+  "next_action": "07:45 ET startup and phone notification on the first trading day.",
   "readiness": {
-    "at": "2026-10-29T04:50:47.236759+00:00",
+    "at": "2026-10-29T05:04:49.543298+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -19,7 +19,19 @@
     "submission_checked_at": "2026-10-29T04:50:49.744729+00:00"
   },
   "reconciliation_errors": [],
-  "calendar": {},
+  "calendar": {
+    "date": "2026-10-29",
+    "session": [
+      {
+        "close": "16:00",
+        "date": "2026-10-29",
+        "open": "09:30",
+        "session_close": "2000",
+        "session_open": "0400",
+        "settlement_date": "2026-10-30"
+      }
+    ]
+  },
   "branches": [
     {
       "name": "intraday",
@@ -72,6 +84,42 @@
   ],
   "equity": [
     {
+      "at": "2026-10-29T05:04:48.039209+00:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T05:04:48.039209+00:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T05:04:48.039209+00:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T05:03:39.431739+00:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T05:03:39.431739+00:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T05:03:39.431739+00:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
       "at": "2026-10-29T04:50:49.577677+00:00",
       "day": "2026-10-29",
       "branch": "options",
@@ -94,6 +142,64 @@
   "pulses": [],
   "plans": [],
   "events": [
+    {
+      "id": 8,
+      "at": "2026-10-29T05:04:48.008302+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 7,
+      "at": "2026-10-29T05:04:10.272577+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "runtime_AgentUnavailable",
+        "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
+      }
+    },
+    {
+      "id": 6,
+      "at": "2026-10-29T05:03:39.813322+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "runtime_AgentUnavailable",
+        "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
+      }
+    },
+    {
+      "id": 5,
+      "at": "2026-10-29T05:03:09.341964+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "incident:2026-10-29:runtime_AgentUnavailable",
+        "title": "Trader - attention required"
+      }
+    },
+    {
+      "id": 4,
+      "at": "2026-10-29T05:03:09.130657+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "runtime_AgentUnavailable",
+        "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
+      }
+    },
+    {
+      "id": 3,
+      "at": "2026-10-29T05:03:08.667895+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
     {
       "id": 2,
       "at": "2026-10-29T04:50:49.748589+00:00",
@@ -120,12 +226,12 @@
   "lessons": [],
   "maintenance": null,
   "quota": {
-    "at": "2026-10-29T04:50:47.196418+00:00",
+    "at": "2026-10-29T05:04:49.502685+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 5,
+        "usedPercent": 6,
         "windowDurationMins": 10080,
         "resetsAt": 1793840572
       }
@@ -142,9 +248,9 @@
   "options_research": {},
   "release": {
     "version": "2.0.0",
-    "commit": "adc5fc0b",
-    "at": "2026-10-29T05:00:00+00:00",
-    "validation": "212 tests passed; browser, CLI and paper submission/cancel verified"
+    "commit": "3cd5a94e",
+    "at": "2026-10-29T05:03:04.551794+00:00",
+    "validation": "212 tests; browser; CLI model switch; live research; paper submit/cancel; isolated maintenance staging"
   },
   "limitations": [
     "Paper results are not live returns.",
