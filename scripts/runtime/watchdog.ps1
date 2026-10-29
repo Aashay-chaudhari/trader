@@ -67,7 +67,7 @@ try {
         Start-ScheduledTask -TaskName 'AgentTrader-WSLHost'
         Write-Record 'host_restarted' 'Hidden WSL keepalive anchor restarted'
     }
-    $service = Invoke-ServiceCommand 'status' 
+    $service = Invoke-ServiceCommand 'status'
     $active = $service.code -eq 0 -and $service.output -eq 'active'
     $fresh = $age -ge -120 -and $age -le 180
     if (-not $active -or -not $fresh) {
