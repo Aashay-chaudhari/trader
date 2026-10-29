@@ -134,3 +134,7 @@ class PositionDecision(Strict):
     reason: str = Field(min_length=10, max_length=1200)
     evidence_fresh: bool
     invalidation_observed: bool
+
+
+class PortfolioReview(Strict):
+    decisions: list[PositionDecision] = Field(max_length=10)

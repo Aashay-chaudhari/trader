@@ -166,7 +166,24 @@ def main():
     if args.command in ("run", "tick", "doctor"):
         from .supervisor import Supervisor
 
-        s = Supervisor(config)
+        try:
+            s = Supervisor(config)
+        except Exception as exc:
+            from .notify import notify
+
+            failed = Store(config.state_dir / "trader.sqlite3")
+            notify(
+                config,
+                failed,
+                "startup-failure:" + datetime.now(ET).date().isoformat(),
+                "Trader - startup blocked",
+                "Local supervisor could not start ("
+                + type(exc).__name__
+                + "). Check local configuration and logs.",
+                urgent=True,
+            )
+            failed.close()
+            raise SystemExit(1) from None
         if args.command == "run":
             s.run()
         elif args.command == "tick":

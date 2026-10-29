@@ -108,4 +108,5 @@ Two active workflows remain: Tests and Publish Dashboard. The local publisher
 commits sanitized snapshots at most every 15 minutes. Manual `publish` is available
 for milestones. Pages adds deployment latency; check snapshot and heartbeat times.
 Windows Git Credential Manager is the fallback for authenticated pushes from WSL.
-The public dashboard has no authenticated execution controls.
+The public dashboard has no authenticated execution controls. A published heartbeat
+older than 35 minutes is flagged; publication normally occurs every 15 minutes.

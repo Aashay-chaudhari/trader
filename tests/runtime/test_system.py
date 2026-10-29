@@ -1,13 +1,12 @@
 import json
 from datetime import timedelta
-from dataclasses import replace
 
 import pytest
 
 from agent_trader.runtime.agent import budget_check
 from agent_trader.runtime.experiments import Experiments
 from agent_trader.runtime.maintenance import validate_source
-from agent_trader.runtime.publish import sanitize, snapshot
+from agent_trader.runtime.publish import snapshot
 from agent_trader.runtime.supervisor import session_times
 
 
@@ -172,3 +171,265 @@ def test_supported_challenger_promotes_only_after_contract_passes(store):
         )
     assert e.evaluate() == ["test-filter"]
     assert store.get("incumbent_filter:intraday")["stage"] == "25% pilot risk"
+
+
+def test_cli_outage_does_not_abort_broker_preflight_or_python_protection(
+    config, broker, monkeypatch
+):
+    import agent_trader.runtime.supervisor as module
+
+    monkeypatch.setattr(module, "Broker", lambda _: broker)
+    monkeypatch.setattr(
+        module, "CodexRPC", lambda _: (_ for _ in ()).throw(RuntimeError("CLI offline"))
+    )
+    s = module.Supervisor(config)
+    try:
+        assert s.preflight() is False
+        assert s.store.get("reconciled") is True
+        assert s.store.get("entry_budget_blocked") is True
+        assert s.store.get("readiness")["models_available"] is False
+    finally:
+        s.pool.shutdown(wait=False)
+        s.publisher_pool.shutdown(wait=False)
+        s.store.close()
+
+
+def test_paired_shadow_uses_actual_incumbent_filter(store, plan, quote, now):
+    store.set(
+        "incumbent_filter:intraday", {"id": "prior-filter", "filter": "higher_confidence_075"}
+    )
+    e = Experiments(store)
+    e.register({**proposal(), "parent_version": "prior-filter"})
+    plan["confidence"] = 0.7
+    e.consider(plan, quote, "risk_on", now)
+    sample = json.loads(store.rows("SELECT payload FROM shadow")[0]["payload"])
+    assert sample["incumbent_trades"] is False
+    assert sample["challenger_trades"] is True
+    quote = {**quote, "bp": 108, "ap": 108.01, "t": (now + timedelta(minutes=1)).isoformat()}
+    e.mark({"AAPL": quote}, now + timedelta(minutes=1))
+    sample = json.loads(store.rows("SELECT payload FROM shadow")[0]["payload"])
+    assert sample["incumbent_return"] == 0
+    assert sample["challenger_return"] > 0
+
+
+def test_new_filter_rolls_back_to_previous_incumbent_on_fixed_loss_limit(store):
+    from agent_trader.runtime.store import dumps
+
+    previous = {"id": "previous", "filter": "higher_confidence_075", "equity_at_promotion": 10000}
+    store.set(
+        "incumbent_filter:intraday",
+        {
+            "id": "new",
+            "filter": "require_risk_on",
+            "equity_at_promotion": 10000,
+            "previous_incumbent": previous,
+        },
+    )
+    store.db.execute(
+        "INSERT INTO experiments VALUES(?,?,?,?,?)",
+        ("new", "intraday", "promoted", dumps(proposal()), "2026-10-29"),
+    )
+    store.db.execute(
+        "INSERT INTO equity(at,day,branch,value) VALUES(?,?,?,?)",
+        ("2026-10-29", "2026-10-29", "intraday", 9700),
+    )
+    Experiments(store).evaluate()
+    assert store.get("incumbent_filter:intraday")["id"] == "previous"
+    assert store.rows("SELECT state FROM experiments WHERE id='new'")[0]["state"] == "rolled_back"
+
+
+def test_call_budget_reserves_four_slots_for_after_close_reviews(store, now):
+    for _ in range(20):
+        store.db.execute(
+            "INSERT INTO usage(at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,payload) VALUES(?,?,?,?,0,0,0,0,?)",
+            (now.isoformat(), now.date().isoformat(), "decision", "test", "{}"),
+        )
+    assert budget_check(store, quota(now), "decision", now)[0] is False
+    assert budget_check(store, quota(now), "retrospective", now)[0] is True
+
+
+def test_incomplete_portfolio_review_cannot_apply_partial_exit_intents(config, broker, monkeypatch):
+    import concurrent.futures
+    import agent_trader.runtime.supervisor as module
+
+    monkeypatch.setattr(module, "Broker", lambda _: broker)
+    s = module.Supervisor(config)
+    errors = []
+    s.incident = lambda code, reason: errors.append(code)
+    try:
+        s.future = concurrent.futures.Future()
+        s.future.set_result(
+            {
+                "decisions": [
+                    {
+                        "symbol": "AAPL",
+                        "action": "exit",
+                        "reason": "A real invalidation",
+                        "evidence_fresh": True,
+                        "invalidation_observed": True,
+                    }
+                ]
+            }
+        )
+        s.task = (
+            "position-test",
+            "position_review",
+            {
+                "positions": [
+                    {"holding": {"symbol": "AAPL", "branch": "swing"}},
+                    {"holding": {"symbol": "MSFT", "branch": "swing"}},
+                ]
+            },
+            "2026-10-29",
+        )
+        s.finish_task()
+        assert errors
+        assert s.store.get("exit-intent:AAPL") is None
+    finally:
+        s.pool.shutdown(wait=False)
+        s.publisher_pool.shutdown(wait=False)
+        s.store.close()
+
+
+def test_exhausted_jobs_can_recover_after_backoff_without_replaying_completed_jobs(store):
+    assert store.job_start("research")
+    store.job_end("research", False, {})
+    assert store.job_start("research")
+    store.job_end("research", False, {})
+    store.db.execute("UPDATE jobs SET at='2026-01-01T00:00:00+00:00' WHERE key='research'")
+    assert store.job_start("completed")
+    store.job_end("completed", True, {})
+    assert store.retry_failed_jobs("2026-01-01T01:00:00+00:00") == 1
+    assert store.job_start("research") is True
+    assert store.job_start("completed") is False
+
+
+def test_free_macro_parser_handles_fred_mixed_calendar_zip():
+    import io
+    import zipfile
+    from datetime import date
+    from agent_trader.runtime.research import parse_macro_download
+
+    data = io.BytesIO()
+    with zipfile.ZipFile(data, "w") as z:
+        z.writestr("README.txt", "Mixed calendars")
+        z.writestr(
+            "daily.csv",
+            "observation_date,DGS2,DGS10\n2026-10-27,3.5,4.1\n2026-10-28,.,4.2\n2026-10-30,9,9\n",
+        )
+        z.writestr("seven_day.csv", "DATE,VIXCLS\n2026-10-28,18.5\n")
+    result = parse_macro_download(data.getvalue(), ["DGS2", "DGS10", "VIXCLS"], date(2026, 10, 29))
+    assert result["DGS2"] == {"value": 3.5, "observation_date": "2026-10-27"}
+    assert result["DGS10"]["value"] == 4.2
+    assert result["VIXCLS"]["value"] == 18.5
+
+
+def test_free_macro_parser_does_not_treat_html_or_future_rows_as_data():
+    from datetime import date
+    from agent_trader.runtime.research import parse_macro_download
+
+    assert parse_macro_download(b"<html>Unavailable</html>", ["DGS10"], date(2026, 10, 29)) == {}
+    assert (
+        parse_macro_download(
+            b"observation_date,DGS10\n2026-10-30,99\n", ["DGS10"], date(2026, 10, 29)
+        )
+        == {}
+    )
+
+
+def test_material_news_suspends_plans_and_cancels_only_pending_entries(
+    config, broker, plan, monkeypatch
+):
+    import concurrent.futures
+    import agent_trader.runtime.supervisor as module
+
+    monkeypatch.setattr(module, "Broker", lambda _: broker)
+    s = module.Supervisor(config)
+    try:
+        s.engine.add_plans([plan], "2026-10-30")
+        order = s.engine.submit_intent(
+            {
+                "client_order_id": "pending-news",
+                "symbol": "AAPL",
+                "side": "buy",
+                "qty": "1",
+                "type": "limit",
+                "limit_price": "100",
+            },
+            "intraday",
+            plan["id"],
+        )
+        s.future = concurrent.futures.Future()
+        s.future.set_result(
+            {
+                "summary": "A material verified event changed the context.",
+                "material_change": True,
+                "affected_symbols": ["AAPL"],
+                "events": [],
+                "sources": [],
+                "unknowns": [],
+            }
+        )
+        s.task = ("pulse-test", "pulse", {}, "2026-10-30")
+        s.finish_task()
+        assert s.store.get("research_refresh_required") is True
+        assert s.store.rows("SELECT state FROM plans")[0]["state"] == "suspended"
+        assert broker.order(order["id"])["status"] == "canceled"
+    finally:
+        s.pool.shutdown(wait=False)
+        s.publisher_pool.shutdown(wait=False)
+        s.store.close()
+
+
+def test_stale_exit_intent_cannot_close_a_new_position_of_same_symbol(config, broker, monkeypatch):
+    from datetime import datetime
+    from agent_trader.runtime.config import ET
+    import agent_trader.runtime.supervisor as module
+
+    monkeypatch.setattr(module, "Broker", lambda _: broker)
+    s = module.Supervisor(config)
+    calls = []
+    s.engine.exit_holding = lambda *args: calls.append(args)
+    try:
+        now = datetime.now(ET)
+        s.store.db.execute(
+            "INSERT INTO holdings VALUES(?,?,?,?,?)", ("AAPL", "swing", 1, 100, "new-position")
+        )
+        s.store.set(
+            "exit-intent:AAPL",
+            {
+                "at": now.isoformat(),
+                "reason": "Old thesis invalidated",
+                "plan_id": "old-position",
+                "branch": "intraday",
+            },
+        )
+        s.market_tick(now, now + timedelta(hours=4))
+        assert not calls
+        assert s.store.get("exit-intent:AAPL") is None
+    finally:
+        s.pool.shutdown(wait=False)
+        s.publisher_pool.shutdown(wait=False)
+        s.store.close()
+
+
+def test_memory_expiration_uses_utc_across_eastern_standard_time(store):
+    store.memory_put("brief", "observation", {}, "2026-11-02T23:59:59-05:00")
+    assert store.rows("SELECT id FROM memory WHERE expires>'2026-11-03T01:00:00+00:00'")
+    assert not store.rows("SELECT id FROM memory WHERE expires>'2026-11-03T05:00:00+00:00'")
+
+
+def test_position_review_worker_requests_batched_schema(config, monkeypatch):
+    from agent_trader.runtime import supervisor
+    from agent_trader.runtime.models import PortfolioReview
+
+    captured = {}
+
+    def infer(config, role, prompt, schema, model, effort, day, **kwargs):
+        captured["schema"] = schema
+        return {"decisions": []}
+
+    monkeypatch.setattr(supervisor, "run_task", infer)
+    result = supervisor.worker(config, "position_review", {"positions": []}, "2026-10-29")
+    assert captured["schema"] is PortfolioReview
+    assert result == {"decisions": []}

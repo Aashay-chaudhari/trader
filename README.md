@@ -74,7 +74,7 @@ own promotion gates. A validated code change does not immediately become active.
 
 Maximum planned loss is $100 per trade, daily branch entry halt is $200 loss,
 and branch drawdown pause is 10%. Initial pilots use a tighter $50 risk budget and
-$2,000 position-notional cap. Actual losses can exceed planned stops. Submitted
+$2,000 position-notional cap and five symbols per branch. Actual losses can exceed planned stops. Submitted
 orders are never counted as filled holdings. Unknown positions/orders/cash mismatches
 halt new entries. Symbol ownership is exclusive across branches initially.
 
@@ -93,3 +93,9 @@ No automatic purchases, paid fallbacks, or reset-credit consumption occur.
 Actions runs tests and deploys Pages only. Legacy cloud trading/reminder/reset
 workflows are retained outside the active workflows directory. The older Python
 agents remain for reference and regression coverage; the CLI uses only the v2 runtime.
+
+Position reviews are batched hourly. Four daily model-call slots and a portion of
+the paced daily quota are reserved for after-close review/maintenance. Calendar
+checks include broker-session confirmation and clock drift; CLI outages cannot
+stop Python reconciliation and closing. Promoted filters have a fixed 2%
+post-promotion equity-loss rollback condition.

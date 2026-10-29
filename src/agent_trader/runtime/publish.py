@@ -19,6 +19,7 @@ PUBLIC_EVENTS = {
     "experiment_registered",
     "experiment_review",
     "strategy_promoted",
+    "strategy_rolled_back",
     "maintenance_no_change",
     "maintenance_rejected",
     "maintenance_staged",
@@ -170,6 +171,8 @@ def snapshot(config, store):
             "budget": {
                 "project_weekly_share": 80,
                 "reserve": 20,
+                "daily_call_ceiling": 24,
+                "night_review_reserved_calls": 4,
                 "attribution": "Task tokens measured; quota deltas include concurrent account activity.",
             },
             "execution_quality": {

@@ -93,8 +93,6 @@ def market_packet(broker, store):
         packet["unknowns"].append(f"Daily bars unavailable: {type(exc).__name__}")
     # Free macro CSV observations. These are daily/delayed, not execution quotes.
     try:
-        import csv
-        import io
         import httpx
 
         series = ["DGS2", "DGS10", "DFII10", "BAMLH0A0HYM2", "VIXCLS"]
@@ -107,17 +105,17 @@ def market_packet(broker, store):
             timeout=20,
         )
         response.raise_for_status()
-        rows = list(csv.DictReader(io.StringIO(response.text)))
-        packet["macro_daily_delayed"] = {}
-        for name in series:
-            recent = [r for r in rows[-20:] if r.get(name) not in ("", ".", None)]
-            if recent:
-                packet["macro_daily_delayed"][name] = {
-                    "value": float(recent[-1][name]),
-                    "observation_date": recent[-1].get("DATE", recent[-1].get("observation_date")),
-                    "retrieved_at": now,
-                    "source": "https://fred.stlouisfed.org/series/" + name,
-                }
+        observations = parse_macro_download(response.content, series, date.today())
+        packet["macro_daily_delayed"] = {
+            name: {
+                **value,
+                "retrieved_at": now,
+                "source": "https://fred.stlouisfed.org/series/" + name,
+            }
+            for name, value in observations.items()
+        }
+        if not observations:
+            raise ValueError("No recognizable dated FRED observations")
     except Exception as exc:
         packet["unknowns"].append(f"FRED public CSV unavailable: {type(exc).__name__}")
     options = {
@@ -238,6 +236,10 @@ def review_prompt(day, store):
                 "equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
                 "events": events,
                 "experiments": store.rows("SELECT * FROM experiments"),
+                "incumbents": {
+                    b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
+                    for b in ("intraday", "swing", "options")
+                },
                 "instructions": "Separate operational failure, decision quality and luck. Propose at most one challenger "
                 "per branch; each must include id, branch, hypothesis, exact_change, parent_version, minimum_sessions "
                 "(>=20), minimum_samples (>=30), cost_model and metrics. Prefer no change when evidence is weak. "
@@ -246,3 +248,42 @@ def review_prompt(day, store):
             }
         )[:22000]
     )
+
+
+def parse_macro_download(content, series, as_of):
+    """FRED returns a ZIP for mixed calendars/frequencies, CSV for one table."""
+    import csv
+    import io
+    import zipfile
+
+    texts = []
+    if content.startswith(b"PK"):
+        with zipfile.ZipFile(io.BytesIO(content)) as archive:
+            infos = [x for x in archive.infolist() if x.filename.lower().endswith(".csv")]
+            if sum(x.file_size for x in infos) > 10000000:
+                raise ValueError("Macro archive expansion limit")
+            texts = [archive.read(x).decode("utf-8-sig") for x in infos]
+    else:
+        if len(content) > 10000000:
+            raise ValueError("Macro download limit")
+        texts = [content.decode("utf-8-sig")]
+    result = {}
+    for text in texts:
+        rows = list(csv.DictReader(io.StringIO(text)))
+        for name in series:
+            for row in reversed(rows):
+                raw = row.get(name)
+                stamp = (row.get("DATE") or row.get("observation_date") or row.get("date") or "")[
+                    :10
+                ]
+                if not stamp or stamp > as_of.isoformat() or raw in ("", ".", None):
+                    continue
+                try:
+                    value = float(raw)
+                    date.fromisoformat(stamp)
+                except (ValueError, TypeError):
+                    continue
+                if name not in result or stamp > result[name]["observation_date"]:
+                    result[name] = {"value": value, "observation_date": stamp}
+                break
+    return result

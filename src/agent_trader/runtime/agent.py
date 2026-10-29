@@ -271,8 +271,10 @@ def budget_check(store, quota, role, now):
         return False, "Short-window quota nearly exhausted"
     today = now.astimezone(ET).date().isoformat()
     calls = store.rows("SELECT count(*) AS n FROM usage WHERE day=?", (today,))[0]["n"]
-    reserved_roles = ("decision", "position_review")
-    if calls >= (16 if role in reserved_roles else 12):
+    night_roles = ("retrospective", "maintenance", "weekly", "monthly")
+    critical_roles = ("decision", "position_review")
+    ceiling = 24 if role in night_roles else (20 if role in critical_roles else 16)
+    if calls >= ceiling:
         return False, "Daily model-call ceiling reached"
     reset_day = datetime.fromtimestamp(reset, timezone.utc).astimezone(ET).date()
     import numpy as np
@@ -285,7 +287,7 @@ def budget_check(store, quota, role, now):
         store.set(day_key, day_start)
     daily_allowance = max(1.0, (80 - day_start) / trading_days)
     consumption = max(0, used - day_start)
-    multiplier = 0.8 if role in ("research", "retrospective", "maintenance") else 1.0
+    multiplier = 1.0 if role in night_roles else (0.8 if role in critical_roles else 0.45)
     if consumption >= daily_allowance * multiplier:
         return False, "Paced daily quota allocation reached"
     return True, "Within account and paced daily limits"
@@ -301,6 +303,7 @@ def run_task(config, role, prompt, response_model, model, effort, day, *, search
             store.set("quota", before)
             allowed, reason = budget_check(store, before, role, datetime.now(timezone.utc))
             if not allowed:
+                store.set("entry_budget_blocked", True)
                 store.event("budget_skip", {"role": role, "reason": reason})
                 raise AgentUnavailable(reason)
             usage_cursor = store.db.execute(
@@ -320,8 +323,29 @@ def run_task(config, role, prompt, response_model, model, effort, day, *, search
             )
             store.set(f"thread:{day}", t)
             parsed = response_model.model_validate(payload)
+            available = [m.get("id") for m in rpc.models()]
+            readiness = store.get("readiness", {})
+            readiness["models_available"] = all(
+                m in available
+                for m in (
+                    config.research_model,
+                    config.decision_model,
+                    config.light_model,
+                    config.maintenance_model,
+                )
+            )
+            store.set("readiness", readiness)
             after = rpc.rate_limits()
             store.set("quota", after)
+            store.set(
+                "entry_budget_blocked",
+                not after.get("ordinary_usage_allowed", True)
+                or any(
+                    float(w.get("usedPercent", 0))
+                    >= (80 if w.get("windowDurationMins", 0) >= 10000 else 90)
+                    for w in after.get("windows", [])
+                ),
+            )
             before_w = next((w for w in before["windows"] if w["windowDurationMins"] >= 10000), {})
             after_w = next((w for w in after["windows"] if w["windowDurationMins"] >= 10000), {})
             delta = max(0, after_w.get("usedPercent", 0) - before_w.get("usedPercent", 0))

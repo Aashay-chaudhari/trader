@@ -272,6 +272,8 @@ class Engine:
             or now.astimezone(ET).date().isoformat() < self.config.start_date
         ):
             raise ValueError("Paper execution disabled or start date not reached")
+        if not self.store.get("market_open", False):
+            raise ValueError("Broker regular session is not confirmed open")
         if not self.store.get("readiness", {}).get("execution_verified"):
             raise ValueError("Execution smoke check not verified")
         if not self.store.get("reconciled"):
@@ -279,6 +281,10 @@ class Engine:
         age = (now - timestamp(self.store.get("last_reconciled"))).total_seconds()
         if age > 90 or age < -5:
             raise ValueError("Account reconciliation stale")
+        if self.store.get("research_refresh_required", False):
+            raise ValueError("Material event requires fresh research before entry")
+        if self.store.get("entry_budget_blocked", False):
+            raise ValueError("Model/quota unavailable; new entries blocked")
         p = Plan.model_validate(plan)
         if p.branch == "options":
             raise ValueError("Options remain shadow-only with indicative data")
@@ -317,6 +323,13 @@ class Engine:
             % ",".join("?" for _ in TERMINAL),
             (p.branch, *TERMINAL),
         )
+        owned_symbols = {
+            h["symbol"]
+            for h in self.store.rows("SELECT symbol FROM holdings WHERE branch=?", (p.branch,))
+        }
+        owned_symbols.update(r["symbol"] for r in pending)
+        if len(owned_symbols) >= 5:
+            raise ValueError("Maximum five positions/pending symbols per branch")
         reserved = sum(
             (r["qty"] - r["filled"]) * float(json.loads(r["payload"]).get("limit_price") or 0)
             for r in pending

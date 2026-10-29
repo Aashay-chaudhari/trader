@@ -5,14 +5,14 @@ import json
 import logging
 import signal
 import time
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from .agent import CodexRPC, run_task
 from .broker import Broker
 from .config import ET
 from .engine import Engine, TERMINAL, order_id, quote_values, timestamp
 from .experiments import Experiments
-from .models import Brief, Decision, MaintenanceProposal, Pulse, Review, PositionDecision
+from .models import Brief, Decision, MaintenanceProposal, Pulse, Review, PortfolioReview
 from .notify import notify
 from .publish import export, publish
 from .research import BASE, decision_prompt, market_packet, research_prompt, review_prompt
@@ -57,12 +57,12 @@ def worker(config, role, context, day):
                 + "\nROLE: active position reviewer. Use only supplied evidence.\n"
                 + json.dumps(context)
                 + """
-Return PositionDecision. Hold unless the documented thesis is invalidated by current
+Return PortfolioReview with one decision per supplied holding. Hold unless the documented thesis is invalidated by current
 verified evidence. Exits cannot create a short or reassign ownership. Missing data
 means hold with an explicit concern; broker-held protection remains active.
 """
             )
-            schema, model, effort, searches = PositionDecision, config.decision_model, "medium", 0
+            schema, model, effort, searches = PortfolioReview, config.decision_model, "medium", 0
         elif role == "pulse":
             prompt = (
                 BASE
@@ -168,16 +168,27 @@ class Supervisor:
                 import hashlib
 
                 for plan in result["plans"]:
+                    active = self.store.get("incumbent_filter:" + plan["branch"])
+                    if active:
+                        plan["version"] = ("promoted-" + active["id"])[:30]
                     suffix = hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest()[
                         :8
                     ]
                     plan["id"] = plan["id"][:59] + "-" + suffix
                 self.store.db.execute(
-                    "UPDATE plans SET state='superseded' WHERE state IN ('planned','approved')"
+                    "UPDATE plans SET state='superseded' WHERE state IN ('planned','approved','suspended')"
                 )
                 self.engine.add_plans(result["plans"], day)
+                self.store.set("research_refresh_required", False)
+                self.store.set("needs_research", False)
                 self.store.memory_put(
-                    "brief:" + day, "observation", result, day + "T23:59:59-04:00"
+                    "brief:" + day,
+                    "observation",
+                    result,
+                    datetime.fromisoformat(day)
+                    .replace(hour=23, minute=59, second=59, tzinfo=ET)
+                    .astimezone(UTC)
+                    .isoformat(),
                 )
                 self.store.event(
                     "research_completed",
@@ -215,18 +226,36 @@ class Supervisor:
                 )
                 self.store.event("decision", result, context["plan"]["branch"])
             elif role == "position_review":
-                if result["symbol"] != context["holding"]["symbol"]:
-                    raise ValueError("Position review refers to another symbol")
-                self.store.event("decision", result, context["holding"]["branch"])
-                if (
-                    result["action"] == "exit"
-                    and result["evidence_fresh"]
-                    and result["invalidation_observed"]
-                ):
-                    self.store.set(
-                        "exit-intent:" + result["symbol"],
-                        {"at": utc_now(), "reason": result["reason"]},
+                owners = {
+                    h["holding"]["symbol"]: h["holding"]["branch"] for h in context["positions"]
+                }
+                ownership = {h["holding"]["symbol"]: h["holding"] for h in context["positions"]}
+                symbols = [d["symbol"] for d in result["decisions"]]
+                if set(symbols) != set(owners) or len(symbols) != len(set(symbols)):
+                    raise ValueError(
+                        "Position review must cover every requested symbol exactly once"
                     )
+                seen = set()
+                for decision in result["decisions"]:
+                    symbol = decision["symbol"]
+                    if symbol not in owners or symbol in seen:
+                        raise ValueError("Position review contains an unknown/duplicate symbol")
+                    seen.add(symbol)
+                    self.store.event("decision", decision, owners[symbol])
+                    if (
+                        decision["action"] == "exit"
+                        and decision["evidence_fresh"]
+                        and decision["invalidation_observed"]
+                    ):
+                        self.store.set(
+                            "exit-intent:" + symbol,
+                            {
+                                "at": utc_now(),
+                                "reason": decision["reason"],
+                                "plan_id": ownership[symbol].get("plan_id"),
+                                "branch": owners[symbol],
+                            },
+                        )
             elif role == "pulse":
                 result["at"] = utc_now()
                 self.store.set("pulses", [result, *self.store.get("pulses", [])][:10])
@@ -241,6 +270,13 @@ class Supervisor:
                         "material_change", {"at": utc_now(), "summary": result["summary"]}
                     )
                     self.store.db.execute("UPDATE plans SET state='planned' WHERE state='approved'")
+                    self.store.set("research_refresh_required", True)
+                    self.store.db.execute(
+                        "UPDATE plans SET state='suspended' WHERE state IN ('planned','approved')"
+                    )
+                    for order in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
+                        if order["status"] not in TERMINAL and order["broker_id"]:
+                            self.broker.cancel(order["broker_id"])
                     self.store.set("needs_research", True)
             elif role in ("weekly", "monthly"):
                 self.store.set(role + ":" + day, result)
@@ -282,6 +318,10 @@ class Supervisor:
                 stage_change(self.config, self.store, result)
             self.store.job_end(key, True, {"role": role, "completed": utc_now()})
         except Exception as exc:
+            if role in ("research", "decision", "position_review", "pulse"):
+                self.store.set("entry_budget_blocked", True)
+            if role == "research":
+                self.store.set("needs_research", True)
             self.store.job_end(key, False, {"error_type": type(exc).__name__})
             self.incident(
                 "agent_" + role,
@@ -301,10 +341,21 @@ class Supervisor:
             if not self.store.rows("SELECT * FROM orders")
             else True
         )
-        with CodexRPC(self.config) as rpc:
-            quota = rpc.rate_limits()
-            self.store.set("quota", quota)
-            available = [m.get("id") for m in rpc.models()]
+        available = []
+        quota = {"windows": [], "ordinary_usage_allowed": False}
+        try:
+            with CodexRPC(self.config) as rpc:
+                quota = rpc.rate_limits()
+                self.store.set("quota", quota)
+                available = [m.get("id") for m in rpc.models()]
+        except Exception as exc:
+            self.store.set(
+                "quota", {"at": utc_now(), "windows": [], "error_type": type(exc).__name__}
+            )
+            self.store.event(
+                "budget_skip",
+                {"role": "preflight", "reason": "CLI unavailable; Python protection continues"},
+            )
         models_ok = all(
             m in available
             for m in (
@@ -314,6 +365,16 @@ class Supervisor:
                 self.config.maintenance_model,
             )
         )
+        quota_blocked = (
+            not quota.get("windows")
+            or not quota.get("ordinary_usage_allowed", True)
+            or any(
+                float(w.get("usedPercent", 0))
+                >= (80 if w.get("windowDurationMins", 0) >= 10000 else 90)
+                for w in quota.get("windows", [])
+            )
+        )
+        self.store.set("entry_budget_blocked", not models_ok or quota_blocked)
         readiness.update(
             {
                 "at": utc_now(),
@@ -327,24 +388,29 @@ class Supervisor:
             }
         )
         self.store.set("readiness", readiness)
-        return good and funded and models_ok
+        return good and funded and models_ok and not quota_blocked
 
     def smoke(self, now, opened, close):
         r = self.store.get("readiness", {})
         if r.get("execution_verified"):
             return True
-        if (
-            not self.config.execution
-            or now.date().isoformat() < self.config.start_date
-            or now < opened + timedelta(minutes=2)
-        ):
-            return False
-        if not self.store.get("reconciled") or not r.get("funded") or not r.get("models_available"):
-            return False
         day = now.date().isoformat()
         key = "smoke:" + day
         stage = self.store.get(key, {})
         if not stage:
+            if (
+                not self.config.execution
+                or self.store.get("entry_budget_blocked", False)
+                or day < self.config.start_date
+                or now < opened + timedelta(minutes=2)
+            ):
+                return False
+            if (
+                not self.store.get("reconciled")
+                or not r.get("funded")
+                or not r.get("models_available")
+            ):
+                return False
             q = self.broker.quotes(["SPY"]).get("SPY", {})
             _, ask = quote_values(q, now)
             entry = round(ask, 2)
@@ -469,6 +535,8 @@ class Supervisor:
         day = now.date().isoformat()
         self.store.set("heartbeat", now.isoformat())
         self.finish_task()
+        if self.store.retry_failed_jobs((now.astimezone(UTC) - timedelta(minutes=30)).isoformat()):
+            self.store.set("needs_research", True)
         calkey = "calendar:" + day
         cal = self.store.get(calkey)
         if cal is None:
@@ -498,10 +566,12 @@ class Supervisor:
                 "next_action", "Next trading session: automatic startup and calendar refresh."
             )
             self.engine.reconcile()
+            self.engine.cancel_entries(now, now + timedelta(days=1))
             self.maybe_publish()
             return
         opened, close = times
         valid = self.engine.reconcile(now)
+        self.engine.cancel_entries(now, close)
         if not valid:
             self.store.set("mode", "halted")
             self.incident(
@@ -527,7 +597,12 @@ class Supervisor:
             ):
                 self.store.set("notified_fill_id", fills[-1]["id"])
         ready = self.store.get("readiness", {})
-        pilot = valid and ready.get("execution_verified") and self.config.execution
+        pilot = (
+            valid
+            and ready.get("execution_verified")
+            and self.config.execution
+            and not self.store.get("entry_budget_blocked", False)
+        )
         self.store.set(
             "mode", "paper_pilot" if pilot else ("halted" if not valid else "research_shadow")
         )
@@ -540,9 +615,28 @@ class Supervisor:
                 "The local trading laboratory is running. Research begins at 08:15 ET. Three separate $10,000 paper allocations; options shadow-only.",
             )
         if now >= opened and now < close:
-            self.engine.cancel_entries(now, close)
+            clock = self.broker.clock()
+            market_open = bool(clock.get("is_open"))
+            clock_age = abs((now - timestamp(clock["timestamp"])).total_seconds())
+            self.store.set("market_open", market_open and clock_age <= 30)
+            if clock_age > 30:
+                self.incident(
+                    "clock_drift", "Local and broker clocks disagree. New entries blocked."
+                )
+            if not self.store.get("market_open"):
+                self.store.set("mode", "halted")
+                self.store.set(
+                    "status",
+                    "Broker session/clock does not confirm the calendar. New entries and market exits deferred.",
+                )
+                self.incident(
+                    "broker_clock",
+                    "Broker session or clock disagrees with the calendar. Existing broker protection remains in place.",
+                )
+                self.maybe_publish()
+                return
             self.engine.ensure_protection()
-            if not ready.get("execution_verified"):
+            if not ready.get("execution_verified") and self.store.get("market_open"):
                 try:
                     self.smoke(now, opened, close)
                 except Exception as exc:
@@ -704,11 +798,21 @@ class Supervisor:
                     if bid >= owned_plan["target"]:
                         self.store.set(
                             "exit-intent:" + h["symbol"],
-                            {"at": utc_now(), "reason": "Recorded target reached on a fresh quote"},
+                            {
+                                "at": utc_now(),
+                                "reason": "Recorded target reached on a fresh quote",
+                                "plan_id": h["plan_id"],
+                                "branch": h["branch"],
+                            },
                         )
                 except ValueError:
                     pass
             intent = self.store.get("exit-intent:" + h["symbol"])
+            if intent and (
+                intent.get("plan_id") != h["plan_id"] or intent.get("branch") != h["branch"]
+            ):
+                self.store.set("exit-intent:" + h["symbol"], None)
+                intent = None
             if intent and (now - timestamp(intent["at"])).total_seconds() < 300:
                 if self.engine.exit_holding(h["symbol"], intent["reason"]):
                     self.store.set("exit-intent:" + h["symbol"], None)
@@ -805,6 +909,7 @@ class Supervisor:
         except BlockingIOError:
             raise SystemExit("Supervisor is already running")
         self.store.recover_jobs()
+        self.store.set("preflight_day", None)
         self.store.event(
             "startup", {"summary": "Local supervisor started; recovering durable state."}
         )
@@ -840,24 +945,33 @@ class Supervisor:
         lock.close()
 
     def launch_position_review(self, now):
-        for holding in self.store.rows(
-            "SELECT * FROM holdings WHERE branch IN ('intraday','swing')"
-        ):
-            if holding["plan_id"] and holding["plan_id"].startswith("operational-smoke"):
-                continue
-            key = f"position:{now.date().isoformat()}:{holding['symbol']}:{now.hour}"
+        holdings = [
+            h
+            for h in self.store.rows("SELECT * FROM holdings")
+            if not (h["plan_id"] or "").startswith("operational-smoke")
+        ]
+        if not holdings:
+            return False
+        update = (self.store.get("material_change") or {}).get("at", "")
+        key = f"position:{now.date().isoformat()}:{now.hour}:{update}"
+        quotes = self.broker.quotes([h["symbol"] for h in holdings])
+        positions = []
+        for holding in holdings:
             rows = self.store.rows("SELECT payload FROM plans WHERE id=?", (holding["plan_id"],))
-            context = {
-                "holding": holding,
-                "plan": json.loads(rows[0]["payload"]) if rows else None,
-                "quote": self.broker.quotes([holding["symbol"]]).get(holding["symbol"]),
-                "brief": self.store.get("brief", {}),
-                "latest_events": self.store.get("pulses", [])[:2],
-                "now": now.isoformat(),
-            }
-            if self.launch(key, "position_review", context, now.date().isoformat()):
-                return True
-        return False
+            positions.append(
+                {
+                    "holding": holding,
+                    "plan": json.loads(rows[0]["payload"]) if rows else None,
+                    "quote": quotes.get(holding["symbol"]),
+                }
+            )
+        context = {
+            "positions": positions,
+            "brief": self.store.get("brief", {}),
+            "latest_events": self.store.get("pulses", [])[:2],
+            "now": now.isoformat(),
+        }
+        return self.launch(key, "position_review", context, now.date().isoformat())
 
 
 def publish_worker(config):

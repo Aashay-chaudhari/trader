@@ -1,10 +1,8 @@
-import copy
-import json
 from datetime import timedelta
 
 import pytest
 
-from agent_trader.runtime.engine import Engine, order_id, quote_values
+from agent_trader.runtime.engine import Engine, order_id
 from agent_trader.runtime.models import Plan
 
 
@@ -12,6 +10,7 @@ def ready(store, broker, config, now):
     e = Engine(config, store, broker)
     assert e.reconcile(now)
     store.set("readiness", {"execution_verified": True})
+    store.set("market_open", True)
     return e
 
 
@@ -290,3 +289,20 @@ def test_explicit_broker_rejection_does_not_create_ambiguous_prepared_order(stor
         store.rows("SELECT status FROM orders WHERE client_id='rejected'")[0]["status"]
         == "rejected"
     )
+
+
+def test_quota_failure_blocks_new_entries_but_not_the_ledger(
+    store, broker, config, now, plan, quote
+):
+    e = ready(store, broker, config, now)
+    store.set("entry_budget_blocked", True)
+    with pytest.raises(ValueError, match="quota unavailable"):
+        e.validate_entry(plan, quote, now, now + timedelta(hours=4))
+    assert store.get("reconciled") is True
+
+
+def test_broker_session_confirmation_is_required(store, broker, config, now, plan, quote):
+    e = ready(store, broker, config, now)
+    store.set("market_open", False)
+    with pytest.raises(ValueError, match="session is not confirmed"):
+        e.validate_entry(plan, quote, now, now + timedelta(hours=4))

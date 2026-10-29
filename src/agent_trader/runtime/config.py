@@ -28,7 +28,7 @@ class Config:
     maintenance_model: str = "gpt-6.1-sol"
     codex_bin: str = ""
     max_agent_seconds: int = 600
-    max_agent_calls_day: int = 16
+    max_agent_calls_day: int = 24
     max_input_chars: int = 28000
     api_key: str = ""
     secret_key: str = ""

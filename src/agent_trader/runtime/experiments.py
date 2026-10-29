@@ -40,6 +40,10 @@ class Experiments:
             return False
         # Only this preimplemented filter can be evaluated automatically. Arbitrary
         # narrative proposals must go through a tested code release first.
+        incumbent = self.store.get("incumbent_filter:" + proposal["branch"])
+        expected_parent = incumbent["id"] if incumbent else "pilot-v1"
+        if proposal["parent_version"] != expected_parent:
+            raise ValueError("Experiment must name the current incumbent version")
         supported = proposal["exact_change"] in ("require_risk_on", "higher_confidence_075") or (
             proposal["exact_change"].startswith("code:") and bool(proposal.get("source"))
         )
@@ -102,6 +106,7 @@ class Experiments:
             "branch": plan["branch"],
             "plan_id": plan["id"],
             "challenger_trades": passes,
+            "incumbent_trades": self.permits(plan, regime),
             "incumbent_return": None,
             "challenger_return": None,
             "assumptions": "Forward quote observation only; $1 unit exposure; round-trip 20bp plus observed spread. No fill guarantee.",
@@ -135,7 +140,7 @@ class Experiments:
                 {
                     "exit": bid,
                     "exit_at": now.isoformat(),
-                    "incumbent_return": ret,
+                    "incumbent_return": ret if p.get("incumbent_trades", True) else 0.0,
                     "challenger_return": ret if p["challenger_trades"] else 0.0,
                 }
             )
@@ -144,6 +149,27 @@ class Experiments:
             )
 
     def evaluate(self):
+        for branch in ("intraday", "swing", "options"):
+            active = self.store.get("incumbent_filter:" + branch)
+            if not active:
+                continue
+            latest = self.store.rows(
+                "SELECT value FROM equity WHERE branch=? ORDER BY id DESC LIMIT 1", (branch,)
+            )
+            value = latest[0]["value"] if latest else 10000
+            if value <= active.get("equity_at_promotion", 10000) * 0.98:
+                self.store.set("incumbent_filter:" + branch, active.get("previous_incumbent"))
+                self.store.db.execute(
+                    "UPDATE experiments SET state='rolled_back' WHERE id=?", (active["id"],)
+                )
+                self.store.event(
+                    "strategy_rolled_back",
+                    {
+                        "id": active["id"],
+                        "reason": "Fixed rollback threshold: 2% equity loss since promotion",
+                    },
+                    branch,
+                )
         promoted = []
         for e in self.store.rows("SELECT * FROM experiments WHERE state='shadow'"):
             spec = json.loads(e["payload"])
@@ -188,6 +214,17 @@ class Experiments:
                     "filter": spec["exact_change"],
                     "source": spec.get("source"),
                     "stage": "25% pilot risk",
+                    "promoted_at": utc_now(),
+                    "previous_incumbent": self.store.get("incumbent_filter:" + e["branch"]),
+                    "equity_at_promotion": next(
+                        iter(
+                            self.store.rows(
+                                "SELECT value FROM equity WHERE branch=? ORDER BY id DESC LIMIT 1",
+                                (e["branch"],),
+                            )
+                        ),
+                        {"value": 10000},
+                    )["value"],
                 },
             )
             self.store.event(
@@ -200,6 +237,12 @@ class Experiments:
                 },
                 e["branch"],
             )
+            candidate = self.store.get("maintenance_candidate")
+            if candidate and e["id"] == "code-" + candidate["id"]:
+                self.store.set(
+                    "maintenance_candidate",
+                    {**candidate, "state": "active_reduced_risk", "activated_at": utc_now()},
+                )
             promoted.append(e["id"])
         return promoted
 

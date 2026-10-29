@@ -93,3 +93,37 @@ No order can be sent before regular-market opening and execution verification.
   installs from uv.lock so local and CI tooling match; final CI pass pending.
 - Isolated code-maintenance integration passed regression validation, committed a
   candidate on its own branch and left operational strategy/ledger unchanged.
+
+## Checkpoint 5 — final recovery and experimental controls
+
+- CLI/quota outage simulation now confirms Python broker reconciliation remains
+  available and new entries are blocked. Startup credential failures send alerts.
+- Broker clock/session confirmation gates entries; stale GTC entries are canceled
+  outside market hours too. Partial-fill protection/target/closing paths tested.
+- Position reviews are batched hourly; daily calls reserve four slots for nightly
+  retrospective/maintenance and reserve paced quota capacity for those roles.
+- Challenger samples now record the actual incumbent's enter/abstain behavior.
+  Promotions preserve prior versions, record activation equity, and roll back at
+  a fixed 2% loss threshold. Executed plans retain their strategy version.
+- Weekly/monthly retrospectives use the broker calendar, including holiday weeks.
+- Actual retrospective and maintenance schema inference passed.
+- Latest full suite was 220 passed before the final budget/batch edge-case run.
+  Final code checks/CI, scheduled reload, public browser QA and ready notification
+  are the remaining handoff checks.
+
+## Checkpoint 6 — final release validation
+
+- Full pre-release suite passed 226 tests; the subsequent batched-position worker
+  schema regression passes with the active-runtime suite (57 tests), yielding
+  227 total. Active runtime, strategy and runtime-test lint pass.
+- Final live free-data packet returned 30 snapshots, 30 daily indicator sets,
+  five delayed FRED series and 30 indicative option samples, without feed errors.
+  FRED's mixed-calendar ZIP response is handled without extracting files to disk.
+- Persistent thread context survived an actual app-server process restart and
+  switched models successfully. Research returned dated primary-source links.
+- Populated and empty desktop/mobile browser checks passed. Fixtures stayed private.
+- Final audit corrected the batched position-review response schema at the worker
+  boundary; a regression test verifies the actual schema supplied to inference.
+- READINESS.md records the October 29 schedule and intentionally pending fill/exit
+  gate. Final source CI, scheduled-process reload and public snapshot are checked
+  after publication below.

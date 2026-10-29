@@ -152,7 +152,7 @@ def stage_change(config, store, proposal):
             "branch": "intraday",
             "hypothesis": proposal["hypothesis"],
             "exact_change": "code:" + digest,
-            "parent_version": "pilot-v1",
+            "parent_version": (store.get("incumbent_filter:intraday") or {"id": "pilot-v1"})["id"],
             "minimum_sessions": 20,
             "minimum_samples": 30,
             "cost_model": "20bp plus observed spread",

@@ -112,7 +112,19 @@ class Store:
     def recover_jobs(self):
         self.db.execute("UPDATE jobs SET state='failed' WHERE state='running'")
 
+    def retry_failed_jobs(self, before):
+        cursor = self.db.execute(
+            "UPDATE jobs SET state='retry',attempts=0 WHERE state='failed' AND attempts>=2 AND at<?",
+            (before,),
+        )
+        return cursor.rowcount
+
     def memory_put(self, key, layer, payload, expires=None):
+        if expires:
+            stamp = datetime.fromisoformat(expires.replace("Z", "+00:00"))
+            if stamp.tzinfo is None:
+                raise ValueError("Memory expiry requires a timezone")
+            expires = stamp.astimezone(timezone.utc).isoformat()
         self.db.execute(
             "INSERT OR REPLACE INTO memory VALUES(?,?,?,?,?)",
             (key, layer, expires, dumps(payload), utc_now()),

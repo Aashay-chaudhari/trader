@@ -1,6 +1,6 @@
 # Agent Trader — Final Refactor Scope
 
-Status: agreed vision consolidated; implementation and launch checks pending.
+Status: implemented; local runtime and Pages verified. Market-open fill/exit gate pending.
 Recorded: October 29, 2026, approximately 00:17 America/New_York.
 Target first operating session: Thursday, October 29, 2026 (explicit user trading-day target).
 
@@ -294,19 +294,19 @@ If launched late, run fresh readiness checks and skip stale phases/plans.
 
 ## 13. Implementation order and launch gates
 
-- [ ] Snapshot legacy state; inspect clean/dirty worktree and preserve user work.
+- [x] Snapshot legacy state; inspect clean/dirty worktree and preserve user work.
 - [x] Verify replacement paper account, intended balance, permissions and holdings.
   Read-only account check passed October 29; refresh state again at activation.
-- [ ] Implement transactional state, branch ledgers, policy and execution engine.
-- [ ] Implement broker reconciliation, idempotency, closing and recovery paths.
-- [ ] Implement supervisor, scheduler, CLI model routing and quota controller.
-- [ ] Implement evidence/event calendar, research roles, memory and plan schemas.
-- [ ] Implement pilots, challenger registry, evaluation and maintenance releases.
-- [ ] Build sanitized dashboard exports, Pages publication and ntfy notifications.
-- [ ] Run relevant tests, failure simulations, and controlled paper-order smoke test.
-- [ ] Disable legacy execution/reminder owners and install/test local scheduled task.
-- [ ] Verify first scheduled startup outside an interactive shell; record launch mode.
-- [ ] Update README, CURRENT_STATE, operator/recovery guides and implementation log.
+- [x] Implement transactional state, branch ledgers, policy and execution engine.
+- [x] Implement broker reconciliation, idempotency, closing and recovery paths.
+- [x] Implement supervisor, scheduler, CLI model routing and quota controller.
+- [x] Implement evidence/event calendar, research roles, memory and plan schemas.
+- [x] Implement pilots, challenger registry, evaluation and maintenance releases.
+- [x] Build sanitized dashboard exports, Pages publication and ntfy notifications.
+- [x] Run relevant tests, failure simulations, and controlled paper-order smoke test.
+- [x] Disable legacy execution/reminder owners and install/test local scheduled task.
+- [x] Verify first scheduled startup outside an interactive shell; record launch mode.
+- [x] Update README, CURRENT_STATE, operator/recovery guides and implementation log.
 
 Required tests cover duplicate/retried submission, restart recovery, partial fills,
 cancel/replace, branch overlap, stale/missing data, invalid model output, risk
@@ -364,3 +364,12 @@ active branch/release, blockers, next action, and launch evidence. Update it at
 meaningful checkpoints. Read this scope and that log before resuming work.
 Never infer successful deployment, account funding, scheduled execution, or
 notification delivery solely from code being present. Record observed results.
+
+## Implementation boundary notes
+
+The initial autonomous code-mutation path is a validated pure strategy filter,
+committed on an isolated branch and evaluated in shadow before activation. Broader
+role/orchestration changes remain recorded proposals until executable validation
+support is added. Options have a research/data desk and reserved allocation; no
+options execution is enabled with the indicative feed. Submission/cancellation
+was verified without fills; the regular-session fill/exit gate is scheduled.
