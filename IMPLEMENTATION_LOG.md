@@ -127,3 +127,19 @@ No order can be sent before regular-market opening and execution verification.
 - READINESS.md records the October 29 schedule and intentionally pending fill/exit
   gate. Final source CI, scheduled-process reload and public snapshot are checked
   after publication below.
+
+## Activation evidence — 02:01 EDT, October 29
+
+- Final full local regression suite: **227 passed** (57 active-runtime tests),
+  one legacy dependency deprecation warning. Lint and JavaScript syntax passed.
+- Source cc59e5e6 passed GitHub Tests run 40826664712. A later frontend-only
+  correction displays the validated source revision; no trading logic changed.
+- Windows task AgentTrader-LocalSupervisor was started through Task Scheduler,
+  observed Running, with the next daily trigger October 29 at 07:40 Eastern.
+  WakeToRun and StartWhenAvailable are true; execution time limit is PT0S.
+- The scheduled process independently refreshed broker/model/quota preflight,
+  recorded a heartbeat and published snapshot commit 9ad9c9eb to main at 02:01.
+  Reconciliation errors are empty; entries are quota-eligible but still gated
+  on the deliberately pending market-open execution check.
+- A second supervisor invocation correctly refused to run, verifying the lock.
+- Windows screen may be locked. Interactive user sign-in is required after reboot.

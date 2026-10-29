@@ -13,7 +13,8 @@ evidence are in `IMPLEMENTATION_LOG.md`.
 - Equity pilots remain disabled until that gate passes. Options remain shadow-only.
 - CLI inference, same-thread model switching and live web research verified.
 - Full frontend rebuilt and deployed to GitHub Pages. Windows scheduled task
-  registered and verified; release reload/CI evidence is in the implementation log.
+  running independently of the editor; source CI passed and automatic snapshot
+  publication was verified. Exact evidence is in the implementation log.
 
 Do not use legacy cloud trading or the old phase runner. The active command is
 `.venv/bin/python -m agent_trader run`, normally launched by the Windows task.
