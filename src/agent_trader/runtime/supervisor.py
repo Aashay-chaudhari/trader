@@ -508,6 +508,24 @@ class Supervisor:
                 "reconciliation",
                 "Broker and branch ledgers differ. New entries halted; inspect System for details.",
             )
+        last_fill = self.store.get("notified_fill_id", 0)
+        fills = self.store.rows(
+            "SELECT id,payload FROM events WHERE kind='fill' AND id>? ORDER BY id LIMIT 50",
+            (last_fill,),
+        )
+        if fills:
+            text = "\n".join(
+                f"{json.loads(f['payload'])['side'].upper()} {json.loads(f['payload'])['qty']} {json.loads(f['payload'])['symbol']} @ ${json.loads(f['payload'])['price']:.2f}"
+                for f in fills
+            )
+            if notify(
+                self.config,
+                self.store,
+                "fills:" + str(fills[-1]["id"]),
+                "Trader - confirmed paper fills",
+                text,
+            ):
+                self.store.set("notified_fill_id", fills[-1]["id"])
         ready = self.store.get("readiness", {})
         pilot = valid and ready.get("execution_verified") and self.config.execution
         self.store.set(
@@ -614,7 +632,15 @@ class Supervisor:
             and now >= close + timedelta(minutes=60)
             and self.store.get("review_day") == day
         ):
-            if now.weekday() == 4:
+            week_key = "last-week-session:" + day
+            last_week_session = self.store.get(week_key)
+            if last_week_session is None:
+                weekend = now.date() + timedelta(days=6 - now.weekday())
+                last_week_session = not self.broker.calendar_range(
+                    (now.date() + timedelta(days=1)).isoformat(), weekend.isoformat()
+                )
+                self.store.set(week_key, last_week_session)
+            if last_week_session:
                 self.launch("weekly:" + day, "weekly", {}, day)
             if not self.future:
                 import calendar as month_calendar

@@ -4,7 +4,7 @@ The v2 local trading laboratory replaces the old local/cloud decision handoff.
 The persistent scope is `REFACTOR_SCOPE.md`; observed checks and remaining activation
 work are in `IMPLEMENTATION_LOG.md`.
 
-- First trading date: October 30, 2026.
+- First trading date: October 29, 2026.
 - Paper account verified with $30,000 equity/cash, zero positions/open orders,
   options level 3. Three internal $10,000 allocations; no borrowing.
 - Application state was reset and old artifacts archived locally. Git history kept.

@@ -101,6 +101,7 @@ def snapshot(config, store):
         for r in store.rows("SELECT * FROM plans ORDER BY day DESC LIMIT 60")
     ]
     quota = store.get("quota", {})
+    extra_cost = sum(r["notional"] for r in store.rows("SELECT notional FROM orders")) * 0.001
     return sanitize(
         {
             "schema_version": 2,
@@ -170,6 +171,12 @@ def snapshot(config, store):
                 "project_weekly_share": 80,
                 "reserve": 20,
                 "attribution": "Task tokens measured; quota deltas include concurrent account activity.",
+            },
+            "execution_quality": {
+                "additional_cost_allowance": extra_cost,
+                "illustrative_equity_after_allowance": sum(b["equity"] for b in branches)
+                - extra_cost,
+                "basis": "Additional 10bp per executed side; illustrative, not actual fees or a live-fill simulation.",
             },
             "benchmarks": store.get("benchmarks", {}),
             "options_research": store.get("options_research", {}),

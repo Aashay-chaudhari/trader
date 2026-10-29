@@ -23,7 +23,14 @@ class CodexRPC:
     def __init__(self, config):
         self.config = config
         binary = config.codex_bin or os.environ.get("TRADER_CODEX_BIN") or shutil.which("codex")
-        if not binary:
+        native = False
+        if binary:
+            try:
+                with open(binary, "rb") as handle:
+                    native = handle.read(4) == b"\x7fELF"
+            except OSError:
+                pass
+        if not native:
             candidates = sorted(
                 Path("/mnt/c/Users/aasha/.vscode/extensions").glob(
                     "openai.chatgpt-*/bin/linux-x86_64/codex"

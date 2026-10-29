@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import timedelta
 
 from .engine import quote_values, timestamp
 from .store import dumps, utc_now
@@ -75,13 +76,29 @@ class Experiments:
         spec = json.loads(experiment["payload"])
         passes = self.filter_passes(spec, plan, regime)
         sid = hashlib.sha256((experiment["id"] + plan["id"]).encode()).hexdigest()[:24]
+        calendar = self.store.get("calendar:" + now.date().isoformat(), [])
+        if plan["branch"] == "swing":
+            exit_deadline = (now + timedelta(days=14)).isoformat()
+        elif calendar:
+            from .config import ET
+            from datetime import datetime
+
+            exit_deadline = (
+                datetime.fromisoformat(now.date().isoformat() + "T" + calendar[0]["close"]).replace(
+                    tzinfo=ET
+                )
+                - timedelta(minutes=12)
+            ).isoformat()
+        else:
+            exit_deadline = plan["expires_at"]
         payload = {
             "day": now.date().isoformat(),
             "entry": ask,
             "entered_at": now.isoformat(),
             "stop": plan["stop"],
             "target": plan["target"],
-            "expires_at": plan["expires_at"],
+            "expires_at": exit_deadline,
+            "entry_deadline": plan["expires_at"],
             "branch": plan["branch"],
             "plan_id": plan["id"],
             "challenger_trades": passes,

@@ -273,3 +273,20 @@ def test_active_strategy_extension_contract(plan):
     assert isinstance(VERSION, str)
     for regime in ["risk_on", "mixed", "risk_off", "unknown"]:
         assert type(candidate_filter(plan, {"regime": regime})) is bool
+
+
+def test_explicit_broker_rejection_does_not_create_ambiguous_prepared_order(store, broker, config):
+    from agent_trader.runtime.broker import BrokerError
+
+    e = Engine(config, store, broker)
+    broker.submit = lambda _: (_ for _ in ()).throw(BrokerError(422))
+    with pytest.raises(BrokerError):
+        e.submit_intent(
+            {"client_order_id": "rejected", "symbol": "AAPL", "side": "buy", "qty": "1"},
+            "intraday",
+            "plan",
+        )
+    assert (
+        store.rows("SELECT status FROM orders WHERE client_id='rejected'")[0]["status"]
+        == "rejected"
+    )

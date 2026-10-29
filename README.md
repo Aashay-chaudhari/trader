@@ -5,7 +5,7 @@ uses authenticated Codex CLI sessions for research and judgment; Python owns bro
 access, risk enforcement, fills, ledgers, recovery, and closing routines. GitHub
 Pages publishes a sanitized, read-only view. No metered model API or paid data is used.
 
-**First trading date: October 30, 2026.** Three separate $10,000 internal allocations:
+**First trading date: October 29, 2026.** Three separate $10,000 internal allocations:
 long-only intraday equities/ETFs, long-only swing equities/ETFs, and options research.
 Options remain shadow-only while using the free indicative feed. No borrowing.
 

@@ -18,7 +18,7 @@ def now_et():
 @dataclass(frozen=True)
 class Config:
     root: Path = ROOT
-    start_date: str = "2026-10-30"
+    start_date: str = "2026-10-29"
     execution: bool = False
     publish: bool = True
     poll_seconds: int = 30
@@ -46,7 +46,7 @@ class Config:
         values = {**dotenv_values(root / ".env"), **os.environ}
         return cls(
             root=root,
-            start_date=values.get("TRADER_START_DATE", "2026-10-30"),
+            start_date=values.get("TRADER_START_DATE", "2026-10-29"),
             execution=values.get("TRADER_EXECUTION", "false").lower() == "true",
             publish=values.get("TRADER_PUBLISH", "true").lower() == "true",
             codex_bin=values.get("TRADER_CODEX_BIN", ""),

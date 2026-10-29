@@ -4,7 +4,7 @@ Authoritative brief: REFACTOR_SCOPE.md. User approved complete implementation,
 local scheduling, Pages publishing, ntfy alerts, controlled paper smoke tests,
 and fresh application state while preserving Git history.
 
-Latest launch target: Friday October 30, 2026 (user superseded October 29).
+Launch target: Thursday October 29, 2026; see the launch-date interpretation below.
 
 ## Checkpoint 1 — foundation
 
@@ -72,3 +72,24 @@ launch mode and limitations. Target start remains October 30 per latest instruct
 - Submission/cancellation passed with no fills. Equity execution remains gated
   until the first trading session's one-share round-trip verifies broker fills.
 - Windows scheduled task is next; source/dashboard publication is being committed.
+
+## Launch-date interpretation
+
+The user's explicit absolute date was October 29, sent at 00:17 EDT. Later overnight
+references to tomorrow are interpreted as the upcoming morning, so first trading is
+October 29 rather than idling until October 30. Configuration and operator docs now
+use October 29 consistently. The earlier October 30 assumption above is superseded.
+No order can be sent before regular-market opening and execution verification.
+
+## Checkpoint 4 — deployment and background verification
+
+- Source pushed to main; GitHub Pages successfully deployed and serves v2 HTML/JSON.
+- Windows task registered and observed Running, with daily 07:40/sign-in triggers,
+  WakeToRun, StartWhenAvailable, IgnoreNew and no execution time limit.
+- Scheduler smoke test exposed Windows npm shim selection; corrected to prefer the
+  native Linux Codex binary. Background account/quota checks now pass.
+- A prelaunch launcher incident is retained in the audit journal; it is resolved.
+- CI tests passed but an unpinned newer Ruff changed default rules. Workflow now
+  installs from uv.lock so local and CI tooling match; final CI pass pending.
+- Isolated code-maintenance integration passed regression validation, committed a
+  candidate on its own branch and left operational strategy/ledger unchanged.

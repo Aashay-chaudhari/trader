@@ -3,7 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 mkdir -p .runtime
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
-if ! command -v codex >/dev/null 2>&1; then
+# Prefer the native Linux binary over Windows npm shims inherited through WSL PATH.
+if [[ -z "${TRADER_CODEX_BIN:-}" ]]; then
   for candidate in /mnt/c/Users/aasha/.vscode/extensions/openai.chatgpt-*/bin/linux-x86_64/codex; do
     if [[ -x "$candidate" ]]; then export TRADER_CODEX_BIN="$candidate"; fi
   done

@@ -78,12 +78,31 @@ class Decision(Strict):
     evidence_fresh: bool
 
 
+class ExperimentContract(Strict):
+    id: str = Field(pattern=r"^[a-zA-Z0-9_-]{4,70}$")
+    branch: Literal["intraday", "swing", "options"]
+    hypothesis: str
+    exact_change: str
+    parent_version: str
+    minimum_sessions: int = Field(ge=20)
+    minimum_samples: int = Field(ge=30)
+    cost_model: str
+    metrics: list[str]
+
+
+class ImprovementRequest(Strict):
+    problem: str
+    hypothesis: str
+    requested_change: str
+    validation_plan: str
+
+
 class Review(Strict):
     summary: str
     observations: list[str]
     proposed_lessons: list[str]
-    experiments: list[dict]
-    code_changes: list[dict]
+    experiments: list[ExperimentContract] = Field(max_length=3)
+    code_changes: list[ImprovementRequest] = Field(max_length=3)
     no_change_reason: str | None
 
 

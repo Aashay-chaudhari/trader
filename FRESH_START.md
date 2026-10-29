@@ -5,5 +5,5 @@ operator action, never an automatic daily task. It preserves source and Git hist
 archives application state locally, requires an empty broker account, and clears
 published historical artifacts. Broker account creation/funding is a separate operation.
 
-The current fresh era begins October 30, 2026 with three $10,000 internal allocations.
+The current fresh era begins October 29, 2026 with three $10,000 internal allocations.
 Historical results remain in Git history; they are not evidence for the new era.

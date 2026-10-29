@@ -15,10 +15,12 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-      - run: pip install -e '.[dev]'
+      - run: pip install uv==0.11.16
+      - name: Install locked dependencies
+        run: uv sync --locked --extra dev
       - name: Runtime and legacy regression tests
-        run: python -m pytest tests -q
+        run: .venv/bin/python -m pytest tests -q
       - name: Lint active runtime
-        run: ruff check src/agent_trader/runtime src/agent_trader/strategies
+        run: .venv/bin/ruff check src/agent_trader/runtime src/agent_trader/strategies
       - name: Check JavaScript
         run: node --check src/agent_trader/runtime/web/app.js

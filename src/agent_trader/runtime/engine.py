@@ -6,6 +6,7 @@ import math
 from datetime import datetime, timedelta, timezone
 
 from .config import ET
+from .broker import BrokerError
 from .models import Plan
 from .store import dumps, utc_now
 
@@ -384,7 +385,17 @@ class Engine:
             )
         try:
             order = self.broker.submit(payload)
-        except Exception:
+        except Exception as exc:
+            if isinstance(exc, BrokerError) and 400 <= exc.status < 500:
+                self.store.db.execute(
+                    "UPDATE orders SET status='rejected' WHERE client_id=?", (cid,)
+                )
+                self.store.event(
+                    "order_rejected",
+                    {"symbol": payload["symbol"], "http_status": exc.status},
+                    branch,
+                )
+                raise
             # Recover the same broker order after a timeout. Unknown outcomes
             # remain prepared, closing entry gates until reconciled.
             order = self.broker.by_client(cid)
@@ -554,6 +565,12 @@ class Engine:
                         break
             if stop is None:
                 raise ValueError("Missing protective stop reference for owned holding")
+            if abs(h["qty"] - round(h["qty"])) > 1e-8:
+                self.exit_holding(
+                    h["symbol"],
+                    "Fractional partial fill cannot use whole-share protective stop; closing confirmed quantity",
+                )
+                continue
             q = self.broker.quotes([h["symbol"]]).get(h["symbol"], {})
             bid, _ = quote_values(q, datetime.now(timezone.utc))
             if bid <= stop:

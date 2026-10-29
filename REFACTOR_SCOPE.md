@@ -2,7 +2,7 @@
 
 Status: agreed vision consolidated; implementation and launch checks pending.
 Recorded: October 29, 2026, approximately 00:17 America/New_York.
-Target first operating session: Friday, October 30, 2026 (latest user instruction).
+Target first operating session: Thursday, October 29, 2026 (explicit user trading-day target).
 
 This document is the persistent implementation brief for the refactor. Read it
 after a restart or context compaction. It describes intended behavior, not
@@ -273,7 +273,7 @@ budget warnings, significant strategy changes, and daily results with a dashboar
 link. Deduplicate/retry with limits; avoid flooding and confidential account data.
 Remove paid Twilio fallback from the active path.
 
-## 12. Schedule and October 30 launch
+## 12. Schedule and October 29 launch
 
 All scheduling uses America/New_York and the broker market calendar, including
 holidays and early closes. October 29 is in EDT (UTC-4), not EST.
@@ -287,7 +287,8 @@ holidays and early closes. October 29 is in EDT (UTC-4), not EST.
 | After close | Reconcile, publish, notify |
 | Evening | Retrospective, experiments, validated next-session release |
 
-The latest user instruction requests a fresh start tomorrow: October 30.
+The explicit user trading-day target is October 29. Overnight references to tomorrow
+are interpreted as the upcoming morning; this avoids silently missing that session.
 Prioritize an operationally correct core over additional strategies or elaborate analysis.
 If launched late, run fresh readiness checks and skip stale phases/plans.
 
