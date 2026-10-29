@@ -143,3 +143,15 @@ No order can be sent before regular-market opening and execution verification.
   on the deliberately pending market-open execution check.
 - A second supervisor invocation correctly refused to run, verifying the lock.
 - Windows screen may be locked. Interactive user sign-in is required after reboot.
+
+## Handoff verification
+
+- Latest source 804bf4dc passed GitHub Tests run 40826756727 and Pages run
+  40826756706. Public schema-v2 JSON reports the October 29 start, $30,000 equity,
+  zero positions and the live scheduled-process heartbeat.
+- Actual public-site Chromium checks passed all six views at 1440px and 390px,
+  with no page errors or horizontal overflow.
+- Scheduled process continued ticking with no new incidents; direct broker query
+  reconfirmed zero positions/open orders. Execution stays gated until market open.
+- Completion notification sent through the configured ntfy destination; delivery
+  is server-accepted, while phone receipt can only be confirmed by the user.
