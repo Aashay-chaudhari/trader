@@ -71,3 +71,53 @@ def test_adhoc_timer_is_timezone_explicit_persistent_and_once(config, monkeypatc
     assert calls[-1][-1] == "agent-trader-probe-test-1900.timer"
     with pytest.raises(ValueError):
         probe.schedule(config, "bad-time", datetime.now())
+
+
+def test_rejected_hypotheses_do_not_claim_a_positive_morning_handoff(config, monkeypatch):
+    from datetime import datetime, timezone
+
+    live = Store(config.state_dir / "trader.sqlite3")
+    live.set("historical_screen", {"trials": []})
+    live.close()
+    now = datetime.now(timezone.utc).isoformat()
+    source = {"url": "https://example.com/paper", "title": "Primary source", "observed_at": now}
+    hypothesis = {
+        "id": "hypothesis-test",
+        "branch": "intraday",
+        "family": "catalyst",
+        "claim": "A hypothesis needing a concrete test.",
+        "mechanism": "Information diffusion",
+        "falsification": "Need a predeclared test",
+        "free_data_feasibility": "limited",
+        "source_urls": [source["url"]],
+        "screen_trial_ids": [],
+        "experiment_ids": [],
+    }
+    report = {
+        "summary": "Test",
+        "hypotheses": [hypothesis],
+        "sources": [source],
+        "experiments": [],
+        "shadow_plans": [],
+    }
+    review = {
+        "summary": "Not ready",
+        "hypotheses": [
+            {
+                "id": hypothesis["id"],
+                "verdict": "needs_work",
+                "reason": "Execution and data rules are incomplete.",
+            }
+        ],
+    }
+    monkeypatch.setattr(probe, "notify", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        probe,
+        "run_task",
+        lambda config, role, *args, **kwargs: report if role == "probe_hypotheses" else review,
+    )
+    result = probe.run_probe(config, "dummy-unapproved", "hypotheses", True)
+    assert result["state"] == "passed"  # the workflow ran, and rejection is a valid result
+    assert result["reviewed_for_testing"] == 0
+    assert result["morning_handoff_verified"] is False
+    assert result["handoff_result"] == "no_cards_approved"

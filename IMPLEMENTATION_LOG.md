@@ -234,3 +234,30 @@ No new trading/runtime incidents or broker positions were introduced.
 - Model-work pause flag removed; end-of-day review resumed under the service.
   The missed-session incident is retained in the public journal. No claim of a
   successful trading session or all-day reliability is inferred from this repair.
+
+## Real research probes and 19:00 one-time trigger — October 29
+
+- Added isolated research/hypothesis probes using the actual free-data, subscribed
+  model inference, structured output, independent reviewer and scratch morning
+  retrieval paths. Separate thread scopes prevent contaminating daily sessions;
+  production plans, challengers and knowledge are never imported from a probe.
+- First quick attempts hit overly small web-action caps while their prompts still
+  requested broad research. Corrected prompt/allowance alignment to include source
+  checks, preserving account quotas and bounded calls. Failed attempts remain in
+  the journal; their successful retries are recorded under the same IDs.
+- Dummy research passed at 18:59:53 ET: seven cited sources, zero execution plans.
+- Dummy hypothesis/review passed at 18:59:58: two hypotheses accepted for testing,
+  with actual retrieval in the scratch morning prompt verified.
+- A persistent systemd one-time timer explicitly used America/New_York. It fired
+  at 19:00 ET and independently launched the full research check, which completed
+  at 19:02:38 with exit status zero: nine sources, two hypotheses, both held for
+  further work. Reviewer identified return-unit wording and undefined test rules.
+  Workflow success does not imply hypothesis approval or profitability.
+- Receipt metadata distinguishes a verified positive handoff from zero approved
+  cards. The scheduled check approved zero cards; the earlier hypothesis dummy
+  verifies positive handoff. Full reports stay private under .runtime/probes/.
+- Broker checks confirm $30,000 equity/cash, no fills, positions or open orders.
+  Main service/watchdog continued while the timer and checks ran. The completed
+  one-time timer is disabled; daily operation remains enabled.
+- Initial probe release passed all 247 tests and CI. Added a further regression
+  covering rejected hypotheses and non-vacuous handoff reporting for final CI.

@@ -169,7 +169,10 @@ def run_probe(config, run_id, kind="full", quick=False, scheduled_for=None):
                 {
                     "hypotheses": len(report["hypotheses"]),
                     "reviewed_for_testing": len(eligible),
-                    "morning_handoff_verified": True,
+                    "morning_handoff_verified": bool(eligible),
+                    "handoff_result": "reviewed_cards_retrieved"
+                    if eligible
+                    else "no_cards_approved",
                 }
             )
         (directory / "report.json").write_text(dumps(output))
