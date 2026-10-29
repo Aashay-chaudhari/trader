@@ -1,13 +1,20 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T22:44:17.816958+00:00",
+  "generated_at": "2026-10-29T22:49:39.840017+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T18:44:09.693692-04:00",
+  "heartbeat": "2026-10-29T18:49:37.322991-04:00",
+  "watchdog": {
+    "checked_at": "2026-10-29T22:48:04.9327352+00:00",
+    "incident": false,
+    "last_restart": "2026-10-29T22:44:03.7869095+00:00",
+    "service_owner": "systemd user service",
+    "models_paused": false
+  },
   "status": "Market closed. Reconciling and reviewing the session.",
   "next_action": "Daily retrospective, experiment evaluation, and validated maintenance.",
   "readiness": {
-    "at": "2026-10-29T22:44:16.799306+00:00",
+    "at": "2026-10-29T22:49:39.255247+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -84,19 +91,127 @@
   ],
   "equity": [
     {
-      "at": "2026-10-29T18:44:09.693692-04:00",
+      "at": "2026-10-29T18:49:37.322991-04:00",
       "day": "2026-10-29",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T18:44:09.693692-04:00",
+      "at": "2026-10-29T18:49:37.322991-04:00",
       "day": "2026-10-29",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T18:44:09.693692-04:00",
+      "at": "2026-10-29T18:49:37.322991-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T22:49:37.342254+00:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T22:49:37.342254+00:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T22:49:37.342254+00:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:48:34.862664-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:48:34.862664-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:48:34.862664-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:47:37.528443-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:47:37.528443-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:47:37.528443-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:46:39.998363-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:46:39.998363-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:46:39.998363-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:45:42.778687-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:45:42.778687-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:45:42.778687-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:44:45.743561-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:44:45.743561-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T18:44:45.743561-04:00",
       "day": "2026-10-29",
       "branch": "intraday",
       "value": 10000.0
@@ -6893,12 +7008,78 @@
   "plans": [],
   "events": [
     {
+      "id": 54,
+      "at": "2026-10-29T22:49:37.317488+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 53,
+      "at": "2026-10-29T22:49:34.594960+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 199742
+      }
+    },
+    {
+      "id": 52,
+      "at": "2026-10-29T22:49:34.269936+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 199742
+      }
+    },
+    {
+      "id": 51,
+      "at": "2026-10-29T22:49:34.239909+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Console launcher retired. Background user service, hidden WSL host, independent Windows watchdog and hidden publication deployed. Interrupt/crash recovery verified; fully stopped service recovered in 72 seconds. Today remains a missed session."
+      }
+    },
+    {
+      "id": 50,
+      "at": "2026-10-29T22:49:34.181205+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "missed_session_2026_10_29",
+        "reason": "October 29 session missed: last morning heartbeat 08:12 ET, before scheduled research. No broker fills or forward shadow observations. Windows recorded a control-exit; initiating source unconfirmed. Background service and independent watchdog recovery drills now passed."
+      }
+    },
+    {
       "id": 49,
       "at": "2026-10-29T22:44:09.683815+00:00",
       "kind": "startup",
       "branch": null,
       "payload": {
         "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 48,
+      "at": "2026-10-29T22:42:57.952447+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 199266
+      }
+    },
+    {
+      "id": 47,
+      "at": "2026-10-29T22:42:57.818660+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 199266
       }
     },
     {
@@ -6917,6 +7098,25 @@
       "branch": null,
       "payload": {
         "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 44,
+      "at": "2026-10-29T22:42:00.203871+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 198817
+      }
+    },
+    {
+      "id": 43,
+      "at": "2026-10-29T22:41:59.753154+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 2,
+        "pid": 198817
       }
     },
     {
@@ -8333,7 +8533,7 @@
   "lessons": [],
   "maintenance": null,
   "quota": {
-    "at": "2026-10-29T22:44:16.587959+00:00",
+    "at": "2026-10-29T22:49:39.002717+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -9003,10 +9203,10 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "fac332413cf79826be3388d8b1b937b6f1c3b363",
+    "source_commit": "25f6d88b30f6ead5400e148f0e3faffed64d7aef",
     "validated_at": "2026-10-29T06:00:57.427721+00:00",
-    "regression_tests": 241,
-    "runtime_tests": 71,
+    "regression_tests": 243,
+    "runtime_tests": 73,
     "browser_views": 6,
     "start_date": "2026-10-29",
     "fill_exit_gate": "pending_market_open",
@@ -9016,7 +9216,14 @@
     "activated_at": "2026-10-29T06:02:55.440085+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-29T11:43:52.353820+00:00"
+    "updated_at": "2026-10-29T22:49:34.236376+00:00",
+    "recovery_drills": {
+      "interrupt": true,
+      "crash": true,
+      "independent_watchdog_seconds": 72
+    },
+    "background_owner": "systemd",
+    "hidden_windows_host": true
   },
   "limitations": [
     "Paper results are not live returns.",
