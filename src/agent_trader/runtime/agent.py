@@ -293,7 +293,9 @@ def budget_check(store, quota, role, now):
     return True, "Within account and paced daily limits"
 
 
-def run_task(config, role, prompt, response_model, model, effort, day, *, searches=8, cycles=25):
+def run_task(
+    config, role, prompt, response_model, model, effort, day, *, searches=8, cycles=25, scope=None
+):
     from .store import Store
 
     store = Store(config.state_dir / "trader.sqlite3")
@@ -317,6 +319,8 @@ def run_task(config, role, prompt, response_model, model, effort, day, *, search
                 if role == "research_validation"
                 else f"thread:{day}"
             )
+            if scope:
+                thread_key = f"thread:probe:{scope}:{role}"
             thread_id = store.get(thread_key)
             t, payload, usage, counters = rpc.run(
                 thread_id,

@@ -11,6 +11,10 @@ from datetime import datetime
 from .store import utc_now
 
 PUBLIC_EVENTS = {
+    "research_probe_scheduled",
+    "research_probe_started",
+    "research_probe_completed",
+    "research_probe_failed",
     "historical_screen",
     "exploration_completed",
     "research_validated",
@@ -187,6 +191,7 @@ def snapshot(config, store):
                 "knowledge": knowledge_context(store, max_chars=None),
             },
             "review": store.get("review", {}),
+            "research_probes": store.get("research_probes", []),
             "period_reviews": [
                 json.loads(r["value"])
                 for r in store.rows(

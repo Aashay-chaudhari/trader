@@ -134,3 +134,24 @@ for milestones. Pages adds deployment latency; check snapshot and heartbeat time
 Windows Git Credential Manager is the fallback for authenticated pushes from WSL.
 The public dashboard has no authenticated execution controls. A published heartbeat
 older than 35 minutes is flagged; publication normally occurs every 15 minutes.
+
+## Isolated research checks and one-time schedules
+
+Operational checks use the real free-data/inference/schema/reviewer paths but keep
+research state in ignored `.runtime/probes/<id>/`. They cannot submit orders,
+register production challengers, replace the production brief or import knowledge.
+Usage is still charged to the existing project quota/call allowance. Start and
+completion/failure notifications are sent through the normal ntfy destination.
+
+```bash
+.venv/bin/python -m agent_trader.runtime.probe --id my-research-check --kind research --quick
+.venv/bin/python -m agent_trader.runtime.probe --id my-hypothesis-check --kind hypotheses --quick
+.venv/bin/python -m agent_trader.runtime.probe --id adhoc-20261029-1900 --schedule-at 2026-10-29T19:00:00-04:00
+systemctl --user list-timers 'agent-trader-probe-*'
+```
+
+One-time timers specify America/New_York explicitly and persist across a restart.
+A full scheduled check runs research, hypothesis generation, separate review and a
+scratch morning-handoff check. The status/events are in the local ledger and public
+journal; full reports remain private. IDs are idempotent after success. A failed
+check can be retried once under the same ID; changing IDs must not bypass budgets.
