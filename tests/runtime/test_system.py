@@ -115,7 +115,7 @@ def proposal():
     }
 
 
-def test_experiment_contract_immutable_single_slot_and_no_day_one_promotion(
+def test_experiment_contract_immutable_duplicate_and_no_day_one_promotion(
     store, plan, quote, now
 ):
     e = Experiments(store)
@@ -164,7 +164,7 @@ def test_supported_challenger_promotes_only_after_contract_passes(store):
     e = Experiments(store)
     e.register(proposal())
     for i in range(40):
-        p = {"day": f"2026-09-{i // 2 + 1:02d}", "incumbent_return": -0.01, "challenger_return": 0}
+        p = {"day": f"2026-09-{i // 2 + 1:02d}", "incumbent_return": 0.005, "challenger_return": 0.01}
         store.db.execute(
             "INSERT INTO shadow VALUES(?,?,?,?,?,?)",
             (str(i), "test-filter", "AAPL", "intraday", "closed", dumps(p)),

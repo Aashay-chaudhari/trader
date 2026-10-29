@@ -99,3 +99,9 @@ the paced daily quota are reserved for after-close review/maintenance. Calendar
 checks include broker-session confirmation and clock drift; CLI outages cannot
 stop Python reconciliation and closing. Promoted filters have a fixed 2%
 post-promotion equity-loss rollback condition.
+
+Initial exploration now includes a ten-morning research sprint, twelve frozen
+historical screens and up to six parallel shadow challengers per equity branch.
+Independently reviewed research cards feed the morning brief; historical results
+and source review remain distinct from forward-validated evidence. See
+[RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md).

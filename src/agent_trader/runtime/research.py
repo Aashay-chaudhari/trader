@@ -162,20 +162,30 @@ def market_packet(broker, store):
 
 
 def research_prompt(day, packet, store):
+    from .exploration import knowledge_context
+
+    knowledge = knowledge_context(store)
     compact = {k: v for k, v in packet.items() if k != "market"}
     compact["market"] = {
         symbol: {
-            "trade": d.get("latestTrade"),
-            "quote": d.get("latestQuote"),
+            "trade": {k: v for k, v in (d.get("latestTrade") or {}).items() if k in ("p", "t")},
+            "quote": {
+                k: v for k, v in (d.get("latestQuote") or {}).items() if k in ("bp", "ap", "t")
+            },
             "daily_close": d.get("dailyBar", {}).get("c"),
             "prior_close": d.get("prevDailyBar", {}).get("c"),
         }
         for symbol, d in packet.get("market", {}).items()
     }
     memory = store.rows(
-        "SELECT layer,payload FROM memory WHERE expires IS NULL OR expires>? ORDER BY at DESC LIMIT 8",
+        "SELECT layer,payload FROM memory WHERE layer='lesson' AND (expires IS NULL OR expires>?) ORDER BY at DESC LIMIT 8",
         (utc_now(),),
     )
+    while len(json.dumps(memory)) > 2500 and memory:
+        memory.pop()
+    # Keep complete objects within the shared model input cap.
+    while len(json.dumps(compact, separators=(",", ":"))) > 14000 and compact.get("market"):
+        compact["market"].pop(next(reversed(compact["market"])))
     return (
         BASE
         + f"""
@@ -196,8 +206,12 @@ Do not force entries. If fresh levels/event evidence are unavailable, no plan.
 Research options qualitatively in the brief; do not generate option trade plans.
 The required summary should be useful to a person learning alongside the system.
 Return the Brief JSON schema. Include uncertainties and contradictory evidence.
+REUSABLE RESEARCH (independently reviewed; evidence levels are explicit):
+{json.dumps(knowledge)}
+Use relevant reviewed hypotheses to guide today's discovery, contrary-evidence checks and plan design.
+State which knowledge IDs informed a thesis. Never treat research review or a historical screen as proven edge.
 Existing lessons are proposals unless marked tested.\nMEMORY:{json.dumps(memory)}
-STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str)[:18000]}
+STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str, separators=(",", ":"))}
 """
     )
 
@@ -223,6 +237,8 @@ def decision_prompt(plan, quote, brief, held):
 
 
 def review_prompt(day, store):
+    from .exploration import knowledge_context
+
     events = store.rows(
         "SELECT at,kind,branch,payload FROM events WHERE at>=? ORDER BY id DESC LIMIT 55", (day,)
     )
@@ -236,12 +252,13 @@ def review_prompt(day, store):
                 "equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
                 "events": events,
                 "experiments": store.rows("SELECT * FROM experiments"),
+                "research_knowledge": knowledge_context(store),
                 "incumbents": {
                     b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
                     for b in ("intraday", "swing", "options")
                 },
-                "instructions": "Separate operational failure, decision quality and luck. Propose at most one challenger "
-                "per branch; each must include id, branch, hypothesis, exact_change, parent_version, minimum_sessions "
+                "instructions": "Separate operational failure, decision quality and luck. Propose up to six diverse concurrent challengers "
+                "per equity branch; each must include id, branch, hypothesis, exact_change, parent_version, minimum_sessions "
                 "(>=20), minimum_samples (>=30), cost_model and metrics. Prefer no change when evidence is weak. "
                 "code_changes may contain problem, hypothesis, requested_change and validation_plan only. "
                 "Do not claim causal learning from one session. Return Review JSON.",

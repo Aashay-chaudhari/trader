@@ -177,8 +177,10 @@ traces or unfiltered internal transcripts.
 
 ## 8. Challenger experiments and promotion
 
-Maintain an incumbent and a small number of challengers, initially at most one
-active challenger per branch to keep evaluation and resource use interpretable.
+Maintain an incumbent and up to six simultaneous shadow challengers per equity
+branch. The first ten research mornings emphasize broad investigation, independent
+source/method review, fixed historical screens and diversified forward hypotheses.
+Historical screening never replaces forward evidence for promotion.
 
 Each experiment records its hypothesis, parent version, exact change, rationale,
 eligible universe, metrics, execution assumptions, evaluation period, minimum
@@ -373,3 +375,33 @@ role/orchestration changes remain recorded proposals until executable validation
 support is added. Options have a research/data desk and reserved allocation; no
 options execution is enabled with the indicative feed. Submission/cancellation
 was verified without fills; the regular-session fill/exit gate is scheduled.
+
+
+## Research sprint and reusable knowledge — October 29 update
+
+The first ten research mornings add a strong-model discovery pass (up to twelve
+searches) and a separate strong-model source/method review (up to four searches).
+The daily call ceiling, weekly reserve, broker policies and closing routines remain
+fixed. Exploration runs before 09:15; held-position review takes priority in-session.
+
+Twelve fixed daily-bar rule/horizon combinations across the liquid universe are
+screened with a chronological development/holdout split, boundary-label purge, and
+20bp/50bp assumed cost checks. Freeze the dataset and report every trial, including
+losers. Adjusted IEX bars, survivor bias, missing intraday execution detail and
+unconstrained unit-opportunity accounting remain explicit limitations. These
+results cannot authorize trades or satisfy forward promotion requirements.
+
+Research moves from draft to independent review to persistent knowledge cards.
+Only reviewed cards enter the morning brief, alongside counterevidence and linked
+experiment states. Cards expire after 30 days without re-review. Source/method
+review means suitable for testing; forward validation refers to a linked supported
+filter that passes the experiment gates, not a blanket certification of the claim.
+Same-morning validated findings request a refreshed brief before the open.
+
+Up to sixteen research shadow plans can broaden forward observations without
+entering the executable plan table or allocating broker capital. At most six
+challengers per equity branch share paired observations. Promotion additionally
+requires positive net challenger performance, a penalty for the recorded trial
+family and predeclared doubling-session review looks. Siblings with a superseded
+parent become stale; arbitrary repeated daily significance checks are disabled.
+Options remain research-only with no simulated executable fills from indicative data.

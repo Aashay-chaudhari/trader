@@ -12,7 +12,16 @@ from .broker import Broker
 from .config import ET
 from .engine import Engine, TERMINAL, order_id, quote_values, timestamp
 from .experiments import Experiments
-from .models import Brief, Decision, MaintenanceProposal, Pulse, Review, PortfolioReview
+from .models import (
+    Brief,
+    Decision,
+    MaintenanceProposal,
+    Pulse,
+    Review,
+    PortfolioReview,
+    ExplorationReport,
+    ResearchValidation,
+)
 from .notify import notify
 from .publish import export, publish
 from .research import BASE, decision_prompt, market_packet, research_prompt, review_prompt
@@ -42,6 +51,27 @@ def worker(config, role, context, day):
                 config.research_model,
                 "high",
                 8,
+            )
+        elif role == "exploration":
+            from .exploration import exploration_prompt, prepare_screen
+
+            screen = prepare_screen(config, Broker(config), store)
+            prompt, schema, model, effort, searches = (
+                exploration_prompt(day, store, screen),
+                ExplorationReport,
+                config.research_model,
+                "high",
+                12,
+            )
+        elif role == "research_validation":
+            from .exploration import validation_prompt
+
+            prompt, schema, model, effort, searches = (
+                validation_prompt(store),
+                ResearchValidation,
+                config.research_model,
+                "medium",
+                4,
             )
         elif role == "decision":
             prompt, schema, model, effort, searches = (
@@ -206,6 +236,21 @@ class Supervisor:
                     result["summary"][:600]
                     + f"\n{len(result['plans'])} plans. Options remain shadow-only.",
                 )
+            elif role == "exploration":
+                from .exploration import record_report
+
+                record_report(self.store, result, day)
+            elif role == "research_validation":
+                from .exploration import record_validation
+
+                if context.get("revision") != self.store.get("exploration_draft", {}).get(
+                    "revision"
+                ):
+                    raise ValueError("Research draft changed while validation was running")
+                record_validation(self.store, result)
+                now = datetime.now(ET)
+                if now.hour < 9 or (now.hour == 9 and now.minute < 25):
+                    self.store.set("needs_research", True)
             elif role == "decision":
                 if result["plan_id"] != context["plan"]["id"]:
                     raise ValueError("Decision refers to a different plan")
@@ -682,6 +727,12 @@ class Supervisor:
             if now >= opened.replace(hour=8, minute=15) and now < close - timedelta(minutes=45):
                 if self.store.get("brief_day") != day:
                     self.launch("research:" + day, "research", {}, day)
+                elif now >= opened and self.launch_position_review(now):
+                    pass
+                elif self.pending_research_validation(day):
+                    pass
+                elif self.launch_exploration(now, close):
+                    pass
                 elif (
                     not self.engine.plans()
                     and 9 * 60 + 45 <= now.hour * 60 + now.minute < 10 * 60 + 15
@@ -776,8 +827,9 @@ class Supervisor:
 
     def market_tick(self, now, close):
         plans = self.engine.plans()
+        exploration_plans = self.store.get("exploration_shadow_plans", [])
         symbols = sorted(
-            {p["symbol"] for p in plans}
+            {p["symbol"] for p in plans + exploration_plans}
             | {h["symbol"] for h in self.store.rows("SELECT * FROM holdings")}
             | {"SPY", "QQQ", "TLT"}
             | {x["symbol"] for x in self.store.rows("SELECT * FROM shadow WHERE state='open'")}
@@ -856,7 +908,46 @@ class Supervisor:
                         p["branch"],
                     )
                     self.store.set(key, True)
+        for p in exploration_plans:
+            q = quotes.get(p["symbol"])
+            if not q or p["branch"] == "options" or not p.get("event_risk_known"):
+                continue
+            if any(timestamp(e["observed_at"]) < now - timedelta(hours=24) for e in p["evidence"]):
+                continue
+            try:
+                self.experiments.consider(p, q, brief.get("regime"), now)
+            except ValueError:
+                continue
         self.experiments.mark(quotes, now)
+
+    def pending_research_validation(self, day):
+        draft = self.store.get("exploration_draft", {})
+        revision = draft.get("revision")
+        if revision and self.store.get("exploration_validated_draft") != revision:
+            return self.launch(
+                "research-validation:" + revision,
+                "research_validation",
+                {"revision": revision},
+                day,
+            )
+        return False
+
+    def launch_exploration(self, now, close):
+        from .exploration import sprint_active
+
+        day = now.date().isoformat()
+        if (
+            sprint_active(self.store)
+            and self.store.get("exploration_day") != day
+            and now >= now.replace(hour=8, minute=35, second=0, microsecond=0)
+            and now
+            < min(
+                close - timedelta(minutes=60),
+                now.replace(hour=9, minute=15, second=0, microsecond=0),
+            )
+        ):
+            return self.launch("exploration:" + day, "exploration", {}, day)
+        return False
 
     def launch_candidate(self, now, close):
         if not self.store.get("readiness", {}).get("execution_verified") or not self.store.get(

@@ -34,19 +34,39 @@ class Experiments:
             raise ValueError("Insufficient forward evidence requirements")
         if self.store.rows("SELECT id FROM experiments WHERE id=?", (proposal["id"],)):
             return False
-        if self.store.rows(
-            "SELECT id FROM experiments WHERE branch=? AND state='shadow'", (proposal["branch"],)
+        if (
+            len(
+                self.store.rows(
+                    "SELECT id FROM experiments WHERE branch=? AND state='shadow'",
+                    (proposal["branch"],),
+                )
+            )
+            >= 6
         ):
             return False
-        # Only this preimplemented filter can be evaluated automatically. Arbitrary
+        for existing in self.store.rows(
+            "SELECT payload FROM experiments WHERE branch=? AND state='shadow'",
+            (proposal["branch"],),
+        ):
+            old = json.loads(existing["payload"])
+            if (
+                old["exact_change"] == proposal["exact_change"]
+                and old["parent_version"] == proposal["parent_version"]
+            ):
+                return False
+        # Only preimplemented filters or isolated validated code are executable.
         # narrative proposals must go through a tested code release first.
         incumbent = self.store.get("incumbent_filter:" + proposal["branch"])
         expected_parent = incumbent["id"] if incumbent else "pilot-v1"
         if proposal["parent_version"] != expected_parent:
             raise ValueError("Experiment must name the current incumbent version")
-        supported = proposal["exact_change"] in ("require_risk_on", "higher_confidence_075") or (
-            proposal["exact_change"].startswith("code:") and bool(proposal.get("source"))
-        )
+        supported = proposal["exact_change"] in (
+            "require_risk_on",
+            "avoid_risk_off",
+            "higher_confidence_075",
+            "higher_confidence_085",
+            "reward_risk_2",
+        ) or (proposal["exact_change"].startswith("code:") and bool(proposal.get("source")))
         state = "shadow" if supported and proposal["branch"] != "options" else "proposed"
         self.store.db.execute(
             "INSERT INTO experiments VALUES(?,?,?,?,?)",
@@ -67,16 +87,13 @@ class Experiments:
             plan["expires_at"]
         ):
             return
-        experiment = next(
-            iter(
-                self.store.rows(
-                    "SELECT * FROM experiments WHERE branch=? AND state='shadow'", (plan["branch"],)
-                )
-            ),
-            None,
-        )
-        if not experiment:
-            return
+        for experiment in self.store.rows(
+            "SELECT * FROM experiments WHERE branch=? AND state='shadow'", (plan["branch"],)
+        ):
+            self._consider_one(experiment, plan, quote, regime, now)
+
+    def _consider_one(self, experiment, plan, quote, regime, now):
+        _, ask = quote_values(quote, now)
         spec = json.loads(experiment["payload"])
         passes = self.filter_passes(spec, plan, regime)
         sid = hashlib.sha256((experiment["id"] + plan["id"]).encode()).hexdigest()[:24]
@@ -178,8 +195,24 @@ class Experiments:
             )
             samples = [json.loads(r["payload"]) for r in rows]
             sessions = len({x["day"] for x in samples})
+            incumbent = self.store.get("incumbent_filter:" + e["branch"])
+            current_parent = incumbent["id"] if incumbent else "pilot-v1"
+            if spec["parent_version"] != current_parent:
+                self.store.db.execute(
+                    "UPDATE experiments SET state='stale_parent' WHERE id=?", (e["id"],)
+                )
+                continue
             if sessions < spec["minimum_sessions"] or len(samples) < spec["minimum_samples"]:
                 continue
+            # Only predeclared doubling-session review looks; don't repeatedly
+            # test significance every day after reaching minimum evidence.
+            look = 0
+            while spec["minimum_sessions"] * 2 ** (look + 1) <= sessions:
+                look += 1
+            look_key = "experiment-look:" + e["id"]
+            if self.store.get(look_key, -1) >= look:
+                continue
+            self.store.set(look_key, look)
             # Daily paired differences avoid treating correlated same-day trades as
             # independent. Conservative sign consistency + lower-bound requirement.
             import numpy as np
@@ -190,8 +223,19 @@ class Experiments:
                     x["challenger_return"] - x["incumbent_return"]
                 )
             deltas = np.array([sum(v) / len(v) for v in daily.values()])
-            lower = float(deltas.mean() - 3 * deltas.std(ddof=1) / np.sqrt(len(deltas)))
-            if lower <= 0 or (deltas > 0).mean() < 0.6:
+            family_trials = self.store.rows(
+                "SELECT count(*) AS n FROM experiments WHERE branch=?", (e["branch"],)
+            )[0]["n"]
+            # Conservative fixed-trial + repeated-look penalty; not a guarantee
+            # of statistical validity for dependent/nonstationary market data.
+            import math
+
+            critical = max(
+                3.0, math.sqrt(2 * math.log(2 * max(1, family_trials) * (look + 1) ** 2 / 0.05))
+            )
+            lower = float(deltas.mean() - critical * deltas.std(ddof=1) / np.sqrt(len(deltas)))
+            net = sum(x["challenger_return"] for x in samples) / len(samples)
+            if lower <= 0 or (deltas > 0).mean() < 0.6 or net <= 0:
                 self.store.event(
                     "experiment_review",
                     {
@@ -200,6 +244,10 @@ class Experiments:
                         "samples": len(samples),
                         "lower_bound": lower,
                         "promoted": False,
+                        "review_look": look,
+                        "family_trials": family_trials,
+                        "critical_multiplier": critical,
+                        "absolute_mean_net": net,
                     },
                     e["branch"],
                 )
@@ -234,6 +282,10 @@ class Experiments:
                     "sessions": sessions,
                     "samples": len(samples),
                     "lower_bound": lower,
+                    "review_look": look,
+                    "family_trials": family_trials,
+                    "critical_multiplier": critical,
+                    "absolute_mean_net": net,
                 },
                 e["branch"],
             )
@@ -262,4 +314,40 @@ class Experiments:
             return evaluate_filter(spec["source"], plan, {"regime": regime})
         if spec["exact_change"] == "require_risk_on":
             return regime == "risk_on"
-        return plan["confidence"] >= 0.75
+        if spec["exact_change"] == "avoid_risk_off":
+            return regime in ("risk_on", "mixed")
+        if spec["exact_change"] == "reward_risk_2":
+            return (plan["target"] - plan["entry_high"]) / (plan["entry_high"] - plan["stop"]) >= 2
+        if spec["exact_change"] == "higher_confidence_085":
+            return plan["confidence"] >= 0.85
+        if spec["exact_change"] == "higher_confidence_075":
+            return plan["confidence"] >= 0.75
+        raise ValueError("Unsupported experiment filter")
+
+    def progress(self):
+        summaries = {}
+        for e in self.store.rows("SELECT id FROM experiments"):
+            closed = [
+                json.loads(r["payload"])
+                for r in self.store.rows(
+                    "SELECT payload FROM shadow WHERE experiment=? AND state='closed'", (e["id"],)
+                )
+            ]
+            days = {x["day"] for x in closed}
+            summaries[e["id"]] = {
+                "samples": len(closed),
+                "sessions": len(days),
+                "open_observations": self.store.rows(
+                    "SELECT count(*) AS n FROM shadow WHERE experiment=? AND state='open'",
+                    (e["id"],),
+                )[0]["n"],
+                "mean_paired_net": sum(
+                    x["challenger_return"] - x["incumbent_return"] for x in closed
+                )
+                / len(closed)
+                if closed
+                else None,
+                "status": "preliminary_forward_observations" if closed else "awaiting_observations",
+                "warning": "Early evidence; correlated trades are not independent and no promotion is implied.",
+            }
+        return summaries

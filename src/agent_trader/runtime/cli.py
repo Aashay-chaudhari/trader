@@ -143,6 +143,7 @@ def main():
         "smoke",
         "notify",
         "research-test",
+        "explore",
         "agent-check",
     ):
         sub.add_parser(cmd)
@@ -250,6 +251,34 @@ def main():
                 print(
                     "Inference and same-thread model switch:", result["action"], result2["action"]
                 )
+        elif args.command == "explore":
+            from .supervisor import worker
+            from .exploration import seed_challengers, record_report, record_validation
+
+            day = datetime.now(ET).date().isoformat()
+            if store.job_start("exploration-bootstrap:" + day):
+                try:
+                    seed_challengers(store)
+                    result = worker(config, "exploration", {}, day)
+                    record_report(store, result, day, morning=False)
+                    reviewed = worker(config, "research_validation", {}, day)
+                    record_validation(store, reviewed)
+                    store.job_end("exploration-bootstrap:" + day, True, {"reviewed": True})
+                    export(config, store)
+                    print(
+                        json.dumps(
+                            {
+                                "hypotheses": len(result["hypotheses"]),
+                                "reviewed": len(reviewed["hypotheses"]),
+                                "orders_authorized": False,
+                            }
+                        )
+                    )
+                except Exception:
+                    store.job_end("exploration-bootstrap:" + day, False, {"reviewed": False})
+                    raise
+            else:
+                print("Bootstrap already completed or retry limit reached")
         elif args.command == "research-test":
             from .supervisor import worker
 

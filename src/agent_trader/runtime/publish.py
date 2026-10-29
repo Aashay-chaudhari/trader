@@ -11,6 +11,9 @@ from datetime import datetime
 from .store import utc_now
 
 PUBLIC_EVENTS = {
+    "historical_screen",
+    "exploration_completed",
+    "research_validated",
     "fill",
     "order_submitted",
     "agent_task",
@@ -68,6 +71,11 @@ def sanitize(value, config):
 
 
 def snapshot(config, store):
+    from .exploration import knowledge_context
+    from .experiments import Experiments
+
+    progress = Experiments(store).progress()
+
     positions = store.rows("SELECT * FROM holdings")
     broker = {p["symbol"]: p for p in store.get("broker_positions", [])}
     for h in positions:
@@ -137,7 +145,7 @@ def snapshot(config, store):
             "plans": plans,
             "events": events[:100],
             "experiments": [
-                dict(r, payload=json.loads(r["payload"]))
+                dict(r, payload=json.loads(r["payload"]), progress=progress.get(r["id"], {}))
                 for r in store.rows("SELECT * FROM experiments")
             ],
             "shadow": [
@@ -150,6 +158,19 @@ def snapshot(config, store):
                 }
                 for r in store.rows("SELECT * FROM shadow LIMIT 200")
             ],
+            "exploration": {
+                "completed_sessions": len(store.get("exploration_sessions", [])),
+                "sprint_sessions": 10,
+                "max_parallel_per_branch": 6,
+                "report": store.get("exploration_report", {}),
+                "draft": {
+                    k: v
+                    for k, v in store.get("exploration_draft", {}).items()
+                    if k in ("summary", "day", "revision")
+                },
+                "historical_screen": store.get("historical_screen", {}),
+                "knowledge": knowledge_context(store, max_chars=None),
+            },
             "review": store.get("review", {}),
             "period_reviews": [
                 json.loads(r["value"])

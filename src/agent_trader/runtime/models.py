@@ -101,7 +101,7 @@ class Review(Strict):
     summary: str
     observations: list[str]
     proposed_lessons: list[str]
-    experiments: list[ExperimentContract] = Field(max_length=3)
+    experiments: list[ExperimentContract] = Field(max_length=12)
     code_changes: list[ImprovementRequest] = Field(max_length=3)
     no_change_reason: str | None
 
@@ -138,3 +138,36 @@ class PositionDecision(Strict):
 
 class PortfolioReview(Strict):
     decisions: list[PositionDecision] = Field(max_length=10)
+
+
+class ResearchHypothesis(Strict):
+    id: str = Field(pattern=r"^[a-zA-Z0-9_-]{4,70}$")
+    branch: Literal["intraday", "swing", "options"]
+    family: str = Field(max_length=100)
+    claim: str = Field(min_length=15, max_length=1000)
+    mechanism: str = Field(min_length=15, max_length=1000)
+    falsification: str = Field(min_length=15, max_length=1000)
+    free_data_feasibility: Literal["ready", "limited", "unavailable"]
+    source_urls: list[str] = Field(min_length=1, max_length=5)
+    screen_trial_ids: list[str] = Field(max_length=4)
+    experiment_ids: list[str] = Field(max_length=6)
+
+
+class ExplorationReport(Strict):
+    summary: str = Field(max_length=2500)
+    hypotheses: list[ResearchHypothesis] = Field(min_length=1, max_length=12)
+    experiments: list[ExperimentContract] = Field(max_length=12)
+    shadow_plans: list[Plan] = Field(max_length=16)
+    sources: list[Evidence] = Field(min_length=2, max_length=16)
+    uncertainties: list[str] = Field(max_length=15)
+
+
+class HypothesisValidation(Strict):
+    id: str
+    verdict: Literal["accepted_for_testing", "needs_work", "rejected"]
+    reason: str = Field(min_length=15, max_length=1000)
+
+
+class ResearchValidation(Strict):
+    summary: str = Field(max_length=2000)
+    hypotheses: list[HypothesisValidation] = Field(max_length=12)
