@@ -1,41 +1,37 @@
 name: Publish Dashboard
-
 on:
   push:
-    branches:
-      - main
-    paths:
-      - docs/**
-      - data/profiles/codex/**
-      - .github/workflows/pages.yml
+    branches: [main]
+    paths: ['docs/**', '.github/workflows/pages.yml']
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: github-pages
   cancel-in-progress: true
-
 jobs:
   deploy:
-    name: Deploy GitHub Pages
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Validate sanitized snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('docs/data/lab.json').read_text())
+          assert data['schema_version']==2
+          assert {b['name'] for b in data['branches']}=={'intraday','swing','options'}
+          assert not any(Path('docs').rglob('.env'))
+          assert not Path('docs/data/interactions').exists()
+          PY
+      - uses: actions/upload-pages-artifact@v3
         with:
-          ref: main
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./docs
-
-      - name: Deploy to GitHub Pages
+          path: docs
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4

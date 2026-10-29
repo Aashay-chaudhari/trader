@@ -61,6 +61,11 @@ gpt_research/
 
 # Local debug tooling
 .tmp/
+.runtime/
+*.sqlite*
+*.db-shm
+*.db-wal
+.env.*.local
 
 # Database files
 *.db
@@ -75,3 +80,5 @@ data/profiles/*/validation_report.json
 
 # Local default profile artifacts created by tests / ad-hoc single-profile runs
 data/profiles/default/
+# Atomic public snapshot writes
+/docs/data/*.tmp

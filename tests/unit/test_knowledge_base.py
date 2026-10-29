@@ -276,11 +276,12 @@ class TestArchival:
         old_path.write_text(json.dumps({"date": "2025-01-15", "market_regime": "risk_off"}))
 
         # Create a recent observation
-        kb.save_daily_observation({"date": "2026-03-21", "market_regime": "risk_on"})
+        recent_date = __import__("datetime").date.today().isoformat()
+        kb.save_daily_observation({"date": recent_date, "market_regime": "risk_on"})
 
         archived = kb.archive_old_observations(keep_days=90)
         assert archived == 1
         assert not old_path.exists()
         assert list(kb.archive_dir.glob("*.json.gz"))
         # Recent file should still exist
-        assert kb.get_recent_observations(days=1)[0]["date"] == "2026-03-21"
+        assert kb.get_recent_observations(days=1)[0]["date"] == recent_date

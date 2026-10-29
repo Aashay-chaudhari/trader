@@ -1,29 +1,24 @@
-# Runs tests on every push. No API keys needed for unit tests.
-
 name: Tests
-
 on:
   push:
     branches: [main]
+    paths: ['src/**', 'tests/**', 'pyproject.toml', '.github/workflows/tests.yml', 'scripts/runtime/**']
   pull_request:
-
+permissions:
+  contents: read
 jobs:
-  test:
+  runtime:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
-
-      - name: Run tests
-        run: pytest tests/unit -v --tb=short
-
-      - name: Lint
-        run: ruff check src/
+          cache: pip
+      - run: pip install -e '.[dev]'
+      - name: Runtime and legacy regression tests
+        run: python -m pytest tests -q
+      - name: Lint active runtime
+        run: ruff check src/agent_trader/runtime src/agent_trader/strategies
+      - name: Check JavaScript
+        run: node --check src/agent_trader/runtime/web/app.js

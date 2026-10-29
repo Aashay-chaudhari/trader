@@ -1,0 +1,151 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-10-29T04:54:13.712457+00:00",
+  "start_date": "2026-10-30",
+  "mode": "research_shadow",
+  "heartbeat": null,
+  "status": "Fresh experiment prepared. First trading session: 2026-10-30.",
+  "next_action": "07:45 ET startup notification; 08:15 ET morning research.",
+  "readiness": {
+    "at": "2026-10-29T04:50:47.236759+00:00",
+    "broker_reconciled": true,
+    "funded": true,
+    "models_available": true,
+    "paper_endpoint": true,
+    "free_only": true,
+    "options_mode": "shadow_indicative",
+    "execution_verified": false,
+    "order_submission_verified": true,
+    "submission_checked_at": "2026-10-29T04:50:49.744729+00:00"
+  },
+  "reconciliation_errors": [],
+  "calendar": {},
+  "branches": [
+    {
+      "name": "intraday",
+      "cash": 10000.0,
+      "high_water": 10000.0,
+      "paused": 0,
+      "pause_reason": "",
+      "equity": 10000.0,
+      "daily_pnl": 0.0,
+      "total_pnl": 0.0,
+      "drawdown": 0,
+      "mode": "research_shadow"
+    },
+    {
+      "name": "swing",
+      "cash": 10000.0,
+      "high_water": 10000.0,
+      "paused": 0,
+      "pause_reason": "",
+      "equity": 10000.0,
+      "daily_pnl": 0.0,
+      "total_pnl": 0.0,
+      "drawdown": 0,
+      "mode": "research_shadow"
+    },
+    {
+      "name": "options",
+      "cash": 10000.0,
+      "high_water": 10000.0,
+      "paused": 0,
+      "pause_reason": "",
+      "equity": 10000.0,
+      "daily_pnl": 0.0,
+      "total_pnl": 0.0,
+      "drawdown": 0,
+      "mode": "shadow"
+    }
+  ],
+  "positions": [],
+  "orders": [
+    {
+      "branch": "intraday",
+      "symbol": "SPY",
+      "side": "buy",
+      "qty": 1.0,
+      "filled": 0.0,
+      "status": "canceled",
+      "at": "2026-10-29T04:50:49.424065+00:00"
+    }
+  ],
+  "equity": [
+    {
+      "at": "2026-10-29T04:50:49.577677+00:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T04:50:49.577677+00:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T04:50:49.577677+00:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    }
+  ],
+  "brief": {},
+  "pulses": [],
+  "plans": [],
+  "events": [
+    {
+      "id": 2,
+      "at": "2026-10-29T04:50:49.748589+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Paper API accepted and canceled a deliberately nonmarketable $1 SPY limit. Fill/exit round-trip still pending market-open check."
+      }
+    },
+    {
+      "id": 1,
+      "at": "2026-10-29T04:50:43.492271+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Fresh application ledger. Three separate $10,000 allocations; no legacy trades or memory imported."
+      }
+    }
+  ],
+  "experiments": [],
+  "shadow": [],
+  "review": {},
+  "lessons": [],
+  "maintenance": null,
+  "quota": {
+    "at": "2026-10-29T04:50:47.196418+00:00",
+    "windows": [
+      {
+        "bucket": "codex",
+        "kind": "primary",
+        "usedPercent": 5,
+        "windowDurationMins": 10080,
+        "resetsAt": 1793840572
+      }
+    ],
+    "ordinary_usage_allowed": true
+  },
+  "usage": [],
+  "budget": {
+    "project_weekly_share": 80,
+    "reserve": 20,
+    "attribution": "Task tokens measured; quota deltas include concurrent account activity."
+  },
+  "benchmarks": {},
+  "options_research": {},
+  "release": {},
+  "limitations": [
+    "Paper results are not live returns.",
+    "Free equities quotes cover IEX only.",
+    "Options use indicative data and remain shadow-only.",
+    "Shadow returns are assumptions, not broker fills.",
+    "No strategy is proven on launch.",
+    "Static dashboard may lag the local process."
+  ]
+}
