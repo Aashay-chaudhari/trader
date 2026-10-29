@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T23:05:12.572817+00:00",
+  "generated_at": "2026-10-29T23:06:54.528624+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T19:05:09.711701-04:00",
+  "heartbeat": "2026-10-29T19:06:37.894356-04:00",
   "watchdog": {
-    "checked_at": "2026-10-29T23:04:05.5143275+00:00",
+    "checked_at": "2026-10-29T23:06:04.6842234+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
@@ -91,19 +91,37 @@
   ],
   "equity": [
     {
-      "at": "2026-10-29T19:05:09.711701-04:00",
+      "at": "2026-10-29T19:06:37.894356-04:00",
       "day": "2026-10-29",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T19:05:09.711701-04:00",
+      "at": "2026-10-29T19:06:37.894356-04:00",
       "day": "2026-10-29",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T19:05:09.711701-04:00",
+      "at": "2026-10-29T19:06:37.894356-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T19:05:40.277443-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T19:05:40.277443-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T19:05:40.277443-04:00",
       "day": "2026-10-29",
       "branch": "intraday",
       "value": 10000.0
@@ -7314,6 +7332,28 @@
   "plans": [],
   "events": [
     {
+      "id": 86,
+      "at": "2026-10-29T23:06:50.072884+00:00",
+      "kind": "research_probe_completed",
+      "branch": null,
+      "payload": {
+        "id": "adhoc-20261029-1900",
+        "kind": "full",
+        "state": "passed",
+        "scheduled_for": "2026-10-29T19:00:00-04:00",
+        "started_at": "2026-10-29T22:59:59.624042+00:00",
+        "orders_authorized": false,
+        "research_sources": 9,
+        "hypotheses": 2,
+        "reviewed_for_testing": 0,
+        "morning_handoff_verified": false,
+        "completed_at": "2026-10-29T23:02:37.916786+00:00",
+        "handoff_result": "no_cards_approved",
+        "summary": "Receipt clarification: scheduled workflow completed with zero approved cards and no positive morning handoff. Positive handoff was verified in the separate dummy hypothesis test.",
+        "correction": true
+      }
+    },
+    {
       "id": 85,
       "at": "2026-10-29T23:05:09.703380+00:00",
       "kind": "startup",
@@ -10097,10 +10137,10 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "25f6d88b30f6ead5400e148f0e3faffed64d7aef",
+    "source_commit": "284ac714ffd15d7ef01e4906ef71e726abccdd16",
     "validated_at": "2026-10-29T06:00:57.427721+00:00",
-    "regression_tests": 243,
-    "runtime_tests": 73,
+    "regression_tests": 248,
+    "runtime_tests": 78,
     "browser_views": 6,
     "start_date": "2026-10-29",
     "fill_exit_gate": "pending_market_open",
@@ -10110,14 +10150,16 @@
     "activated_at": "2026-10-29T06:02:55.440085+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-29T22:49:34.236376+00:00",
+    "updated_at": "2026-10-29T23:06:50.088534+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
       "independent_watchdog_seconds": 72
     },
     "background_owner": "systemd",
-    "hidden_windows_host": true
+    "hidden_windows_host": true,
+    "research_probe_checks": "passed",
+    "scheduled_probe_completed_at": "2026-10-29T23:02:37.916786+00:00"
   },
   "limitations": [
     "Paper results are not live returns.",
