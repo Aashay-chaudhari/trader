@@ -221,3 +221,16 @@ No new trading/runtime incidents or broker positions were introduced.
   it is removed after validation. The Windows watchdog remains enabled throughout.
 - New tests cover independent heartbeat output during broker failure and the hidden
   Windows publication path; native PowerShell parser checks reported zero errors.
+
+### Recovery release verification
+
+- Final source 25f6d88b passed CI run 40968728829; the core service/watchdog source
+  07df1b4b passed run 40968675556. Local regression suite passed 243 tests.
+- Scheduled publication through the hidden Windows Git/auth chain succeeded;
+  Pages snapshot bf78865f deployed successfully. Public mobile System view reports
+  independent recovery without page errors or horizontal overflow.
+- Latest service preflight and subsequent heartbeats passed. Windows watchdog
+  independently reported healthy at 18:50 ET; its incident state is cleared.
+- Model-work pause flag removed; end-of-day review resumed under the service.
+  The missed-session incident is retained in the public journal. No claim of a
+  successful trading session or all-day reliability is inferred from this repair.
