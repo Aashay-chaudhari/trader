@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-29T06:01:03.745912+00:00",
+  "generated_at": "2026-10-29T06:02:57.765909+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T02:01:01.148666-04:00",
+  "heartbeat": "2026-10-29T02:02:34.571560-04:00",
   "status": "Preparing the session. Research starts at 08:15 ET.",
   "next_action": "Morning market brief and event calendar; paper execution check after 09:32 ET.",
   "readiness": {
@@ -84,19 +84,37 @@
   ],
   "equity": [
     {
-      "at": "2026-10-29T02:01:01.148666-04:00",
+      "at": "2026-10-29T02:02:34.571560-04:00",
       "day": "2026-10-29",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T02:01:01.148666-04:00",
+      "at": "2026-10-29T02:02:34.571560-04:00",
       "day": "2026-10-29",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T02:01:01.148666-04:00",
+      "at": "2026-10-29T02:02:34.571560-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T02:01:33.735206-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T02:01:33.735206-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T02:01:33.735206-04:00",
       "day": "2026-10-29",
       "branch": "intraday",
       "value": 10000.0
@@ -467,6 +485,16 @@
   "plans": [],
   "events": [
     {
+      "id": 13,
+      "at": "2026-10-29T06:02:56.115992+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "refactor-ready-2026-10-29",
+        "title": "Trader - refactor ready"
+      }
+    },
+    {
       "id": 12,
       "at": "2026-10-29T06:01:01.142527+00:00",
       "kind": "startup",
@@ -615,13 +643,17 @@
   "benchmarks": {},
   "options_research": {},
   "release": {
-    "source_commit": "cc59e5e6cf6bf86d5b01037a7b4ed2188d1ec548",
+    "source_commit": "804bf4dc7eb44cdb300b7470315910d746f63eca",
     "validated_at": "2026-10-29T06:00:57.427721+00:00",
     "regression_tests": 227,
     "runtime_tests": 57,
     "browser_views": 6,
     "start_date": "2026-10-29",
-    "fill_exit_gate": "pending_market_open"
+    "fill_exit_gate": "pending_market_open",
+    "ci": "passed",
+    "pages": "passed",
+    "public_browser_qa": "passed",
+    "activated_at": "2026-10-29T06:02:55.440085+00:00"
   },
   "limitations": [
     "Paper results are not live returns.",
