@@ -187,3 +187,12 @@ No order can be sent before regular-market opening and execution verification.
   cover six views at desktop/mobile widths, all twelve screens and actual reviewed
   research cards. CI passed the initial source and separate-reviewer commits;
   final prompt/check metadata is verified in the next CI release.
+
+### Research release activation
+
+Source fac33241 passed GitHub Tests run 40867595243. Pages run 40867740870
+succeeded; public JSON and the mobile strategy view expose twelve screens, four
+reviewed knowledge cards and eight shadow experiments. Windows task was re-registered
+and started after a reload interruption; fresh 07:45 ET preflight confirmed models,
+broker reconciliation and funding. The 07:45 startup notification was server-accepted.
+No new trading/runtime incidents or broker positions were introduced.

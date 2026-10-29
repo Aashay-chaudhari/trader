@@ -24,3 +24,9 @@ Normal entries are blocked until it passes. CLI/quota outages block new entries
 without interrupting the deterministic broker/closing path.
 
 See READINESS.md for verified behavior, the first-session schedule and boundaries.
+
+The research sprint is enabled for the first ten research mornings. The initial
+pass produced nine hypotheses from thirteen sources; four cards passed review and
+automated reference checks for morning reuse. Twelve historical screens and eight
+parallel shadow challengers are recorded. These are exploratory findings, not
+proven strategies. See RESEARCH_WORKFLOW.md for the explicit daily handoff.

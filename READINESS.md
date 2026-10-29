@@ -12,7 +12,7 @@ are implemented. Operational activation evidence is recorded in IMPLEMENTATION_L
   and recovery of the same thread after restarting the CLI process.
 - Free data integration: 30 market snapshots, 30 daily indicator sets, five dated
   FRED macro series, 30 indicative option samples; no paid fallback.
-- 227 regression tests (including 57 active-runtime tests), active-runtime/test
+- 241 regression tests (including 71 active-runtime tests), active-runtime/test
   lint and JavaScript syntax checks. One legacy dependency deprecation warning.
 - Chromium checks of six dashboard views at desktop and 390px mobile widths,
   including populated research/options, long text and escaped HTML fixtures.
@@ -44,3 +44,9 @@ continue when CLI inference is unavailable; new entries are blocked.
 
 Public dashboard: https://aashay-chaudhari.github.io/trader/
 Operator procedures: SYSTEM_GUIDE.md. Persistent vision: REFACTOR_SCOPE.md.
+
+Research sprint update: twelve fixed historical screens are complete, eight shadow
+challengers are registered, and four independently reviewed knowledge cards are
+available to the morning brief. Nine hypotheses and thirteen sources were assessed;
+reviewer approval plus automated reference checks gate reuse. None is labeled
+forward-validated or proven profitable. See RESEARCH_WORKFLOW.md.
