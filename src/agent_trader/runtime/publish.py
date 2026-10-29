@@ -30,6 +30,7 @@ PUBLIC_EVENTS = {
     "startup",
     "daily_summary",
     "pulse",
+    "period_review",
     "entry_cancellation_requested",
     "protection_repair",
 }
@@ -148,6 +149,12 @@ def snapshot(config, store):
                 for r in store.rows("SELECT * FROM shadow LIMIT 200")
             ],
             "review": store.get("review", {}),
+            "period_reviews": [
+                json.loads(r["value"])
+                for r in store.rows(
+                    "SELECT value FROM kv WHERE key LIKE 'weekly:%' OR key LIKE 'monthly:%' ORDER BY key DESC LIMIT 4"
+                )
+            ],
             "lessons": [
                 dict(r, payload=json.loads(r["payload"]))
                 for r in store.rows(

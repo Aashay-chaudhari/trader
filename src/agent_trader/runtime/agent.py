@@ -22,7 +22,7 @@ class CodexRPC:
 
     def __init__(self, config):
         self.config = config
-        binary = os.environ.get("TRADER_CODEX_BIN") or shutil.which("codex")
+        binary = config.codex_bin or os.environ.get("TRADER_CODEX_BIN") or shutil.which("codex")
         if not binary:
             candidates = sorted(
                 Path("/mnt/c/Users/aasha/.vscode/extensions").glob(

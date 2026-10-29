@@ -44,6 +44,9 @@ class Broker:
     def calendar(self, day: str):
         return self.request("GET", "/v2/calendar", params={"start": day, "end": day})
 
+    def calendar_range(self, start, end):
+        return self.request("GET", "/v2/calendar", params={"start": start, "end": end})
+
     def positions(self):
         return self.request("GET", "/v2/positions")
 

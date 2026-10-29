@@ -14,7 +14,7 @@ if not token:
 headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','User-Agent':'agent-trader-local-check'}
 for resource in ('actions/runs?per_page=8','pages',''):
     try:
-        with urllib.request.urlopen(urllib.request.Request('https://api.github.com/repos/Aashay-chaudhari/trader/'+resource,headers=headers),timeout=20) as response:
+        with urllib.request.urlopen(urllib.request.Request('https://api.github.com/repos/Aashay-chaudhari/trader'+('/'+resource if resource else ''),headers=headers),timeout=20) as response:
             data=json.load(response)
         if resource.startswith('actions'):
             out=[{k:x.get(k) for k in ('name','head_sha','status','conclusion','html_url','created_at')} for x in data.get('workflow_runs',[])]

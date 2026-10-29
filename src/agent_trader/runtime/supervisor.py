@@ -78,9 +78,20 @@ means hold with an explicit concern; broker-held protection remains active.
                 )[:18000]
             )
             schema, model, effort, searches = Pulse, config.light_model, "low", 3
-        elif role == "retrospective":
+        elif role in ("retrospective", "weekly", "monthly"):
+            date = datetime.fromisoformat(day).date()
+            beginning = day
+            if role == "weekly":
+                beginning = (date - timedelta(days=date.weekday())).isoformat()
+            if role == "monthly":
+                beginning = date.replace(day=1).isoformat()
             prompt, schema, model, effort, searches = (
-                review_prompt(day, store),
+                review_prompt(beginning, store)
+                + "\nReview period: "
+                + role
+                + " through "
+                + day
+                + ". Do not invent pre-launch evidence.",
                 Review,
                 config.research_model,
                 "high",
@@ -231,6 +242,15 @@ class Supervisor:
                     )
                     self.store.db.execute("UPDATE plans SET state='planned' WHERE state='approved'")
                     self.store.set("needs_research", True)
+            elif role in ("weekly", "monthly"):
+                self.store.set(role + ":" + day, result)
+                self.store.event("period_review", {"period": role, "summary": result["summary"]})
+                for i, lesson in enumerate(result["proposed_lessons"]):
+                    self.store.memory_put(
+                        f"{role}:{day}:lesson:{i}",
+                        "lesson",
+                        {"claim": lesson, "state": "proposed", "period": role, "ending": day},
+                    )
             elif role == "retrospective":
                 self.store.set("review", result)
                 self.store.set("review_day", day)
@@ -589,6 +609,30 @@ class Supervisor:
                     self.launch(
                         "maintenance:" + day, "maintenance", self.store.get("review", {}), day
                     )
+        if (
+            not self.future
+            and now >= close + timedelta(minutes=60)
+            and self.store.get("review_day") == day
+        ):
+            if now.weekday() == 4:
+                self.launch("weekly:" + day, "weekly", {}, day)
+            if not self.future:
+                import calendar as month_calendar
+
+                last = now.date().replace(day=month_calendar.monthrange(now.year, now.month)[1])
+                last_key = "last-session:" + day
+                is_last = self.store.get(last_key)
+                if is_last is None:
+                    is_last = (
+                        not self.broker.calendar_range(
+                            (now.date() + timedelta(days=1)).isoformat(), last.isoformat()
+                        )
+                        if now.date() < last
+                        else True
+                    )
+                    self.store.set(last_key, is_last)
+                if is_last:
+                    self.launch("monthly:" + day, "monthly", {}, day)
         if now >= close + timedelta(minutes=10):
             values = self.store.rows(
                 "SELECT * FROM equity WHERE id IN (SELECT max(id) FROM equity GROUP BY branch)"

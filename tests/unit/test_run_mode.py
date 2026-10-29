@@ -18,6 +18,7 @@ def make_settings(**env_overrides):
 
 
 def test_run_mode_debug_is_default(monkeypatch):
+    monkeypatch.delenv("DATA_DIR", raising=False)
     monkeypatch.delenv("RUN_MODE", raising=False)
     monkeypatch.delenv("MONITOR_RUNTIME", raising=False)
     reset_settings()
