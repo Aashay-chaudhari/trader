@@ -261,3 +261,9 @@ No new trading/runtime incidents or broker positions were introduced.
   one-time timer is disabled; daily operation remains enabled.
 - Initial probe release passed all 247 tests and CI. Added a further regression
   covering rejected hypotheses and non-vacuous handoff reporting for final CI.
+
+Final probe source 284ac714 passed full CI (248 tests). The completed scheduled
+service exited zero. All three completion notifications were server-accepted.
+Public snapshot exposes all receipts; model work remained bounded under existing
+quota limits. Production still has four reviewed cards and no executable plans or
+positions. The main service/watchdog remain active after the one-time timer retired.

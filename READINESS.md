@@ -12,7 +12,7 @@ are implemented. Operational activation evidence is recorded in IMPLEMENTATION_L
   and recovery of the same thread after restarting the CLI process.
 - Free data integration: 30 market snapshots, 30 daily indicator sets, five dated
   FRED macro series, 30 indicative option samples; no paid fallback.
-- 243 regression tests (including 73 active-runtime tests), active-runtime/test
+- 248 regression tests (including 78 active-runtime tests), active-runtime/test
   lint and JavaScript syntax checks. One legacy dependency deprecation warning.
 - Chromium checks of six dashboard views at desktop and 390px mobile widths,
   including populated research/options, long text and escaped HTML fixtures.
@@ -60,3 +60,10 @@ plus a hidden Windows WSL host and an independent two-minute heartbeat watchdog.
 Actual SIGINT, SIGKILL and stopped-service recovery drills passed (the Windows
 watchdog recovered the fully stopped service within 72 seconds). This verifies
 recovery paths, not a completed unattended trading day.
+
+Two real isolated research checks passed after correcting a quick-test web-action
+budget mismatch. A one-time timer fired at 19:00 New York time on October 29 and
+completed the full non-trading pipeline at 19:02:38. Research yielded nine sources;
+both proposed hypotheses were held for revision. A separate dummy produced two
+reviewed cards and verified their scratch morning retrieval. Production knowledge
+and broker exposure remained unchanged. Final probe CI passed.
