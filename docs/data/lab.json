@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-30T00:58:54.389476+00:00",
+  "generated_at": "2026-10-30T01:01:38.337217+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T20:58:35.011321-04:00",
+  "heartbeat": "2026-10-29T21:01:37.832211-04:00",
   "watchdog": {
-    "checked_at": "2026-10-30T00:58:05.1245587+00:00",
+    "checked_at": "2026-10-30T01:00:04.3336587+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
@@ -90,6 +90,60 @@
     }
   ],
   "equity": [
+    {
+      "at": "2026-10-29T21:01:37.832211-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:01:37.832211-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:01:37.832211-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:00:36.909394-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:00:36.909394-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:00:36.909394-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T20:59:35.899532-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T20:59:35.899532-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T20:59:35.899532-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
     {
       "at": "2026-10-29T20:58:35.011321-04:00",
       "day": "2026-10-29",
@@ -9362,634 +9416,9 @@
     }
   ],
   "brief": {},
-  "project": {
-    "as_of": "2026-10-30T00:58:54.405280+00:00",
-    "title": "Operational progress. Profitability unproven.",
-    "assessment": "No measured trading edge. The system is still collecting operational and forward evidence. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
-    "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
-    "stage": "operational_validation",
-    "evidence": {
-      "filled_orders": 0,
-      "reviewed_cards": 6,
-      "closed_filter_observations": 0,
-      "closed_cohort_observations": 0,
-      "promoted_filters": 0,
-      "complete_observed_sessions": 0
-    },
-    "coverage": {
-      "tracking_started": null,
-      "complete_sessions": 0,
-      "sessions": [
-        {
-          "day": "2026-10-29",
-          "recorded_slots": 0,
-          "expected_slots": 78,
-          "observed_fraction": 0.0,
-          "whole_session_evaluable": false,
-          "complete_observed_session": false,
-          "maximum_unobserved_gap_minutes": 390,
-          "state": "not_fully_instrumented_or_in_progress"
-        }
-      ],
-      "definition": "Five-minute slots after broker-session confirmation; at least 95% and no gap above ten minutes across a fully instrumented completed session. Not proof of order execution."
-    },
-    "milestones": [
-      {
-        "name": "Independent recovery",
-        "state": "drills_passed",
-        "detail": "Interrupt, crash and stopped-service recovery are separate from a whole unattended session."
-      },
-      {
-        "name": "Reliable market-session coverage",
-        "state": "not_demonstrated",
-        "detail": "0 completed sessions satisfy the recorded coverage rule."
-      },
-      {
-        "name": "Reusable research",
-        "state": "reviewed_for_testing",
-        "detail": "6 cards passed source/method review. None is certified profitable by that review."
-      },
-      {
-        "name": "Broker fill/exit verification",
-        "state": "pending",
-        "detail": "The market-open one-share paper gate has its own explicit receipt."
-      },
-      {
-        "name": "Forward net expectancy",
-        "state": "no_completed_observations",
-        "detail": "Paired observations, costs, correlation and multiple testing matter. Historical screens cannot satisfy this stage."
-      },
-      {
-        "name": "Real-money readiness",
-        "state": "outside_this_release",
-        "detail": "No live endpoint or automatic paper-to-live switch is implemented."
-      }
-    ],
-    "agenda": [
-      {
-        "question": "Can the unattended loop cover a complete session?",
-        "test": "Record broker-confirmed five-minute coverage slots; retain missed periods.",
-        "next": "Observe the next fully instrumented session."
-      },
-      {
-        "question": "Do fixed reversal/continuation rules survive observed costs?",
-        "test": "Run all twelve forward cohorts on the same frozen universe; preserve losses and abstentions.",
-        "next": "Capture the first eligible quote window; no forced trades."
-      },
-      {
-        "question": "Does event context change a decision worth changing?",
-        "test": "Use official calendar coverage plus source-checked Fed/earnings research; missing timing stays unknown.",
-        "next": "Compare explicit event-aware hypotheses, not extra searches alone."
-      },
-      {
-        "question": "Does bounded role context improve useful work per token?",
-        "test": "Compare matched role tasks, validity, sources and input/cache usage; do not infer causality from one probe.",
-        "next": "Accumulate role-level measurements before promoting further routing changes."
-      }
-    ],
-    "decisions": [
-      {
-        "date": "2026-10-29",
-        "title": "Free data, with explicit missingness",
-        "why": "Combine primary public calendars, filings and web research with broker data; never invent a paid-quality quote from a web result.",
-        "evidence": "Calendar status, source timestamps, IEX/indicative labels.",
-        "status": "active"
-      },
-      {
-        "date": "2026-10-29",
-        "title": "Recovery is separate from the trader",
-        "why": "The first session was missed after the loop stopped at 08:12 ET. A background service and independent hidden Windows watchdog now own recovery.",
-        "evidence": "Interrupt, crash and stopped-service drills; a full unattended session is still a separate gate.",
-        "status": "active"
-      },
-      {
-        "date": "2026-10-29",
-        "title": "Research review does not certify an edge",
-        "why": "A source-supported mechanism can be worth testing without being profitable. Reviewed cards and forward evidence carry different labels.",
-        "evidence": "The 19:00 check completed but its reviewer held both hypotheses.",
-        "status": "active"
-      },
-      {
-        "date": "2026-10-29",
-        "title": "Observe fixed signals without forcing orders",
-        "why": "Waiting for model-generated price plans can starve research. Twelve preregistered cohorts can collect fresh paired quote observations across the liquid universe.",
-        "evidence": "Pre-open signal freeze; first observed quotes; missing exits are not evaluable. No broker allocation or automatic promotion.",
-        "status": "active; forward collection awaits market"
-      },
-      {
-        "date": "2026-10-29",
-        "title": "Keep historical units attached to the numbers",
-        "why": "Five-session unit-opportunity returns were repeatedly mistaken for daily portfolio returns. Derived evidence now names the horizon and aggregation explicitly.",
-        "evidence": "Frozen data/hash retained; historical screens never count toward forward promotion.",
-        "status": "active"
-      },
-      {
-        "date": "2026-10-29",
-        "title": "Bound role context and finish within tool budgets",
-        "why": "A shared thread grew beyond 100,000 cached input tokens and quick checks hit tool limits. Separate role context, bounded rotation, compact packets and soft budget notices reduce avoidable failure paths.",
-        "evidence": "Task usage/context-rotation records. Decision-quality and token savings still require matched forward evaluation.",
-        "status": "active; benefit under evaluation"
-      }
-    ],
-    "automations": [
-      {
-        "when": "Continuously / 30 seconds",
-        "work": "Broker reconciliation, protection, triggers and heartbeat",
-        "owner": "Python background service",
-        "condition": "Calendar and broker session must agree; fresh inputs required."
-      },
-      {
-        "when": "Every 2 minutes",
-        "work": "Independent health check, recovery and failure/recovery notifications",
-        "owner": "Hidden Windows watchdog",
-        "condition": "Windows signed in, powered and connected."
-      },
-      {
-        "when": "07:45 ET",
-        "work": "Morning startup notification",
-        "owner": "Supervisor",
-        "condition": "Trading session; late starts report their actual time."
-      },
-      {
-        "when": "08:15 ET",
-        "work": "Market brief, primary-source research and reviewed knowledge retrieval",
-        "owner": "Research role",
-        "condition": "Available account allowance, dated evidence and complete schema."
-      },
-      {
-        "when": "08:35\u201309:15 ET",
-        "work": "Initial ten-morning exploration, separate review and refreshed brief",
-        "owner": "Research / reviewer roles",
-        "condition": "Bounded daily/weekly budget; source review is not performance validation."
-      },
-      {
-        "when": "From 09:32 ET",
-        "work": "One-share paper fill/exit gate, once until verified",
-        "owner": "Python execution check",
-        "condition": "Regular session, reconciliation, fresh quote and existing risk gates."
-      },
-      {
-        "when": "09:35\u201310:00 ET",
-        "work": "Observe preregistered fixed signal cohorts",
-        "owner": "Deterministic research lab",
-        "condition": "Signals frozen before open; no orders or backfilled entries."
-      },
-      {
-        "when": "Hourly; 11:00 / 13:00 / 14:30 ET",
-        "work": "Position review and material-event checks",
-        "owner": "Decision / light research roles",
-        "condition": "Live positions and due checkpoints; Python protection remains independent."
-      },
-      {
-        "when": "12 minutes before actual close",
-        "work": "Flatten intraday positions and observe due cohort exits",
-        "owner": "Python / broker calendar",
-        "condition": "Early closes honored; confirmed fills and missing exits reported."
-      },
-      {
-        "when": "After close: +10 / +15 / +35 minutes",
-        "work": "Results, retrospective and controlled maintenance",
-        "owner": "Supervisor / review / maintenance",
-        "condition": "Actual records only. Broader code changes remain proposals."
-      },
-      {
-        "when": "Every ~15 minutes",
-        "work": "Sanitized snapshot \u2192 GitHub Pages",
-        "owner": "Publisher / Actions",
-        "condition": "Publishing can lag; GitHub does not own broker execution."
-      }
-    ],
-    "resources": [
-      {
-        "title": "Alpaca IEX / indicative options",
-        "url": "https://docs.alpaca.markets/docs/about-market-data-api",
-        "use": "Quotes, daily bars and broker calendar; free IEX only. Indicative options remain research-only.",
-        "state": "integrated",
-        "limit": "Single exchange; not consolidated prices or firm options liquidity."
-      },
-      {
-        "title": "BEA release calendar",
-        "url": "https://www.bea.gov/news/schedule/icalendar",
-        "use": "Official dated GDP, income/outlays and other BEA release events.",
-        "state": "integrated calendar",
-        "limit": "Calendar dates are not consensus forecasts or economic surprises."
-      },
-      {
-        "title": "BLS official schedule",
-        "url": "https://www.bls.gov/schedule/news_release/",
-        "use": "Inflation, employment and wage release dates.",
-        "state": "feed checked; web verification when blocked",
-        "limit": "Direct feed may reject requests. Missing coverage stays explicit; no paid proxy."
-      },
-      {
-        "title": "Federal Reserve FOMC calendar",
-        "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-        "use": "Meeting dates, statements, minutes and official policy context.",
-        "state": "research reference",
-        "limit": "The agent must verify timing and changes; not provided by the BEA/BLS collector."
-      },
-      {
-        "title": "FRED / ALFRED",
-        "url": "https://fred.stlouisfed.org/",
-        "use": "Treasury yields, real rates, credit and volatility context.",
-        "state": "daily series integrated",
-        "limit": "Daily/delayed. Revisions require vintage data for point-in-time backtests; current CSV is not vintage history."
-      },
-      {
-        "title": "SEC EDGAR APIs",
-        "url": "https://www.sec.gov/about/developer-resources",
-        "use": "Public submissions and XBRL fundamentals; primary filings for corporate research.",
-        "state": "web reference; direct connector deferred",
-        "limit": "Declared user agent and fair access required. Filings are not a complete future earnings calendar."
-      },
-      {
-        "title": "Company investor relations",
-        "url": "https://www.sec.gov/edgar/search/",
-        "use": "Use issuer IR releases and filings to verify earnings and guidance.",
-        "state": "research workflow",
-        "limit": "Missing exact timing stays unknown; generic search snippets are not confirmed earnings schedules."
-      }
-    ],
-    "repo_map": [
-      {
-        "label": "Operating loop",
-        "path": "src/agent_trader/runtime/supervisor.py",
-        "purpose": "Calendar, jobs, independent model worker, broker checks and closing."
-      },
-      {
-        "label": "Execution kernel",
-        "path": "src/agent_trader/runtime/engine.py",
-        "purpose": "Paper-only orders, branch ownership, risk, fills and reconciliation."
-      },
-      {
-        "label": "Research and knowledge",
-        "path": "src/agent_trader/runtime/research.py",
-        "purpose": "Public evidence, calendars, prompt packets and morning knowledge handoff."
-      },
-      {
-        "label": "Parallel signal lab",
-        "path": "src/agent_trader/runtime/cohorts.py",
-        "purpose": "Preregistered forward observations with explicit units and missingness."
-      },
-      {
-        "label": "Experiments and code changes",
-        "path": "src/agent_trader/runtime/experiments.py",
-        "purpose": "Forward challenger evaluation, promotion and rollback; isolated maintenance candidates."
-      },
-      {
-        "label": "Model harness",
-        "path": "src/agent_trader/runtime/agent.py",
-        "purpose": "Existing subscription, model routing, task limits and bounded role context."
-      },
-      {
-        "label": "Recovery and operator guide",
-        "path": "SYSTEM_GUIDE.md",
-        "purpose": "Hidden Windows host/watchdog, systemd, probes and recovery procedures."
-      },
-      {
-        "label": "Persistent vision",
-        "path": "REFACTOR_SCOPE.md",
-        "purpose": "Capital, free-only constraints, learning rules and research boundaries."
-      }
-    ],
-    "research_audit": {
-      "at": "2026-10-30T00:44:35.858246+00:00",
-      "day": "2026-10-29",
-      "summary": "Both hypotheses are accepted for descriptive forward testing under fixed-signal-v1 only. This validates source use and methods, not profitability, executable fills, causal effects, or promotion. Historical figures match the attached screen and retain holding-horizon units. Full-session capture, future quote completeness, and the supplied calendar remain unverified; zero forward quotes establish no forward result.",
-      "accepted": 2,
-      "held": 0,
-      "scope": "Source/method definitions only; no proven profitability or execution approval.",
-      "protocol_sha256": "37d7a40302170e2a6a97d1f3334b6a4fa8f1797947d388d0a1495be3a70f82c6"
-    },
-    "limits": [
-      "No probability-of-profitability score is supportable yet.",
-      "More tokens, sources or agents do not substitute for measured forward outcomes.",
-      "Public calendars do not supply complete earnings surprises, consolidated quotes or firm options execution.",
-      "Current historical universe and adjusted data are not a point-in-time backtest universe."
-    ]
-  },
-  "forward_lab": {
-    "version": "fixed-signal-v1",
-    "protocols": 12,
-    "trials": [
-      {
-        "branch": "intraday",
-        "rule": "trend",
-        "description": "Prior close above its trailing 20-session average",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "intraday",
-        "rule": "pullback",
-        "description": "Uptrend with a negative prior-session return",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "intraday",
-        "rule": "breakout",
-        "description": "Prior close above the preceding 20 closes",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "intraday",
-        "rule": "reversal",
-        "description": "Prior three-session return below -3%",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "intraday",
-        "rule": "momentum",
-        "description": "Prior five-session return above 2%",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "intraday",
-        "rule": "market_confirmed_trend",
-        "description": "Stock and SPY above their prior 20-session averages",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "trend",
-        "description": "Prior close above its trailing 20-session average",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "pullback",
-        "description": "Uptrend with a negative prior-session return",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "breakout",
-        "description": "Prior close above the preceding 20 closes",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "reversal",
-        "description": "Prior three-session return below -3%",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "momentum",
-        "description": "Prior five-session return above 2%",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      },
-      {
-        "branch": "swing",
-        "rule": "market_confirmed_trend",
-        "description": "Stock and SPY above their prior 20-session averages",
-        "open": 0,
-        "closed": 0,
-        "preregistered_opportunities": 30,
-        "entry_sessions": 0,
-        "not_evaluable": 0,
-        "mean_horizon_net_return": null,
-        "mean_horizon_baseline_return": null,
-        "mean_horizon_stressed_return": null
-      }
-    ],
-    "broker_orders_allowed": false,
-    "automatic_promotion": false,
-    "study": {
-      "id": "fixed-signal-v1:2026-10-30",
-      "registered_at": "2026-10-29T20:37:09.642976-04:00",
-      "entry_dates": [
-        "2026-10-30",
-        "2026-11-02",
-        "2026-11-03",
-        "2026-11-04",
-        "2026-11-05",
-        "2026-11-06",
-        "2026-11-09",
-        "2026-11-10",
-        "2026-11-11",
-        "2026-11-12",
-        "2026-11-13",
-        "2026-11-16",
-        "2026-11-17",
-        "2026-11-18",
-        "2026-11-19",
-        "2026-11-20",
-        "2026-11-23",
-        "2026-11-24",
-        "2026-11-25",
-        "2026-11-27"
-      ],
-      "report_after": "2026-12-03T16:00:00-05:00",
-      "protocol": {
-        "version": "fixed-signal-v1",
-        "signals": "Prior completed Alpaca IEX daily bars only; provider daily closes are not guaranteed consolidated closing-auction prices. Six fixed rules. Raw reversal is not a classified non-fundamental liquidity shock.",
-        "entry": "First observed valid ask from actual market open +5 through +30 minutes, never a reconstructed fill.",
-        "exit": "First valid bid from actual close -12 minutes through the close on holding session 1 or 5; missing exits are not evaluable.",
-        "quote_validation": "Bid/ask finite, positive, ordered; bid >= $5; quote age between -5 and 90 seconds; spread / midpoint <=0.5% and spread / ask <=0.5%.",
-        "cost_formula": "gross=exit_bid/entry_ask-1; net=gross-0.002-(entry_ask-entry_bid)/entry_ask-(exit_ask-exit_bid)/exit_ask; stress=net-0.003. Ask/bid already includes spread; the extra spread terms are conservative additional assumed penalties, not measured fees.",
-        "reporting_window": "Twenty broker-calendar entry sessions fixed before the first observation, followed by four possible swing maturation sessions. No optional extension to obtain a winner; descriptive results only.",
-        "denominator": "Preregister every eligible rule/symbol/horizon opportunity. Missing prior-session data and non-overlap exclusions are reported separately. Missing entry or exit quotes are not evaluable, never zeros or fills. Net means condition on evaluable observations; show their count against all preregistered opportunities.",
-        "unit": "Holding-horizon returns per unit opportunity, cash=0 for observed signal abstentions; average within entry date then across entry dates. Symbols and variants are correlated; entry dates are not proven independent observations.",
-        "comparison": "Historical bar-open/close screens differ from this forward quote protocol. They are hypothesis-generation evidence only.",
-        "authority": "No broker orders, allocated capital, automatic promotion, causal controls, annualized return or profitability claim."
-      },
-      "protocol_sha256": "37d7a40302170e2a6a97d1f3334b6a4fa8f1797947d388d0a1495be3a70f82c6",
-      "amended_at": "2026-10-29T20:44:09.617871-04:00"
-    },
-    "exclusions": [
-      {
-        "day": "2026-10-30",
-        "missing_history": [],
-        "overlap_opportunities": 0
-      }
-    ],
-    "protocol": {
-      "version": "fixed-signal-v1",
-      "signals": "Prior completed Alpaca IEX daily bars only; provider daily closes are not guaranteed consolidated closing-auction prices. Six fixed rules. Raw reversal is not a classified non-fundamental liquidity shock.",
-      "entry": "First observed valid ask from actual market open +5 through +30 minutes, never a reconstructed fill.",
-      "exit": "First valid bid from actual close -12 minutes through the close on holding session 1 or 5; missing exits are not evaluable.",
-      "quote_validation": "Bid/ask finite, positive, ordered; bid >= $5; quote age between -5 and 90 seconds; spread / midpoint <=0.5% and spread / ask <=0.5%.",
-      "cost_formula": "gross=exit_bid/entry_ask-1; net=gross-0.002-(entry_ask-entry_bid)/entry_ask-(exit_ask-exit_bid)/exit_ask; stress=net-0.003. Ask/bid already includes spread; the extra spread terms are conservative additional assumed penalties, not measured fees.",
-      "reporting_window": "Twenty broker-calendar entry sessions fixed before the first observation, followed by four possible swing maturation sessions. No optional extension to obtain a winner; descriptive results only.",
-      "denominator": "Preregister every eligible rule/symbol/horizon opportunity. Missing prior-session data and non-overlap exclusions are reported separately. Missing entry or exit quotes are not evaluable, never zeros or fills. Net means condition on evaluable observations; show their count against all preregistered opportunities.",
-      "unit": "Holding-horizon returns per unit opportunity, cash=0 for observed signal abstentions; average within entry date then across entry dates. Symbols and variants are correlated; entry dates are not proven independent observations.",
-      "comparison": "Historical bar-open/close screens differ from this forward quote protocol. They are hypothesis-generation evidence only.",
-      "authority": "No broker orders, allocated capital, automatic promotion, causal controls, annualized return or profitability claim."
-    },
-    "unit": "Net holding-horizon returns per unit opportunity, averaged within entry session then across entry sessions",
-    "limitations": [
-      "Forward quote observations, not guaranteed fills or allocated paper P&L.",
-      "All symbols/variants share market exposure; counts are not independent evidence.",
-      "Ask entry / bid exit plus 20bp and spread buffers; stressed costs add 30bp.",
-      "Entry window 09:35\u201310:00; exits twelve minutes before actual close on holding session 1 or 5.",
-      "Missing exit quotes or large unverified discontinuities are not evaluable; no retrospective fills.",
-      "Historical screens use bar open/close; this forward protocol uses first observed quotes after 09:35 / before close, so results are not a direct replication.",
-      "Fixed present-day universe; no causal, portfolio or profitability inference from this cohort."
-    ]
-  },
-  "official_calendar": {
-    "observed_at": "2026-10-30T00:39:18.601864+00:00",
-    "events": [
-      {
-        "title": "GDP (Advance Estimate), 3rd Quarter 2026",
-        "when": "2026-10-29T08:30:00-04:00",
-        "timing_known": true,
-        "symbols": [],
-        "importance": "medium",
-        "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
-        "agency": "BEA",
-        "observed_at": "2026-10-30T00:25:29.761268+00:00",
-        "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
-        "calendar_status": "ok"
-      },
-      {
-        "title": "Personal Income and Outlays, September 2026",
-        "when": "2026-10-29T08:30:00-04:00",
-        "timing_known": true,
-        "symbols": [],
-        "importance": "high",
-        "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
-        "agency": "BEA",
-        "observed_at": "2026-10-30T00:25:29.761268+00:00",
-        "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
-        "calendar_status": "ok"
-      },
-      {
-        "title": "U.S. International Trade in Goods and Services, September 2026",
-        "when": "2026-11-04T08:30:00-05:00",
-        "timing_known": true,
-        "symbols": [],
-        "importance": "medium",
-        "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
-        "agency": "BEA",
-        "observed_at": "2026-10-30T00:25:29.761268+00:00",
-        "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
-        "calendar_status": "ok"
-      }
-    ],
-    "sources": [
-      {
-        "agency": "BLS",
-        "url": "https://www.bls.gov/schedule/news_release/bls.ics",
-        "status": "unavailable",
-        "retrieved_at": null
-      },
-      {
-        "agency": "BEA",
-        "url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
-        "status": "ok",
-        "retrieved_at": "2026-10-30T00:25:29.761268+00:00"
-      }
-    ],
-    "unknowns": [
-      "BLS official calendar unavailable (HTTPStatusError)"
-    ]
-  },
   "pulses": [],
   "plans": [],
   "events": [
-    {
-      "id": 101,
-      "at": "2026-10-30T00:56:17.566386+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Pre-observation input amendment: exact inputs and canonical hash now retained; old snapshot archived, no outcomes observed.",
-        "day": "2026-10-30",
-        "old_data_sha256": "881655f74e0c33c988fef302279edf56e6d085bc2a19daaa306cc2a569ba7ef2",
-        "new_data_sha256": "bbc047fc382d2ab92475917aa02b6624bc4da8653bfdc95c595f0348fcbf4d87"
-      }
-    },
-    {
-      "id": 100,
-      "at": "2026-10-30T00:56:17.559454+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Fixed forward signal cohort frozen before the open; no orders or paper capital.",
-        "day": "2026-10-30",
-        "symbols": 30,
-        "protocols": 12,
-        "data_sha256": "bbc047fc382d2ab92475917aa02b6624bc4da8653bfdc95c595f0348fcbf4d87"
-      }
-    },
     {
       "id": 99,
       "at": "2026-10-30T00:53:57.274114+00:00",
@@ -10021,15 +9450,6 @@
       }
     },
     {
-      "id": 97,
-      "at": "2026-10-30T00:44:35.863394+00:00",
-      "kind": "research_audit_completed",
-      "branch": null,
-      "payload": {
-        "summary": "Follow-up design review against exact formulas, quote gates and fixed observation window: 2 accepted for testing; 0 held."
-      }
-    },
-    {
       "id": 96,
       "at": "2026-10-30T00:44:35.729797+00:00",
       "kind": "agent_task",
@@ -10044,29 +9464,6 @@
       }
     },
     {
-      "id": 95,
-      "at": "2026-10-30T00:44:10.349886+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Pre-observation source qualification clarified; original protocol hash archived, no outcomes observed.",
-        "protocol_sha256": "37d7a40302170e2a6a97d1f3334b6a4fa8f1797947d388d0a1495be3a70f82c6"
-      }
-    },
-    {
-      "id": 94,
-      "at": "2026-10-30T00:41:06.648323+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Fixed forward signal cohort frozen before the open; no orders or paper capital.",
-        "day": "2026-10-30",
-        "symbols": 30,
-        "protocols": 12,
-        "data_sha256": "881655f74e0c33c988fef302279edf56e6d085bc2a19daaa306cc2a569ba7ef2"
-      }
-    },
-    {
       "id": 91,
       "at": "2026-10-30T00:29:17.656334+00:00",
       "kind": "notification_sent",
@@ -10074,15 +9471,6 @@
       "payload": {
         "key": "public-research-audit:2026-10-29",
         "title": "Trader - research design audit"
-      }
-    },
-    {
-      "id": 90,
-      "at": "2026-10-30T00:29:16.645741+00:00",
-      "kind": "research_audit_completed",
-      "branch": null,
-      "payload": {
-        "summary": "Public research-design audit completed: 0 definitions accepted for testing; 2 held. No execution changes."
       }
     },
     {
@@ -11643,21 +11031,6 @@
       "symbols": 30,
       "dataset_sha256": "6e8053b7dc16b75561212471426e7f3143f6221140a350f822160bd7931c875d",
       "trial_count": 12,
-      "limitations": [
-        "Exploratory historical screen; never counted toward forward promotion or paper P&L.",
-        "Fixed present-day liquid universe: survivor/selection bias; adjusted historical data is not a point-in-time universe.",
-        "Prior-session features, next-open entry; daily bars cannot test intraday catalyst timing, stops or fills.",
-        "65/35 chronological split with boundary-label purge. Holdout has been inspected; future changes require new forward evidence.",
-        "Equal-weight unit opportunities, cash for abstentions; no constrained portfolio simulation. Swing entry-day clusters overlap across symbols.",
-        "20bp base / 50bp stressed round-trip costs are assumptions; IEX-only OHLC is not consolidated executable liquidity.",
-        "Twelve fixed trials reported together; rankings are not statistical proof and correlated signals are not independent evidence."
-      ],
-      "metric_contract": {
-        "unit": "net holding-horizon return per equal-weight unit opportunity, including cash abstentions",
-        "aggregation": "Mean across symbol opportunities within an entry session, then mean across entry sessions",
-        "not": "Not a portfolio daily return, executed-trade return, independent sample count, Sharpe ratio or annualized return",
-        "costs": "20bp base / 50bp stressed assumed round trip"
-      },
       "trials": [
         {
           "id": "intraday-trend",
@@ -11667,20 +11040,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 2923,
-            "mean_horizon_net_return": -0.0011962084698306206,
-            "mean_horizon_stressed_return": -0.0029465078710282254,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.0011962084698306206,
+            "mean_daily_stress": -0.0029465078710282254,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 1604,
-            "mean_horizon_net_return": -0.0013967622485849234,
-            "mean_horizon_stressed_return": -0.0029693112681927667,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.0013967622485849234,
+            "mean_daily_stress": -0.0029693112681927667,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11691,20 +11064,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 1049,
-            "mean_horizon_net_return": -0.0005253920840626686,
-            "mean_horizon_stressed_return": -0.0011535357966375188,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.0005253920840626686,
+            "mean_daily_stress": -0.0011535357966375188,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 625,
-            "mean_horizon_net_return": -0.0004246765995286732,
-            "mean_horizon_stressed_return": -0.0010374216975678888,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.0004246765995286732,
+            "mean_daily_stress": -0.0010374216975678888,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11715,20 +11088,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 820,
-            "mean_horizon_net_return": -0.000284720419470622,
-            "mean_horizon_stressed_return": -0.0007757383835424783,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.000284720419470622,
+            "mean_daily_stress": -0.0007757383835424783,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 415,
-            "mean_horizon_net_return": -0.0005630809726890788,
-            "mean_horizon_stressed_return": -0.000969943717787118,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.0005630809726890788,
+            "mean_daily_stress": -0.000969943717787118,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11739,20 +11112,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 494,
-            "mean_horizon_net_return": -0.0001591201307566823,
-            "mean_horizon_stressed_return": -0.00045492851399021514,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.0001591201307566823,
+            "mean_daily_stress": -0.00045492851399021514,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 365,
-            "mean_horizon_net_return": -0.00027426976466679673,
-            "mean_horizon_stressed_return": -0.0006321129019216986,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.00027426976466679673,
+            "mean_daily_stress": -0.0006321129019216986,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11763,20 +11136,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 1397,
-            "mean_horizon_net_return": -0.0004332716844479109,
-            "mean_horizon_stressed_return": -0.0012697986305556953,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.0004332716844479109,
+            "mean_daily_stress": -0.0012697986305556953,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 765,
-            "mean_horizon_net_return": -0.0008328336668810221,
-            "mean_horizon_stressed_return": -0.001582833666881022,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.0008328336668810221,
+            "mean_daily_stress": -0.001582833666881022,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11787,20 +11160,20 @@
           "holding_sessions": 1,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 167,
-            "unit_opportunities": 5010,
+            "sessions": 167,
+            "opportunities": 5010,
             "signals": 2321,
-            "mean_horizon_net_return": -0.0010469722756538142,
-            "mean_horizon_stressed_return": -0.002436792634935251,
-            "mean_horizon_baseline_return": -0.0015781457381604804
+            "mean_daily_net": -0.0010469722756538142,
+            "mean_daily_stress": -0.002436792634935251,
+            "mean_daily_baseline": -0.0015781457381604804
           },
           "holdout": {
-            "entry_sessions": 102,
-            "unit_opportunities": 3060,
+            "sessions": 102,
+            "opportunities": 3060,
             "signals": 1036,
-            "mean_horizon_net_return": -0.001137764611666783,
-            "mean_horizon_stressed_return": -0.002153450886176587,
-            "mean_horizon_baseline_return": -0.0022911316278028996
+            "mean_daily_net": -0.001137764611666783,
+            "mean_daily_stress": -0.002153450886176587,
+            "mean_daily_baseline": -0.0022911316278028996
           }
         },
         {
@@ -11811,20 +11184,20 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 578,
-            "mean_horizon_net_return": 0.0011386307762946643,
-            "mean_horizon_stressed_return": -0.0006128843752204868,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": 0.0011386307762946643,
+            "mean_daily_stress": -0.0006128843752204868,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 314,
-            "mean_horizon_net_return": -0.0010285629582580558,
-            "mean_horizon_stressed_return": -0.0025985629582580554,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": -0.0010285629582580558,
+            "mean_daily_stress": -0.0025985629582580554,
+            "mean_daily_baseline": -0.000921365534438192
           }
         },
         {
@@ -11835,20 +11208,20 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 224,
-            "mean_horizon_net_return": -0.0003940758291268823,
-            "mean_horizon_stressed_return": -0.001072863707914761,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": -0.0003940758291268823,
+            "mean_daily_stress": -0.001072863707914761,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 134,
-            "mean_horizon_net_return": -0.000406567287256837,
-            "mean_horizon_stressed_return": -0.0010765672872568369,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": -0.000406567287256837,
+            "mean_daily_stress": -0.0010765672872568369,
+            "mean_daily_baseline": -0.000921365534438192
           }
         },
         {
@@ -11859,20 +11232,20 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 161,
-            "mean_horizon_net_return": 0.0016245916533706003,
-            "mean_horizon_stressed_return": 0.0011367128654918126,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": 0.0016245916533706003,
+            "mean_daily_stress": 0.0011367128654918126,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 75,
-            "mean_horizon_net_return": -1.8183351729941795e-05,
-            "mean_horizon_stressed_return": -0.0003931833517299416,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": -1.8183351729941795e-05,
+            "mean_daily_stress": -0.0003931833517299416,
+            "mean_daily_baseline": -0.000921365534438192
           }
         },
         {
@@ -11883,20 +11256,20 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 100,
-            "mean_horizon_net_return": 0.00029546560571220367,
-            "mean_horizon_stressed_return": -7.5646973180992845e-06,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": 0.00029546560571220367,
+            "mean_daily_stress": -7.5646973180992845e-06,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 73,
-            "mean_horizon_net_return": 0.0008973331788943301,
-            "mean_horizon_stressed_return": 0.00053233317889433,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": 0.0008973331788943301,
+            "mean_daily_stress": 0.00053233317889433,
+            "mean_daily_baseline": -0.000921365534438192
           }
         },
         {
@@ -11907,20 +11280,20 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 257,
-            "mean_horizon_net_return": 0.0018307559805711582,
-            "mean_horizon_stressed_return": 0.0010519681017832796,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": 0.0018307559805711582,
+            "mean_daily_stress": 0.0010519681017832796,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 151,
-            "mean_horizon_net_return": -0.0010449271778131255,
-            "mean_horizon_stressed_return": -0.0017999271778131251,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": -0.0010449271778131255,
+            "mean_daily_stress": -0.0017999271778131251,
+            "mean_daily_baseline": -0.000921365534438192
           }
         },
         {
@@ -11931,22 +11304,31 @@
           "holding_sessions": 5,
           "state": "historical_screen_only",
           "development": {
-            "entry_sessions": 33,
-            "unit_opportunities": 990,
+            "sessions": 33,
+            "opportunities": 990,
             "signals": 441,
-            "mean_horizon_net_return": 0.0008383034060047189,
-            "mean_horizon_stressed_return": -0.000498060230358917,
-            "mean_horizon_baseline_return": 0.004262775685074868
+            "mean_daily_net": 0.0008383034060047189,
+            "mean_daily_stress": -0.000498060230358917,
+            "mean_daily_baseline": 0.004262775685074868
           },
           "holdout": {
-            "entry_sessions": 20,
-            "unit_opportunities": 600,
+            "sessions": 20,
+            "opportunities": 600,
             "signals": 226,
-            "mean_horizon_net_return": -0.002017070176024959,
-            "mean_horizon_stressed_return": -0.003147070176024959,
-            "mean_horizon_baseline_return": -0.000921365534438192
+            "mean_daily_net": -0.002017070176024959,
+            "mean_daily_stress": -0.003147070176024959,
+            "mean_daily_baseline": -0.000921365534438192
           }
         }
+      ],
+      "limitations": [
+        "Exploratory historical screen; never counted toward forward promotion or paper P&L.",
+        "Fixed present-day liquid universe: survivor/selection bias; adjusted historical data is not a point-in-time universe.",
+        "Prior-session features, next-open entry; daily bars cannot test intraday catalyst timing, stops or fills.",
+        "65/35 chronological split with boundary-label purge. Holdout has been inspected; future changes require new forward evidence.",
+        "Equal-weight unit opportunities, cash for abstentions; no constrained portfolio simulation. Swing entry-day clusters overlap across symbols.",
+        "20bp base / 50bp stressed round-trip costs are assumptions; IEX-only OHLC is not consolidated executable liquidity.",
+        "Twelve fixed trials reported together; rankings are not statistical proof and correlated signals are not independent evidence."
       ]
     },
     "knowledge": {
@@ -12223,8 +11605,7 @@
       "input_tokens": 14617,
       "cached_tokens": 14336,
       "output_tokens": 57,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-30T00:53:23.639349+00:00",
@@ -12234,8 +11615,7 @@
       "input_tokens": 14610,
       "cached_tokens": 14336,
       "output_tokens": 60,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-30T00:44:35.725987+00:00",
@@ -12245,8 +11625,7 @@
       "input_tokens": 26010,
       "cached_tokens": 19456,
       "output_tokens": 623,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-30T00:29:16.504082+00:00",
@@ -12256,8 +11635,7 @@
       "input_tokens": 25019,
       "cached_tokens": 18432,
       "output_tokens": 771,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-30T00:28:45.995108+00:00",
@@ -12267,8 +11645,7 @@
       "input_tokens": 34162,
       "cached_tokens": 27520,
       "output_tokens": 2574,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T23:02:37.758968+00:00",
@@ -12278,8 +11655,7 @@
       "input_tokens": 25215,
       "cached_tokens": 21248,
       "output_tokens": 366,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T23:02:18.220730+00:00",
@@ -12289,8 +11665,7 @@
       "input_tokens": 25387,
       "cached_tokens": 21760,
       "output_tokens": 1466,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T23:01:27.286840+00:00",
@@ -12300,8 +11675,7 @@
       "input_tokens": 47166,
       "cached_tokens": 38784,
       "output_tokens": 3503,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:59:58.302162+00:00",
@@ -12311,8 +11685,7 @@
       "input_tokens": 26222,
       "cached_tokens": 0,
       "output_tokens": 586,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:59:53.182569+00:00",
@@ -12322,8 +11695,7 @@
       "input_tokens": 41348,
       "cached_tokens": 39808,
       "output_tokens": 2279,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:59:31.757635+00:00",
@@ -12333,8 +11705,7 @@
       "input_tokens": 31007,
       "cached_tokens": 22656,
       "output_tokens": 1204,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:57:32.479168+00:00",
@@ -12344,8 +11715,7 @@
       "input_tokens": 0,
       "cached_tokens": 0,
       "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:56:58.115143+00:00",
@@ -12355,8 +11725,7 @@
       "input_tokens": 0,
       "cached_tokens": 0,
       "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:50:46.711599+00:00",
@@ -12366,8 +11735,7 @@
       "input_tokens": 120782,
       "cached_tokens": 0,
       "output_tokens": 134,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T22:50:29.627571+00:00",
@@ -12377,8 +11745,7 @@
       "input_tokens": 118894,
       "cached_tokens": 0,
       "output_tokens": 1364,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T11:42:17.857712+00:00",
@@ -12388,8 +11755,7 @@
       "input_tokens": 62158,
       "cached_tokens": 53760,
       "output_tokens": 1220,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T11:40:26.275050+00:00",
@@ -12399,8 +11765,7 @@
       "input_tokens": 38285,
       "cached_tokens": 36224,
       "output_tokens": 1235,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T11:39:22.945428+00:00",
@@ -12410,8 +11775,7 @@
       "input_tokens": 109263,
       "cached_tokens": 100864,
       "output_tokens": 1626,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     },
     {
       "at": "2026-10-29T11:37:40.196731+00:00",
@@ -12421,8 +11785,7 @@
       "input_tokens": 72729,
       "cached_tokens": 67072,
       "output_tokens": 6381,
-      "quota_delta": 0.0,
-      "state": "completed"
+      "quota_delta": 0.0
     }
   ],
   "budget": {
