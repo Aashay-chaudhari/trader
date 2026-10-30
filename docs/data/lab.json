@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-30T01:04:17.520732+00:00",
+  "generated_at": "2026-10-30T01:04:47.636232+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T21:04:17.031024-04:00",
+  "heartbeat": "2026-10-29T21:04:45.683272-04:00",
   "watchdog": {
     "checked_at": "2026-10-30T01:04:07.9788952+00:00",
     "incident": false,
@@ -14,7 +14,7 @@
   "status": "Market closed. Reconciling and reviewing the session.",
   "next_action": "Daily retrospective, experiment evaluation, and validated maintenance.",
   "readiness": {
-    "at": "2026-10-30T01:02:15.137862+00:00",
+    "at": "2026-10-30T01:04:46.967449+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -91,19 +91,37 @@
   ],
   "equity": [
     {
-      "at": "2026-10-29T21:04:17.031024-04:00",
+      "at": "2026-10-29T21:04:45.683272-04:00",
       "day": "2026-10-29",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T21:04:17.031024-04:00",
+      "at": "2026-10-29T21:04:45.683272-04:00",
       "day": "2026-10-29",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-29T21:04:17.031024-04:00",
+      "at": "2026-10-29T21:04:45.683272-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-30T01:04:45.705808+00:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-30T01:04:45.705808+00:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-30T01:04:45.705808+00:00",
       "day": "2026-10-29",
       "branch": "intraday",
       "value": 10000.0
@@ -9489,7 +9507,7 @@
   ],
   "brief": {},
   "project": {
-    "as_of": "2026-10-30T01:04:17.531289+00:00",
+    "as_of": "2026-10-30T01:04:47.656485+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "No measured trading edge. The system is still collecting operational and forward evidence. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -10091,6 +10109,34 @@
   "pulses": [],
   "plans": [],
   "events": [
+    {
+      "id": 108,
+      "at": "2026-10-30T01:04:45.678966+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 107,
+      "at": "2026-10-30T01:04:43.603206+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 12276
+      }
+    },
+    {
+      "id": 106,
+      "at": "2026-10-30T01:04:43.182296+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 12276
+      }
+    },
     {
       "id": 105,
       "at": "2026-10-30T01:02:13.747728+00:00",
@@ -11182,34 +11228,6 @@
       "payload": {
         "key": "incident:2026-10-29:runtime_AgentUnavailable",
         "title": "Trader - attention required"
-      }
-    },
-    {
-      "id": 4,
-      "at": "2026-10-29T05:03:09.130657+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "runtime_AgentUnavailable",
-        "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
-      }
-    },
-    {
-      "id": 3,
-      "at": "2026-10-29T05:03:08.667895+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 2,
-      "at": "2026-10-29T04:50:49.748589+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Paper API accepted and canceled a deliberately nonmarketable $1 SPY limit. Fill/exit round-trip still pending market-open check."
       }
     }
   ],
@@ -12357,7 +12375,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-10-30T01:02:15.083028+00:00",
+    "at": "2026-10-30T01:04:46.921340+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -13226,7 +13244,7 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "db4427cea4c20cf5258dbba68e8eb4637ebddf51",
+    "source_commit": "a6f2eac963b7676f1af7f3062349d2b3afb5bc62",
     "validated_at": "2026-10-30T01:02:11.633924+00:00",
     "regression_tests": 266,
     "runtime_tests": 96,
@@ -13236,10 +13254,10 @@
     "ci": "pending_latest_source",
     "pages": "pending_latest_snapshot",
     "public_browser_qa": "pending_latest_snapshot",
-    "activated_at": "2026-10-29T06:02:55.440085+00:00",
+    "activated_at": "2026-10-30T01:04:43.154110+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-30T01:02:11.633941+00:00",
+    "updated_at": "2026-10-30T01:04:43.154092+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
