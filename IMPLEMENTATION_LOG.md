@@ -307,7 +307,26 @@ into morning research and retrospectives; the live morning/review packets fit th
 input cap and retrieved the revised reviewed hypothesis. No inference or order
 was required for this deterministic handoff check.
 
-Final daily-handoff source db4427ce passed Tests run 40983375627. Public verification
-exposed stale unversioned CDN JavaScript while the new snapshot was already visible;
-the publisher now hashes CSS/JavaScript references in exported HTML so new releases
-request matching assets. The browser checks are repeated against the actual site.
+Final daily-handoff source db4427ce passed Tests run 40983375627. The publisher
+now hashes CSS/JavaScript references in exported HTML so releases request matching
+assets. An initial browser assertion mistook CSS-uppercased table headings for a
+missing column; direct DOM inspection confirmed the columns were present. The
+corrected checks are repeated against the actual site. No stale-script incident
+is inferred from that assertion failure.
+
+### Final public-research upgrade activation
+
+- Final source a6f2eac9 passed Tests run 40983632867 (266 tests); Pages snapshot
+  d9154692 deployed successfully in run 40983660049.
+- All seven actual public views passed Chromium desktop/390px-mobile verification,
+  including versioned assets, complete Project assessment, all twelve forward rows
+  and net/baseline/stress columns. No JavaScript errors or viewport overflow.
+- Reloaded systemd service reconciled broker/ledgers, confirmed model availability
+  and published automatically. Subsequent heartbeat matched the active service PID;
+  independent Windows watchdog reported healthy. Hidden host running, old visible
+  task disabled, native PowerShell parse errors zero. No new runtime/cohort incidents.
+- Direct broker check remained $30,000, zero positions/open orders/fills. The exact
+  frozen input hash verifies, with 360 expected opportunities and zero observations.
+  Actual fill/exit and a completed unattended trading day remain pending.
+- Source CI and public QA receipts are reflected in the exported release metadata.
+  Final metadata/doc publication does not change the tested source or risk policy.

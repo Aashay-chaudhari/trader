@@ -28,3 +28,10 @@ Implement and verify:
 Do not interpret enthusiastic research or a positive historical screen as an edge.
 Do not attribute subjective feelings to the model or display invented probability
 of profitability. Keep October 29's missed session in the public account.
+
+Completed October 29 evening. Evidence: 266 regression tests (96 runtime), final
+source a6f2eac9 / successful CI 40983632867, seven-view live Pages desktop/mobile
+QA, real free-data/inference checks, verified daily knowledge/forward handoff,
+service reload and independent healthy watchdog. See IMPLEMENTATION_LOG.md.
+Next required evidence is an actual observed market session and forward outcomes;
+that cannot be manufactured while the market is closed.
