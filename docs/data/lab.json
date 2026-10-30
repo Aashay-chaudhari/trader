@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-30T01:04:47.636232+00:00",
+  "generated_at": "2026-10-30T01:08:15.074540+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-29T21:04:45.683272-04:00",
+  "heartbeat": "2026-10-29T21:07:49.950516-04:00",
   "watchdog": {
-    "checked_at": "2026-10-30T01:04:07.9788952+00:00",
+    "checked_at": "2026-10-30T01:08:04.2579348+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
@@ -90,6 +90,60 @@
     }
   ],
   "equity": [
+    {
+      "at": "2026-10-29T21:07:49.950516-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:07:49.950516-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:07:49.950516-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:06:49.010605-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:06:49.010605-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:06:49.010605-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:05:48.066545-04:00",
+      "day": "2026-10-29",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:05:48.066545-04:00",
+      "day": "2026-10-29",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-29T21:05:48.066545-04:00",
+      "day": "2026-10-29",
+      "branch": "intraday",
+      "value": 10000.0
+    },
     {
       "at": "2026-10-29T21:04:45.683272-04:00",
       "day": "2026-10-29",
@@ -9507,7 +9561,7 @@
   ],
   "brief": {},
   "project": {
-    "as_of": "2026-10-30T01:04:47.656485+00:00",
+    "as_of": "2026-10-30T01:08:15.096268+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "No measured trading edge. The system is still collecting operational and forward evidence. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -10109,6 +10163,26 @@
   "pulses": [],
   "plans": [],
   "events": [
+    {
+      "id": 110,
+      "at": "2026-10-30T01:08:13.704608+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "public-learning-upgrade-20261029",
+        "title": "Trader - research upgrade ready"
+      }
+    },
+    {
+      "id": 109,
+      "at": "2026-10-30T01:08:11.731412+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Research upgrade verified and active: 266 tests, source CI and seven-view public desktop/mobile QA passed. Background service and independent watchdog healthy. 360 preregistered opportunities; zero forward observations or broker fills yet.",
+        "source_commit": "a6f2eac963b7676f1af7f3062349d2b3afb5bc62"
+      }
+    },
     {
       "id": 108,
       "at": "2026-10-30T01:04:45.678966+00:00",
@@ -11208,26 +11282,6 @@
       "payload": {
         "code": "runtime_AgentUnavailable",
         "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
-      }
-    },
-    {
-      "id": 6,
-      "at": "2026-10-29T05:03:39.813322+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "runtime_AgentUnavailable",
-        "reason": "Runtime check failed (AgentUnavailable); retrying in 30 seconds."
-      }
-    },
-    {
-      "id": 5,
-      "at": "2026-10-29T05:03:09.341964+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "incident:2026-10-29:runtime_AgentUnavailable",
-        "title": "Trader - attention required"
       }
     }
   ],
@@ -13245,19 +13299,19 @@
   },
   "release": {
     "source_commit": "a6f2eac963b7676f1af7f3062349d2b3afb5bc62",
-    "validated_at": "2026-10-30T01:02:11.633924+00:00",
+    "validated_at": "2026-10-30T01:08:11.716265+00:00",
     "regression_tests": 266,
     "runtime_tests": 96,
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "pending_market_open",
-    "ci": "pending_latest_source",
-    "pages": "pending_latest_snapshot",
-    "public_browser_qa": "pending_latest_snapshot",
+    "ci": "passed",
+    "pages": "passed",
+    "public_browser_qa": "passed",
     "activated_at": "2026-10-30T01:04:43.154110+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-30T01:04:43.154092+00:00",
+    "updated_at": "2026-10-30T01:08:11.716293+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -13270,7 +13324,10 @@
     "public_research_upgrade": true,
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
-    "profitability": "unproven"
+    "profitability": "unproven",
+    "source_ci_run": 40983632867,
+    "pages_verified_run": 40983660049,
+    "asset_versioning": true
   },
   "limitations": [
     "Paper results are not live returns.",
