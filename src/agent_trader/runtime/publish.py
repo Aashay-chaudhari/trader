@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import shutil
@@ -250,8 +251,13 @@ def export(config, store):
     target = config.root / "docs"
     target.mkdir(exist_ok=True)
     source = config.root / "src/agent_trader/runtime/web"
-    for name in ("index.html", "app.js", "style.css"):
+    index = (source / "index.html").read_text()
+    for name in ("app.js", "style.css"):
         shutil.copyfile(source / name, target / name)
+        version = hashlib.sha256((source / name).read_bytes()).hexdigest()[:12]
+        index = index.replace('"' + name + '"', '"' + name + '?v=' + version + '"')
+    # Version assets so a fresh snapshot cannot be paired with stale CDN scripts.
+    (target / "index.html").write_text(index)
     (target / "data").mkdir(exist_ok=True)
     data = snapshot(config, store)
     encoded = json.dumps(data, indent=2, allow_nan=False)

@@ -306,3 +306,8 @@ A final integration follow-up also injects complete provisional forward evidence
 into morning research and retrospectives; the live morning/review packets fit the
 input cap and retrieved the revised reviewed hypothesis. No inference or order
 was required for this deterministic handoff check.
+
+Final daily-handoff source db4427ce passed Tests run 40983375627. Public verification
+exposed stale unversioned CDN JavaScript while the new snapshot was already visible;
+the publisher now hashes CSS/JavaScript references in exported HTML so new releases
+request matching assets. The browser checks are repeated against the actual site.
