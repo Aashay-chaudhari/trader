@@ -208,3 +208,8 @@ It is idempotent after success, budgeted and scratch-isolated; only source/metho
 reviewed definitions enter knowledge. It cannot create plans/contracts or certify
 profitability. Reports live under ignored `.runtime/audits/`. It is not a recurring
 nightly job. Normal retrospectives and controlled maintenance retain their schedule.
+
+Both morning research and daily/periodic retrospectives receive a complete compact
+forward-evidence digest: study window/hash, all twelve trial denominators, missing
+data, net/baseline/stressed horizon means and observed session count. Provisional
+results may explain data gaps; they cannot tune or promote the fixed study.

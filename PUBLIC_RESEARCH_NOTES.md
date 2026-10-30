@@ -101,3 +101,8 @@ JSON while explicitly retaining unavailable source details. That verifies harnes
 behavior, not research quality or measured token-efficiency gains. Full regression
 and browser results are recorded in READINESS.md. All data and inference stay within
 the existing free/subscription experiment; account/risk limits were not raised.
+
+The daily handoff includes all twelve forward trial summaries in both morning
+research and retrospectives. A live construction check produced complete 24,837-
+character morning and 18,947-character review prompts under the 28,000-character
+cap, including the reviewed audit cards and explicit provisional-evidence limits.

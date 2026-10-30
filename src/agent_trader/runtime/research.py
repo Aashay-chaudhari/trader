@@ -184,6 +184,59 @@ def market_packet(broker, store):
     return packet
 
 
+def forward_evidence(store):
+    """Bounded daily handoff; observational results never become execution authority."""
+    from .cohorts import ForwardLab
+    from .project import session_coverage
+
+    lab = ForwardLab(store).summary()
+    study = lab.get("study") or {}
+    dates = study.get("entry_dates", [])
+    return {
+        "kind": "descriptive_quote_observations_not_broker_profit",
+        "authority": "Inspect data gaps and failure modes. Do not promote, tune or amend the fixed study from provisional results.",
+        "unit": lab["unit"],
+        "window": {
+            "first_entry": dates[0] if dates else None,
+            "last_entry": dates[-1] if dates else None,
+            "report_after": study.get("report_after"),
+            "protocol_sha256": study.get("protocol_sha256"),
+        },
+        "trial_columns": [
+            "branch",
+            "rule",
+            "preregistered",
+            "open",
+            "closed",
+            "entry_dates",
+            "not_evaluable",
+            "net_horizon_mean",
+            "baseline_mean",
+            "stressed_mean",
+        ],
+        "trials": [
+            [
+                t[k]
+                for k in (
+                    "branch",
+                    "rule",
+                    "preregistered_opportunities",
+                    "open",
+                    "closed",
+                    "entry_sessions",
+                    "not_evaluable",
+                    "mean_horizon_net_return",
+                    "mean_horizon_baseline_return",
+                    "mean_horizon_stressed_return",
+                )
+            ]
+            for t in lab["trials"]
+        ],
+        "complete_observed_sessions": session_coverage(store)["complete_sessions"],
+        "caveats": "Means condition on evaluable observations; variants/symbols/dates are not established independent samples. No guaranteed fills, portfolio P&L or edge established.",
+    }
+
+
 def research_prompt(day, packet, store):
     from .exploration import knowledge_context
 
@@ -256,6 +309,7 @@ REUSABLE RESEARCH (independently reviewed; evidence levels are explicit):
 Use relevant reviewed hypotheses to guide today's discovery, contrary-evidence checks and plan design.
 State which knowledge IDs informed a thesis. Never treat research review or a historical screen as proven edge.
 Existing lessons are proposals unless marked tested.\nMEMORY:{json.dumps(memory)}
+FORWARD EVIDENCE (provisional, separate from source review and broker P&L):{json.dumps(forward_evidence(store), separators=(",", ":"))}
 STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str, separators=(",", ":"))}
 """
     )
@@ -347,6 +401,7 @@ def review_prompt(day, store):
         "experiments": trials,
         "experiment_count": len(all_trials),
         "research_knowledge": knowledge_context(store, max_chars=3500),
+        "forward_evidence": forward_evidence(store),
         "incumbents": {
             b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
             for b in ("intraday", "swing", "options")

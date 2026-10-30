@@ -75,6 +75,14 @@ def test_cohorts_preregistered_before_open_and_idempotent(store):
     )
     assert swing["exit_at"] == "2026-11-05T15:48:00-05:00"  # actual sessions cross DST
     assert swing["promotion_eligible"] is False
+    from agent_trader.runtime.research import forward_evidence, research_prompt
+
+    evidence = forward_evidence(store)
+    assert sum(row[3] for row in evidence["trials"]) == 24
+    assert all(row[7] is None for row in evidence["trials"])
+    assert evidence["kind"] == "descriptive_quote_observations_not_broker_profit"
+    prompt = research_prompt(before.date().isoformat(), {}, store)
+    assert evidence["window"]["protocol_sha256"] in prompt
 
 
 def test_no_after_open_freeze_or_historical_backfill(store):
@@ -294,6 +302,8 @@ def test_review_packet_is_complete_json_and_reports_selection(store):
     assert context["event_counts"] == [{"kind": "incident", "n": 80}]
     assert len(context["selected_events"]) <= 40 and "instructions" in context
     assert "raw_large_blob" not in prompt
+    assert "forward_evidence" in context
+    assert context["forward_evidence"]["complete_observed_sessions"] == 0
 
 
 def test_observational_lab_failure_does_not_prevent_owned_exit(config, broker, monkeypatch, plan):
