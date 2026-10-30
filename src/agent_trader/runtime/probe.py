@@ -94,7 +94,7 @@ def run_probe(config, run_id, kind="full", quick=False, scheduled_for=None):
             packet = market_packet(ResearchData(config), scratch)
             prompt = (
                 research_prompt(day, packet, scratch).replace(
-                    "Do up to 8 focused LIVE web searches",
+                    "Use at most 3 focused live searches and 3 source checks (6 web actions total)",
                     "Use at most two live search requests and two page checks (four web actions total)",
                 )
                 + "\nOPERATIONAL CHECK: return plans=[]; no trades or price plans. Cover verified current/next-session events. Keep each prose section under 500 characters."
@@ -121,7 +121,7 @@ def run_probe(config, run_id, kind="full", quick=False, scheduled_for=None):
                 raise ValueError("Frozen historical screen is required")
             prompt = (
                 exploration_prompt(day, scratch, screen).replace(
-                    "Use up to 12 focused live web searches",
+                    "Use at most 5 focused searches and 5 source checks (10 web actions total)",
                     "Use at most one live search and two page checks (three web actions total)",
                 )
                 + "\nOPERATIONAL CHECK: exactly two concise hypotheses, experiments=[], shadow_plans=[]. Use existing screened evidence and primary sources; no new executable contracts. Keep the response compact."

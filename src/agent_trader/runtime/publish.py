@@ -15,6 +15,9 @@ PUBLIC_EVENTS = {
     "research_probe_started",
     "research_probe_completed",
     "research_probe_failed",
+    "cohort_registered",
+    "cohort_error",
+    "research_audit_completed",
     "historical_screen",
     "exploration_completed",
     "research_validated",
@@ -79,6 +82,8 @@ def sanitize(value, config):
 def snapshot(config, store):
     from .exploration import knowledge_context
     from .experiments import Experiments
+    from .cohorts import ForwardLab, normalized_screen
+    from .project import project_snapshot
 
     progress = Experiments(store).progress()
     try:
@@ -160,6 +165,9 @@ def snapshot(config, store):
                 "SELECT at,day,branch,value FROM equity WHERE id IN (SELECT max(id) FROM equity GROUP BY branch,substr(at,1,16)) ORDER BY id DESC LIMIT 1800"
             ),
             "brief": store.get("brief", {}),
+            "project": project_snapshot(config, store),
+            "forward_lab": ForwardLab(store).summary(),
+            "official_calendar": store.get("official_calendar", {}),
             "pulses": store.get("pulses", [])[:10],
             "plans": plans,
             "events": events[:100],
@@ -187,7 +195,7 @@ def snapshot(config, store):
                     for k, v in store.get("exploration_draft", {}).items()
                     if k in ("summary", "day", "revision")
                 },
-                "historical_screen": store.get("historical_screen", {}),
+                "historical_screen": normalized_screen(store.get("historical_screen", {})),
                 "knowledge": knowledge_context(store, max_chars=None),
             },
             "review": store.get("review", {}),
@@ -207,7 +215,7 @@ def snapshot(config, store):
             "maintenance": store.get("maintenance_candidate"),
             "quota": quota,
             "usage": store.rows(
-                "SELECT at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta FROM usage ORDER BY id DESC LIMIT 150"
+                "SELECT at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,coalesce(json_extract(payload,'$.state'),'completed') state FROM usage ORDER BY id DESC LIMIT 150"
             ),
             "budget": {
                 "project_weekly_share": 80,

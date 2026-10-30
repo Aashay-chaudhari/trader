@@ -155,3 +155,56 @@ A full scheduled check runs research, hypothesis generation, separate review and
 scratch morning-handoff check. The status/events are in the local ledger and public
 journal; full reports remain private. IDs are idempotent after success. A failed
 check can be retried once under the same ID; changing IDs must not bypass budgets.
+
+## Fixed signal lab and evidence integrity
+
+The lab is automatic and observational: it has no order API or allocated capital.
+Morning market-data preparation freezes prior completed daily IEX bars, rule flags,
+exact normalized inputs and hashes privately in SQLite. Frozen inputs cannot be
+replaced by a later provider revision. Entries observe first valid quotes from
+open+5 to open+30; exits observe the recorded session close−12 minute window on
+holding session one or five. Early closes and DST follow the broker calendar.
+
+The first study preregisters twenty entry dates (October 30–November 27), followed
+by four possible swing-maturation sessions (final review after December 3 close).
+All twelve variants are reported; daily provisional results cannot trigger promotion
+or extend the window to find a winner. Missing entry/exit quotes are not evaluable,
+never synthetic fills or zero returns. Missing-history and overlap exclusions are
+reported separately. Observed abstentions may earn zero; net results condition on
+valid observations and are holding-horizon unit returns, not account P&L.
+
+`cohort_expected` is the opportunity denominator; `cohort_observations` contains
+open/closed/not-evaluable records. `cohort-inputs:<date>` retains private frozen
+inputs, `cohort-signals:<date>` their decision flags/hash, and `cohort_study` the
+fixed contract/reporting window. A protocol change after the study starts is rejected.
+Pre-observation amendments archive the original protocol hash explicitly.
+
+`session_health` records broker-confirmed five-minute slots. The Project view
+requires a fully instrumented completed session, at least 95% recorded slots and
+no unobserved gap above ten minutes before calling coverage complete. This is
+separate from the heartbeat, research availability, fills and restart drills.
+
+## Research context and official public resources
+
+BEA/BLS official ICS results are cached for six hours; recent failures back off for
+thirty minutes. Missing feeds remain unknown, and stale cached events are labeled.
+These feeds do not cover Fed policy meetings or a complete earnings calendar.
+Primary-source web verification remains necessary. Never substitute delayed FRED
+observations or indicative options data for current execution quotes.
+
+Roles get separate bounded contexts and explicit durable knowledge. Threads rotate
+after two turns or a measured input above 48,000 tokens; decision and independent
+review turns start fresh. Review packets contain complete selected JSON objects,
+counts and selection limits. Soft budget notices do not increase hard limits;
+failed/started calls with unreported totals are disclosed in System & usage.
+
+The one-off production design audit can be inspected with:
+
+```bash
+.venv/bin/python -m agent_trader.runtime.audit
+```
+
+It is idempotent after success, budgeted and scratch-isolated; only source/method
+reviewed definitions enter knowledge. It cannot create plans/contracts or certify
+profitability. Reports live under ignored `.runtime/audits/`. It is not a recurring
+nightly job. Normal retrospectives and controlled maintenance retain their schedule.

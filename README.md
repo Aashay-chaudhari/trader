@@ -1,6 +1,6 @@
 # Trader — the autonomous paper-trading laboratory
 
-Trader runs locally on this Windows PC through WSL Ubuntu. A scheduled supervisor
+Trader runs locally on this Windows PC through WSL Ubuntu. A systemd-owned supervisor
 uses authenticated Codex CLI sessions for research and judgment; Python owns broker
 access, risk enforcement, fills, ledgers, recovery, and closing routines. GitHub
 Pages publishes a sanitized, read-only view. No metered model API or paid data is used.
@@ -17,11 +17,12 @@ Options remain shadow-only while using the free indicative feed. No borrowing.
 
 ## Operation
 
-The Windows scheduled task `AgentTrader-LocalSupervisor` starts at 07:40 local
-Windows time and at sign-in. The runtime schedules trading in `America/New_York`,
-using Alpaca's calendar for holidays and early closes. Windows must remain powered,
-networked, and signed in; locking the desktop is fine. After reboot, sign in once
-so the user-owned WSL distribution and CLI authentication become available.
+The lingering `agent-trader.service` systemd user service owns the runtime and
+restarts it after exits/crashes. Hidden Windows tasks keep WSL alive and independently
+check/recover the service every two minutes. The old visible-console task is disabled.
+Schedules use `America/New_York` and Alpaca's holiday/early-close calendar. Windows
+must remain powered, networked and signed in; locking the desktop is fine. Sign in
+once after reboot to restore the user-owned WSL distribution and CLI authentication.
 
 The supervisor sends a 07:45 ET phone notification, begins research at 08:15, checks
 paper execution after 09:32, monitors throughout the session, begins intraday closing
@@ -36,7 +37,7 @@ reconciliation and closing do not wait for a model response.
 .venv/bin/python -m agent_trader run
 ```
 
-`run` holds a single-instance lock. The scheduler is the normal execution owner.
+`run` holds a single-instance lock. The systemd service is the normal execution owner.
 `doctor` performs read-only broker/quota/model checks. `smoke` performs an explicitly
 nonmarketable paper submission/cancellation check; a separate market-open round-trip
 must pass before equity pilots can submit normal entries.
@@ -110,3 +111,25 @@ The October 29 runtime interruption exposed a console-lifetime/recovery gap. The
 active owner is now `agent-trader.service` with automatic restarts, a hidden WSL
 keepalive host and a separate Windows heartbeat watchdog. The old visible-console
 task is disabled. See SYSTEM_GUIDE.md for hidden installation and recovery commands.
+
+## Project account and research acceleration
+
+The [Project & progress dashboard](https://aashay-chaudhari.github.io/trader/#project)
+explains the repo, architecture, decisions, schedule, public resources, evidence
+milestones and next questions. Its assessment is computed from recorded evidence;
+it does not express subjective feelings or assign a probability of profitability.
+October 29 was operationally missed, despite successful recovery drills afterwards.
+
+A separate deterministic lab preregisters twelve fixed signal/horizon protocols
+across thirty liquid symbols. It records observed quote opportunities even when
+there are no model trade plans. Missing entry/exit data remains not evaluable;
+results are holding-horizon unit returns, not portfolio profits or guaranteed fills.
+The first study fixes twenty entry sessions from October 30 through November 27,
+with final swing maturation through December 3. Provisional observations stay visible.
+This lab cannot submit orders or promote a strategy automatically.
+
+Official BEA calendar intake, explicit BLS fetch failures, complete review packets
+and bounded role-specific model contexts improve the daily handoff. Read the
+[primary-source review and limitations](PUBLIC_RESEARCH_NOTES.md) and
+[research workflow](RESEARCH_WORKFLOW.md). All existing paper/free-only risk and
+quota limits remain enforced.

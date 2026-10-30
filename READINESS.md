@@ -1,69 +1,64 @@
-# Release readiness — October 29, 2026
+# Release readiness — October 29, 2026 evening upgrade
 
-The local supervisor, broker ledger, research loop and rebuilt GitHub Pages dashboard
-are implemented. Operational activation evidence is recorded in IMPLEMENTATION_LOG.md.
+The local paper execution/research system and seven-view GitHub Pages dashboard
+are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
 
-## Verified
+## Verified locally
 
-- Active Alpaca **paper** account: $30,000 cash/equity, no positions or open orders.
-  Three internal allocations of $10,000; borrowing disabled by the application.
-- Nonmarketable one-share SPY limit accepted and canceled; **zero fills**.
-- Subscription-authenticated Codex inference, live web search, model switching,
-  and recovery of the same thread after restarting the CLI process.
-- Free data integration: 30 market snapshots, 30 daily indicator sets, five dated
-  FRED macro series, 30 indicative option samples; no paid fallback.
-- 248 regression tests (including 78 active-runtime tests), active-runtime/test
-  lint and JavaScript syntax checks. One legacy dependency deprecation warning.
-- Chromium checks of six dashboard views at desktop and 390px mobile widths,
-  including populated research/options, long text and escaped HTML fixtures.
-- Isolated maintenance candidate validation, branch commit and shadow registration;
-  operational state remained unchanged during this test.
+- Active Alpaca paper account: $30,000 cash/equity, no positions or open orders,
+  zero fills. Three separate $10,000 allocations; no borrowing or live endpoint.
+- Nonmarketable paper submission/cancellation passed. Actual regular-session
+  fill/exit/reconciliation remains pending and blocks normal equity entries.
+- Subscription-authenticated inference, live web use, model routing and persistent
+  thread recovery. Soft budget steering was acknowledged in real app-server checks;
+  their factual answers explicitly retained unknowns rather than inventing sources.
+- Thirty free market snapshots, thirty daily indicator sets, five dated FRED series
+  and indicative options observations. BEA official calendar fetched/parsed; BLS
+  direct feed returns 403, explicitly unavailable with ordinary official-web fallback.
+- 266 regression tests, including 96 active-runtime tests; runtime/test lint.
+  One pre-existing legacy dependency deprecation warning.
+- Chromium checks of all seven views at desktop and 390px mobile widths, including
+  Project section navigation. Source JavaScript is also checked by CI.
+- Actual interrupt/crash/stopped-service recovery drills. Independent Windows
+  watchdog restored a fully stopped service in 72 seconds. Hidden launchers remain.
+- Two isolated real research checks and the persistent October 29 19:00 timer.
+  Scheduled research completed at 19:02:38 with two hypotheses held. Separate
+  scratch checks verified positive research-to-morning retrieval without live import.
+- An independent design repair/review accepted two observational definitions for
+  testing; six total source/method-reviewed catalogue cards feed morning research.
+- Twelve forward protocols preregistered, 360 opportunities prepared for October 30.
+  Exact normalized inputs retained privately with canonical hashes. Zero actual
+  cohort observations or completed forward returns at activation.
 
-## First session: Thursday, October 29
+## Next trading session: Friday, October 30
 
-- 07:40 ET: Windows daily task trigger; supervisor also starts at user sign-in.
-- 07:45 ET: startup notification. 08:15 ET: structured morning research.
-- From 09:32 ET: one-share paper fill/exit/reconciliation check. Equity pilots may
-  activate only after that check passes. Failure keeps research/shadow mode active.
-- Twelve minutes before the broker-reported close: flatten intraday holdings.
-- After close: results, retrospective, challenger evaluation and bounded maintenance.
+- The systemd user service runs continuously; hidden Windows host/watchdog tasks
+  keep WSL available and check independent health every two minutes.
+- 07:45 ET startup notification; 08:15 structured research; exploration/review and
+  brief refresh from 08:35, subject to quota and data availability.
+- From 09:32: controlled one-share paper fill/exit gate, required before pilots.
+- 09:35–10:00: first valid quote observations for fixed cohorts; no forced orders.
+- Twelve minutes before the actual broker close: intraday closing and due cohort
+  exit observations. After-close results, review and controlled maintenance follow.
 
 ## Explicit boundaries
 
-The actual market-open fill/exit test is **pending**, not already passed. Options
-remain research/shadow because the free indicative feed is unsuitable for the
-execution-quality gate. No live trading switch exists in this release.
+October 29 was operationally missed after heartbeat stopped at 08:12 ET. The
+initiating termination source is unconfirmed. Recovery drills and fresh heartbeats
+do not demonstrate a completed unattended trading day. Coverage instrumentation
+starts with this upgrade; no earlier all-day record is fabricated.
 
-Code evolution initially supports pure strategy-filter changes, with isolated tests
-and forward shadow evaluation. Broader role/orchestration changes are recorded as
-proposals until an executable evaluation contract supports them.
+Source/method review, historical screens, forward quote returns and broker P&L are
+separate evidence. No profitable strategy or live-money readiness is claimed.
+The fixed signal lab cannot submit orders or promote variants; its twenty entry
+sessions end November 27, with final swing maturation through December 3.
 
-Keep Windows powered, connected and signed in (the screen may be locked). After a
-reboot, signing in starts the task. Broker protection and Python closing routines
-continue when CLI inference is unavailable; new entries are blocked.
+Options remain indicative-data research/shadow. Code evolution supports tested
+pure strategy filters in isolated worktrees followed by forward evaluation; broader
+orchestration changes remain proposals. Risk and quota gates remain fixed.
 
-Public dashboard: https://aashay-chaudhari.github.io/trader/
-Operator procedures: SYSTEM_GUIDE.md. Persistent vision: REFACTOR_SCOPE.md.
+Keep Windows powered, connected and signed in; locking is fine. Sign in after a
+reboot. There is no external monitor for complete PC/network outages.
 
-Research sprint update: twelve fixed historical screens are complete, eight shadow
-challengers are registered, and four independently reviewed knowledge cards are
-available to the morning brief. Nine hypotheses and thirteen sources were assessed;
-reviewer approval plus automated reference checks gate reuse. None is labeled
-forward-validated or proven profitable. See RESEARCH_WORKFLOW.md.
-
-## October 29 reliability correction
-
-The first unattended trading session failed operationally: heartbeat stopped at
-08:12 ET. No trades/forward shadow observations occurred. The initiating control-
-exit source is unknown. Runtime ownership is now a lingering systemd user service
-plus a hidden Windows WSL host and an independent two-minute heartbeat watchdog.
-Actual SIGINT, SIGKILL and stopped-service recovery drills passed (the Windows
-watchdog recovered the fully stopped service within 72 seconds). This verifies
-recovery paths, not a completed unattended trading day.
-
-Two real isolated research checks passed after correcting a quick-test web-action
-budget mismatch. A one-time timer fired at 19:00 New York time on October 29 and
-completed the full non-trading pipeline at 19:02:38. Research yielded nine sources;
-both proposed hypotheses were held for revision. A separate dummy produced two
-reviewed cards and verified their scratch morning retrieval. Production knowledge
-and broker exposure remained unchanged. Final probe CI passed.
+Dashboard: https://aashay-chaudhari.github.io/trader/#project
+Operations: SYSTEM_GUIDE.md. Primary research: PUBLIC_RESEARCH_NOTES.md.

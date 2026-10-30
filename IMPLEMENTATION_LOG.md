@@ -267,3 +267,36 @@ service exited zero. All three completion notifications were server-accepted.
 Public snapshot exposes all receipts; model work remained bounded under existing
 quota limits. Production still has four reviewed cards and no executable plans or
 positions. The main service/watchdog remain active after the one-time timer retired.
+
+## Public-resource and learning acceleration — October 29 late evening
+
+- Primary-source review covers agent-trading evaluation, multiple-testing risk,
+  reversal mechanisms, official release calendars and public-data limitations.
+  PUBLIC_RESEARCH_NOTES.md records citations, selected changes and limits.
+- New official BEA/BLS ICS collector validates dates/time zones, source URLs,
+  payload size and unsupported recurrence, caches six hours and backs off failures.
+  Actual BEA fetch yielded three dated events; BLS returned 403 and stays unknown.
+  Five dated FRED series and thirty completed-bar indicator sets were verified.
+- Added an independent deterministic forward lab: six fixed rules × one/five-session
+  horizons; actual quote windows, numerical costs, frozen normalized inputs/hashes,
+  missing-data denominators and overlap exclusions. It has no broker order authority.
+  Twenty entry dates are fixed October 30–November 27, final maturity December 3.
+  Day-one preparation records 360 planned opportunities and zero quote observations.
+  Pre-observation input/protocol amendments archive originals explicitly.
+- Preserved historical raw data/hash/split. Derived fields now identify horizon unit
+  returns, never daily portfolio P&L. Correlated symbols/variants are not independent.
+- Independent research audit initially held two definitions; a revised precise
+  protocol passed a fresh reviewer for descriptive testing only. Six total reviewed
+  knowledge cards are now available to the morning loop, no new executable plans.
+- Separated/rotated role contexts, fresh decision/review contexts, complete bounded
+  retrospective JSON and explicit selection/counts. Failed inference calls expose
+  missing token totals. Real app-server soft-steering acknowledgments passed;
+  hard ceilings and 80% weekly/20% reserve policy remain unchanged.
+- Added broker-confirmed five-minute session coverage, separate from heartbeats,
+  drill success and fills. Auxiliary cohort/coverage errors cannot block owned exits.
+- Added Project & progress: architecture, decisions, automations, resource register,
+  repo map, research agenda and computed assessment. October 29's operational miss
+  remains explicit. No subjective feelings or probability-of-profitability score.
+- Local full regression: 266 passed (96 runtime), one legacy dependency warning;
+  runtime/test lint passed. Seven-view Chromium desktop/mobile QA and in-page
+  Project navigation passed. Deployment/activation receipts follow below.

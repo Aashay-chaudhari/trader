@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+
+from .config import ET
 
 from .store import utc_now
 
@@ -50,7 +52,8 @@ Intraday positions must close that session. Code enforces $100 maximum planned l
 $200 daily branch loss threshold, 10% drawdown pause and conservative pilot sizing.
 Initial strategies are unproven paper experiments. New variants need forward tests.
 Never label a lesson or strategy proven from a single day. Do not change risk policy.
-The same daily thread may contain previous role work; follow this turn's role/schema.
+Use the supplied durable knowledge and evidence packet; other roles use separate,
+bounded contexts. Follow this turn's role/schema.
 """
 
 
@@ -76,19 +79,36 @@ def market_packet(broker, store):
         packet["unknowns"].append(f"Snapshots unavailable: {type(exc).__name__}")
     try:
         bars = broker.bars(UNIVERSE)
+        from .cohorts import freeze_signals
+        from .exploration import clean_bars
+        from .engine import timestamp
+
+        trade_day = datetime.now(ET).date().isoformat()
+        completed = clean_bars(bars, trade_day)
         indicators = {}
-        for symbol, values in bars.items():
+        for symbol, values in completed.items():
             closes = [float(v["c"]) for v in values]
-            vols = [float(v["v"]) for v in values]
+            volume_by_day = {
+                timestamp(row["t"]).astimezone(ET).date().isoformat(): row.get("v")
+                for row in bars.get(symbol, [])
+            }
+            vols = [volume_by_day.get(row["day"]) for row in values[-20:]]
             if len(closes) >= 20:
                 indicators[symbol] = {
                     "last_daily_close": closes[-1],
                     "sma20": sum(closes[-20:]) / 20,
                     "return_5d": closes[-1] / closes[-6] - 1 if len(closes) > 5 else None,
-                    "average_daily_volume_20_iex_only": sum(vols[-20:]) / 20,
-                    "asof": values[-1]["t"],
+                    "average_daily_volume_20_iex_only": sum(float(v) for v in vols) / 20
+                    if all(v is not None for v in vols)
+                    else None,
+                    "asof": values[-1]["day"],
                 }
         packet["daily_indicators"] = indicators
+        if hasattr(broker, "calendar_range"):
+            sessions = broker.calendar_range(
+                trade_day, (datetime.now(ET).date() + timedelta(days=45)).isoformat()
+            )
+            freeze_signals(store, bars, sessions)
     except Exception as exc:
         packet["unknowns"].append(f"Daily bars unavailable: {type(exc).__name__}")
     # Free macro CSV observations. These are daily/delayed, not execution quotes.
@@ -100,12 +120,12 @@ def market_packet(broker, store):
             "https://fred.stlouisfed.org/graph/fredgraph.csv",
             params={
                 "id": ",".join(series),
-                "cosd": (date.today() - timedelta(days=14)).isoformat(),
+                "cosd": (datetime.now(ET).date() - timedelta(days=14)).isoformat(),
             },
             timeout=20,
         )
         response.raise_for_status()
-        observations = parse_macro_download(response.content, series, date.today())
+        observations = parse_macro_download(response.content, series, datetime.now(ET).date())
         packet["macro_daily_delayed"] = {
             name: {
                 **value,
@@ -142,6 +162,9 @@ def market_packet(broker, store):
         except Exception as exc:
             options["unknowns"].append(underlying + ": " + type(exc).__name__)
     store.set("options_research", options)
+    from .calendars import official_calendar
+
+    packet["official_release_calendar"] = official_calendar(store)
     packet["options_data_summary"] = {
         "feed": "indicative",
         "contracts_observed": len(options["contracts"]),
@@ -164,8 +187,28 @@ def market_packet(broker, store):
 def research_prompt(day, packet, store):
     from .exploration import knowledge_context
 
-    knowledge = knowledge_context(store)
+    knowledge = knowledge_context(store, max_chars=4500)
     compact = {k: v for k, v in packet.items() if k != "market"}
+    if "official_release_calendar" in compact:
+        cal = compact["official_release_calendar"]
+        compact["official_release_calendar"] = {
+            "sources": cal["sources"],
+            "unknowns": cal["unknowns"],
+            "events": [
+                {
+                    k: e[k]
+                    for k in (
+                        "title",
+                        "when",
+                        "timing_known",
+                        "source_url",
+                        "agency",
+                        "calendar_status",
+                    )
+                }
+                for e in cal["events"][:8]
+            ],
+        }
     compact["market"] = {
         symbol: {
             "trade": {k: v for k, v in (d.get("latestTrade") or {}).items() if k in ("p", "t")},
@@ -181,7 +224,7 @@ def research_prompt(day, packet, store):
         "SELECT layer,payload FROM memory WHERE layer='lesson' AND (expires IS NULL OR expires>?) ORDER BY at DESC LIMIT 8",
         (utc_now(),),
     )
-    while len(json.dumps(memory)) > 2500 and memory:
+    while len(json.dumps(memory)) > 1500 and memory:
         memory.pop()
     # Keep complete objects within the shared model input cap.
     while len(json.dumps(compact, separators=(",", ":"))) > 14000 and compact.get("market"):
@@ -190,11 +233,13 @@ def research_prompt(day, packet, store):
         BASE
         + f"""
 ROLE: morning researcher. Trading date: {day}. Current UTC: {utc_now()}.
-Do up to 8 focused LIVE web searches. Cover rates/bonds, Fed and macro releases,
+Use at most 3 focused live searches and 3 source checks (6 web actions total). Cover rates/bonds, Fed and macro releases,
 earnings/company filings, market breadth/sectors, cross-market developments and
 relevant narratives. Prefer federalreserve.gov, treasury.gov, bls.gov, bea.gov,
 sec.gov and company investor-relations pages. Record actual source/event dates.
 For earnings state exact timing only when verified; otherwise mark unknown.
+The official-release calendar is independently fetched; stale/unavailable coverage
+is explicit. BLS/BEA calendars do not cover Fed dates or company earnings. Verify those separately.
 Daily macro observations and IEX daily bars below may be stale; report their age.
 Explore a liquid universe plus catalyst discoveries. Produce up to 4 executable
 EQUITY plans total, each with a narrow observable entry interval, stop, target,
@@ -238,32 +283,85 @@ def decision_prompt(plan, quote, brief, held):
 
 def review_prompt(day, store):
     from .exploration import knowledge_context
+    from .experiments import Experiments
 
-    events = store.rows(
-        "SELECT at,kind,branch,payload FROM events WHERE at>=? ORDER BY id DESC LIMIT 55", (day,)
+    raw_events = store.rows(
+        "SELECT at,kind,branch,payload FROM events WHERE at>=? AND kind!='market_observation' ORDER BY id DESC LIMIT 40",
+        (day,),
     )
+    events = []
+    for event in raw_events:
+        p = json.loads(event["payload"])
+        selected = {
+            k: p[k]
+            for k in (
+                "summary",
+                "reason",
+                "code",
+                "symbol",
+                "side",
+                "qty",
+                "price",
+                "sessions",
+                "samples",
+                "promoted",
+                "error_type",
+            )
+            if k in p
+        }
+        for key, value in list(selected.items()):
+            if isinstance(value, str):
+                selected[key] = value[:450]
+        events.append({k: v for k, v in event.items() if k != "payload"} | {"facts": selected})
+    trials = []
+    progress = Experiments(store).progress()
+    all_trials = store.rows("SELECT * FROM experiments")
+    for row in all_trials[:18]:
+        spec = json.loads(row["payload"])
+        trials.append(
+            {
+                "id": row["id"],
+                "branch": row["branch"],
+                "state": row["state"],
+                "hypothesis": spec.get("hypothesis", "")[:400],
+                "exact_change": spec.get("exact_change"),
+                "parent_version": spec.get("parent_version"),
+                "minimum_sessions": spec.get("minimum_sessions"),
+                "minimum_samples": spec.get("minimum_samples"),
+                "progress": progress.get(row["id"]),
+            }
+        )
+    context = {
+        "instructions": "Separate operational failure, decision quality and luck. Propose at most six diverse challengers per equity branch. Never infer edge from one day, research acceptance, historical screens or recovery drills. Return Review JSON. Prefer no change without evidence.",
+        "day": day,
+        "branches": store.rows("SELECT * FROM branches"),
+        "latest_equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
+        "event_counts": store.rows(
+            "SELECT kind,count(*) n FROM events WHERE at>=? GROUP BY kind", (day,)
+        ),
+        "fills": store.rows("SELECT count(*) n FROM events WHERE kind='fill' AND at>=?", (day,))[0][
+            "n"
+        ],
+        "selected_events": events,
+        "event_selection": "Most recent non-market-observation events; summaries bounded, raw journal retained locally",
+        "experiments": trials,
+        "experiment_count": len(all_trials),
+        "research_knowledge": knowledge_context(store, max_chars=3500),
+        "incumbents": {
+            b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
+            for b in ("intraday", "swing", "options")
+        },
+    }
+    while (
+        len(json.dumps(context, default=str, separators=(",", ":"))) > 22000
+        and context["selected_events"]
+    ):
+        context["selected_events"].pop()
+    context["events_in_packet"] = len(context["selected_events"])
     return (
         BASE
-        + "\nROLE: daily retrospective and experiment designer.\n"
-        + json.dumps(
-            {
-                "day": day,
-                "branches": store.rows("SELECT * FROM branches"),
-                "equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
-                "events": events,
-                "experiments": store.rows("SELECT * FROM experiments"),
-                "research_knowledge": knowledge_context(store),
-                "incumbents": {
-                    b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
-                    for b in ("intraday", "swing", "options")
-                },
-                "instructions": "Separate operational failure, decision quality and luck. Propose up to six diverse concurrent challengers "
-                "per equity branch; each must include id, branch, hypothesis, exact_change, parent_version, minimum_sessions "
-                "(>=20), minimum_samples (>=30), cost_model and metrics. Prefer no change when evidence is weak. "
-                "code_changes may contain problem, hypothesis, requested_change and validation_plan only. "
-                "Do not claim causal learning from one session. Return Review JSON.",
-            }
-        )[:22000]
+        + "\nROLE: retrospective and experiment designer.\n"
+        + json.dumps(context, default=str, separators=(",", ":"))
     )
 
 

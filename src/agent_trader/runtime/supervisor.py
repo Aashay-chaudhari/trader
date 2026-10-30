@@ -12,6 +12,7 @@ from datetime import UTC, datetime, timedelta
 from .agent import CodexRPC, run_task
 from .broker import Broker
 from .config import ET
+from .cohorts import ForwardLab
 from .engine import Engine, TERMINAL, order_id, quote_values, timestamp
 from .experiments import Experiments
 from .models import (
@@ -98,7 +99,7 @@ means hold with an explicit concern; broker-held protection remains active.
         elif role == "pulse":
             prompt = (
                 BASE
-                + "\nROLE: focused market-event update. Use at most 3 web searches. "
+                + "\nROLE: focused market-event update. Use at most one focused search and one source check (two web actions total). "
                 + json.dumps(
                     {
                         "now": utc_now(),
@@ -153,6 +154,9 @@ class Supervisor:
         self.broker = Broker(config)
         self.engine = Engine(config, self.store, self.broker)
         self.experiments = Experiments(self.store)
+        self.cohorts = ForwardLab(self.store)
+        if not self.store.get("coverage_tracking_started"):
+            self.store.set("coverage_tracking_started", utc_now())
         self.pool = concurrent.futures.ThreadPoolExecutor(
             max_workers=1, thread_name_prefix="research"
         )
@@ -177,6 +181,27 @@ class Supervisor:
             reason,
             urgent=True,
         )
+
+    def cohort_check(self, label, action, default=None):
+        # The observational lab must never prevent order protection or closing.
+        try:
+            return action()
+        except Exception as exc:
+            key = "cohort-warning:" + datetime.now(ET).date().isoformat() + ":" + label
+            if not self.store.get(key):
+                self.store.event(
+                    "cohort_error",
+                    {
+                        "summary": "Observational cohort "
+                        + label
+                        + " deferred ("
+                        + type(exc).__name__
+                        + "); broker routines continue."
+                    },
+                )
+                self.store.set(key, True)
+            LOG.warning("Cohort %s deferred: %s", label, type(exc).__name__)
+            return default
 
     def launch(self, key, role, context, day):
         if (self.config.state_dir / "agent-pause.flag").exists():
@@ -583,6 +608,7 @@ class Supervisor:
         now = now.astimezone(ET)
         day = now.date().isoformat()
         self.store.set("heartbeat", now.isoformat())
+        self.cohort_check("expiry", lambda: self.cohorts.expire(now))
         # The Windows watchdog reads this directly even when Pages/export fail.
         self.config.state_dir.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(
@@ -693,6 +719,14 @@ class Supervisor:
                 self.maybe_publish()
                 return
             self.engine.ensure_protection()
+            slot = int((now - opened).total_seconds() // 300)
+            self.cohort_check(
+                "session_health",
+                lambda: self.store.db.execute(
+                    "INSERT OR REPLACE INTO session_health VALUES(?,?,?,?,?)",
+                    (day, slot, now.isoformat(), 1, int(self.store.get("brief_day") == day)),
+                ),
+            )
             if not ready.get("execution_verified") and self.store.get("market_open"):
                 try:
                     self.smoke(now, opened, close)
@@ -833,21 +867,31 @@ class Supervisor:
 
     def finish_shadow(self, now, closing=False):
         symbols = [x["symbol"] for x in self.store.rows("SELECT * FROM shadow WHERE state='open'")]
-        quotes = self.broker.quotes(sorted(set(symbols) | {"SPY"}))
+        cohort_symbols = self.cohort_check(
+            "symbols", lambda: self.cohorts.symbols(now.date().isoformat()), set()
+        )
+        quotes = self.broker.quotes(sorted(set(symbols) | cohort_symbols | {"SPY"}))
         self.experiments.mark(quotes, now, closing=closing)
+        self.cohort_check("mark", lambda: self.cohorts.mark(quotes, now))
         self.benchmarks(quotes, now)
 
     def market_tick(self, now, close):
         plans = self.engine.plans()
         exploration_plans = self.store.get("exploration_shadow_plans", [])
+        cohort_symbols = self.cohort_check(
+            "symbols", lambda: self.cohorts.symbols(now.date().isoformat()), set()
+        )
         symbols = sorted(
             {p["symbol"] for p in plans + exploration_plans}
             | {h["symbol"] for h in self.store.rows("SELECT * FROM holdings")}
             | {"SPY", "QQQ", "TLT"}
             | {x["symbol"] for x in self.store.rows("SELECT * FROM shadow WHERE state='open'")}
+            | cohort_symbols
         )
         quotes = self.broker.quotes(symbols)
         self.store.set("quotes", quotes)
+        calendar = self.store.get("calendar:" + now.date().isoformat(), [])
+        session = session_times(calendar, now.date().isoformat())
         self.benchmarks(quotes, now)
         brief = self.store.get("brief", {})
         from agent_trader.strategies.adaptive import candidate_filter
@@ -931,6 +975,11 @@ class Supervisor:
             except ValueError:
                 continue
         self.experiments.mark(quotes, now)
+        if session:
+            self.cohort_check(
+                "entry observations", lambda: self.cohorts.observe(quotes, now, *session)
+            )
+            self.cohort_check("mark", lambda: self.cohorts.mark(quotes, now))
 
     def pending_research_validation(self, day):
         draft = self.store.get("exploration_draft", {})

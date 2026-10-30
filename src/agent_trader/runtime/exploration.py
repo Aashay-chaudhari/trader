@@ -219,6 +219,9 @@ def prepare_screen(config, broker, store):
 
 
 def exploration_prompt(day, store, screen):
+    from .cohorts import normalized_screen
+
+    screen = normalized_screen(screen)
     from .research import BASE
 
     return (
@@ -235,7 +238,7 @@ def exploration_prompt(day, store, screen):
                 },
                 "historical_screen": screen,
                 "existing_experiments": store.rows("SELECT id,branch,state FROM experiments"),
-                "instructions": "Use up to 12 focused live web searches, primary research and official sources. "
+                "instructions": "Use at most 5 focused searches and 5 source checks (10 web actions total), primary research and official sources. "
                 "Investigate distinct families: momentum/breakout, mean reversion/pullbacks, earnings/catalysts, macro/rates/regimes, "
                 "and options volatility/event hypotheses (options research only). Explain economic mechanism, contrary evidence, "
                 "free-data feasibility, costs, failure modes and a falsification test. Historical screens are exploratory, "
@@ -273,6 +276,8 @@ def record_report(store, report, day, *, morning=True):
 
 
 def validation_prompt(store):
+    from .cohorts import normalized_screen
+
     from .research import BASE
 
     draft = store.get("exploration_draft", {})
@@ -280,11 +285,11 @@ def validation_prompt(store):
         "revision": draft.get("revision"),
         "hypotheses": draft.get("hypotheses", []),
         "sources": draft.get("sources", []),
-        "historical_screen": store.get("historical_screen", {}),
+        "historical_screen": normalized_screen(store.get("historical_screen", {})),
     }
     instructions = """
 ROLE: independent research validator, not the original researcher.
-Use up to 4 live searches to check primary sources and important counterevidence.
+Use at most 1 focused search and 2 source checks (3 web actions total) to check primary sources and counterevidence.
 For EVERY hypothesis return exactly one verdict. Accept for testing only when cited
 evidence supports the mechanism, falsification is concrete, and free-data limits
 are explicit. Reject fabricated citations and historical claims unsupported by the

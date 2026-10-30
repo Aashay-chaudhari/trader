@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
+
+from .config import ET
 
 import httpx
 
@@ -110,8 +112,8 @@ class Broker:
                 "symbols": ",".join(symbols),
                 "timeframe": "1Day",
                 "feed": "iex",
-                "start": (date.today() - timedelta(days=days)).isoformat(),
-                "end": (datetime.now().astimezone() - timedelta(minutes=20)).isoformat(),
+                "start": (datetime.now(ET).date() - timedelta(days=days)).isoformat(),
+                "end": (datetime.now(ET) - timedelta(minutes=20)).isoformat(),
                 "limit": 10000,
                 "adjustment": "all",
             },

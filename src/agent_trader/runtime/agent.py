@@ -190,10 +190,15 @@ class CodexRPC:
         turn_id = turn["turn"]["id"]
         end = time.monotonic() + self.config.max_agent_seconds
         output, usage, cycles, searches = "", {}, 0, 0
+        budget_notice = False
+        budget_notice_status = "not_sent"
         pending = list(self.backlog)
         self.backlog.clear()
         while True:
             msg = pending.pop(0) if pending else self.receive(end)
+            if msg.get("id") == 999998:
+                budget_notice_status = "rejected" if msg.get("error") else "accepted"
+                continue
             params = msg.get("params", {})
             if params.get("threadId", thread_id) != thread_id:
                 continue
@@ -212,6 +217,30 @@ class CodexRPC:
                         }
                     )
                     raise AgentUnavailable("Task search/tool budget exhausted")
+            # Let an in-flight source finish before asking for the final answer.
+            # Hard ceilings above still interrupt at tool start.
+            if method == "item/completed":
+                if not budget_notice and (
+                    (max_searches > 1 and searches >= max_searches - 1) or cycles >= max_cycles - 3
+                ):
+                    self.send(
+                        {
+                            "id": 999998,
+                            "method": "turn/steer",
+                            "params": {
+                                "threadId": thread_id,
+                                "expectedTurnId": turn_id,
+                                "input": [
+                                    {
+                                        "type": "text",
+                                        "text": "The bounded task budget is nearly exhausted. Finish now with the evidence already obtained, explicit unknowns, and the required JSON schema. Do not request more tools.",
+                                    }
+                                ],
+                            },
+                        }
+                    )
+                    budget_notice = True
+                    budget_notice_status = "pending"
             if method == "item/agentMessage/delta":
                 output += params.get("delta", "")
                 if len(output) > 100000:
@@ -227,7 +256,17 @@ class CodexRPC:
                 if result_turn.get("status") != "completed":
                     raise AgentUnavailable("Codex turn failed or was interrupted")
                 break
-        return thread_id, json.loads(output), usage, {"searches": searches, "cycles": cycles}
+        return (
+            thread_id,
+            json.loads(output),
+            usage,
+            {
+                "searches": searches,
+                "cycles": cycles,
+                "budget_notice": budget_notice,
+                "budget_notice_status": budget_notice_status,
+            },
+        )
 
     def close(self):
         import signal
@@ -271,7 +310,14 @@ def budget_check(store, quota, role, now):
         return False, "Short-window quota nearly exhausted"
     today = now.astimezone(ET).date().isoformat()
     calls = store.rows("SELECT count(*) AS n FROM usage WHERE day=?", (today,))[0]["n"]
-    night_roles = ("retrospective", "maintenance", "weekly", "monthly")
+    night_roles = (
+        "retrospective",
+        "maintenance",
+        "weekly",
+        "monthly",
+        "research_audit",
+        "research_audit_review",
+    )
     critical_roles = ("decision", "position_review")
     ceiling = 24 if role in night_roles else (20 if role in critical_roles else 16)
     if calls >= ceiling:
@@ -317,11 +363,33 @@ def run_task(
             thread_key = (
                 f"thread:research_validation:{day}"
                 if role == "research_validation"
-                else f"thread:{day}"
+                else f"thread:{day}:{role}"
             )
             if scope:
                 thread_key = f"thread:probe:{scope}:{role}"
             thread_id = store.get(thread_key)
+            context_key = "context-policy:" + thread_key
+            context = store.get(context_key, {})
+            # Explicit memory is the durable handoff; do not grow one cross-role
+            # transcript indefinitely or expose a reviewer to the author's history.
+            fresh_roles = (
+                "decision",
+                "position_review",
+                "research_validation",
+                "research_audit_review",
+                "probe_validation",
+            )
+            rotated = bool(
+                thread_id
+                and (
+                    role in fresh_roles
+                    or context.get("turns", 0) >= 2
+                    or context.get("last_input_tokens", 0) > 48000
+                )
+            )
+            if rotated:
+                thread_id = None
+                context = {}
             t, payload, usage, counters = rpc.run(
                 thread_id,
                 prompt[: config.max_input_chars],
@@ -360,6 +428,14 @@ def run_task(
             after_w = next((w for w in after["windows"] if w["windowDurationMins"] >= 10000), {})
             delta = max(0, after_w.get("usedPercent", 0) - before_w.get("usedPercent", 0))
             last = usage.get("last") or usage.get("total") or {}
+            store.set(
+                context_key,
+                {
+                    "turns": context.get("turns", 0) + 1,
+                    "last_input_tokens": last.get("inputTokens", 0),
+                    "at": utc_now(),
+                },
+            )
             store.db.execute(
                 """UPDATE usage SET at=?,day=?,role=?,model=?,input_tokens=?,cached_tokens=?,output_tokens=?,quota_delta=?,payload=? WHERE id=?""",
                 (
@@ -375,7 +451,25 @@ def run_task(
                     usage_id,
                 ),
             )
-            store.event("agent_task", {"role": role, "model": model, **counters})
+            store.event(
+                "agent_task", {"role": role, "model": model, "context_rotated": rotated, **counters}
+            )
             return parsed.model_dump(mode="json")
+    except Exception as exc:
+        if "usage_id" in locals():
+            store.db.execute(
+                "UPDATE usage SET payload=? WHERE id=?",
+                (
+                    dumps(
+                        {
+                            "state": "failed",
+                            "error_type": type(exc).__name__,
+                            "partial_tokens": "unavailable unless reported before interruption",
+                        }
+                    ),
+                    usage_id,
+                ),
+            )
+        raise
     finally:
         store.close()

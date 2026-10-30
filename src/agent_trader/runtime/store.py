@@ -58,6 +58,15 @@ class Store:
           id INTEGER PRIMARY KEY, at TEXT, day TEXT, role TEXT, model TEXT,
           input_tokens INTEGER, cached_tokens INTEGER, output_tokens INTEGER,
           quota_delta REAL, payload TEXT);
+        CREATE TABLE IF NOT EXISTS cohort_observations(
+          id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT,
+          state TEXT, payload TEXT);
+        CREATE INDEX IF NOT EXISTS cohort_open ON cohort_observations(state,branch,rule,symbol);
+        CREATE TABLE IF NOT EXISTS cohort_expected(
+          id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT, payload TEXT);
+        CREATE TABLE IF NOT EXISTS session_health(
+          day TEXT, slot INTEGER, at TEXT, broker_confirmed INTEGER,
+          research_ready INTEGER, PRIMARY KEY(day,slot));
         """)
         for name in ("intraday", "swing", "options"):
             self.db.execute(

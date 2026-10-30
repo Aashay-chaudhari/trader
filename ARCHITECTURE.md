@@ -1,7 +1,8 @@
 # Architecture
 
 ```text
-Windows Task Scheduler → WSL local supervisor
+Hidden Windows WSL host + independent 2-minute watchdog
+  └─ lingering systemd user service → WSL local supervisor
   ├─ Python / 30-second tick
   │    ├─ Alpaca PAPER account, calendar, IEX data, orders and fills
   │    ├─ SQLite transactional branch ledger and durable work queue
@@ -9,8 +10,8 @@ Windows Task Scheduler → WSL local supervisor
   │    └─ sanitized static snapshot → Git push → Actions → GitHub Pages
   ├─ one bounded background model worker
   │    └─ local Codex app-server / existing subscription authentication
-  │         ├─ persistent daily thread, role/model selection between turns
-  │         ├─ morning researcher and event updates using live web search
+  │         ├─ bounded role-specific threads, role/model selection between turns
+  │         ├─ morning researcher, official calendars and live web event updates
   │         ├─ entry reviewer, daily retrospective, controlled maintenance
   │         └─ structured JSON validated before entering runtime state
   └─ ntfy free push notifications
@@ -56,3 +57,26 @@ publication. Graceful signal exits and forced crashes are covered by systemd's
 Restart=always; an intentional service stop is covered by the Windows watchdog.
 User lingering is enabled. This remains a local-PC design requiring Windows sign-in
 after reboot; complete power/network outages cannot self-report immediately.
+
+## Research evidence and context
+
+`cohorts.py` is a deterministic observational path, separate from execution and
+paired filter promotion. Before the open it freezes prior completed IEX daily bars,
+exact normalized inputs, flags and hashes. A fixed twenty-entry-session study uses
+actual broker sessions for one/five-session horizons, first eligible ask entries
+and bid exits, explicit assumed cost buffers and missing-data denominators.
+The lab has no broker order authority. Auxiliary lab/coverage failures are caught
+so they cannot interrupt an owned-position exit or the closing path.
+
+`calendars.py` caches official BEA/BLS feeds with provenance and failure backoff.
+Source failures remain unavailable/stale, not evidence of an empty calendar. Fed
+and earnings still require separate primary-source checks. `project.py` derives
+public decisions, schedule, coverage and evidence milestones from recorded state.
+Restart drills never substitute for whole-session or fill/exit verification.
+
+The model harness hands roles explicit durable knowledge, rotates after two turns
+or large measured input, and gives decision/reviewer roles fresh contexts. Complete
+bounded JSON packets replace raw string truncation for retrospective evidence.
+Soft budget steering asks for an answer after a completed tool item; hard runtime,
+search, cycle, account-reserve and daily-call ceilings remain in force. Failed
+attempts retain an explicit unreported-token status rather than appearing free.
