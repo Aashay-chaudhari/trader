@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-31T05:34:11.058115+00:00",
+  "generated_at": "2026-10-31T05:35:55.683578+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-31T01:34:09.112595-04:00",
+  "heartbeat": "2026-10-31T01:35:42.127946-04:00",
   "watchdog": {
-    "checked_at": "2026-10-31T05:34:03.4502857+00:00",
+    "checked_at": "2026-10-31T05:35:35.0539917+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
@@ -109,19 +109,37 @@
   ],
   "equity": [
     {
-      "at": "2026-10-31T05:34:10.687992+00:00",
+      "at": "2026-10-31T05:35:42.176539+00:00",
       "day": "2026-10-31",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-31T05:34:10.687992+00:00",
+      "at": "2026-10-31T05:35:42.176539+00:00",
       "day": "2026-10-31",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-31T05:34:10.687992+00:00",
+      "at": "2026-10-31T05:35:42.176539+00:00",
+      "day": "2026-10-31",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:34:41.063253+00:00",
+      "day": "2026-10-31",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:34:41.063253+00:00",
+      "day": "2026-10-31",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:34:41.063253+00:00",
       "day": "2026-10-31",
       "branch": "intraday",
       "value": 10000.0
@@ -10886,24 +10904,6 @@
     },
     {
       "at": "2026-10-30T15:36:47.360170-04:00",
-      "day": "2026-10-30",
-      "branch": "intraday",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:35:49.578813-04:00",
-      "day": "2026-10-30",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:35:49.578813-04:00",
-      "day": "2026-10-30",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:35:49.578813-04:00",
       "day": "2026-10-30",
       "branch": "intraday",
       "value": 10000.0
@@ -11059,7 +11059,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-10-31T05:34:11.101356+00:00",
+    "as_of": "2026-10-31T05:35:55.720445+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "No measured trading edge. The system is still collecting operational and forward evidence. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11817,6 +11817,26 @@
   ],
   "plans": [],
   "events": [
+    {
+      "id": 152,
+      "at": "2026-10-31T05:35:54.628530+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "execution-repair-20261031",
+        "title": "Trader - execution repair deployed"
+      }
+    },
+    {
+      "id": 151,
+      "at": "2026-10-31T05:35:53.260986+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Execution lifecycle repair activated: 287 tests and source CI passed, seven-view live-site QA passed, service reconciled. Independent follow-up confirms broker cancellation and pending real fill/exit gate.",
+        "source_commit": "ad2dafe9c2e4bb3c5eb04ea1caae7a517052277c"
+      }
+    },
     {
       "id": 150,
       "at": "2026-10-31T05:34:09.108132+00:00",
@@ -12971,25 +12991,6 @@
       "branch": null,
       "payload": {
         "pid": 199266
-      }
-    },
-    {
-      "id": 47,
-      "at": "2026-10-29T22:42:57.818660+00:00",
-      "kind": "supervisor_stopping",
-      "branch": null,
-      "payload": {
-        "signal": 15,
-        "pid": 199266
-      }
-    },
-    {
-      "id": 46,
-      "at": "2026-10-29T22:42:26.355868+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
       }
     }
   ],
@@ -15370,13 +15371,13 @@
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "pending_next_regular_session",
-    "ci": "pending_latest_source",
-    "pages": "pending_latest_snapshot",
-    "public_browser_qa": "pending_latest_snapshot",
-    "activated_at": "2026-10-30T01:04:43.154110+00:00",
+    "ci": "passed",
+    "pages": "passed",
+    "public_browser_qa": "passed",
+    "activated_at": "2026-10-31T05:35:53.250030+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-31T05:34:06.103128+00:00",
+    "updated_at": "2026-10-31T05:35:53.250012+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -15390,8 +15391,8 @@
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
     "profitability": "unproven",
-    "source_ci_run": 40983632867,
-    "pages_verified_run": 40983660049,
+    "source_ci_run": 41173094113,
+    "pages_verified_run": 41173121542,
     "asset_versioning": true,
     "execution_check_repair": true,
     "operational_evidence_review_verified": true
