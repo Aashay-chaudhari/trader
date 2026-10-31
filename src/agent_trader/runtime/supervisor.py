@@ -74,7 +74,7 @@ def worker(config, role, context, day):
                 ResearchValidation,
                 config.research_model,
                 "medium",
-                4,
+                6,
             )
         elif role == "decision":
             prompt, schema, model, effort, searches = (
@@ -97,19 +97,9 @@ means hold with an explicit concern; broker-held protection remains active.
             )
             schema, model, effort, searches = PortfolioReview, config.decision_model, "medium", 0
         elif role == "pulse":
-            prompt = (
-                BASE
-                + "\nROLE: focused market-event update. Use at most one focused search and one source check (two web actions total). "
-                + json.dumps(
-                    {
-                        "now": utc_now(),
-                        "brief": context.get("brief"),
-                        "symbols": context.get("symbols"),
-                        "instruction": "Check material changes to Fed/macro calendar, earnings or major catalysts affecting these holdings/plans. "
-                        "Do not invent fresh quotes or plans. Record unknowns. Return Pulse JSON.",
-                    }
-                )[:18000]
-            )
+            from .quality import pulse_prompt
+
+            prompt = pulse_prompt(context, store)
             schema, model, effort, searches = Pulse, config.light_model, "low", 3
         elif role in ("retrospective", "weekly", "monthly"):
             date = datetime.fromisoformat(day).date()
@@ -119,7 +109,7 @@ means hold with an explicit concern; broker-held protection remains active.
             if role == "monthly":
                 beginning = date.replace(day=1).isoformat()
             prompt, schema, model, effort, searches = (
-                review_prompt(beginning, store)
+                review_prompt(beginning, store, end_day=day)
                 + "\nReview period: "
                 + role
                 + " through "
@@ -132,9 +122,12 @@ means hold with an explicit concern; broker-held protection remains active.
             )
         elif role == "maintenance":
             from .maintenance import maintenance_prompt
+            from .quality import digest
 
             prompt, schema, model, effort, searches = (
-                maintenance_prompt(config, context),
+                maintenance_prompt(
+                    config, {**context, "research_quality_audit": digest(store, day)}
+                ),
                 MaintenanceProposal,
                 config.maintenance_model,
                 "high",
@@ -219,11 +212,13 @@ class Supervisor:
         key, role, context, day = self.task
         try:
             result = self.future.result()
+            original_result = json.loads(json.dumps(result))
             if role == "research":
                 # Never allow a research result from another session/date to enter
                 # the live queue. Expired plans remain visible but cannot execute.
                 self.store.set("brief", result)
                 self.store.set("brief_day", day)
+                self.store.set("brief_recorded_at", utc_now())
                 import hashlib
 
                 for plan in result["plans"]:
@@ -402,7 +397,10 @@ class Supervisor:
 
                 stage_change(self.config, self.store, result)
             self.store.job_end(key, True, {"role": role, "completed": utc_now()})
+            self.record_quality(day, role, original_result, key, "applied")
         except Exception as exc:
+            if "original_result" in locals():
+                self.record_quality(day, role, original_result, key, "rejected")
             if role in ("research", "decision", "position_review", "pulse"):
                 self.store.set("entry_budget_blocked", True)
             if role == "research":
@@ -416,6 +414,41 @@ class Supervisor:
             self.future = None
             self.task = None
             self.store.set("active_task", None)
+
+    def record_quality(self, day, role, result, key, outcome):
+        from .quality import record_artifact, daily_audit
+
+        try:
+            record_artifact(self.store, day, role, result, key, outcome)
+            daily_audit(self.store, day, persist=True)
+        except Exception as exc:
+            LOG.warning("Research-quality capture deferred: %s", type(exc).__name__)
+
+    def launch_period(self, role, day):
+        from .quality import derive_period, record_artifact, daily_audit
+
+        result = derive_period(self.store, role, day)
+        if result is None:
+            return self.launch(role + ":" + day, role, {}, day)
+        key = role + ":" + day
+        if not self.store.job_start(key):
+            return False
+        self.store.set(key, result)
+        self.store.event(
+            "period_review",
+            {"period": role, "summary": result["summary"], "derived_from": result["derived_from"]},
+        )
+        self.store.job_end(key, True, {"derived_from": result["derived_from"], "model_call": False})
+        self.cohort_check(
+            "derived_review_capture",
+            lambda: record_artifact(
+                self.store, day, role, result, key, origin="derived_period_review"
+            ),
+        )
+        self.cohort_check(
+            "research_quality_audit", lambda: daily_audit(self.store, day, persist=True)
+        )
+        return True
 
     def preflight(self):
         good = self.engine.reconcile()
@@ -880,7 +913,12 @@ class Supervisor:
                         now, close
                     ):
                         minutes = now.hour * 60 + now.minute
+                        exposed = bool(
+                            self.engine.plans() or self.store.rows("SELECT symbol FROM holdings")
+                        )
                         for checkpoint in (11 * 60, 13 * 60, 14 * 60 + 30):
+                            if not exposed and checkpoint != 13 * 60:
+                                continue  # one focused midday context pulse when no exposure/plans
                             if checkpoint <= minutes < checkpoint + 45:
                                 self.launch(
                                     f"pulse:{day}:{checkpoint}",
@@ -900,6 +938,11 @@ class Supervisor:
                                 break
             if now >= close + timedelta(minutes=15):
                 if self.store.get("review_day") != day:
+                    from .quality import daily_audit
+
+                    self.cohort_check(
+                        "research_quality_audit", lambda: daily_audit(self.store, day, persist=True)
+                    )
                     self.launch("review:" + day, "retrospective", {}, day)
                 elif now >= close + timedelta(minutes=35):
                     self.launch(
@@ -919,7 +962,7 @@ class Supervisor:
                 )
                 self.store.set(week_key, last_week_session)
             if last_week_session:
-                self.launch("weekly:" + day, "weekly", {}, day)
+                self.launch_period("weekly", day)
             if not self.future:
                 import calendar as month_calendar
 
@@ -936,7 +979,7 @@ class Supervisor:
                     )
                     self.store.set(last_key, is_last)
                 if is_last:
-                    self.launch("monthly:" + day, "monthly", {}, day)
+                    self.launch_period("monthly", day)
         if now >= close + timedelta(minutes=10):
             values = self.store.rows(
                 "SELECT * FROM equity WHERE id IN (SELECT max(id) FROM equity GROUP BY branch)"

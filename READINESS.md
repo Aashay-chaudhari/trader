@@ -15,7 +15,7 @@ are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
 - Thirty free market snapshots, thirty daily indicator sets, five dated FRED series
   and indicative options observations. BEA official calendar fetched/parsed; BLS
   direct feed returns 403, explicitly unavailable with ordinary official-web fallback.
-- 287 regression tests, including 117 active-runtime tests; runtime/test lint.
+- 307 regression tests, including 137 active-runtime tests; runtime/test lint.
   One pre-existing legacy dependency deprecation warning.
 - Chromium checks of all seven views at desktop and 390px mobile widths, including
   Project section navigation. Source JavaScript is also checked by CI.
@@ -79,3 +79,20 @@ Retrospective packets now include terminal order evidence and incident details;
 operational proposals are durable, with the original maintenance scope unchanged.
 A separate follow-up review preserves the original Friday daily review. Current
 source CI, deployment and follow-up receipts are in IMPLEMENTATION_LOG.md.
+
+## Research-quality upgrade — October 31
+
+Source/method rechecks covered the six Friday hypotheses and six legacy reviewed
+cards. Current catalogue: four reviewed-for-testing cards with explicit independent
+source attestations, thirteen held. Original reports/card history remain intact.
+
+A real free IEX historical replay returned 872 bars for thirty symbols, with VWAP
+available for all thirty and complete opening-five-minute coverage for twenty-six.
+That verifies retrieval/calculation, not point-in-time Friday decisions or future
+live freshness. A recent-end IEX request also succeeded off-hours. No observations
+were backfilled and no paper orders were submitted by these checks.
+
+Daily audit, durable artifacts/backlog, complete maintenance/review packets,
+focused pulses and explicit source checks are implemented. Main input cap remains
+28,000 characters; measured sample packets fit it. The regular-session fill/exit
+gate remains pending independently. Source CI/public QA receipts are logged below.

@@ -98,6 +98,9 @@ def market_packet(broker, store):
                     "last_daily_close": closes[-1],
                     "sma20": sum(closes[-20:]) / 20,
                     "return_5d": closes[-1] / closes[-6] - 1 if len(closes) > 5 else None,
+                    "return_3d": closes[-1] / closes[-4] - 1,
+                    "return_1d": closes[-1] / closes[-2] - 1,
+                    "preceding_20_close_high": max(closes[-21:-1]) if len(closes) >= 21 else None,
                     "average_daily_volume_20_iex_only": sum(float(v) for v in vols) / 20
                     if all(v is not None for v in vols)
                     else None,
@@ -111,6 +114,37 @@ def market_packet(broker, store):
             freeze_signals(store, bars, sessions)
     except Exception as exc:
         packet["unknowns"].append(f"Daily bars unavailable: {type(exc).__name__}")
+    packet["intraday_indicators"] = {}
+    try:
+        from .features import minute_features
+
+        local_now = datetime.now(ET)
+        cal = broker.calendar(local_now.date().isoformat()) if hasattr(broker, "calendar") else []
+        if cal:
+            opened = datetime.fromisoformat(
+                local_now.date().isoformat() + "T" + cal[0]["open"]
+            ).replace(tzinfo=ET)
+            closed = datetime.fromisoformat(
+                local_now.date().isoformat() + "T" + cal[0]["close"]
+            ).replace(tzinfo=ET)
+            if opened + timedelta(minutes=1) <= local_now < closed and hasattr(
+                broker, "intraday_bars"
+            ):
+                packet["intraday_indicators"] = minute_features(
+                    broker.intraday_bars(UNIVERSE, opened, local_now), local_now, opened, closed
+                )
+            else:
+                packet["unknowns"].append(
+                    "Current-session intraday features not collected outside the regular session."
+                )
+    except Exception as exc:
+        packet["unknowns"].append("Intraday IEX bars unavailable: " + type(exc).__name__)
+    from .features import research_focus
+
+    packet["focus_symbols"] = research_focus(packet, datetime.now(ET))
+    packet["feature_contract"] = (
+        "Completed provider daily/one-minute bars only. IEX-only ranges, volume and bar VWAP are research context, not consolidated execution prices. Missing minute bars/VWAP remain explicit. Focus ranks data readiness then absolute five-session return for research priority only, not a strategy or trade recommendation."
+    )
     # Free macro CSV observations. These are daily/delayed, not execution quotes.
     try:
         import httpx
@@ -172,6 +206,15 @@ def market_packet(broker, store):
         "unknowns": options["unknowns"],
     }
     store.set("market_packet", packet)
+    store.memory_put(
+        "research-input:" + now,
+        "research_input",
+        {
+            "day": datetime.now(ET).date().isoformat(),
+            "observed_at": now,
+            "packet": packet,
+        },
+    )
     # Persist forward observation, with no retroactive replacement.
     store.event(
         "market_observation",
@@ -213,6 +256,7 @@ def forward_evidence(store):
             "net_horizon_mean",
             "baseline_mean",
             "stressed_mean",
+            "closed_active_signals",
         ],
         "trials": [
             [
@@ -228,6 +272,7 @@ def forward_evidence(store):
                     "mean_horizon_net_return",
                     "mean_horizon_baseline_return",
                     "mean_horizon_stressed_return",
+                    "closed_signals",
                 )
             ]
             for t in lab["trials"]
@@ -241,7 +286,23 @@ def research_prompt(day, packet, store):
     from .exploration import knowledge_context
 
     knowledge = knowledge_context(store, max_chars=4500)
-    compact = {k: v for k, v in packet.items() if k != "market"}
+    selected = set(packet.get("focus_symbols", [])) | {"SPY", "QQQ", "TLT"}
+    if not packet.get("focus_symbols"):
+        selected |= set(list(packet.get("market", {}))[:3])
+    compact = {
+        k: v
+        for k, v in packet.items()
+        if k not in ("market", "daily_indicators", "intraday_indicators")
+    }
+    for field in ("daily_indicators", "intraday_indicators"):
+        compact[field] = {s: d for s, d in packet.get(field, {}).items() if s in selected}
+    compact["feature_coverage"] = {
+        field: len(packet.get(field, {}))
+        for field in ("market", "daily_indicators", "intraday_indicators")
+    }
+    compact["context_selection"] = (
+        "Numerical details for three research-priority symbols plus SPY/QQQ/TLT. Full universe observations remain stored locally. This is bounded discovery, not complete event coverage."
+    )
     if "official_release_calendar" in compact:
         cal = compact["official_release_calendar"]
         compact["official_release_calendar"] = {
@@ -272,6 +333,7 @@ def research_prompt(day, packet, store):
             "prior_close": d.get("prevDailyBar", {}).get("c"),
         }
         for symbol, d in packet.get("market", {}).items()
+        if symbol in selected
     }
     memory = store.rows(
         "SELECT layer,payload FROM memory WHERE layer='lesson' AND (expires IS NULL OR expires>?) ORDER BY at DESC LIMIT 8",
@@ -294,6 +356,12 @@ For earnings state exact timing only when verified; otherwise mark unknown.
 The official-release calendar is independently fetched; stale/unavailable coverage
 is explicit. BLS/BEA calendars do not cover Fed dates or company earnings. Verify those separately.
 Daily macro observations and IEX daily bars below may be stale; report their age.
+Prioritize at most three focus symbols for company/event verification. The supplied
+exact three-session return and IEX opening-range/bar-VWAP features may support
+conditional price levels only when present and fresh. Do not require paid consolidated
+quotes as a blanket prerequisite: IEX is the approved experiment feed, subject to
+the existing freshness/spread/risk gates. Verify event risk for each proposed symbol;
+checking an entire universe is not required and missing timing is never cleared.
 Explore a liquid universe plus catalyst discoveries. Produce up to 4 executable
 EQUITY plans total, each with a narrow observable entry interval, stop, target,
 expiry with timezone, concrete invalidation, event-risk check, and cited evidence.
@@ -308,6 +376,8 @@ REUSABLE RESEARCH (independently reviewed; evidence levels are explicit):
 {json.dumps(knowledge)}
 Use relevant reviewed hypotheses to guide today's discovery, contrary-evidence checks and plan design.
 State which knowledge IDs informed a thesis. Never treat research review or a historical screen as proven edge.
+Cards marked legacy_unattested are research leads requiring fresh source checks,
+not independently authenticated evidence. Source-check fields are reviewer attestations.
 Existing lessons are proposals unless marked tested.\nMEMORY:{json.dumps(memory)}
 FORWARD EVIDENCE (provisional, separate from source review and broker P&L):{json.dumps(forward_evidence(store), separators=(",", ":"))}
 STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str, separators=(",", ":"))}
@@ -335,18 +405,25 @@ def decision_prompt(plan, quote, brief, held):
     )
 
 
-def review_prompt(day, store):
+def review_prompt(day, store, *, end_day=None):
     from .exploration import knowledge_context
     from .experiments import Experiments
     from .operations import operational_evidence
+    from .quality import digest
 
     period_start = (
         datetime.fromisoformat(day).replace(tzinfo=ET).astimezone(timezone.utc).isoformat()
     )
+    through = end_day or day
+    period_end = (
+        (datetime.fromisoformat(through).replace(tzinfo=ET) + timedelta(days=1))
+        .astimezone(timezone.utc)
+        .isoformat()
+    )
 
     raw_events = store.rows(
-        "SELECT at,kind,branch,payload FROM events WHERE at>=? AND kind!='market_observation' ORDER BY id DESC LIMIT 40",
-        (period_start,),
+        "SELECT at,kind,branch,payload FROM events WHERE at>=? AND at<? AND kind!='market_observation' ORDER BY id DESC LIMIT 40",
+        (period_start, period_end),
     )
     events = []
     for event in raw_events:
@@ -391,15 +468,21 @@ def review_prompt(day, store):
             }
         )
     context = {
-        "instructions": "Separate operational failure, decision quality and luck. Inspect operational_evidence for confirmed order states, execution-check outcomes and failure details; do not infer cancellation acknowledgments from requests. Propose concrete operational repairs via code_changes when warranted, even if outside the automated filter's scope; these remain proposals requiring developer work. Do not confuse a local code fix with market-session execution verification. Propose at most six diverse challengers per equity branch. Never infer edge from one day, research acceptance, historical screens or recovery drills. Return Review JSON. Prefer no strategy change without evidence.",
-        "day": day,
+        "instructions": "Separate operational failure, decision quality and luck. Inspect research_quality_audit for recurring missing inputs, weak verification, artifact gaps and wasted work; propose concrete data/source/workflow repairs through code_changes when supported. Code receipts do not prove an observed improvement, and infrastructure failures must not be worked around by tuning a strategy filter. Inspect operational_evidence for confirmed order states, execution-check outcomes and failure details; do not infer cancellation acknowledgments from requests. Propose concrete operational repairs via code_changes when warranted, even if outside the automated filter's scope; these remain proposals requiring developer work. Do not confuse a local code fix with market-session execution verification. Propose at most six diverse challengers per equity branch. Never infer edge from one day, research acceptance, historical screens or recovery drills. Return Review JSON. Prefer no strategy change without evidence.",
+        "day": through,
+        "review_window": {"start": day, "through": through, "timezone": "America/New_York"},
+        "branch_balances_as_of": utc_now(),
         "branches": store.rows("SELECT * FROM branches"),
-        "latest_equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
+        "latest_equity": store.rows(
+            "SELECT * FROM equity WHERE day>=? AND day<=? ORDER BY id DESC LIMIT 6", (day, through)
+        ),
         "event_counts": store.rows(
-            "SELECT kind,count(*) n FROM events WHERE at>=? GROUP BY kind", (period_start,)
+            "SELECT kind,count(*) n FROM events WHERE at>=? AND at<? GROUP BY kind",
+            (period_start, period_end),
         ),
         "fills": store.rows(
-            "SELECT count(*) n FROM events WHERE kind='fill' AND at>=?", (period_start,)
+            "SELECT count(*) n FROM events WHERE kind='fill' AND at>=? AND at<?",
+            (period_start, period_end),
         )[0]["n"],
         "selected_events": events,
         "event_selection": "Most recent non-market-observation events; summaries bounded, raw journal retained locally",
@@ -408,6 +491,7 @@ def review_prompt(day, store):
         "research_knowledge": knowledge_context(store, max_chars=3500),
         "forward_evidence": forward_evidence(store),
         "operational_evidence": operational_evidence(day, store),
+        "research_quality_audit": digest(store, through),
         "incumbents": {
             b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
             for b in ("intraday", "swing", "options")

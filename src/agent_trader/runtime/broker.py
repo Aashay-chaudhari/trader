@@ -104,11 +104,8 @@ class Broker:
         )
 
     def bars(self, symbols, days=80):
-        return self.request(
-            "GET",
-            "/v2/stocks/bars",
-            data=True,
-            params={
+        return self.bar_pages(
+            {
                 "symbols": ",".join(symbols),
                 "timeframe": "1Day",
                 "feed": "iex",
@@ -116,8 +113,37 @@ class Broker:
                 "end": (datetime.now(ET) - timedelta(minutes=20)).isoformat(),
                 "limit": 10000,
                 "adjustment": "all",
-            },
-        ).get("bars", {})
+            }
+        )
+
+    def bar_pages(self, params, max_pages=4):
+        """Never silently truncate a symbol-sorted multi-symbol response."""
+        result, seen = {}, set()
+        for _ in range(max_pages):
+            page = self.request("GET", "/v2/stocks/bars", data=True, params=params)
+            for symbol, values in page.get("bars", {}).items():
+                result.setdefault(symbol, []).extend(values)
+            token = page.get("next_page_token")
+            if not token:
+                return result
+            if token in seen:
+                raise ValueError("Repeated market-data pagination token")
+            seen.add(token)
+            params = {**params, "page_token": token}
+        raise ValueError("Market-data pagination budget exhausted; partial batch rejected")
+
+    def intraday_bars(self, symbols, start, end):
+        return self.bar_pages(
+            {
+                "symbols": ",".join(symbols),
+                "timeframe": "1Min",
+                "feed": "iex",
+                "start": start.isoformat(),
+                "end": end.isoformat(),
+                "limit": 10000,
+                "adjustment": "raw",
+            }
+        )
 
     def option_chain(self, symbol):
         return self.request(

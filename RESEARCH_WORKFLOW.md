@@ -43,3 +43,22 @@ The strategy dashboard displays research, all twelve screens, known limitations,
 parallel experiments and observed progress. Account-wide weekly allowance and the
 24-call daily ceiling remain; this sprint shifts work toward early research rather
 than buying more capacity or increasing financial risk.
+
+## Source quality, input readiness and daily audit
+
+A reviewer must attest independent readable-primary-content checks, name the actual
+checked URLs and hold partial/blocked checks. Source approval does not validate a
+mechanism's transfer to our horizon, executable liquidity or profitability. Current
+catalogue states may change after rechecks; original reports remain historical.
+The October 31 recheck left four cards reviewed for testing and thirteen held.
+
+Research receives exact daily inputs, feed-specific completed-minute context when
+available, and exact existing experiment/parent definitions. It focuses company
+verification on a bounded shortlist. Missing event timing remains unknown; IEX is
+the approved free experiment feed, never a consolidated-price substitute.
+
+Full input/output artifacts, measured usage, reported blockers and verification
+states feed a deterministic daily quality audit. Retrospective and maintenance get
+that audit in complete JSON; operational proposals persist in a development backlog.
+The audit itself grants no trade, promotion or kernel-editing authority. Offline
+feature replays remain separate from recorded forward observations.

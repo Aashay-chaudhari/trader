@@ -192,6 +192,7 @@ class CodexRPC:
         output, usage, cycles, searches = "", {}, 0, 0
         budget_notice = False
         budget_notice_status = "not_sent"
+        web_inflight = 0
         pending = list(self.backlog)
         self.backlog.clear()
         while True:
@@ -208,6 +209,7 @@ class CodexRPC:
                 cycles += 1
                 if item.get("type") == "webSearch":
                     searches += 1
+                    web_inflight += 1
                 if cycles > max_cycles or searches > max_searches:
                     self.send(
                         {
@@ -220,8 +222,15 @@ class CodexRPC:
             # Let an in-flight source finish before asking for the final answer.
             # Hard ceilings above still interrupt at tool start.
             if method == "item/completed":
-                if not budget_notice and (
-                    (max_searches > 1 and searches >= max_searches - 1) or cycles >= max_cycles - 3
+                if params.get("item", {}).get("type") == "webSearch":
+                    web_inflight = max(0, web_inflight - 1)
+                if (
+                    not budget_notice
+                    and not web_inflight
+                    and (
+                        (max_searches > 1 and searches >= max_searches - 1)
+                        or cycles >= max_cycles - 3
+                    )
                 ):
                     self.send(
                         {

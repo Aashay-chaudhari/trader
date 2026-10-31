@@ -148,6 +148,8 @@ def validation(verdict="accepted_for_testing"):
                 "id": "hypothesis-one",
                 "verdict": verdict,
                 "reason": "Mechanism and falsification are suitable for a forward test.",
+                "source_check_status": "verified",
+                "checked_source_urls": ["https://example.com/paper"],
             }
         ],
     }

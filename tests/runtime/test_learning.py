@@ -296,7 +296,7 @@ def test_review_packet_is_complete_json_and_reports_selection(store):
             "incident",
             {"summary": "x" * 5000, "code": "failure-" + str(i), "raw_large_blob": "y" * 10000},
         )
-    prompt = review_prompt("2026-01-01", store)
+    prompt = review_prompt(datetime.now(ET).date().isoformat(), store)
     context = json.loads(prompt.split("ROLE: retrospective and experiment designer.\n", 1)[1])
     assert len(prompt) < 28000
     assert context["event_counts"] == [{"kind": "incident", "n": 80}]
@@ -469,3 +469,33 @@ def test_role_context_is_bounded_and_decision_uses_fresh_evidence(config, monkey
     assert seen == ["existing-context", None, None, None]
     assert s.get(f"context-policy:thread:{day}:decision")["turns"] == 1
     s.close()
+
+
+def test_budget_notice_waits_for_inflight_web_result(config, monkeypatch):
+    messages = [
+        {"method": "item/started", "params": {"item": {"type": "webSearch"}}},
+        {"method": "item/completed", "params": {"item": {"type": "reasoning"}}},
+        {"method": "item/completed", "params": {"item": {"type": "webSearch"}}},
+        {"id": 999998, "result": {"turnId": "turn-test"}},
+        {
+            "method": "item/completed",
+            "params": {"item": {"type": "agentMessage", "text": '{"ok":true}'}},
+        },
+        {"method": "turn/completed", "params": {"turn": {"status": "completed"}}},
+    ]
+    rpc, sent = rpc_fixture(config, monkeypatch, messages)
+    received = 0
+    notified_at = []
+    original_receive = rpc.receive
+
+    def receive(deadline):
+        nonlocal received
+        received += 1
+        return original_receive(deadline)
+
+    rpc.receive = receive
+    rpc.send = lambda msg: (sent.append(msg), notified_at.append(received))
+    rpc.run(None, "Bounded review", config.research_model, "low", {}, max_searches=2)
+    assert notified_at == [
+        3
+    ]  # reasoning completion while web is active cannot cut the source check short

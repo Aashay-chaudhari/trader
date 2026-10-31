@@ -237,3 +237,45 @@ it cannot change runtime/risk/promotion code. A developer handles broader propos
 Confirmed diagnoses and repair evidence use `operational_finding`; a follow-up
 review uses `operational_review` and preserves the original daily review. The latest
 follow-up is visible in Project & progress and its summary in the decision journal.
+
+## Daily research-quality audit and development backlog
+
+Every completed research, exploration, validation, pulse and review task archives
+its full structured output with task identity, outcome and capture provenance.
+Research intake also preserves the supplied market packet privately. Rejected
+outputs stay distinct from adopted output; surviving legacy snapshots are labeled
+partial history and never presented as complete old research transcripts.
+
+`quality.py` derives a daily audit from measured model/web usage, artifacts,
+reported input/source blockers, catalogue verification and redundant work. It runs
+before retrospective and after completed model tasks, feeds complete bounded
+context to retrospective and maintenance, and updates deduplicated
+`quality-proposal:<finding>` records in the `improvement_proposal` memory layer.
+Audit findings are diagnostics, not an accuracy or profitability score. The latest
+snapshot appears in Project & progress. Full artifacts remain local in SQLite.
+
+Reviewer verdicts now require explicit `source_check_status=verified` and matching
+`checked_source_urls` for every cited source before a card can be reused as reviewed
+or authorize a new experiment. Blocked/partial/supplied-only checks are held.
+These fields are reviewer attestations; URL consistency checks do not authenticate
+page contents. Original reports and before/after card versions remain recorded.
+
+Numerical research uses exact one/three/five-session returns and, during the regular
+session, completed one-minute IEX bars: opening range, volume, highs/lows and
+volume-weighted provider bar VWAP. Missing bars/fields and age are explicit. No
+synthetic VWAP or opening-range fill is created. Bounded pagination rejects an
+unfinished batch instead of silently dropping later symbols. A three-symbol research
+focus prioritizes data readiness then absolute five-session return; it does not
+approve trades or modify the fixed forward-study universe or signal rules.
+
+Without positions or eligible plans, there is one 13:00 ET context pulse. With
+exposure/plans, the existing 11:00/13:00/14:30 checkpoints remain. Pulses receive
+current time and recent updates, not the entire stale morning transcript. Period
+reviews can reuse an existing review only when the larger window adds no retained
+substantive events, orders or equity records. Derived rollups are explicitly labeled
+and consume no inference call; earlier failures prevent inappropriate reuse.
+
+Runtime/data changes still require controlled developer work. Automatic maintenance
+can only edit the pure adaptive strategy filter; audit findings cannot expand it.
+Free-only data, existing account quota reserve, execution/risk gates and frozen
+cohort protocol remain unchanged. See RESEARCH_QUALITY_AUDIT.md for audit receipts.

@@ -237,8 +237,28 @@ def exploration_prompt(day, store, screen):
                     if k in ("summary", "regime", "unknowns")
                 },
                 "historical_screen": screen,
-                "existing_experiments": store.rows("SELECT id,branch,state FROM experiments"),
+                "existing_experiments": [
+                    {
+                        "id": r["id"],
+                        "branch": r["branch"],
+                        "state": r["state"],
+                        **{
+                            k: v
+                            for k, v in json.loads(r["payload"]).items()
+                            if k
+                            in (
+                                "exact_change",
+                                "parent_version",
+                                "minimum_sessions",
+                                "minimum_samples",
+                                "cost_model",
+                            )
+                        },
+                    }
+                    for r in store.rows("SELECT * FROM experiments")
+                ],
                 "instructions": "Use at most 5 focused searches and 5 source checks (10 web actions total), primary research and official sources. "
+                "If a publisher/NBER page blocks access, prefer a readable primary author or university working-paper copy and cite the URL actually accessed. Do not invent successful access or use a paid proxy. "
                 "Investigate distinct families: momentum/breakout, mean reversion/pullbacks, earnings/catalysts, macro/rates/regimes, "
                 "and options volatility/event hypotheses (options research only). Explain economic mechanism, contrary evidence, "
                 "free-data feasibility, costs, failure modes and a falsification test. Historical screens are exploratory, "
@@ -289,13 +309,19 @@ def validation_prompt(store):
     }
     instructions = """
 ROLE: independent research validator, not the original researcher.
-Use at most 1 focused search and 2 source checks (3 web actions total) to check primary sources and counterevidence.
+Use at most 1 focused search and 3 source checks (4 web actions total) to check primary sources and counterevidence.
 For EVERY hypothesis return exactly one verdict. Accept for testing only when cited
 evidence supports the mechanism, falsification is concrete, and free-data limits
 are explicit. Reject fabricated citations and historical claims unsupported by the
 attached screen. Screen metrics are horizon returns averaged across unit opportunities,
 grouped by entry session; five-session swing returns are NOT daily portfolio returns.
 Do not accept that unit confusion, annualization, or fabricated executable fills.
+For each verdict explicitly set source_check_status and checked_source_urls.
+Verified means you independently accessed the cited primary content supporting the
+bounded mechanism, not merely the supplied abstract, URL list or a search snippet.
+Mark blocked, unfinished or supplied-only checks partial/unverified and needs_work.
+List only URLs actually checked, drawn from that hypothesis's source_urls.
+All its cited URLs must be checked for acceptance; otherwise hold it for later.
 Unverifiable claims need work. Acceptance means source/method review only, never
 profitability validation. Return ResearchValidation JSON.
 """
@@ -329,14 +355,28 @@ def record_validation(store, result):
             url in sources and urlsplit(url).scheme == "https" and bool(urlsplit(url).hostname)
             for url in h["source_urls"]
         )
-        dates_ok = all(
-            timestamp(sources[url]["observed_at"]) <= now + timedelta(minutes=5)
-            for url in h["source_urls"]
-            if url in sources
-        )
+        try:
+            dates_ok = all(
+                timestamp(sources[url]["observed_at"]).tzinfo is not None
+                and timestamp(sources[url]["observed_at"]) <= now + timedelta(minutes=5)
+                for url in h["source_urls"]
+                if url in sources
+            )
+        except (ValueError, TypeError, KeyError):
+            dates_ok = False
         links_ok = set(h["screen_trial_ids"]) <= trial_ids
+        checks = set(verdict.get("checked_source_urls", []))
+        independently_checked = (
+            verdict.get("source_check_status") == "verified"
+            and bool(h["source_urls"])
+            and checks == set(h["source_urls"])
+        )
         accepted = (
-            verdict["verdict"] == "accepted_for_testing" and citation_ok and dates_ok and links_ok
+            verdict["verdict"] == "accepted_for_testing"
+            and citation_ok
+            and dates_ok
+            and links_ok
+            and independently_checked
         )
         gate_issues = []
         if not citation_ok:
@@ -347,6 +387,10 @@ def record_validation(store, result):
             gate_issues.append("A cited observation is dated in the future.")
         if not links_ok:
             gate_issues.append("A referenced historical trial does not exist.")
+        if not independently_checked:
+            gate_issues.append(
+                "Independent primary-source checks are partial, unverified or missing. Reviewer attestations are not automated content authentication."
+            )
         state = (
             "reviewed_for_testing"
             if accepted
@@ -360,6 +404,8 @@ def record_validation(store, result):
             "review_reason": verdict["reason"]
             + (" Automated checks: " + " ".join(gate_issues) if gate_issues else ""),
             "reviewer_verdict": verdict["verdict"],
+            "source_check_status": verdict.get("source_check_status", "unverified"),
+            "checked_source_urls": sorted(checks),
             "automated_check_issues": gate_issues,
             "reviewed_at": utc_now(),
             "expires_at": (now + timedelta(days=30)).isoformat(),
@@ -421,6 +467,8 @@ def knowledge_context(store, *, max_chars=6500):
         if original["state"] != "reviewed_for_testing" or timestamp(original["expires_at"]) <= now:
             continue
         card = dict(original)
+        card["source_check_status"] = original.get("source_check_status", "legacy_unattested")
+        card["checked_source_urls"] = original.get("checked_source_urls", [])
         evidence = []
         for eid in original["experiment_ids"]:
             rows = store.rows("SELECT id,state,payload FROM experiments WHERE id=?", (eid,))
@@ -467,6 +515,8 @@ def knowledge_context(store, *, max_chars=6500):
                     "review_reason",
                     "screen_trial_ids",
                     "caution",
+                    "source_check_status",
+                    "checked_source_urls",
                 )
                 if k in c
             }

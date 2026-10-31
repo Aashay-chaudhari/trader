@@ -38,6 +38,12 @@ class ResearchData:
     def option_chain(self, symbol):
         return self._broker.option_chain(symbol)
 
+    def calendar(self, day):
+        return self._broker.calendar(day)
+
+    def intraday_bars(self, symbols, start, end):
+        return self._broker.intraday_bars(symbols, start, end)
+
 
 def update_summary(store, entry):
     with store.transaction():
@@ -144,7 +150,7 @@ def run_probe(config, run_id, kind="full", quick=False, scheduled_for=None):
                 config,
                 "probe_validation",
                 validation_prompt(scratch).replace(
-                    "Use up to 4 live searches",
+                    "Use at most 1 focused search and 3 source checks (4 web actions total)",
                     "Use at most one live search and two page checks (three web actions total)",
                 ),
                 ResearchValidation,

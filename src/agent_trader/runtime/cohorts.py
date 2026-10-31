@@ -393,6 +393,7 @@ class ForwardLab:
                         "description": description,
                         "open": sum(r["state"] == "open" for r in rows),
                         "closed": len(closed),
+                        "closed_signals": sum(bool(p.get("signal")) for _, p in closed),
                         "preregistered_opportunities": self.store.rows(
                             "SELECT count(*) n FROM cohort_expected WHERE branch=? AND rule=?",
                             (branch, rule),

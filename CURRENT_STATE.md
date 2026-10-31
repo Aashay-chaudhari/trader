@@ -20,8 +20,8 @@ The persistent vision remains REFACTOR_SCOPE.md.
   These are correlated research units, not filled trades or portfolio profits.
   Study protocol/window/input history remain unchanged.
 - Friday research assessed six hypotheses: four accepted for further testing and
-  two held, with source-verification limits explicit. Ten total catalogue cards are
-  reviewed for testing. Eight existing filter challengers still have zero samples.
+  two held, with source-verification limits explicit. After the stricter October 31 source recheck, four catalogue cards are
+  reviewed for testing and thirteen held. Eight existing filter challengers still have zero samples.
 - Daily/weekly/monthly reviews and maintenance completed; no strategy changes or
   promotions. Operational evidence now includes confirmed order states, timestamps,
   execution-check outcomes and incident details. Proposals persist separately from
@@ -32,3 +32,10 @@ The persistent vision remains REFACTOR_SCOPE.md.
 Verification/deployment receipts: IMPLEMENTATION_LOG.md and READINESS.md.
 Private `.runtime/` and `.env` remain local. No live endpoint, paid fallback, increased
 risk/quota limits or automatic kernel-editing authority has been added.
+
+October 31 quality upgrade: full research input/output capture and a daily audit
+now feed retrospectives, maintenance and a durable developer backlog. Research has
+exact three-session inputs and completed-minute IEX features when available;
+source checks have explicit attestation gates. No-exposure pulses use one midday
+update, and identical-evidence period rollups avoid redundant calls. The original
+Friday records and frozen study remain intact; fill/exit verification is pending.

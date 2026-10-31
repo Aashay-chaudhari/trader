@@ -203,6 +203,12 @@ def snapshot(config, store):
             },
             "review": store.get("review", {}),
             "operational_review": store.get("operational_review", {}),
+            "quality_audit": store.get("quality_audit", {}),
+            "source_quality_reviews": [
+                store.get(k, {})
+                for k in ("source_quality_review", "legacy_source_quality_review")
+                if store.get(k)
+            ],
             "research_probes": store.get("research_probes", []),
             "period_reviews": [
                 json.loads(r["value"])

@@ -380,3 +380,41 @@ orders. Frozen protocol hash, cohort counts, branch cash and zero filled-order
 count matched the saved pre-reload baseline. Original Friday review remains intact.
 The real fill/exit gate remains false. Broker next-open is November 2 at 09:30 EST;
 the controlled check is eligible from 09:32, subject to existing quote/risk gates.
+
+## Research-log quality audit and daily development integration — October 31
+
+Audited actual research, pulses, source reviews, missing inputs, usage and logs.
+Primary spot checks supported selected Fed/BLS/BEA facts. The main gaps were missing
+price features, incomplete source verification, stale repeated pulses, incomplete
+artifact history and redundant review windows. RESEARCH_QUALITY_AUDIT.md records
+sources, measurements, selected changes and limitations.
+
+Implemented exact daily features, free IEX completed-minute features with missingness,
+complete bounded pagination, focused research/pulse context, explicit source-check
+attestations and all-citation gating. Added durable full input/output artifacts,
+deterministic daily quality findings, deduplicated developer proposals and complete
+review/maintenance handoffs. Period reuse requires identical retained evidence and
+is labeled derived. Soft budget steering waits for an in-flight web result to finish.
+Forward summaries now expose active signal counts so abstention can explain zero.
+
+Two actual fresh-context reviewer runs rechecked twelve definitions; current
+catalogue is four reviewed-for-testing / thirteen held, with no reviewed card lacking
+explicit source attestation. Original reports and card history were preserved;
+existing experiment registry and fixed cohort protocol were not rewritten.
+
+Real free-data checks: 872 replay minute bars across thirty symbols, thirty VWAP
+values, twenty-six complete opening ranges. Offline replay was not imported as
+forward evidence. A latest-end IEX access check succeeded off-hours. Future live
+freshness and paper fill/exit are still separate unverified gates.
+
+Regression/deployment/public QA receipts follow after final validation.
+
+Final local quality-upgrade regression: 306 tests passed, including 136 active
+runtime tests, with the same single legacy dependency warning. Runtime/test lint
+passed. Live source-check schema/gates were exercised by both independent rechecks.
+
+Final quality-upgrade suite after explicit review-window correction: 307 tests
+passed (137 active runtime), one unchanged legacy warning. Weekly/monthly review
+packets now use the final day's quality audit and explicitly bound period events;
+later operational diagnoses remain separately labeled current snapshots. Local
+seven-view desktop/mobile QA passed for quality, attestations and active-signal UI.

@@ -94,6 +94,7 @@ def operational_evidence(day, store):
         )
     ready = store.get("readiness", {})
     result = {
+        "snapshot_scope": "Current operational state and later diagnoses at as_of; do not treat them as knowledge available during an earlier reviewed period.",
         "as_of": utc_now(),
         "period_start_utc": start,
         "execution_verified": bool(ready.get("execution_verified")),

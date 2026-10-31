@@ -166,6 +166,8 @@ class HypothesisValidation(Strict):
     id: str
     verdict: Literal["accepted_for_testing", "needs_work", "rejected"]
     reason: str = Field(min_length=15, max_length=1000)
+    source_check_status: Literal["verified", "partial", "unverified"] = "unverified"
+    checked_source_urls: list[str] = Field(default_factory=list, max_length=5)
 
 
 class ResearchValidation(Strict):

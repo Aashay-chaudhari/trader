@@ -80,3 +80,15 @@ bounded JSON packets replace raw string truncation for retrospective evidence.
 Soft budget steering asks for an answer after a completed tool item; hard runtime,
 search, cycle, account-reserve and daily-call ceilings remain in force. Failed
 attempts retain an explicit unreported-token status rather than appearing free.
+
+## Research-quality feedback
+
+Full market packets and structured model outputs are retained privately with task,
+outcome and capture provenance. `quality.py` computes a bounded daily diagnostic
+from those artifacts and measured usage, supplies it to retrospective/maintenance,
+and deduplicates development proposals. It has no order or promotion authority.
+`features.py` computes completed-bar IEX research context with missingness; it does
+not change the preregistered signal lab. Source reuse requires explicit reviewer
+attestations and matching checked URLs, not mere URL presence. Partial/blocked
+checks are held, and original reports remain historical. Period rollups can reuse
+an existing review only when no earlier retained evidence broadens their window.

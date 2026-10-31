@@ -133,3 +133,9 @@ and bounded role-specific model contexts improve the daily handoff. Read the
 [primary-source review and limitations](PUBLIC_RESEARCH_NOTES.md) and
 [research workflow](RESEARCH_WORKFLOW.md). All existing paper/free-only risk and
 quota limits remain enforced.
+
+The daily [research-quality audit](RESEARCH_QUALITY_AUDIT.md) now tracks missing
+inputs, source-check attestations, full artifact coverage and redundant work. Its
+findings feed retrospectives and a durable development backlog. Research uses free
+completed-minute IEX features when available; offline checks are never backfilled
+as forward evidence. The dashboard shows the audit and explicit source-review status.
