@@ -103,11 +103,11 @@ The actual discovery/review path was exercised, including transport schema failu
 invalid specifications and independent method rejection. Constraints and evidence
 packets were corrected rather than bypassing validation. A revised local hypothesis
 passed independent review and registered two future-only studies, each six symbols
-by sixty entry dates;720 opportunities pending, zero outcomes. Original rejections
-and draft versions remain recorded. Broker calendar fixes first entry November2
-and final entry January28. This is descriptive research, not strategy promotion.
+by sixty entry dates; 720 opportunities pending, zero outcomes. Original rejections
+and draft versions remain recorded. Broker calendar fixes first entry November 2
+and final entry January 28. This is descriptive research, not strategy promotion.
 
-All seven actual populated frontend views passed at1440px and390px. Post-change
+All seven actual populated frontend views passed at 1440px and 390px. Post-change
 mechanics assessments await later completed sessions. Fixed study hash/counts,
 three branch balances and zero-fill state match the pre-audit baseline. CI and
 service activation receipts are in IMPLEMENTATION_LOG.md.

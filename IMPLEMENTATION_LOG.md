@@ -454,25 +454,33 @@ historical statement and requested implemented measurement definitions. The repa
 specification uses the actual all-opportunity metric and was independently accepted
 for descriptive testing only; original drafts/rejections remain recorded.
 
-Two contracts now bind six symbols over sixty actual entry sessions, November2–
-January28, each360 preregistered opportunities. All720 remain pending; zero adaptive
+Two contracts now bind six symbols over sixty actual entry sessions, November 2–
+January 28, each 360 preregistered opportunities. All 720 remain pending; zero adaptive
 outcomes, orders or promotions. Catalogue: four source-reviewed plus one local
 observation/method-reviewed hypothesis; thirteen held. The fixed study remains
-174closed/174open/12not-evaluable, with identical protocol hash; cash remains10k per
-branch and filled-order count0. Return is0%, no edge established.
+174 closed / 174 open / 12 not evaluable, with identical protocol hash; cash remains $10,000 per
+branch and filled-order count 0. Return is 0%, no edge established.
 
-Full local suite:368passed, including198runtime tests; one unchanged legacy
+Full local suite: 368 passed, including 198 runtime tests; one unchanged legacy
 websockets deprecation warning. Runtime/test lint and native JavaScript syntax pass.
-All seven actual populated views passed1440px/390px QA, expanded contracts and real
+All seven actual populated views passed at 1440px / 390px QA, expanded contracts and real
 observations included, no errors/overflow. Receipts are retained privately under
 .runtime/integrated-learning-populated-*. Final CI/deployment activation follows.
 
 ### Adaptive upgrade release verification
 
-Source513767466a32fd5548ab6687ed39944c8e16abf3 passed GitHub Tests41220429757:
+Source 513767466a32fd5548ab6687ed39944c8e16abf3 passed GitHub Tests run 41220429757:
 full regression suite, locked dependency install, runtime lint and JavaScript syntax.
-Snapshot79105e12 initiated Pages41220441316. The actual post-registration knowledge
+Snapshot 79105e12 initiated Pages run 41220441316. The actual post-registration knowledge
 handoff includes both prospective contracts; current morning/review prompt lengths
-22704/24421 remain complete under the28000-character ceiling. The fixed study hash,
+22,704 / 24,421 remain complete under the 28,000-character ceiling. The fixed study hash,
 174/174/12 counts, branch cash and zero fills match the prior baseline after all real
 research and calendar-binding runs. Service/public activation follows this receipt.
+
+Activation verified: systemd service is active, refreshed heartbeat/reconciliation,
+models available, entry budget unblocked, and independent hidden watchdog reports
+no incident. Both pause flags are absent. Startup snapshot 0cd05959 deployed through
+Pages run 41220542958. Public seven-view desktop/mobile QA confirmed source 51376746,
+two studies / 720 pending opportunities, five reviewed hypotheses and three actual
+observation leads. No errors or overflow; no preview servers remain. Profitability
+and the regular-session paper entry/exit gate remain unproven.
