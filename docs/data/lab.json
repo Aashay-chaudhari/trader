@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-31T05:33:19.372819+00:00",
+  "generated_at": "2026-10-31T05:34:11.058115+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-10-31T01:33:03.272536-04:00",
+  "heartbeat": "2026-10-31T01:34:09.112595-04:00",
   "watchdog": {
-    "checked_at": "2026-10-31T05:32:03.8969230+00:00",
+    "checked_at": "2026-10-31T05:34:03.4502857+00:00",
     "incident": false,
     "last_restart": "2026-10-29T22:44:03.7869095+00:00",
     "service_owner": "systemd user service",
@@ -14,7 +14,7 @@
   "status": "Market holiday or weekend. Existing broker protection remains in place.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-10-31T04:00:10.345965+00:00",
+    "at": "2026-10-31T05:34:10.669819+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -109,19 +109,37 @@
   ],
   "equity": [
     {
-      "at": "2026-10-31T05:33:03.306014+00:00",
+      "at": "2026-10-31T05:34:10.687992+00:00",
       "day": "2026-10-31",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-10-31T05:33:03.306014+00:00",
+      "at": "2026-10-31T05:34:10.687992+00:00",
       "day": "2026-10-31",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-10-31T05:33:03.306014+00:00",
+      "at": "2026-10-31T05:34:10.687992+00:00",
+      "day": "2026-10-31",
+      "branch": "intraday",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:33:33.877650+00:00",
+      "day": "2026-10-31",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:33:33.877650+00:00",
+      "day": "2026-10-31",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-10-31T05:33:33.877650+00:00",
       "day": "2026-10-31",
       "branch": "intraday",
       "value": 10000.0
@@ -10886,24 +10904,6 @@
     },
     {
       "at": "2026-10-30T15:35:49.578813-04:00",
-      "day": "2026-10-30",
-      "branch": "intraday",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:34:51.442448-04:00",
-      "day": "2026-10-30",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:34:51.442448-04:00",
-      "day": "2026-10-30",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-10-30T15:34:51.442448-04:00",
       "day": "2026-10-30",
       "branch": "intraday",
       "value": 10000.0
@@ -11059,7 +11059,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-10-31T05:33:19.458096+00:00",
+    "as_of": "2026-10-31T05:34:11.101356+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "No measured trading edge. The system is still collecting operational and forward evidence. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11817,6 +11817,44 @@
   ],
   "plans": [],
   "events": [
+    {
+      "id": 150,
+      "at": "2026-10-31T05:34:09.108132+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 149,
+      "at": "2026-10-31T05:34:07.078448+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 12984
+      }
+    },
+    {
+      "id": 148,
+      "at": "2026-10-31T05:34:06.144288+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 12984
+      }
+    },
+    {
+      "id": 147,
+      "at": "2026-10-31T05:34:06.109225+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Bounded execution-check lifecycle and operational retrospective evidence repaired. 287 local tests pass; actual regular-session fill/exit remains pending. Original review and frozen study preserved.",
+        "source_commit": "ad2dafe9c2e4bb3c5eb04ea1caae7a517052277c"
+      }
+    },
     {
       "id": 146,
       "at": "2026-10-31T05:29:14.717709+00:00",
@@ -12952,43 +12990,6 @@
       "branch": null,
       "payload": {
         "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 45,
-      "at": "2026-10-29T22:42:13.216805+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 44,
-      "at": "2026-10-29T22:42:00.203871+00:00",
-      "kind": "supervisor_stopped",
-      "branch": null,
-      "payload": {
-        "pid": 198817
-      }
-    },
-    {
-      "id": 43,
-      "at": "2026-10-29T22:41:59.753154+00:00",
-      "kind": "supervisor_stopping",
-      "branch": null,
-      "payload": {
-        "signal": 2,
-        "pid": 198817
-      }
-    },
-    {
-      "id": 42,
-      "at": "2026-10-29T22:41:03.876961+00:00",
-      "kind": "daily_summary",
-      "branch": null,
-      "payload": {
-        "summary": "Paper equity: $30,000.00. Since fresh start: $+0.00.\nIntraday: $10,000.00\nSwing: $10,000.00\nOptions: $10,000.00"
       }
     }
   ],
@@ -14247,7 +14248,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-10-31T05:29:14.609659+00:00",
+    "at": "2026-10-31T05:34:10.624026+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -15362,20 +15363,20 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "a6f2eac963b7676f1af7f3062349d2b3afb5bc62",
-    "validated_at": "2026-10-30T01:08:11.716265+00:00",
-    "regression_tests": 266,
-    "runtime_tests": 96,
+    "source_commit": "ad2dafe9c2e4bb3c5eb04ea1caae7a517052277c",
+    "validated_at": "2026-10-31T05:34:06.103104+00:00",
+    "regression_tests": 287,
+    "runtime_tests": 117,
     "browser_views": 7,
     "start_date": "2026-10-29",
-    "fill_exit_gate": "pending_market_open",
-    "ci": "passed",
-    "pages": "passed",
-    "public_browser_qa": "passed",
+    "fill_exit_gate": "pending_next_regular_session",
+    "ci": "pending_latest_source",
+    "pages": "pending_latest_snapshot",
+    "public_browser_qa": "pending_latest_snapshot",
     "activated_at": "2026-10-30T01:04:43.154110+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-30T01:08:11.716293+00:00",
+    "updated_at": "2026-10-31T05:34:06.103128+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -15391,7 +15392,9 @@
     "profitability": "unproven",
     "source_ci_run": 40983632867,
     "pages_verified_run": 40983660049,
-    "asset_versioning": true
+    "asset_versioning": true,
+    "execution_check_repair": true,
+    "operational_evidence_review_verified": true
   },
   "limitations": [
     "Paper results are not live returns.",
