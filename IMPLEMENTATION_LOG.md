@@ -418,3 +418,18 @@ passed (137 active runtime), one unchanged legacy warning. Weekly/monthly review
 packets now use the final day's quality audit and explicitly bound period events;
 later operational diagnoses remain separately labeled current snapshots. Local
 seven-view desktop/mobile QA passed for quality, attestations and active-signal UI.
+
+### Research-quality upgrade activation
+
+Final source 11d9c89f passed GitHub Tests run 41175540423. Pages snapshot ce5c47c3
+passed deployment run 41175579709. All seven actual public views passed Chromium
+desktop/390px-mobile checks with quality findings, source attestations and closed
+active-signal counts visible; no browser errors or horizontal overflow.
+
+The reloaded systemd service reconciled funding/broker state and confirmed models.
+Direct broker check remained $30,000 cash/equity, zero positions/open orders. Cohort
+counts, frozen protocol hash, branch cash and zero filled-order count matched the
+pre-upgrade baseline. The original Friday daily review and original source reports
+remain preserved. Four current reviewed cards have explicit source attestations;
+thirteen are held. Actual next-session feature freshness, improved decision quality
+and regular-session fill/exit remain unproven; no paid resources or risk increases.
