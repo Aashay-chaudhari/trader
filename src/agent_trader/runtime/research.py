@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 from .config import ET
 
@@ -338,10 +338,15 @@ def decision_prompt(plan, quote, brief, held):
 def review_prompt(day, store):
     from .exploration import knowledge_context
     from .experiments import Experiments
+    from .operations import operational_evidence
+
+    period_start = (
+        datetime.fromisoformat(day).replace(tzinfo=ET).astimezone(timezone.utc).isoformat()
+    )
 
     raw_events = store.rows(
         "SELECT at,kind,branch,payload FROM events WHERE at>=? AND kind!='market_observation' ORDER BY id DESC LIMIT 40",
-        (day,),
+        (period_start,),
     )
     events = []
     for event in raw_events:
@@ -386,22 +391,23 @@ def review_prompt(day, store):
             }
         )
     context = {
-        "instructions": "Separate operational failure, decision quality and luck. Propose at most six diverse challengers per equity branch. Never infer edge from one day, research acceptance, historical screens or recovery drills. Return Review JSON. Prefer no change without evidence.",
+        "instructions": "Separate operational failure, decision quality and luck. Inspect operational_evidence for confirmed order states, execution-check outcomes and failure details; do not infer cancellation acknowledgments from requests. Propose concrete operational repairs via code_changes when warranted, even if outside the automated filter's scope; these remain proposals requiring developer work. Do not confuse a local code fix with market-session execution verification. Propose at most six diverse challengers per equity branch. Never infer edge from one day, research acceptance, historical screens or recovery drills. Return Review JSON. Prefer no strategy change without evidence.",
         "day": day,
         "branches": store.rows("SELECT * FROM branches"),
         "latest_equity": store.rows("SELECT * FROM equity ORDER BY id DESC LIMIT 6"),
         "event_counts": store.rows(
-            "SELECT kind,count(*) n FROM events WHERE at>=? GROUP BY kind", (day,)
+            "SELECT kind,count(*) n FROM events WHERE at>=? GROUP BY kind", (period_start,)
         ),
-        "fills": store.rows("SELECT count(*) n FROM events WHERE kind='fill' AND at>=?", (day,))[0][
-            "n"
-        ],
+        "fills": store.rows(
+            "SELECT count(*) n FROM events WHERE kind='fill' AND at>=?", (period_start,)
+        )[0]["n"],
         "selected_events": events,
         "event_selection": "Most recent non-market-observation events; summaries bounded, raw journal retained locally",
         "experiments": trials,
         "experiment_count": len(all_trials),
         "research_knowledge": knowledge_context(store, max_chars=3500),
         "forward_evidence": forward_evidence(store),
+        "operational_evidence": operational_evidence(day, store),
         "incumbents": {
             b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
             for b in ("intraday", "swing", "options")

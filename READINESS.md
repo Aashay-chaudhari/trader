@@ -1,4 +1,4 @@
-# Release readiness — October 29, 2026 evening upgrade
+# Release readiness — October 31, 2026 operational repair
 
 The local paper execution/research system and seven-view GitHub Pages dashboard
 are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
@@ -15,7 +15,7 @@ are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
 - Thirty free market snapshots, thirty daily indicator sets, five dated FRED series
   and indicative options observations. BEA official calendar fetched/parsed; BLS
   direct feed returns 403, explicitly unavailable with ordinary official-web fallback.
-- 266 regression tests, including 96 active-runtime tests; runtime/test lint.
+- 287 regression tests, including 117 active-runtime tests; runtime/test lint.
   One pre-existing legacy dependency deprecation warning.
 - Chromium checks of all seven views at desktop and 390px mobile widths, including
   Project section navigation. Source JavaScript is also checked by CI.
@@ -25,12 +25,12 @@ are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
   Scheduled research completed at 19:02:38 with two hypotheses held. Separate
   scratch checks verified positive research-to-morning retrieval without live import.
 - An independent design repair/review accepted two observational definitions for
-  testing; six total source/method-reviewed catalogue cards feed morning research.
+  testing; six initial source/method-reviewed cards fed morning research; Friday exploration brought the total to ten.
 - Twelve forward protocols preregistered, 360 opportunities prepared for October 30.
   Exact normalized inputs retained privately with canonical hashes. Zero actual
   cohort observations or completed forward returns at activation.
 
-## Next trading session: Friday, October 30
+## Regular-session schedule
 
 - The systemd user service runs continuously; hidden Windows host/watchdog tasks
   keep WSL available and check independent health every two minutes.
@@ -62,3 +62,20 @@ reboot. There is no external monitor for complete PC/network outages.
 
 Dashboard: https://aashay-chaudhari.github.io/trader/#project
 Operations: SYSTEM_GUIDE.md. Primary research: PUBLIC_RESEARCH_NOTES.md.
+
+## October 30 results and October 31 repair
+
+Friday recorded all 78 market-coverage slots, closed 174 intraday research units
+and retained 174 unfinished swing units. Twelve missing-quote opportunities remain
+not evaluable. Paper equity stayed $30,000 with zero broker fills.
+
+The execution-test lifecycle repair has dedicated fake-broker regression coverage:
+restart persistence, exact bounded intent, forged/extended-intent rejection, expiry,
+branch pause/cutoff cancellation, response-loss recovery, partial-fill unwind,
+confirmed entry/exit fills and failed-reconciliation blocking. These checks do not
+replace a real regular-session round-trip; the execution gate remains pending.
+
+Retrospective packets now include terminal order evidence and incident details;
+operational proposals are durable, with the original maintenance scope unchanged.
+A separate follow-up review preserves the original Friday daily review. Current
+source CI, deployment and follow-up receipts are in IMPLEMENTATION_LOG.md.

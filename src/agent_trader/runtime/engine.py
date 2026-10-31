@@ -444,19 +444,79 @@ class Engine:
         )
         return order
 
+    def execution_check_deadline(self, row, now):
+        """Recognize only the exact persisted, bounded operational entry intent."""
+        day = now.astimezone(ET).date().isoformat()
+        stage = self.store.get("smoke:" + day, {})
+        if (
+            row["plan_id"] != "operational-smoke-" + day
+            or row["client_id"] != order_id("smoke", day, "buy")
+            or stage.get("entry_client_id") != row["client_id"]
+            or row["branch"] != "intraday"
+            or row["symbol"] != "SPY"
+            or row["side"] != "buy"
+            or row["qty"] != 1
+            or stage.get("state") not in ("submitted", "cancel_requested")
+        ):
+            return None
+        try:
+            started, deadline = timestamp(stage["at"]), timestamp(stage["expires_at"])
+            if (
+                started.astimezone(ET).date().isoformat() == day
+                and started <= now
+                and deadline == started + timedelta(minutes=2)
+            ):
+                return deadline
+        except (KeyError, TypeError, ValueError):
+            pass
+        return None
+
     def cancel_entries(self, now, close):
         for row in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
             if row["status"] in TERMINAL or not row["broker_id"]:
                 continue
             plans = self.store.rows("SELECT payload FROM plans WHERE id=?", (row["plan_id"],))
-            expired = not plans or now >= timestamp(json.loads(plans[0]["payload"])["expires_at"])
+            check_deadline = self.execution_check_deadline(row, now)
+            deadline = check_deadline or (
+                timestamp(json.loads(plans[0]["payload"])["expires_at"]) if plans else None
+            )
+            expired = deadline is None or now >= deadline
             paused = self.store.rows("SELECT paused FROM branches WHERE name=?", (row["branch"],))[
                 0
             ]["paused"]
             if expired or paused or now >= close - timedelta(minutes=30):
+                reason = (
+                    "branch_paused"
+                    if paused
+                    else "closing_cutoff"
+                    if now >= close - timedelta(minutes=30)
+                    else "missing_plan_or_intent"
+                    if deadline is None
+                    else "execution_check_timeout"
+                    if check_deadline
+                    else "plan_expired"
+                )
                 self.broker.cancel(row["broker_id"])
+                if check_deadline:
+                    key = "smoke:" + now.astimezone(ET).date().isoformat()
+                    self.store.set(
+                        key,
+                        {
+                            **self.store.get(key),
+                            "state": "cancel_requested",
+                            "cancel_requested_at": now.isoformat(),
+                            "reason": reason,
+                        },
+                    )
                 self.store.event(
-                    "entry_cancellation_requested", {"symbol": row["symbol"]}, row["branch"]
+                    "entry_cancellation_requested",
+                    {
+                        "symbol": row["symbol"],
+                        "plan_id": row["plan_id"],
+                        "reason": reason,
+                        "observed_order_status": row["status"],
+                    },
+                    row["branch"],
                 )
 
     def close_intraday(self):

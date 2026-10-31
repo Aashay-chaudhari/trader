@@ -1,36 +1,34 @@
-# Current state — October 29, 2026 evening
+# Current state — October 31, 2026
 
-The application is a local, free-data, subscription-authenticated paper-trading
-research laboratory. The original vision is in REFACTOR_SCOPE.md; the latest
-research/architecture upgrade is in IMPROVEMENT_SCOPE_20261029.md.
+Trader is a local, free-data, subscription-authenticated paper-trading research
+laboratory. GitHub Pages is a sanitized read-only dashboard; Python owns execution.
+The persistent vision remains REFACTOR_SCOPE.md.
 
-- Alpaca paper account: $30,000 cash/equity, three separate $10,000 allocations.
-  No positions/open orders/fills at the latest direct check. No borrowing/live endpoint.
-- October 29 was operationally missed after the heartbeat stopped at 08:12 ET.
-  The initiating termination source remains unknown. No strategy result is inferred.
-- A lingering systemd user service now owns Python. Hidden Windows host/watchdog
-  tasks keep WSL alive, independently recover the service and send health alerts.
-  Interrupt/crash/stopped-service drills passed; a whole unattended session is unproven.
-- Paper submission/cancellation passed. The actual market-open fill/exit gate is
-  pending and normal equity pilots remain blocked until it passes. Options stay
-  indicative-data research/shadow only.
-- The 19:00 one-time research timer completed successfully. Its two hypotheses
-  were held for revision; isolated dummy checks separately verified positive retrieval.
-- An additional independent design review accepted two repaired observational
-  definitions for testing. Six total catalogue cards are source/method-reviewed;
-  no card or strategy is certified profitable. Reviewed cards feed morning research.
-- Twelve historical screens and eight filter challengers remain intact. A new
-  separate fixed signal lab preregisters twelve protocols across thirty symbols:
-  360 opportunities prepared for October 30, zero actual cohort observations yet.
-  Entry study window is October 30–November 27; final swing maturity December 3.
-- BEA official calendar loads; BLS direct requests return 403 and stay explicitly
-  unavailable. Fed/earnings require separate official-page verification. Thirty
-  daily indicator sets and five dated FRED series are available from free sources.
-- Role contexts are bounded, complete review packets preserve units/selection, and
-  failed inference attempts disclose missing token totals. All quota/risk rules remain.
-- GitHub Pages has seven views, including Project & progress with repo map,
-  decisions, automation schedule, resources and a candid evidence-based assessment.
+- Friday October 30 completed all 78 five-minute broker-confirmed coverage slots.
+  One full observed market session is now recorded. October 29 remains an operational
+  miss; recovery drills do not erase it.
+- Paper account remains $30,000 cash/equity, zero fills, no positions/open orders.
+  Three separate $10,000 allocations; options indicative-data research/shadow only.
+- Friday's execution-test order was canceled before its intended two-minute window
+  because ordinary cleanup treated its absent strategy plan as expired. The repair
+  persists and strictly identifies the operational intent, preserves bounded expiry
+  and verifies both entry/exit fills plus reconciliation before opening the gate.
+- The fill/exit gate is still pending. No market-session success is inferred from
+  regression tests. Next eligible check is the next actual regular trading session.
+- Fixed forward study: 174 intraday quote observations closed, 174 swing observations
+  remain open, and 12 XOM opportunities were not evaluable for missing valid quotes.
+  These are correlated research units, not filled trades or portfolio profits.
+  Study protocol/window/input history remain unchanged.
+- Friday research assessed six hypotheses: four accepted for further testing and
+  two held, with source-verification limits explicit. Ten total catalogue cards are
+  reviewed for testing. Eight existing filter challengers still have zero samples.
+- Daily/weekly/monthly reviews and maintenance completed; no strategy changes or
+  promotions. Operational evidence now includes confirmed order states, timestamps,
+  execution-check outcomes and incident details. Proposals persist separately from
+  automated filter-only maintenance. A follow-up preserves Friday's original review.
+- The lingering systemd service, hidden Windows WSL host and independent watchdog
+  remain the runtime/recovery owners. GitHub Actions runs tests and deploys Pages.
 
-Normal owner: `agent-trader.service`. Operator procedures: SYSTEM_GUIDE.md.
-Verification receipts and deployment details: IMPLEMENTATION_LOG.md and READINESS.md.
-Private `.runtime/` and `.env` stay local; Git history and existing paper ledgers persist.
+Verification/deployment receipts: IMPLEMENTATION_LOG.md and READINESS.md.
+Private `.runtime/` and `.env` remain local. No live endpoint, paid fallback, increased
+risk/quota limits or automatic kernel-editing authority has been added.

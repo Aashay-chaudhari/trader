@@ -330,3 +330,39 @@ is inferred from that assertion failure.
   Actual fill/exit and a completed unattended trading day remain pending.
 - Source CI and public QA receipts are reflected in the exported release metadata.
   Final metadata/doc publication does not change the tested source or risk policy.
+
+## Execution-test lifecycle and operational review repair — October 31
+
+- Confirmed Friday's one-share SPY test lacked an ordinary strategy-plan row.
+  Cleanup requested cancellation at 09:32:58 ET, before its intended two-minute
+  window; broker cancellation was confirmed at 09:33:28. Zero fills occurred.
+- Persist the exact operational intent before submission. Only matching daily
+  client ID, SPY, one share, intraday branch and a two-minute expiry qualify for
+  cleanup recognition. Missing/forged/extended intents remain cancelable; branch
+  pause and close cutoff still apply. Existing client-ID recovery avoids duplicates.
+- Cancellation-requested and broker-confirmed terminal outcomes are distinct.
+  Passing requires one-share entry and exit fill receipts, successful reconciliation
+  and no remaining intraday holdings/SPY orders. Partial fills cannot pass the gate.
+- Added bounded operational review evidence: broker order states/timestamps,
+  execution checks, reconciliation, incident details and diagnoses. Eastern period
+  boundaries exclude the previous evening from daily reviews. Whole records/counts
+  remain explicit under the input budget.
+- Persist operational repair proposals separately from strategy lessons. Automated
+  maintenance permissions remain restricted to the pure adaptive filter. Original
+  Friday reviews remain intact; a fresh operational follow-up is recorded separately.
+- Full local regression: 287 tests passed (117 active runtime), one legacy dependency
+  warning. Runtime/test lint passed. Real follow-up and deployment receipts follow.
+
+### Independent operational follow-up
+
+A real subscription-authenticated, fresh-context review used the repaired packet
+(23,788 characters, within the existing input cap). It confirmed the entry and both
+sell orders were broker-canceled with zero fills, distinguished request/final times,
+recognized the early-cleanup defect and kept real fill/exit verification pending.
+No experiments or strategy changes were proposed. The original Friday daily review
+was preserved byte-for-byte as structured state. The separate follow-up is stored
+locally and displayed under Project & progress; its summary is in the public journal.
+
+All seven views passed local Chromium desktop/390px-mobile checks, including the
+follow-up panel. Source lint passed. Risk, quota, options restrictions and the fixed
+cohort protocol/window remain unchanged. Deployment receipts follow below.

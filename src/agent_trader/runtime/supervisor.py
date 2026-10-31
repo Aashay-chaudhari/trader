@@ -364,6 +364,17 @@ class Supervisor:
             elif role == "retrospective":
                 self.store.set("review", result)
                 self.store.set("review_day", day)
+                for i, proposal in enumerate(result["code_changes"]):
+                    self.store.memory_put(
+                        f"{day}:improvement:{i}",
+                        "improvement_proposal",
+                        {
+                            **proposal,
+                            "state": "proposed",
+                            "evidence_day": day,
+                            "authority": "Recorded for developer review; does not expand automated maintenance scope",
+                        },
+                    )
                 for i, lesson in enumerate(result["proposed_lessons"]):
                     self.store.memory_put(
                         f"{day}:lesson:{i}",
@@ -485,6 +496,8 @@ class Supervisor:
                 or not r.get("models_available")
             ):
                 return False
+            if self.store.rows("SELECT symbol FROM holdings") or self.broker.orders():
+                return False  # operational round-trip starts only from a flat account
             q = self.broker.quotes(["SPY"]).get("SPY", {})
             _, ask = quote_values(q, now)
             entry = round(ask, 2)
@@ -502,8 +515,18 @@ class Supervisor:
             }
             if now > close - timedelta(minutes=40):
                 return False
+            # Persist the bounded operational intent before submission, including
+            # timeout/response-loss recovery. This is not a strategy-plan exemption.
+            self.store.set(
+                key,
+                {
+                    "at": now.isoformat(),
+                    "state": "submitted",
+                    "expires_at": (now + timedelta(minutes=2)).isoformat(),
+                    "entry_client_id": payload["client_order_id"],
+                },
+            )
             self.engine.submit_intent(payload, "intraday", "operational-smoke-" + day)
-            self.store.set(key, {"at": now.isoformat(), "state": "submitted"})
             self.store.event(
                 "startup",
                 {
@@ -517,16 +540,47 @@ class Supervisor:
         if not rows:
             return False
         order = rows[0]
+        deadline = (
+            timestamp(stage["expires_at"])
+            if stage.get("expires_at")
+            else timestamp(stage["at"]) + timedelta(minutes=2)
+        )
         if order["filled"] > 0:
             self.engine.close_intraday()
-            self.engine.reconcile()
-            if not self.store.rows("SELECT * FROM holdings WHERE branch='intraday'") and not [
-                o for o in self.broker.orders() if o["symbol"] == "SPY"
-            ]:
+            reconciled = self.engine.reconcile()
+            exits = self.store.rows(
+                "SELECT filled FROM orders WHERE symbol='SPY' AND side='sell' AND branch='intraday' AND plan_id IN (?,?,?)",
+                ("operational-smoke-" + day, "close:" + day + ":SPY", "exit:" + day + ":SPY"),
+            )
+            if (
+                reconciled
+                and order["filled"] == 1
+                and sum(e["filled"] for e in exits) == 1
+                and not self.store.rows("SELECT * FROM holdings WHERE branch='intraday'")
+                and not [o for o in self.broker.orders() if o["symbol"] == "SPY"]
+            ):
                 r["execution_verified"] = True
                 r["execution_verified_at"] = utc_now()
                 self.store.set("readiness", r)
-                self.store.set(key, {"at": now.isoformat(), "state": "passed"})
+                self.store.set(
+                    key,
+                    {
+                        **stage,
+                        "state": "passed",
+                        "verified_at": utc_now(),
+                        "entry_filled_qty": 1,
+                        "exit_filled_qty": 1,
+                    },
+                )
+                self.store.event(
+                    "execution_check",
+                    {
+                        "summary": "One-share paper entry and exit fills reconciled; execution gate passed.",
+                        "day": day,
+                        "entry_filled_qty": 1,
+                        "exit_filled_qty": 1,
+                    },
+                )
                 notify(
                     self.config,
                     self.store,
@@ -535,17 +589,50 @@ class Supervisor:
                     "One-share paper entry, broker fill, closing fill and reconciliation passed. Equity paper pilots can now operate.",
                 )
                 return True
-        elif now - timestamp(stage["at"]) > timedelta(minutes=2):
-            if order["broker_id"] and order["status"] not in TERMINAL:
-                self.broker.cancel(order["broker_id"])
-            self.store.set(key, {**stage, "state": "unfilled"})
+        elif order["status"] in TERMINAL:
+            if stage.get("state") != "unfilled":
+                self.store.set(
+                    key,
+                    {
+                        **stage,
+                        "state": "unfilled",
+                        "entry_order_status": order["status"],
+                        "confirmed_at": self.store.get("last_reconciled"),
+                        "reason": stage.get("reason", "entry_terminated_without_fill"),
+                    },
+                )
+                self.store.event(
+                    "execution_check",
+                    {
+                        "summary": "Paper execution check ended without a fill; broker entry status confirmed as "
+                        + order["status"]
+                        + ". Gate remains pending.",
+                        "day": day,
+                        "order_status": order["status"],
+                    },
+                )
             notify(
                 self.config,
                 self.store,
                 "smoke-unfilled:" + day,
                 "Trader - research/shadow mode",
-                "Execution check did not fill. Pending entry canceled; pilots remain disabled.",
+                "Execution check ended without a fill. Broker entry status: "
+                + order["status"]
+                + ". Pilots remain disabled.",
             )
+        elif now >= deadline:
+            if order["broker_id"] and order["status"] not in TERMINAL:
+                if stage.get("state") != "cancel_requested":
+                    self.broker.cancel(order["broker_id"])
+                    self.store.set(
+                        key,
+                        {
+                            **stage,
+                            "state": "cancel_requested",
+                            "cancel_requested_at": now.isoformat(),
+                            "reason": "execution_check_timeout",
+                        },
+                    )
         return False
 
     def benchmarks(self, quotes, now):

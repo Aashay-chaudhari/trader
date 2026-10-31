@@ -74,6 +74,15 @@ entry fill, closing fill and final reconciliation. Until that succeeds, normal
 entries remain blocked and the dashboard says research/shadow. The smoke position
 has broker-held protective bracket orders. No other intraday entries run during it.
 
+The check records its exact one-share SPY intent and a two-minute expiry before
+submission. Cleanup recognizes only the matching persisted client ID, day, branch,
+symbol and quantity; prefix matches, missing metadata and extended expiries do not
+qualify. A branch pause, entry cutoff or expiry still cancels it. A cancellation
+request is recorded separately from a broker-fed terminal state. A restart never
+creates another entry for the same daily check. Partial fills are unwound, but do
+not satisfy the complete one-share gate. Passing requires confirmed entry and exit
+fills plus successful reconciliation and no remaining intraday holdings/SPY orders.
+
 Free IEX quotes must be fresh and sufficiently narrow. Missing data or an unfilled
 smoke check can prevent paper pilots from activating; that is reported explicitly.
 Options remain research/shadow because indicative data cannot establish executable
@@ -213,3 +222,18 @@ Both morning research and daily/periodic retrospectives receive a complete compa
 forward-evidence digest: study window/hash, all twelve trial denominators, missing
 data, net/baseline/stressed horizon means and observed session count. Provisional
 results may explain data gaps; they cannot tune or promote the fixed study.
+
+## Operational evidence and follow-up review
+
+Retrospectives include broker-fed order statuses and confirmation timestamps,
+execution-check state, last reconciliation/errors, bounded incident details and
+explicit selection counts. Period boundaries use Eastern midnight converted to
+UTC, so a daily review does not accidentally include the previous evening.
+A tested code repair remains separate from a real regular-session fill/exit check.
+
+Operational code-change proposals are stored in the `improvement_proposal` memory
+layer. Automated maintenance still edits only the pure adaptive strategy filter;
+it cannot change runtime/risk/promotion code. A developer handles broader proposals.
+Confirmed diagnoses and repair evidence use `operational_finding`; a follow-up
+review uses `operational_review` and preserves the original daily review. The latest
+follow-up is visible in Project & progress and its summary in the decision journal.

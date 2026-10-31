@@ -12,6 +12,8 @@ from datetime import datetime
 from .store import utc_now
 
 PUBLIC_EVENTS = {
+    "execution_check",
+    "operational_review",
     "research_probe_scheduled",
     "research_probe_started",
     "research_probe_completed",
@@ -200,6 +202,7 @@ def snapshot(config, store):
                 "knowledge": knowledge_context(store, max_chars=None),
             },
             "review": store.get("review", {}),
+            "operational_review": store.get("operational_review", {}),
             "research_probes": store.get("research_probes", []),
             "period_reviews": [
                 json.loads(r["value"])
@@ -255,7 +258,7 @@ def export(config, store):
     for name in ("app.js", "style.css"):
         shutil.copyfile(source / name, target / name)
         version = hashlib.sha256((source / name).read_bytes()).hexdigest()[:12]
-        index = index.replace('"' + name + '"', '"' + name + '?v=' + version + '"')
+        index = index.replace('"' + name + '"', '"' + name + "?v=" + version + '"')
     # Version assets so a fresh snapshot cannot be paired with stale CDN scripts.
     (target / "index.html").write_text(index)
     (target / "data").mkdir(exist_ok=True)
