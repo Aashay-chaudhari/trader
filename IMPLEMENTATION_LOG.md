@@ -466,3 +466,13 @@ websockets deprecation warning. Runtime/test lint and native JavaScript syntax p
 All seven actual populated views passed1440px/390px QA, expanded contracts and real
 observations included, no errors/overflow. Receipts are retained privately under
 .runtime/integrated-learning-populated-*. Final CI/deployment activation follows.
+
+### Adaptive upgrade release verification
+
+Source513767466a32fd5548ab6687ed39944c8e16abf3 passed GitHub Tests41220429757:
+full regression suite, locked dependency install, runtime lint and JavaScript syntax.
+Snapshot79105e12 initiated Pages41220441316. The actual post-registration knowledge
+handoff includes both prospective contracts; current morning/review prompt lengths
+22704/24421 remain complete under the28000-character ceiling. The fixed study hash,
+174/174/12 counts, branch cash and zero fills match the prior baseline after all real
+research and calendar-binding runs. Service/public activation follows this receipt.
