@@ -366,3 +366,17 @@ locally and displayed under Project & progress; its summary is in the public jou
 All seven views passed local Chromium desktop/390px-mobile checks, including the
 follow-up panel. Source lint passed. Risk, quota, options restrictions and the fixed
 cohort protocol/window remain unchanged. Deployment receipts follow below.
+
+### Operational repair activation
+
+Final source ad2dafe9 passed GitHub Tests run 41173094113 (287 tests). Pages
+snapshot 24bf33a6 deployed successfully in run 41173121542. All seven actual public
+views passed desktop/390px-mobile QA with the operational follow-up visible and
+no browser errors/viewport overflow.
+
+Reloaded systemd service confirmed broker reconciliation, funding and model
+availability. Broker directly reported $30,000 cash/equity, zero positions/open
+orders. Frozen protocol hash, cohort counts, branch cash and zero filled-order
+count matched the saved pre-reload baseline. Original Friday review remains intact.
+The real fill/exit gate remains false. Broker next-open is November 2 at 09:30 EST;
+the controlled check is eligible from 09:32, subject to existing quote/risk gates.
