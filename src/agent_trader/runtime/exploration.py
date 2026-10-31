@@ -220,60 +220,169 @@ def prepare_screen(config, broker, store):
 
 def exploration_prompt(day, store, screen):
     from .cohorts import normalized_screen
+    from .intelligence import observation_context, objective_scorecard
+    from .adaptive_lab import AdaptiveLab, PROTOCOL
+    from .research import BASE, UNIVERSE, forward_evidence
 
-    screen = normalized_screen(screen)
-    from .research import BASE
-
+    score = objective_scorecard(store)
+    history = normalized_screen(screen)
+    historical_prior = {
+        "metric_contract": history.get("metric_contract"),
+        "dataset_sha256": history.get("dataset_sha256"),
+        "limitations": "Exploratory, inspected historical sample with survivor and selection bias; never forward validation or portfolio returns.",
+        "columns": [
+            "id",
+            "holding_sessions",
+            "development_net",
+            "development_stressed",
+            "holdout_net",
+            "holdout_stressed",
+        ],
+        "trials": [
+            [
+                t["id"],
+                t.get("holding_sessions"),
+                t.get("development", {}).get("mean_horizon_net_return"),
+                t.get("development", {}).get("mean_horizon_stressed_return"),
+                t.get("holdout", {}).get("mean_horizon_net_return"),
+                t.get("holdout", {}).get("mean_horizon_stressed_return"),
+            ]
+            for t in history.get("trials", [])
+        ],
+    }
+    context = {
+        "day": day,
+        "now": utc_now(),
+        "observations": observation_context(store, max_chars=5500),
+        "adaptive_tests": AdaptiveLab(store).context(max_trials=6),
+        "adaptive_protocol": PROTOCOL,
+        "fixed_forward_study": forward_evidence(store),
+        "objective": {k: score[k] for k in ("objective", "research_funnel", "diagnostics")},
+        "brief": {
+            k: str(v)[:900] if isinstance(v, str) else v[:6]
+            for k, v in store.get("brief", {}).items()
+            if k in ("summary", "regime", "unknowns")
+        },
+        "catalogue": [
+            {
+                k: c.get(k)
+                for k in (
+                    "id",
+                    "branch",
+                    "state",
+                    "expires_at",
+                    "observation_ids",
+                    "experiment_ids",
+                )
+            }
+            | {"claim": c.get("claim", "")[:220]}
+            for c in store.get("research_catalogue", [])[-36:]
+        ],
+        "catalogue_total": len(store.get("research_catalogue", [])),
+        "historical_screen": historical_prior,
+        "existing_experiments": [
+            {
+                "id": r["id"],
+                "branch": r["branch"],
+                "state": r["state"],
+                **{
+                    k: v
+                    for k, v in json.loads(r["payload"]).items()
+                    if k
+                    in (
+                        "exact_change",
+                        "parent_version",
+                        "minimum_sessions",
+                        "minimum_samples",
+                        "cost_model",
+                    )
+                },
+            }
+            for r in store.rows("SELECT * FROM experiments")[-18:]
+        ],
+        "allowed_adaptive_symbols": UNIVERSE,
+        "supported_observation_features": [
+            "return_1d",
+            "return_3d",
+            "return_5d",
+            "price_vs_sma20",
+            "gap_from_prior_close",
+            "relative_gap_spy",
+        ],
+        "omitted_for_budget": {"catalogue_history": len(store.get("research_catalogue", [])) - 36}
+        if len(store.get("research_catalogue", [])) > 36
+        else {},
+    }
+    # Prune complete objects. Instructions never share the truncation budget.
+    while len(json.dumps(context, default=str, separators=(",", ":"))) > 18500:
+        if context["historical_screen"].get("trials"):
+            context["historical_screen"]["trials"].pop()
+            selected = "historical_trials"
+        elif context["fixed_forward_study"].get("trials"):
+            context["fixed_forward_study"]["trials"].pop()
+            selected = "fixed_trials"
+        elif len(context["catalogue"]) > 8:
+            context["catalogue"].pop(0)
+            selected = "catalogue"
+        elif len(context["existing_experiments"]) > 6:
+            context["existing_experiments"].pop(0)
+            selected = "existing_experiments"
+        elif context["observations"].get("records"):
+            context["observations"]["records"].pop()
+            selected = "observations"
+        else:
+            raise ValueError("Exploration context cannot fit without losing its evidence contract")
+        context["omitted_for_budget"][selected] = context["omitted_for_budget"].get(selected, 0) + 1
     return (
         BASE
-        + "\nROLE: initial research sprint / hypothesis designer.\n"
-        + json.dumps(
-            {
-                "day": day,
-                "now": utc_now(),
-                "brief": {
-                    k: v
-                    for k, v in store.get("brief", {}).items()
-                    if k in ("summary", "regime", "unknowns")
-                },
-                "historical_screen": screen,
-                "existing_experiments": [
-                    {
-                        "id": r["id"],
-                        "branch": r["branch"],
-                        "state": r["state"],
-                        **{
-                            k: v
-                            for k, v in json.loads(r["payload"]).items()
-                            if k
-                            in (
-                                "exact_change",
-                                "parent_version",
-                                "minimum_sessions",
-                                "minimum_samples",
-                                "cost_model",
-                            )
-                        },
-                    }
-                    for r in store.rows("SELECT * FROM experiments")
-                ],
-                "instructions": "Use at most 5 focused searches and 5 source checks (10 web actions total), primary research and official sources. "
-                "If a publisher/NBER page blocks access, prefer a readable primary author or university working-paper copy and cite the URL actually accessed. Do not invent successful access or use a paid proxy. "
-                "Investigate distinct families: momentum/breakout, mean reversion/pullbacks, earnings/catalysts, macro/rates/regimes, "
-                "and options volatility/event hypotheses (options research only). Explain economic mechanism, contrary evidence, "
-                "free-data feasibility, costs, failure modes and a falsification test. Historical screens are exploratory, "
-                "use current-universe adjusted IEX bars, and are not evidence of an intraday catalyst edge. Report losers too. "
-                "Give a day-one research shortlist, not a claim of proven profitability. Propose at most six experiment contracts "
-                "per equity branch, diversify mechanisms rather than many parameter tweaks. Already registered contracts are immutable. "
-                "Executable exact_change filters: require_risk_on, avoid_risk_off, higher_confidence_075, higher_confidence_085, reward_risk_2. "
-                "Other ideas stay proposed until supported by tested code. Minimum forward sessions20 and samples30 remain. "
-                "Create up to 16 diversified, dated shadow_plans only when fresh levels and event evidence exist; "
-                "these never authorize orders. No options price plans. Plans need narrow observable entries and concrete exits. "
-                "At night or with stale quotes, leave shadow_plans empty. Include explicit uncertainty and next tests. "
-                "Return ExplorationReport JSON. Keep prose concise.",
-            },
-            default=str,
-        )[:24000]
+        + """
+ROLE: continuing observation-led research designer.
+The objective is repeatable net returns with controlled drawdown, not research volume.
+Start with recorded surprises, cross-market differences, data failures or contrary
+forward outcomes. Explain what changed and why it merits a new test. History supplies
+base rates and failure cases; do not recite the same screens or tune their frozen study.
+Consider at least one competing explanation (market exposure, costs, timing, feed
+artifacts, selection or chance). A real observation does NOT establish causality.
+Propose at most THREE distinct hypotheses per pass; an empty batch with an explicit
+reason is better than duplicate claims. Review the catalogue, stale cards and existing
+tests first. Re-review a useful expired card using its ID, preserving its trail.
+Lack of outcome evidence does not by itself prevent preregistering a bounded research
+test: testing is how we obtain that evidence. It does prevent calling the idea proven.
+Narrow a novel observation into a measurable conjecture when the supported inputs
+allow it; do not confuse proposed research with changing the frozen control study.
+Use up to 3 focused searches and 3 primary-source checks. Spend them resolving a
+specific uncertainty, not manufacturing citations for an original empirical idea.
+Set evidence_basis=local_observation for an explicitly conjectural mechanism grounded
+in supplied observation_ids; it can have no external sources. Set mixed/external and
+cite actual readable primary URLs for external factual claims. Local ideas require
+alternative_explanations and a precise predicted_outcome plus falsification. Never
+invent observation IDs or silently treat old event dates as fresh evidence.
+Use adaptive_contracts to make a reviewed idea measurable independently of trade plans:
+immutable long-only numeric conjunctions (1–3 predicates, gte/lte) on the supported
+fields; all ratios are decimal returns, not percentages. Define symbol scope, hypothesis_id,
+branch, prediction and falsification. Intraday horizon=1 session; swing=5 actual sessions;
+first valid quote 15–30 minutes after open, exit close minus12 minutes; 20bp base/50bp
+stressed cost assumptions. At least20 entry sessions and30 active closed signals.
+minimum_signals MUST be <= minimum_sessions * number of symbols. For one symbol
+and30 signals choose at least30 sessions; rare triggers may still be inconclusive.
+Choose a feasible universe and horizon for the question rather than collecting a
+single exceptional event and claiming generality. Both accepted and failed designs remain recorded.
+Registration starts FUTURE sessions only; do not treat today's motivating result as
+an out-of-sample test. At most3 new adaptive contracts per pass,6 active per branch.
+These are observational tests, NOT executable strategies, portfolio returns or automatic
+promotions. Unsupported features/event labels remain explicit development proposals.
+Use the attached protocol's exact all-opportunity aggregation, including cash for
+false signals. It does not report active-only conditional means. relative_gap_spy
+uses current ask changes at the entry observation, not opening-auction gaps.
+Existing executable filter exact_change values: require_risk_on, avoid_risk_off,
+higher_confidence_075, higher_confidence_085, reward_risk_2; existing contracts immutable.
+A shadow_plan must name its exact hypothesis_id in this draft and have fresh levels
+and verified event evidence. No options price plans; options remain qualitative
+research. At night/stale quotes leave shadow_plans empty. Do not force trades.
+Return ExplorationReport JSON. Source/method review permits testing, never proves edge.
+CONTEXT:
+"""
+        + json.dumps(context, default=str, separators=(",", ":"))
     )
 
 
@@ -299,19 +408,61 @@ def validation_prompt(store):
     from .cohorts import normalized_screen
 
     from .research import BASE
+    from .adaptive_lab import PROTOCOL
 
     draft = store.get("exploration_draft", {})
+    ids = sorted({i for h in draft.get("hypotheses", []) for i in h.get("observation_ids", [])})
+    referenced_urls = {u for h in draft.get("hypotheses", []) for u in h.get("source_urls", [])}
+    referenced_trials = {
+        t for h in draft.get("hypotheses", []) for t in h.get("screen_trial_ids", [])
+    }
+    records = []
+    for identity in ids:
+        rows = store.rows(
+            "SELECT id,payload FROM memory WHERE layer='market_observation_lead' AND id=?",
+            (identity,),
+        )
+        if rows:
+            r = json.loads(rows[0]["payload"])
+            records.append(
+                {
+                    k: r.get(k)
+                    for k in (
+                        "id",
+                        "kind",
+                        "subject",
+                        "observed_at",
+                        "event_asof",
+                        "values",
+                        "provenance",
+                    )
+                }
+            )
+        else:
+            records.append({"id": identity, "status": "missing; cannot validate"})
+    screen = normalized_screen(store.get("historical_screen", {}))
     context = {
         "revision": draft.get("revision"),
+        "draft_at": draft.get("at"),
         "hypotheses": draft.get("hypotheses", []),
-        "sources": draft.get("sources", []),
-        "historical_screen": normalized_screen(store.get("historical_screen", {})),
+        "sources": [
+            {k: v for k, v in source.items() if k != "takeaway"}
+            for source in draft.get("sources", [])
+            if source.get("url") in referenced_urls
+        ],
+        "historical_screen": {
+            "trials": [t for t in screen.get("trials", []) if t.get("id") in referenced_trials],
+            "limitations": screen.get("limitations", []),
+        },
+        "adaptive_contracts": draft.get("adaptive_contracts", []),
+        "adaptive_protocol": PROTOCOL,
+        "observations": records,
     }
     instructions = """
 ROLE: independent research validator, not the original researcher.
 Use at most 1 focused search and 3 source checks (4 web actions total) to check primary sources and counterevidence.
 For EVERY hypothesis return exactly one verdict. Accept for testing only when cited
-evidence supports the mechanism, falsification is concrete, and free-data limits
+evidence supports the external factual claims, falsification is concrete, and free-data limits
 are explicit. Reject fabricated citations and historical claims unsupported by the
 attached screen. Screen metrics are horizon returns averaged across unit opportunities,
 grouped by entry session; five-session swing returns are NOT daily portfolio returns.
@@ -322,10 +473,32 @@ bounded mechanism, not merely the supplied abstract, URL list or a search snippe
 Mark blocked, unfinished or supplied-only checks partial/unverified and needs_work.
 List only URLs actually checked, drawn from that hypothesis's source_urls.
 All its cited URLs must be checked for acceptance; otherwise hold it for later.
+For local_observation conjectures, a published paper is NOT required: validate the
+supplied immutable observations, their event/capture dates, competing explanations,
+and the proposed future prediction. An observed association does not prove the
+conjectured mechanism. With no external claims/sources use source_check_status=
+not_applicable, checked_source_urls=[]; never use that to exempt an external fact.
+Set method_check_status=reviewed only when the proposed test measures the actual
+claim, supported features/horizon/units match, and falsification and costs are explicit.
+An adaptive contract must reference this hypothesis, use the same branch, and test
+only future data; motivating observations are not validation samples. Hold ideas
+whose test fails to distinguish the explanation from alternatives. Validation may
+accept bounded descriptive testing without asserting causality or profitability.
+The attached implemented protocol defines supported features, time/adjustment rules,
+missingness and reported units. Do not require future prices to exist before
+registering a prospective test; unavailable future observations will be missing.
+Reported means include false-signal cash opportunities and group by entry session.
+Do not approve a falsification rule requiring unimplemented active-only statistics
+or assert that groups selected by opposing conditions identify a causal effect.
 Unverifiable claims need work. Acceptance means source/method review only, never
 profitability validation. Return ResearchValidation JSON.
 """
-    return BASE + instructions + json.dumps(context, default=str, separators=(",", ":"))
+    prompt = BASE + instructions + json.dumps(context, default=str, separators=(",", ":"))
+    if len(prompt) > 27000:
+        raise ValueError(
+            "Validation batch too large; retain complete evidence and split into smaller research batches"
+        )
+    return prompt
 
 
 def record_validation(store, result):
@@ -348,6 +521,7 @@ def record_validation(store, result):
     by_id = {v["id"]: v for v in result["hypotheses"]}
     catalogue = {c["id"]: c for c in store.get("research_catalogue", [])}
     approved_experiments = set()
+    accepted_ids = set()
     now = datetime.now(timezone.utc)
     for h in hypotheses:
         verdict = by_id[h["id"]]
@@ -366,17 +540,61 @@ def record_validation(store, result):
             dates_ok = False
         links_ok = set(h["screen_trial_ids"]) <= trial_ids
         checks = set(verdict.get("checked_source_urls", []))
+        from .intelligence import observation_ids_valid
+
+        local = h.get("evidence_basis", "external") in ("local_observation", "mixed")
+        local_ok = not local or (
+            observation_ids_valid(store, h.get("observation_ids", []), before=draft.get("at"))
+            and bool(h.get("alternative_explanations"))
+            and bool(h.get("predicted_outcome"))
+            and verdict.get("method_check_status") == "reviewed"
+        )
         independently_checked = (
             verdict.get("source_check_status") == "verified"
             and bool(h["source_urls"])
             and checks == set(h["source_urls"])
         )
+        if h.get("evidence_basis") == "local_observation" and not h["source_urls"]:
+            independently_checked = (
+                verdict.get("source_check_status") == "not_applicable" and not checks
+            )
+        previous_card = catalogue.get(h["id"])
+        linked = store.rows(
+            "SELECT name FROM sqlite_master WHERE name='adaptive_contracts'"
+        ) and store.rows(
+            "SELECT id FROM adaptive_contracts WHERE json_extract(payload,'$.hypothesis_id')=?",
+            (h["id"],),
+        )
+        if (
+            previous_card
+            and linked
+            and any(
+                previous_card.get(k) != h.get(k)
+                for k in (
+                    "branch",
+                    "claim",
+                    "mechanism",
+                    "falsification",
+                    "predicted_outcome",
+                    "evidence_basis",
+                )
+            )
+        ):
+            store.event(
+                "adaptive_contract_rejected",
+                {
+                    "id": h["id"],
+                    "reason": "A tested hypothesis definition is immutable; use a new hypothesis/version ID for a changed claim",
+                },
+            )
+            continue
         accepted = (
             verdict["verdict"] == "accepted_for_testing"
             and citation_ok
             and dates_ok
             and links_ok
             and independently_checked
+            and local_ok
         )
         gate_issues = []
         if not citation_ok:
@@ -390,6 +608,10 @@ def record_validation(store, result):
         if not independently_checked:
             gate_issues.append(
                 "Independent primary-source checks are partial, unverified or missing. Reviewer attestations are not automated content authentication."
+            )
+        if not local_ok:
+            gate_issues.append(
+                "Local observations, pre-draft timing, alternatives, prediction or independent method review are missing."
             )
         state = (
             "reviewed_for_testing"
@@ -405,6 +627,8 @@ def record_validation(store, result):
             + (" Automated checks: " + " ".join(gate_issues) if gate_issues else ""),
             "reviewer_verdict": verdict["verdict"],
             "source_check_status": verdict.get("source_check_status", "unverified"),
+            "method_check_status": verdict.get("method_check_status", "unreviewed"),
+            "observation_provenance_verified": bool(local and local_ok),
             "checked_source_urls": sorted(checks),
             "automated_check_issues": gate_issues,
             "reviewed_at": utc_now(),
@@ -418,7 +642,42 @@ def record_validation(store, result):
         )
         catalogue[h["id"]] = card
         if accepted:
+            accepted_ids.add(h["id"])
             approved_experiments.update(h["experiment_ids"])
+    accepted_current = {h["id"]: catalogue[h["id"]] for h in hypotheses if h["id"] in accepted_ids}
+    from .adaptive_lab import AdaptiveLab
+
+    adaptive = AdaptiveLab(store)
+    for proposal in draft.get("adaptive_contracts", [])[:3]:
+        card = accepted_current.get(proposal.get("hypothesis_id"))
+        if (
+            not card
+            or card["branch"] != proposal.get("branch")
+            or (
+                card.get("method_check_status") != "reviewed"
+                or not observation_ids_valid(
+                    store, card.get("observation_ids", []), before=draft.get("at")
+                )
+            )
+        ):
+            store.event(
+                "adaptive_contract_rejected",
+                {
+                    "id": proposal.get("id"),
+                    "reason": "Current reviewed hypothesis, method and local observation linkage required",
+                },
+            )
+            continue
+        try:
+            adaptive.register(proposal)
+        except (ValueError, KeyError, TypeError):
+            store.event(
+                "adaptive_contract_rejected",
+                {
+                    "id": proposal.get("id"),
+                    "reason": "Invalid, changed or duplicate prospective contract",
+                },
+            )
     registry = Experiments(store)
     for proposal in draft.get("experiments", []):
         if proposal["id"] in approved_experiments:
@@ -433,17 +692,15 @@ def record_validation(store, result):
     store.set("exploration_report", {**draft, "validation": result, "validated_at": utc_now()})
     # Research-generated shadow plans also require the method/source review. They
     # can NEVER enter the execution plans table or normal entry review queue.
-    ready_branches = {
-        c["branch"]
-        for c in catalogue.values()
-        if c["state"] == "reviewed_for_testing" and c["free_data_feasibility"] == "ready"
-    }
     store.set(
         "exploration_shadow_plans",
         [
             p
             for p in draft.get("shadow_plans", [])
-            if p["branch"] in ready_branches and p["branch"] != "options"
+            if p.get("hypothesis_id") in accepted_current
+            and accepted_current[p["hypothesis_id"]]["branch"] == p["branch"]
+            and accepted_current[p["hypothesis_id"]]["free_data_feasibility"] == "ready"
+            and p["branch"] != "options"
         ],
     )
     store.set("exploration_validated_draft", draft.get("revision"))
@@ -462,6 +719,9 @@ def record_validation(store, result):
 def knowledge_context(store, *, max_chars=6500):
     """Explicit morning-loop handoff, with experiment evidence joined at retrieval."""
     now = datetime.now(ET)
+    from .adaptive_lab import AdaptiveLab
+
+    adaptive_trials = AdaptiveLab(store).summary()["trials"]
     cards = []
     for original in store.get("research_catalogue", []):
         if original["state"] != "reviewed_for_testing" or timestamp(original["expires_at"]) <= now:
@@ -487,6 +747,27 @@ def knowledge_context(store, *, max_chars=6500):
                     }
                 )
         card["forward_evidence"] = evidence
+        card["adaptive_tests"] = [
+            {
+                k: trial[k]
+                for k in (
+                    "id",
+                    "state",
+                    "closed",
+                    "closed_signals",
+                    "closed_sessions",
+                    "not_evaluable",
+                    "cumulative",
+                )
+            }
+            for trial in adaptive_trials
+            if trial["hypothesis_id"] == original["id"]
+        ]
+        card["test_status"] = (
+            "registered_test"
+            if evidence or card["adaptive_tests"]
+            else "reviewed_without_implemented_test"
+        )
         card["evidence_level"] = (
             "forward_validated_filter"
             if any(e["state"] == "promoted" for e in evidence)
@@ -517,6 +798,13 @@ def knowledge_context(store, *, max_chars=6500):
                     "caution",
                     "source_check_status",
                     "checked_source_urls",
+                    "evidence_basis",
+                    "observation_ids",
+                    "alternative_explanations",
+                    "predicted_outcome",
+                    "method_check_status",
+                    "adaptive_tests",
+                    "test_status",
                 )
                 if k in c
             }

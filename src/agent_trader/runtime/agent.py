@@ -17,6 +17,30 @@ class AgentUnavailable(RuntimeError):
     pass
 
 
+def response_schema(model):
+    """Transport requires every property, including locally defaulted fields.
+
+    Pydantic defaults keep old stored records readable; model output must still
+    state those fields explicitly. This does not weaken local model validation.
+    """
+    schema = model.model_json_schema()
+
+    def visit(value):
+        if isinstance(value, dict):
+            value.pop("default", None)
+            if value.get("type") == "object" and "properties" in value:
+                value["required"] = list(value["properties"])
+                value["additionalProperties"] = False
+            for child in value.values():
+                visit(child)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child)
+
+    visit(schema)
+    return schema
+
+
 class CodexRPC:
     """Authenticated subscription-only local harness; no OpenAI API client."""
 
@@ -353,6 +377,10 @@ def run_task(
 ):
     from .store import Store
 
+    if len(prompt) > config.max_input_chars:
+        raise AgentUnavailable(
+            "Complete evidence packet exceeds input budget; shrink whole records before calling the model"
+        )
     store = Store(config.state_dir / "trader.sqlite3")
     try:
         with CodexRPC(config) as rpc:
@@ -401,10 +429,10 @@ def run_task(
                 context = {}
             t, payload, usage, counters = rpc.run(
                 thread_id,
-                prompt[: config.max_input_chars],
+                prompt,
                 model,
                 effort,
-                response_model.model_json_schema(),
+                response_schema(response_model),
                 max_searches=searches,
                 max_cycles=cycles,
             )
@@ -466,16 +494,44 @@ def run_task(
             return parsed.model_dump(mode="json")
     except Exception as exc:
         if "usage_id" in locals():
+            failure = {
+                "state": "failed",
+                "error_type": type(exc).__name__,
+                "partial_tokens": "unavailable unless reported before interruption",
+            }
+            if "payload" in locals() and isinstance(payload, dict):
+                # A completed model reply rejected by local semantic validation is
+                # still evidence and measured work. Preserve it privately for repair.
+                from .quality import record_artifact
+
+                try:
+                    record_artifact(
+                        store, day, role, payload, "schema-rejected:" + str(usage_id), "rejected"
+                    )
+                except Exception as capture_error:
+                    failure["artifact_capture_error"] = type(capture_error).__name__
+                measured = usage.get("last") or usage.get("total") or usage
+                failure.update(counters)
+                failure["reply_usage_reported"] = (
+                    "inputTokens" in measured or "outputTokens" in measured
+                )
+                if failure["reply_usage_reported"]:
+                    failure["partial_tokens"] = (
+                        "completed reply usage retained; application validation failed"
+                    )
+                store.db.execute(
+                    "UPDATE usage SET input_tokens=?,cached_tokens=?,output_tokens=? WHERE id=?",
+                    (
+                        measured.get("inputTokens", 0),
+                        measured.get("cachedInputTokens", 0),
+                        measured.get("outputTokens", 0),
+                        usage_id,
+                    ),
+                )
             store.db.execute(
                 "UPDATE usage SET payload=? WHERE id=?",
                 (
-                    dumps(
-                        {
-                            "state": "failed",
-                            "error_type": type(exc).__name__,
-                            "partial_tokens": "unavailable unless reported before interruption",
-                        }
-                    ),
+                    dumps(failure),
                     usage_id,
                 ),
             )

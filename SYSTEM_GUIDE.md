@@ -279,3 +279,18 @@ Runtime/data changes still require controlled developer work. Automatic maintena
 can only edit the pure adaptive strategy filter; audit findings cannot expand it.
 Free-only data, existing account quota reserve, execution/risk gates and frozen
 cohort protocol remain unchanged. See RESEARCH_QUALITY_AUDIT.md for audit receipts.
+
+## Return objective and adaptive research
+
+The Project view reports reconciled account returns, explicit extra-friction stress,
+prospective verified drawdown and learning/development bottlenecks. Strategy lab
+shows independently reviewed adaptive observation studies and their motivating
+questions. The original fixed forward study remains separate and unchanged.
+
+Discovery continues after ten mornings for new observations/expired cards and Monday
+review. Supported new studies need no executable trade plan and have no broker
+permission. Their registration and exact definitions are immutable. Research prompt
+budgets retain complete records; oversized inputs fail before a model call. Broad
+runtime maintenance remains a developer release task, not unattended kernel mutation.
+Post-change mechanics are assessed only on later completed sessions, with preserved
+baseline metadata and explicit evidence scope. See ADAPTIVE_ENGINE_AUDIT.md.

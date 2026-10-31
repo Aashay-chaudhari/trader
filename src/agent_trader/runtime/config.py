@@ -11,6 +11,40 @@ ET = ZoneInfo("America/New_York")
 BRANCHES = ("intraday", "swing", "options")
 
 
+RESEARCH_UNIVERSE = [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "GOOGL",
+    "META",
+    "JPM",
+    "XOM",
+    "AVGO",
+    "AMD",
+    "TSLA",
+    "UNH",
+    "WMT",
+    "COST",
+    "LLY",
+    "GE",
+    "XLK",
+    "XLF",
+    "XLE",
+    "XLV",
+    "TLT",
+    "IEF",
+    "HYG",
+    "GLD",
+    "USO",
+    "UUP",
+]
+
+
 def now_et():
     return datetime.now(ET)
 

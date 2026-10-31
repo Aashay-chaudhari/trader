@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from .adaptive_lab import AdaptiveContract
 
 
 class Strict(BaseModel):
@@ -16,6 +17,12 @@ class Evidence(Strict):
     published_at: str | None
     observed_at: datetime
     takeaway: str = Field(max_length=900)
+
+    @model_validator(mode="after")
+    def aware_observation(self):
+        if self.observed_at.tzinfo is None:
+            raise ValueError("Evidence observation needs a timezone")
+        return self
 
 
 class MarketEvent(Strict):
@@ -148,17 +155,42 @@ class ResearchHypothesis(Strict):
     mechanism: str = Field(min_length=15, max_length=1000)
     falsification: str = Field(min_length=15, max_length=1000)
     free_data_feasibility: Literal["ready", "limited", "unavailable"]
-    source_urls: list[str] = Field(min_length=1, max_length=5)
+    evidence_basis: Literal["external", "local_observation", "mixed"] = "external"
+    observation_ids: list[str] = Field(default_factory=list, max_length=6)
+    alternative_explanations: list[Annotated[str, Field(max_length=300)]] = Field(
+        default_factory=list, max_length=3
+    )
+    predicted_outcome: str = Field(default="", max_length=700)
+    source_urls: list[str] = Field(max_length=5)
     screen_trial_ids: list[str] = Field(max_length=4)
     experiment_ids: list[str] = Field(max_length=6)
+
+    @model_validator(mode="after")
+    def evidence(self):
+        if self.evidence_basis in ("external", "mixed") and not self.source_urls:
+            raise ValueError("External factual claims require cited sources")
+        if self.evidence_basis in ("local_observation", "mixed") and (
+            not self.observation_ids
+            or not self.alternative_explanations
+            or not self.predicted_outcome
+        ):
+            raise ValueError(
+                "Observation-led ideas need recorded evidence, alternatives and a prediction"
+            )
+        return self
+
+
+class ResearchShadowPlan(Plan):
+    hypothesis_id: str = Field(min_length=4, max_length=70)
 
 
 class ExplorationReport(Strict):
     summary: str = Field(max_length=2500)
-    hypotheses: list[ResearchHypothesis] = Field(min_length=1, max_length=12)
+    hypotheses: list[ResearchHypothesis] = Field(max_length=12)
     experiments: list[ExperimentContract] = Field(max_length=12)
-    shadow_plans: list[Plan] = Field(max_length=16)
-    sources: list[Evidence] = Field(min_length=2, max_length=16)
+    adaptive_contracts: list[AdaptiveContract] = Field(default_factory=list, max_length=3)
+    shadow_plans: list[ResearchShadowPlan] = Field(max_length=16)
+    sources: list[Evidence] = Field(max_length=16)
     uncertainties: list[str] = Field(max_length=15)
 
 
@@ -166,8 +198,11 @@ class HypothesisValidation(Strict):
     id: str
     verdict: Literal["accepted_for_testing", "needs_work", "rejected"]
     reason: str = Field(min_length=15, max_length=1000)
-    source_check_status: Literal["verified", "partial", "unverified"] = "unverified"
+    source_check_status: Literal["verified", "partial", "unverified", "not_applicable"] = (
+        "unverified"
+    )
     checked_source_urls: list[str] = Field(default_factory=list, max_length=5)
+    method_check_status: Literal["reviewed", "needs_work", "unreviewed"] = "unreviewed"
 
 
 class ResearchValidation(Strict):

@@ -323,6 +323,7 @@ def test_validator_receives_actual_screen_metrics_not_only_trial_names(store):
         "historical_screen",
         {"trials": [{"id": "swing-reversal", "holdout": {"mean_daily_net": 0.00123}}]},
     )
+    store.set("exploration_draft", {"hypotheses": [{"screen_trial_ids": ["swing-reversal"]}]})
     prompt = validation_prompt(store)
     assert "0.00123" in prompt
     assert "five-session swing returns are NOT daily portfolio returns" in prompt

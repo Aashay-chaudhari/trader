@@ -138,7 +138,18 @@ def daily_audit(store, day, persist=False):
         urls.update(s["url"] for s in r.get("sources", []) if s.get("url"))
     catalogue = store.get("research_catalogue", [])
     reviewed = [c for c in catalogue if c.get("state") == "reviewed_for_testing"]
-    unattested = [c["id"] for c in reviewed if c.get("source_check_status") != "verified"]
+    unattested = [
+        c["id"]
+        for c in reviewed
+        if c.get("source_check_status") != "verified"
+        and not (
+            c.get("evidence_basis") == "local_observation"
+            and not c.get("source_urls")
+            and c.get("source_check_status") == "not_applicable"
+            and c.get("method_check_status") == "reviewed"
+            and c.get("observation_provenance_verified")
+        )
+    ]
     known_no_plan = sum(
         a["role"] == "research"
         and a["outcome"] == "applied"
@@ -161,7 +172,9 @@ def daily_audit(store, day, persist=False):
         "output_tokens": sum(r["output_tokens"] for r in usage),
         "web_actions": sum(json.loads(r["payload"]).get("searches", 0) for r in usage),
         "unreported_attempts": sum(
-            json.loads(r["payload"]).get("state") in ("started", "failed") for r in usage
+            json.loads(r["payload"]).get("state") in ("started", "failed")
+            and not json.loads(r["payload"]).get("reply_usage_reported", False)
+            for r in usage
         ),
     }
     candidates = []
@@ -261,13 +274,34 @@ def daily_audit(store, day, persist=False):
                 key,
                 "improvement_proposal",
                 {
+                    **old,
                     **f,
                     "first_seen": old.get("first_seen", utc_now()),
                     "last_seen": utc_now(),
                     "evidence_day": day,
+                    "baseline_evidence_day": old.get(
+                        "baseline_evidence_day", old.get("evidence_day", day)
+                    ),
+                    "baseline_problem": old.get(
+                        "baseline_problem", old.get("problem", f["problem"])
+                    ),
                     "authority": "Developer proposal; automated maintenance remains filter-only",
                 },
             )
+    from .development import assess_changes
+
+    effects = assess_changes(store, day, persist=persist)
+    report["development_effects"] = {
+        "scope": effects["scope"],
+        "state_counts": effects["state_counts"],
+        "changes": [
+            {k: effect.get(k) for k in ("id", "state", "evidence_day", "metrics", "reason")}
+            for effect in effects["changes"]
+        ],
+    }
+    if persist:
+        store.set("quality-audit:" + day, report)
+        store.set("quality_audit", report)
     return report
 
 
@@ -284,12 +318,14 @@ def digest(store, day):
             "reviewed_without_explicit_source_attestation",
             "findings",
             "limits",
+            "development_effects",
         )
     }
 
 
 def pulse_prompt(context, store):
     from .research import BASE
+    from .intelligence import observation_context
 
     p = {
         "now": utc_now(),
@@ -297,6 +333,7 @@ def pulse_prompt(context, store):
         "baseline_summary": context.get("brief", {}).get("summary", "")[:800],
         "events": context.get("brief", {}).get("events", [])[:6],
         "symbols": context.get("symbols", []),
+        "observed_questions": observation_context(store, max_chars=1600),
         "recent_updates": [
             {
                 "at": u.get("at"),

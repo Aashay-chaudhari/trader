@@ -1,4 +1,4 @@
-# Release readiness — October 31, 2026 operational repair
+# Release readiness — October 31, 2026 adaptive research upgrade
 
 The local paper execution/research system and seven-view GitHub Pages dashboard
 are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
@@ -15,7 +15,7 @@ are implemented. Current receipts are recorded in IMPLEMENTATION_LOG.md.
 - Thirty free market snapshots, thirty daily indicator sets, five dated FRED series
   and indicative options observations. BEA official calendar fetched/parsed; BLS
   direct feed returns 403, explicitly unavailable with ordinary official-web fallback.
-- 307 regression tests, including 137 active-runtime tests; runtime/test lint.
+- 368 regression tests, including 198 active-runtime tests; runtime/test lint.
   One pre-existing legacy dependency deprecation warning.
 - Chromium checks of all seven views at desktop and 390px mobile widths, including
   Project section navigation. Source JavaScript is also checked by CI.
@@ -96,3 +96,18 @@ Daily audit, durable artifacts/backlog, complete maintenance/review packets,
 focused pulses and explicit source checks are implemented. Main input cap remains
 28,000 characters; measured sample packets fit it. The regular-session fill/exit
 gate remains pending independently. Source CI/public QA receipts are logged below.
+
+## Observation-led adaptation verification
+
+The actual discovery/review path was exercised, including transport schema failures,
+invalid specifications and independent method rejection. Constraints and evidence
+packets were corrected rather than bypassing validation. A revised local hypothesis
+passed independent review and registered two future-only studies, each six symbols
+by sixty entry dates;720 opportunities pending, zero outcomes. Original rejections
+and draft versions remain recorded. Broker calendar fixes first entry November2
+and final entry January28. This is descriptive research, not strategy promotion.
+
+All seven actual populated frontend views passed at1440px and390px. Post-change
+mechanics assessments await later completed sessions. Fixed study hash/counts,
+three branch balances and zero-fill state match the pre-audit baseline. CI and
+service activation receipts are in IMPLEMENTATION_LOG.md.

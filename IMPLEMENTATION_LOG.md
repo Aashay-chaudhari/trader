@@ -433,3 +433,36 @@ pre-upgrade baseline. The original Friday daily review and original source repor
 remain preserved. Four current reviewed cards have explicit source attestations;
 thirteen are held. Actual next-session feature freshness, improved decision quality
 and regular-session fill/exit remain unproven; no paid resources or risk increases.
+
+## Adaptive return-engine audit — October 31, 2026
+
+Audited the gap between research activity and measurable economic learning. Added
+immutable observation leads, continuing discovery, independent local-method versus
+external-source review, typed future-only observation contracts, explicit test
+handoff, return/cost-stress/drawdown metrics and later-session development effects.
+Original fixed study, account allocation, execution/risk gates and free-only policy
+were preserved. ADAPTIVE_ENGINE_AUDIT.md records rationale and challenges to vision.
+
+Independent code reviews identified and resolved scheduler fallthrough, evidence
+linkage, older-reference retrieval, complete-packet budgeting, malformed timestamps
+and research fault isolation. Actual model integration exposed required-field schema
+compatibility, catalogue displacement, an infeasible signal budget and an unsupported
+symbol. The supported universe is now explicit in schema/context; mathematical and
+metric constraints are explicit. Rejected completed replies retain their private
+payload and measured usage. An independent reviewer also rejected an unsupported
+historical statement and requested implemented measurement definitions. The repaired
+specification uses the actual all-opportunity metric and was independently accepted
+for descriptive testing only; original drafts/rejections remain recorded.
+
+Two contracts now bind six symbols over sixty actual entry sessions, November2–
+January28, each360 preregistered opportunities. All720 remain pending; zero adaptive
+outcomes, orders or promotions. Catalogue: four source-reviewed plus one local
+observation/method-reviewed hypothesis; thirteen held. The fixed study remains
+174closed/174open/12not-evaluable, with identical protocol hash; cash remains10k per
+branch and filled-order count0. Return is0%, no edge established.
+
+Full local suite:368passed, including198runtime tests; one unchanged legacy
+websockets deprecation warning. Runtime/test lint and native JavaScript syntax pass.
+All seven actual populated views passed1440px/390px QA, expanded contracts and real
+observations included, no errors/overflow. Receipts are retained privately under
+.runtime/integrated-learning-populated-*. Final CI/deployment activation follows.

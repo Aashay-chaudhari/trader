@@ -139,3 +139,6 @@ inputs, source-check attestations, full artifact coverage and redundant work. It
 findings feed retrospectives and a durable development backlog. Research uses free
 completed-minute IEX features when available; offline checks are never backfilled
 as forward evidence. The dashboard shows the audit and explicit source-review status.
+
+The [adaptive engine audit](ADAPTIVE_ENGINE_AUDIT.md) records the return objective,
+observation-driven discovery, prospective tests, autonomy boundaries and limitations.

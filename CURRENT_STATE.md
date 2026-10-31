@@ -20,8 +20,10 @@ The persistent vision remains REFACTOR_SCOPE.md.
   These are correlated research units, not filled trades or portfolio profits.
   Study protocol/window/input history remain unchanged.
 - Friday research assessed six hypotheses: four accepted for further testing and
-  two held, with source-verification limits explicit. After the stricter October 31 source recheck, four catalogue cards are
-  reviewed for testing and thirteen held. Eight existing filter challengers still have zero samples.
+  two held, with source-verification limits explicit. After the stricter October 31 source recheck, four catalogue cards were
+  reviewed for testing and thirteen held. The later observation-led audit added one
+  independently method-reviewed local hypothesis: current total five reviewed,
+  thirteen held. Eight existing filter challengers still have zero samples.
 - Daily/weekly/monthly reviews and maintenance completed; no strategy changes or
   promotions. Operational evidence now includes confirmed order states, timestamps,
   execution-check outcomes and incident details. Proposals persist separately from
@@ -39,3 +41,16 @@ exact three-session inputs and completed-minute IEX features when available;
 source checks have explicit attestation gates. No-exposure pulses use one midday
 update, and identical-evidence period rollups avoid redundant calls. The original
 Friday records and frozen study remain intact; fill/exit verification is pending.
+
+October 31 adaptive engine audit: continuous observation-led discovery now designs
+independently reviewed declarative studies without depending on trade plans. Two
+intraday comparison contracts for one hypothesis are registered over 60 actual
+entry sessions, November 2 through January 28, with 720 future opportunities and
+zero outcomes. The source-supported four cards and the new local conjecture carry
+distinct evidence checks. No strategy was promoted or order submitted by the audit.
+
+The Project/Strategy lab views now show account returns, explicit friction stress,
+prospective verified drawdown, research bottlenecks, actual observations and adaptive
+studies. Deployed research fixes receive later-session mechanical-effect assessments.
+Broader nightly application rewrites remain a reviewed release task. Details and
+remaining limitations: ADAPTIVE_ENGINE_AUDIT.md.

@@ -79,6 +79,10 @@ def maintenance_prompt(config, review):
         {k: f.get(k) for k in ("id", "state", "problem", "requested_change", "validation_plan")}
         for f in audit.get("findings", [])[:5]
     ]
+    compact_audit["development_effects"] = [
+        {k: effect.get(k) for k in ("id", "state", "evidence_day", "reason")}
+        for effect in audit.get("development_effects", {}).get("changes", [])[:6]
+    ]
     packet = {"research_quality_audit": compact_audit, "daily_review": daily}
     budget = max(1000, min(12000, config.max_input_chars - len(source) - 2000))
     while len(json.dumps(packet)) > budget:

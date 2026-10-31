@@ -62,3 +62,18 @@ states feed a deterministic daily quality audit. Retrospective and maintenance g
 that audit in complete JSON; operational proposals persist in a development backlog.
 The audit itself grants no trade, promotion or kernel-editing authority. Offline
 feature replays remain separate from recorded forward observations.
+
+## Continuing observation-led discovery (October 31 upgrade)
+
+The ten mornings are an initial cadence, not an end to discovery. At08:35 the role
+continues when new observation IDs exist, reviewed cards expire, or on Monday.
+Fifteen-minute quote captures, market packets and later test outcomes support new
+questions. Every local conjecture names its actual recorded IDs, alternatives and a
+prediction; external factual claims still require independently checked sources.
+
+A separate adaptive observation lab can test supported numeric conjunctions without
+waiting for executable plans. Reviewed contracts bind only future actual sessions,
+retain failed/missing opportunities and compare cash and unconditional same-symbol
+observations. Results feed morning knowledge and retrospectives; no observation
+result automatically promotes an executable strategy. Unsupported event features
+remain explicit development work. ADAPTIVE_ENGINE_AUDIT.md specifies the full path.

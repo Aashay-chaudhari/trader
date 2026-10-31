@@ -3,42 +3,12 @@ from __future__ import annotations
 import json
 from datetime import date, datetime, timedelta, timezone
 
-from .config import ET
+from .config import ET, RESEARCH_UNIVERSE
 
 from .store import utc_now
 
-UNIVERSE = [
-    "SPY",
-    "QQQ",
-    "IWM",
-    "DIA",
-    "AAPL",
-    "MSFT",
-    "NVDA",
-    "AMZN",
-    "GOOGL",
-    "META",
-    "JPM",
-    "XOM",
-    "AVGO",
-    "AMD",
-    "TSLA",
-    "UNH",
-    "WMT",
-    "COST",
-    "LLY",
-    "GE",
-    "XLK",
-    "XLF",
-    "XLE",
-    "XLV",
-    "TLT",
-    "IEF",
-    "HYG",
-    "GLD",
-    "USO",
-    "UUP",
-]
+UNIVERSE = RESEARCH_UNIVERSE
+
 
 BASE = """You are the research/decision role inside an autonomous PAPER trading laboratory.
 Use only free public research. Never access credentials, private files, broker tools,
@@ -215,6 +185,9 @@ def market_packet(broker, store):
             "packet": packet,
         },
     )
+    from .intelligence import capture_observations
+
+    capture_observations(store, packet)
     # Persist forward observation, with no retroactive replacement.
     store.event(
         "market_observation",
@@ -284,8 +257,10 @@ def forward_evidence(store):
 
 def research_prompt(day, packet, store):
     from .exploration import knowledge_context
+    from .intelligence import observation_context
+    from .adaptive_lab import AdaptiveLab
 
-    knowledge = knowledge_context(store, max_chars=4500)
+    knowledge = knowledge_context(store, max_chars=3500)
     selected = set(packet.get("focus_symbols", [])) | {"SPY", "QQQ", "TLT"}
     if not packet.get("focus_symbols"):
         selected |= set(list(packet.get("market", {}))[:3])
@@ -335,14 +310,23 @@ def research_prompt(day, packet, store):
         for symbol, d in packet.get("market", {}).items()
         if symbol in selected
     }
-    memory = store.rows(
-        "SELECT layer,payload FROM memory WHERE layer='lesson' AND (expires IS NULL OR expires>?) ORDER BY at DESC LIMIT 8",
+    lessons = store.rows(
+        "SELECT layer,payload FROM memory WHERE layer='lesson' AND (expires IS NULL OR expires>?) ORDER BY at DESC LIMIT 40",
         (utc_now(),),
     )
+    memory, seen_lessons = [], set()
+    for row in lessons:
+        lesson = json.loads(row["payload"])
+        claim = " ".join(str(lesson.get("claim", "")).lower().split())
+        if claim and claim not in seen_lessons:
+            memory.append({"layer": row["layer"], "payload": lesson})
+            seen_lessons.add(claim)
+        if len(memory) >= 8:
+            break
     while len(json.dumps(memory)) > 1500 and memory:
         memory.pop()
     # Keep complete objects within the shared model input cap.
-    while len(json.dumps(compact, separators=(",", ":"))) > 14000 and compact.get("market"):
+    while len(json.dumps(compact, separators=(",", ":"))) > 11000 and compact.get("market"):
         compact["market"].pop(next(reversed(compact["market"])))
     return (
         BASE
@@ -376,9 +360,14 @@ REUSABLE RESEARCH (independently reviewed; evidence levels are explicit):
 {json.dumps(knowledge)}
 Use relevant reviewed hypotheses to guide today's discovery, contrary-evidence checks and plan design.
 State which knowledge IDs informed a thesis. Never treat research review or a historical screen as proven edge.
+Use observation-led questions and prospective results below to challenge yesterday's
+explanation. Name the evidence that would change today's decision. Adaptive studies
+are research only: their quotes, abstentions and thresholds never authorize an order.
 Cards marked legacy_unattested are research leads requiring fresh source checks,
 not independently authenticated evidence. Source-check fields are reviewer attestations.
 Existing lessons are proposals unless marked tested.\nMEMORY:{json.dumps(memory)}
+OBSERVATION-LED QUESTIONS:{json.dumps(observation_context(store, max_chars=2200), separators=(",", ":"))}
+ADAPTIVE TESTS:{json.dumps(AdaptiveLab(store).context(max_trials=3), separators=(",", ":"))}
 FORWARD EVIDENCE (provisional, separate from source review and broker P&L):{json.dumps(forward_evidence(store), separators=(",", ":"))}
 STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str, separators=(",", ":"))}
 """
@@ -410,6 +399,8 @@ def review_prompt(day, store, *, end_day=None):
     from .experiments import Experiments
     from .operations import operational_evidence
     from .quality import digest
+    from .intelligence import objective_scorecard, observation_context
+    from .adaptive_lab import AdaptiveLab
 
     period_start = (
         datetime.fromisoformat(day).replace(tzinfo=ET).astimezone(timezone.utc).isoformat()
@@ -492,16 +483,32 @@ def review_prompt(day, store, *, end_day=None):
         "forward_evidence": forward_evidence(store),
         "operational_evidence": operational_evidence(day, store),
         "research_quality_audit": digest(store, through),
+        "return_objective": objective_scorecard(store),
+        "observation_questions": observation_context(store, max_chars=2000),
+        "adaptive_tests": AdaptiveLab(store).context(max_trials=4),
         "incumbents": {
             b: store.get("incumbent_filter:" + b, {"id": "pilot-v1"})
             for b in ("intraday", "swing", "options")
         },
     }
-    while (
-        len(json.dumps(context, default=str, separators=(",", ":"))) > 22000
-        and context["selected_events"]
-    ):
-        context["selected_events"].pop()
+    context["omitted_for_context_budget"] = {}
+    optional = [
+        ("events", context["selected_events"]),
+        ("reviewed_cards", context["research_knowledge"]["reviewed_research"]),
+        ("filter_experiments", context["experiments"]),
+        ("adaptive_tests", context["adaptive_tests"]["trials"]),
+        ("observation_questions", context["observation_questions"]["records"]),
+        ("fixed_trials", context["forward_evidence"]["trials"]),
+    ]
+    while len(json.dumps(context, default=str, separators=(",", ":"))) > 23500:
+        choice = next(((name, records) for name, records in optional if records), None)
+        if choice is None:
+            raise ValueError("Retrospective context exceeds complete evidence budget")
+        name, records = choice
+        records.pop()
+        context["omitted_for_context_budget"][name] = (
+            context["omitted_for_context_budget"].get(name, 0) + 1
+        )
     context["events_in_packet"] = len(context["selected_events"])
     return (
         BASE

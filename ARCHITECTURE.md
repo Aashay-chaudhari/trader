@@ -92,3 +92,18 @@ not change the preregistered signal lab. Source reuse requires explicit reviewer
 attestations and matching checked URLs, not mere URL presence. Partial/blocked
 checks are held, and original reports remain historical. Period rollups can reuse
 an existing review only when no earlier retained evidence broadens their window.
+
+## Observation-led adaptation
+
+`intelligence.py` freezes selected local observations with IDs, capture/event times,
+values, provenance and alternatives. Exploration prioritizes these and existing
+catalogue definitions; external factual claims and local conjectures have distinct
+review requirements. Discovery continues after the initial sprint.
+
+`adaptive_lab.py` executes only typed prospective observation contracts in separate
+tables. Immutable definitions, actual-session calendars, archived inputs and fresh
+quotes determine conditional horizon observations with explicit missingness/costs.
+It has no broker client or promotion authority and cannot rewrite the fixed study.
+`development.py` checks deployed mechanics only after later completed sessions.
+Account returns, prospective verified drawdown and learning bottlenecks are separate
+from research means. See ADAPTIVE_ENGINE_AUDIT.md for the objective and limitations.

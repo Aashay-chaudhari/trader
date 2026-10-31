@@ -63,6 +63,13 @@ RESOURCES = [
 
 DECISIONS = [
     {
+        "date": "2026-10-31",
+        "title": "Let recorded observations originate prospective tests",
+        "why": "Published mechanisms and fixed plan filters alone cannot discover or measure new ideas when no trade plan exists. Timestamped observations now feed independently reviewed, immutable declarative studies.",
+        "evidence": "Local provenance and independent method checks; future sessions only; explicit comparators, missingness and costs. Existing fixed study preserved.",
+        "status": "implemented; future economic results unobserved",
+    },
+    {
         "date": "2026-10-29",
         "title": "Free data, with explicit missingness",
         "why": "Combine primary public calendars, filings and web research with broker data; never invent a paid-quality quote from a web result.",
@@ -133,9 +140,9 @@ AUTOMATIONS = [
     },
     {
         "when": "08:35–09:15 ET",
-        "work": "Initial ten-morning exploration, separate review and refreshed brief",
+        "work": "Observation-led discovery, independent review and refreshed brief",
         "owner": "Research / reviewer roles",
-        "condition": "Bounded daily/weekly budget; source review is not performance validation.",
+        "condition": "First ten mornings, then new observations, expired cards or Monday review; same quota limits. Review is not performance validation.",
     },
     {
         "when": "From 09:32 ET",
@@ -148,6 +155,12 @@ AUTOMATIONS = [
         "work": "Observe preregistered fixed signal cohorts",
         "owner": "Deterministic research lab",
         "condition": "Signals frozen before open; no orders or backfilled entries.",
+    },
+    {
+        "when": "09:45–10:00 ET; session quotes every 15 minutes",
+        "work": "Observe separately registered adaptive studies and capture new research questions",
+        "owner": "Deterministic observation lab",
+        "condition": "Future-only contracts, archived previous-session inputs and fresh IEX quotes; no broker orders.",
     },
     {
         "when": "Hourly; 11:00 / 13:00 / 14:30 ET",

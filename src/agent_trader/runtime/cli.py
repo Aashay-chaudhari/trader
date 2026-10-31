@@ -254,15 +254,25 @@ def main():
         elif args.command == "explore":
             from .supervisor import worker
             from .exploration import seed_challengers, record_report, record_validation
+            from .research import market_packet
+            from .quality import record_artifact, daily_audit
 
             day = datetime.now(ET).date().isoformat()
             if store.job_start("exploration-bootstrap:" + day):
                 try:
                     seed_challengers(store)
+                    market_packet(Broker(config), store)
                     result = worker(config, "exploration", {}, day)
                     record_report(store, result, day, morning=False)
+                    record_artifact(
+                        store, day, "exploration", result, "exploration-bootstrap:" + day
+                    )
                     reviewed = worker(config, "research_validation", {}, day)
                     record_validation(store, reviewed)
+                    record_artifact(
+                        store, day, "research_validation", reviewed, "validation-bootstrap:" + day
+                    )
+                    daily_audit(store, day, persist=True)
                     store.job_end("exploration-bootstrap:" + day, True, {"reviewed": True})
                     export(config, store)
                     print(

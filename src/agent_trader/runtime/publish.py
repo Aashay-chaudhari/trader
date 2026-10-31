@@ -12,6 +12,8 @@ from datetime import datetime
 from .store import utc_now
 
 PUBLIC_EVENTS = {
+    "adaptive_registered",
+    "adaptive_contract_rejected",
     "execution_check",
     "operational_review",
     "research_probe_scheduled",
@@ -87,6 +89,8 @@ def snapshot(config, store):
     from .experiments import Experiments
     from .cohorts import ForwardLab, normalized_screen
     from .project import project_snapshot
+    from .intelligence import objective_scorecard, observation_context
+    from .adaptive_lab import AdaptiveLab
 
     progress = Experiments(store).progress()
     try:
@@ -169,6 +173,9 @@ def snapshot(config, store):
             ),
             "brief": store.get("brief", {}),
             "project": project_snapshot(config, store),
+            "objective_scorecard": objective_scorecard(store),
+            "observation_research": observation_context(store, max_chars=7500),
+            "adaptive_lab": AdaptiveLab(store).summary(),
             "forward_lab": ForwardLab(store).summary(),
             "official_calendar": store.get("official_calendar", {}),
             "pulses": store.get("pulses", [])[:10],

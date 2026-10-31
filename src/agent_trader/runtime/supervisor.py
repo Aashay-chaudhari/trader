@@ -27,7 +27,7 @@ from .models import (
 )
 from .notify import notify
 from .publish import export, publish
-from .research import BASE, decision_prompt, market_packet, research_prompt, review_prompt
+from .research import BASE, UNIVERSE, decision_prompt, market_packet, research_prompt, review_prompt
 from .store import Store, utc_now
 
 LOG = logging.getLogger(__name__)
@@ -99,6 +99,9 @@ means hold with an explicit concern; broker-held protection remains active.
         elif role == "pulse":
             from .quality import pulse_prompt
 
+            # The background role refreshes research inputs; order protection keeps
+            # running in the supervisor. No model tokens are spent on the raw packet.
+            market_packet(Broker(config), store)
             prompt = pulse_prompt(context, store)
             schema, model, effort, searches = Pulse, config.light_model, "low", 3
         elif role in ("retrospective", "weekly", "monthly"):
@@ -148,6 +151,9 @@ class Supervisor:
         self.engine = Engine(config, self.store, self.broker)
         self.experiments = Experiments(self.store)
         self.cohorts = ForwardLab(self.store)
+        from .adaptive_lab import AdaptiveLab
+
+        self.adaptive = AdaptiveLab(self.store)
         if not self.store.get("coverage_tracking_started"):
             self.store.set("coverage_tracking_started", utc_now())
         self.pool = concurrent.futures.ThreadPoolExecutor(
@@ -264,6 +270,7 @@ class Supervisor:
                 from .exploration import record_report
 
                 record_report(self.store, result, day)
+                self.store.set("exploration_observation_ids", context.get("observation_ids", []))
             elif role == "research_validation":
                 from .exploration import record_validation
 
@@ -729,6 +736,7 @@ class Supervisor:
         day = now.date().isoformat()
         self.store.set("heartbeat", now.isoformat())
         self.cohort_check("expiry", lambda: self.cohorts.expire(now))
+        self.cohort_check("adaptive expiry", lambda: self.adaptive.expire(now))
         # The Windows watchdog reads this directly even when Pages/export fail.
         self.config.state_dir.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(
@@ -774,6 +782,10 @@ class Supervisor:
             return
         opened, close = times
         valid = self.engine.reconcile(now)
+        if valid:
+            from .intelligence import record_reconciled_equity
+
+            self.cohort_check("performance receipt", lambda: record_reconciled_equity(self.store))
         self.engine.cancel_entries(now, close)
         if not valid:
             self.store.set("mode", "halted")
@@ -902,12 +914,13 @@ class Supervisor:
                 elif (
                     not self.engine.plans()
                     and 9 * 60 + 45 <= now.hour * 60 + now.minute < 10 * 60 + 15
+                    and self.launch("fresh-open-research:" + day, "research", {}, day)
                 ):
-                    self.launch("fresh-open-research:" + day, "research", {}, day)
-                elif self.store.get("needs_research"):
-                    slot = now.strftime("%H")
-                    if self.launch("refresh:" + day + ":" + slot, "research", {}, day):
-                        self.store.set("needs_research", False)
+                    pass
+                elif self.store.get("needs_research") and self.launch(
+                    "refresh:" + day + ":" + now.strftime("%H"), "research", {}, day
+                ):
+                    self.store.set("needs_research", False)
                 elif now >= opened and now < close - timedelta(minutes=30):
                     if not self.launch_position_review(now) and not self.launch_candidate(
                         now, close
@@ -1000,9 +1013,13 @@ class Supervisor:
         cohort_symbols = self.cohort_check(
             "symbols", lambda: self.cohorts.symbols(now.date().isoformat()), set()
         )
-        quotes = self.broker.quotes(sorted(set(symbols) | cohort_symbols | {"SPY"}))
+        adaptive_symbols = self.cohort_check("adaptive symbols", self.adaptive.symbols, set())
+        quotes = self.broker.quotes(
+            sorted(set(symbols) | cohort_symbols | adaptive_symbols | {"SPY"})
+        )
         self.experiments.mark(quotes, now, closing=closing)
         self.cohort_check("mark", lambda: self.cohorts.mark(quotes, now))
+        self.cohort_check("adaptive mark", lambda: self.adaptive.mark(quotes, now))
         self.benchmarks(quotes, now)
 
     def market_tick(self, now, close):
@@ -1011,12 +1028,15 @@ class Supervisor:
         cohort_symbols = self.cohort_check(
             "symbols", lambda: self.cohorts.symbols(now.date().isoformat()), set()
         )
+        adaptive_symbols = self.cohort_check("adaptive symbols", self.adaptive.symbols, set())
         symbols = sorted(
             {p["symbol"] for p in plans + exploration_plans}
             | {h["symbol"] for h in self.store.rows("SELECT * FROM holdings")}
             | {"SPY", "QQQ", "TLT"}
             | {x["symbol"] for x in self.store.rows("SELECT * FROM shadow WHERE state='open'")}
             | cohort_symbols
+            | adaptive_symbols
+            | set(UNIVERSE)
         )
         quotes = self.broker.quotes(symbols)
         self.store.set("quotes", quotes)
@@ -1098,11 +1118,17 @@ class Supervisor:
             q = quotes.get(p["symbol"])
             if not q or p["branch"] == "options" or not p.get("event_risk_known"):
                 continue
-            if any(timestamp(e["observed_at"]) < now - timedelta(hours=24) for e in p["evidence"]):
-                continue
             try:
+                if any(
+                    timestamp(e["observed_at"]).tzinfo is None
+                    or not now - timedelta(hours=24)
+                    <= timestamp(e["observed_at"])
+                    <= now + timedelta(minutes=5)
+                    for e in p["evidence"]
+                ):
+                    continue
                 self.experiments.consider(p, q, brief.get("regime"), now)
-            except ValueError:
+            except (ValueError, KeyError, TypeError):
                 continue
         self.experiments.mark(quotes, now)
         if session:
@@ -1110,6 +1136,60 @@ class Supervisor:
                 "entry observations", lambda: self.cohorts.observe(quotes, now, *session)
             )
             self.cohort_check("mark", lambda: self.cohorts.mark(quotes, now))
+            self.cohort_check(
+                "adaptive observations", lambda: self.adaptive_tick(quotes, now, *session)
+            )
+
+    def adaptive_tick(self, quotes, now, opened, closed):
+        from .intelligence import capture_observations
+
+        packet = self.store.get("market_packet", {})
+        key = (
+            "observation-slot:"
+            + now.date().isoformat()
+            + ":"
+            + str(int((now - opened).total_seconds() // 900))
+        )
+        if not self.store.get(key):
+            captured_packet = {
+                "observed_at": now.isoformat(),
+                "capture_mode": "quote_monitor",
+                "data_feed": packet.get("data_feed", "Alpaca free IEX"),
+                "universe": sorted(quotes),
+                "daily_indicators": packet.get("daily_indicators", {}),
+                "market": {s: {"latestQuote": q} for s, q in quotes.items()},
+            }
+            self.store.memory_put(
+                "research-input:" + now.isoformat(),
+                "research_input",
+                {
+                    "day": now.date().isoformat(),
+                    "observed_at": now.isoformat(),
+                    "packet": captured_packet,
+                    "origin": "quarter_hour_quote_observation",
+                },
+            )
+            capture_observations(self.store, captured_packet, now=now)
+            self.store.set(key, True)
+        if self.adaptive.symbols():
+            key = "adaptive-calendar:" + now.date().isoformat()
+            sessions = self.store.get(key)
+            if sessions is None:
+                rows = self.store.rows(
+                    "SELECT registered_at FROM adaptive_contracts ORDER BY registered_at LIMIT 1"
+                )
+                earliest = (
+                    timestamp(rows[0]["registered_at"]).astimezone(ET).date()
+                    if rows
+                    else now.date()
+                )
+                sessions = self.broker.calendar_range(
+                    (earliest - timedelta(days=10)).isoformat(),
+                    (now.date() + timedelta(days=120)).isoformat(),
+                )
+                self.store.set(key, sessions)
+            self.adaptive.observe(quotes, packet, now, opened, closed, sessions)
+        self.adaptive.mark(quotes, now)
 
     def pending_research_validation(self, day):
         draft = self.store.get("exploration_draft", {})
@@ -1125,10 +1205,18 @@ class Supervisor:
 
     def launch_exploration(self, now, close):
         from .exploration import sprint_active
+        from .intelligence import observation_context
 
         day = now.date().isoformat()
+        ids = [r["id"] for r in observation_context(self.store).get("records", [])]
+        new_observations = bool(set(ids) - set(self.store.get("exploration_observation_ids", [])))
+        stale_cards = any(
+            c.get("expires_at") and timestamp(c["expires_at"]) <= now
+            for c in self.store.get("research_catalogue", [])
+            if c.get("state") == "reviewed_for_testing"
+        )
         if (
-            sprint_active(self.store)
+            (sprint_active(self.store) or new_observations or stale_cards or now.weekday() == 0)
             and self.store.get("exploration_day") != day
             and now >= now.replace(hour=8, minute=35, second=0, microsecond=0)
             and now
@@ -1137,7 +1225,7 @@ class Supervisor:
                 now.replace(hour=9, minute=15, second=0, microsecond=0),
             )
         ):
-            return self.launch("exploration:" + day, "exploration", {}, day)
+            return self.launch("exploration:" + day, "exploration", {"observation_ids": ids}, day)
         return False
 
     def launch_candidate(self, now, close):
