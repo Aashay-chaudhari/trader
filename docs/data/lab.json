@@ -1,20 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T20:22:28.846182+00:00",
+  "generated_at": "2026-11-07T21:09:46.228343+00:00",
   "start_date": "2026-10-29",
   "mode": "halted",
-  "heartbeat": "2026-11-07T15:22:22.439530-05:00",
+  "heartbeat": "2026-11-07T15:25:57.480313-05:00",
   "watchdog": {
-    "checked_at": "2026-11-07T20:22:08.7592366+00:00",
+    "checked_at": "2026-11-07T21:08:04.0159807+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
-    "models_paused": false
+    "models_paused": false,
+    "maintenance": true
   },
-  "status": "Market holiday or weekend. Existing broker protection remains in place.",
+  "status": "Local supervisor stopped; independent watchdog owns recovery.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T18:14:21.408330+00:00",
+    "at": "2026-11-07T21:06:28.161973+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -24,7 +25,9 @@
     "execution_verified": true,
     "order_submission_verified": true,
     "submission_checked_at": "2026-10-29T04:50:49.744729+00:00",
-    "execution_verified_at": "2026-11-02T14:35:37.790606+00:00"
+    "execution_verified_at": "2026-11-02T14:35:37.790606+00:00",
+    "required_execution_kernel": "paper-execution-20261107",
+    "current_execution_verified": false
   },
   "reconciliation_errors": [],
   "calendar": {
@@ -34,14 +37,14 @@
   "branches": [
     {
       "name": "intraday",
-      "cash": 9999.87,
+      "cash": 9999.84,
       "high_water": 10000.2,
       "paused": 0,
       "pause_reason": "",
-      "equity": 9999.87,
-      "daily_pnl": 0.0,
-      "total_pnl": -0.12999999999919964,
-      "drawdown": 3.2999340013217804e-05,
+      "equity": 9999.84,
+      "daily_pnl": -0.030000000000654836,
+      "total_pnl": -0.15999999999985448,
+      "drawdown": 3.599928001440933e-05,
       "mode": "halted"
     },
     {
@@ -69,6 +72,54 @@
       "mode": "shadow"
     }
   ],
+  "accounting": {
+    "broker_equity": 29999.84,
+    "broker_cash": 29999.84,
+    "branch_ledger_equity": 29999.84,
+    "unattributed_equity_difference": 0.0,
+    "reconciled": true,
+    "as_of": "2026-11-07T21:06:25.655832+00:00",
+    "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
+  },
+  "account_activity": {
+    "observed_at": "2026-11-07T20:45:51.172928+00:00",
+    "complete_history": true,
+    "activity_counts": {
+      "JNLC": 1,
+      "FEE": 2,
+      "FILL": 2
+    },
+    "fee_count": 2,
+    "fees": [
+      {
+        "trade_date": "2026-11-02",
+        "category": "CAT",
+        "amount": "-0.01",
+        "branch": "intraday",
+        "attribution_status": "booked",
+        "reason": "verified_daily_transaction_fee_and_unique_owned_branch"
+      },
+      {
+        "trade_date": "2026-11-02",
+        "category": "REG",
+        "amount": "-0.02",
+        "branch": "intraday",
+        "attribution_status": "booked",
+        "reason": "verified_daily_transaction_fee_and_unique_owned_branch"
+      }
+    ],
+    "omitted_fee_rows": 0,
+    "cash_bridge": {
+      "ledger_cash": 29999.84,
+      "broker_cash": 29999.84,
+      "broker_cash_observed_at": "2026-11-07T21:06:25.655832+00:00",
+      "broker_minus_ledger": 0.0,
+      "attributed_unbooked_fee_net": 0.0,
+      "remaining_after_attributed_fees": 0.0,
+      "arithmetic_matches": true
+    },
+    "basis": "Broker activity receipts explain cash differences; intake does not book fees. Only explicitly applied, uniquely linked fees change branch cash. Unknown transfers, corrections and ambiguous fees require review. Raw IDs/descriptions remain private."
+  },
   "positions": [],
   "orders": [
     {
@@ -146,6 +197,114 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T21:06:25.655832+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:06:25.655832+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:06:25.655832+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T20:45:51.194799+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:45:51.194799+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:45:51.194799+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T20:43:07.621937+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:43:07.621937+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:43:07.621937+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.87
+    },
+    {
+      "at": "2026-11-07T20:25:57.579277+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:25:57.579277+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:25:57.579277+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.87
+    },
+    {
+      "at": "2026-11-07T20:24:47.402873+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:24:47.402873+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:24:47.402873+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.87
+    },
+    {
+      "at": "2026-11-07T20:23:36.158415+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:23:36.158415+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T20:23:36.158415+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.87
+    },
+    {
       "at": "2026-11-07T20:22:22.609313+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10833,114 +10992,6 @@
     },
     {
       "at": "2026-11-07T10:09:44.107695+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:08:39.878384+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:08:39.878384+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:08:39.878384+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:07:35.545944+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:07:35.545944+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:07:35.545944+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:06:31.598054+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:06:31.598054+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:06:31.598054+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:05:59.640869+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:05:59.640869+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:05:59.640869+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:04:55.716467+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:04:55.716467+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:04:55.716467+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:03:51.382736+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:03:51.382736+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:03:51.382736+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11058,11 +11109,11 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T20:22:29.489967+00:00",
+    "as_of": "2026-11-07T21:09:46.446525+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
-    "stage": "forward_paper_evidence",
+    "stage": "operational_validation",
     "evidence": {
       "filled_orders": 2,
       "reviewed_cards": 6,
@@ -11165,9 +11216,14 @@
         "detail": "6 cards passed source/method review. None is certified profitable by that review."
       },
       {
-        "name": "Broker fill/exit verification",
+        "name": "Historical broker fill/exit verification",
         "state": "passed",
         "detail": "The market-open one-share paper gate has its own explicit receipt."
+      },
+      {
+        "name": "Current execution release acceptance",
+        "state": "pending",
+        "detail": "A changed execution kernel requires its own bounded regular-session paper check; earlier success remains historical evidence."
       },
       {
         "name": "Forward net expectancy",
@@ -11254,6 +11310,12 @@
       }
     ],
     "automations": [
+      {
+        "when": "Weekends; after close +90 minutes; overnight before 07:00 ET",
+        "work": "Focused evidence research followed by an independent reviewer",
+        "owner": "Background research queue",
+        "condition": "Distinct unresolved evidence; 50\u201380% weekly usage objective, 80% account stop, separate bounded attempts. No order or code-edit authority."
+      },
       {
         "when": "Continuously / 30 seconds",
         "work": "Broker reconciliation, protection, triggers and heartbeat",
@@ -11437,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T20:22:29.491759+00:00",
+    "as_of": "2026-11-07T21:09:46.447706+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11451,10 +11513,11 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T20:22:22.609313+00:00",
+      "as_of": "2026-11-07T21:06:25.655832+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
+      "current_execution_verified": false,
       "cash_comparator_return": 0.0,
       "market_references": [
         {
@@ -11496,19 +11559,23 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 26.35490575888889,
+      "input_age_hours": 27.1429490775,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
-      "total_proposals": 20,
+      "total_proposals": 25,
       "stage_counts": {
-        "observed_mechanics": 3,
-        "awaiting_observation": 2,
-        "proposed": 15
+        "awaiting_observation": 5,
+        "proposed": 20
       },
       "automated_scope": "Pure entry-filter candidates only; broader application repairs require the development release workflow."
     },
     "diagnostics": [
+      {
+        "id": "execution_unverified",
+        "state": "pending",
+        "detail": "A reconciled entry-and-exit fill cycle is still required before strategy execution."
+      },
       {
         "id": "experiment_sample_starvation",
         "state": "observed",
@@ -11534,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T20:22:31.740486+00:00",
+    "as_of": "2026-11-07T21:09:47.161046+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -14272,6 +14339,640 @@
   "plans": [],
   "events": [
     {
+      "id": 417,
+      "at": "2026-11-07T21:09:44.939870+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Useful off-hours research, atomic budgets/jobs, evidence integrity, accounted fees and revised execution recovery.",
+        "source_commit": "d844f079fbd9a16c0585619b2362c3b6dbac00e5",
+        "regression_tests": 533,
+        "current_kernel_acceptance": "pending_regular_session"
+      }
+    },
+    {
+      "id": 416,
+      "at": "2026-11-07T21:03:10.776862+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "42a03b3c82f0da2037e068fd:0",
+        "topic": "evidence_integrity"
+      }
+    },
+    {
+      "id": 415,
+      "at": "2026-11-07T21:03:10.456253+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "5f75be025b84fe84f6e3ce667238c97d9318106bdc068307b34d0e692825b9ee",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T21:01:16.867788+00:00",
+        "attempt_id": "usage:106",
+        "searches": 2,
+        "cycles": 11,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:03:10.451955+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 414,
+      "at": "2026-11-07T21:01:14.940068+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "d222e41a4294c824282ca74e:0",
+        "topic": "accounting_attribution",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. Integer-cent checks confirm the zero snapshot residual, \u2212$0.13 fill contribution and \u2212$0.03 reported booked fees. Opening balances remain hypothetical; journal impact and historical attribution remain unknown. Bridge assertions are appropriately qualified. The proposed read-only invariants and reproducible tests avoid double-counting booked fees. No external sources were cited."
+      }
+    },
+    {
+      "id": 413,
+      "at": "2026-11-07T21:01:13.864909+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "624d75bd2427faaf83d963ce127775c8fa1c16b349f6308347941f0cb976ab2b",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T21:00:47.023034+00:00",
+        "attempt_id": "usage:105",
+        "searches": 0,
+        "cycles": 5,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:01:13.860821+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 412,
+      "at": "2026-11-07T21:00:45.413922+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "d222e41a4294c824282ca74e:0",
+        "topic": "accounting_attribution"
+      }
+    },
+    {
+      "id": 411,
+      "at": "2026-11-07T21:00:45.334690+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "54c4a19e7b5457f50437ed6e4dc1d9c9743206daed14d293dfe04233c3eeeaf0",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:59:50.230639+00:00",
+        "attempt_id": "usage:104",
+        "searches": 0,
+        "cycles": 4,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:00:45.331176+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 410,
+      "at": "2026-11-07T20:55:49.559934+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "b4fcaca9130d32deec367d3e:0",
+        "topic": "runtime_reliability",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope by the supplied evidence. Retry announcements do not demonstrate executed retries or recovery. Drill and regression success remain reported checks; the November 2 round trip is explicitly qualified as reported verification without raw receipts. Earlier pending execution diagnoses are correctly treated as historical. The proposed restart-during-retry test is bounded and unexecuted, with explicit completion evidence and protected-state checks. No analyst URLs require verification."
+      }
+    },
+    {
+      "id": 409,
+      "at": "2026-11-07T20:55:48.646103+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "c43b08dd4a91b71c980058a9632a41770201d0baef300a83811cb1b775f76dce",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:55:23.199251+00:00",
+        "attempt_id": "usage:103",
+        "searches": 0,
+        "cycles": 3,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:55:48.642252+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 408,
+      "at": "2026-11-07T20:55:21.897352+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "b4fcaca9130d32deec367d3e:0",
+        "topic": "runtime_reliability"
+      }
+    },
+    {
+      "id": 407,
+      "at": "2026-11-07T20:55:21.193915+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "f80978a6fe847f04a9cb9349842dc51d4136336e1fceb1c64f7322dc514a8111",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:54:02.825670+00:00",
+        "attempt_id": "usage:102",
+        "searches": 0,
+        "cycles": 6,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:55:21.189162+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 406,
+      "at": "2026-11-07T20:54:00.620108+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "61fe6161d43f258a6a524d39:0",
+        "topic": "accounting_attribution",
+        "disposition": "accepted",
+        "summary": "All four findings are supported at their stated scope. Checked arithmetic: branch cash totals $29,999.84; account cash minus branch cash and equity minus cash both equal $0.00. Supplied holdings are empty. Recorded fills net to zero shares and -$0.13 gross cash. Assuming $30,000.00 opening cash yields a -$0.03 residual, but neither that opening balance nor interval completeness is established. No fee, additional activity or branch allocation is asserted. The proposed reporting invariant and hypothetical tests reproduce correctly, preserve missing historical inputs as unknown and require evidence for attribution. No external sources were claimed or needed to verify the supplied arithmetic."
+      }
+    },
+    {
+      "id": 405,
+      "at": "2026-11-07T20:54:00.148190+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "6e5fbb30c95b332dcf3d8767dbd9601452f34a258326cda0823416c3c904b820",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:53:42.476657+00:00",
+        "attempt_id": "usage:101",
+        "searches": 0,
+        "cycles": 3,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:54:00.143984+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 404,
+      "at": "2026-11-07T20:53:40.530895+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "61fe6161d43f258a6a524d39:0",
+        "topic": "accounting_attribution"
+      }
+    },
+    {
+      "id": 403,
+      "at": "2026-11-07T20:53:40.370655+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "b74dc229188dd448a064e7b5308b4d60dbfa69f8f1025e664b2f041150e5064b",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:53:02.359612+00:00",
+        "attempt_id": "usage:100",
+        "searches": 0,
+        "cycles": 3,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:53:40.365761+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 401,
+      "at": "2026-11-07T20:53:00.668168+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "agent_deep_research_review",
+        "reason": "Deep_Research_Review did not complete (WorkValidationError). Protective routines continue; new plans require valid research."
+      }
+    },
+    {
+      "id": 400,
+      "at": "2026-11-07T20:52:59.393255+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "c65befab43c094e9406645d7b93f59d917060f24e6d0e7842683f8213f21dd43",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:52:02.472148+00:00",
+        "attempt_id": "usage:99",
+        "searches": 2,
+        "cycles": 7,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:52:59.389863+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 399,
+      "at": "2026-11-07T20:52:00.923954+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "db861fff18cb73f2af9f2258:0",
+        "topic": "source_verification"
+      }
+    },
+    {
+      "id": 398,
+      "at": "2026-11-07T20:52:00.483271+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "5da3a9a103b904a6962317b76fea5198a4972792201ff0a2c0668a639c229171",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:49:37.899791+00:00",
+        "attempt_id": "usage:98",
+        "searches": 4,
+        "cycles": 16,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:52:00.479649+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 397,
+      "at": "2026-11-07T20:49:36.056023+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "52d3163b41930fbfd3b06e01:1",
+        "topic": "experiment_lifecycle",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. The refresh reports zero plans; the empty funnel establishes only the first visible stopping point, not exhaustive parent rejection, challenger eligibility failures or collector health. All eight definitions support the reported lifecycle labels, thresholds and costs. The prospective tests distinguish stage failures, exclude fixtures and fixed/adaptive observations from challenger credit, and preserve existing gates and promotion criteria. Missing accounting and promotion rules remain explicit prerequisites. No external sources are claimed by the analyst; the market statements are correctly scoped as observations about the supplied report."
+      }
+    },
+    {
+      "id": 396,
+      "at": "2026-11-07T20:49:35.992712+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "adc27dc2bad31f4ad1e94b0f0745f10456a51601921610bbe3304b3b8e219b4a",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:49:15.031463+00:00",
+        "attempt_id": "usage:97",
+        "searches": 0,
+        "cycles": 4,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:49:35.988643+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 395,
+      "at": "2026-11-07T20:49:13.407895+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "52d3163b41930fbfd3b06e01:1",
+        "topic": "experiment_lifecycle"
+      }
+    },
+    {
+      "id": 394,
+      "at": "2026-11-07T20:49:13.297851+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "5262489fcd385fae91ef3fb9cf68a19017217d738cf736757ccab71875751519",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:48:14.656547+00:00",
+        "attempt_id": "usage:96",
+        "searches": 0,
+        "cycles": 4,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:49:13.294322+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 393,
+      "at": "2026-11-07T20:45:51.187070+00:00",
+      "kind": "fee_booked",
+      "branch": "intraday",
+      "payload": {
+        "amount": "-0.01",
+        "category": "CAT",
+        "trade_date": "2026-11-02",
+        "reason": "verified_daily_transaction_fee_and_unique_owned_branch"
+      }
+    },
+    {
+      "id": 392,
+      "at": "2026-11-07T20:45:51.186665+00:00",
+      "kind": "fee_booked",
+      "branch": "intraday",
+      "payload": {
+        "amount": "-0.02",
+        "category": "REG",
+        "trade_date": "2026-11-02",
+        "reason": "verified_daily_transaction_fee_and_unique_owned_branch"
+      }
+    },
+    {
+      "id": 391,
+      "at": "2026-11-07T20:42:38.214397+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "52d3163b41930fbfd3b06e01:0",
+        "topic": "experiment_lifecycle",
+        "disposition": "revise",
+        "summary": "Finding 0 describes unmet market-context requirements that the supplied report does not explicitly identify as parent gates. Its qualification does not fully resolve that attribution. Findings 1\u20135 are supported at their stated, bounded scopes. The prospective tests preserve parent eligibility, costs, sample accounting and promotion criteria, while leaving unexercised collection paths untested. The analyst cites no external sources requiring URL verification."
+      }
+    },
+    {
+      "id": 390,
+      "at": "2026-11-07T20:42:37.822959+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "1415ef6592de96b177f184141d8156e524502e9860c68f7c08c147b484f115c8",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:42:04.621902+00:00",
+        "attempt_id": "usage:95",
+        "searches": 0,
+        "cycles": 5,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:42:37.818629+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": []
+      }
+    },
+    {
+      "id": 389,
+      "at": "2026-11-07T20:42:01.245403+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "52d3163b41930fbfd3b06e01:0",
+        "topic": "experiment_lifecycle"
+      }
+    },
+    {
+      "id": 388,
+      "at": "2026-11-07T20:42:00.429825+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "31eb2eb266a4c31a36c2b2ebf8c7b44c3fc0e303f39244f12b31790cec42f6e3",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:40:50.091963+00:00",
+        "attempt_id": "usage:94",
+        "searches": 0,
+        "cycles": 4,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:42:00.426640+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": []
+      }
+    },
+    {
+      "id": 386,
+      "at": "2026-11-07T20:40:47.499602+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "agent_deep_research",
+        "reason": "Deep_Research did not complete (ValueError). Protective routines continue; new plans require valid research."
+      }
+    },
+    {
+      "id": 385,
+      "at": "2026-11-07T20:40:46.493028+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "44333ef8b0ba643e9aea5100c9db6de4a0b652789f0b9e90b81c78e076d426d2",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:38:33.980497+00:00",
+        "attempt_id": "usage:93",
+        "searches": 2,
+        "cycles": 9,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:40:46.488888+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": []
+      }
+    },
+    {
+      "id": 383,
+      "at": "2026-11-07T20:38:31.771589+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "agent_deep_research",
+        "reason": "Deep_Research did not complete (ValueError). Protective routines continue; new plans require valid research."
+      }
+    },
+    {
+      "id": 382,
+      "at": "2026-11-07T20:38:30.115293+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "b4c14e52d2b1c3608edb8e15f54331636122a16241e60da33f7287d4d1eed011",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T20:36:16.762329+00:00",
+        "attempt_id": "usage:92",
+        "searches": 5,
+        "cycles": 14,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T20:38:30.108490+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": []
+      }
+    },
+    {
+      "id": 381,
+      "at": "2026-11-07T20:26:21.430952+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 554
+      }
+    },
+    {
+      "id": 380,
+      "at": "2026-11-07T20:26:20.741196+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 554
+      }
+    },
+    {
       "id": 379,
       "at": "2026-11-07T18:14:18.061243+00:00",
       "kind": "startup",
@@ -14983,436 +15684,6 @@
         "budget_notice": false,
         "budget_notice_status": "not_sent"
       }
-    },
-    {
-      "id": 309,
-      "at": "2026-11-05T21:10:21.509614+00:00",
-      "kind": "daily_summary",
-      "branch": null,
-      "payload": {
-        "summary": "Paper equity: $29,999.87. Since fresh start: $-0.13.\nIntraday: $9,999.87\nSwing: $10,000.00\nOptions: $10,000.00"
-      }
-    },
-    {
-      "id": 308,
-      "at": "2026-11-05T21:10:21.504114+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "summary:2026-11-05",
-        "title": "Trader - daily results"
-      }
-    },
-    {
-      "id": 307,
-      "at": "2026-11-05T18:03:35.022386+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "No equity plans at 13:01 ET. The fresh IEX snapshot shows worsening equity weakness and rising TLT. WMT remains relatively resilient but has lost its opening range and VWAP. Its November 19 earnings timing is now verified; that resolves an earlier information gap without establishing an entry.",
-        "plans": 0,
-        "regime": "risk_off"
-      }
-    },
-    {
-      "id": 306,
-      "at": "2026-11-05T18:03:12.354914+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 8,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 304,
-      "at": "2026-11-05T18:01:20.468478+00:00",
-      "kind": "pulse",
-      "branch": null,
-      "payload": {
-        "summary": "BLS published its preliminary Q3 2026 Productivity and Costs release at 8:30 a.m. ET today. Nonfarm business labor productivity rose 3.6% at an annualized rate, output rose 3.7%, and hours worked rose 0.1%. This is a macro update for broad-market context; no market reaction or position-specific implication is established.",
-        "material_change": true
-      }
-    },
-    {
-      "id": 303,
-      "at": "2026-11-05T18:00:48.524413+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "pulse",
-        "model": "gpt-6-luna",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 7,
-        "budget_notice": true,
-        "budget_notice_status": "accepted"
-      }
-    },
-    {
-      "id": 301,
-      "at": "2026-11-05T14:48:10.792417+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "No executable plans at the supplied 09:45 ET snapshot. SPY and technology are falling below opening ranges and IEX bar VWAP; WMT shows relative strength but its next earnings timing remains unverified. GE has verified company evidence but has lost its opening-range low. Relative strength is a research lead, not sufficient entry confirmation.",
-        "plans": 0,
-        "regime": "risk_off"
-      }
-    },
-    {
-      "id": 300,
-      "at": "2026-11-05T14:47:38.948328+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": true,
-        "searches": 2,
-        "cycles": 8,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 298,
-      "at": "2026-11-05T13:39:18.443668+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "At 08:37 ET, no equity plans qualify. Newly released productivity data offers a potentially favorable inflation narrative, but price confirmation is missing. DIA leads SPY in fresh premarket quotes without an observed pullback; AMD has verified earnings evidence but an unusable stale, wide quote. Strong fundamentals and relative strength are research leads, not entry signals.",
-        "plans": 0,
-        "regime": "mixed"
-      }
-    },
-    {
-      "id": 297,
-      "at": "2026-11-05T13:39:09.185905+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 9,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 295,
-      "at": "2026-11-05T13:37:12.262506+00:00",
-      "kind": "research_validated",
-      "branch": null,
-      "payload": {
-        "summary": "No hypotheses were supplied; no source checks or method reviews were performed. No testing acceptance or trading decision is supported.",
-        "accepted_for_testing": 6,
-        "not_profitability_validation": true
-      }
-    },
-    {
-      "id": 294,
-      "at": "2026-11-05T13:36:47.618785+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research_validation",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 3,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 293,
-      "at": "2026-11-05T13:36:40.065166+00:00",
-      "kind": "exploration_completed",
-      "branch": null,
-      "payload": {
-        "summary": "Empty batch after reviewing the supplied catalogue and active tests. XLE's sharp decline (observation:050204be9d0da012de0ae333) overlaps the existing swing-reversal research family; severity alone does not justify another threshold variant. TSLA weakness and DIA strength are premarket midpoint observations, whereas existing contracts use regular-session asks. Testing that timing difference requires unsupported archived premarket features. USO's adverse forward result merits continued observation under its unchanged contract, not immediate retuning. No distinct, adequately specified new test emerged. No trade plans.",
-        "hypotheses": 0,
-        "state": "awaiting_independent_review"
-      }
-    },
-    {
-      "id": 292,
-      "at": "2026-11-05T13:36:20.086394+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "exploration",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 291,
-      "at": "2026-11-05T13:17:39.402970+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "research:2026-11-05",
-        "title": "Trader - morning research ready"
-      }
-    },
-    {
-      "id": 290,
-      "at": "2026-11-05T13:17:39.179956+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "At 08:15 ET on November 5, the evidence supports a mixed regime and no equity plans. Yesterday's Dow strength contrasts with energy and Tesla weakness; it does not establish broad participation. Productivity data is scheduled in 15 minutes, with payrolls tomorrow. Fresh regular-session confirmation could change the decision; prior closes alone do not supply today's entry setup.",
-        "plans": 0,
-        "regime": "mixed"
-      }
-    },
-    {
-      "id": 289,
-      "at": "2026-11-05T13:17:12.773604+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 8,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 287,
-      "at": "2026-11-05T13:15:05.239993+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Fixed forward signal cohort frozen before the open; no orders or paper capital.",
-        "day": "2026-11-05",
-        "symbols": 30,
-        "protocols": 12,
-        "data_sha256": "2b7053421b3e431ec29789bbacb25d781d2cb4739a5dd93f6e21cbb1fd2031b0"
-      }
-    },
-    {
-      "id": 286,
-      "at": "2026-11-05T12:45:07.246272+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "morning:2026-11-05",
-        "title": "Trader - good morning"
-      }
-    },
-    {
-      "id": 285,
-      "at": "2026-11-04T21:35:43.201015+00:00",
-      "kind": "maintenance_no_change",
-      "branch": null,
-      "payload": {
-        "reason": "The daily review explicitly supports preserving existing filters. Zero reported November 4 fills, unresolved input gaps, and unverified observation coverage establish neither selection quality nor an edge. Runtime, data, provenance, and orchestration repairs belong in the developer backlog and cannot be addressed by changing this strategy filter."
-      }
-    },
-    {
-      "id": 284,
-      "at": "2026-11-04T21:35:29.787378+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "maintenance",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 283,
-      "at": "2026-11-04T21:16:27.278906+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "retrospective",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 282,
-      "at": "2026-11-04T21:10:29.608635+00:00",
-      "kind": "daily_summary",
-      "branch": null,
-      "payload": {
-        "summary": "Paper equity: $29,999.87. Since fresh start: $-0.13.\nIntraday: $9,999.87\nSwing: $10,000.00\nOptions: $10,000.00"
-      }
-    },
-    {
-      "id": 281,
-      "at": "2026-11-04T21:10:29.602816+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "summary:2026-11-04",
-        "title": "Trader - daily results"
-      }
-    },
-    {
-      "id": 280,
-      "at": "2026-11-04T18:03:41.551672+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "As of the supplied November 4, 13:01 ET snapshot, equities are rebounding, but the broader trend remains mixed. No equity plans: AMD is below its session VWAP after earnings, LLY has lost its opening range, and GOOGL's catalyst and event timing remain unverified. A strong report or rising price alone does not establish a repeatable entry.",
-        "plans": 0,
-        "regime": "mixed"
-      }
-    },
-    {
-      "id": 279,
-      "at": "2026-11-04T18:03:40.383378+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": true,
-        "searches": 2,
-        "cycles": 7,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 277,
-      "at": "2026-11-04T18:01:28.815397+00:00",
-      "kind": "pulse",
-      "branch": null,
-      "payload": {
-        "summary": "One material development since the prior update: BEA's September 2026 trade release was due today, and the supplied evidence reports a $105.0 billion deficit. This is a macro update for broad-market context; no holdings or plans were supplied, and market reaction or causal attribution is not established.",
-        "material_change": true
-      }
-    },
-    {
-      "id": 276,
-      "at": "2026-11-04T18:01:02.930131+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "pulse",
-        "model": "gpt-6-luna",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 6,
-        "budget_notice": true,
-        "budget_notice_status": "accepted"
-      }
-    },
-    {
-      "id": 274,
-      "at": "2026-11-04T14:48:04.622724+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "No equity plans at the supplied 09:45 ET observation. Fresh IEX bars confirm a broad-index and technology rebound, but completed daily trends remain weak. GOOGL lacks complete forward event coverage; GE has a stronger daily trend but is below session VWAP without a confirmed support retest. Strong price movement alone does not establish a suitable entry.",
-        "plans": 0,
-        "regime": "mixed"
-      }
-    },
-    {
-      "id": 273,
-      "at": "2026-11-04T14:47:44.584664+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 2,
-        "cycles": 13,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 271,
-      "at": "2026-11-04T13:40:09.796194+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "No equity plans at 08:38 ET. Fresh IEX quotes show DIA outperforming SPY, but regular-session confirmation is unavailable and the cause remains unverified. AMD has a verified earnings catalyst but lacks supplied fresh price levels. A premarket rebound alone does not establish a durable trend or an executable entry.",
-        "plans": 0,
-        "regime": "mixed"
-      }
-    },
-    {
-      "id": 270,
-      "at": "2026-11-04T13:39:55.311201+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": true,
-        "searches": 2,
-        "cycles": 10,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 268,
-      "at": "2026-11-04T13:38:05.059847+00:00",
-      "kind": "research_validated",
-      "branch": null,
-      "payload": {
-        "summary": "Needs work: the proposed prediction and adaptive contract specify different universes. No external source checks were applicable; supplied observations support registering a conjecture, not validating recovery or profitability.",
-        "accepted_for_testing": 6,
-        "not_profitability_validation": true
-      }
-    },
-    {
-      "id": 267,
-      "at": "2026-11-04T13:38:05.033089+00:00",
-      "kind": "adaptive_contract_rejected",
-      "branch": null,
-      "payload": {
-        "id": "20261104-swing-rally-giveback-recovery-v1",
-        "reason": "Current reviewed hypothesis, method and local observation linkage required"
-      }
-    },
-    {
-      "id": 266,
-      "at": "2026-11-04T13:37:53.984275+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research_validation",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 3,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
     }
   ],
   "experiments": [
@@ -15439,7 +15710,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15468,7 +15742,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15497,7 +15774,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15526,7 +15806,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15555,7 +15838,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15584,7 +15870,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15613,7 +15902,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -15642,7 +15934,10 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "eligibility_versions": [],
         "open_observations": 0,
+        "not_evaluable_observations": 0,
+        "current_bottleneck": "no_plan_inputs",
         "mean_paired_net": null,
         "status": "awaiting_observations",
         "warning": "Early evidence; correlated trades are not independent and no promotion is implied."
@@ -16316,140 +16611,94 @@
     "original_review_preserved": true
   },
   "quality_audit": {
-    "day": "2026-11-06",
-    "as_of": "2026-11-06T22:01:45.329729+00:00",
+    "day": "2026-11-07",
+    "as_of": "2026-11-07T21:03:11.050291+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 12,
+      "calls": 15,
       "by_role": {
-        "research": 4,
-        "exploration": 3,
-        "research_validation": 1,
-        "pulse": 1,
-        "retrospective": 1,
-        "maintenance": 1,
-        "weekly": 1
+        "deep_research": 9,
+        "deep_research_review": 6
       },
-      "input_tokens": 414643,
-      "cached_input_tokens": 288256,
-      "output_tokens": 24259,
-      "web_actions": 16,
+      "input_tokens": 370140,
+      "cached_input_tokens": 192512,
+      "output_tokens": 32652,
+      "web_actions": 15,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "research": 4,
-      "exploration": 1,
-      "research_validation": 1,
-      "pulse": 1,
-      "retrospective": 1,
-      "weekly": 1
+      "deep_research": 6,
+      "deep_research_review": 4
     },
     "legacy_snapshot_artifacts": 0,
     "derived_period_reviews": 0,
-    "reported_blockers": {
-      "price_structure": 2,
-      "event_coverage": 4,
-      "stale_data": 4,
-      "source_access": 6
+    "reported_blockers": {},
+    "reported_mentions": {},
+    "feature_diagnostics": {
+      "research_reports": 0,
+      "matched_inputs": 0,
+      "phase_counts": {},
+      "state_counts": {},
+      "records": [],
+      "omitted_records": 0,
+      "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup."
     },
-    "unique_cited_urls": 17,
-    "known_no_plan_research_outputs": 4,
-    "pulse_outputs": 1,
+    "unique_cited_urls": 18,
+    "known_no_plan_research_outputs": 0,
+    "pulse_outputs": 0,
     "pulses_without_verified_delta": 0,
     "reviewed_cards": 6,
     "catalogue_cards": 20,
     "catalogue_scope": "Current catalogue state at audit time; not a reconstruction of historical acceptance.",
     "reviewed_without_explicit_source_attestation": 0,
-    "findings": [
-      {
-        "id": "missing_price_features",
-        "priority": "high",
-        "problem": "Research reports missing price structure or exact daily inputs.",
-        "requested_change": "Supply exact completed daily returns and timestamped IEX minute-bar ranges/volume/VWAP with missingness.",
-        "validation_plan": "Verify calculations, exclusion of incomplete/future bars, pagination and use in actual next-session research.",
-        "state": "code_changed_awaiting_observation",
-        "code_receipt": {
-          "at": "2026-10-31T06:08:01.070007+00:00",
-          "state": "deployed_code_checks_passed_live_effect_unobserved",
-          "verification": "Completed daily/minute IEX features, pagination and missingness; offline replay verified, future live freshness pending.",
-          "live_effect": "not demonstrated yet",
-          "source_commit": "11d9c89f9ad7726e0cc0f1e1ce62f6148f0786d7",
-          "regression_tests": 307,
-          "source_ci_run": 41175540423
-        }
-      }
-    ],
+    "findings": [],
     "limits": [
       "No claim that citations were automatically authenticated or their statements are true.",
       "Historical overwritten outputs cannot be reconstructed from summaries.",
       "No-material-change is not evidence that no market event occurred.",
-      "Code receipts do not demonstrate improved research quality before subsequent observations."
+      "Code receipts do not demonstrate improved research quality before subsequent observations.",
+      "Textual mentions and reported blockers are not verified input failures. Feature diagnostics use recorded input linkage and session phase; field presence is not a correctness or trade-readiness check."
     ],
     "development_effects": {
       "scope": "Post-change mechanics, evaluated only on completed later research sessions; no profitability claim.",
       "state_counts": {
-        "observed_mechanics": 3,
-        "awaiting_observation": 2
+        "awaiting_observation": 5
       },
       "changes": [
         {
           "id": "artifact_history",
-          "state": "observed_mechanics",
-          "evidence_day": "2026-11-06",
-          "metrics": {
-            "completed_live_research_calls": 4,
-            "full_live_research_artifacts": 4,
-            "applied": 4,
-            "rejected": 0,
-            "legacy_or_nonlive_outputs_excluded": 0
-          },
-          "reason": "Completed research calls and full applied/rejected artifacts have matching counts; count coverage is not per-call identity proof."
+          "state": "awaiting_observation",
+          "evidence_day": null,
+          "metrics": {},
+          "reason": "Awaiting a completed research session after the dated code change."
         },
         {
           "id": "duplicate_period_reviews",
           "state": "awaiting_observation",
-          "evidence_day": "2026-11-06",
-          "metrics": {
-            "derived_rollups": 0,
-            "explicitly_labeled_derived_rollups": 0
-          },
-          "reason": "No derived rollup was observed; independent reviews may appropriately have broader evidence windows."
+          "evidence_day": null,
+          "metrics": {},
+          "reason": "Awaiting a completed research session after the dated code change."
         },
         {
           "id": "missing_price_features",
-          "state": "observed_mechanics",
-          "evidence_day": "2026-11-06",
-          "metrics": {
-            "research_packets": 4,
-            "packets_with_exact_daily_features": 4,
-            "regular_session_packets": 2,
-            "packets_with_fresh_completed_minutes": 2,
-            "fresh_minute_symbols": 39,
-            "daily_feature_symbols": 120
-          },
-          "reason": "Exact daily features and some fresh completed-minute context reached retained research packets. Coverage counts do not establish accuracy of decisions or profitability."
+          "state": "awaiting_observation",
+          "evidence_day": null,
+          "metrics": {},
+          "reason": "Awaiting a completed research session after the dated code change."
         },
         {
           "id": "source_verification",
-          "state": "observed_mechanics",
-          "evidence_day": "2026-11-06",
-          "metrics": {
-            "current_reviewed_cards": 6,
-            "cards_missing_required_attestations": 0,
-            "weak_card_ids": [],
-            "catalogue_as_of": "2026-11-06T22:01:45.345231+00:00"
-          },
-          "reason": "Current reviewed catalogue satisfies required external-source or local-observation/method attestations. These are not automatic content authentication."
+          "state": "awaiting_observation",
+          "evidence_day": null,
+          "metrics": {},
+          "reason": "Awaiting a completed research session after the dated code change."
         },
         {
           "id": "stale_pulses",
           "state": "awaiting_observation",
-          "evidence_day": "2026-11-06",
-          "metrics": {
-            "applied_live_pulses": 1,
-            "declared_material_changes": 1
-          },
-          "reason": "Pulse usefulness and freshness need matched evidence review; a no-material-change answer or abstention is not classified as failure."
+          "evidence_day": null,
+          "metrics": {},
+          "reason": "Awaiting a completed research session after the dated code change."
         }
       ]
     }
@@ -16784,19 +17033,513 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T18:14:21.263594+00:00",
+    "at": "2026-11-07T21:06:28.109567+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 2,
+        "usedPercent": 17,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
     ],
     "ordinary_usage_allowed": true
   },
+  "experiment_funnel": {
+    "branches": {
+      "intraday": {
+        "active_challengers": 4,
+        "queued_plans": 0,
+        "research_plans": 0,
+        "closed_samples": 0,
+        "open_samples": 0,
+        "not_evaluable": 0,
+        "current_bottleneck": "no_plan_inputs"
+      },
+      "swing": {
+        "active_challengers": 4,
+        "queued_plans": 0,
+        "research_plans": 0,
+        "closed_samples": 0,
+        "open_samples": 0,
+        "not_evaluable": 0,
+        "current_bottleneck": "no_plan_inputs"
+      }
+    },
+    "latest_eligibility": null,
+    "tracking": "not_yet_observed",
+    "interpretation": "Filters compare valid plan inputs; no plan means no filter sample. Resolve documented data/event gaps or accept justified abstention. Do not force plans, weaken gates, or substitute fixed/adaptive-study samples. Eligibility counts are repeated plan snapshots, not independent trials."
+  },
+  "background_research": {
+    "version": "evidence-research-v1",
+    "as_of": "2026-11-07T21:09:47.575236+00:00",
+    "status": {
+      "state": "awaiting_queue_refresh",
+      "role": "deep_research",
+      "topic": "evidence_integrity",
+      "work_id": "42a03b3c82f0da2037e068fd:0",
+      "as_of": "2026-11-07T16:01:15.373537-05:00",
+      "next_eligible_at": null,
+      "idle_reasons": [
+        {
+          "topic": "source_verification",
+          "reason": "retry_cooldown"
+        },
+        {
+          "topic": "event_coverage",
+          "reason": "retry_cooldown"
+        },
+        {
+          "topic": "feature_lineage",
+          "reason": "retry_cooldown"
+        },
+        {
+          "topic": "experiment_lifecycle",
+          "reason": "accepted"
+        },
+        {
+          "topic": "source_verification",
+          "reason": "retry_cooldown"
+        },
+        {
+          "topic": "accounting_attribution",
+          "reason": "accepted"
+        },
+        {
+          "topic": "runtime_reliability",
+          "reason": "accepted"
+        }
+      ],
+      "last_budget_decision": {
+        "at": "2026-11-07T16:01:15.373537-05:00",
+        "allowed": true,
+        "reason": "Useful background work within account reserve and attempt ceiling"
+      },
+      "reason": "The previously selected stage is complete; the scheduler must select the next retained question or review."
+    },
+    "reports": [
+      {
+        "work_id": "42a03b3c82f0da2037e068fd:0",
+        "topic": "evidence_integrity",
+        "stage": "analysis",
+        "at": "2026-11-07T21:03:10.773755+00:00",
+        "disposition": "awaiting_review",
+        "summary": "USO's stated 120-session cohort conflicts with its 60-session metadata and scheduled window. Lookbacks and holding horizons must remain distinct. Dependence, selection history and cost denominators prevent stronger conclusions. Breakout's reported cost decrement has plausible alternative explanations requiring a ledger. No protocol, threshold or promotion gate is changed.",
+        "sources": [
+          {
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "claim": "[NYSE calendar](https://www.nyse.com/trade/hours-calendars) lists four full closures and two early closes within the registered date windows.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:01:43+00:00",
+            "limitation": "Published schedule only; does not verify actual observations, future unscheduled closures or authenticity of supplied registrations."
+          }
+        ]
+      },
+      {
+        "work_id": "d222e41a4294c824282ca74e:0",
+        "topic": "accounting_attribution",
+        "stage": "review",
+        "at": "2026-11-07T21:01:14.939177+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. Integer-cent checks confirm the zero snapshot residual, \u2212$0.13 fill contribution and \u2212$0.03 reported booked fees. Opening balances remain hypothetical; journal impact and historical attribution remain unknown. Bridge assertions are appropriately qualified. The proposed read-only invariants and reproducible tests avoid double-counting booked fees. No external sources were cited.",
+        "sources": []
+      },
+      {
+        "work_id": "d222e41a4294c824282ca74e:0",
+        "topic": "accounting_attribution",
+        "stage": "analysis",
+        "at": "2026-11-07T21:00:45.412316+00:00",
+        "disposition": "awaiting_review",
+        "summary": "Broker cash, equity and summed branch cash all equal $29,999.84, leaving no snapshot residual. Recorded fills net \u2212$0.13; supplied booked fees net \u2212$0.03. Together they match the $0.16 difference from a $30,000 comparison value. Opening balances and the journal activity amount are missing, so this does not establish a complete historical attribution.",
+        "sources": []
+      },
+      {
+        "work_id": "b4fcaca9130d32deec367d3e:0",
+        "topic": "runtime_reliability",
+        "stage": "review",
+        "at": "2026-11-07T20:55:49.559138+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope by the supplied evidence. Retry announcements do not demonstrate executed retries or recovery. Drill and regression success remain reported checks; the November 2 round trip is explicitly qualified as reported verification without raw receipts. Earlier pending execution diagnoses are correctly treated as historical. The proposed restart-during-retry test is bounded and unexecuted, with explicit completion evidence and protected-state checks. No analyst URLs require verification.",
+        "sources": []
+      },
+      {
+        "work_id": "b4fcaca9130d32deec367d3e:0",
+        "topic": "runtime_reliability",
+        "stage": "analysis",
+        "at": "2026-11-07T20:55:21.896518+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The retained runtime errors show a common retry announcement, not demonstrated recovery or a common cause. November 2 provides reported market round-trip verification beyond earlier local checks and pending statuses. Watchdog drills do not establish full-session reliability. Propose one isolated restart-during-retry test; no repair or test execution is claimed.",
+        "sources": []
+      },
+      {
+        "work_id": "61fe6161d43f258a6a524d39:0",
+        "topic": "accounting_attribution",
+        "stage": "review",
+        "at": "2026-11-07T20:54:00.619219+00:00",
+        "disposition": "accepted",
+        "summary": "All four findings are supported at their stated scope. Checked arithmetic: branch cash totals $29,999.84; account cash minus branch cash and equity minus cash both equal $0.00. Supplied holdings are empty. Recorded fills net to zero shares and -$0.13 gross cash. Assuming $30,000.00 opening cash yields a -$0.03 residual, but neither that opening balance nor interval completeness is established. No fee, additional activity or branch allocation is asserted. The proposed reporting invariant and hypothetical tests reproduce correctly, preserve missing historical inputs as unknown and require evidence for attribution. No external sources were claimed or needed to verify the supplied arithmetic.",
+        "sources": []
+      },
+      {
+        "work_id": "61fe6161d43f258a6a524d39:0",
+        "topic": "accounting_attribution",
+        "stage": "analysis",
+        "at": "2026-11-07T20:53:40.530041+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The supplied branch cash totals $29,999.84, exactly matching account cash and equity. Recorded fills produce a $0.13 gross cash loss. A further $0.03 decrease exists only if opening cash was $30,000 and these fills were complete for the reconciliation interval. Neither premise is established, so attribution remains unresolved.",
+        "sources": []
+      },
+      {
+        "work_id": "db861fff18cb73f2af9f2258:0",
+        "topic": "source_verification",
+        "stage": "analysis",
+        "at": "2026-11-07T20:52:00.922761+00:00",
+        "disposition": "awaiting_review",
+        "summary": "One primary full text was verified: the MIT options paper. Seven other direct retrievals failed, leaving their substantive attributions unverified. Regime definitions and event/quote receipts remain decisive gaps. Supplied screen figures were not independently reproduced. Repairs below are evidence supplements only; no card, strategy, frozen study, risk limit or promotion gate is changed.",
+        "sources": [
+          {
+            "url": "https://www.nber.org/papers/w17653",
+            "claim": "Checked the cited Nagel landing page for liquidity/reversal mechanism support.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:49:42+00:00",
+            "limitation": "HTTP 403; substantive content was not retrieved."
+          },
+          {
+            "url": "https://www.nber.org/papers/w20721",
+            "claim": "Checked the shared transaction-cost citation used by reversal and continuation cards.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:49:42+00:00",
+            "limitation": "HTTP 403; cost conclusions remain unverified through this endpoint."
+          },
+          {
+            "url": "https://www.nber.org/papers/w20439.pdf",
+            "claim": "Checked Momentum Crashes for the swing-continuation crash-state attribution.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:49:42+00:00",
+            "limitation": "HTTP 403; neither crash conditions nor their applicability were verified."
+          },
+          {
+            "url": "https://doi.org/10.1093/rfs/hhs066",
+            "claim": "Tried the publisher DOI as an alternate route to Nagel's Evaporating Liquidity.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:50:08+00:00",
+            "limitation": "Tool reported the URL inaccessible; no substantive publisher content was retrieved."
+          },
+          {
+            "url": "https://mysimon.rochester.edu/novy-marx/research/ToAatTC.pdf",
+            "claim": "Tried the author-hosted A Taxonomy of Anomalies and their Trading Costs as an alternate primary copy.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:50:17+00:00",
+            "limitation": "Fetch timed out, reported as 400. Indexed excerpts do not establish successful full-text retrieval."
+          },
+          {
+            "url": "https://www.sciencedirect.com/science/article/pii/016541019090008R",
+            "claim": "Rechecked the cited Bernard\u2013Thomas publisher article.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:50:17+00:00",
+            "limitation": "HTTP 403; search-index abstract text was insufficient for full attribution verification."
+          },
+          {
+            "url": "https://deepblue.lib.umich.edu/bitstream/handle/2027.42/28288/0000041.pdf",
+            "claim": "Tried the university repository copy of the Bernard\u2013Thomas article.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T20:50:08+00:00",
+            "limitation": "HTTP 403; no full-text passage was checked."
+          },
+          {
+            "url": "https://ide.mit.edu/wp-content/uploads/2024/03/Retail_Options.pdf?x14396=",
+            "claim": "March 4, 2024 paper: Introduction separates straddle underperformance from spreads; \u00a72 identifies Nasdaq and commercial research inputs.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T20:50:17+00:00",
+            "limitation": "65-page PDF retrieved. Historical study support only; no laboratory-specific specification, free quote feed or executable-fill evidence."
+          }
+        ]
+      },
+      {
+        "work_id": "52d3163b41930fbfd3b06e01:1",
+        "topic": "experiment_lifecycle",
+        "stage": "review",
+        "at": "2026-11-07T20:49:36.055226+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. The refresh reports zero plans; the empty funnel establishes only the first visible stopping point, not exhaustive parent rejection, challenger eligibility failures or collector health. All eight definitions support the reported lifecycle labels, thresholds and costs. The prospective tests distinguish stage failures, exclude fixtures and fixed/adaptive observations from challenger credit, and preserve existing gates and promotion criteria. Missing accounting and promotion rules remain explicit prerequisites. No external sources are claimed by the analyst; the market statements are correctly scoped as observations about the supplied report.",
+        "sources": []
+      },
+      {
+        "work_id": "52d3163b41930fbfd3b06e01:1",
+        "topic": "experiment_lifecycle",
+        "stage": "analysis",
+        "at": "2026-11-07T20:49:13.405420+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The supplied refresh reports zero equity plans, and the funnel contains no plans or shadow entries. Parent-plan availability is the first visible stopping point. The evidence does not establish challenger eligibility failures or collection faults. Prospective acceptance requires linked stage receipts and naturally eligible parents while preserving filters, costs, sample rules and promotion criteria.",
+        "sources": []
+      },
+      {
+        "work_id": "52d3163b41930fbfd3b06e01:0",
+        "topic": "experiment_lifecycle",
+        "stage": "review",
+        "at": "2026-11-07T20:42:38.213374+00:00",
+        "disposition": "revise",
+        "summary": "Finding 0 describes unmet market-context requirements that the supplied report does not explicitly identify as parent gates. Its qualification does not fully resolve that attribution. Findings 1\u20135 are supported at their stated, bounded scopes. The prospective tests preserve parent eligibility, costs, sample accounting and promotion criteria, while leaving unexercised collection paths untested. The analyst cites no external sources requiring URL verification.",
+        "sources": []
+      },
+      {
+        "work_id": "52d3163b41930fbfd3b06e01:0",
+        "topic": "experiment_lifecycle",
+        "stage": "analysis",
+        "at": "2026-11-07T20:42:01.243479+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The supplied evidence stops at parent-plan availability: one research refresh reports zero equity plans, and the supplied funnel contains empty plans and shadow arrays. Eight challenger definitions exist in shadow state, but no challenger evaluation or sample receipt is supplied. Eligibility failures and collection faults cannot be established or excluded. The proposed acceptance test is prospective and preserves existing parent filters, costs and promotion criteria.",
+        "sources": []
+      }
+    ],
+    "scope": "Focused research and independently reviewed developer proposals; no plan, order, strategy promotion or code-edit authority.",
+    "limits": {
+      "revisions_per_evidence": 2,
+      "attempts_per_stage": 2,
+      "retry_minutes": 30
+    }
+  },
   "usage": [
+    {
+      "at": "2026-11-07T21:03:10.452004+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 30281,
+      "cached_tokens": 29952,
+      "output_tokens": 3265,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:106",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T21:01:13.860835+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 17643,
+      "cached_tokens": 17408,
+      "output_tokens": 554,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:105",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T21:00:45.331192+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 16095,
+      "cached_tokens": 0,
+      "output_tokens": 2094,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:104",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:55:48.642268+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 17484,
+      "cached_tokens": 0,
+      "output_tokens": 820,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:103",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:55:21.189176+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 16552,
+      "cached_tokens": 0,
+      "output_tokens": 2804,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:102",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:54:00.144000+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 16405,
+      "cached_tokens": 0,
+      "output_tokens": 498,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:101",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:53:40.365787+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 14368,
+      "cached_tokens": 0,
+      "output_tokens": 1492,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:100",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:52:59.389878+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 34969,
+      "cached_tokens": 29952,
+      "output_tokens": 1680,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:99",
+      "application_outcome": "rejected",
+      "application_validation_code": "unknown_evidence_reference",
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:52:00.479707+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 43562,
+      "cached_tokens": 35200,
+      "output_tokens": 4590,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:98",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:49:35.988659+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 18895,
+      "cached_tokens": 0,
+      "output_tokens": 770,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:97",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:49:13.294398+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 17982,
+      "cached_tokens": 0,
+      "output_tokens": 2405,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:96",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:42:37.818644+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 19229,
+      "cached_tokens": 0,
+      "output_tokens": 1315,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:95",
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:42:00.426657+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 17435,
+      "cached_tokens": 0,
+      "output_tokens": 2583,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:94",
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:40:46.488905+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 36440,
+      "cached_tokens": 27520,
+      "output_tokens": 4287,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:93",
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
+    {
+      "at": "2026-11-07T20:38:30.108509+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 52800,
+      "cached_tokens": 52480,
+      "output_tokens": 3495,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:92",
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
+    },
     {
       "at": "2026-11-06T22:01:18.055812+00:00",
       "day": "2026-11-06",
@@ -16806,7 +17549,12 @@
       "cached_tokens": 0,
       "output_tokens": 2444,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T21:35:28.950305+00:00",
@@ -16817,7 +17565,12 @@
       "cached_tokens": 0,
       "output_tokens": 434,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T21:16:05.266237+00:00",
@@ -16828,7 +17581,12 @@
       "cached_tokens": 0,
       "output_tokens": 2104,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T18:03:13.201323+00:00",
@@ -16839,7 +17597,12 @@
       "cached_tokens": 30720,
       "output_tokens": 3671,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T18:00:39.987318+00:00",
@@ -16850,7 +17613,12 @@
       "cached_tokens": 18944,
       "output_tokens": 400,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T14:47:13.781329+00:00",
@@ -16861,7 +17629,12 @@
       "cached_tokens": 57600,
       "output_tokens": 3514,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T14:11:31.792942+00:00",
@@ -16872,7 +17645,12 @@
       "cached_tokens": 29696,
       "output_tokens": 3578,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T14:09:28.601544+00:00",
@@ -16883,7 +17661,12 @@
       "cached_tokens": 0,
       "output_tokens": 70,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T14:08:53.615036+00:00",
@@ -16894,7 +17677,12 @@
       "cached_tokens": 38912,
       "output_tokens": 914,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-06T13:37:16.715684+00:00",
@@ -16905,7 +17693,12 @@
       "cached_tokens": 31232,
       "output_tokens": 1939,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
     },
     {
       "at": "2026-11-06T13:35:11.182446+00:00",
@@ -16916,7 +17709,12 @@
       "cached_tokens": 26624,
       "output_tokens": 1846,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
     },
     {
       "at": "2026-11-06T13:17:26.643234+00:00",
@@ -16927,7 +17725,12 @@
       "cached_tokens": 54528,
       "output_tokens": 3345,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T21:35:27.504208+00:00",
@@ -16938,7 +17741,12 @@
       "cached_tokens": 0,
       "output_tokens": 383,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T21:16:20.926724+00:00",
@@ -16949,7 +17757,12 @@
       "cached_tokens": 0,
       "output_tokens": 2414,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T18:03:12.349406+00:00",
@@ -16960,7 +17773,12 @@
       "cached_tokens": 66816,
       "output_tokens": 3510,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T18:00:48.519836+00:00",
@@ -16971,7 +17789,12 @@
       "cached_tokens": 18048,
       "output_tokens": 361,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T14:47:38.942489+00:00",
@@ -16982,7 +17805,12 @@
       "cached_tokens": 30592,
       "output_tokens": 3705,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T13:39:09.181973+00:00",
@@ -16993,7 +17821,12 @@
       "cached_tokens": 64768,
       "output_tokens": 3552,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T13:36:47.615128+00:00",
@@ -17004,7 +17837,12 @@
       "cached_tokens": 0,
       "output_tokens": 59,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T13:36:20.081993+00:00",
@@ -17015,7 +17853,12 @@
       "cached_tokens": 0,
       "output_tokens": 1413,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-05T13:17:12.769661+00:00",
@@ -17026,7 +17869,12 @@
       "cached_tokens": 29696,
       "output_tokens": 3705,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T21:35:29.782551+00:00",
@@ -17037,7 +17885,12 @@
       "cached_tokens": 0,
       "output_tokens": 447,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T21:16:27.274559+00:00",
@@ -17048,7 +17901,12 @@
       "cached_tokens": 0,
       "output_tokens": 2320,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T18:03:40.376744+00:00",
@@ -17059,7 +17917,12 @@
       "cached_tokens": 30592,
       "output_tokens": 3085,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T18:01:02.924613+00:00",
@@ -17070,7 +17933,12 @@
       "cached_tokens": 18944,
       "output_tokens": 414,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T14:47:44.578866+00:00",
@@ -17081,7 +17949,12 @@
       "cached_tokens": 57728,
       "output_tokens": 5337,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T13:39:55.307000+00:00",
@@ -17092,7 +17965,12 @@
       "cached_tokens": 29952,
       "output_tokens": 4008,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T13:37:53.980752+00:00",
@@ -17103,7 +17981,12 @@
       "cached_tokens": 0,
       "output_tokens": 325,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T13:37:02.551130+00:00",
@@ -17114,7 +17997,12 @@
       "cached_tokens": 0,
       "output_tokens": 2513,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-04T13:17:05.588669+00:00",
@@ -17125,7 +18013,12 @@
       "cached_tokens": 54400,
       "output_tokens": 3641,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T21:35:35.895487+00:00",
@@ -17136,7 +18029,12 @@
       "cached_tokens": 0,
       "output_tokens": 491,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T21:16:39.347123+00:00",
@@ -17147,7 +18045,12 @@
       "cached_tokens": 0,
       "output_tokens": 2306,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T18:03:10.150223+00:00",
@@ -17158,7 +18061,12 @@
       "cached_tokens": 37376,
       "output_tokens": 3146,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T18:00:49.657222+00:00",
@@ -17169,7 +18077,12 @@
       "cached_tokens": 13824,
       "output_tokens": 351,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T14:47:48.779181+00:00",
@@ -17180,7 +18093,12 @@
       "cached_tokens": 56320,
       "output_tokens": 3729,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T13:40:18.077869+00:00",
@@ -17191,7 +18109,12 @@
       "cached_tokens": 29312,
       "output_tokens": 3185,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T13:38:13.357784+00:00",
@@ -17202,7 +18125,12 @@
       "cached_tokens": 0,
       "output_tokens": 436,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T13:37:42.399173+00:00",
@@ -17213,7 +18141,12 @@
       "cached_tokens": 29952,
       "output_tokens": 2804,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-03T13:18:21.903215+00:00",
@@ -17224,7 +18157,12 @@
       "cached_tokens": 53888,
       "output_tokens": 3346,
       "quota_delta": 1.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T21:35:41.500941+00:00",
@@ -17235,7 +18173,12 @@
       "cached_tokens": 0,
       "output_tokens": 453,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T21:16:51.545703+00:00",
@@ -17246,7 +18189,12 @@
       "cached_tokens": 0,
       "output_tokens": 2373,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T18:03:25.261179+00:00",
@@ -17257,7 +18205,12 @@
       "cached_tokens": 29184,
       "output_tokens": 3546,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T18:00:34.654957+00:00",
@@ -17268,7 +18221,12 @@
       "cached_tokens": 19200,
       "output_tokens": 410,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T14:47:46.383181+00:00",
@@ -17279,7 +18237,12 @@
       "cached_tokens": 49664,
       "output_tokens": 3807,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T13:40:57.450365+00:00",
@@ -17290,7 +18253,12 @@
       "cached_tokens": 30848,
       "output_tokens": 2960,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T13:38:39.745333+00:00",
@@ -17301,7 +18269,12 @@
       "cached_tokens": 15616,
       "output_tokens": 407,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T13:38:01.442951+00:00",
@@ -17312,7 +18285,12 @@
       "cached_tokens": 38016,
       "output_tokens": 1992,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-11-02T13:35:10.901827+00:00",
@@ -17323,7 +18301,12 @@
       "cached_tokens": 38016,
       "output_tokens": 1893,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": 1
     },
     {
       "at": "2026-11-02T13:17:45.272261+00:00",
@@ -17334,7 +18317,12 @@
       "cached_tokens": 57472,
       "output_tokens": 3468,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:31:32.923496+00:00",
@@ -17345,7 +18333,12 @@
       "cached_tokens": 0,
       "output_tokens": 655,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:28:59.080310+00:00",
@@ -17356,7 +18349,12 @@
       "cached_tokens": 0,
       "output_tokens": 518,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:28:36.583165+00:00",
@@ -17367,7 +18365,12 @@
       "cached_tokens": 0,
       "output_tokens": 3172,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:24:47.518755+00:00",
@@ -17378,7 +18381,12 @@
       "cached_tokens": 20992,
       "output_tokens": 2621,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:21:10.946715+00:00",
@@ -17389,7 +18397,12 @@
       "cached_tokens": 0,
       "output_tokens": 0,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:18:42.125350+00:00",
@@ -17400,7 +18413,12 @@
       "cached_tokens": 0,
       "output_tokens": 64,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:18:34.700162+00:00",
@@ -17411,7 +18429,12 @@
       "cached_tokens": 27392,
       "output_tokens": 869,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T16:16:01.381906+00:00",
@@ -17422,7 +18445,12 @@
       "cached_tokens": 0,
       "output_tokens": 0,
       "quota_delta": 0.0,
-      "state": "failed"
+      "state": "failed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T05:56:21.089086+00:00",
@@ -17433,7 +18461,12 @@
       "cached_tokens": 31360,
       "output_tokens": 1722,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T05:53:43.840644+00:00",
@@ -17444,7 +18477,12 @@
       "cached_tokens": 28032,
       "output_tokens": 1437,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-31T05:29:14.632829+00:00",
@@ -17455,7 +18493,12 @@
       "cached_tokens": 0,
       "output_tokens": 934,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T21:01:48.862256+00:00",
@@ -17466,7 +18509,12 @@
       "cached_tokens": 0,
       "output_tokens": 991,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T21:00:56.273614+00:00",
@@ -17477,7 +18525,12 @@
       "cached_tokens": 0,
       "output_tokens": 1110,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T20:35:46.757565+00:00",
@@ -17488,7 +18541,12 @@
       "cached_tokens": 0,
       "output_tokens": 239,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T20:15:37.419857+00:00",
@@ -17499,7 +18557,12 @@
       "cached_tokens": 0,
       "output_tokens": 981,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T18:30:42.386492+00:00",
@@ -17510,7 +18573,12 @@
       "cached_tokens": 20864,
       "output_tokens": 867,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T17:00:38.043078+00:00",
@@ -17521,7 +18589,12 @@
       "cached_tokens": 0,
       "output_tokens": 359,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T15:00:18.711895+00:00",
@@ -17532,7 +18605,12 @@
       "cached_tokens": 20736,
       "output_tokens": 468,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T13:47:17.596478+00:00",
@@ -17543,7 +18621,12 @@
       "cached_tokens": 31488,
       "output_tokens": 3311,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T12:40:03.193741+00:00",
@@ -17554,7 +18637,12 @@
       "cached_tokens": 41600,
       "output_tokens": 3393,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T12:38:10.059234+00:00",
@@ -17565,7 +18653,12 @@
       "cached_tokens": 18432,
       "output_tokens": 733,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T12:37:22.346974+00:00",
@@ -17576,7 +18669,12 @@
       "cached_tokens": 35584,
       "output_tokens": 4337,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T12:17:13.436809+00:00",
@@ -17587,7 +18685,12 @@
       "cached_tokens": 54656,
       "output_tokens": 3557,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T00:53:57.270013+00:00",
@@ -17598,7 +18701,12 @@
       "cached_tokens": 14336,
       "output_tokens": 57,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T00:53:23.639349+00:00",
@@ -17609,7 +18717,12 @@
       "cached_tokens": 14336,
       "output_tokens": 60,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T00:44:35.725987+00:00",
@@ -17620,7 +18733,12 @@
       "cached_tokens": 19456,
       "output_tokens": 623,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T00:29:16.504082+00:00",
@@ -17631,7 +18749,12 @@
       "cached_tokens": 18432,
       "output_tokens": 771,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-30T00:28:45.995108+00:00",
@@ -17642,7 +18765,12 @@
       "cached_tokens": 27520,
       "output_tokens": 2574,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T23:02:37.758968+00:00",
@@ -17653,7 +18781,12 @@
       "cached_tokens": 21248,
       "output_tokens": 366,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T23:02:18.220730+00:00",
@@ -17664,7 +18797,12 @@
       "cached_tokens": 21760,
       "output_tokens": 1466,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T23:01:27.286840+00:00",
@@ -17675,7 +18813,12 @@
       "cached_tokens": 38784,
       "output_tokens": 3503,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:59:58.302162+00:00",
@@ -17686,7 +18829,12 @@
       "cached_tokens": 0,
       "output_tokens": 586,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:59:53.182569+00:00",
@@ -17697,7 +18845,12 @@
       "cached_tokens": 39808,
       "output_tokens": 2279,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:59:31.757635+00:00",
@@ -17708,7 +18861,12 @@
       "cached_tokens": 22656,
       "output_tokens": 1204,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:57:32.479168+00:00",
@@ -17719,7 +18877,12 @@
       "cached_tokens": 0,
       "output_tokens": 0,
       "quota_delta": 0.0,
-      "state": "started"
+      "state": "started",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:56:58.115143+00:00",
@@ -17730,7 +18893,12 @@
       "cached_tokens": 0,
       "output_tokens": 0,
       "quota_delta": 0.0,
-      "state": "started"
+      "state": "started",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:50:46.711599+00:00",
@@ -17741,7 +18909,12 @@
       "cached_tokens": 0,
       "output_tokens": 134,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T22:50:29.627571+00:00",
@@ -17752,7 +18925,12 @@
       "cached_tokens": 0,
       "output_tokens": 1364,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T11:42:17.857712+00:00",
@@ -17763,7 +18941,12 @@
       "cached_tokens": 53760,
       "output_tokens": 1220,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T11:40:26.275050+00:00",
@@ -17774,7 +18957,12 @@
       "cached_tokens": 36224,
       "output_tokens": 1235,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T11:39:22.945428+00:00",
@@ -17785,7 +18973,12 @@
       "cached_tokens": 100864,
       "output_tokens": 1626,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     },
     {
       "at": "2026-10-29T11:37:40.196731+00:00",
@@ -17796,19 +18989,31 @@
       "cached_tokens": 67072,
       "output_tokens": 6381,
       "quota_delta": 0.0,
-      "state": "completed"
+      "state": "completed",
+      "outcome": null,
+      "attempt_id": null,
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null
     }
   ],
   "budget": {
+    "minimum_weekly_target": 50,
+    "weekly_target": 80,
     "project_weekly_share": 80,
     "reserve": 20,
     "daily_call_ceiling": 24,
+    "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "attribution": "Task tokens measured; quota deltas include concurrent account activity."
+    "account_used_percent": 17.0,
+    "quota_observed_at": "2026-11-07T21:06:28.109567+00:00",
+    "target_gap_percentage_points": 63.0,
+    "account_limit_reason": null,
+    "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
   "execution_quality": {
     "additional_cost_allowance": 1.51865,
-    "illustrative_equity_after_allowance": 29998.35135,
+    "illustrative_equity_after_allowance": 29998.32135,
     "basis": "Additional 10bp per executed side; illustrative, not actual fees or a live-fill simulation."
   },
   "benchmarks": {
@@ -18536,15 +19741,15 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "513767466a32fd5548ab6687ed39944c8e16abf3",
-    "validated_at": "2026-10-31T16:36:46.060322+00:00",
-    "regression_tests": 368,
-    "runtime_tests": 198,
+    "source_commit": "d844f079fbd9a16c0585619b2362c3b6dbac00e5",
+    "validated_at": "2026-11-07T21:09:44.934653+00:00",
+    "regression_tests": 533,
+    "runtime_tests": 363,
     "browser_views": 7,
     "start_date": "2026-10-29",
-    "fill_exit_gate": "pending_next_regular_session",
-    "ci": "passed",
-    "pages": "passed",
+    "fill_exit_gate": "historical_passed_current_kernel_pending",
+    "ci": "pending_push_verification",
+    "pages": "pending_new_snapshot",
     "public_browser_qa": "passed",
     "activated_at": "2026-10-31T16:38:33.258652+00:00",
     "research_sprint": true,
@@ -18563,18 +19768,35 @@
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
     "profitability": "unproven",
-    "source_ci_run": 41220429757,
-    "pages_verified_run": 41220542958,
+    "source_ci_run": null,
+    "pages_verified_run": null,
     "asset_versioning": true,
     "execution_check_repair": true,
     "operational_evidence_review_verified": true,
     "research_quality_audit": true,
     "source_check_attestations": true,
     "at": "2026-10-31T16:35:37.008768+00:00",
-    "summary": "Observation-led discovery, independently reviewed future studies, return accountability and post-change mechanics assessments. Profitability unproven.",
+    "summary": "Useful off-hours research, atomic budgets/jobs, evidence integrity, accounted fees and revised execution recovery.",
     "observation_led_discovery": true,
     "adaptive_studies": 2,
-    "adaptive_handoff_verified": true
+    "adaptive_handoff_verified": true,
+    "refinement_20261107": {
+      "weekly_usage_target": [
+        50,
+        80
+      ],
+      "initial_account_usage_percent": 2,
+      "latest_observed_account_usage_percent": 17,
+      "background_daily_attempts": 96,
+      "core_daily_attempts": 24,
+      "kernel": "paper-execution-20261107",
+      "current_kernel_market_acceptance": "pending_regular_session",
+      "fee_receipts_booked": 2,
+      "frozen_protocols_preserved": true,
+      "orders_submitted_by_maintenance": 0,
+      "mobile_viewport_px": 390,
+      "desktop_viewport_px": 1440
+    }
   },
   "limitations": [
     "Paper results are not live returns.",
