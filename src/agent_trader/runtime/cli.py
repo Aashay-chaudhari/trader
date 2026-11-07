@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import closing
 import json
 import logging
 import shutil
@@ -24,45 +25,44 @@ def reset_application(config, confirm, *, ownership=None):
 def _reset_application(config, confirm):
     if confirm != "RESET":
         raise ValueError("Reset requires --confirm RESET")
-    broker = Broker(config)
-    if broker.positions() or broker.orders():
-        raise ValueError("Broker must have no positions or open orders for a fresh ledger")
-    archive = config.state_dir / "archive" / datetime.now(ET).strftime("reset-%Y%m%d-%H%M%S")
-    archive.mkdir(parents=True, exist_ok=True)
-    for name in ("trader.sqlite3", "trader.sqlite3-wal", "trader.sqlite3-shm"):
-        p = config.state_dir / name
-        if p.exists():
-            shutil.move(str(p), archive / name)
-    for root in (config.root / "data", config.root / "docs/data"):
-        if root.exists():
-            destination = archive / (
-                "legacy-data" if root == config.root / "data" else "published-data"
+    with Broker(config) as broker:
+        if broker.positions() or broker.orders():
+            raise ValueError("Broker must have no positions or open orders for a fresh ledger")
+        archive = config.state_dir / "archive" / datetime.now(ET).strftime("reset-%Y%m%d-%H%M%S")
+        archive.mkdir(parents=True, exist_ok=True)
+        for name in ("trader.sqlite3", "trader.sqlite3-wal", "trader.sqlite3-shm"):
+            p = config.state_dir / name
+            if p.exists():
+                shutil.move(str(p), archive / name)
+        for root in (config.root / "data", config.root / "docs/data"):
+            if root.exists():
+                destination = archive / (
+                    "legacy-data" if root == config.root / "data" else "published-data"
+                )
+                shutil.move(str(root), destination)
+        (config.root / "data").mkdir(exist_ok=True)
+        (config.root / "data/README.md").write_text(
+            "# Runtime state\n\nOperational data lives locally in ignored `.runtime/trader.sqlite3`.\nOnly sanitized snapshots are published to `docs/data/lab.json`.\nHistorical profile artifacts are archived locally and remain in Git history.\n"
+        )
+        with closing(Store(config.state_dir / "trader.sqlite3")) as store:
+            store.set(
+                "fresh_start",
+                {"start_date": config.start_date, "reset_at": utc_now(), "preserve_git_history": True},
             )
-            shutil.move(str(root), destination)
-    (config.root / "data").mkdir(exist_ok=True)
-    (config.root / "data/README.md").write_text(
-        "# Runtime state\n\nOperational data lives locally in ignored `.runtime/trader.sqlite3`.\nOnly sanitized snapshots are published to `docs/data/lab.json`.\nHistorical profile artifacts are archived locally and remain in Git history.\n"
-    )
-    store = Store(config.state_dir / "trader.sqlite3")
-    store.set(
-        "fresh_start",
-        {"start_date": config.start_date, "reset_at": utc_now(), "preserve_git_history": True},
-    )
-    store.set("mode", "research_shadow")
-    store.set(
-        "status", "Fresh experiment prepared. First trading session: " + config.start_date + "."
-    )
-    store.set("next_action", "07:45 ET startup notification; 08:15 ET morning research.")
-    store.event(
-        "release",
-        {
-            "summary": "Fresh application ledger. Three separate $10,000 allocations; no legacy trades or memory imported."
-        },
-    )
-    Engine(config, store, broker).reconcile()
-    export(config, store)
-    store.close()
-    return {"reset": "complete", "start_date": config.start_date, "git_history": "preserved"}
+            store.set("mode", "research_shadow")
+            store.set(
+                "status", "Fresh experiment prepared. First trading session: " + config.start_date + "."
+            )
+            store.set("next_action", "07:45 ET startup notification; 08:15 ET morning research.")
+            store.event(
+                "release",
+                {
+                    "summary": "Fresh application ledger. Three separate $10,000 allocations; no legacy trades or memory imported."
+                },
+            )
+            Engine(config, store, broker).reconcile()
+            export(config, store)
+            return {"reset": "complete", "start_date": config.start_date, "git_history": "preserved"}
 
 
 def smoke_submission(config, store, *, ownership=None):
@@ -71,66 +71,66 @@ def smoke_submission(config, store, *, ownership=None):
 
 
 def _smoke_submission(config, store):
-    broker = Broker(config)
-    if broker.positions() or broker.orders():
-        raise ValueError("Submission test requires flat paper account")
-    engine = Engine(config, store, broker)
-    cid = order_id("preflight-submission", datetime.now(ET).date().isoformat())
-    order = broker.by_client(cid)
-    if order is None:
-        payload = {
-            "symbol": "SPY",
-            "qty": "1",
-            "side": "buy",
-            "type": "limit",
-            "limit_price": "1.00",
-            "time_in_force": "day",
-            "client_order_id": cid,
-            "extended_hours": False,
-        }
-        order = engine.submit_intent(payload, "intraday", "submission-preflight")
-    try:
-        if order["status"] not in TERMINAL:
-            broker.cancel(order["id"])
-        for _ in range(10):
-            latest = broker.order(order["id"])
-            engine.ingest_order(latest, "intraday", "submission-preflight")
-            if latest["status"] in TERMINAL:
-                break
-            time.sleep(0.5)
-        if float(latest.get("filled_qty") or 0) > 0:
-            raise ValueError("Unexpected test fill; reconcile before continuing")
-        if latest["status"] != "canceled":
-            raise ValueError("Test cancellation not confirmed")
-        engine.reconcile()
-        readiness = store.get("readiness", {})
-        readiness.update(
-            {
-                "order_submission_verified": True,
-                "submission_checked_at": utc_now(),
-                "execution_verified": readiness.get("execution_verified", False),
-                "required_execution_kernel": EXECUTION_KERNEL,
-                "verified_execution_kernel": None,
+    with Broker(config) as broker:
+        if broker.positions() or broker.orders():
+            raise ValueError("Submission test requires flat paper account")
+        engine = Engine(config, store, broker)
+        cid = order_id("preflight-submission", datetime.now(ET).date().isoformat())
+        order = broker.by_client(cid)
+        if order is None:
+            payload = {
+                "symbol": "SPY",
+                "qty": "1",
+                "side": "buy",
+                "type": "limit",
+                "limit_price": "1.00",
+                "time_in_force": "day",
+                "client_order_id": cid,
+                "extended_hours": False,
             }
-        )
-        store.set("readiness", readiness)
-        store.event(
-            "startup",
-            {
-                "summary": "Paper API accepted and canceled a deliberately nonmarketable $1 SPY limit. Fill/exit round-trip still pending market-open check."
-            },
-        )
-        return {
-            "submission": "accepted",
-            "cancellation": "confirmed",
-            "fills": 0,
-            "round_trip": "pending_market_open",
-        }
-    finally:
-        # Never intentionally leave a test entry resting overnight.
-        fresh = broker.by_client(cid)
-        if fresh and fresh["status"] not in TERMINAL:
-            broker.cancel(fresh["id"])
+            order = engine.submit_intent(payload, "intraday", "submission-preflight")
+        try:
+            if order["status"] not in TERMINAL:
+                broker.cancel(order["id"])
+            for _ in range(10):
+                latest = broker.order(order["id"])
+                engine.ingest_order(latest, "intraday", "submission-preflight")
+                if latest["status"] in TERMINAL:
+                    break
+                time.sleep(0.5)
+            if float(latest.get("filled_qty") or 0) > 0:
+                raise ValueError("Unexpected test fill; reconcile before continuing")
+            if latest["status"] != "canceled":
+                raise ValueError("Test cancellation not confirmed")
+            engine.reconcile()
+            readiness = store.get("readiness", {})
+            readiness.update(
+                {
+                    "order_submission_verified": True,
+                    "submission_checked_at": utc_now(),
+                    "execution_verified": readiness.get("execution_verified", False),
+                    "required_execution_kernel": EXECUTION_KERNEL,
+                    "verified_execution_kernel": None,
+                }
+            )
+            store.set("readiness", readiness)
+            store.event(
+                "startup",
+                {
+                    "summary": "Paper API accepted and canceled a deliberately nonmarketable $1 SPY limit. Fill/exit round-trip still pending market-open check."
+                },
+            )
+            return {
+                "submission": "accepted",
+                "cancellation": "confirmed",
+                "fills": 0,
+                "round_trip": "pending_market_open",
+            }
+        finally:
+            # Never intentionally leave a test entry resting overnight.
+            fresh = broker.by_client(cid)
+            if fresh and fresh["status"] not in TERMINAL:
+                broker.cancel(fresh["id"])
 
 
 def main():
@@ -190,18 +190,17 @@ def dispatch(config, args, *, ownership=None):
         except Exception as exc:
             from .notify import notify
 
-            failed = Store(config.state_dir / "trader.sqlite3")
-            notify(
-                config,
-                failed,
-                "startup-failure:" + datetime.now(ET).date().isoformat(),
-                "Trader - startup blocked",
-                "Local supervisor could not start ("
-                + type(exc).__name__
-                + "). Check local configuration and logs.",
-                urgent=True,
-            )
-            failed.close()
+            with closing(Store(config.state_dir / "trader.sqlite3")) as failed:
+                notify(
+                    config,
+                    failed,
+                    "startup-failure:" + datetime.now(ET).date().isoformat(),
+                    "Trader - startup blocked",
+                    "Local supervisor could not start ("
+                    + type(exc).__name__
+                    + "). Check local configuration and logs.",
+                    urgent=True,
+                )
             raise SystemExit(1) from None
         try:
             if args.command == "run":
@@ -226,9 +225,7 @@ def dispatch(config, args, *, ownership=None):
                     )
                 )
         finally:
-            s.pool.shutdown(wait=True, cancel_futures=True)
-            s.publisher_pool.shutdown(wait=True, cancel_futures=True)
-            s.store.close()
+            s.close()
         return
     store = Store(config.state_dir / "trader.sqlite3")
     try:
@@ -263,7 +260,8 @@ def dispatch(config, args, *, ownership=None):
             if store.job_start("exploration-bootstrap:" + day):
                 try:
                     seed_challengers(store)
-                    market_packet(Broker(config), store)
+                    with Broker(config) as broker:
+                        market_packet(broker, store)
                     result = worker(config, "exploration", {}, day)
                     record_report(store, result, day, morning=False)
                     record_artifact(

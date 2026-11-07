@@ -61,80 +61,87 @@ class Store:
         self._job_claims = {}
         self._transaction_job_completions = None
         self.db = sqlite3.connect(path, timeout=30, isolation_level=None)
-        self.db.row_factory = sqlite3.Row
-        # Two first-time openers can contend while switching an empty database
-        # to WAL; SQLite may reject this lock upgrade without invoking its busy
-        # timeout. Retry only that bounded transient, never silently fall back.
-        for attempt in range(6):
+        try:
+            self.db.row_factory = sqlite3.Row
+            # Two first-time openers can contend while switching an empty database
+            # to WAL; SQLite may reject this lock upgrade without invoking its busy
+            # timeout. Retry only that bounded transient, never silently fall back.
+            for attempt in range(6):
+                try:
+                    mode = self.db.execute("PRAGMA journal_mode=WAL").fetchone()[0]
+                    if mode != "wal":
+                        raise sqlite3.OperationalError("WAL journal mode is required")
+                    break
+                except sqlite3.OperationalError as exc:
+                    if getattr(exc, "sqlite_errorcode", None) not in (
+                        sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED
+                    ) or attempt == 5:
+                        raise
+                    time.sleep(0.01 * 2 ** attempt)
+            self.db.executescript("""
+            PRAGMA foreign_keys=ON;
+            CREATE TABLE IF NOT EXISTS kv(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS events(
+              id INTEGER PRIMARY KEY, at TEXT NOT NULL, kind TEXT NOT NULL,
+              branch TEXT, payload TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS jobs(
+              key TEXT PRIMARY KEY, state TEXT NOT NULL, attempts INTEGER DEFAULT 0,
+              at TEXT NOT NULL, result TEXT, owner TEXT);
+            CREATE TABLE IF NOT EXISTS plans(
+              id TEXT PRIMARY KEY, day TEXT, branch TEXT, state TEXT, payload TEXT);
+            CREATE TABLE IF NOT EXISTS orders(
+              client_id TEXT PRIMARY KEY, broker_id TEXT UNIQUE, branch TEXT NOT NULL,
+              symbol TEXT NOT NULL, side TEXT NOT NULL, qty REAL NOT NULL,
+              status TEXT NOT NULL, filled REAL DEFAULT 0, notional REAL DEFAULT 0,
+              plan_id TEXT, payload TEXT NOT NULL, at TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS holdings(
+              symbol TEXT PRIMARY KEY, branch TEXT NOT NULL, qty REAL NOT NULL,
+              cost REAL NOT NULL, plan_id TEXT);
+            CREATE TABLE IF NOT EXISTS branches(
+              name TEXT PRIMARY KEY, cash REAL NOT NULL, high_water REAL NOT NULL,
+              paused INTEGER DEFAULT 0, pause_reason TEXT DEFAULT '');
+            CREATE TABLE IF NOT EXISTS equity(
+              id INTEGER PRIMARY KEY, at TEXT, day TEXT, branch TEXT, value REAL,
+              UNIQUE(day,branch,at));
+            CREATE TABLE IF NOT EXISTS experiments(
+              id TEXT PRIMARY KEY, branch TEXT, state TEXT, payload TEXT, at TEXT);
+            CREATE TABLE IF NOT EXISTS shadow(
+              id TEXT PRIMARY KEY, experiment TEXT, symbol TEXT, branch TEXT,
+              state TEXT, payload TEXT);
+            CREATE TABLE IF NOT EXISTS memory(
+              id TEXT PRIMARY KEY, layer TEXT, expires TEXT, payload TEXT, at TEXT);
+            CREATE TABLE IF NOT EXISTS usage(
+              id INTEGER PRIMARY KEY, at TEXT, day TEXT, role TEXT, model TEXT,
+              input_tokens INTEGER, cached_tokens INTEGER, output_tokens INTEGER,
+              quota_delta REAL, payload TEXT);
+            CREATE TABLE IF NOT EXISTS cohort_observations(
+              id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT,
+              state TEXT, payload TEXT);
+            CREATE INDEX IF NOT EXISTS cohort_open ON cohort_observations(state,branch,rule,symbol);
+            CREATE TABLE IF NOT EXISTS cohort_expected(
+              id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT, payload TEXT);
+            CREATE TABLE IF NOT EXISTS session_health(
+              day TEXT, slot INTEGER, at TEXT, broker_confirmed INTEGER,
+              research_ready INTEGER, PRIMARY KEY(day,slot));
+            """)
+            # Additive migration under one write lock: other worker/probe connections
+            # may open the same database while a release is starting.
+            with self.transaction():
+                columns = {r["name"] for r in self.db.execute("PRAGMA table_info(jobs)")}
+                if "owner" not in columns:
+                    self.db.execute("ALTER TABLE jobs ADD COLUMN owner TEXT")
+            for name in ("intraday", "swing", "options"):
+                self.db.execute(
+                    "INSERT OR IGNORE INTO branches(name,cash,high_water) VALUES(?,10000,10000)",
+                    (name,),
+                )
+        except BaseException as exc:
             try:
-                mode = self.db.execute("PRAGMA journal_mode=WAL").fetchone()[0]
-                if mode != "wal":
-                    raise sqlite3.OperationalError("WAL journal mode is required")
-                break
-            except sqlite3.OperationalError as exc:
-                if getattr(exc, "sqlite_errorcode", None) not in (
-                    sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED
-                ) or attempt == 5:
-                    self.db.close()
-                    raise
-                time.sleep(0.01 * 2 ** attempt)
-        self.db.executescript("""
-        PRAGMA foreign_keys=ON;
-        CREATE TABLE IF NOT EXISTS kv(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS events(
-          id INTEGER PRIMARY KEY, at TEXT NOT NULL, kind TEXT NOT NULL,
-          branch TEXT, payload TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS jobs(
-          key TEXT PRIMARY KEY, state TEXT NOT NULL, attempts INTEGER DEFAULT 0,
-          at TEXT NOT NULL, result TEXT, owner TEXT);
-        CREATE TABLE IF NOT EXISTS plans(
-          id TEXT PRIMARY KEY, day TEXT, branch TEXT, state TEXT, payload TEXT);
-        CREATE TABLE IF NOT EXISTS orders(
-          client_id TEXT PRIMARY KEY, broker_id TEXT UNIQUE, branch TEXT NOT NULL,
-          symbol TEXT NOT NULL, side TEXT NOT NULL, qty REAL NOT NULL,
-          status TEXT NOT NULL, filled REAL DEFAULT 0, notional REAL DEFAULT 0,
-          plan_id TEXT, payload TEXT NOT NULL, at TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS holdings(
-          symbol TEXT PRIMARY KEY, branch TEXT NOT NULL, qty REAL NOT NULL,
-          cost REAL NOT NULL, plan_id TEXT);
-        CREATE TABLE IF NOT EXISTS branches(
-          name TEXT PRIMARY KEY, cash REAL NOT NULL, high_water REAL NOT NULL,
-          paused INTEGER DEFAULT 0, pause_reason TEXT DEFAULT '');
-        CREATE TABLE IF NOT EXISTS equity(
-          id INTEGER PRIMARY KEY, at TEXT, day TEXT, branch TEXT, value REAL,
-          UNIQUE(day,branch,at));
-        CREATE TABLE IF NOT EXISTS experiments(
-          id TEXT PRIMARY KEY, branch TEXT, state TEXT, payload TEXT, at TEXT);
-        CREATE TABLE IF NOT EXISTS shadow(
-          id TEXT PRIMARY KEY, experiment TEXT, symbol TEXT, branch TEXT,
-          state TEXT, payload TEXT);
-        CREATE TABLE IF NOT EXISTS memory(
-          id TEXT PRIMARY KEY, layer TEXT, expires TEXT, payload TEXT, at TEXT);
-        CREATE TABLE IF NOT EXISTS usage(
-          id INTEGER PRIMARY KEY, at TEXT, day TEXT, role TEXT, model TEXT,
-          input_tokens INTEGER, cached_tokens INTEGER, output_tokens INTEGER,
-          quota_delta REAL, payload TEXT);
-        CREATE TABLE IF NOT EXISTS cohort_observations(
-          id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT,
-          state TEXT, payload TEXT);
-        CREATE INDEX IF NOT EXISTS cohort_open ON cohort_observations(state,branch,rule,symbol);
-        CREATE TABLE IF NOT EXISTS cohort_expected(
-          id TEXT PRIMARY KEY, day TEXT, branch TEXT, rule TEXT, symbol TEXT, payload TEXT);
-        CREATE TABLE IF NOT EXISTS session_health(
-          day TEXT, slot INTEGER, at TEXT, broker_confirmed INTEGER,
-          research_ready INTEGER, PRIMARY KEY(day,slot));
-        """)
-        # Additive migration under one write lock: other worker/probe connections
-        # may open the same database while a release is starting.
-        with self.transaction():
-            columns = {r["name"] for r in self.db.execute("PRAGMA table_info(jobs)")}
-            if "owner" not in columns:
-                self.db.execute("ALTER TABLE jobs ADD COLUMN owner TEXT")
-        for name in ("intraday", "swing", "options"):
-            self.db.execute(
-                "INSERT OR IGNORE INTO branches(name,cash,high_water) VALUES(?,10000,10000)",
-                (name,),
-            )
+                self.db.close()
+            except Exception as cleanup_error:
+                exc.add_note("Store initialization cleanup failed: " + type(cleanup_error).__name__)
+            raise
+
 
     @contextmanager
     def transaction(self):

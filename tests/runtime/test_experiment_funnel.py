@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta
 
+from agent_trader.runtime.config import ET
 from agent_trader.runtime.experiments import Experiments
 from agent_trader.runtime.exploration import exploration_prompt, seed_challengers
 from agent_trader.runtime.research import research_prompt, review_prompt
@@ -162,16 +163,21 @@ def test_complete_prompt_budget_preserves_current_prices_before_background(store
             "reviewed_research": [{"id": str(i), "claim": "background " * 200} for i in range(30)]
         },
     )
+    daily_at = now.astimezone(ET).replace(hour=0, minute=0, second=0, microsecond=0)
+    previous = daily_at - timedelta(days=1)
     packet = {
+        "observed_at": now.isoformat(),
         "focus_symbols": ["AAPL"],
         "market": {
             "AAPL": {
                 "latestQuote": {"bp": 99.99, "ap": 100, "t": now.isoformat()},
-                "dailyBar": {"c": 100, "t": now.isoformat()},
-                "prevDailyBar": {"c": 98, "t": (now - timedelta(days=1)).isoformat()},
+                "dailyBar": {"c": 100, "t": daily_at.isoformat()},
+                "prevDailyBar": {"c": 98, "t": previous.isoformat()},
             }
         },
         "daily_indicators": {"AAPL": {"return_3d": 0.01}},
+        "daily_input_validation": {"as_of": daily_at.date().isoformat(),
+                                   "expected_previous_session": previous.date().isoformat()},
     }
     prompt = research_prompt(now.date().isoformat(), packet, store)
     context = json.loads(prompt.split("CONTEXT:\n", 1)[1])
@@ -181,6 +187,6 @@ def test_complete_prompt_budget_preserves_current_prices_before_background(store
     market = context["structured_observations"]["market"]["AAPL"]
     assert "daily_close" not in market
     assert market["current_session_bar_close"] == 100
-    assert market["current_session_bar_at"] == now.isoformat()
+    assert market["current_session_bar_at"] == daily_at.isoformat()
     assert market["prior_close"] == 98
     assert context["structured_observations"]["daily_indicators"]["AAPL"]["return_3d"] == 0.01

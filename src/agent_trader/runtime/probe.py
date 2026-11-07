@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import closing
 import json
 import re
 import subprocess
@@ -29,6 +30,15 @@ class ResearchData:
     def __init__(self, config):
         self._broker = Broker(config)
 
+    def close(self):
+        self._broker.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.close()
+
     def snapshots(self, symbols):
         return self._broker.snapshots(symbols)
 
@@ -40,6 +50,13 @@ class ResearchData:
 
     def calendar(self, day):
         return self._broker.calendar(day)
+
+    def calendar_range(self, start, end):
+        return self._broker.calendar_range(start, end)
+
+    @property
+    def last_bar_receipt(self):
+        return getattr(self._broker, "last_bar_receipt", None)
 
     def intraday_bars(self, symbols, start, end):
         return self._broker.intraday_bars(symbols, start, end)
@@ -54,182 +71,179 @@ def update_summary(store, entry):
 def run_probe(config, run_id, kind="full", quick=False, scheduled_for=None):
     if not re.fullmatch(r"[A-Za-z0-9_-]{4,80}", run_id):
         raise ValueError("Invalid probe ID")
-    live = Store(config.state_dir / "trader.sqlite3")
-    key = "research-probe:" + run_id
-    prior = next((x for x in live.get("research_probes", []) if x["id"] == run_id), {})
-    if not live.job_start(key):
-        live.close()
-        return prior
-    result = {
-        "id": run_id,
-        "kind": kind,
-        "state": "running",
-        "scheduled_for": scheduled_for or prior.get("scheduled_for"),
-        "started_at": utc_now(),
-        "orders_authorized": False,
-    }
-    update_summary(live, result)
-    live.event(
-        "research_probe_started",
-        {
-            "summary": "Isolated " + kind + " research check started; no orders authorized.",
-            **result,
-        },
-    )
-    notify(
-        config,
-        live,
-        key + ":start",
-        "Trader - research check started",
-        "Isolated " + kind + " run started. This check cannot place orders.",
-    )
-    directory = config.state_dir / "probes" / run_id
-    directory.mkdir(parents=True, exist_ok=True)
-    scratch = Store(directory / "research.sqlite3")
-    try:
-        for name in ("historical_screen", "research_catalogue", "brief", "market_packet"):
-            scratch.set(name, live.get(name, {} if name != "research_catalogue" else []))
-        for row in live.rows("SELECT * FROM experiments"):
-            scratch.db.execute(
-                "INSERT OR IGNORE INTO experiments VALUES(?,?,?,?,?)",
-                tuple(row[k] for k in ("id", "branch", "state", "payload", "at")),
-            )
-        day = datetime.now(ET).date().isoformat()
-        output = {}
-        if kind in ("research", "full"):
-            packet = market_packet(ResearchData(config), scratch)
-            prompt = (
-                research_prompt(day, packet, scratch).replace(
-                    "Use at most 3 focused live searches and 3 source checks (6 web actions total)",
-                    "Use at most two live search requests and two page checks (four web actions total)",
-                )
-                + "\nOPERATIONAL CHECK: return plans=[]; no trades or price plans. Cover verified current/next-session events. Keep each prose section under 500 characters."
-            )
-            brief = run_task(
-                config,
-                "probe_research",
-                prompt,
-                Brief,
-                config.research_model,
-                "medium" if quick else "high",
-                day,
-                searches=6 if quick else 8,
-                scope=run_id,
-            )
-            if brief["plans"]:
-                raise ValueError("Research check returned execution plans")
-            scratch.set("brief", brief)
-            output["brief"] = brief
-            result["research_sources"] = len(brief["sources"])
-        if kind in ("hypotheses", "full"):
-            screen = scratch.get("historical_screen")
-            if not screen:
-                raise ValueError("Frozen historical screen is required")
-            prompt = (
-                exploration_prompt(day, scratch, screen).replace(
-                    "Use at most 5 focused searches and 5 source checks (10 web actions total)",
-                    "Use at most one live search and two page checks (three web actions total)",
-                )
-                + "\nOPERATIONAL CHECK: exactly two concise hypotheses, experiments=[], shadow_plans=[]. Use existing screened evidence and primary sources; no new executable contracts. Keep the response compact."
-            )
-            report = run_task(
-                config,
-                "probe_hypotheses",
-                prompt,
-                ExplorationReport,
-                config.research_model,
-                "medium" if quick else "high",
-                day,
-                searches=5 if quick else 8,
-                scope=run_id,
-            )
-            if report["experiments"] or report["shadow_plans"]:
-                raise ValueError("Hypothesis check returned operational changes")
-            record_report(scratch, report, day, morning=False)
-            reviewed = run_task(
-                config,
-                "probe_validation",
-                validation_prompt(scratch).replace(
-                    "Use at most 1 focused search and 3 source checks (4 web actions total)",
-                    "Use at most one live search and two page checks (three web actions total)",
-                ),
-                ResearchValidation,
-                config.research_model,
-                "medium",
-                day,
-                searches=5 if quick else 6,
-                scope=run_id,
-            )
-            record_validation(scratch, reviewed)
-            ids = {h["id"] for h in report["hypotheses"]}
-            eligible = [
-                h["id"]
-                for h in knowledge_context(scratch, max_chars=None)["reviewed_research"]
-                if h["id"] in ids
-            ]
-            handoff = research_prompt(day, {"market": {}}, scratch)
-            if not all(identifier in handoff for identifier in eligible):
-                raise ValueError("Reviewed hypothesis missing from morning handoff")
-            output.update({"hypotheses": report, "validation": reviewed})
-            result.update(
-                {
-                    "hypotheses": len(report["hypotheses"]),
-                    "reviewed_for_testing": len(eligible),
-                    "morning_handoff_verified": bool(eligible),
-                    "handoff_result": "reviewed_cards_retrieved"
-                    if eligible
-                    else "no_cards_approved",
-                }
-            )
-        (directory / "report.json").write_text(dumps(output))
-        result.update({"state": "passed", "completed_at": utc_now()})
+    with closing(Store(config.state_dir / "trader.sqlite3")) as live:
+        key = "research-probe:" + run_id
+        prior = next((x for x in live.get("research_probes", []) if x["id"] == run_id), {})
+        if not live.job_start(key):
+            return prior
+        result = {
+            "id": run_id,
+            "kind": kind,
+            "state": "running",
+            "scheduled_for": scheduled_for or prior.get("scheduled_for"),
+            "started_at": utc_now(),
+            "orders_authorized": False,
+        }
         update_summary(live, result)
-        live.job_end(key, True, result)
         live.event(
-            "research_probe_completed",
+            "research_probe_started",
             {
-                "summary": "Isolated research check passed: data, inference and schema validation; no orders authorized.",
+                "summary": "Isolated " + kind + " research check started; no orders authorized.",
                 **result,
             },
         )
         notify(
             config,
             live,
-            key + ":done",
-            "Trader - research check passed",
-            f"{run_id}: {result.get('research_sources', 0)} brief sources; {result.get('hypotheses', 0)} hypotheses; {result.get('reviewed_for_testing', 0)} eligible for testing. Production plans and knowledge unchanged.",
+            key + ":start",
+            "Trader - research check started",
+            "Isolated " + kind + " run started. This check cannot place orders.",
         )
-        return result
-    except Exception as exc:
-        result.update(
-            {"state": "failed", "completed_at": utc_now(), "error_type": type(exc).__name__}
-        )
-        update_summary(live, result)
-        live.job_end(key, False, result)
-        live.event(
-            "research_probe_failed",
-            {
-                "summary": "Isolated research check failed ("
-                + type(exc).__name__
-                + "); production trading state untouched.",
-                **result,
-            },
-        )
-        notify(
-            config,
-            live,
-            key + ":failed",
-            "Trader - research check failed",
-            run_id
-            + " failed ("
-            + type(exc).__name__
-            + "). Production plans and knowledge unchanged.",
-            urgent=True,
-        )
-        raise
-    finally:
-        scratch.close()
-        live.close()
+        directory = config.state_dir / "probes" / run_id
+        directory.mkdir(parents=True, exist_ok=True)
+        with closing(Store(directory / "research.sqlite3")) as scratch:
+            try:
+                for name in ("historical_screen", "research_catalogue", "brief", "market_packet"):
+                    scratch.set(name, live.get(name, {} if name != "research_catalogue" else []))
+                for row in live.rows("SELECT * FROM experiments"):
+                    scratch.db.execute(
+                        "INSERT OR IGNORE INTO experiments VALUES(?,?,?,?,?)",
+                        tuple(row[k] for k in ("id", "branch", "state", "payload", "at")),
+                    )
+                day = datetime.now(ET).date().isoformat()
+                output = {}
+                if kind in ("research", "full"):
+                    with ResearchData(config) as data:
+                        packet = market_packet(data, scratch)
+                    prompt = (
+                        research_prompt(day, packet, scratch).replace(
+                            "Use at most 3 focused live searches and 3 source checks (6 web actions total)",
+                            "Use at most two live search requests and two page checks (four web actions total)",
+                        )
+                        + "\nOPERATIONAL CHECK: return plans=[]; no trades or price plans. Cover verified current/next-session events. Keep each prose section under 500 characters."
+                    )
+                    brief = run_task(
+                        config,
+                        "probe_research",
+                        prompt,
+                        Brief,
+                        config.research_model,
+                        "medium" if quick else "high",
+                        day,
+                        searches=6 if quick else 8,
+                        scope=run_id,
+                    )
+                    if brief["plans"]:
+                        raise ValueError("Research check returned execution plans")
+                    scratch.set("brief", brief)
+                    output["brief"] = brief
+                    result["research_sources"] = len(brief["sources"])
+                if kind in ("hypotheses", "full"):
+                    screen = scratch.get("historical_screen")
+                    if not screen:
+                        raise ValueError("Frozen historical screen is required")
+                    prompt = (
+                        exploration_prompt(day, scratch, screen).replace(
+                            "Use at most 5 focused searches and 5 source checks (10 web actions total)",
+                            "Use at most one live search and two page checks (three web actions total)",
+                        )
+                        + "\nOPERATIONAL CHECK: exactly two concise hypotheses, experiments=[], shadow_plans=[]. Use existing screened evidence and primary sources; no new executable contracts. Keep the response compact."
+                    )
+                    report = run_task(
+                        config,
+                        "probe_hypotheses",
+                        prompt,
+                        ExplorationReport,
+                        config.research_model,
+                        "medium" if quick else "high",
+                        day,
+                        searches=5 if quick else 8,
+                        scope=run_id,
+                    )
+                    if report["experiments"] or report["shadow_plans"]:
+                        raise ValueError("Hypothesis check returned operational changes")
+                    record_report(scratch, report, day, morning=False)
+                    reviewed = run_task(
+                        config,
+                        "probe_validation",
+                        validation_prompt(scratch).replace(
+                            "Use at most 1 focused search and 3 source checks (4 web actions total)",
+                            "Use at most one live search and two page checks (three web actions total)",
+                        ),
+                        ResearchValidation,
+                        config.research_model,
+                        "medium",
+                        day,
+                        searches=5 if quick else 6,
+                        scope=run_id,
+                    )
+                    record_validation(scratch, reviewed)
+                    ids = {h["id"] for h in report["hypotheses"]}
+                    eligible = [
+                        h["id"]
+                        for h in knowledge_context(scratch, max_chars=None)["reviewed_research"]
+                        if h["id"] in ids
+                    ]
+                    handoff = research_prompt(day, {"market": {}}, scratch)
+                    if not all(identifier in handoff for identifier in eligible):
+                        raise ValueError("Reviewed hypothesis missing from morning handoff")
+                    output.update({"hypotheses": report, "validation": reviewed})
+                    result.update(
+                        {
+                            "hypotheses": len(report["hypotheses"]),
+                            "reviewed_for_testing": len(eligible),
+                            "morning_handoff_verified": bool(eligible),
+                            "handoff_result": "reviewed_cards_retrieved"
+                            if eligible
+                            else "no_cards_approved",
+                        }
+                    )
+                (directory / "report.json").write_text(dumps(output))
+                result.update({"state": "passed", "completed_at": utc_now()})
+                update_summary(live, result)
+                live.job_end(key, True, result)
+                live.event(
+                    "research_probe_completed",
+                    {
+                        "summary": "Isolated research check passed: data, inference and schema validation; no orders authorized.",
+                        **result,
+                    },
+                )
+                notify(
+                    config,
+                    live,
+                    key + ":done",
+                    "Trader - research check passed",
+                    f"{run_id}: {result.get('research_sources', 0)} brief sources; {result.get('hypotheses', 0)} hypotheses; {result.get('reviewed_for_testing', 0)} eligible for testing. Production plans and knowledge unchanged.",
+                )
+                return result
+            except Exception as exc:
+                result.update(
+                    {"state": "failed", "completed_at": utc_now(), "error_type": type(exc).__name__}
+                )
+                update_summary(live, result)
+                live.job_end(key, False, result)
+                live.event(
+                    "research_probe_failed",
+                    {
+                        "summary": "Isolated research check failed ("
+                        + type(exc).__name__
+                        + "); production trading state untouched.",
+                        **result,
+                    },
+                )
+                notify(
+                    config,
+                    live,
+                    key + ":failed",
+                    "Trader - research check failed",
+                    run_id
+                    + " failed ("
+                    + type(exc).__name__
+                    + "). Production plans and knowledge unchanged.",
+                    urgent=True,
+                )
+                raise
 
 
 def schedule(config, run_id, when):
@@ -263,21 +277,20 @@ WantedBy=timers.target
     (unit_dir / (name + ".timer")).write_text(timer)
     subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
     subprocess.run(["systemctl", "--user", "enable", "--now", name + ".timer"], check=True)
-    store = Store(config.state_dir / "trader.sqlite3")
-    entry = {
-        "id": run_id,
-        "kind": "full",
-        "state": "scheduled",
-        "scheduled_for": when.isoformat(),
-        "orders_authorized": False,
-    }
-    update_summary(store, entry)
-    store.event(
-        "research_probe_scheduled",
-        {"summary": "Ad hoc non-trading research scheduled for " + when.isoformat(), **entry},
-    )
-    store.close()
-    return entry
+    with closing(Store(config.state_dir / "trader.sqlite3")) as store:
+        entry = {
+            "id": run_id,
+            "kind": "full",
+            "state": "scheduled",
+            "scheduled_for": when.isoformat(),
+            "orders_authorized": False,
+        }
+        update_summary(store, entry)
+        store.event(
+            "research_probe_scheduled",
+            {"summary": "Ad hoc non-trading research scheduled for " + when.isoformat(), **entry},
+        )
+        return entry
 
 
 def main():

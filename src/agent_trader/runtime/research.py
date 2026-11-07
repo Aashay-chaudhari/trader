@@ -29,6 +29,7 @@ bounded contexts. Follow this turn's role/schema.
 
 def market_packet(broker, store):
     now = utc_now()
+    sessions = []
     packet = {
         "observed_at": now,
         "data_feed": "Alpaca free IEX (one exchange; not consolidated)",
@@ -44,64 +45,77 @@ def market_packet(broker, store):
                 if k in ("latestTrade", "latestQuote", "dailyBar", "prevDailyBar")
             }
             for s, d in snapshots.items()
+            if s in UNIVERSE and isinstance(d, dict)
         }
     except Exception as exc:
         packet["unknowns"].append(f"Snapshots unavailable: {type(exc).__name__}")
     try:
-        bars = broker.bars(UNIVERSE)
         from .cohorts import freeze_signals
-        from .exploration import clean_bars
-        from .engine import timestamp
+        from .daily_inputs import build_daily_inputs
+        from .observation_audit import content_hash
 
-        trade_day = datetime.now(ET).date().isoformat()
-        completed = clean_bars(bars, trade_day)
-        indicators = {}
-        for symbol, values in completed.items():
-            closes = [float(v["c"]) for v in values]
-            volume_by_day = {
-                timestamp(row["t"]).astimezone(ET).date().isoformat(): row.get("v")
-                for row in bars.get(symbol, [])
+        bars_requested_at = utc_now()
+        bars = broker.bars(UNIVERSE)
+        bars_received_at = utc_now()
+        bar_receipt = getattr(broker, "last_bar_receipt", None)
+        calendar_now = datetime.now(ET)
+        trade_day = calendar_now.date().isoformat()
+        start = (calendar_now.date() - timedelta(days=80)).isoformat()
+        end = (calendar_now.date() + timedelta(days=45)).isoformat()
+        calendar_receipt, calendar_key, sessions = None, None, []
+        try:
+            sessions = broker.calendar_range(start, end)
+            calendar_received_at = utc_now()
+            calendar_hash = content_hash(sessions)
+            calendar_key = "cohort-calendar:" + trade_day + ":" + calendar_hash
+            calendar_receipt = {
+                "source": "Alpaca broker calendar", "observed_at": calendar_received_at,
+                "requested_at": calendar_now.isoformat(), "requested_start": start,
+                "requested_end": end, "sessions": sessions, "sha256": calendar_hash,
             }
-            vols = [volume_by_day.get(row["day"]) for row in values[-20:]]
-            if len(closes) >= 20:
-                indicators[symbol] = {
-                    "last_daily_close": closes[-1],
-                    "sma20": sum(closes[-20:]) / 20,
-                    "return_5d": closes[-1] / closes[-6] - 1 if len(closes) > 5 else None,
-                    "return_3d": closes[-1] / closes[-4] - 1,
-                    "return_1d": closes[-1] / closes[-2] - 1,
-                    "preceding_20_close_high": max(closes[-21:-1]) if len(closes) >= 21 else None,
-                    "average_daily_volume_20_iex_only": sum(float(v) for v in vols) / 20
-                    if all(v is not None for v in vols)
-                    else None,
-                    "asof": values[-1]["day"],
-                }
-        packet["daily_indicators"] = indicators
-        if hasattr(broker, "calendar_range"):
-            from .observation_audit import content_hash
-
-            calendar_now = datetime.now(ET)
-            start = (calendar_now.date() - timedelta(days=80)).isoformat()
-            end = (calendar_now.date() + timedelta(days=45)).isoformat()
-            try:
-                sessions = broker.calendar_range(start, end)
-            except Exception as exc:
-                packet["unknowns"].append(f"Broker calendar unavailable for cohort validation: {type(exc).__name__}")
-                freeze_signals(store, bars, [])
-            else:
-                calendar_hash = content_hash(sessions)
-                calendar_key = "cohort-calendar:" + trade_day + ":" + calendar_hash
-                if not store.get(calendar_key):
-                    store.set(calendar_key, {
-                        "source": "Alpaca broker calendar", "observed_at": calendar_now.isoformat(),
-                        "requested_start": start, "requested_end": end,
-                        "sessions": sessions, "sha256": calendar_hash,
-                    })
-                freeze_signals(store, bars, sessions, calendar_reference=calendar_key)
-        else:
+            if not store.get(calendar_key):
+                store.set(calendar_key, calendar_receipt)
+            # The fixed cohort keeps its existing immutable calendar receipt.
+            freeze_signals(store, bars, sessions, calendar_reference=calendar_key)
+        except Exception as exc:
+            packet["unknowns"].append(
+                "Broker calendar unavailable for daily input validation: " + type(exc).__name__
+            )
             freeze_signals(store, bars, [])
+        packet["daily_indicators"], packet["daily_input_validation"] = build_daily_inputs(
+            store, bars, calendar_receipt, as_of=trade_day, observed_at=now,
+            received_at=utc_now(), symbols=UNIVERSE,
+            source_metadata={
+                "feed": "iex", "adjustment": "all", "timeframe": "1Day",
+                "symbol_mapping_asof": "Provider current-date default; not point-in-time symbol history",
+                "bars_requested_at": bars_requested_at, "bars_received_at": bars_received_at,
+                "broker_receipt": bar_receipt,
+            },
+        )
+        if packet["daily_input_validation"]["state"] != "ready":
+            packet["unknowns"].append(
+                "Some daily features are unknown because required broker-session inputs are missing or invalid."
+            )
     except Exception as exc:
         packet["unknowns"].append(f"Daily bars unavailable: {type(exc).__name__}")
+        import httpx
+        from .broker import BrokerError
+        from .daily_inputs import VERSION as DAILY_INPUT_VERSION
+
+        category = (
+            "provider_transport_error" if isinstance(exc, (httpx.HTTPError, TimeoutError, ConnectionError))
+            else "provider_request_error" if isinstance(exc, BrokerError)
+            else "invalid_daily_intake" if isinstance(exc, (ValueError, TypeError, KeyError, AttributeError))
+            else "daily_intake_failed"
+        )
+        packet["daily_indicators"] = {}
+        packet["daily_input_validation"] = {
+            "version": DAILY_INPUT_VERSION,
+            "as_of": datetime.fromisoformat(now).astimezone(ET).date().isoformat(),
+            "state": "unavailable", "collection_error": category,
+            "expected_previous_session": None,
+            "source": {"feed": "iex", "adjustment": "all", "timeframe": "1Day"},
+        }
     packet["intraday_indicators"] = {}
     try:
         from .features import minute_features
@@ -131,7 +145,7 @@ def market_packet(broker, store):
 
     packet["focus_symbols"] = research_focus(packet, datetime.now(ET))
     packet["feature_contract"] = (
-        "Completed provider daily/one-minute bars only. IEX-only ranges, volume and bar VWAP are research context, not consolidated execution prices. Missing minute bars/VWAP remain explicit. Focus ranks data readiness then absolute five-session return for research priority only, not a strategy or trade recommendation."
+        "Calendar-indexed prior daily features use adjusted=all IEX bars; exact return endpoints, SMA/high/volume windows require their own source dates. Snapshot and one-minute prices are raw. Completed provider bars only. IEX-only ranges, volume and bar VWAP are research context, not consolidated execution prices. Missing minute bars/VWAP remain explicit. Focus ranks data readiness then absolute five-session return for research priority only, not a strategy or trade recommendation."
     )
     # Free macro CSV observations. These are daily/delayed, not execution quotes.
     try:
@@ -193,6 +207,14 @@ def market_packet(broker, store):
         "execution_eligible": False,
         "unknowns": options["unknowns"],
     }
+    from .daily_inputs import acquisition_interval
+
+    packet["completed_at"] = utc_now()
+    packet["acquisition_interval"] = acquisition_interval(now, packet["completed_at"], sessions)
+    if packet["acquisition_interval"]["crossed_et_date"]:
+        packet["unknowns"].append(
+            "Collection crossed an ET date boundary; original observation start and individual source dates remain explicit."
+        )
     store.set("market_packet", packet)
     store.memory_put(
         "research-input:" + now,
@@ -318,17 +340,15 @@ def research_prompt(day, packet, store):
                 for e in cal["events"][:8]
             ],
         }
+    from .daily_inputs import snapshot_projection
+
+    daily_validation = packet.get("daily_input_validation", {})
     compact["market"] = {
-        symbol: {
-            "trade": {k: v for k, v in (d.get("latestTrade") or {}).items() if k in ("p", "t")},
-            "quote": {
-                k: v for k, v in (d.get("latestQuote") or {}).items() if k in ("bp", "ap", "t")
-            },
-            "current_session_bar_close": d.get("dailyBar", {}).get("c"),
-            "current_session_bar_at": d.get("dailyBar", {}).get("t"),
-            "prior_close": d.get("prevDailyBar", {}).get("c"),
-            "prior_close_at": d.get("prevDailyBar", {}).get("t"),
-        }
+        symbol: snapshot_projection(
+            d, as_of=day,
+            previous_session=daily_validation.get("expected_previous_session")
+            if daily_validation.get("as_of") == day else None,
+        )
         for symbol, d in packet.get("market", {}).items()
         if symbol in selected
     }

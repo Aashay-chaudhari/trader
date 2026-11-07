@@ -1,5 +1,6 @@
 import json
 import threading
+from contextlib import closing
 from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 
@@ -68,6 +69,11 @@ def test_single_tick_finishes_applies_result_and_closes_workers_under_lock(confi
         def __init__(self, config):
             self.store = SimpleNamespace(close=lambda: calls.append("closed"))
             self.pool = self.publisher_pool = FakePool()
+
+        def close(self):
+            self.pool.shutdown(wait=True, cancel_futures=True)
+            self.publisher_pool.shutdown(wait=True, cancel_futures=True)
+            self.store.close()
 
         def tick(self):
             assert self.store.job_owner["kind"] == "supervisor"
@@ -215,8 +221,9 @@ def test_shutdown_applies_a_completed_report_under_ownership(config, broker, mon
         instance.future.set_result(report)
         monkeypatch.setattr(instance, "_run_owned", lambda: None)
         instance.run()
-        assert instance.store.get(key) == report
-        assert instance.store.rows("SELECT state FROM jobs")[0]["state"] == "done"
+        with closing(Store(config.state_dir / "trader.sqlite3")) as observed:
+            assert observed.get(key) == report
+            assert observed.rows("SELECT state FROM jobs")[0]["state"] == "done"
         assert broker.submissions == 0
         assert instance.future is None
     finally:

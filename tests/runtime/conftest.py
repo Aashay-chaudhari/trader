@@ -74,6 +74,16 @@ class FakeBroker:
         self.pos = []
         self.submissions = 0
         self.fail_after_accept = False
+        self.closed = False
+
+    def close(self):
+        self.closed = True
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.close()
 
     def account(self):
         return {

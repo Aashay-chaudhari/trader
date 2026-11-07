@@ -6,6 +6,7 @@ import os
 import selectors
 import shutil
 import subprocess
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -158,6 +159,14 @@ class CodexRPC:
 
     def __init__(self, config):
         self.config = config
+        self.proc = self.selector = None
+        self._closed = False
+        self._cleanup_complete = False
+        self._reaped = False
+        self._kill_sent = False
+        self._closed_resources = set()
+        self._close_lock = threading.Lock()
+        self._io_lock = threading.Lock()
         binary = config.codex_bin or os.environ.get("TRADER_CODEX_BIN") or shutil.which("codex")
         native = False
         if binary:
@@ -184,46 +193,59 @@ class CodexRPC:
                 x in k.upper() for x in ["API_KEY", "SECRET", "NTFY", "GH_TOKEN", "GITHUB_TOKEN"]
             )
         }
-        self.proc = subprocess.Popen(
-            [
-                binary,
-                "app-server",
-                "--listen",
-                "stdio://",
-                "--disable",
-                "shell_tool",
-                "--disable",
-                "apps",
-                "-c",
-                'web_search="live"',
-                "-c",
-                'approval_policy="never"',
-                "-c",
-                'sandbox_mode="read-only"',
-            ],
-            cwd=self.workspace,
-            env=env,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-        self.selector = selectors.DefaultSelector()
-        self.selector.register(self.proc.stdout, selectors.EVENT_READ)
-        self.buffer = b""
-        self.counter = 0
-        self.backlog = []
-        self.rpc(
-            "initialize", {"clientInfo": {"name": "agent_trader", "version": "2.0.0"}}, timeout=30
-        )
-        self.send({"method": "initialized"})
+        try:
+            self.proc = subprocess.Popen(
+                [
+                    binary,
+                    "app-server",
+                    "--listen",
+                    "stdio://",
+                    "--disable",
+                    "shell_tool",
+                    "--disable",
+                    "apps",
+                    "-c",
+                    'web_search="live"',
+                    "-c",
+                    'approval_policy="never"',
+                    "-c",
+                    'sandbox_mode="read-only"',
+                ],
+                cwd=self.workspace,
+                env=env,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+            self.selector = selectors.DefaultSelector()
+            self.selector.register(self.proc.stdout, selectors.EVENT_READ)
+            self.buffer = b""
+            self.counter = 0
+            self.backlog = []
+            self.rpc(
+                "initialize", {"clientInfo": {"name": "agent_trader", "version": "2.0.0"}}, timeout=30
+            )
+            self.send({"method": "initialized"})
+        except BaseException as exc:
+            try:
+                self.close()
+            except Exception as cleanup_error:
+                exc.add_note("Codex initialization cleanup failed: " + type(cleanup_error).__name__)
+            raise
+
 
     def send(self, message):
-        self.proc.stdin.write((dumps(message) + "\n").encode())
-        self.proc.stdin.flush()
+        with self._io_lock:
+            if self._closed:
+                raise AgentUnavailable("Codex client closed")
+            self.proc.stdin.write((dumps(message) + "\n").encode())
+            self.proc.stdin.flush()
 
     def receive(self, deadline):
         while time.monotonic() < deadline:
+            if self._closed:
+                raise AgentUnavailable("Codex client closed")
             if b"\n" in self.buffer:
                 line, self.buffer = self.buffer.split(b"\n", 1)
                 if not line:
@@ -242,11 +264,17 @@ class CodexRPC:
                 return message
             if self.proc.poll() is not None:
                 raise AgentUnavailable("Codex process exited")
-            if self.selector.select(min(1, max(0.01, deadline - time.monotonic()))):
-                chunk = os.read(self.proc.stdout.fileno(), 65536)
-                if not chunk:
-                    raise AgentUnavailable("Codex stream closed")
-                self.buffer += chunk
+            with self._io_lock:
+                if self._closed:
+                    raise AgentUnavailable("Codex client closed")
+                ready = self.selector.select(min(1, max(0.01, deadline - time.monotonic())))
+                if self._closed:
+                    raise AgentUnavailable("Codex client closed")
+                if ready:
+                    chunk = os.read(self.proc.stdout.fileno(), 65536)
+                    if not chunk:
+                        raise AgentUnavailable("Codex stream closed")
+                    self.buffer += chunk
         raise AgentUnavailable("Codex task timed out")
 
     def rpc(self, method, params=None, timeout=30):
@@ -452,15 +480,46 @@ class CodexRPC:
     def close(self):
         import signal
 
-        try:
-            os.killpg(self.proc.pid, signal.SIGTERM)
-            self.proc.wait(timeout=5)
-        except (ProcessLookupError, subprocess.TimeoutExpired):
+        with self._close_lock:
+            if self._cleanup_complete:
+                return
+            self._closed = True
             try:
-                os.killpg(self.proc.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-        self.selector.close()
+                if self.proc is not None and not self._reaped:
+                    if not self._kill_sent:
+                        try:
+                            os.killpg(self.proc.pid, signal.SIGTERM)
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            self.proc.wait(timeout=5)
+                            self._reaped = True
+                        except subprocess.TimeoutExpired:
+                            try:
+                                os.killpg(self.proc.pid, signal.SIGKILL)
+                            except ProcessLookupError:
+                                pass
+                            self._kill_sent = True
+                    if not self._reaped:
+                        self.proc.wait(timeout=5)
+                        self._reaped = True
+            finally:
+                # receive() holds this lock for at most its one-second selector
+                # wait; marking closed above prevents another read from starting.
+                with self._io_lock:
+                    try:
+                        self._close_resource("selector", self.selector)
+                    finally:
+                        try:
+                            self._close_resource("stdin", self.proc.stdin if self.proc else None)
+                        finally:
+                            self._close_resource("stdout", self.proc.stdout if self.proc else None)
+            self._cleanup_complete = True
+
+    def _close_resource(self, name, resource):
+        if resource is not None and name not in self._closed_resources:
+            resource.close()
+            self._closed_resources.add(name)
 
     def __enter__(self):
         return self
@@ -517,7 +576,6 @@ def run_task(
         raise AgentUnavailable(
             "Complete evidence packet exceeds input budget; shrink whole records before calling the model"
         )
-    store = Store(config.state_dir / "trader.sqlite3")
     schema = response_schema(response_model)
     schema_id = hashlib.sha256(dumps(schema).encode()).hexdigest()
     prompt_id = hashlib.sha256(prompt.encode()).hexdigest()
@@ -527,6 +585,7 @@ def run_task(
         dumps([day, role, scope, task_key or prompt_id, schema_id]).encode()
     ).hexdigest()
     phase = "quota_preflight"
+    store = Store(config.state_dir / "trader.sqlite3")
     try:
         with CodexRPC(config) as rpc:
             before = rpc.rate_limits()

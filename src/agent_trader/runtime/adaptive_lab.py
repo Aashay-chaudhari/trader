@@ -15,7 +15,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .config import ET, RESEARCH_UNIVERSE
-from .observation_audit import date_composition, record_quote
+from .observation_audit import date_composition, record_quote, quote_receipt_status
 from .store import dumps
 
 
@@ -69,6 +69,10 @@ PROTOCOL = {
     "unit": "Holding-horizon unit opportunity, cash=0 for observed false signals. Same-symbol always-long comparator, no portfolio allocation or broker P&L.",
     "authority": "Descriptive research only. No automatic promotion, orders, significance test or profitability certification.",
 }
+
+# Implementation provenance beside the frozen scientific definition. Do not
+# change PROTOCOL or relabel old observations when validation becomes stricter.
+INPUT_VALIDATION_VERSION = "adaptive-input-evidence-v1"
 
 
 def _stamp(value):
@@ -259,7 +263,22 @@ class AdaptiveLab:
             {"contract": json.loads(row["payload"]), "protocol": PROTOCOL}
         )
 
+    @staticmethod
+    def _daily_dependencies(spec):
+        fields = set()
+        for predicate in spec["predicates"]:
+            field = predicate["field"]
+            if field in ("return_1d", "return_3d", "return_5d"):
+                fields.add(field)
+            else:
+                fields.add("last_daily_close")
+                if field == "price_vs_sma20":
+                    fields.add("sma20")
+        return sorted(fields)
+
     def _features(self, spec, symbol, quote, quotes, packet, now, expected_previous):
+        from .daily_inputs import validate_daily_inputs
+
         observed = _stamp(packet["observed_at"])
         if (
             observed.astimezone(ET).date() != now.astimezone(ET).date()
@@ -277,9 +296,15 @@ class AdaptiveLab:
             packet
         ):
             raise ValueError("Market input archive is future dated or differs from supplied input")
+        if "completed_at" in packet and not observed <= _stamp(packet["completed_at"]) <= _stamp(archive[0]["at"]):
+            raise ValueError("Market input acquisition interval differs from its archive cutoff")
         daily = packet.get("daily_indicators", {}).get(symbol, {})
         if daily.get("asof") != expected_previous:
             raise ValueError("Daily inputs are missing or not from the previous broker session")
+        daily = validate_daily_inputs(
+            self.store, packet, symbol, self._daily_dependencies(spec), expected_previous,
+            available_by=archive[0]["at"],
+        )
         _, ask = _quote(quote, now)
         result = {}
         for predicate in spec["predicates"]:
@@ -297,8 +322,11 @@ class AdaptiveLab:
                     raise ValueError("Missing positive prior close")
                 value = ask / close - 1
                 if field == "relative_gap_spy":
-                    spy = packet.get("daily_indicators", {}).get("SPY", {})
-                    if spy.get("asof") != expected_previous or float(spy["last_daily_close"]) <= 0:
+                    spy = validate_daily_inputs(
+                        self.store, packet, "SPY", ["last_daily_close"], expected_previous,
+                        available_by=archive[0]["at"],
+                    )
+                    if float(spy["last_daily_close"]) <= 0:
                         raise ValueError("SPY prior-session comparison unavailable")
                     _, spy_ask = _quote(quotes.get("SPY", {}), now)
                     value -= spy_ask / float(spy["last_daily_close"]) - 1
@@ -341,6 +369,22 @@ class AdaptiveLab:
                         else features[x["field"]] <= x["value"]
                         for x in spec["predicates"]
                     )
+                    requires_spy = any(x["field"] == "relative_gap_spy" for x in spec["predicates"])
+                    dependencies = {"SPY": quotes["SPY"]} if requires_spy else {}
+                    validation = packet["daily_input_validation"]
+                    input_validation = {
+                        "version": INPUT_VALIDATION_VERSION,
+                        "daily_receipt": {key: validation[key] for key in ("version", "receipt_reference", "sha256")},
+                        "daily_fields": {row["symbol"]: self._daily_dependencies(spec)},
+                        "quote_dependencies": sorted(dependencies),
+                    }
+                    if requires_spy:
+                        input_validation["daily_fields"]["SPY"] = sorted(set(
+                            input_validation["daily_fields"].get("SPY", []) + ["last_daily_close"]
+                        ))
+                        input_validation["subject_spy_quote_gap_seconds"] = abs(
+                            (_stamp(q["t"]) - _stamp(quotes["SPY"]["t"])).total_seconds()
+                        )
                 except (KeyError, ValueError, TypeError, ZeroDivisionError) as exc:
                     p["last_missing_reason"] = str(exc)[:200]
                     self.store.db.execute(
@@ -358,6 +402,7 @@ class AdaptiveLab:
                         "input_reference": "research-input:" + packet["observed_at"],
                         "input_sha256": _hash(packet),
                         "quote": q,
+                        "input_validation": input_validation,
                         "promotion_eligible": False,
                     }
                 )
@@ -379,7 +424,9 @@ class AdaptiveLab:
                                 "assumed_base_cost_fraction": 0.002,
                                 "input_sha256": p["input_sha256"],
                                 "specification_sha256": p["specification_sha256"],
+                                "input_validation": input_validation,
                             },
+                            dependencies=dependencies,
                         )
         self.mark(quotes, now)
 
@@ -474,16 +521,30 @@ class AdaptiveLab:
 
     def summary(self):
         trials = []
+        entry_receipts = {
+            row["key"]: json.loads(row["value"])
+            for row in self.store.rows("SELECT key,value FROM kv WHERE key LIKE 'observation-quote:adaptive:%:entry'")
+        }
         for row in self.store.rows("SELECT * FROM adaptive_contracts ORDER BY registered_at,id"):
             spec = json.loads(row["payload"])
             observations = self.store.rows(
-                "SELECT day,state,payload FROM adaptive_observations WHERE contract_id=?",
+                "SELECT id,day,state,payload FROM adaptive_observations WHERE contract_id=?",
                 (row["id"],),
             )
             closed = [
                 (r["day"], json.loads(r["payload"])) for r in observations if r["state"] == "closed"
             ]
             dates = sorted({d for d, _ in closed})
+            entered = [(r, p) for r in observations if (p := json.loads(r["payload"])).get("entered_at")]
+            needs_spy = any(p["field"] == "relative_gap_spy" for p in spec["predicates"])
+            dependency_receipts = sum(
+                quote_receipt_status(
+                    entry_receipts.get("observation-quote:adaptive:" + r["id"] + ":entry"),
+                    ("SPY",), identity=("adaptive", r["id"], "entry"),
+                ) == "retained"
+                for r, _ in entered
+            ) if needs_spy else None
+            validated = sum(p.get("input_validation", {}).get("version") == INPUT_VALIDATION_VERSION for _, p in entered)
 
             def means(selected):
                 groups = {}
@@ -516,6 +577,16 @@ class AdaptiveLab:
                     "date_composition": date_composition(
                         [(day, p["signal_net"], p["signal"]) for day, p in closed]
                     ),
+                    "input_lineage": {
+                        "validation_version": INPUT_VALIDATION_VERSION,
+                        "entered_observations": len(entered),
+                        "daily_validation_recorded": validated,
+                        "legacy_or_unversioned": len(entered) - validated,
+                        "requires_spy_quote": needs_spy,
+                        "direct_spy_quote_receipts": dependency_receipts,
+                        "missing_or_invalid_spy_receipts": len(entered) - dependency_receipts if needs_spy else None,
+                        "scope": "Recorded per-entry local provenance only; legacy gaps remain missing. No reconstructed quotes or independent price certification.",
+                    },
                     "not_evaluable": sum(r["state"] == "not_evaluable" for r in observations),
                     "cumulative": means(closed),
                     "recent_five_entry_sessions": means(
@@ -556,6 +627,7 @@ class AdaptiveLab:
             "preregistered_opportunities",
             "cumulative",
             "recent_five_entry_sessions",
+            "input_lineage",
         )
         return {
             "trial_count": summary["trial_count"],

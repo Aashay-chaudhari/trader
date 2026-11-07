@@ -288,24 +288,33 @@ def test_daily_packet_has_exact_three_day_return_and_preserved_input(store, monk
             return {s: {"latestQuote": {"bp": 100, "ap": 100.01, "t": utc_now()}} for s in symbols}
 
         def bars(self, symbols):
-            start = datetime.now(ET) - timedelta(days=60)
+            today = datetime.now(ET).date()
+            dates = [today - timedelta(days=i) for i in range(1, 100)]
+            dates = sorted(d for d in dates if d.weekday() < 5)[-60:]
             return {
                 s: [
                     {
-                        "t": (start + timedelta(days=i)).isoformat(),
+                        "t": datetime.fromisoformat(day.isoformat()).replace(tzinfo=ET).isoformat(),
                         "o": 100 + i,
                         "h": 102 + i,
                         "l": 99 + i,
                         "c": 100 + i,
                         "v": 1000,
                     }
-                    for i in range(60)
+                    for i, day in enumerate(dates)
                 ]
                 for s in symbols
             }
 
         def calendar(self, day):
             return []
+
+        def calendar_range(self, start, end):
+            first = datetime.fromisoformat(start).date()
+            last = datetime.fromisoformat(end).date()
+            dates = [first + timedelta(days=i) for i in range((last - first).days + 1)]
+            return [{"date": day.isoformat(), "open": "09:30", "close": "16:00"}
+                    for day in dates if day.weekday() < 5]
 
         def option_chain(self, symbol):
             return {"snapshots": {}}

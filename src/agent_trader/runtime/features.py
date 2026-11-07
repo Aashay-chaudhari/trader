@@ -12,7 +12,7 @@ def minute_features(bars, now, opened, closed):
     result = {}
     cutoff = min(now, closed)
     for symbol, raw in bars.items():
-        valid = {}
+        valid, conflicts = {}, set()
         for r in raw:
             try:
                 at = timestamp(r["t"])
@@ -29,29 +29,45 @@ def minute_features(bars, now, opened, closed):
                     or at + timedelta(minutes=1) > cutoff
                 ):
                     continue
-                valid[at] = {**r, "v": v, "h": h, "l": low, "o": o, "c": c}
+                normalized = {**r, "v": v, "h": h, "l": low, "o": o, "c": c}
+                if at in conflicts:
+                    continue
+                if at in valid and valid[at] != normalized:
+                    valid.pop(at)
+                    conflicts.add(at)
+                    continue
+                valid[at] = normalized
             except (ValueError, KeyError, TypeError):
                 continue
         if not valid:
             continue
         times = sorted(valid)
         rows = [valid[t] for t in times]
-        volume = sum(r["v"] for r in rows)
-        weighted, covered = 0.0, 0.0
+        try:
+            volume = math.fsum(r["v"] for r in rows)
+        except OverflowError:
+            volume = None
+        weights, covered_rows = [], []
         for r in rows:
             try:
                 vw = float(r["vw"])
                 if math.isfinite(vw) and vw > 0:
-                    weighted += vw * r["v"]
-                    covered += r["v"]
+                    covered_rows.append(r["v"])
+                    if volume and volume > 0:
+                        weights.append(vw * (r["v"] / volume))
             except (KeyError, TypeError, ValueError):
                 pass
         opening = [valid.get(opened + timedelta(minutes=i)) for i in range(5)]
         complete = all(r is not None for r in opening)
+        covered = math.fsum(covered_rows) if volume is not None else None
+        vwap = math.fsum(weights) if volume and covered == volume else None
+        if vwap is not None and not math.isfinite(vwap):
+            vwap = None
         result[symbol] = {
             "feed": "iex",
             "asof": (times[-1] + timedelta(minutes=1)).isoformat(),
             "observed_minute_bars": len(rows),
+            "conflicting_minute_intervals": len(conflicts),
             "missing_minute_intervals": max(
                 0, int((cutoff - opened).total_seconds() // 60) - len(rows)
             ),
@@ -59,8 +75,8 @@ def minute_features(bars, now, opened, closed):
             "high_so_far": max(r["h"] for r in rows),
             "low_so_far": min(r["l"] for r in rows),
             "session_volume_iex": volume,
-            "bar_vwap_iex": weighted / volume if volume > 0 and covered == volume else None,
-            "vwap_volume_coverage": covered / volume if volume > 0 else 0,
+            "bar_vwap_iex": vwap,
+            "vwap_volume_coverage": covered / volume if volume and volume > 0 else 0,
             "opening_5m_high": max(r["h"] for r in opening) if complete else None,
             "opening_5m_low": min(r["l"] for r in opening) if complete else None,
             "opening_5m_complete": complete,

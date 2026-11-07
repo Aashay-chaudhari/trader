@@ -8,6 +8,8 @@ from pydantic import ValidationError
 
 from agent_trader.runtime.adaptive_lab import AdaptiveContract, AdaptiveLab
 from agent_trader.runtime.config import ET
+from agent_trader.runtime.daily_inputs import build_daily_inputs
+from agent_trader.runtime.observation_audit import content_hash
 from agent_trader.runtime.store import dumps
 
 
@@ -45,18 +47,40 @@ def quote(now, bid=100, ask=100.01):
     return {"bp": bid, "ap": ask, "t": now.isoformat()}
 
 
-def packet(store, now, **changes):
+def daily_source_fixture(now, return_3d=-0.04):
+    days = [now.date() - timedelta(days=i) for i in range(40, -1, -1)
+            if (now.date() - timedelta(days=i)).weekday() < 5]
+    prior = [day for day in days if day < now.date()]
+    bars = {}
+    for symbol in ("AAPL", "SPY"):
+        values = []
+        for day in prior:
+            close = 100
+            if symbol == "AAPL":
+                close = 99 if day == prior[-1] else 99 / (1 + return_3d) if day == prior[-4] else 100
+            values.append({"t": at(day.isoformat(), "00:00").isoformat(),
+                           "o": close, "h": close + 1, "l": close - 1, "c": close, "v": 1000})
+        bars[symbol] = values
+    sessions = [{"date": day.isoformat(), "open": "09:30", "close": "16:00"} for day in days]
+    calendar_receipt = {"sessions": sessions, "sha256": content_hash(sessions),
+                        "requested_start": days[0].isoformat(), "requested_end": days[-1].isoformat(),
+                        "observed_at": (now - timedelta(minutes=31)).isoformat()}
+    return bars, calendar_receipt
+
+
+def packet(store, now, *, daily_return_3d=-0.04, **changes):
+    observed_at = (now - timedelta(minutes=30)).isoformat()
+    bars, calendar_receipt = daily_source_fixture(now, daily_return_3d)
+    indicators, validation = build_daily_inputs(
+        store, bars, calendar_receipt, as_of=now.date().isoformat(), observed_at=observed_at,
+        received_at=(now - timedelta(minutes=29)).isoformat(),
+        source_metadata={"feed": "iex", "adjustment": "all", "timeframe": "1Day"},
+        symbols=["AAPL", "SPY"],
+    )
     p = {
-        "observed_at": (now - timedelta(minutes=30)).isoformat(),
-        "daily_indicators": {
-            "AAPL": {
-                "asof": "2026-10-30",
-                "return_3d": -0.04,
-                "last_daily_close": 99,
-                "sma20": 100,
-            },
-            "SPY": {"asof": "2026-10-30", "last_daily_close": 100},
-        },
+        "observed_at": observed_at,
+        "daily_indicators": indicators,
+        "daily_input_validation": validation,
         **changes,
     }
     archive(store, p, now)
@@ -125,7 +149,7 @@ def test_entry_capture_closed_returns_and_idempotency(store):
     entered = rows(store)[0]
     assert entered["state"] == "open"
     assert entered["payload"]["signal"] is True
-    assert entered["payload"]["features"] == {"return_3d": -0.04}
+    assert entered["payload"]["features"] == {"return_3d": pytest.approx(-0.04)}
     assert entered["payload"]["input_sha256"]
     run(lab, now + timedelta(minutes=1), p)
     assert rows(store)[0]["payload"]["entered_at"] == now.isoformat()
@@ -187,8 +211,7 @@ def test_unknown_inputs_are_never_false_signals(store, case):
 
 def test_false_signal_keeps_cash_and_same_symbol_comparator(store):
     lab, now, p = setup(store)
-    p["daily_indicators"]["AAPL"]["return_3d"] = 0.04
-    archive(store, p, now)
+    p = packet(store, now, daily_return_3d=0.04)
     run(lab, now, p)
     assert rows(store)[0]["payload"]["signal"] is False
     lab.mark({"AAPL": quote(at(clock="15:48"), 99, 99.01)}, at(clock="15:48"))

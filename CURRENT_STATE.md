@@ -78,17 +78,38 @@ combinations), and their original inputs and hashes remain intact. New validatio
 does not retrospectively certify unrecorded quote details or profitability.
 
 
-## Prospective research cleanup prepared November 7
+## Prospective research cleanup released November 7
 
-A further isolated review prepares four finite research questions tied to exact
-held cards and their original evidence. It also prepares a bounded prospective
+The third controlled release adds four finite research questions tied to exact
+held cards and their original evidence. It includes a bounded prospective
 options coverage probe: the retained historical sample is 30 same-day calls,
 not evidence that all later-expiry free IV is unavailable. The probe will retain
 calls and puts across two fixed future windows, with eight planned observations
 and twelve lifetime request reservations. It has no execution authority.
-Registration, activation and session outcomes require separate observed receipts.
+Source `939b232e` passed 727 full and 557 minimal-runtime tests, both cloud test
+jobs, Pages deployment and fourteen public browser checks. It first activated at
+22:25:51 UTC. The one-time study was registered using an actual broker-calendar
+receipt for November 9 at 10:00–10:02 and 10:15–10:17 ET. Its eight observations
+remain pending; no study request or options order was made during registration.
 
 The proposed VIX/SPX diagnostic remains a design document, not an active study.
 Its daily-close timestamp limitation prevents a strict synchronized calibration
 claim. Confirmed holidays/weekends now have an expected non-session diagnostic;
 an unverified missing calendar remains deferred.
+
+
+## Daily input and provenance refinement
+
+The next release validates each daily feature against its exact broker-calendar
+dependencies, retains immutable normalized source receipts, and distinguishes
+raw snapshots from adjusted daily indicators. A November 7 read-only provider
+check on a database copy recovered all 210 expected fields across 30 symbols.
+Its prior session was November 6; no Saturday bar was labeled current-session.
+Transport or malformed intake is explicitly unavailable, not legacy validation.
+
+New adaptive entries retain their exact daily validation and required SPY quote
+evidence. All 64 earlier entered observations remain unversioned; 40 have matching
+quote evidence in another archive and 24 lack that archive. No historical inputs
+or protocol definitions are rewritten. The dashboard exposes these limitations.
+HTTP clients, database handles and model subprocesses now have explicit cleanup
+on success and failure, including partial construction and bounded process reap.

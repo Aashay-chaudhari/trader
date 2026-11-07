@@ -109,6 +109,22 @@ def snapshot(config, store):
     from .engine import current_execution_verified
 
     progress = Experiments(store).progress()
+    input_packet = store.get("market_packet", {})
+    daily_validation = input_packet.get("daily_input_validation") or {}
+    input_quality = {
+        "observed_at": input_packet.get("observed_at"),
+        "acquisition_interval": {
+            key: input_packet.get("acquisition_interval", {}).get(key)
+            for key in ("started_at", "completed_at", "crossed_et_date", "crossed_regular_open", "crossed_regular_close")
+        },
+        "state": daily_validation.get("state", "legacy_or_unversioned"),
+        **{key: daily_validation[key] for key in (
+            "version", "expected_previous_session", "field_missing_counts", "calendar_error", "collection_error",
+        ) if key in daily_validation},
+        "source": {key: daily_validation.get("source", {}).get(key)
+                   for key in ("feed", "adjustment", "timeframe")},
+        "scope": "Calendar-linked feature availability, not independent provider-price verification. Earlier packets retain their original validation scope.",
+    }
     try:
         watchdog = json.loads(
             (config.state_dir / "watchdog-state.json").read_text(encoding="utf-8-sig")
@@ -287,6 +303,7 @@ def snapshot(config, store):
             "benchmarks": store.get("benchmarks", {}),
             "options_research": store.get("options_research", {}),
             "options_coverage": options_coverage_summary(store),
+            "research_input_quality": input_quality,
             "release": store.get("release", {}),
             "limitations": [
                 "Paper results are not live returns.",

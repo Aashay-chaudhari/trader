@@ -86,6 +86,12 @@ def test_data_only_worker_bypasses_model_and_closes_broker(config, monkeypatch):
     class Data:
         client = type("Client", (), {"close": lambda self: closed.append(True)})()
 
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            self.client.close()
+
     monkeypatch.setattr(supervisor, "Broker", lambda _: Data())
     monkeypatch.setattr(supervisor, "run_task", lambda *a, **kw: pytest.fail("No model invocation"))
     monkeypatch.setattr(

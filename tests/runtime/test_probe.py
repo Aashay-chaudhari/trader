@@ -1,4 +1,5 @@
 from datetime import datetime
+from contextlib import nullcontext
 
 import pytest
 
@@ -12,7 +13,7 @@ def test_probe_cannot_create_execution_plans_or_overwrite_production_knowledge(c
     live.set("brief", {"summary": "production brief"})
     monkeypatch.setattr(probe, "market_packet", lambda *args: {"market": {}})
     monkeypatch.setattr(probe, "research_prompt", lambda *args: "Research evidence")
-    monkeypatch.setattr(probe, "ResearchData", lambda config: object())
+    monkeypatch.setattr(probe, "ResearchData", lambda config: nullcontext(object()))
     monkeypatch.setattr(probe, "notify", lambda *args, **kwargs: True)
     calls = []
 
@@ -40,7 +41,7 @@ def test_probe_cannot_create_execution_plans_or_overwrite_production_knowledge(c
 def test_probe_rejects_actionable_output_and_records_failure(config, monkeypatch):
     monkeypatch.setattr(probe, "market_packet", lambda *args: {"market": {}})
     monkeypatch.setattr(probe, "research_prompt", lambda *args: "Research evidence")
-    monkeypatch.setattr(probe, "ResearchData", lambda config: object())
+    monkeypatch.setattr(probe, "ResearchData", lambda config: nullcontext(object()))
     monkeypatch.setattr(probe, "notify", lambda *args, **kwargs: True)
     monkeypatch.setattr(
         probe, "run_task", lambda *args, **kwargs: {"plans": [{"id": "must-not-execute"}]}

@@ -55,26 +55,21 @@ def worker(config, role, context, day, task_key=None):
         if role == "accounting_refresh":
             from .accounting import Accounting
 
-            broker = Broker(config)
-            try:
+            with Broker(config) as broker:
                 return Accounting(store).refresh(broker)
-            finally:
-                broker.client.close()
         if role == "options_coverage":
             from .options_coverage import run_capture
 
-            broker = Broker(config)
-            try:
+            with Broker(config) as broker:
                 return run_capture(store, broker, context["slot"])
-            finally:
-                broker.client.close()
         if role in ("deep_research", "deep_research_review"):
             from .research_work import prepare_task
 
             prompt, schema = prepare_task(store, context, review=role == "deep_research_review")
             model, effort, searches = config.research_model, "high", 16
         elif role == "research":
-            packet = market_packet(Broker(config), store)
+            with Broker(config) as broker:
+                packet = market_packet(broker, store)
             prompt, schema, model, effort, searches = (
                 research_prompt(day, packet, store),
                 Brief,
@@ -85,7 +80,8 @@ def worker(config, role, context, day, task_key=None):
         elif role == "exploration":
             from .exploration import exploration_prompt, prepare_screen
 
-            screen = prepare_screen(config, Broker(config), store)
+            with Broker(config) as broker:
+                screen = prepare_screen(config, broker, store)
             prompt, schema, model, effort, searches = (
                 exploration_prompt(day, store, screen),
                 ExplorationReport,
@@ -128,7 +124,8 @@ means hold with an explicit concern; broker-held protection remains active.
 
             # The background role refreshes research inputs; order protection keeps
             # running in the supervisor. No model tokens are spent on the raw packet.
-            market_packet(Broker(config), store)
+            with Broker(config) as broker:
+                market_packet(broker, store)
             prompt = pulse_prompt(context, store)
             schema, model, effort, searches = Pulse, config.light_model, "low", 3
         elif role in ("retrospective", "weekly", "monthly"):
@@ -178,27 +175,54 @@ means hold with an explicit concern; broker-held protection remains active.
 class Supervisor:
     def __init__(self, config):
         self.config = config
-        self.store = Store(config.state_dir / "trader.sqlite3")
-        self.broker = Broker(config)
-        self.engine = Engine(config, self.store, self.broker)
-        self.experiments = Experiments(self.store)
-        self.cohorts = ForwardLab(self.store)
-        from .adaptive_lab import AdaptiveLab
+        self.store = self.broker = self.pool = self.publisher_pool = None
+        self._closed = False
+        try:
+            self.store = Store(config.state_dir / "trader.sqlite3")
+            self.broker = Broker(config)
+            self.engine = Engine(config, self.store, self.broker)
+            self.experiments = Experiments(self.store)
+            self.cohorts = ForwardLab(self.store)
+            from .adaptive_lab import AdaptiveLab
 
-        self.adaptive = AdaptiveLab(self.store)
-        if not self.store.get("coverage_tracking_started"):
-            self.store.set("coverage_tracking_started", utc_now())
-        self.pool = concurrent.futures.ThreadPoolExecutor(
-            max_workers=1, thread_name_prefix="research"
-        )
-        self.future = None
-        self.task = None
-        self.publisher_pool = concurrent.futures.ThreadPoolExecutor(
-            max_workers=1, thread_name_prefix="publisher"
-        )
-        self.publication_future = None
-        self.last_publish = 0
-        self.stopping = False
+            self.adaptive = AdaptiveLab(self.store)
+            if not self.store.get("coverage_tracking_started"):
+                self.store.set("coverage_tracking_started", utc_now())
+            self.pool = concurrent.futures.ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="research"
+            )
+            self.future = None
+            self.task = None
+            self.publisher_pool = concurrent.futures.ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="publisher"
+            )
+            self.publication_future = None
+            self.last_publish = 0
+            self.stopping = False
+        except BaseException as exc:
+            try:
+                self.close()
+            except Exception as cleanup_error:
+                exc.add_note("Supervisor initialization cleanup failed: " + type(cleanup_error).__name__)
+            raise
+
+    def close(self):
+        """Drain owned workers before releasing the HTTP client and SQLite store."""
+        if self._closed:
+            return
+        try:
+            if self.pool is not None:
+                self.pool.shutdown(wait=True, cancel_futures=True)
+        finally:
+            if self.publisher_pool is not None:
+                self.publisher_pool.shutdown(wait=True, cancel_futures=True)
+        self._closed = True
+        try:
+            if self.broker is not None:
+                self.broker.close()
+        finally:
+            if self.store is not None:
+                self.store.close()
 
     def incident(self, code, reason, details=None):
         LOG.warning("%s: %s", code, reason)
@@ -1501,19 +1525,29 @@ class Supervisor:
     def run(self, *, ownership=None):
         from .ownership import runtime_ownership
 
-        with runtime_ownership(self.config.state_dir, ownership):
-            try:
-                self._run_owned()
-            finally:
-                # Do not release execution ownership while a research/publisher
-                # worker can still write state. Systemd retains its stop timeout.
-                self.pool.shutdown(wait=True, cancel_futures=True)
+        try:
+            with runtime_ownership(self.config.state_dir, ownership):
                 try:
-                    self.finish_shutdown_task()
+                    self._run_owned()
                 finally:
-                    self.publisher_pool.shutdown(wait=True, cancel_futures=True)
-                self.store.set("status", "Local supervisor stopped; independent watchdog owns recovery.")
-                self.store.event("supervisor_stopped", {"pid": os.getpid()})
+                    # Do not release execution ownership while a research/publisher
+                    # worker can still write state. Systemd retains its stop timeout.
+                    try:
+                        self.pool.shutdown(wait=True, cancel_futures=True)
+                        try:
+                            self.finish_shutdown_task()
+                        finally:
+                            self.publisher_pool.shutdown(wait=True, cancel_futures=True)
+                        self.store.set("status", "Local supervisor stopped; independent watchdog owns recovery.")
+                        self.store.event("supervisor_stopped", {"pid": os.getpid()})
+                    finally:
+                        self.close()
+        except BaseException:
+            # A rejected lease never enters the owned loop, but this instance
+            # still owns the resources acquired by its constructor.
+            self.close()
+            raise
+
 
     def finish_shutdown_task(self):
         """Keep completed evidence without applying execution decisions on stop."""

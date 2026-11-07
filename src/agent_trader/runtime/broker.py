@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 from .config import ET
+from .observation_audit import content_hash
 
 import httpx
 
@@ -30,6 +31,15 @@ class Broker:
             },
             timeout=20,
         )
+
+    def close(self):
+        self.client.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
 
     def request(self, method, path, *, data=False, params=None, payload=None):
         base = DATA_URL if data else PAPER_URL
@@ -145,27 +155,66 @@ class Broker:
         )
 
     def bars(self, symbols, days=80):
+        now = datetime.now(ET)
         return self.bar_pages(
             {
                 "symbols": ",".join(symbols),
                 "timeframe": "1Day",
                 "feed": "iex",
-                "start": (datetime.now(ET).date() - timedelta(days=days)).isoformat(),
-                "end": (datetime.now(ET) - timedelta(minutes=20)).isoformat(),
+                "start": (now.date() - timedelta(days=days)).isoformat(),
+                "end": (now - timedelta(minutes=20)).isoformat(),
                 "limit": 10000,
                 "adjustment": "all",
             }
         )
 
     def bar_pages(self, params, max_pages=4):
-        """Never silently truncate a symbol-sorted multi-symbol response."""
-        result, seen = {}, set()
+        """Follow provider pagination semantics with unambiguous symbol records."""
+        self.last_bar_receipt = None
+        if not isinstance(max_pages, int) or isinstance(max_pages, bool) or max_pages < 1:
+            raise ValueError("Invalid market-data pagination budget")
+        original = dict(params)
+        requested = set(str(params.get("symbols", "")).split(",")) - {""}
+        if not requested:
+            raise ValueError("Market-data symbols are required")
+        started = datetime.now(timezone.utc).isoformat()
+        result, seen, records, pages = {}, set(), {}, []
         for _ in range(max_pages):
+            sent = datetime.now(timezone.utc).isoformat()
             page = self.request("GET", "/v2/stocks/bars", data=True, params=params)
-            for symbol, values in page.get("bars", {}).items():
-                result.setdefault(symbol, []).extend(values)
+            received = datetime.now(timezone.utc).isoformat()
+            if not isinstance(page, dict) or not isinstance(page.get("bars"), dict):
+                raise ValueError("Incomplete market-data pagination response")
+            # Alpaca's own SDK treats an absent token like null. Preserve which
+            # completion form was received rather than inventing a stricter API.
             token = page.get("next_page_token")
-            if not token:
+            if token is not None and (not isinstance(token, str) or not token):
+                raise ValueError("Malformed market-data pagination token")
+            for symbol, values in page["bars"].items():
+                if symbol not in requested or not isinstance(values, list):
+                    raise ValueError("Unexpected market-data symbol or bar collection")
+                for row in values:
+                    if not isinstance(row, dict) or not isinstance(row.get("t"), str) or not row["t"]:
+                        raise ValueError("Market-data bar timestamp is missing")
+                    identity = (symbol, row["t"])
+                    digest = content_hash(row)
+                    if identity in records:
+                        if records[identity] != digest:
+                            raise ValueError("Conflicting duplicate market-data bar")
+                        continue
+                    records[identity] = digest
+                    result.setdefault(symbol, []).append(row)
+            pages.append({"requested_at": sent, "received_at": received,
+                          "response_sha256": content_hash(page), "has_next_page": token is not None})
+            if token is None:
+                self.last_bar_receipt = {
+                    "version": "broker-bars-receipt-v1", "request_params": original,
+                    "requested_at": started, "received_at": received, "pages": pages,
+                    "row_count": len(records), "response_sha256": content_hash(result),
+                    "complete": True,
+                    "completion_basis": "explicit_null" if "next_page_token" in page
+                    else "token_absent_provider_sdk_semantics",
+                }
                 return result
             if token in seen:
                 raise ValueError("Repeated market-data pagination token")

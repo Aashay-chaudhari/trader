@@ -720,3 +720,64 @@ lock freshness, active runtime/test lint, JavaScript syntax and whitespace check
 passed. Fourteen populated page/viewport browser checks and ten focused coverage,
 current-kernel and unknown-value fixtures passed. Registration and activation
 receipts follow separately; these tests do not certify a future market outcome.
+
+
+Third release activation: source 939b232e5c6980cd63e5054ba7e0135a72d95971
+published as snapshot 2d219ce71536a2e122f02aa0d86f2f045592cd57. Tests 42420564968
+and Pages 42420565017 completed successfully; public browser verification passed
+fourteen page/viewport checks with the exact source and options registration.
+First application startup was 2026-11-07T22:25:51.636340Z. Final restart at 22:27:54Z
+removed both maintenance/model pause flags, reconciled broker/ledger state and
+resumed a pending independent research review. No incident or publication failure
+was observed after the preceding release. Account meter reached 41% at 22:28:00Z;
+the 80% requested objective remains in progress.
+
+The reviewed options protocol was registered once from a newly retained actual
+broker calendar for November 9, 10:00–10:02 and 10:15–10:17 ET, with eight expected
+observations and zero of twelve requests reserved. The original baseline of 30 calls expiring on its observation date was frozen. Exact pre/post hashes preserve orders 8, holdings 0, plans 0,
+fixed expectations/observations 1,440 each and adaptive contracts 3/observations 780.
+Registration does not certify the future session or any observation outcome.
+The execution kernel remains paper-execution-20261107-r2, awaiting regular-session
+acceptance. The next data-integrity pass is isolated from this running release.
+
+
+## November 7 daily input and resource-lifetime release
+
+Daily features now validate the exact required dates against the broker calendar,
+with immutable normalized source receipts and field-specific missingness. Snapshot
+dailyBar is treated as the provider's latest bar, not an assumed current-session
+bar. The prior close must match the actual previous broker session. Acquisition
+start/completion and crossed session boundaries are retained. Daily indicators
+state their adjusted basis; snapshots and minute prices remain raw. Invalid or
+failed intake carries current-version unavailable status without invented counts.
+Daily/minute pagination, duplicate conflicts and nonfinite values fail explicitly.
+An absent final pagination token remains compatible with the provider SDK.
+
+The read-only live compatibility check used three broker GETs and a copied local
+database: all 30 symbols and 210 expected daily fields were available, previous
+session November 6, 30 raw prior closes and no Saturday current-session closes.
+It placed no orders, made no model call and did not write operational state.
+
+New adaptive entry evidence retains calendar-validation receipts and exact SPY
+quotes where the unchanged rule requires them. Earlier 64 entered observations
+retain their original scope: zero direct SPY sidecars, 40 reproducible from another
+identical-tick archive and 24 lacking that archive. Public summaries distinguish
+recorded provenance from missing historical evidence. Frozen protocol hashes and
+observations are unchanged.
+
+Resource cleanup now closes owned HTTP clients and stores on all reviewed paths;
+worker completion precedes shared resource/ownership release. Model subprocess
+cleanup handles partial construction, bounded terminate/kill/reap and repeated
+close after a final wait timeout. Existing transaction and job-claim semantics
+are preserved. Fake resource-lifetime checks establish explicit cleanup paths;
+they do not claim measured production descriptor growth.
+
+Clean full/minimal suites initially completed with 829 and 659 passing tests and
+one outdated fixture each: its daily timestamp was intraday rather than the
+provider's ET-midnight bar. The corrected fixture retains the original prompt
+budget and price assertions; all ten affected tests passed in both environments.
+The final daily failure-reporting refinement and its prompt integration passed
+45 focused tests. Public export, JavaScript syntax, lint and whitespace checks
+were also run. Twenty populated and legacy/partial/provenance browser checks
+passed across desktop/mobile widths. Complete cloud suite results and actual
+activation receipts are recorded separately after publication.

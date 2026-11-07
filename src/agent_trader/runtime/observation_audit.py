@@ -14,7 +14,7 @@ def content_hash(value):
     ).hexdigest()
 
 
-def record_quote(store, ledger, observation_id, phase, quote, now, calculation):
+def record_quote(store, ledger, observation_id, phase, quote, now, calculation, *, dependencies=None):
     """Call in the observation's transaction, only when that transition succeeds.
 
     Historical rows stay without receipts. A later quote cannot replace the first
@@ -31,6 +31,12 @@ def record_quote(store, ledger, observation_id, phase, quote, now, calculation):
         "quote": {key: quote[key] for key in ("bp", "ap", "t")},
         "calculation": calculation,
     }
+    if dependencies is not None:
+        payload["version"] = "observation-quote-receipt-v2"
+        payload["dependencies"] = {
+            symbol: {key: source[key] for key in ("bp", "ap", "t")}
+            for symbol, source in sorted(dependencies.items())
+        }
     receipt = {**payload, "sha256": content_hash(payload)}
     key = f"observation-quote:{ledger}:{observation_id}:{phase}"
     old = store.get(key)
@@ -40,6 +46,26 @@ def record_quote(store, ledger, observation_id, phase, quote, now, calculation):
         return old
     store.db.execute("INSERT INTO kv VALUES(?,?)", (key, dumps(receipt)))
     return receipt
+
+
+def quote_receipt_status(receipt, required_dependencies=(), *, identity=None):
+    """Check retained local provenance; never reconstruct a historical quote."""
+    if not receipt:
+        return "missing"
+    try:
+        if (receipt.get("version") not in ("observation-quote-receipt-v1", "observation-quote-receipt-v2")
+                or receipt.get("sha256") != content_hash({k: v for k, v in receipt.items() if k != "sha256"})):
+            return "invalid"
+        if identity is not None and tuple(receipt.get(k) for k in ("ledger", "observation_id", "phase")) != identity:
+            return "invalid"
+        if set(receipt.get("quote", {})) != {"bp", "ap", "t"}:
+            return "invalid"
+        dependencies = receipt.get("dependencies", {})
+        if any(set(dependencies.get(symbol, {})) != {"bp", "ap", "t"} for symbol in required_dependencies):
+            return "dependencies_missing"
+    except (TypeError, ValueError, AttributeError):
+        return "invalid"
+    return "retained"
 
 
 def date_composition(observations):
