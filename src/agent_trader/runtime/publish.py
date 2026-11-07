@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import hashlib
+import math
 import os
 import re
 import shutil
 import subprocess
 import tempfile
 from datetime import datetime
+from contextlib import contextmanager
 
 from .store import utc_now
 
@@ -95,7 +97,61 @@ def sanitize(value, config):
     return value
 
 
+@contextmanager
+def _read_snapshot(store):
+    """Own only a new deferred read scope; never finish the caller's transaction."""
+    connection = store.db
+    owned = not connection.in_transaction
+    query_only = connection.execute("PRAGMA query_only").fetchone()[0]
+    original_error = None
+    try:
+        connection.execute("PRAGMA query_only=ON")
+        if owned:
+            connection.execute("BEGIN")
+        yield
+    except BaseException as exc:
+        original_error = exc
+        raise
+    finally:
+        cleanup_errors = []
+        try:
+            if owned and connection.in_transaction:
+                connection.execute("ROLLBACK")
+        except Exception as cleanup_error:
+            cleanup_errors.append(cleanup_error)
+        try:
+            connection.execute("PRAGMA query_only=" + str(int(query_only)))
+        except Exception as cleanup_error:
+            cleanup_errors.append(cleanup_error)
+        if cleanup_errors:
+            primary = original_error or cleanup_errors[0]
+            for cleanup_error in cleanup_errors:
+                primary.add_note("Snapshot cleanup failed: " + type(cleanup_error).__name__)
+            if original_error is None:
+                raise primary
+
+
+def _number(value):
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        result = float(value)
+        return result if math.isfinite(result) else None
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def _complete_sum(values):
+    values = list(values)
+    return _number(sum(values)) if all(value is not None for value in values) else None
+
+
 def snapshot(config, store):
+    with _read_snapshot(store):
+        return _snapshot(config, store)
+
+
+def _snapshot(config, store):
     from .exploration import knowledge_context
     from .experiments import Experiments
     from .cohorts import ForwardLab, normalized_screen
@@ -132,29 +188,33 @@ def snapshot(config, store):
     except (OSError, ValueError):
         watchdog = {}
 
+    generated_at = utc_now()
+    day = datetime.fromisoformat(generated_at).astimezone(
+        __import__("zoneinfo").ZoneInfo("America/New_York")
+    ).date().isoformat()
+    scorecard = objective_scorecard(store, generated_at)
+    reconciled = scorecard["portfolio"]["reconciled"]
     positions = store.rows("SELECT * FROM holdings")
     broker = {p["symbol"]: p for p in store.get("broker_positions", [])}
     for h in positions:
         p = broker.get(h["symbol"], {})
-        h["market_value"] = float(p.get("market_value", h["cost"]))
-        h["unrealized_pnl"] = h["market_value"] - h["cost"]
+        value, quantity = _number(p.get("market_value")), _number(p.get("qty"))
+        valid = reconciled and value is not None and value >= 0 and quantity is not None and abs(quantity - h["qty"]) <= 1e-6
+        h["market_value"] = value if valid else None
+        h["unrealized_pnl"] = _number(value - h["cost"]) if valid else None
+        h["valuation_status"] = "reconciled_broker_mark" if valid else "unavailable"
     branches = []
     for b in store.rows("SELECT * FROM branches"):
-        b["equity"] = b["cash"] + sum(
+        market_value = _complete_sum(
             h["market_value"] for h in positions if h["branch"] == b["name"]
         )
-        b["daily_pnl"] = b["equity"] - store.get(
-            "sod:"
-            + datetime.now()
-            .astimezone(__import__("zoneinfo").ZoneInfo("America/New_York"))
-            .date()
-            .isoformat()
-            + ":"
-            + b["name"],
-            10000,
-        )
-        b["total_pnl"] = b["equity"] - 10000
-        b["drawdown"] = max(0, 1 - b["equity"] / b["high_water"])
+        b["equity"] = _number(b["cash"] + market_value) if market_value is not None else None
+        b["start_of_day_equity"] = _number(store.get(f"sod:{day}:{b['name']}"))
+        b["daily_pnl"] = _number(b["equity"] - b["start_of_day_equity"]) if b["equity"] is not None and b["start_of_day_equity"] is not None else None
+        b["total_pnl"] = _number(b["equity"] - 10000) if b["equity"] is not None else None
+        peak_ratio = _number(b["equity"] / b["high_water"]) if b["equity"] is not None and b["high_water"] > 0 else None
+        b["drawdown"] = max(0, 1 - peak_ratio) if peak_ratio is not None else None
+        b["valuation_status"] = "ledger_estimate" if b["equity"] is not None else "unavailable"
         b["mode"] = "shadow" if b["name"] == "options" else store.get("mode", "research_shadow")
         branches.append(b)
     events = []
@@ -167,13 +227,15 @@ def snapshot(config, store):
     ]
     quota = store.get("quota", {})
     account = store.get("account", {})
-    ledger_equity = sum(b["equity"] for b in branches)
-    broker_equity = float(account["equity"]) if account.get("equity") is not None else None
-    extra_cost = sum(r["notional"] for r in store.rows("SELECT notional FROM orders")) * 0.001
+    ledger_equity = _complete_sum(b["equity"] for b in branches)
+    broker_equity = _number(account.get("equity"))
+    difference = _number(broker_equity - ledger_equity) if broker_equity is not None and ledger_equity is not None else None
+    notional = _complete_sum(_number(r["notional"]) for r in store.rows("SELECT notional FROM orders"))
+    extra_cost = notional * 0.001 if notional is not None else None
     return sanitize(
         {
             "schema_version": 2,
-            "generated_at": utc_now(),
+            "generated_at": generated_at,
             "start_date": config.start_date,
             "mode": store.get("mode", "research_shadow"),
             "heartbeat": store.get("heartbeat"),
@@ -196,10 +258,10 @@ def snapshot(config, store):
             "branches": branches,
             "accounting": {
                 "broker_equity": broker_equity,
-                "broker_cash": float(account["cash"]) if account.get("cash") is not None else None,
+                "broker_cash": _number(account.get("cash")),
                 "branch_ledger_equity": ledger_equity,
-                "unattributed_equity_difference": None if broker_equity is None else round(broker_equity - ledger_equity, 8),
-                "reconciled": bool(store.get("reconciled", False)),
+                "unattributed_equity_difference": round(difference, 8) if difference is not None else None,
+                "reconciled": reconciled,
                 "as_of": store.get("last_reconciled"),
                 "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented.",
             },
@@ -222,9 +284,9 @@ def snapshot(config, store):
             ),
             "brief": store.get("brief", {}),
             "project": project_snapshot(config, store),
-            "objective_scorecard": objective_scorecard(store),
+            "objective_scorecard": scorecard,
             "observation_research": observation_context(store, max_chars=7500),
-            "adaptive_lab": AdaptiveLab(store).summary(),
+            "adaptive_lab": AdaptiveLab(store, initialize=False).summary(),
             "forward_lab": ForwardLab(store).summary(),
             "official_calendar": store.get("official_calendar", {}),
             "pulses": store.get("pulses", [])[:10],
@@ -297,7 +359,7 @@ def snapshot(config, store):
             "budget": usage_policy(store),
             "execution_quality": {
                 "additional_cost_allowance": extra_cost,
-                "illustrative_equity_after_allowance": None if broker_equity is None else broker_equity - extra_cost,
+                "illustrative_equity_after_allowance": _number(broker_equity - extra_cost) if reconciled and broker_equity is not None and extra_cost is not None else None,
                 "basis": "Additional 10bp per executed side; illustrative, not actual fees or a live-fill simulation.",
             },
             "benchmarks": store.get("benchmarks", {}),

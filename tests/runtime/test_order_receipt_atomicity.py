@@ -251,15 +251,15 @@ def test_completed_truthful_receipt_survives_later_network_failure_without_doubl
     assert len(fill_events(store)) == 1
 
 
-def test_prior_kernel_receipt_does_not_certify_atomic_execution_kernel():
+@pytest.mark.parametrize("prior_kernel", ["paper-execution-20261107-r2", "paper-execution-20261107-r3"])
+def test_prior_kernel_receipt_does_not_certify_current_execution_kernel(prior_kernel):
     ready = {
         "execution_verified": True,
         "execution_verified_at": "2026-11-02T14:35:37+00:00",
         "required_execution_kernel": EXECUTION_KERNEL,
-        "verified_execution_kernel": "paper-execution-20261107-r2",
+        "verified_execution_kernel": prior_kernel,
     }
     original = dumps(ready)
-    assert EXECUTION_KERNEL == "paper-execution-20261107-r3"
     assert current_execution_verified(ready) is False
     assert dumps(ready) == original
 

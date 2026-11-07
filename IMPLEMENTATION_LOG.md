@@ -846,3 +846,77 @@ tests passed in 250.03s without legacy dependencies. All 33 runtime imports
 resolved to the candidate source in the minimal environment. Active/runtime-test
 lint, JavaScript syntax and whitespace checks passed. These are local fake/fixture
 regressions, not a broker-market acceptance receipt.
+
+
+Fifth release activation: source 26f5f47d4ac06b44953e87145c4a99ed16fdab51
+published as 159df069de8915585e03eff1ec9a1fdbf7082e3c. Tests 42424390579 passed
+full/minimal suites; Pages 42424390493 passed. Fourteen public browser checks
+confirmed exact source, required kernel r3 and unchanged options registration.
+First startup was 2026-11-07T23:15:35.273090 UTC; final verification 23:17:05.346840.
+All frozen table/registration hashes matched the backup. Preflight reconciliation
+was clean; no maintenance order was placed. The account meter was 57%. Both pause
+flags were removed and the service resumed useful research. New regular-session
+acceptance remains pending and cannot start while the 80% admission gate is active.
+
+
+## November 7 reporting, scheduling and remaining application refinement
+
+The sixth candidate extends atomic local application to decisions, position
+reviews, exploration, period lessons, deep research and pulses. Conditional job
+completion and usage acceptance share each local commit; replay cannot silently
+apply a result after ownership is lost. Pulse transport effects remain separate: a
+material-change result durably records its safety/refresh state and exact owned
+cancellation intents, while tick delivery records attempts before HTTP, keeps a
+60-second per-order cooldown across restart and distinguishes a requested cancel
+from a terminal broker receipt. Slow calls advance timestamps before later attempts.
+
+Actual Engine/tick integration exposed duplicate cancellation requests and first-
+order errors suppressing unrelated work. The shared owned-order cancellation path
+now defers exact pulse-owned requests to their durable dispatcher. Closing, explicit
+exit and protective repair retain protective sells while an entry remainder is
+unconfirmed, then require fresh reconciliation and no conflicting open orders
+before an independent liquidation. Transport failures remain uncertain and do not
+skip safe work on unrelated symbols. The existing entry-budget block is set on
+explicit cancellation uncertainty to preserve failed-tick entry suppression; it is
+not a new durable all-entry gate and a later quota refresh can clear that flag.
+Pending-order ownership and capital/risk reservation checks remain in force.
+
+New operational smoke checks recheck elapsed time, quote freshness, account
+reconciliation age, readiness, quota and cutoff immediately before dispatch.
+Their fixed one-share size and two-minute horizon are unchanged; an existing
+stage's original expiry cannot slide outward. At quota80, new checks remain
+blocked while existing stages may unwind safely. The kernel changes to r4 and
+still requires prospective regular-session acceptance when admission reopens.
+
+Fresh known quota limits now allow a due read-only options capture ahead of
+model work that cannot be admitted. Unknown/malformed quota gets metadata refresh
+first; valid admitted model priorities and deterministic protection/closing remain.
+Fake-provider integration completed eight observations within exactly twelve
+request reservations. Registered windows, expiry selection, protocol hash and
+original observations are unchanged; real collection still depends on the fixed
+future windows and worker availability. Weekend status distinguishes known quota
+blocking from unavailable metadata without promising a reset will restore access.
+
+Dashboard export now owns one deferred, query-only database snapshot, without
+finishing a caller-owned transaction or creating schema during reads. A concurrent
+WAL writer can commit while the export remains internally consistent. Missing or
+unreconciled marks propagate to unknown dependent valuations, and missing daily
+baselines no longer substitute original capital. Branch estimates are explicitly
+labeled. Real zero values remain measured; invalid or overflowing chart buckets
+are omitted without rewriting raw history. Current recorded cash remains exactly
+$29,999.84; these fault cases do not imply a current portfolio discrepancy.
+
+Focused reporting validation passed18 Python tests and five Node regression cases.
+Twenty desktop/mobile page and valuation fixtures passed, followed by four focused
+chart checks after the final chart change. The Node cases now run in cloud CI.
+Full candidate validation and actual activation are recorded separately below.
+
+Complete Phase 6 local suites finished with 1,013 full and 843 minimal tests
+passing and one obsolete kernel-name assertion failing in each environment.
+The test required r3 literally despite the intended r4 change. It now verifies
+that both r2 and r3 receipts cannot certify the current kernel, while preserving
+their original contents. All 34 tests in its module passed in both environments
+after correction; no runtime source changed for this correction. The full run
+had the existing single websockets legacy deprecation warning. The final
+candidate contains 1,015 full/845 minimal Python tests and five Node cases.
+Cloud complete-suite receipts follow after publication.

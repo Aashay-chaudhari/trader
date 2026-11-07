@@ -53,5 +53,7 @@ jobs:
         run: .venv/bin/python -m pytest tests -q
       - name: Lint active runtime
         run: .venv/bin/ruff check src/agent_trader/runtime src/agent_trader/strategies
-      - name: Check JavaScript
-        run: node --check src/agent_trader/runtime/web/app.js
+      - name: Check JavaScript and reporting regressions
+        run: |
+          node --check src/agent_trader/runtime/web/app.js
+          node --test tests/web/*.test.cjs

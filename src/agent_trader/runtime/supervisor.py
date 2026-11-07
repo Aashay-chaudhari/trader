@@ -273,7 +273,11 @@ class Supervisor:
         if not self.future or not self.future.done():
             return
         key, role, context, day = self.task
-        atomic_batch = role in {"research", "research_validation", "retrospective"}
+        atomic_batch = role in {
+            "research", "research_validation", "retrospective", "decision",
+            "position_review", "exploration", "weekly", "monthly",
+            "deep_research", "deep_research_review", "pulse",
+        }
         notifications = []
         application_succeeded = False
         try:
@@ -462,10 +466,10 @@ class Supervisor:
                         self.store.db.execute(
                             "UPDATE plans SET state='suspended' WHERE state IN ('planned','approved')"
                         )
-                        for order in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
-                            if order["status"] not in TERMINAL and order["broker_id"]:
-                                self.broker.cancel(order["broker_id"])
                         self.store.set("needs_research", True)
+                        for order in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
+                            if order["status"] not in TERMINAL:
+                                self.queue_pulse_cancellation(order, key, result["at"])
                 elif role in ("weekly", "monthly"):
                     self.store.set(role + ":" + day, result)
                     self.store.event("period_review", {"period": role, "summary": result["summary"]})
@@ -573,6 +577,92 @@ class Supervisor:
         except Exception as exc:
             LOG.warning("Research-quality capture deferred: %s", type(exc).__name__)
 
+    def queue_pulse_cancellation(self, order, task_key, observed_at):
+        """Persist exact owned identity inside the pulse's local transaction."""
+        from .observation_audit import content_hash
+
+        identity = {key: order[key] for key in (
+            "client_id", "broker_id", "branch", "symbol", "side", "plan_id", "qty",
+        )}
+        key = "pulse-cancellation:" + content_hash(identity)
+        if self.store.get(key) is None:
+            state = "pending" if identity["broker_id"] else "unresolved"
+            self.store.set(key, {
+                "version": "pulse-cancellation-v1", "identity": identity,
+                "task_key": task_key, "created_at": observed_at, "state": state,
+                "attempts": 0, "last_attempt_at": None, "next_retry_at": None,
+                "reason": None if identity["broker_id"] else "missing_broker_identity",
+            })
+            self.store.event("pulse_cancellation_queued", {"reference": key, "state": state})
+
+    def apply_pulse_cancellations(self, now):
+        """Deliver durable cancellation requests, never inferred cancellations."""
+        started = time.monotonic()
+        for row in self.store.rows(
+            "SELECT key FROM kv WHERE key LIKE 'pulse-cancellation:%' "
+            "AND json_extract(value,'$.state') IN ('pending','attempting','requested','uncertain') "
+            "ORDER BY key"
+        ):
+            try:
+                attempt_now = now + timedelta(seconds=max(0, time.monotonic() - started))
+                self._deliver_pulse_cancellation(row["key"], attempt_now)
+            except Exception as exc:
+                # A DB/transport fault on one intent must not skip its siblings.
+                LOG.warning("Pulse cancellation delivery deferred: %s", type(exc).__name__)
+
+    def _deliver_pulse_cancellation(self, key, now):
+        started = time.monotonic()
+        with self.store.transaction():
+            intent = self.store.get(key)
+            if not intent or intent["state"] not in ("pending", "attempting", "requested", "uncertain"):
+                return
+            identity = intent["identity"]
+            orders = self.store.rows("SELECT * FROM orders WHERE client_id=?", (identity["client_id"],))
+            now = now + timedelta(seconds=max(0, time.monotonic() - started))
+            if not orders or not identity["broker_id"] or any(
+                orders[0].get(field) != value for field, value in identity.items()
+            ):
+                self.store.set(key, {**intent, "state": "unresolved", "reason": "owned_identity_unavailable_or_changed"})
+                self.store.event("pulse_cancellation_unresolved", {"reference": key, "reason": "owned_identity_unavailable_or_changed"})
+                return
+            if orders[0]["status"] in TERMINAL:
+                self.store.set(key, {**intent, "state": "terminal", "observed_status": orders[0]["status"], "confirmed_at": now.isoformat()})
+                self.store.event("pulse_cancellation_terminal", {"reference": key, "observed_status": orders[0]["status"]})
+                return
+            if intent.get("next_retry_at") and now < timestamp(intent["next_retry_at"]):
+                return
+            attempt = intent["attempts"] + 1
+            intent = {**intent, "state": "attempting", "attempts": attempt,
+                      "last_attempt_at": now.isoformat(),
+                      "next_retry_at": (now + timedelta(seconds=60)).isoformat(), "reason": None}
+            self.store.set(key, intent)
+        # Commit the attempt before HTTP so restart preserves the cooldown even
+        # if the request or its acknowledgement is lost. No entry is submitted.
+        outcome, error_type = "requested", None
+        try:
+            self.broker.cancel(identity["broker_id"])
+        except Exception as exc:
+            outcome, error_type = "uncertain", type(exc).__name__
+        try:
+            with self.store.transaction():
+                current = self.store.get(key)
+                if current != intent:
+                    raise RuntimeError("Pulse cancellation attempt changed during delivery")
+                if outcome == "uncertain":
+                    self.store.set("entry_budget_blocked", True)
+                self.store.set(key, {**intent, "state": outcome, "error_type": error_type})
+                self.store.event("pulse_cancellation_attempt", {
+                    "reference": key, "attempt": attempt, "outcome": outcome,
+                    "error_type": error_type,
+                    "summary": "Cancellation request only; terminal broker state requires reconciliation.",
+                })
+        except Exception:
+            # Preserve the prior failure gate if an external request happened
+            # but its outcome could not be retained. Quota refresh may later
+            # clear this flag; owned pending-order reservations remain separate.
+            self.store.set("entry_budget_blocked", True)
+            raise
+
     def launch_deep_research(self, now):
         """Useful off-hours work; fresh quota is checked again in the worker."""
         from .budget import budget_check
@@ -636,6 +726,32 @@ class Supervisor:
         )
         return True
 
+    def model_quota_state(self, now):
+        """Classify model admission without confusing unknown metadata with a limit."""
+        from .budget import account_limit_reason
+
+        quota = self.store.get("quota", {})
+        try:
+            age = (now - timestamp(quota["at"])).total_seconds()
+        except (KeyError, TypeError, ValueError):
+            return "unknown"
+        windows = quota.get("windows")
+        if not -60 <= age <= 900 or not isinstance(windows, list) or not windows:
+            return "unknown"
+        ceilings = {
+            "20% account reserve reached", "Short-window quota nearly exhausted",
+        }
+        # Validate every bucket even when an earlier bucket already hits a limit.
+        reasons = [account_limit_reason({**quota, "windows": [window]}, now) for window in windows]
+        if any(reason not in ceilings | {None, "Weekly quota window unavailable"} for reason in reasons):
+            return "unknown"
+        if not any(window["windowDurationMins"] >= 10000 for window in windows):
+            return "unknown"
+        return "blocked" if any(reason in ceilings for reason in reasons) else "ready"
+
+    def fresh_quota_blocks_models(self, now):
+        return self.model_quota_state(now) == "blocked"
+
     def launch_options_coverage(self, now, close):
         from .options_coverage import capture_admission, public_summary
 
@@ -644,17 +760,14 @@ class Supervisor:
         slot = self.cohort_check("options coverage due", lambda: capture_admission(self.store, now))
         if slot is None:
             return False
-        # Execution decisions and the shared quota refresh retain queue priority.
-        if self.launch_candidate(now, close):
-            return True
-        quota = self.store.get("quota", {})
-        try:
-            age = (now - timestamp(quota["at"])).total_seconds()
-        except (KeyError, TypeError, ValueError):
-            age = float("inf")
-        if age < -60 or age > 900:
+        # Metadata refresh never needs model inference. Known blocked model work
+        # cannot consume this preregistered, data-only collection window.
+        quota_state = self.model_quota_state(now)
+        if quota_state == "unknown":
             return self.launch("quota-refresh:" + now.strftime("%Y-%m-%d:%H:") + str(now.minute // 5),
                                "quota_refresh", {}, now.date().isoformat())
+        if quota_state == "ready" and self.launch_candidate(now, close):
+            return True
         summary = public_summary(self.store)
         return self.launch("options-coverage:" + summary["registration_id"] + ":" + str(slot),
                            "options_coverage", {"slot": slot}, now.date().isoformat())
@@ -713,6 +826,7 @@ class Supervisor:
         return good and funded and models_ok and not quota_blocked
 
     def smoke(self, now, opened, close):
+        started, observed_at = time.monotonic(), now
         r = self.store.get("readiness", {})
         if current_execution_verified(r):
             return True
@@ -724,22 +838,42 @@ class Supervisor:
         key = "smoke:" + day
         stage = self.store.get(key, {})
         if not stage:
-            if (
-                not self.config.execution
-                or self.store.get("entry_budget_blocked", False)
-                or day < self.config.start_date
-                or now < opened + timedelta(minutes=2)
-            ):
+            def new_stage_ready(at):
+                ready = self.store.get("readiness", {})
+                try:
+                    reconciliation_age = (at - timestamp(self.store.get("last_reconciled"))).total_seconds()
+                except (TypeError, ValueError):
+                    return False
+                return (
+                    self.config.execution
+                    and not self.store.get("entry_budget_blocked", False)
+                    and day >= self.config.start_date
+                    and at.date().isoformat() == day
+                    and opened + timedelta(minutes=2) <= at <= close - timedelta(minutes=40)
+                    and self.store.get("reconciled")
+                    and -5 <= reconciliation_age <= 90
+                    and ready.get("funded")
+                    and ready.get("models_available")
+                    and ready.get("required_execution_kernel", EXECUTION_KERNEL) == EXECUTION_KERNEL
+                    and not current_execution_verified(ready)
+                    and not self.store.get(key)
+                    and not self.store.rows("SELECT symbol FROM holdings")
+                )
+
+            if not new_stage_ready(now):
                 return False
-            if (
-                not self.store.get("reconciled")
-                or not r.get("funded")
-                or not r.get("models_available")
-            ):
-                return False
-            if self.store.rows("SELECT symbol FROM holdings") or self.broker.orders():
+            if self.broker.orders():
                 return False  # operational round-trip starts only from a flat account
+            now = observed_at + timedelta(seconds=max(0, time.monotonic() - started))
+            if not new_stage_ready(now):
+                return False
             q = self.broker.quotes(["SPY"]).get("SPY", {})
+            # Order/quote lookups can consume the quote's remaining lifetime or
+            # cross the entry cutoff. Recheck local admission at receipt time;
+            # a quota update while those requests run cannot authorize an entry.
+            now = observed_at + timedelta(seconds=max(0, time.monotonic() - started))
+            if not new_stage_ready(now):
+                return False
             _, ask = quote_values(q, now)
             entry = round(ask, 2)
             payload = {
@@ -754,8 +888,6 @@ class Supervisor:
                 "stop_loss": {"stop_price": str(round(entry - 2, 2))},
                 "client_order_id": order_id("smoke", day, "buy"),
             }
-            if now > close - timedelta(minutes=40):
-                return False
             # Persist the bounded operational intent before submission, including
             # timeout/response-loss recovery. This is not a strategy-plan exemption.
             self.store.set(
@@ -989,6 +1121,7 @@ class Supervisor:
             self.store.set(
                 "next_action", "07:45 ET startup and phone notification on the first trading day."
             )
+            self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
             self.maybe_publish()
             return
         if not times:
@@ -997,14 +1130,22 @@ class Supervisor:
             # while an actual mismatch must remain visible and block entries.
             self.store.set("mode", "market_closed" if valid else "halted")
             self.store.set("market_open", False)
-            self.store.set("status", (
-                "Market holiday or weekend. Reconciled; background research is available."
-                if valid else "Market closed. Reconciliation failed; new entries remain blocked."
-            ))
-            self.store.set(
-                "next_action", "Next trading session: automatic startup and calendar refresh."
-            )
+            quota_state = self.model_quota_state(now)
+            status = "Market closed. Reconciliation failed; new entries remain blocked."
+            next_action = "Next trading session: automatic startup and calendar refresh."
+            if valid:
+                if quota_state == "blocked":
+                    status = "Market holiday or weekend. Reconciled Python monitoring continues; model work and new entries await quota admission."
+                    next_action = "Continue monitoring and recheck quota admission before new model work or entries."
+                elif quota_state == "unknown":
+                    status = "Market holiday or weekend. Reconciled Python monitoring continues; model quota admission is unknown."
+                    next_action = "Refresh quota metadata before admitting new model work or entries."
+                else:
+                    status = "Market holiday or weekend. Reconciled; background research is available."
+            self.store.set("status", status)
+            self.store.set("next_action", next_action)
             self.engine.cancel_entries(now, now + timedelta(days=1))
+            self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
             self.cohort_check("background research", lambda: self.launch_deep_research(now))
             self.maybe_publish()
             return
@@ -1081,6 +1222,7 @@ class Supervisor:
                     "broker_clock",
                     "Broker session or clock disagrees with the calendar. Existing broker protection remains in place.",
                 )
+                self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
                 self.maybe_publish()
                 return
             slot = int((now - opened).total_seconds() // 300)
@@ -1097,6 +1239,7 @@ class Supervisor:
                 self.store.set("status", "Recovering intraday exposure carried beyond its entry session.")
                 self.store.set("next_action", "Verify paper exit fills and reconciliation before resuming entries.")
                 self.engine.close_intraday()
+                self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
                 self.maybe_publish()
                 return
             if (not current_execution_verified(ready) and self.store.get("market_open")
@@ -1164,9 +1307,12 @@ class Supervisor:
                 "Morning market brief and event calendar; paper execution check after 09:32 ET.",
             )
         # Launch roles only when the worker is free; deterministic tick keeps running.
+        self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
         if not self.future:
             if now >= opened.replace(hour=8, minute=15) and now < close - timedelta(minutes=45):
-                if self.store.get("brief_day") != day:
+                if now >= opened and self.model_quota_state(now) != "ready" and self.launch_options_coverage(now, close):
+                    pass  # A blocked model job cannot consume this fixed data window.
+                elif self.store.get("brief_day") != day:
                     self.launch("research:" + day, "research", {}, day)
                 elif now >= opened and self.launch_position_review(now):
                     pass

@@ -123,7 +123,7 @@ The service resumed research after verification at 22:59:50 UTC.
 
 ## Atomic application and order-receipt refinement
 
-The fifth candidate addresses reproduced partial-write failures in research-plan
+The fifth release addresses reproduced partial-write failures in research-plan
 application, validation and retrospectives. A successful identical refresh keeps
 its existing plan identity; a new brief requires a fresh decision. Submitted or
 terminal plan states are never revived. Complete local batches, job completion
@@ -142,3 +142,27 @@ At the requested 80% weekly usage boundary, the unchanged account-reserve policy
 blocks new model work and new paper entries, including starting a fresh one-share
 acceptance check. Existing acceptance stages can still unwind safely. A fresh r3
 acceptance therefore waits for both a regular session and renewed quota admission.
+
+Source `26f5f47d` activated at 23:15:35 UTC and passed full/minimal cloud CI,
+Pages deployment and fourteen public browser checks. Final verification at
+23:17:05 UTC preserved every checked order, plan, holding, fixed/adaptive row
+and the one-time options registration. The service resumed background research.
+
+
+## Reporting and execution timing candidate
+
+The sixth candidate makes remaining local model-result batches atomic, preserves
+material-change refresh/cancellation intents across delivery failures, and routes
+each exact pulse-owned cancellation through one durable dispatcher. Protective
+orders remain while an entry remainder is unconfirmed; fresh reconciliation and
+no conflicting open orders still gate independent liquidation.
+
+New acceptance entries recheck elapsed quote/account freshness and retain their
+fixed one-share/two-minute bounds. A fresh known quota block no longer starves
+the separately registered read-only options windows; unknown metadata is refreshed.
+The revised kernel is r4, with prospective market acceptance still pending.
+
+Public export uses a consistent read snapshot. Missing marks and daily baselines
+remain unknown, branch ledger estimates are labeled, and incomplete chart points
+are omitted without changing raw history. Twenty page/valuation browser checks,
+four focused chart checks and five Node tests passed before complete validation.

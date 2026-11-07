@@ -67,8 +67,9 @@ def test_session_close_runs_before_a_failing_protection_check_even_with_busy_mod
 
 
 @pytest.mark.parametrize("healthy,expected", [(True, "market_closed"), (False, "halted")])
+@pytest.mark.parametrize("quota_state", ["ready", "blocked", "unknown"])
 def test_weekend_reconciles_and_cancels_before_background_work(
-    scheduler, broker, monkeypatch, healthy, expected
+    scheduler, broker, monkeypatch, healthy, expected, quota_state
 ):
     now = datetime(2026, 11, 7, 12, 0, tzinfo=ET)
     prepare(scheduler, broker, monkeypatch, now, session=False, reconciles=healthy)
@@ -77,11 +78,20 @@ def test_weekend_reconciles_and_cancels_before_background_work(
     monkeypatch.setattr(scheduler.engine, "reconcile", lambda: calls.append("reconcile") or healthy)
     monkeypatch.setattr(scheduler.engine, "cancel_entries", lambda *args: calls.append("cancel_entries"))
     monkeypatch.setattr(scheduler, "launch_deep_research", lambda *_: calls.append("background"))
+    monkeypatch.setattr(scheduler, "model_quota_state", lambda _: quota_state)
     scheduler.tick(now)
     assert calls == ["reconcile", "cancel_entries", "background"]
     assert scheduler.store.get("mode") == expected
     assert scheduler.store.get("market_open") is False
     assert ("Reconciliation failed" in scheduler.store.get("status")) is (not healthy)
+    if healthy:
+        assert ("background research is available" in scheduler.store.get("status")) is (quota_state == "ready")
+        if quota_state == "blocked":
+            assert "await quota admission" in scheduler.store.get("status")
+            assert "recheck quota admission" in scheduler.store.get("next_action")
+        elif quota_state == "unknown":
+            assert "quota admission is unknown" in scheduler.store.get("status")
+            assert "Refresh quota metadata" in scheduler.store.get("next_action")
     assert broker.submissions == 0
 
 

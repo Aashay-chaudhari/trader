@@ -14,7 +14,7 @@ from .store import dumps, utc_now
 # done_for_day can resume on the next session; GTC reservations and recovery
 # must retain it until the broker confirms an actual terminal state.
 TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced"}
-EXECUTION_KERNEL = "paper-execution-20261107-r3"
+EXECUTION_KERNEL = "paper-execution-20261107-r4"
 
 
 def current_execution_verified(readiness):
@@ -781,6 +781,43 @@ class Engine:
             pass
         return None
 
+    def _pending_pulse_cancellation(self, row):
+        """The durable pulse dispatcher exclusively owns this exact buy request."""
+        if row["side"] != "buy":
+            return False
+        from .observation_audit import content_hash
+
+        identity = {key: row[key] for key in (
+            "client_id", "broker_id", "branch", "symbol", "side", "plan_id", "qty",
+        )}
+        intent = self.store.get("pulse-cancellation:" + content_hash(identity))
+        return bool(intent and intent.get("identity") == identity and intent.get("state") in (
+            "pending", "attempting", "requested", "uncertain",
+        ))
+
+    def _cancel_owned_order(self, row, reason):
+        if not row["broker_id"] or self._pending_pulse_cancellation(row):
+            return False
+        try:
+            self.broker.cancel(row["broker_id"])
+        except Exception as exc:
+            # Preserve the failed tick's no-new-entry behavior while allowing
+            # reconciled protective/closing work for unrelated symbols to proceed.
+            self.store.set("entry_budget_blocked", True)
+            self.store.event("order_cancellation_uncertain", {
+                "symbol": row["symbol"], "reason": reason,
+                "outcome": "uncertain", "error_type": type(exc).__name__,
+                "observed_order_status": row["status"],
+            }, row["branch"])
+            return False
+        return True  # Request acknowledgement, never a terminal broker receipt.
+
+    def _unconfirmed_entries(self, symbol=None, branch=None):
+        return [row for row in self.store.rows("SELECT * FROM orders WHERE side='buy'")
+                if row["status"] not in TERMINAL
+                and (symbol is None or row["symbol"] == symbol)
+                and (branch is None or row["branch"] == branch)]
+
     def cancel_entries(self, now, close):
         for row in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
             if row["status"] in TERMINAL or not row["broker_id"]:
@@ -806,7 +843,8 @@ class Engine:
                     if check_deadline
                     else "plan_expired"
                 )
-                self.broker.cancel(row["broker_id"])
+                if not self._cancel_owned_order(row, reason):
+                    continue
                 if check_deadline:
                     key = "smoke:" + now.astimezone(ET).date().isoformat()
                     self.store.set(
@@ -906,14 +944,22 @@ class Engine:
     def close_intraday(self):
         if not self.store.get("reconciled"):
             raise ValueError("Cannot cancel protection while broker state is unreconciled")
-        # Cancel owned outstanding intraday orders first, including bracket legs.
+        # Keep protective sells until every entry remainder for its symbol is
+        # confirmed terminal. A pulse-owned buy is delivered only by its outbox.
+        entries = self._unconfirmed_entries(branch="intraday")
+        for row in entries:
+            self._cancel_owned_order(row, "intraday_entry_close")
+        if entries and not self.reconcile():
+            return
+        blocked = {row["symbol"] for row in self._unconfirmed_entries()}
         rows = self.store.rows("SELECT * FROM orders WHERE branch='intraday'")
         for row in rows:
-            if row["status"] not in TERMINAL and row["broker_id"]:
+            if row["symbol"] not in blocked and row["status"] not in TERMINAL and row["broker_id"]:
                 if self._is_liquidation_order(row):
                     continue
-                self.broker.cancel(row["broker_id"])
-        self.reconcile()
+                self._cancel_owned_order(row, "intraday_protection_close")
+        if not self.reconcile():
+            return
         open_symbols = {o["symbol"] for o in self.broker.orders()}
         for h in self.store.rows("SELECT * FROM holdings WHERE branch='intraday'"):
             if h["symbol"] in open_symbols:
@@ -928,13 +974,19 @@ class Engine:
         if not rows or not self.store.get("reconciled"):
             return False
         h = rows[0]
+        entries = self._unconfirmed_entries(symbol=symbol)
+        for row in entries:
+            self._cancel_owned_order(row, "authorized_exit_entry")
+        if entries:
+            if not self.reconcile() or self._unconfirmed_entries(symbol=symbol):
+                return False
         # Cancel and confirm protective orders before an independent sell. Keep
         # existing protection until an exit has actually been authorized.
         for row in self.store.rows("SELECT * FROM orders WHERE symbol=?", (symbol,)):
             if row["status"] not in TERMINAL and row["broker_id"]:
                 if self._is_liquidation_order(row):
                     continue
-                self.broker.cancel(row["broker_id"])
+                self._cancel_owned_order(row, "authorized_exit_protection")
         if not self.reconcile():
             return False
         if any(o["symbol"] == symbol for o in self.broker.orders()):
@@ -971,17 +1023,18 @@ class Engine:
                 for o in open_orders
                 if o["symbol"] == h["symbol"] and o.get("status") not in TERMINAL
             ]
-            partial_entries = [
-                o for o in active if o["side"] == "buy" and float(o.get("filled_qty") or 0) > 0
-            ]
-            if partial_entries:
-                for order in active:
-                    self.broker.cancel(order["id"])
+            owned = {row["broker_id"]: row for row in self.store.rows(
+                "SELECT * FROM orders WHERE symbol=?", (h["symbol"],)
+            ) if row["broker_id"]}
+            entries = self._unconfirmed_entries(symbol=h["symbol"])
+            if entries or any(order["side"] == "buy" for order in active):
+                for entry in entries:
+                    self._cancel_owned_order(entry, "entry_remainder_before_protection")
                 self.store.event(
                     "protection_repair",
                     {
                         "symbol": h["symbol"],
-                        "reason": "Canceling partial entry remainder before protecting confirmed quantity",
+                        "reason": "Entry cancellation remains unconfirmed; existing protective sells retained",
                     },
                     h["branch"],
                 )
@@ -1010,7 +1063,8 @@ class Engine:
                 # Cancel an incomplete OCO/protective configuration before creating
                 # another sell; never stack competing exits on the same shares.
                 for order in active:
-                    self.broker.cancel(order["id"])
+                    if order["id"] in owned:
+                        self._cancel_owned_order(owned[order["id"]], "replace_incomplete_protection")
                 continue
             rows = self.store.rows("SELECT payload FROM plans WHERE id=?", (h["plan_id"],))
             stop = json.loads(rows[0]["payload"])["stop"] if rows else None

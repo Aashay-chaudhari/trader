@@ -1,5 +1,5 @@
 import json
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -380,9 +380,12 @@ def test_material_news_suspends_plans_and_cancels_only_pending_entries(
             }
         )
         s.task = ("pulse-test", "pulse", {}, "2026-10-30")
+        assert s.store.job_start("pulse-test")
         s.finish_task()
         assert s.store.get("research_refresh_required") is True
         assert s.store.rows("SELECT state FROM plans")[0]["state"] == "suspended"
+        assert broker.order(order["id"])["status"] == "new"
+        s.apply_pulse_cancellations(datetime.now(timezone.utc))
         assert broker.order(order["id"])["status"] == "canceled"
     finally:
         s.pool.shutdown(wait=False)

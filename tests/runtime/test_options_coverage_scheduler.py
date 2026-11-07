@@ -1,4 +1,5 @@
 from concurrent.futures import Future
+from datetime import timedelta
 
 import pytest
 
@@ -7,12 +8,19 @@ from tests.runtime.test_options_coverage import at, confirm, registration
 from tests.runtime.test_scheduler_priorities import prepare, scheduler as scheduler
 
 
+def fresh_quota(now):
+    return {"at": now.isoformat(), "ordinary_usage_allowed": True, "windows": [{
+        "usedPercent": 10, "windowDurationMins": 10080,
+        "resetsAt": (now + timedelta(days=7)).timestamp(),
+    }]}
+
+
 def prepare_probe(scheduler, broker, monkeypatch):
     now = at()
     registration(scheduler.store)
     prepare(scheduler, broker, monkeypatch, now)
     confirm(scheduler.store, now)
-    scheduler.store.set("quota", {"at": now.isoformat()})
+    scheduler.store.set("quota", fresh_quota(now))
     return now, now.replace(hour=16, minute=0)
 
 
@@ -31,7 +39,7 @@ def test_capture_queue_preserves_candidate_and_quota_refresh_priority(
     scheduler.store.set("quota", {})
     assert scheduler.launch_options_coverage(now, close)
     assert launched == ["quota_refresh"]
-    scheduler.store.set("quota", {"at": now.isoformat()})
+    scheduler.store.set("quota", fresh_quota(now))
     assert scheduler.launch_options_coverage(now, close)
     assert launched == ["quota_refresh", "options_coverage"]
 

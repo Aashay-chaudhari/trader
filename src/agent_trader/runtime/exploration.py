@@ -749,7 +749,7 @@ def knowledge_context(store, *, max_chars=6500):
     now = datetime.now(ET)
     from .adaptive_lab import AdaptiveLab
 
-    adaptive_trials = AdaptiveLab(store).summary()["trials"]
+    adaptive_trials = AdaptiveLab(store, initialize=False).summary()["trials"]
     cards = []
     for original in store.get("research_catalogue", []):
         if original["state"] != "reviewed_for_testing" or timestamp(original["expires_at"]) <= now:

@@ -15,6 +15,7 @@ from agent_trader.runtime import supervisor
 def runtime(config, broker, monkeypatch):
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     monkeypatch.setattr(supervisor, "notify", lambda *a, **kw: True)
+    monkeypatch.setattr(supervisor.time, "monotonic", lambda: 0)
     s = supervisor.Supervisor(config)
     now = datetime.now(ET).replace(hour=9, minute=32, second=0, microsecond=0)
     broker.quotes = lambda symbols: {"SPY": {"bp": 100, "ap": 100.01, "t": now.isoformat()}}

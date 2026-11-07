@@ -102,8 +102,10 @@ def _quote(quote, now):
 
 
 class AdaptiveLab:
-    def __init__(self, store):
+    def __init__(self, store, *, initialize=True):
         self.store = store
+        if not initialize:
+            return
         # executescript would commit an enclosing result-application transaction.
         # Individual DDL statements participate in whichever scope owns this store.
         for statement in ("""CREATE TABLE IF NOT EXISTS adaptive_contracts(
@@ -530,7 +532,10 @@ class AdaptiveLab:
             row["key"]: json.loads(row["value"])
             for row in self.store.rows("SELECT key,value FROM kv WHERE key LIKE 'observation-quote:adaptive:%:entry'")
         }
-        for row in self.store.rows("SELECT * FROM adaptive_contracts ORDER BY registered_at,id"):
+        contracts = self.store.rows("SELECT * FROM adaptive_contracts ORDER BY registered_at,id") if self.store.rows(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='adaptive_contracts'"
+        ) else []
+        for row in contracts:
             spec = json.loads(row["payload"])
             observations = self.store.rows(
                 "SELECT id,day,state,payload FROM adaptive_observations WHERE contract_id=?",
