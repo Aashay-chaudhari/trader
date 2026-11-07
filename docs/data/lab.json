@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T23:47:43.679907+00:00",
+  "generated_at": "2026-11-07T23:48:27.904661+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T18:47:36.118341-05:00",
+  "heartbeat": "2026-11-07T18:48:19.304500-05:00",
   "watchdog": {
-    "checked_at": "2026-11-07T23:46:02.6037380+00:00",
+    "checked_at": "2026-11-07T23:48:03.0101536+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
-    "models_paused": true,
-    "maintenance": true
+    "models_paused": false,
+    "maintenance": false
   },
   "status": "Market holiday or weekend. Reconciled; background research is available.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T23:47:38.044817+00:00",
+    "at": "2026-11-07T23:48:23.308035+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -84,7 +84,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T23:47:38.053233+00:00",
+    "as_of": "2026-11-07T23:48:23.316647+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -118,7 +118,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T23:47:38.053233+00:00",
+      "broker_cash_observed_at": "2026-11-07T23:48:23.316647+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -203,6 +203,24 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T23:48:23.316647+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:48:23.316647+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:48:23.316647+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T23:47:38.053233+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10980,24 +10998,6 @@
     },
     {
       "at": "2026-11-07T12:14:28.337678+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T12:13:56.511845+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T12:13:56.511845+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T12:13:56.511845+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11115,7 +11115,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T23:47:45.284692+00:00",
+    "as_of": "2026-11-07T23:48:28.849477+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11505,7 +11505,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T23:47:43.679907+00:00",
+    "as_of": "2026-11-07T23:48:27.904661+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11519,7 +11519,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T23:47:38.053233+00:00",
+      "as_of": "2026-11-07T23:48:23.316647+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11565,7 +11565,7 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 29.77551357777778,
+      "input_age_hours": 29.787798231666667,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
@@ -11607,7 +11607,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T23:47:45.538940+00:00",
+    "as_of": "2026-11-07T23:48:29.421576+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15052,6 +15052,34 @@
   "plans": [],
   "events": [
     {
+      "id": 586,
+      "at": "2026-11-07T23:48:19.300402+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 585,
+      "at": "2026-11-07T23:48:17.093487+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 76619
+      }
+    },
+    {
+      "id": 584,
+      "at": "2026-11-07T23:48:15.128982+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 76619
+      }
+    },
+    {
       "id": 583,
       "at": "2026-11-07T23:47:36.113226+00:00",
       "kind": "startup",
@@ -17154,68 +17182,6 @@
         "metadata_errors": [],
         "application_outcome": "pending"
       }
-    },
-    {
-      "id": 486,
-      "at": "2026-11-07T22:20:22.875089+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "6d2dad759c0bdaac9ab66197:0",
-        "topic": "symbol_events:XLK",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scope; indexes below are zero-based. Independently checked all six analyst URLs, including holdings, XLK's distribution group, session hours, issuer notices and AMD's exhibit. Session counts and event-window mappings agree. Anchor ambiguity, incomplete disclosure coverage, unverified CPI timing and publication-time limits remain explicit. Acceptance does not establish comprehensive event clearance or alter any plan or gate."
-      }
-    },
-    {
-      "id": 485,
-      "at": "2026-11-07T22:20:06.120263+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "8c1ce6e140db2109b2d3fe71c2508e50d6c7dee7dcc0a151703113560ee9a565",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T22:19:13.142791+00:00",
-        "attempt_id": "usage:132",
-        "searches": 3,
-        "cycles": 9,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T22:20:06.116279+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 38,
-          "after_used_percent": 38,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 484,
-      "at": "2026-11-07T22:19:10.004486+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "6d2dad759c0bdaac9ab66197:0",
-        "topic": "symbol_events:XLK"
-      }
     }
   ],
   "experiments": [
@@ -18749,7 +18715,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T23:47:37.994314+00:00",
+    "at": "2026-11-07T23:48:25.989212+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -18788,98 +18754,25 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T23:47:46.018328+00:00",
+    "as_of": "2026-11-07T23:48:29.681160+00:00",
     "status": {
-      "state": "awaiting_queue_refresh",
-      "role": "deep_research",
+      "state": "running",
+      "role": "deep_research_review",
       "topic": "symbol_events:JPM",
       "work_id": "fd02850ccb2ae1b7f33d9f2a:1",
-      "as_of": "2026-11-07T18:40:16.502157-05:00",
+      "as_of": "2026-11-07T18:48:19.304500-05:00",
       "next_eligible_at": null,
-      "idle_reasons": [
-        {
-          "topic": "event_coverage",
-          "reason": "accepted"
-        },
-        {
-          "topic": "feature_lineage",
-          "reason": "revise"
-        },
-        {
-          "topic": "experiment_lifecycle",
-          "reason": "accepted"
-        },
-        {
-          "topic": "source_verification",
-          "reason": "accepted"
-        },
-        {
-          "topic": "accounting_attribution",
-          "reason": "accepted"
-        },
-        {
-          "topic": "runtime_reliability",
-          "reason": "accepted"
-        },
-        {
-          "topic": "evidence_integrity",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_vix_horizon",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_earnings_iv",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_reversal_lineage",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_rally_universe",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:NVDA",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:TSLA",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:XLK",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:AAPL",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:MSFT",
-          "reason": "attempts_exhausted"
-        },
-        {
-          "topic": "symbol_events:AMZN",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:GOOGL",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:META",
-          "reason": "accepted"
-        }
-      ],
+      "idle_reasons": [],
       "last_budget_decision": {
-        "at": "2026-11-07T18:40:16.502157-05:00",
+        "at": "2026-11-07T18:48:19.304500-05:00",
         "allowed": true,
         "reason": "Useful background work within account reserve and attempt ceiling"
       },
-      "reason": "The previously selected stage is complete; the scheduler must select the next retained question or review."
+      "reason": "A background research stage is running.",
+      "active_task": {
+        "role": "deep_research_review",
+        "started": "2026-11-07T23:48:24.416104+00:00"
+      }
     },
     "reports": [
       {
@@ -20192,6 +20085,24 @@
     }
   },
   "usage": [
+    {
+      "at": "2026-11-07T23:48:25.997645+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 0,
+      "cached_tokens": 0,
+      "output_tokens": 0,
+      "quota_delta": 0.0,
+      "state": "started",
+      "outcome": null,
+      "attempt_id": "usage:170",
+      "application_outcome": null,
+      "application_validation_code": null,
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
+    },
     {
       "at": "2026-11-07T23:42:40.604810+00:00",
       "day": "2026-11-07",
@@ -22873,24 +22784,6 @@
       "reply_usage_reported": null,
       "quota_delta_reported": null,
       "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-30T12:17:13.436809+00:00",
-      "day": "2026-10-30",
-      "role": "research",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 54931,
-      "cached_tokens": 54656,
-      "output_tokens": 3557,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
     }
   ],
   "budget": {
@@ -22902,7 +22795,7 @@
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
     "account_used_percent": 70.0,
-    "quota_observed_at": "2026-11-07T23:47:37.994314+00:00",
+    "quota_observed_at": "2026-11-07T23:48:25.989212+00:00",
     "target_gap_percentage_points": 10.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
@@ -23741,13 +23634,13 @@
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "historical_passed_current_kernel_pending",
-    "ci": "pending",
-    "pages": "pending",
-    "public_browser_qa": "pending",
-    "activated_at": null,
+    "ci": "passed",
+    "pages": "passed",
+    "public_browser_qa": "passed_14_checks_at_1440_and_390_exact_source_r4_and_registration",
+    "activated_at": "2026-11-07T23:47:36.113226+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-11-07T23:17:05.334377+00:00",
+    "updated_at": "2026-11-07T23:48:17.437916+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -23761,8 +23654,8 @@
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
     "profitability": "unproven",
-    "source_ci_run": null,
-    "pages_verified_run": null,
+    "source_ci_run": 42426807098,
+    "pages_verified_run": 42426807124,
     "asset_versioning": true,
     "execution_check_repair": true,
     "operational_evidence_review_verified": true,
@@ -23800,7 +23693,7 @@
     },
     "local_browser_qa": "passed_20_checks_at_1440_and_390",
     "previous_source_commit": "26f5f47d4ac06b44953e87145c4a99ed16fdab51",
-    "local_validation": "Full and minimal runs had one obsolete kernel-version assertion; corrected module passed 34 checks in each environment. Final counts 1015/845 await complete CI. Five Node, 20 browser and four chart checks passed.",
+    "local_validation": "Complete cloud suites passed 1015 full and 845 minimal Python tests; five Node tests passed. Local browser fixtures and exact-source public QA passed.",
     "javascript_tests": 5
   },
   "limitations": [
