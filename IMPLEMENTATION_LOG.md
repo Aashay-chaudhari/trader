@@ -484,3 +484,90 @@ Pages run 41220542958. Public seven-view desktop/mobile QA confirmed source 5137
 two studies / 720 pending opportunities, five reviewed hypotheses and three actual
 observation leads. No errors or overflow; no preview servers remain. Profitability
 and the regular-session paper entry/exit gate remain unproven.
+
+
+## November 7, 2026 — useful research capacity and runtime refinement
+
+User authorized a broader cleanup and substantially increased useful subscription
+work, targeting 50–80% weekly allowance. Initial live account meter was 2%; later
+maintenance readings reached 16%. These are account-wide readings, not an exact
+repo token budget. The existing 80% stop/20% reserve and no-paid-fallback policy
+remain. Consumption target completion is not claimed by this release receipt.
+
+Implemented a distinct bounded off-hours/weekend research queue: 20 questions from
+retained evidence, high-effort analyst then fresh skeptical reviewer, immutable
+packets, no unchanged-evidence loops, bounded retries/revisions and safe feedback.
+Accepted research has expiry; expired verified URLs remain leads requiring a fresh
+source check. No order, promotion or automatic code-edit authority is granted.
+Core 16/20/24 daily attempt slots remain separate from up to 96 background attempts.
+Admission and attempt reservation are atomic across processes, charged to actual
+Eastern admission day. Every quota bucket is checked; missing/stale/malformed
+telemetry fails closed. Streamed limits can interrupt a turn; in-flight percentage
+overshoot remains possible because the meter is account-wide and rounded.
+
+The eight challenger experiments were starved upstream by zero valid parent plans.
+Added prospective eligibility counts and event/evidence checks for both plan paths,
+immutable eligibility versions, stale-parent/mixed-scope promotion blocking and
+not-evaluable missed intraday exits. No samples were invented. Adaptive prompt
+arithmetic now reflects actual opportunity bounds; the frozen USO 120-vs60 prose
+mismatch is recorded as a historical caveat, not silently rewritten.
+
+Morning source work is expanded and prioritized around company-event coverage.
+Whole-prompt budgeting preserves current prices/features before optional old
+context. Retained packet replays fit; price fields distinguish evolving session
+bars from dated prior closes. Phase-aware quality replay matched eight November 5–6
+reports to their exact inputs: preopen missing minute features were expected;
+regular-session features were present. Raw word mentions no longer imply missing
+input defects on their own.
+
+Failure telemetry now links request/schema/attempt IDs, safe validation paths,
+partial reported tokens and application outcomes. Valid replies survive metadata
+refresh faults but entries remain blocked. Private rejected artifacts are retained.
+Actual early background checks exposed an out-of-range source reference and two
+oversized reports; their exact replies were recovered from their own app-server
+threads and preserved as rejected artifacts. Prompts gained explicit 7,000-character
+response targets, source-index lists and bounded retry feedback; gates stayed strict.
+A skeptical reviewer requested a correction before the experiment-lifecycle report
+was accepted. Other accepted analyses and held/revised outcomes remain distinct.
+
+Jobs now have boot/process/start identity and unique claims. Recovery cannot steal
+live independent probes or finish successor jobs. Dead capped jobs enter scoped
+backoff. Unknown legacy owners are not inferred dead from age. Concurrent cold
+SQLite initialization retries only a bounded WAL lock contention.
+
+The execution review repaired confirmed-terminal exit retries, cross-date pending
+liquidation handling, post-cancel reconciliation, done_for_day recovery/reservations,
+exact protection coverage, rounded-price risk/cash sizing, fresh validation after
+asset lookup, broker identity/authorized quantity checks and nonfinite/corrected
+broker data handling. Intraday closing and next-session overdue recovery precede
+quote-dependent protection repair. Independent code review caught and fixed a
+pending-order variable overwrite before activation.
+
+Current execution kernel is paper-execution-20261107. Production preflight requires
+its own bounded regular-session acceptance. November 2 historical verification/time
+are preserved; new-version market acceptance remains pending. No maintenance work
+submitted a broker order. The next actual regular session may perform the existing
+bounded one-share check; code tests do not substitute for that receipt.
+
+Read-only complete account-activity intake identified posted CAT-$0.01 and
+REG-$0.02 fees for the uniquely matched November 2 intraday executions. After
+immutable receipt, exact-fill linkage and cash-bridge checks, these two fees were
+explicitly booked once. Branch cash now matches broker $29,999.84 exactly; future
+intake is read-only and does not auto-book charges. Raw activity IDs/descriptions
+remain private. Dashboard totals use broker cash/equity and actual position exposure.
+
+Evidence preservation check: orders 8, positions 0, plans 0; fixed expectations and
+observations 1,440 each; adaptive contracts 3 and observations 780. Counts, frozen study
+metadata and specification hashes match the maintenance baseline. Only the two
+proved fees changed branch cash. Original reports and historical findings remain.
+
+Local verification: full regression run 533 passed with the existing single legacy
+websockets deprecation warning; later focused research/application/scheduler
+integration 107 passed, final research-work 36 passed and execution-version 14 passed.
+Active runtime/tests lint, JavaScript syntax and diff-whitespace checks passed.
+All seven populated views passed browser QA at exact 1440px and 390px widths using
+CDP: no JavaScript errors or horizontal overflow, correct $0 exposure and broker cash.
+Native Edge window sizing alone measured 492px for the requested 390px, so those
+older receipts were superseded by measured CDP viewport checks.
+
+Source CI, activation and subsequent live-loop receipts follow separately.

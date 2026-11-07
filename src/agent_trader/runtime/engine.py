@@ -4,13 +4,30 @@ import hashlib
 import json
 import math
 from datetime import datetime, timedelta, timezone
+from time import monotonic
 
 from .config import ET
 from .broker import BrokerError
 from .models import Plan
 from .store import dumps, utc_now
 
-TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced", "done_for_day"}
+# done_for_day can resume on the next session; GTC reservations and recovery
+# must retain it until the broker confirms an actual terminal state.
+TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced"}
+EXECUTION_KERNEL = "paper-execution-20261107"
+
+
+def current_execution_verified(readiness):
+    """Historical success certifies a required kernel only when versions match.
+
+    Legacy metadata without an explicit requirement retains its old meaning;
+    production preflight always installs this release's required version.
+    """
+    required = readiness.get("required_execution_kernel")
+    return bool(
+        readiness.get("execution_verified")
+        and (not required or readiness.get("verified_execution_kernel") == required)
+    )
 
 
 def order_id(*parts):
@@ -59,8 +76,13 @@ class Engine:
         ]
 
     def ingest_order(self, order, branch, plan_id):
-        cid = order.get("client_order_id") or f"broker-{order['id']}"
         with self.store.transaction():
+            known = self.store.rows("SELECT * FROM orders WHERE broker_id=?", (order["id"],))
+            cid = order.get("client_order_id") or (
+                known[0]["client_id"] if known else f"broker-{order['id']}"
+            )
+            if known and known[0]["client_id"] != cid:
+                raise ValueError("Broker order identity changed")
             self.store.db.execute(
                 """INSERT OR IGNORE INTO orders
               (client_id,broker_id,branch,symbol,side,qty,status,plan_id,payload,at)
@@ -79,21 +101,51 @@ class Engine:
                 ),
             )
             row = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))[0]
+            if (
+                row["symbol"] != order["symbol"]
+                or row["side"] != order["side"]
+                or row["branch"] != branch
+                or row["plan_id"] != plan_id
+                or (row["broker_id"] and row["broker_id"] != order["id"])
+            ):
+                raise ValueError("Broker order does not match its owned intent")
             qty = float(order.get("filled_qty") or 0)
             price = float(order.get("filled_avg_price") or 0)
+            requested = float(order["qty"])
             if (
                 not math.isfinite(qty)
                 or not math.isfinite(price)
+                or not math.isfinite(requested)
+                or requested <= 0
                 or qty < 0
+                or qty > requested + 1e-8
                 or (qty > 0 and price <= 0)
             ):
                 raise ValueError("Invalid broker fill quantity/price")
+            if abs(requested - row["qty"]) > 1e-8:
+                parents = self.store.rows(
+                    "SELECT payload FROM orders WHERE side='buy' AND symbol=? AND branch=? AND plan_id=?",
+                    (row["symbol"], branch, plan_id),
+                )
+                protective_leg = order["side"] == "sell" and any(
+                    leg.get("id") == order["id"]
+                    for parent in parents
+                    for leg in json.loads(parent["payload"]).get("legs", []) or []
+                )
+                if not protective_leg or requested > row["qty"]:
+                    raise ValueError("Broker quantity differs from the authorized intent")
             notional = qty * price
+            if not math.isfinite(notional):
+                raise ValueError("Invalid broker fill notional")
             delta = qty - row["filled"]
             if delta < -1e-8:
                 raise ValueError("Broker cumulative fill quantity decreased")
+            if abs(delta) <= 1e-8 and abs(notional - row["notional"]) > 1e-6:
+                raise ValueError("Broker corrected fill notional; explicit ledger review required")
             if delta > 1e-8:
                 money = notional - row["notional"]
+                if money <= 0:
+                    raise ValueError("Broker incremental fill notional is inconsistent")
                 holdings = self.store.rows(
                     "SELECT * FROM holdings WHERE symbol=?", (order["symbol"],)
                 )
@@ -137,9 +189,9 @@ class Engine:
                     branch,
                 )
             self.store.db.execute(
-                """UPDATE orders SET broker_id=?,status=?,filled=?,notional=?,payload=?
+                """UPDATE orders SET broker_id=?,status=?,qty=?,filled=?,notional=?,payload=?
               WHERE client_id=?""",
-                (order["id"], order["status"], qty, notional, dumps(order), cid),
+                (order["id"], order["status"], requested, qty, notional, dumps(order), cid),
             )
         for leg in order.get("legs") or []:
             self.ingest_order(leg, branch, plan_id)
@@ -177,6 +229,19 @@ class Engine:
         account = self.broker.account()
         positions = self.broker.positions()
         open_orders = self.broker.orders()
+        if any(
+            not math.isfinite(float(account[key])) or float(account[key]) < 0
+            for key in ("cash", "equity")
+        ):
+            raise ValueError("Broker account cash/equity is not a valid nonnegative balance")
+        if any(
+            not math.isfinite(float(position[key]))
+            for position in positions
+            for key in ("qty", "market_value")
+        ):
+            raise ValueError("Broker position quantity/value is not finite")
+        if len({p["symbol"] for p in positions}) != len(positions):
+            raise ValueError("Broker returned duplicate position symbols")
         known = {r["broker_id"] for r in self.store.rows("SELECT broker_id FROM orders")}
         unknown_orders = [o for o in open_orders if o["id"] not in known]
         ledger = {h["symbol"]: h for h in self.store.rows("SELECT * FROM holdings")}
@@ -274,7 +339,7 @@ class Engine:
             raise ValueError("Paper execution disabled or start date not reached")
         if not self.store.get("market_open", False):
             raise ValueError("Broker regular session is not confirmed open")
-        if not self.store.get("readiness", {}).get("execution_verified"):
+        if not current_execution_verified(self.store.get("readiness", {})):
             raise ValueError("Execution smoke check not verified")
         if not self.store.get("reconciled"):
             raise ValueError("Broker/ledger not reconciled")
@@ -316,7 +381,10 @@ class Engine:
             raise ValueError("Pilot universe excludes stocks below $5")
         if not p.entry_low <= ask <= p.entry_high:
             raise ValueError("Entry condition not satisfied")
-        if (p.target - ask) / (ask - p.stop) < 1.5:
+        limit, stop, target = round(ask, 2), round(p.stop, 2), round(p.target, 2)
+        if not 0 < stop < limit < target or not p.entry_low <= limit <= p.entry_high:
+            raise ValueError("Rounded broker prices violate the plan's entry/risk interval")
+        if (target - limit) / (limit - stop) < 1.5:
             raise ValueError("Reward/risk below 1.5")
         pending = self.store.rows(
             "SELECT * FROM orders WHERE branch=? AND side='buy' AND status NOT IN (%s)"
@@ -355,25 +423,25 @@ class Engine:
                 exposure += max(0, h["cost"] - h["qty"] * hp["stop"])
         for pending_order in pending:
             intent = json.loads(pending_order["payload"])
-            stop = float((intent.get("stop_loss") or {}).get("stop_price") or 0)
-            limit = float(intent.get("limit_price") or 0)
+            pending_stop = float((intent.get("stop_loss") or {}).get("stop_price") or 0)
+            pending_limit = float(intent.get("limit_price") or 0)
             exposure += max(0, pending_order["qty"] - pending_order["filled"]) * max(
-                0, limit - stop
+                0, pending_limit - pending_stop
             )
         if exposure >= 300:
             raise ValueError("Aggregate branch risk limit")
-        cost_per_share = ask * 0.001 + max(0, ask - bid)
+        cost_per_share = limit * 0.001 + max(0, limit - bid)
         pilot_risk = 12.5 if self.store.get("incumbent_filter:" + p.branch) else 50
         qty = math.floor(
             min(
-                2000 / ask,
-                cash / ask,
-                min(pilot_risk, 300 - exposure) / (ask - p.stop + cost_per_share),
+                2000 / limit,
+                cash / limit,
+                min(pilot_risk, 300 - exposure) / (limit - stop + cost_per_share),
             )
         )
         if qty < 1:
             raise ValueError("Insufficient unencumbered capital/risk capacity")
-        return qty, round(ask, 2)
+        return qty, limit
 
     def submit_intent(self, payload, branch, plan_id):
         cid = payload["client_order_id"]
@@ -418,10 +486,16 @@ class Engine:
         return order
 
     def enter(self, plan, quote, now, close):
+        started = monotonic()
         qty, limit = self.validate_entry(plan, quote, now, close)
         asset = self.broker.asset(plan["symbol"])
         if not asset.get("tradable") or asset.get("status") != "active":
             raise ValueError("Asset is not tradable")
+        # Asset lookup may block. Recheck all time-sensitive gates immediately
+        # before submission, using elapsed time rather than a stale tick timestamp.
+        qty, limit = self.validate_entry(
+            plan, quote, now + timedelta(seconds=max(0, monotonic() - started)), close
+        )
         payload = {
             "symbol": plan["symbol"],
             "qty": str(qty),
@@ -519,6 +593,80 @@ class Engine:
                     row["branch"],
                 )
 
+    @staticmethod
+    def _is_liquidation_order(row):
+        return (
+            row["side"] == "sell"
+            and str(row.get("plan_id") or "").startswith(("close:", "exit:"))
+            and json.loads(row["payload"]).get("type") == "market"
+        )
+
+    def _submit_liquidation(self, holding, purpose, day):
+        """Retry only a confirmed terminal attempt; ambiguous intents keep their ID."""
+        if self.store.rows(
+            "SELECT client_id FROM orders WHERE symbol=? AND status NOT IN (%s)"
+            % ",".join("?" for _ in TERMINAL),
+            (holding["symbol"], *TERMINAL),
+        ):
+            # A prior-day done_for_day order, held child, or unconfirmed cancel
+            # may be absent from status=open responses and still resume later.
+            return False
+        scope = f"{purpose}:{day}:{holding['symbol']}"
+        previous = self.store.rows(
+            "SELECT * FROM orders WHERE plan_id=? AND side='sell' ORDER BY at,client_id", (scope,)
+        )
+        if any(row["status"] not in TERMINAL for row in previous):
+            return False
+        attempt = len(previous)
+        payload = {
+            "symbol": holding["symbol"],
+            "qty": str(holding["qty"]),
+            "side": "sell",
+            "type": "market",
+            "time_in_force": "day",
+            "client_order_id": order_id(
+                purpose, day, holding["symbol"], holding["plan_id"], attempt
+            ),
+        }
+        self.store.event(
+            "liquidation_attempt",
+            {
+                "symbol": holding["symbol"],
+                "purpose": purpose,
+                "attempt": attempt + 1,
+                "quantity": holding["qty"],
+                "previous_terminal_attempts": len(previous),
+            },
+            holding["branch"],
+        )
+        order = self.submit_intent(payload, holding["branch"], scope)
+        return bool(order and order.get("status") not in {"rejected", "canceled", "expired"})
+
+    def overdue_intraday(self, now):
+        """Intraday holdings carried from an older or unverified entry session."""
+        day = now.astimezone(ET).date().isoformat()
+        overdue = []
+        for holding in self.store.rows("SELECT * FROM holdings WHERE branch='intraday'"):
+            parents = self.store.rows(
+                "SELECT at,payload FROM orders WHERE plan_id=? AND side='buy' AND filled>0",
+                (holding["plan_id"],),
+            )
+            entry_days = []
+            try:
+                for parent in parents:
+                    payload = json.loads(parent["payload"])
+                    entered = timestamp(
+                        payload.get("filled_at") or payload.get("submitted_at") or parent["at"]
+                    )
+                    if entered.tzinfo is None:
+                        raise ValueError("Unknown entry timezone")
+                    entry_days.append(entered.astimezone(ET).date().isoformat())
+            except (ValueError, TypeError, KeyError):
+                entry_days = []
+            if not entry_days or min(entry_days) < day or max(entry_days) > day:
+                overdue.append(holding["symbol"])
+        return overdue
+
     def close_intraday(self):
         if not self.store.get("reconciled"):
             raise ValueError("Cannot cancel protection while broker state is unreconciled")
@@ -526,7 +674,7 @@ class Engine:
         rows = self.store.rows("SELECT * FROM orders WHERE branch='intraday'")
         for row in rows:
             if row["status"] not in TERMINAL and row["broker_id"]:
-                if row["side"] == "sell" and row["plan_id"] and row["plan_id"].startswith("close:"):
+                if self._is_liquidation_order(row):
                     continue
                 self.broker.cancel(row["broker_id"])
         self.reconcile()
@@ -537,15 +685,7 @@ class Engine:
             if not self.store.get("reconciled"):
                 raise ValueError("Cannot close mismatched ledger automatically")
             day = datetime.now(ET).date().isoformat()
-            payload = {
-                "symbol": h["symbol"],
-                "qty": str(h["qty"]),
-                "side": "sell",
-                "type": "market",
-                "time_in_force": "day",
-                "client_order_id": order_id("close", day, h["symbol"], h["qty"]),
-            }
-            self.submit_intent(payload, "intraday", f"close:{day}:{h['symbol']}")
+            self._submit_liquidation(h, "close", day)
 
     def exit_holding(self, symbol, reason):
         rows = self.store.rows("SELECT * FROM holdings WHERE symbol=?", (symbol,))
@@ -556,8 +696,11 @@ class Engine:
         # existing protection until an exit has actually been authorized.
         for row in self.store.rows("SELECT * FROM orders WHERE symbol=?", (symbol,)):
             if row["status"] not in TERMINAL and row["broker_id"]:
+                if self._is_liquidation_order(row):
+                    continue
                 self.broker.cancel(row["broker_id"])
-        self.reconcile()
+        if not self.reconcile():
+            return False
         if any(o["symbol"] == symbol for o in self.broker.orders()):
             return False
         rows = self.store.rows("SELECT * FROM holdings WHERE symbol=?", (symbol,))
@@ -565,15 +708,8 @@ class Engine:
             return True
         h = rows[0]
         day = datetime.now(ET).date().isoformat()
-        payload = {
-            "symbol": symbol,
-            "qty": str(h["qty"]),
-            "side": "sell",
-            "type": "market",
-            "time_in_force": "day",
-            "client_order_id": order_id("exit", day, symbol, h["qty"]),
-        }
-        self.submit_intent(payload, h["branch"], "exit:" + day + ":" + symbol)
+        if not self._submit_liquidation(h, "exit", day):
+            return False
         self.store.event(
             "decision", {"symbol": symbol, "action": "exit", "reason": reason}, h["branch"]
         )
@@ -594,7 +730,11 @@ class Engine:
 
         open_orders = flatten(open_orders)
         for h in self.store.rows("SELECT * FROM holdings"):
-            active = [o for o in open_orders if o["symbol"] == h["symbol"]]
+            active = [
+                o
+                for o in open_orders
+                if o["symbol"] == h["symbol"] and o.get("status") not in TERMINAL
+            ]
             partial_entries = [
                 o for o in active if o["side"] == "buy" and float(o.get("filled_qty") or 0) > 0
             ]
@@ -615,8 +755,19 @@ class Engine:
                 for o in active
                 if o["side"] == "sell" and o.get("status") not in ("held", "pending_cancel")
             ]
-            if any(
-                o.get("type") in ("stop", "stop_limit", "trailing_stop", "market") for o in sells
+            protection = [
+                o
+                for o in sells
+                if o.get("type") in ("stop", "stop_limit", "trailing_stop", "market")
+            ]
+            if (
+                len(protection) == 1
+                and abs(
+                    float(protection[0].get("qty") or 0)
+                    - float(protection[0].get("filled_qty") or 0)
+                    - h["qty"]
+                )
+                <= 1e-8
             ):
                 continue
             if active:

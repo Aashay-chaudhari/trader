@@ -1,3 +1,20 @@
+# Current release check — November 7, 2026
+
+The October 31 material below is preserved as historical release evidence.
+The actual one-share paper execution gate passed November 2 after that repair.
+Six observed complete sessions are now recorded; strategy profitability remains
+unproven. CURRENT_STATE.md describes the current evidence and limitations.
+
+November 7 work adds useful background analyst/reviewer jobs with an explicit
+50–80% account-usage objective, prospective experiment funnel/exit integrity,
+phase/attempt diagnostics, scoped job recovery, accounting receipts and honest
+weekend status. Core trading/risk/promotion constraints remain fixed.
+The initial live weekly meter was 2%; reaching a target requires a later meter
+receipt, not extrapolation from raw tokens. Final validation/activation receipts
+are recorded in IMPLEMENTATION_LOG.md.
+
+---
+
 # Release readiness — October 31, 2026 adaptive research upgrade
 
 The local paper execution/research system and seven-view GitHub Pages dashboard

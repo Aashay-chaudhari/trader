@@ -1,56 +1,59 @@
-# Current state — October 31, 2026
+# Current state — November 7, 2026
 
-Trader is a local, free-data, subscription-authenticated paper-trading research
-laboratory. GitHub Pages is a sanitized read-only dashboard; Python owns execution.
-The persistent vision remains REFACTOR_SCOPE.md.
+Trader is a local paper-trading research laboratory. Python owns execution,
+reconciliation, fixed risk and closing. Subscription-authenticated Codex roles
+provide research; GitHub Pages is a sanitized read-only dashboard.
 
-- Friday October 30 completed all 78 five-minute broker-confirmed coverage slots.
-  One full observed market session is now recorded. October 29 remains an operational
-  miss; recovery drills do not erase it.
-- Paper account remains $30,000 cash/equity, zero fills, no positions/open orders.
-  Three separate $10,000 allocations; options indicative-data research/shadow only.
-- Friday's execution-test order was canceled before its intended two-minute window
-  because ordinary cleanup treated its absent strategy plan as expired. The repair
-  persists and strictly identifies the operational intent, preserves bounded expiry
-  and verifies both entry/exit fills plus reconciliation before opening the gate.
-- The fill/exit gate is still pending. No market-session success is inferred from
-  regression tests. Next eligible check is the next actual regular trading session.
-- Fixed forward study: 174 intraday quote observations closed, 174 swing observations
-  remain open, and 12 XOM opportunities were not evaluable for missing valid quotes.
-  These are correlated research units, not filled trades or portfolio profits.
-  Study protocol/window/input history remain unchanged.
-- Friday research assessed six hypotheses: four accepted for further testing and
-  two held, with source-verification limits explicit. After the stricter October 31 source recheck, four catalogue cards were
-  reviewed for testing and thirteen held. The later observation-led audit added one
-  independently method-reviewed local hypothesis: current total five reviewed,
-  thirteen held. Eight existing filter challengers still have zero samples.
-- Daily/weekly/monthly reviews and maintenance completed; no strategy changes or
-  promotions. Operational evidence now includes confirmed order states, timestamps,
-  execution-check outcomes and incident details. Proposals persist separately from
-  automated filter-only maintenance. A follow-up preserves Friday's original review.
-- The lingering systemd service, hidden Windows WSL host and independent watchdog
-  remain the runtime/recovery owners. GitHub Actions runs tests and deploys Pages.
+## Recorded operating evidence
 
-Verification/deployment receipts: IMPLEMENTATION_LOG.md and READINESS.md.
-Private `.runtime/` and `.env` remain local. No live endpoint, paid fallback, increased
-risk/quota limits or automatic kernel-editing authority has been added.
+- Six fully observed market sessions: October 30 and November 2–6, all 78/78
+  broker-confirmed five-minute slots. October 29 remains an operational miss.
+- The bounded one-share SPY execution check passed November 2 at 09:35:37 ET:
+  one entry fill, one exit fill, no remaining position/open order. This follows
+  the October 31 cleanup repair. Old pending diagnoses are historical snapshots.
+  The newly revised November 7 execution kernel requires a separate bounded
+  regular-session acceptance check; historical success remains preserved.
+- Latest checked paper equity/cash is $29,999.84, versus $30,000 initially.
+  Strategy entries and promotions remain zero; the two fills were operational.
+  The fill prices explain $0.13 loss; read-only account activities identify
+  another $0.03 of posted CAT/REG fees. Branch fee attribution must retain
+  the broker activity evidence and may not be invented from the residual.
+  Both verified fees were explicitly booked once on November 7; branch and broker
+  cash now agree exactly at $29,999.84. Future intake does not auto-book fees.
+- Twenty research cards: six reviewed for testing, fourteen held. Eight plan-filter
+  challengers have zero samples because no valid parent plans were produced.
+  Separate fixed/adaptive observations are not substitute challenger evidence.
+- Three immutable adaptive studies are collecting prospective observations.
+  The USO study has a retained historical discrepancy: prose says 120 sessions,
+  structured contract and actual schedule say 60. No frozen definitions or prior
+  results are rewritten; this discrepancy limits interpretation of that study.
+- Recent faults include infeasible model-generated study specifications, broker
+  transport/timeouts and a stale weekend halt label. Protection remains Python-owned.
 
-October 31 quality upgrade: full research input/output capture and a daily audit
-now feed retrospectives, maintenance and a durable developer backlog. Research has
-exact three-session inputs and completed-minute IEX features when available;
-source checks have explicit attestation gates. No-exposure pulses use one midday
-update, and identical-evidence period rollups avoid redundant calls. The original
-Friday records and frozen study remain intact; fill/exit verification is pending.
+## November 7 refinement
 
-October 31 adaptive engine audit: continuous observation-led discovery now designs
-independently reviewed declarative studies without depending on trade plans. Two
-intraday comparison contracts for one hypothesis are registered over 60 actual
-entry sessions, November 2 through January 28, with 720 future opportunities and
-zero outcomes. The source-supported four cards and the new local conjecture carry
-distinct evidence checks. No strategy was promoted or order submitted by the audit.
+User requested substantially more useful research, with a 50–80% weekly allowance
+objective and the existing 20% account reserve. The initial live meter was 2% used.
+This is an account-wide percentage, not a repo-attributable token denominator.
 
-The Project/Strategy lab views now show account returns, explicit friction stress,
-prospective verified drawdown, research bottlenecks, actual observations and adaptive
-studies. Deployed research fixes receive later-session mechanical-effect assessments.
-Broader nightly application rewrites remain a reviewed release task. Details and
-remaining limitations: ADAPTIVE_ENGINE_AUDIT.md.
+The release adds focused off-hours/weekend analyst/reviewer work, durable evidence
+identities and bounded retries; reviewed findings feed future briefs. It adds
+prospective challenger eligibility diagnostics, completed-versus-missing exit
+integrity, feasible-study prompt guidance, and complete input-packet budgeting.
+Failure records identify attempts, phases and safe validation paths. Broker faults
+identify sanitized routes. Weekend mode is recomputed from reconciliation.
+
+The background allowance is separate from core decision/review call slots.
+All roles retain the 80% weekly account stop, no paid fallback, no live endpoint,
+and fixed risk/promotion gates. No research quota creates a trade requirement.
+Repeated unchanged evidence does not justify repeated calls. Weekly consumption
+is a target; current meter receipts and useful outcomes must demonstrate progress.
+
+Release validation and activation receipts are appended to IMPLEMENTATION_LOG.md.
+A code/test receipt never substitutes for later-session observed improvement.
+Private state and raw artifacts remain under ignored .runtime/.
+
+Execution review also repaired confirmed-terminal exit retries, overnight intraday
+recovery, pending-order ownership/quantity checks, nonfinite broker data rejection,
+exact protection coverage and rounded-price sizing. New-version market acceptance
+is pending; fake-broker regressions are not an actual future-session receipt.

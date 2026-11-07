@@ -79,7 +79,7 @@ $2,000 position-notional cap and five symbols per branch. Actual losses can exce
 orders are never counted as filled holdings. Unknown positions/orders/cash mismatches
 halt new entries. Symbol ownership is exclusive across branches initially.
 
-The project may use up to 80% of weekly account allowance, with 20% reserved.
+The project targets useful work toward 50–80% of weekly account allowance, with a hard 80% admission stop and 20% reserved.
 Account-wide quota and project task tokens are displayed separately. Calls have
 runtime/search/cycle/output ceilings; routine numerical checks need no model.
 No automatic purchases, paid fallbacks, or reset-credit consumption occur.
@@ -95,7 +95,7 @@ Actions runs tests and deploys Pages only. Legacy cloud trading/reminder/reset
 workflows are retained outside the active workflows directory. The older Python
 agents remain for reference and regression coverage; the CLI uses only the v2 runtime.
 
-Position reviews are batched hourly. Four daily model-call slots and a portion of
+Position reviews are batched hourly. Four core daily model-call slots and a portion of
 the paced daily quota are reserved for after-close review/maintenance. Calendar
 checks include broker-session confirmation and clock drift; CLI outages cannot
 stop Python reconciliation and closing. Promoted filters have a fixed 2%
@@ -142,3 +142,12 @@ as forward evidence. The dashboard shows the audit and explicit source-review st
 
 The [adaptive engine audit](ADAPTIVE_ENGINE_AUDIT.md) records the return objective,
 observation-driven discovery, prospective tests, autonomy boundaries and limitations.
+
+
+Focused background research runs on weekends and off-hours when the worker is
+free. It investigates actual source/event gaps, data lineage, experiment sampling,
+accounting and operational failures, with a separate independent reviewer and
+bounded attempts. Accepted findings feed later briefs with expiry and uncertainty;
+they cannot create trades or promote strategies. Core model-call slots remain
+separate from the background allowance. Quota percentages describe account-wide
+usage, while task tokens are measured independently. See SYSTEM_GUIDE.md.

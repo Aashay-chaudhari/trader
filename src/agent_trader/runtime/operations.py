@@ -7,13 +7,14 @@ from datetime import datetime, timezone
 
 from .config import ET
 from .store import utc_now
+from .engine import current_execution_verified
 
 
 def operational_evidence(day, store):
     start = datetime.fromisoformat(day).replace(tzinfo=ET).astimezone(timezone.utc).isoformat()
     selected = store.rows(
         "SELECT symbol,branch,side,qty,status,filled,notional,plan_id,at,payload FROM orders "
-        "WHERE at>=? OR status NOT IN ('filled','canceled','expired','rejected','replaced','done_for_day') "
+        "WHERE at>=? OR status NOT IN ('filled','canceled','expired','rejected','replaced') "
         "ORDER BY at DESC LIMIT 16",
         (start,),
     )
@@ -82,6 +83,7 @@ def operational_evidence(day, store):
                     for k in ("code", "reason", "summary", "errors", "error_type")
                     if k in p
                 },
+                "operation": p.get("operation"),
             }
         )
     findings = []
@@ -93,19 +95,35 @@ def operational_evidence(day, store):
             {k: p[k] for k in ("id", "state", "summary", "evidence", "verification") if k in p}
         )
     ready = store.get("readiness", {})
+    latest_passed = store.rows(
+        "SELECT key,value FROM kv WHERE key LIKE 'smoke:____-__-__' "
+        "AND json_extract(value,'$.state')='passed' ORDER BY key DESC LIMIT 1"
+    )
+    verified_receipt = None
+    if latest_passed:
+        p = json.loads(latest_passed[0]["value"])
+        verified_receipt = {
+            "day": latest_passed[0]["key"].split(":", 1)[1],
+            **{k: p.get(k) for k in ("state", "verified_at", "entry_filled_qty", "exit_filled_qty")},
+            "scope": "Most recent historical execution-gate receipt; not a trade in the review period.",
+        }
     result = {
         "snapshot_scope": "Current operational state and later diagnoses at as_of; do not treat them as knowledge available during an earlier reviewed period.",
         "as_of": utc_now(),
         "period_start_utc": start,
         "execution_verified": bool(ready.get("execution_verified")),
         "execution_verified_at": ready.get("execution_verified_at"),
+        "current_execution_verified": current_execution_verified(ready),
+        "required_execution_kernel": ready.get("required_execution_kernel"),
+        "verified_execution_kernel": ready.get("verified_execution_kernel"),
+        "latest_verified_execution_check": verified_receipt,
         "reconciled": store.get("reconciled", False),
         "last_reconciled": store.get("last_reconciled"),
         "reconciliation_errors": store.get("reconciliation_errors", [])[:8],
         "broker_open_orders": store.get("broker_open_orders"),
         "execution_checks": checks,
         "order_status_counts": store.rows(
-            "SELECT status,count(*) n FROM orders WHERE at>=? OR status NOT IN ('filled','canceled','expired','rejected','replaced','done_for_day') GROUP BY status",
+            "SELECT status,count(*) n FROM orders WHERE at>=? OR status NOT IN ('filled','canceled','expired','rejected','replaced') GROUP BY status",
             (start,),
         ),
         "selected_orders": orders,
@@ -117,7 +135,7 @@ def operational_evidence(day, store):
         "recent_incident_details": incidents,
         "diagnosed_findings": findings,
         "maintenance_scope": "Automated code maintenance may edit only the pure adaptive strategy filter. Runtime/operational repairs are durable proposals for developer review, never automatic changes to the kernel.",
-        "evidence_contract": "Submitted, cancellation-requested, broker-confirmed terminal status and reconciled fills are distinct. A tested code repair is not a successful live-session fill/exit. Ledger confirmations are as of last_reconciled; do not call available terminal states unknown. Strategy abstention alone does not prove profitable judgment.",
+        "evidence_contract": "Submitted, cancellation-requested, broker-confirmed terminal status and reconciled fills are distinct. A tested code repair is not a successful live-session fill/exit. The latest_verified_execution_check is actual historical evidence; old diagnosed findings marked pending are historical statements, not authoritative current gate status. Ledger confirmations are as of last_reconciled; do not call available terminal states unknown. Strategy abstention alone does not prove profitable judgment.",
     }
     original_sizes = {
         k: len(result[k])

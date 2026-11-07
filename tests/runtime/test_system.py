@@ -61,7 +61,10 @@ def test_jobs_are_idempotent_and_recoverable(store):
     store.job_end("morning", True, {})
     assert not store.job_start("morning")
     assert store.job_start("other")
-    store.recover_jobs()
+    # A restart elsewhere cannot declare this still-live owner interrupted.
+    assert store.recover_jobs() == 0
+    assert not store.job_start("other")
+    store.job_end("other", False, {})
     assert store.job_start("other")
     store.job_end("other", False, {})
     assert not store.job_start("other")

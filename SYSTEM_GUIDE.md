@@ -294,3 +294,48 @@ budgets retain complete records; oversized inputs fail before a model call. Broa
 runtime maintenance remains a developer release task, not unattended kernel mutation.
 Post-change mechanics are assessed only on later completed sessions, with preserved
 baseline metadata and explicit evidence scope. See ADAPTIVE_ENGINE_AUDIT.md.
+
+
+## Focused background research — November 7
+
+Weekends, overnight before 07:00 ET, and after the actual close plus 90 minutes,
+the free worker can investigate unresolved retained evidence. Core daily/weekly
+reviews receive scheduling priority. The queue covers event/source verification,
+company-specific coverage, feature lineage, sampling, accounting and reliability.
+Each analyst report requires a fresh independent reviewer. Accepted reports have
+explicit validity windows and enter research context only; they cannot submit
+orders, promote filters, edit code, or rewrite frozen studies.
+
+Unchanged question/evidence combinations are deduplicated. At most two requested
+revisions and two attempts per stage are allowed, with a 30-minute failure cooldown.
+A queue with no distinct useful work waits for new evidence. The System/Project
+views show measured usage, question status and reviewed outcomes.
+
+The user-requested weekly objective is 50–80% account usage, with admission blocked
+at 80% and no paid fallback/reset-credit use. Core work retains its 16 ordinary /
+20 decision /24 review daily attempt limits; background work has up to 96 separate
+attempts per day. Fresh account telemetry is checked before inference and streamed
+limit updates can interrupt a turn. Quota is account-wide and rounded: raw task
+tokens are measured separately, and an in-flight turn can cross a reported limit.
+An objective is not a guarantee that sufficient useful work or allowance exists.
+
+Use .runtime/agent-pause.flag to pause all model jobs while Python protection
+continues. Existing maintenance/watchdog procedures remain unchanged.
+
+
+## Execution release verification and recovery
+
+A release that changes execution semantics sets a new EXECUTION_KERNEL identifier.
+Preflight records that required version; historical successful round trips retain
+their original flag/time and receipts. Normal entries require a verified matching
+version. The next eligible regular session runs the same bounded one-share paper
+check; off-hours commands cannot manufacture acceptance. A previous version's
+same-day check cannot cause a second daily entry or certify the new release.
+
+Confirmed terminal rejected/canceled exits can be retried with distinct persisted
+attempt IDs. Unconfirmed or nonterminal exits retain their identity and block a
+duplicate. `done_for_day` remains nonterminal. Reconciliation must still pass after
+canceling protection. Carried intraday exposure is recovered at the next confirmed
+market session; liquidation takes priority over quote-dependent stop repair.
+Broker quantity/identity changes and nonfinite fields block automatic accounting
+or new execution until reviewed. These checks do not guarantee an available fill.

@@ -9,11 +9,14 @@ import tempfile
 import time
 from datetime import UTC, datetime, timedelta
 
-from .agent import CodexRPC, run_task
+from .agent import CodexRPC, record_application_outcome, run_task
 from .broker import Broker
 from .config import ET
 from .cohorts import ForwardLab
-from .engine import Engine, TERMINAL, order_id, quote_values, timestamp
+from .engine import (
+    Engine, TERMINAL, EXECUTION_KERNEL, current_execution_verified,
+    order_id, quote_values, timestamp,
+)
 from .experiments import Experiments
 from .models import (
     Brief,
@@ -43,17 +46,33 @@ def session_times(calendar, day):
     )
 
 
-def worker(config, role, context, day):
+def worker(config, role, context, day, task_key=None):
     store = Store(config.state_dir / "trader.sqlite3")
     try:
-        if role == "research":
+        if role == "quota_refresh":
+            with CodexRPC(config) as rpc:
+                return rpc.rate_limits()
+        if role == "accounting_refresh":
+            from .accounting import Accounting
+
+            broker = Broker(config)
+            try:
+                return Accounting(store).refresh(broker)
+            finally:
+                broker.client.close()
+        if role in ("deep_research", "deep_research_review"):
+            from .research_work import prepare_task
+
+            prompt, schema = prepare_task(store, context, review=role == "deep_research_review")
+            model, effort, searches = config.research_model, "high", 16
+        elif role == "research":
             packet = market_packet(Broker(config), store)
             prompt, schema, model, effort, searches = (
                 research_prompt(day, packet, store),
                 Brief,
                 config.research_model,
                 "high",
-                8,
+                24,
             )
         elif role == "exploration":
             from .exploration import exploration_prompt, prepare_screen
@@ -138,7 +157,12 @@ means hold with an explicit concern; broker-held protection remains active.
             )
         else:
             raise ValueError("Unknown role")
-        return run_task(config, role, prompt, schema, model, effort, day, searches=searches)
+        return run_task(
+            config, role, prompt, schema, model, effort, day, searches=searches,
+            cycles=45 if role in ("research", "deep_research", "deep_research_review") else 25,
+            task_key=task_key,
+            scope=task_key if role in ("deep_research", "deep_research_review") else None,
+        )
     finally:
         store.close()
 
@@ -168,9 +192,9 @@ class Supervisor:
         self.last_publish = 0
         self.stopping = False
 
-    def incident(self, code, reason):
+    def incident(self, code, reason, details=None):
         LOG.warning("%s: %s", code, reason)
-        self.store.event("incident", {"code": code, "reason": reason})
+        self.store.event("incident", {"code": code, "reason": reason, **({"operation": details} if details else {})})
         day = datetime.now(ET).date().isoformat()
         notify(
             self.config,
@@ -209,7 +233,7 @@ class Supervisor:
             return False
         self.store.set("active_task", {"key": key, "role": role, "started": utc_now()})
         self.task = (key, role, context, day)
-        self.future = self.pool.submit(worker, self.config, role, context, day)
+        self.future = self.pool.submit(worker, self.config, role, context, day, key)
         return True
 
     def finish_task(self):
@@ -219,7 +243,30 @@ class Supervisor:
         try:
             result = self.future.result()
             original_result = json.loads(json.dumps(result))
-            if role == "research":
+            if role == "quota_refresh":
+                from .budget import account_limit_reason
+
+                self.store.set("quota", result)
+                self.store.set("quota_refresh_error", None)
+                self.store.set("entry_budget_blocked", (
+                    bool(account_limit_reason(result))
+                    or not self.store.get("readiness", {}).get("models_available", False)
+                ))
+            elif role == "accounting_refresh":
+                self.store.set("accounting_refresh_day", day)
+                self.store.event("accounting_refreshed", {
+                    "summary": "Broker activity receipts refreshed; branch cash unchanged.",
+                    "fee_count": result.get("fee_count", 0),
+                    "cash_bridge": result.get("cash_bridge", {}),
+                })
+            elif role in ("deep_research", "deep_research_review"):
+                from .research_work import record_analysis, record_review
+
+                if role == "deep_research":
+                    record_analysis(self.store, context, result, day)
+                else:
+                    record_review(self.store, context, result, day)
+            elif role == "research":
                 # Never allow a research result from another session/date to enter
                 # the live queue. Expired plans remain visible but cannot execute.
                 self.store.set("brief", result)
@@ -404,19 +451,34 @@ class Supervisor:
 
                 stage_change(self.config, self.store, result)
             self.store.job_end(key, True, {"role": role, "completed": utc_now()})
-            self.record_quality(day, role, original_result, key, "applied")
+            if role not in ("quota_refresh", "accounting_refresh"):
+                record_application_outcome(self.store, key, "accepted")
+                self.record_quality(day, role, original_result, key, "applied")
         except Exception as exc:
-            if "original_result" in locals():
+            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh"):
+                record_application_outcome(
+                    self.store, key, "rejected", getattr(exc, "validation_code", None)
+                )
+            if role in ("deep_research", "deep_research_review"):
+                from .research_work import record_failure
+
+                record_failure(self.store, key, exc, datetime.now(ET))
+            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh"):
                 self.record_quality(day, role, original_result, key, "rejected")
             if role in ("research", "decision", "position_review", "pulse"):
                 self.store.set("entry_budget_blocked", True)
             if role == "research":
                 self.store.set("needs_research", True)
             self.store.job_end(key, False, {"error_type": type(exc).__name__})
-            self.incident(
-                "agent_" + role,
-                f"{role.title()} did not complete ({type(exc).__name__}). Protective routines continue; new plans require valid research.",
-            )
+            if role == "quota_refresh":
+                self.store.set("quota", {"at": utc_now(), "windows": [], "ordinary_usage_allowed": False})
+                self.store.set("quota_refresh_error", type(exc).__name__)
+                self.store.set("entry_budget_blocked", True)
+            else:
+                self.incident(
+                    "agent_" + role,
+                    f"{role.title()} did not complete ({type(exc).__name__}). Protective routines continue; new plans require valid research.",
+                )
         finally:
             self.future = None
             self.task = None
@@ -430,6 +492,39 @@ class Supervisor:
             daily_audit(self.store, day, persist=True)
         except Exception as exc:
             LOG.warning("Research-quality capture deferred: %s", type(exc).__name__)
+
+    def launch_deep_research(self, now):
+        """Useful off-hours work; fresh quota is checked again in the worker."""
+        from .budget import budget_check
+        from .research_work import next_work
+
+        if self.future or (self.config.state_dir / "agent-pause.flag").exists():
+            return False
+        quota = self.store.get("quota", {})
+        try:
+            age = (now - timestamp(quota["at"])).total_seconds()
+        except (KeyError, TypeError, ValueError):
+            age = float("inf")
+        if age < -60 or age > 900:
+            # Meter refresh is read-only and runs on the background executor.
+            return self.launch(
+                "quota-refresh:" + now.strftime("%Y-%m-%d:%H:") + str(now.minute // 5),
+                "quota_refresh", {}, now.date().isoformat(),
+            )
+        day = now.date().isoformat()
+        if self.store.get("accounting_refresh_day") != day:
+            key = "accounting-refresh:" + day
+            prior = self.store.rows("SELECT state,attempts FROM jobs WHERE key=?", (key,))
+            if not prior and self.launch(key, "accounting_refresh", {}, day):
+                return True
+        work = next_work(self.store, now)
+        if not work:
+            return False
+        allowed, reason = budget_check(self.store, quota, work["role"], now)
+        self.store.set("background_budget", {"at": now.isoformat(), "allowed": allowed, "reason": reason})
+        if not allowed:
+            return False
+        return self.launch(work["key"], work["role"], work["context"], now.date().isoformat())
 
     def launch_period(self, role, day):
         from .quality import derive_period, record_artifact, daily_audit
@@ -490,15 +585,9 @@ class Supervisor:
                 self.config.maintenance_model,
             )
         )
-        quota_blocked = (
-            not quota.get("windows")
-            or not quota.get("ordinary_usage_allowed", True)
-            or any(
-                float(w.get("usedPercent", 0))
-                >= (80 if w.get("windowDurationMins", 0) >= 10000 else 90)
-                for w in quota.get("windows", [])
-            )
-        )
+        from .budget import account_limit_reason
+
+        quota_blocked = bool(account_limit_reason(quota))
         self.store.set("entry_budget_blocked", not models_ok or quota_blocked)
         readiness.update(
             {
@@ -510,6 +599,7 @@ class Supervisor:
                 "free_only": True,
                 "options_mode": "shadow_indicative",
                 "execution_verified": readiness.get("execution_verified", False),
+                "required_execution_kernel": EXECUTION_KERNEL,
             }
         )
         self.store.set("readiness", readiness)
@@ -517,8 +607,12 @@ class Supervisor:
 
     def smoke(self, now, opened, close):
         r = self.store.get("readiness", {})
-        if r.get("execution_verified"):
+        if current_execution_verified(r):
             return True
+        if now < opened or now >= close:
+            return False
+        if r.get("required_execution_kernel", EXECUTION_KERNEL) != EXECUTION_KERNEL:
+            return False  # This binary cannot certify another required release.
         day = now.date().isoformat()
         key = "smoke:" + day
         stage = self.store.get(key, {})
@@ -564,6 +658,7 @@ class Supervisor:
                     "state": "submitted",
                     "expires_at": (now + timedelta(minutes=2)).isoformat(),
                     "entry_client_id": payload["client_order_id"],
+                    "execution_kernel": EXECUTION_KERNEL,
                 },
             )
             self.engine.submit_intent(payload, "intraday", "operational-smoke-" + day)
@@ -594,33 +689,48 @@ class Supervisor:
             )
             if (
                 reconciled
+                and stage.get("execution_kernel") == EXECUTION_KERNEL
                 and order["filled"] == 1
                 and sum(e["filled"] for e in exits) == 1
                 and not self.store.rows("SELECT * FROM holdings WHERE branch='intraday'")
                 and not [o for o in self.broker.orders() if o["symbol"] == "SPY"]
             ):
+                verified_at = utc_now()
+                history = self.store.get("execution_verification_history", [])
+                if r.get("execution_verified") and r.get("execution_verified_at") and not history:
+                    history.append({
+                        "kernel": r.get("verified_execution_kernel", "legacy_unversioned"),
+                        "verified_at": r["execution_verified_at"],
+                        "basis": "Prior persisted verification; original order receipts remain retained.",
+                    })
                 r["execution_verified"] = True
-                r["execution_verified_at"] = utc_now()
-                self.store.set("readiness", r)
-                self.store.set(
-                    key,
-                    {
-                        **stage,
-                        "state": "passed",
-                        "verified_at": utc_now(),
-                        "entry_filled_qty": 1,
-                        "exit_filled_qty": 1,
-                    },
-                )
-                self.store.event(
-                    "execution_check",
-                    {
-                        "summary": "One-share paper entry and exit fills reconciled; execution gate passed.",
-                        "day": day,
-                        "entry_filled_qty": 1,
-                        "exit_filled_qty": 1,
-                    },
-                )
+                if not r.get("execution_verified_at"):
+                    r["execution_verified_at"] = verified_at
+                r["verified_execution_kernel"] = EXECUTION_KERNEL
+                r["verified_execution_kernel_at"] = verified_at
+                receipt = {
+                    "kernel": EXECUTION_KERNEL, "verified_at": verified_at, "day": day,
+                    "entry_filled_qty": 1, "exit_filled_qty": 1,
+                    "basis": "Broker-confirmed bounded paper round-trip and reconciliation.",
+                }
+                with self.store.transaction():
+                    self.store.set("readiness", r)
+                    self.store.set("execution_verification_history", [*history, receipt])
+                    self.store.set(
+                        key,
+                        {
+                            **stage, "state": "passed", "verified_at": verified_at,
+                            "entry_filled_qty": 1, "exit_filled_qty": 1,
+                        },
+                    )
+                    self.store.event(
+                        "execution_check",
+                        {
+                            "summary": "One-share paper entry and exit fills reconciled; execution gate passed.",
+                            "day": day, "execution_kernel": EXECUTION_KERNEL,
+                            "entry_filled_qty": 1, "exit_filled_qty": 1,
+                        },
+                    )
                 notify(
                     self.config,
                     self.store,
@@ -770,14 +880,20 @@ class Supervisor:
             self.maybe_publish()
             return
         if not times:
-            self.store.set(
-                "status", "Market holiday or weekend. Existing broker protection remains in place."
-            )
+            valid = self.engine.reconcile()
+            # A successful weekend check must clear a prior transient halt label,
+            # while an actual mismatch must remain visible and block entries.
+            self.store.set("mode", "market_closed" if valid else "halted")
+            self.store.set("market_open", False)
+            self.store.set("status", (
+                "Market holiday or weekend. Reconciled; background research is available."
+                if valid else "Market closed. Reconciliation failed; new entries remain blocked."
+            ))
             self.store.set(
                 "next_action", "Next trading session: automatic startup and calendar refresh."
             )
-            self.engine.reconcile()
             self.engine.cancel_entries(now, now + timedelta(days=1))
+            self.cohort_check("background research", lambda: self.launch_deep_research(now))
             self.maybe_publish()
             return
         opened, close = times
@@ -814,7 +930,7 @@ class Supervisor:
         ready = self.store.get("readiness", {})
         pilot = (
             valid
-            and ready.get("execution_verified")
+            and current_execution_verified(ready)
             and self.config.execution
             and not self.store.get("entry_budget_blocked", False)
         )
@@ -850,7 +966,6 @@ class Supervisor:
                 )
                 self.maybe_publish()
                 return
-            self.engine.ensure_protection()
             slot = int((now - opened).total_seconds() // 300)
             self.cohort_check(
                 "session_health",
@@ -859,7 +974,16 @@ class Supervisor:
                     (day, slot, now.isoformat(), 1, int(self.store.get("brief_day") == day)),
                 ),
             )
-            if not ready.get("execution_verified") and self.store.get("market_open"):
+            overdue = self.engine.overdue_intraday(now)
+            if overdue:
+                self.store.set("mode", "halted")
+                self.store.set("status", "Recovering intraday exposure carried beyond its entry session.")
+                self.store.set("next_action", "Verify paper exit fills and reconciliation before resuming entries.")
+                self.engine.close_intraday()
+                self.maybe_publish()
+                return
+            if (not current_execution_verified(ready) and self.store.get("market_open")
+                    and now < close - timedelta(minutes=12)):
                 try:
                     self.smoke(now, opened, close)
                 except Exception as exc:
@@ -873,6 +997,7 @@ class Supervisor:
                 self.engine.close_intraday()
                 self.finish_shadow(now, closing=True)
             else:
+                self.engine.ensure_protection()
                 self.store.set(
                     "status",
                     "Monitoring the session. Agent reviews material changes and eligible setups.",
@@ -1006,6 +1131,11 @@ class Supervisor:
                 if not self.store.get("summary_recorded:" + day):
                     self.store.event("daily_summary", {"summary": summary})
                     self.store.set("summary_recorded:" + day, True)
+        # Leave the single worker free for morning and market-session priorities.
+        # After-close reviews above receive first priority; overnight work stops
+        # launching 45 minutes before the morning research window.
+        if not self.future and (now.hour < 7 or now >= close + timedelta(minutes=90)):
+            self.cohort_check("background research", lambda: self.launch_deep_research(now))
         self.maybe_publish()
 
     def finish_shadow(self, now, closing=False):
@@ -1044,6 +1174,10 @@ class Supervisor:
         session = session_times(calendar, now.date().isoformat())
         self.benchmarks(quotes, now)
         brief = self.store.get("brief", {})
+        self.cohort_check(
+            "filter sampling funnel",
+            lambda: self.experiments.record_funnel(plans, exploration_plans, quotes, now),
+        )
         from agent_trader.strategies.adaptive import candidate_filter
 
         for h in self.store.rows("SELECT * FROM holdings"):
@@ -1229,7 +1363,7 @@ class Supervisor:
         return False
 
     def launch_candidate(self, now, close):
-        if not self.store.get("readiness", {}).get("execution_verified") or not self.store.get(
+        if not current_execution_verified(self.store.get("readiness", {})) or not self.store.get(
             "reconciled"
         ):
             return False
@@ -1278,7 +1412,10 @@ class Supervisor:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise SystemExit("Supervisor is already running")
-        self.store.recover_jobs()
+        from .store import process_owner
+
+        self.store.job_owner = process_owner("supervisor")
+        self.store.recover_jobs(owner_kind="supervisor")
         self.store.set("preflight_day", None)
         self.store.event(
             "startup", {"summary": "Local supervisor started; recovering durable state."}
@@ -1301,6 +1438,7 @@ class Supervisor:
                 self.incident(
                     "runtime_" + type(exc).__name__,
                     f"Runtime check failed ({type(exc).__name__}); retrying in 30 seconds.",
+                    getattr(exc, "operation_details", None),
                 )
                 try:
                     export(self.config, self.store)

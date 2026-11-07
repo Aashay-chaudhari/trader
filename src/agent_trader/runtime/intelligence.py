@@ -458,7 +458,9 @@ def objective_scorecard(store, now=None):
         ),
     }
     diagnostics = []
-    if not store.get("readiness", {}).get("execution_verified"):
+    from .engine import current_execution_verified
+
+    if not current_execution_verified(store.get("readiness", {})):
         diagnostics.append(
             {
                 "id": "execution_unverified",
@@ -527,6 +529,7 @@ def objective_scorecard(store, now=None):
             "confirmed_fill_events": fills,
             "filled_orders": store.rows("SELECT count(*) n FROM orders WHERE filled>0")[0]["n"],
             "execution_verified": bool(store.get("readiness", {}).get("execution_verified")),
+            "current_execution_verified": current_execution_verified(store.get("readiness", {})),
             "cash_comparator_return": 0.0,
             "market_references": references,
             "basis": "Latest reconciled broker account equity versus $30,000. Drawdown uses only prospective verified marks; legacy marks lack reconciliation flags. Cash comparator assumes zero yield.",

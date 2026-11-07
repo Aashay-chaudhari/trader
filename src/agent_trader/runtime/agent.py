@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import selectors
@@ -9,12 +10,84 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .budget import account_limit_reason, budget_check
 from .config import ET
 from .store import dumps, utc_now
 
 
 class AgentUnavailable(RuntimeError):
     pass
+
+
+def validation_diagnostics(exc, schema):
+    """Field/type diagnostics without Pydantic's echoed inputs or error context."""
+    from pydantic import ValidationError
+
+    if not isinstance(exc, ValidationError):
+        return {}
+    fields = set()
+
+    def collect(value):
+        if isinstance(value, dict):
+            fields.update(value.get("properties", {}))
+            for child in value.values():
+                collect(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect(child)
+
+    collect(schema)
+    # Only developer-authored messages in this explicit map may become public
+    # categories. Arbitrary exception messages can contain model/source content.
+    known_rules = {
+        "Value error, Signal target exceeds the maximum opportunities in the fixed study":
+            "signal_target_exceeds_opportunities",
+        "Value error, External factual claims require cited sources": "missing_external_sources",
+        "Value error, Observation-led ideas need recorded evidence, alternatives and a prediction":
+            "incomplete_observation_evidence",
+    }
+    errors = exc.errors(include_input=False, include_url=False, include_context=False)
+    details = []
+    for error in errors[:20]:
+        detail = {
+            "path": [
+                part if isinstance(part, int) or part in fields else "<unrecognized-field>"
+                for part in error.get("loc", ())[:12]
+            ],
+            "type": error["type"],
+        }
+        if error.get("msg") in known_rules:
+            detail["rule"] = known_rules[error["msg"]]
+        details.append(detail)
+    return {"validation_errors": details, "validation_error_count": len(errors)}
+
+
+def bounded_failure_reply(payload, raw_text=None):
+    """Retain bounded invalid evidence privately; never export this object."""
+    text = raw_text if raw_text is not None else dumps(payload)
+    if len(text) <= 100000 and raw_text is None:
+        return payload
+    return {
+        "text_excerpt": text[:100000],
+        "characters": len(text),
+        "sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "truncated": len(text) > 100000,
+        "format": "unparsed_reply" if raw_text is not None else "oversize_json",
+    }
+
+
+def normalized_rate_limits(result):
+    buckets = result.get("rateLimitsByLimitId") or {"codex": result.get("rateLimits", {})}
+    windows = []
+    for key, bucket in buckets.items():
+        for name in ("primary", "secondary"):
+            window = bucket.get(name)
+            if window:
+                windows.append({"bucket": key, "kind": name, **window})
+    return {
+        "at": utc_now(), "windows": windows,
+        "ordinary_usage_allowed": result.get("ordinaryUsageAllowed", True),
+    }
 
 
 def response_schema(model):
@@ -154,24 +227,27 @@ class CodexRPC:
             self.backlog.append(message)
 
     def rate_limits(self):
-        result = self.rpc("account/rateLimits/read")
-        buckets = result.get("rateLimitsByLimitId") or {"codex": result.get("rateLimits", {})}
-        windows = []
-        for key, bucket in buckets.items():
-            for name in ("primary", "secondary"):
-                w = bucket.get(name)
-                if w:
-                    windows.append({"bucket": key, "kind": name, **w})
-        return {
-            "at": utc_now(),
-            "windows": windows,
-            "ordinary_usage_allowed": result.get("ordinaryUsageAllowed", True),
-        }
+        return normalized_rate_limits(self.rpc("account/rateLimits/read"))
 
     def models(self):
         return self.rpc("model/list", {"limit": 100}).get("data", [])
 
     def run(self, thread_id, prompt, model, effort, schema, *, max_searches=8, max_cycles=25):
+        # Kept on the RPC instance so an interruption cannot discard reported
+        # tokens, turn identity or the phase that failed before run() returns.
+        self.last_attempt = {"phase": "thread_setup", "state": "started", "usage": {}}
+        try:
+            result = self._run(
+                thread_id, prompt, model, effort, schema,
+                max_searches=max_searches, max_cycles=max_cycles,
+            )
+            self.last_attempt["state"] = "completed"
+            return result
+        except Exception:
+            self.last_attempt["state"] = "failed"
+            raise
+
+    def _run(self, thread_id, prompt, model, effort, schema, *, max_searches=8, max_cycles=25):
         if thread_id:
             result = self.rpc(
                 "thread/resume",
@@ -198,6 +274,7 @@ class CodexRPC:
                 },
             )
         thread_id = result["thread"]["id"]
+        self.last_attempt.update({"thread_id": thread_id, "phase": "turn_start"})
         self.backlog.clear()
         turn = self.rpc(
             "turn/start",
@@ -212,6 +289,7 @@ class CodexRPC:
             },
         )
         turn_id = turn["turn"]["id"]
+        self.last_attempt.update({"turn_id": turn_id, "phase": "turn_stream"})
         end = time.monotonic() + self.config.max_agent_seconds
         output, usage, cycles, searches = "", {}, 0, 0
         budget_notice = False
@@ -220,6 +298,12 @@ class CodexRPC:
         pending = list(self.backlog)
         self.backlog.clear()
         while True:
+            self.last_attempt["counters"] = {
+                "searches": searches,
+                "cycles": cycles,
+                "budget_notice": budget_notice,
+                "budget_notice_status": budget_notice_status,
+            }
             msg = pending.pop(0) if pending else self.receive(end)
             if msg.get("id") == 999998:
                 budget_notice_status = "rejected" if msg.get("error") else "accepted"
@@ -227,7 +311,23 @@ class CodexRPC:
             params = msg.get("params", {})
             if params.get("threadId", thread_id) != thread_id:
                 continue
+            if params.get("turnId", turn_id) != turn_id:
+                continue
             method = msg.get("method", "")
+            if method == "turn/completed" and params.get("turn", {}).get("id", turn_id) != turn_id:
+                continue
+            if method == "account/rateLimits/updated":
+                quota = normalized_rate_limits(params)
+                self.last_attempt["quota"] = quota
+                reason = account_limit_reason(quota)
+                if reason:
+                    self.last_attempt["phase"] = "quota_interrupt"
+                    self.last_attempt["quota_stop_reason"] = reason
+                    self.send({
+                        "id": 999999, "method": "turn/interrupt",
+                        "params": {"threadId": thread_id, "turnId": turn_id},
+                    })
+                    raise AgentUnavailable(reason)
             if method == "item/started":
                 item = params.get("item", {})
                 cycles += 1
@@ -282,16 +382,25 @@ class CodexRPC:
                 item = params.get("item", {})
                 if item.get("type") == "agentMessage":
                     output = item.get("text", output)
+                    if len(output) > 100000:
+                        raise AgentUnavailable("Task output budget exhausted")
             if method == "thread/tokenUsage/updated":
                 usage = params.get("tokenUsage", {})
+                self.last_attempt["usage"] = usage
             if method == "turn/completed":
                 result_turn = params.get("turn", {})
+                self.last_attempt["turn_status"] = result_turn.get("status", "unknown")
                 if result_turn.get("status") != "completed":
                     raise AgentUnavailable("Codex turn failed or was interrupted")
                 break
+        self.last_attempt["phase"] = "reply_json"
+        self.last_attempt["raw_reply"] = output
+        payload = json.loads(output)
+        self.last_attempt.pop("raw_reply", None)
+        self.last_attempt["phase"] = "reply_complete"
         return (
             thread_id,
-            json.loads(output),
+            payload,
             usage,
             {
                 "searches": searches,
@@ -321,59 +430,46 @@ class CodexRPC:
         self.close()
 
 
-def budget_check(store, quota, role, now):
-    windows = quota.get("windows", [])
-    if not quota.get("ordinary_usage_allowed") or not windows:
-        return False, "Account quota unavailable or access limited"
-    weekly = [w for w in windows if w.get("windowDurationMins", 0) >= 10000]
-    if not weekly:
-        return False, "Weekly quota window unavailable"
-    w = weekly[0]
-    used, reset = float(w["usedPercent"]), int(w["resetsAt"])
-    key = f"quota-baseline:{reset}"
-    baseline = store.get(key)
-    if baseline is None or used < baseline - 1:
-        baseline = used
-        store.set(key, baseline)
-    # Includes other work since baseline: intentionally conservative attribution.
-    allowance_used = max(0, used - baseline)
-    if used >= 80 or allowance_used >= 80:
-        return False, "20% account reserve reached"
-    if any(float(x.get("usedPercent", 0)) >= 90 for x in windows):
-        return False, "Short-window quota nearly exhausted"
-    today = now.astimezone(ET).date().isoformat()
-    calls = store.rows("SELECT count(*) AS n FROM usage WHERE day=?", (today,))[0]["n"]
-    night_roles = (
-        "retrospective",
-        "maintenance",
-        "weekly",
-        "monthly",
-        "research_audit",
-        "research_audit_review",
-    )
-    critical_roles = ("decision", "position_review")
-    ceiling = 24 if role in night_roles else (20 if role in critical_roles else 16)
-    if calls >= ceiling:
-        return False, "Daily model-call ceiling reached"
-    reset_day = datetime.fromtimestamp(reset, timezone.utc).astimezone(ET).date()
-    import numpy as np
+def record_application_outcome(store, task_key, outcome, validation_code=None):
+    """Link application validation to inference without rewriting token evidence."""
+    if outcome not in ("accepted", "rejected"):
+        raise ValueError("Unsupported application outcome")
+    if not task_key:
+        return None
+    from .research_work import WORK_VALIDATION_CODES
 
-    trading_days = max(1, int(np.busday_count(now.astimezone(ET).date(), reset_day)) + 1)
-    day_key = f"quota-day:{today}:{reset}"
-    day_start = store.get(day_key)
-    if day_start is None:
-        day_start = used
-        store.set(day_key, day_start)
-    daily_allowance = max(1.0, (80 - day_start) / trading_days)
-    consumption = max(0, used - day_start)
-    multiplier = 1.0 if role in night_roles else (0.8 if role in critical_roles else 0.45)
-    if consumption >= daily_allowance * multiplier:
-        return False, "Paced daily quota allocation reached"
-    return True, "Within account and paced daily limits"
+    code = None
+    if outcome == "rejected":
+        code = (
+            validation_code
+            if isinstance(validation_code, str) and validation_code in WORK_VALIDATION_CODES
+            else "application_error"
+        )
+    with store.transaction():
+        row = store.db.execute(
+            "SELECT id,payload FROM usage WHERE json_extract(payload,'$.task_key')=? "
+            "ORDER BY id DESC LIMIT 1", (task_key,),
+        ).fetchone()
+        if row is None:
+            return None  # Data-only tasks have no inference attempt.
+        payload = json.loads(row["payload"])
+        if payload.get("state") != "completed" or payload.get("terminal_outcome") != "validated":
+            return None
+        prior = payload.get("application_outcome")
+        if prior in ("accepted", "rejected"):
+            return row["id"] if prior == outcome else None
+        payload.update({
+            "application_outcome": outcome,
+            "application_at": utc_now(),
+            "application_validation_code": code,
+        })
+        store.db.execute("UPDATE usage SET payload=? WHERE id=?", (dumps(payload), row["id"]))
+    return row["id"]
 
 
 def run_task(
-    config, role, prompt, response_model, model, effort, day, *, searches=8, cycles=25, scope=None
+    config, role, prompt, response_model, model, effort, day, *, searches=8, cycles=25,
+    scope=None, task_key=None
 ):
     from .store import Store
 
@@ -382,20 +478,53 @@ def run_task(
             "Complete evidence packet exceeds input budget; shrink whole records before calling the model"
         )
     store = Store(config.state_dir / "trader.sqlite3")
+    schema = response_schema(response_model)
+    schema_id = hashlib.sha256(dumps(schema).encode()).hexdigest()
+    prompt_id = hashlib.sha256(prompt.encode()).hexdigest()
+    # An explicit durable job key links retries even if refreshed evidence changes
+    # the prompt. Without one, only identical requests are grouped together.
+    request_id = hashlib.sha256(
+        dumps([day, role, scope, task_key or prompt_id, schema_id]).encode()
+    ).hexdigest()
+    phase = "quota_preflight"
     try:
         with CodexRPC(config) as rpc:
             before = rpc.rate_limits()
             store.set("quota", before)
-            allowed, reason = budget_check(store, before, role, datetime.now(timezone.utc))
+            # Independent probes and the daemon share this ledger. Admission and
+            # the counted reservation must be atomic across their connections;
+            # no network request or inference is performed under this lock.
+            with store.transaction():
+                admitted_at = datetime.now(timezone.utc)
+                usage_day = admitted_at.astimezone(ET).date().isoformat()
+                allowed, reason = budget_check(store, before, role, admitted_at)
+                if not allowed:
+                    store.set("entry_budget_blocked", True)
+                    store.event("budget_skip", {"role": role, "reason": reason})
+                else:
+                    previous = store.rows(
+                        "SELECT id FROM usage WHERE json_extract(payload,'$.request_id')=? "
+                        "ORDER BY id DESC LIMIT 1", (request_id,),
+                    )
+                    attempt = {
+                        "state": "started", "request_id": request_id,
+                        "task_key": task_key, "task_day": day,
+                        "schema_id": schema_id, "schema_name": response_model.__name__,
+                        "previous_attempt_id": "usage:" + str(previous[0]["id"]) if previous else None,
+                        "started_at": admitted_at.isoformat(),
+                    }
+                    cursor = store.db.execute(
+                        "INSERT INTO usage(at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,payload) VALUES(?,?,?,?,0,0,0,0,?)",
+                        (admitted_at.isoformat(), usage_day, role, model, dumps(attempt)),
+                    )
+                    reserved_id = cursor.lastrowid
+                    attempt["attempt_id"] = "usage:" + str(reserved_id)
+                    store.db.execute(
+                        "UPDATE usage SET payload=? WHERE id=?", (dumps(attempt), reserved_id)
+                    )
             if not allowed:
-                store.set("entry_budget_blocked", True)
-                store.event("budget_skip", {"role": role, "reason": reason})
                 raise AgentUnavailable(reason)
-            usage_cursor = store.db.execute(
-                "INSERT INTO usage(at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,payload) VALUES(?,?,?,?,0,0,0,0,?)",
-                (utc_now(), day, role, model, dumps({"state": "started"})),
-            )
-            usage_id = usage_cursor.lastrowid
+            usage_id = reserved_id
             # Give the reviewer fresh context rather than the researcher's thread.
             thread_key = (
                 f"thread:research_validation:{day}"
@@ -415,6 +544,7 @@ def run_task(
                 "research_validation",
                 "research_audit_review",
                 "probe_validation",
+                "deep_research_review",
             )
             rotated = bool(
                 thread_id
@@ -427,43 +557,62 @@ def run_task(
             if rotated:
                 thread_id = None
                 context = {}
+            phase = "inference"
             t, payload, usage, counters = rpc.run(
                 thread_id,
                 prompt,
                 model,
                 effort,
-                response_schema(response_model),
+                schema,
                 max_searches=searches,
                 max_cycles=cycles,
             )
             store.set(thread_key, t)
+            phase = "schema_validation"
             parsed = response_model.model_validate(payload)
-            available = [m.get("id") for m in rpc.models()]
-            readiness = store.get("readiness", {})
-            readiness["models_available"] = all(
-                m in available
-                for m in (
-                    config.research_model,
-                    config.decision_model,
-                    config.light_model,
-                    config.maintenance_model,
+            phase = "metadata_refresh"
+            metadata_errors = []
+            try:
+                available = [m.get("id") for m in rpc.models()]
+                readiness = store.get("readiness", {})
+                readiness["models_available"] = all(
+                    m in available
+                    for m in (
+                        config.research_model,
+                        config.decision_model,
+                        config.light_model,
+                        config.maintenance_model,
+                    )
                 )
-            )
-            store.set("readiness", readiness)
-            after = rpc.rate_limits()
+                store.set("readiness", readiness)
+            except Exception as refresh_error:
+                metadata_errors.append({
+                    "phase": "model_catalog_refresh", "error_type": type(refresh_error).__name__
+                })
+            try:
+                after = rpc.rate_limits()
+            except Exception as refresh_error:
+                metadata_errors.append({
+                    "phase": "quota_refresh", "error_type": type(refresh_error).__name__
+                })
+                after = {"at": utc_now(), "windows": [], "ordinary_usage_allowed": False}
             store.set("quota", after)
             store.set(
                 "entry_budget_blocked",
-                not after.get("ordinary_usage_allowed", True)
-                or any(
-                    float(w.get("usedPercent", 0))
-                    >= (80 if w.get("windowDurationMins", 0) >= 10000 else 90)
-                    for w in after.get("windows", [])
-                ),
+                bool(metadata_errors)
+                or not store.get("readiness", {}).get("models_available", False)
+                or bool(account_limit_reason(after)),
             )
-            before_w = next((w for w in before["windows"] if w["windowDurationMins"] >= 10000), {})
-            after_w = next((w for w in after["windows"] if w["windowDurationMins"] >= 10000), {})
-            delta = max(0, after_w.get("usedPercent", 0) - before_w.get("usedPercent", 0))
+            before_w = next(
+                (w for w in before.get("windows", []) if w.get("windowDurationMins", 0) >= 10000), {}
+            )
+            after_w = next(
+                (w for w in after.get("windows", []) if w.get("windowDurationMins", 0) >= 10000), {}
+            )
+            delta_reported = bool(before_w and after_w) and (
+                before_w.get("resetsAt") == after_w.get("resetsAt")
+            )
+            delta = max(0, after_w["usedPercent"] - before_w["usedPercent"]) if delta_reported else 0
             last = usage.get("last") or usage.get("total") or {}
             store.set(
                 context_key,
@@ -473,68 +622,107 @@ def run_task(
                     "at": utc_now(),
                 },
             )
+            phase = "result_persistence"
+            completed = {
+                **attempt, **counters, "state": "completed", "terminal_outcome": "validated",
+                "completed_at": utc_now(), "quota_delta_reported": delta_reported,
+                "reply_usage_reported": "inputTokens" in last or "outputTokens" in last,
+                "metadata_errors": metadata_errors,
+                "application_outcome": "pending" if task_key else "untracked",
+            }
             store.db.execute(
                 """UPDATE usage SET at=?,day=?,role=?,model=?,input_tokens=?,cached_tokens=?,output_tokens=?,quota_delta=?,payload=? WHERE id=?""",
                 (
                     utc_now(),
-                    day,
+                    usage_day,
                     role,
                     model,
                     last.get("inputTokens", 0),
                     last.get("cachedInputTokens", 0),
                     last.get("outputTokens", 0),
                     delta,
-                    dumps(counters),
+                    dumps(completed),
                     usage_id,
                 ),
             )
             store.event(
-                "agent_task", {"role": role, "model": model, "context_rotated": rotated, **counters}
+                "agent_task", {
+                    "role": role, "model": model, "context_rotated": rotated,
+                    **{k: v for k, v in completed.items() if k != "task_key"},
+                }
             )
             return parsed.model_dump(mode="json")
     except Exception as exc:
         if "usage_id" in locals():
+            rpc_attempt = getattr(rpc, "last_attempt", {})
+            failed_phase = rpc_attempt.get("phase", phase) if phase == "inference" else phase
+            outcome = {
+                "schema_validation": "schema_rejected",
+                "reply_json": "invalid_json",
+                "quota_interrupt": "quota_interrupted",
+                "result_persistence": "persistence_failed",
+            }.get(failed_phase, "inference_failed")
             failure = {
+                **attempt,
+                **rpc_attempt.get("counters", {}),
                 "state": "failed",
                 "error_type": type(exc).__name__,
+                "phase": failed_phase,
+                "terminal_outcome": outcome,
+                "completed_at": utc_now(),
+                **validation_diagnostics(exc, schema),
                 "partial_tokens": "unavailable unless reported before interruption",
             }
-            if "payload" in locals() and isinstance(payload, dict):
-                # A completed model reply rejected by local semantic validation is
-                # still evidence and measured work. Preserve it privately for repair.
+            if rpc_attempt.get("quota"):
+                store.set("quota", rpc_attempt["quota"])
+                store.set("entry_budget_blocked", True)
+                failure["quota_stop_reason"] = rpc_attempt.get("quota_stop_reason")
+            if "usage" in locals():
+                measured_usage = usage
+                failure.update(counters)
+            else:
+                measured_usage = rpc_attempt.get("usage", {})
+            measured = measured_usage.get("last") or measured_usage.get("total") or measured_usage
+            failure["reply_usage_reported"] = "inputTokens" in measured or "outputTokens" in measured
+            if failure["reply_usage_reported"]:
+                failure["partial_tokens"] = (
+                    "completed reply usage retained; application validation failed"
+                    if failed_phase == "schema_validation"
+                    else "reported usage retained; full turn total may be unavailable"
+                )
+            has_reply = "payload" in locals() or "raw_reply" in rpc_attempt
+            if has_reply:
                 from .quality import record_artifact
 
                 try:
-                    record_artifact(
-                        store, day, role, payload, "schema-rejected:" + str(usage_id), "rejected"
+                    reply = bounded_failure_reply(
+                        payload if "payload" in locals() else None, rpc_attempt.get("raw_reply")
                     )
+                    artifact_id = "agent-attempt:" + str(usage_id)
+                    store.memory_put(artifact_id, "agent_attempt_artifact", {
+                        **failure, "day": day, "role": role,
+                        "task_key": task_key, "prompt_id": prompt_id,
+                        "thread_id": rpc_attempt.get("thread_id"),
+                        "turn_id": rpc_attempt.get("turn_id"), "reply": reply,
+                    })
+                    failure["artifact_id"] = artifact_id
+                    if failed_phase == "schema_validation":
+                        record_artifact(
+                            store, day, role, reply, "schema-rejected:" + str(usage_id), "rejected"
+                        )
                 except Exception as capture_error:
                     failure["artifact_capture_error"] = type(capture_error).__name__
-                measured = usage.get("last") or usage.get("total") or usage
-                failure.update(counters)
-                failure["reply_usage_reported"] = (
-                    "inputTokens" in measured or "outputTokens" in measured
-                )
-                if failure["reply_usage_reported"]:
-                    failure["partial_tokens"] = (
-                        "completed reply usage retained; application validation failed"
-                    )
-                store.db.execute(
-                    "UPDATE usage SET input_tokens=?,cached_tokens=?,output_tokens=? WHERE id=?",
-                    (
-                        measured.get("inputTokens", 0),
-                        measured.get("cachedInputTokens", 0),
-                        measured.get("outputTokens", 0),
-                        usage_id,
-                    ),
-                )
             store.db.execute(
-                "UPDATE usage SET payload=? WHERE id=?",
+                "UPDATE usage SET input_tokens=?,cached_tokens=?,output_tokens=?,payload=? WHERE id=?",
                 (
-                    dumps(failure),
-                    usage_id,
+                    measured.get("inputTokens", 0), measured.get("cachedInputTokens", 0),
+                    measured.get("outputTokens", 0), dumps(failure), usage_id,
                 ),
             )
+            store.event("agent_task_failed", {
+                "role": role, "model": model,
+                **{k: v for k, v in failure.items() if k != "task_key"},
+            })
         raise
     finally:
         store.close()

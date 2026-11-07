@@ -10,7 +10,7 @@ from datetime import datetime
 from .agent import CodexRPC
 from .broker import Broker
 from .config import Config, ET
-from .engine import Engine, TERMINAL, order_id
+from .engine import Engine, TERMINAL, EXECUTION_KERNEL, order_id
 from .publish import export, publish
 from .store import Store, utc_now
 
@@ -105,7 +105,9 @@ def smoke_submission(config, store):
             {
                 "order_submission_verified": True,
                 "submission_checked_at": utc_now(),
-                "execution_verified": False,
+                "execution_verified": readiness.get("execution_verified", False),
+                "required_execution_kernel": EXECUTION_KERNEL,
+                "verified_execution_kernel": None,
             }
         )
         store.set("readiness", readiness)

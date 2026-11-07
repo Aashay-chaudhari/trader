@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 
+from .config import ET
 from .engine import quote_values, timestamp
 from .store import dumps, utc_now
 
@@ -11,6 +12,127 @@ from .store import dumps, utc_now
 class Experiments:
     def __init__(self, store):
         self.store = store
+
+    @staticmethod
+    def eligibility_reason(plan, quote, now):
+        """Explain the existing observation gates without granting order approval."""
+        try:
+            if plan["branch"] == "options":
+                return "options_research_only"
+            expiry = timestamp(plan["expires_at"])
+            if expiry.tzinfo is None:
+                return "invalid_plan"
+            if now >= expiry:
+                return "expired_plan"
+            if not plan.get("event_risk_known"):
+                return "event_risk_unknown"
+            evidence = plan.get("evidence", [])
+            if not evidence or any(
+                timestamp(item["observed_at"]).tzinfo is None
+                or not now - timedelta(hours=24)
+                <= timestamp(item["observed_at"])
+                <= now + timedelta(minutes=5)
+                for item in evidence
+            ):
+                return "evidence_not_fresh"
+            if not quote:
+                return "missing_quote"
+            try:
+                _, ask = quote_values(quote, now)
+            except (ValueError, KeyError, TypeError):
+                return "invalid_or_stale_quote"
+            if not plan["entry_low"] <= ask <= plan["entry_high"]:
+                return "outside_entry_interval"
+            return "eligible_for_observation"
+        except (ValueError, KeyError, TypeError):
+            return "invalid_plan"
+
+    def record_funnel(self, plans, exploration_plans, quotes, now):
+        """Retain one eligibility snapshot per five-minute slot, never synthetic samples.
+
+        Counts describe supplied plans at a tick. They are neither independent
+        opportunities nor evidence that research ought to have produced a trade.
+        """
+        now = now.astimezone(ET)
+        day = now.date().isoformat()
+        slot = now.hour * 12 + now.minute // 5
+        key = "experiment-funnel:" + day
+        history = self.store.get(key, {"day": day, "slots": {}})
+        slot_key = str(slot)
+        if slot_key in history["slots"]:
+            return history["slots"][slot_key]
+        branches = {}
+        for branch in ("intraday", "swing"):
+            rows = [(p, False) for p in plans if p.get("branch") == branch]
+            rows += [(p, True) for p in exploration_plans if p.get("branch") == branch]
+            reasons = {}
+            for plan, _ in rows:
+                reason = self.eligibility_reason(
+                    plan, quotes.get(plan.get("symbol")), now
+                )
+                reasons[reason] = reasons.get(reason, 0) + 1
+            branches[branch] = {
+                "executable_plans": sum(not research for _, research in rows),
+                "research_plans": sum(research for _, research in rows),
+                "reasons": reasons,
+                "state": "no_valid_plan_stream" if not rows else "plan_stream_present",
+            }
+        snapshot = {"as_of": now.isoformat(), "branches": branches}
+        history["slots"][slot_key] = snapshot
+        self.store.set(key, history)
+        self.store.set("experiment_funnel_latest", snapshot)
+        return snapshot
+
+    def funnel(self):
+        """Compact, read-only diagnosis; missing historical instrumentation stays unknown."""
+        latest = self.store.get("experiment_funnel_latest")
+        branches = {}
+        plans = self.store.rows(
+            "SELECT branch,count(*) n FROM plans WHERE state IN ('planned','approved') GROUP BY branch"
+        )
+        research = self.store.get("exploration_shadow_plans", [])
+        for branch in ("intraday", "swing"):
+            active = self.store.rows(
+                "SELECT count(*) n FROM experiments WHERE branch=? AND state='shadow'", (branch,)
+            )[0]["n"]
+            samples = {
+                r["state"]: r["n"]
+                for r in self.store.rows(
+                    "SELECT s.state,count(*) n FROM shadow s JOIN experiments e "
+                    "ON e.id=s.experiment WHERE e.branch=? AND e.state='shadow' GROUP BY s.state",
+                    (branch,),
+                )
+            }
+            queued = next((r["n"] for r in plans if r["branch"] == branch), 0)
+            research_count = sum(p.get("branch") == branch for p in research)
+            if not active:
+                blocker = "no_active_challengers"
+            elif not queued and not research_count:
+                blocker = "no_plan_inputs"
+            elif samples.get("open"):
+                blocker = "awaiting_observed_exits"
+            else:
+                blocker = "inspect_recorded_eligibility"
+            branches[branch] = {
+                "active_challengers": active,
+                "queued_plans": queued,
+                "research_plans": research_count,
+                "closed_samples": samples.get("closed", 0),
+                "open_samples": samples.get("open", 0),
+                "not_evaluable": samples.get("not_evaluable", 0),
+                "current_bottleneck": blocker,
+            }
+        return {
+            "branches": branches,
+            "latest_eligibility": latest,
+            "tracking": "prospective_five_minute_snapshots" if latest else "not_yet_observed",
+            "interpretation": (
+                "Filters compare valid plan inputs; no plan means no filter sample. "
+                "Resolve documented data/event gaps or accept justified abstention. "
+                "Do not force plans, weaken gates, or substitute fixed/adaptive-study samples. "
+                "Eligibility counts are repeated plan snapshots, not independent trials."
+            ),
+        }
 
     def register(self, proposal):
         required = {
@@ -80,12 +202,7 @@ class Experiments:
         return True
 
     def consider(self, plan, quote, regime, now):
-        if plan["branch"] == "options":
-            return
-        bid, ask = quote_values(quote, now)
-        if not plan["entry_low"] <= ask <= plan["entry_high"] or now >= timestamp(
-            plan["expires_at"]
-        ):
+        if self.eligibility_reason(plan, quote, now) != "eligible_for_observation":
             return
         for experiment in self.store.rows(
             "SELECT * FROM experiments WHERE branch=? AND state='shadow'", (plan["branch"],)
@@ -95,31 +212,43 @@ class Experiments:
     def _consider_one(self, experiment, plan, quote, regime, now):
         _, ask = quote_values(quote, now)
         spec = json.loads(experiment["payload"])
+        active = self.store.get("incumbent_filter:" + plan["branch"])
+        if spec["parent_version"] != (active["id"] if active else "pilot-v1"):
+            # A daily evaluator may not have marked the old experiment stale yet.
+            # Never pair a new incumbent with an old parent's contract.
+            return
         passes = self.filter_passes(spec, plan, regime)
         sid = hashlib.sha256((experiment["id"] + plan["id"]).encode()).hexdigest()[:24]
-        calendar = self.store.get("calendar:" + now.date().isoformat(), [])
+        local_now = now.astimezone(ET)
+        day = local_now.date().isoformat()
+        calendar = self.store.get("calendar:" + day, [])
+        observation_end = None
         if plan["branch"] == "swing":
             exit_deadline = (now + timedelta(days=14)).isoformat()
         elif calendar:
-            from .config import ET
-            from datetime import datetime
-
-            exit_deadline = (
-                datetime.fromisoformat(now.date().isoformat() + "T" + calendar[0]["close"]).replace(
-                    tzinfo=ET
-                )
-                - timedelta(minutes=12)
-            ).isoformat()
+            closed = datetime.fromisoformat(day + "T" + calendar[0]["close"]).replace(tzinfo=ET)
+            exit_deadline = (closed - timedelta(minutes=12)).isoformat()
+            observation_end = closed.isoformat()
         else:
             exit_deadline = plan["expires_at"]
+            observation_end = datetime.combine(
+                local_now.date() + timedelta(days=1), time.min, tzinfo=ET
+            ).isoformat()
         payload = {
-            "day": now.date().isoformat(),
+            "day": day,
+            "eligibility_version": "plan-evidence-v2",
+            "eligibility_scope": (
+                "Fresh priced plan with verified event risk and fresh cited evidence. "
+                "Both executable and research-only plan inputs use these gates; "
+                "this is not broker approval, sizing or a fill."
+            ),
             "entry": ask,
             "entered_at": now.isoformat(),
             "stop": plan["stop"],
             "target": plan["target"],
             "expires_at": exit_deadline,
             "entry_deadline": plan["expires_at"],
+            "observation_end": observation_end,
             "branch": plan["branch"],
             "plan_id": plan["id"],
             "challenger_trades": passes,
@@ -135,14 +264,34 @@ class Experiments:
 
     def mark(self, quotes, now, closing=False):
         for row in self.store.rows("SELECT * FROM shadow WHERE state='open'"):
+            p = json.loads(row["payload"])
+            if row["branch"] == "intraday":
+                # Missing the closing observation never becomes a next-session
+                # price. Older rows lack a stored calendar close: the entry-day
+                # boundary is the minimum defensible expiry for those records.
+                end = p.get("observation_end")
+                missed = now >= timestamp(end) if end else (
+                    now.astimezone(ET).date().isoformat() > p["day"]
+                )
+                if missed:
+                    p.update(
+                        {
+                            "not_evaluable_reason": "missing_valid_intraday_exit",
+                            "marked_at": now.isoformat(),
+                        }
+                    )
+                    self.store.db.execute(
+                        "UPDATE shadow SET state='not_evaluable',payload=? WHERE id=?",
+                        (dumps(p), row["id"]),
+                    )
+                    continue
             q = quotes.get(row["symbol"])
             if not q:
                 continue
             try:
                 bid, ask = quote_values(q, now)
-            except ValueError:
+            except (ValueError, KeyError, TypeError):
                 continue
-            p = json.loads(row["payload"])
             exit_due = (
                 bid <= p["stop"]
                 or bid >= p["target"]
@@ -195,6 +344,24 @@ class Experiments:
             )
             samples = [json.loads(r["payload"]) for r in rows]
             sessions = len({x["day"] for x in samples})
+            eligibility_versions = {
+                x.get("eligibility_version", "legacy_unversioned") for x in samples
+            }
+            if len(eligibility_versions) > 1:
+                key = "experiment-mixed-eligibility:" + e["id"]
+                if not self.store.get(key):
+                    self.store.event(
+                        "experiment_review",
+                        {
+                            "id": e["id"],
+                            "promoted": False,
+                            "reason": "Mixed observation eligibility versions require a new prospective contract",
+                            "eligibility_versions": sorted(eligibility_versions),
+                        },
+                        e["branch"],
+                    )
+                    self.store.set(key, True)
+                continue
             incumbent = self.store.get("incumbent_filter:" + e["branch"])
             current_parent = incumbent["id"] if incumbent else "pilot-v1"
             if spec["parent_version"] != current_parent:
@@ -326,7 +493,8 @@ class Experiments:
 
     def progress(self):
         summaries = {}
-        for e in self.store.rows("SELECT id FROM experiments"):
+        funnel = self.funnel()["branches"]
+        for e in self.store.rows("SELECT id,branch FROM experiments"):
             closed = [
                 json.loads(r["payload"])
                 for r in self.store.rows(
@@ -337,10 +505,20 @@ class Experiments:
             summaries[e["id"]] = {
                 "samples": len(closed),
                 "sessions": len(days),
+                "eligibility_versions": sorted(
+                    {x.get("eligibility_version", "legacy_unversioned") for x in closed}
+                ),
                 "open_observations": self.store.rows(
                     "SELECT count(*) AS n FROM shadow WHERE experiment=? AND state='open'",
                     (e["id"],),
                 )[0]["n"],
+                "not_evaluable_observations": self.store.rows(
+                    "SELECT count(*) AS n FROM shadow WHERE experiment=? AND state='not_evaluable'",
+                    (e["id"],),
+                )[0]["n"],
+                "current_bottleneck": funnel.get(e["branch"], {}).get(
+                    "current_bottleneck", "options_research_only"
+                ),
                 "mean_paired_net": sum(
                     x["challenger_return"] - x["incumbent_return"] for x in closed
                 )

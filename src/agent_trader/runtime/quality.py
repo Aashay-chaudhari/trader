@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .config import ET
 from .store import utc_now
@@ -19,7 +20,156 @@ ROLES = {
     "retrospective",
     "weekly",
     "monthly",
+    "deep_research",
+    "deep_research_review",
 }
+
+FEATURE_PATTERNS = {
+    "price_structure": r"opening[ -]range|vwap|entry structure|entry level",
+    "exact_daily_features": r"exact three|three-session|three.session return",
+}
+
+
+def _feature_language(result):
+    """Text is reported language, never proof that an input was absent."""
+    mentioned, unresolved, resolved = set(), set(), set()
+    for paragraph in result.get("unknowns", []) + result.get("uncertainties", []):
+        for text in re.split(r"\bbut\b|\bwhile\b|;\s*|(?<=[.!?])\s+", paragraph, flags=re.I):
+            for category, pattern in FEATURE_PATTERNS.items():
+                if not re.search(pattern, text, re.I):
+                    continue
+                mentioned.add(category)
+                if re.search(
+                    r"no longer.{0,25}(?:blocker|missing|unavailable)|"
+                    r"(?:resolved|resolves).{0,50}(?:gap|missing)|"
+                    r"(?:not missing|not unavailable)", text, re.I,
+                ):
+                    resolved.add(category)
+                elif re.search(
+                    r"unavailable|missing|absent|lack(?:s|ing)?|do(?:es)? not exist|unknown|"
+                    r"not (?:supplied|available)|\bno\b.{0,100}\b(?:exist|available)", text, re.I,
+                ):
+                    unresolved.add(category)
+    return mentioned, unresolved, resolved
+
+
+def _input_phase(store, packet):
+    """Use the retained input time and actual broker calendar, never wall-clock guesses."""
+    try:
+        at = datetime.fromisoformat(packet["observed_at"].replace("Z", "+00:00"))
+        if at.tzinfo is None:
+            return "unknown", None
+        local = at.astimezone(ET)
+        day = local.date().isoformat()
+        calendar = store.get("calendar:" + day)
+        if calendar == []:
+            return "non_session", None
+        if not calendar or calendar[0].get("date", day) != day:
+            return "unknown", None
+        opened = datetime.fromisoformat(day + "T" + calendar[0]["open"]).replace(tzinfo=ET)
+        closed = datetime.fromisoformat(day + "T" + calendar[0]["close"]).replace(tzinfo=ET)
+        if closed <= opened:
+            return "unknown", None
+        if local < opened:
+            return "preopen", local - opened
+        if local >= closed:
+            return "after_close", local - opened
+        return ("opening_minutes" if local < opened + timedelta(minutes=5) else "regular_session"), local - opened
+    except (KeyError, TypeError, ValueError, IndexError):
+        return "unknown", None
+
+
+def feature_diagnostics(store, artifacts):
+    """Match research to retained inputs and distinguish expected absence from gaps.
+
+    Presence checks do not establish calculation accuracy, actionable price
+    structure or complete feed coverage. Recorded input timestamps are linkage
+    evidence; they do not reconstruct missing historical prompt transcripts.
+    """
+    records = []
+    for artifact in artifacts:
+        if artifact.get("role") != "research" or artifact.get("outcome") != "applied":
+            continue
+        result = artifact.get("result")
+        if not isinstance(result, dict):
+            continue
+        mentioned, unresolved, resolved = _feature_language(result)
+        stamp = artifact.get("input_observed_at")
+        inputs = store.rows(
+            "SELECT id,payload FROM memory WHERE layer='research_input' "
+            "AND json_extract(payload,'$.observed_at')=? LIMIT 2", (stamp,),
+        ) if stamp else []
+        record = {
+            "task_key": artifact.get("task_key"), "input_observed_at": stamp,
+            "input_link": "matched_recorded_timestamp" if len(inputs) == 1 else "missing_or_ambiguous",
+            "session_phase": "unknown", "state": "input_unmatched",
+            "mentioned_features": sorted(mentioned), "reported_unresolved_features": sorted(unresolved),
+            "reported_resolved_features": sorted(resolved),
+            "expected_missing_count": None, "unexpected_missing_count": None,
+            "missing_examples": [],
+        }
+        if len(inputs) == 1:
+            retained = json.loads(inputs[0]["payload"])
+            packet = retained.get("packet", {})
+            record["input_record_id"] = inputs[0]["id"]
+            phase, elapsed = _input_phase(store, packet)
+            record["session_phase"] = phase
+            selected = set(packet.get("focus_symbols", [])) | {"SPY", "QQQ", "TLT"}
+            if not packet.get("focus_symbols"):
+                selected |= set(list(packet.get("market", {}))[:3])
+            daily_gaps, minute_gaps, expected = [], [], []
+            daily_complete, minute_complete = 0, 0
+
+            def present(value):
+                return type(value) in (float, int) and math.isfinite(value)
+
+            for symbol in sorted(selected):
+                daily = packet.get("daily_indicators", {}).get(symbol, {})
+                minute = packet.get("intraday_indicators", {}).get(symbol, {})
+                daily_missing = [f for f in ("return_1d", "return_3d", "return_5d") if not present(daily.get(f))]
+                daily_complete += not daily_missing
+                daily_gaps += [symbol + ":" + f for f in daily_missing]
+                minute_missing = [f for f in ("bar_vwap_iex", "opening_5m_high", "opening_5m_low") if not present(minute.get(f))]
+                minute_complete += not minute_missing
+                for field in minute_missing:
+                    wait = 1 if field == "bar_vwap_iex" else 5
+                    anticipated = phase in ("preopen", "after_close", "non_session") or (
+                        phase == "opening_minutes" and elapsed < timedelta(minutes=wait)
+                    )
+                    (expected if anticipated else minute_gaps).append(symbol + ":" + field)
+            gaps = daily_gaps + minute_gaps
+            relevant_gaps = (daily_gaps if "exact_daily_features" in unresolved else []) + (
+                minute_gaps if "price_structure" in unresolved else []
+            )
+            relevant_expected = expected if "price_structure" in unresolved else []
+            record.update({
+                "selected_symbols": sorted(selected),
+                "daily_complete_symbols": daily_complete, "minute_complete_symbols": minute_complete,
+                "expected_missing_count": len(expected),
+                "unexpected_missing_count": len(gaps) if phase != "unknown" else None,
+                "observed_missing_count": len(gaps) + len(expected),
+                "missing_examples": (gaps + expected)[:4],
+            })
+            if not unresolved:
+                record["state"] = "reported_resolved" if resolved else "no_reported_feature_blocker"
+            elif phase == "unknown":
+                record["state"] = "phase_unverified"
+            elif relevant_gaps:
+                record["state"] = "reported_blocker_with_input_gaps"
+            elif relevant_expected:
+                record["state"] = "expected_session_phase_absence"
+            else:
+                record["state"] = "reported_blocker_with_supplied_features"
+        records.append(record)
+    states = Counter(r["state"] for r in records)
+    return {
+        "research_reports": len(records),
+        "matched_inputs": sum(r["input_link"] == "matched_recorded_timestamp" for r in records),
+        "phase_counts": dict(Counter(r["session_phase"] for r in records)),
+        "state_counts": dict(states),
+        "records": records[-12:], "omitted_records": max(0, len(records) - 12),
+        "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup.",
+    }
 
 
 def record_artifact(
@@ -119,13 +269,13 @@ def daily_audit(store, day, persist=False):
     calls = Counter(r["role"] for r in usage)
     role_outputs = Counter(a["role"] for a in artifacts if a["outcome"] == "applied")
     patterns = {
-        "price_structure": r"opening range|vwap|entry structure|entry level",
-        "exact_daily_features": r"exact three|three-session|three.session return",
+        **FEATURE_PATTERNS,
         "event_coverage": r"earnings|event timing|calendar|release timing",
         "source_access": r"403|not independently|not.*verified|source.*unavailable",
         "stale_data": r"stale|two calendar days old",
     }
     blockers = Counter()
+    mentions = Counter()
     urls = set()
     for a in artifacts:
         r = a["result"]
@@ -134,7 +284,11 @@ def daily_audit(store, day, persist=False):
         text = " ".join(r.get("unknowns", []) + r.get("uncertainties", []))
         for name, pattern in patterns.items():
             if re.search(pattern, text, re.I):
-                blockers[name] += 1
+                mentions[name] += 1
+                if name not in FEATURE_PATTERNS:
+                    blockers[name] += 1
+        _, unresolved, _ = _feature_language(r)
+        blockers.update(unresolved)
         urls.update(s["url"] for s in r.get("sources", []) if s.get("url"))
     catalogue = store.get("research_catalogue", [])
     reviewed = [c for c in catalogue if c.get("state") == "reviewed_for_testing"]
@@ -193,13 +347,29 @@ def daily_audit(store, day, persist=False):
             }
         )
 
-    if blockers["price_structure"] or blockers["exact_daily_features"]:
+    feature_checks = feature_diagnostics(store, artifacts)
+    feature_states = feature_checks["state_counts"]
+    if feature_states.get("reported_blocker_with_input_gaps"):
         finding(
             "missing_price_features",
-            "Research reports missing price structure or exact daily inputs.",
-            "Supply exact completed daily returns and timestamped IEX minute-bar ranges/volume/VWAP with missingness.",
-            "Verify calculations, exclusion of incomplete/future bars, pagination and use in actual next-session research.",
+            "An unresolved research feature report coincides with missing fields in its timestamp-linked input during a phase where they are expected.",
+            "Inspect the named report/input and missing fields; distinguish unavailable IEX coverage from collection/calculation defects before repairing inputs.",
+            "Verify exact packet linkage, broker session phase, completed bars, field calculations and subsequent research use; do not backfill observations.",
             "high",
+        )
+    if any(r["reported_unresolved_features"] and r["state"] in ("input_unmatched", "phase_unverified") for r in feature_checks["records"]):
+        finding(
+            "feature_input_lineage",
+            "A reported feature gap cannot be classified because its exact input or session phase is unverified.",
+            "Retain exact research-input and broker-calendar linkage; do not infer missing data from feature keywords or expected preopen absence.",
+            "Match future research artifacts to the actual supplied packet and session; historical missing linkage stays explicit.",
+        )
+    if feature_states.get("reported_blocker_with_supplied_features"):
+        finding(
+            "feature_blocker_attribution",
+            "Research describes a feature/setup blocker although the checked feature fields were supplied.",
+            "Map each blocker to a specific symbol/field and distinguish sparse or stale coverage, unclear naming, unusable setup and failure to consume supplied evidence.",
+            "Review the exact retained packet/output pair. Field presence alone establishes neither calculation accuracy nor an executable entry.",
         )
     if unattested:
         finding(
@@ -247,6 +417,8 @@ def daily_audit(store, day, persist=False):
         "legacy_snapshot_artifacts": sum(a["origin"].startswith("legacy") for a in artifacts),
         "derived_period_reviews": sum(a["origin"] == "derived_period_review" for a in artifacts),
         "reported_blockers": dict(blockers),
+        "reported_mentions": dict(mentions),
+        "feature_diagnostics": feature_checks,
         "unique_cited_urls": len(urls),
         "known_no_plan_research_outputs": known_no_plan,
         "pulse_outputs": len(pulse_outputs),
@@ -261,6 +433,7 @@ def daily_audit(store, day, persist=False):
             "Historical overwritten outputs cannot be reconstructed from summaries.",
             "No-material-change is not evidence that no market event occurred.",
             "Code receipts do not demonstrate improved research quality before subsequent observations.",
+            "Textual mentions and reported blockers are not verified input failures. Feature diagnostics use recorded input linkage and session phase; field presence is not a correctness or trade-readiness check.",
         ],
     }
     if persist:
@@ -307,7 +480,7 @@ def daily_audit(store, day, persist=False):
 
 def digest(store, day):
     r = daily_audit(store, day)
-    return {
+    result = {
         k: r[k]
         for k in (
             "day",
@@ -315,12 +488,22 @@ def digest(store, day):
             "artifact_counts",
             "legacy_snapshot_artifacts",
             "reported_blockers",
+            "reported_mentions",
             "reviewed_without_explicit_source_attestation",
             "findings",
             "limits",
             "development_effects",
         )
     }
+    feature = r["feature_diagnostics"]
+    result["feature_diagnostics"] = {
+        k: feature[k] for k in ("research_reports", "matched_inputs", "phase_counts", "state_counts", "scope")
+    }
+    result["feature_diagnostics"]["recent_records"] = [
+        {k: row[k] for k in ("task_key", "input_link", "session_phase", "state", "expected_missing_count", "unexpected_missing_count")}
+        for row in feature["records"][-2:]
+    ]
+    return result
 
 
 def pulse_prompt(context, store):

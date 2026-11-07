@@ -16,3 +16,9 @@ operational state. Use narrow staging paths, not `git add .`.
 After behavior changes, run relevant runtime tests and full regressions as needed,
 run active-runtime lint, regenerate the dashboard, and record observed outcomes in
 the implementation log. Do not claim scheduled/deployed behavior without checking it.
+
+
+Execution changes require a new `EXECUTION_KERNEL` version and a fresh bounded
+regular-session paper acceptance check. Preserve historical verification receipts;
+tests cannot certify the changed kernel's market execution. Broad code work must
+retain evidence-based research deduplication, atomic budget admission and job claims.

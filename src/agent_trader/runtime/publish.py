@@ -29,6 +29,11 @@ PUBLIC_EVENTS = {
     "fill",
     "order_submitted",
     "agent_task",
+    "agent_task_failed",
+    "accounting_refreshed",
+    "fee_booked",
+    "research_work_analyzed",
+    "research_work_reviewed",
     "budget_skip",
     "notification_sent",
     "experiment_registered",
@@ -91,6 +96,10 @@ def snapshot(config, store):
     from .project import project_snapshot
     from .intelligence import objective_scorecard, observation_context
     from .adaptive_lab import AdaptiveLab
+    from .budget import usage_policy
+    from .research_work import public_summary
+    from .accounting import accounting_summary
+    from .engine import current_execution_verified
 
     progress = Experiments(store).progress()
     try:
@@ -134,6 +143,9 @@ def snapshot(config, store):
         for r in store.rows("SELECT * FROM plans ORDER BY day DESC LIMIT 60")
     ]
     quota = store.get("quota", {})
+    account = store.get("account", {})
+    ledger_equity = sum(b["equity"] for b in branches)
+    broker_equity = float(account["equity"]) if account.get("equity") is not None else None
     extra_cost = sum(r["notional"] for r in store.rows("SELECT notional FROM orders")) * 0.001
     return sanitize(
         {
@@ -148,13 +160,27 @@ def snapshot(config, store):
                 "last_restart": watchdog.get("lastRestart"),
                 "service_owner": "systemd user service",
                 "models_paused": (config.state_dir / "agent-pause.flag").exists(),
+                "maintenance": (config.state_dir / "maintenance.flag").exists(),
             },
             "status": store.get("status", "Preparing a new experiment"),
             "next_action": store.get("next_action"),
-            "readiness": store.get("readiness", {}),
+            "readiness": {
+                **store.get("readiness", {}),
+                "current_execution_verified": current_execution_verified(store.get("readiness", {})),
+            },
             "reconciliation_errors": store.get("reconciliation_errors", []),
             "calendar": store.get("calendar", {}),
             "branches": branches,
+            "accounting": {
+                "broker_equity": broker_equity,
+                "broker_cash": float(account["cash"]) if account.get("cash") is not None else None,
+                "branch_ledger_equity": ledger_equity,
+                "unattributed_equity_difference": None if broker_equity is None else round(broker_equity - ledger_equity, 8),
+                "reconciled": bool(store.get("reconciled", False)),
+                "as_of": store.get("last_reconciled"),
+                "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented.",
+            },
+            "account_activity": accounting_summary(store),
             "positions": positions,
             "orders": [
                 {
@@ -231,20 +257,22 @@ def snapshot(config, store):
             ],
             "maintenance": store.get("maintenance_candidate"),
             "quota": quota,
+            "experiment_funnel": Experiments(store).funnel(),
+            "background_research": public_summary(store),
             "usage": store.rows(
-                "SELECT at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,coalesce(json_extract(payload,'$.state'),'completed') state FROM usage ORDER BY id DESC LIMIT 150"
+                "SELECT at,day,role,model,input_tokens,cached_tokens,output_tokens,quota_delta,"
+                "coalesce(json_extract(payload,'$.state'),'completed') state,"
+                "json_extract(payload,'$.terminal_outcome') outcome,"
+                "json_extract(payload,'$.attempt_id') attempt_id,"
+                "json_extract(payload,'$.application_outcome') application_outcome,"
+                "json_extract(payload,'$.application_validation_code') application_validation_code,"
+                "json_extract(payload,'$.reply_usage_reported') reply_usage_reported "
+                "FROM usage ORDER BY id DESC LIMIT 150"
             ),
-            "budget": {
-                "project_weekly_share": 80,
-                "reserve": 20,
-                "daily_call_ceiling": 24,
-                "night_review_reserved_calls": 4,
-                "attribution": "Task tokens measured; quota deltas include concurrent account activity.",
-            },
+            "budget": usage_policy(store),
             "execution_quality": {
                 "additional_cost_allowance": extra_cost,
-                "illustrative_equity_after_allowance": sum(b["equity"] for b in branches)
-                - extra_cost,
+                "illustrative_equity_after_allowance": None if broker_equity is None else broker_equity - extra_cost,
                 "basis": "Additional 10bp per executed side; illustrative, not actual fees or a live-fill simulation.",
             },
             "benchmarks": store.get("benchmarks", {}),

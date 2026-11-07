@@ -107,3 +107,25 @@ It has no broker client or promotion authority and cannot rewrite the fixed stud
 `development.py` checks deployed mechanics only after later completed sessions.
 Account returns, prospective verified drawdown and learning bottlenecks are separate
 from research means. See ADAPTIVE_ENGINE_AUDIT.md for the objective and limitations.
+
+
+## Focused spare-capacity work and execution receipts
+
+`research_work.py` creates bounded questions from retained external/operating
+evidence, freezes each packet, and requires a fresh independent reviewer. Accepted
+reports can inform later research and developer proposals; they have no broker,
+strategy-registration, promotion or code-edit capability. Recurring failures of
+these jobs do not create fresh research identities. Source checks are attestations,
+not automatic truth verification. `budget.py` separates the 50–80% usage objective
+from the fixed 80% account stop and from separately reserved core call slots.
+
+Durable jobs carry process/boot/start identity and a unique claim. Recovery only
+reclaims explicitly owned supervisor jobs whose process is proven absent; live
+independent probes cannot be swept into retries. Unknown legacy ownership is not
+inferred from an old timestamp. Attempt telemetry distinguishes valid replies,
+application rejection, transport failure and missing measurements.
+
+`accounting.py` retains immutable private broker-activity receipts and a sanitized
+cash bridge. Read-only intake cannot mutate branch cash. Explicit fee application
+requires uniquely matched owned executions, an unchanged receipt and an exact
+cash bridge, and is atomic and idempotent. Ambiguous fees remain unassigned.

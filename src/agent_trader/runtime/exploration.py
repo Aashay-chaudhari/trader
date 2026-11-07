@@ -223,6 +223,7 @@ def exploration_prompt(day, store, screen):
     from .intelligence import observation_context, objective_scorecard
     from .adaptive_lab import AdaptiveLab, PROTOCOL
     from .research import BASE, UNIVERSE, forward_evidence
+    from .experiments import Experiments
 
     score = objective_scorecard(store)
     history = normalized_screen(screen)
@@ -258,6 +259,7 @@ def exploration_prompt(day, store, screen):
         "adaptive_protocol": PROTOCOL,
         "fixed_forward_study": forward_evidence(store),
         "objective": {k: score[k] for k in ("objective", "research_funnel", "diagnostics")},
+        "filter_sampling": Experiments(store).funnel(),
         "brief": {
             k: str(v)[:900] if isinstance(v, str) else v[:6]
             for k, v in store.get("brief", {}).items()
@@ -362,9 +364,18 @@ immutable long-only numeric conjunctions (1–3 predicates, gte/lte) on the supp
 fields; all ratios are decimal returns, not percentages. Define symbol scope, hypothesis_id,
 branch, prediction and falsification. Intraday horizon=1 session; swing=5 actual sessions;
 first valid quote 15–30 minutes after open, exit close minus12 minutes; 20bp base/50bp
-stressed cost assumptions. At least20 entry sessions and30 active closed signals.
-minimum_signals MUST be <= minimum_sessions * number of symbols. For one symbol
-and30 signals choose at least30 sessions; rare triggers may still be inconclusive.
+stressed cost assumptions. Structured minimum_sessions is the FIXED number of entry
+sessions (20..60 inclusive), not an extendable floor. Use 1..6 DISTINCT symbols.
+Before returning each contract compute maximum_opportunities = minimum_sessions *
+len(symbols), and require 30 <= minimum_signals <= maximum_opportunities.
+Examples: one symbol/60 sessions/30 signals is structurally feasible; one symbol/20
+sessions/30 signals or one symbol/60 sessions/200 signals is INVALID. Six symbols/60
+sessions allow at most360 signals, not360 independent trials. False signals, missing
+data and swing overlap can reduce observed counts; feasibility is not a guarantee.
+If the question needs more than60 entry sessions, return an unsupported-design
+uncertainty/proposal instead of claiming120 sessions in prose. Hypothesis and
+falsification must exactly match the structured session/signal counts and horizon.
+Insufficient signals at the fixed end are inconclusive; do not extend or retune.
 Choose a feasible universe and horizon for the question rather than collecting a
 single exceptional event and claiming generality. Both accepted and failed designs remain recorded.
 Registration starts FUTURE sessions only; do not treat today's motivating result as
@@ -376,6 +387,10 @@ false signals. It does not report active-only conditional means. relative_gap_sp
 uses current ask changes at the entry observation, not opening-auction gaps.
 Existing executable filter exact_change values: require_risk_on, avoid_risk_off,
 higher_confidence_075, higher_confidence_085, reward_risk_2; existing contracts immutable.
+Inspect filter_sampling before proposing more filters: they need valid plan inputs.
+When plans are absent, diagnose the documented event/data/setup bottleneck, accept
+justified abstention, or design a separate future observational test. More filters
+cannot repair absent inputs; never backfill their samples from another study.
 A shadow_plan must name its exact hypothesis_id in this draft and have fresh levels
 and verified event evidence. No options price plans; options remain qualitative
 research. At night/stale quotes leave shadow_plans empty. Do not force trades.
@@ -480,6 +495,9 @@ conjectured mechanism. With no external claims/sources use source_check_status=
 not_applicable, checked_source_urls=[]; never use that to exempt an external fact.
 Set method_check_status=reviewed only when the proposed test measures the actual
 claim, supported features/horizon/units match, and falsification and costs are explicit.
+For adaptive contracts verify 20 <= minimum_sessions <= 60, 1..6 distinct symbols,
+and 30 <= minimum_signals <= minimum_sessions * len(symbols). Counts in hypothesis
+and falsification prose must match these exact JSON fields; the window cannot extend.
 An adaptive contract must reference this hypothesis, use the same branch, and test
 only future data; motivating observations are not validation samples. Hold ideas
 whose test fails to distinguish the explanation from alternatives. Validation may

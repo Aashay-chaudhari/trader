@@ -259,6 +259,8 @@ def research_prompt(day, packet, store):
     from .exploration import knowledge_context
     from .intelligence import observation_context
     from .adaptive_lab import AdaptiveLab
+    from .experiments import Experiments
+    from .research_work import reviewed_context, stale_source_leads
 
     knowledge = knowledge_context(store, max_chars=3500)
     selected = set(packet.get("focus_symbols", [])) | {"SPY", "QQQ", "TLT"}
@@ -304,8 +306,10 @@ def research_prompt(day, packet, store):
             "quote": {
                 k: v for k, v in (d.get("latestQuote") or {}).items() if k in ("bp", "ap", "t")
             },
-            "daily_close": d.get("dailyBar", {}).get("c"),
+            "current_session_bar_close": d.get("dailyBar", {}).get("c"),
+            "current_session_bar_at": d.get("dailyBar", {}).get("t"),
             "prior_close": d.get("prevDailyBar", {}).get("c"),
+            "prior_close_at": d.get("prevDailyBar", {}).get("t"),
         }
         for symbol, d in packet.get("market", {}).items()
         if symbol in selected
@@ -325,14 +329,31 @@ def research_prompt(day, packet, store):
             break
     while len(json.dumps(memory)) > 1500 and memory:
         memory.pop()
-    # Keep complete objects within the shared model input cap.
-    while len(json.dumps(compact, separators=(",", ":"))) > 11000 and compact.get("market"):
-        compact["market"].pop(next(reversed(compact["market"])))
-    return (
+    context = {
+        "research_knowledge": knowledge,
+        "memory": memory,
+        "independently_reviewed_research": reviewed_context(store, max_chars=1800),
+        "stale_source_leads": stale_source_leads(store, max_chars=1000),
+        "observation_questions": observation_context(store, max_chars=2200),
+        "adaptive_tests": AdaptiveLab(store).context(max_trials=3),
+        "filter_sampling": Experiments(store).funnel(),
+        "forward_evidence": forward_evidence(store),
+        "structured_observations": compact,
+        "omitted_for_context_budget": {},
+    }
+    instructions = (
         BASE
         + f"""
 ROLE: morning researcher. Trading date: {day}. Current UTC: {utc_now()}.
-Use at most 3 focused live searches and 3 source checks (6 web actions total). Cover rates/bonds, Fed and macro releases,
+Use up to 8 focused live searches and 8 source checks (16 web actions total).
+Prioritize the supplied focus symbols' current company-event/catalyst coverage and
+today's material macro timing, since unresolved event evidence can block all plans.
+Use readable issuer IR/releases and SEC filings for company facts; if an IR calendar
+fails, try another official primary page or filing rather than repeating that URL.
+Stop a question when its required evidence is verified or the access/missing-data
+limit is explicit; the action allowance is a ceiling, not a requirement to fill.
+Do not spend repeated calls rediscovering already dated, verified background facts.
+Cover rates/bonds, Fed and macro releases,
 earnings/company filings, market breadth/sectors, cross-market developments and
 relevant narratives. Prefer federalreserve.gov, treasury.gov, bls.gov, bea.gov,
 sec.gov and company investor-relations pages. Record actual source/event dates.
@@ -340,12 +361,16 @@ For earnings state exact timing only when verified; otherwise mark unknown.
 The official-release calendar is independently fetched; stale/unavailable coverage
 is explicit. BLS/BEA calendars do not cover Fed dates or company earnings. Verify those separately.
 Daily macro observations and IEX daily bars below may be stale; report their age.
+current_session_bar_close is the provider's evolving session bar, not a completed
+daily close; check its timestamp. Completed daily features and prior_close are separate.
 Prioritize at most three focus symbols for company/event verification. The supplied
 exact three-session return and IEX opening-range/bar-VWAP features may support
 conditional price levels only when present and fresh. Do not require paid consolidated
 quotes as a blanket prerequisite: IEX is the approved experiment feed, subject to
 the existing freshness/spread/risk gates. Verify event risk for each proposed symbol;
 checking an entire universe is not required and missing timing is never cleared.
+Absence of a listed event is not proof that company event risk is resolved; report
+exact coverage and which claims remain unavailable instead of a blanket clearance.
 Explore a liquid universe plus catalyst discoveries. Produce up to 4 executable
 EQUITY plans total, each with a narrow observable entry interval, stop, target,
 expiry with timezone, concrete invalidation, event-risk check, and cited evidence.
@@ -353,11 +378,12 @@ Use strategy names 'catalyst-confirmation' for intraday and 'trend-pullback' for
 version 'pilot-v1' unless an approved promoted incumbent says otherwise. An ID must
 include the date and symbol. Confidence is an estimate, not calibrated probability.
 Do not force entries. If fresh levels/event evidence are unavailable, no plan.
+Use FILTER SAMPLING to distinguish absent plan inputs from quote/exit failures.
+For an abstention name the concrete missing source/input or unmet setup and what
+fresh evidence would permit reassessment. Zero filter samples do not justify entries.
 Research options qualitatively in the brief; do not generate option trade plans.
 The required summary should be useful to a person learning alongside the system.
 Return the Brief JSON schema. Include uncertainties and contradictory evidence.
-REUSABLE RESEARCH (independently reviewed; evidence levels are explicit):
-{json.dumps(knowledge)}
 Use relevant reviewed hypotheses to guide today's discovery, contrary-evidence checks and plan design.
 State which knowledge IDs informed a thesis. Never treat research review or a historical screen as proven edge.
 Use observation-led questions and prospective results below to challenge yesterday's
@@ -365,13 +391,42 @@ explanation. Name the evidence that would change today's decision. Adaptive stud
 are research only: their quotes, abstentions and thresholds never authorize an order.
 Cards marked legacy_unattested are research leads requiring fresh source checks,
 not independently authenticated evidence. Source-check fields are reviewer attestations.
-Existing lessons are proposals unless marked tested.\nMEMORY:{json.dumps(memory)}
-OBSERVATION-LED QUESTIONS:{json.dumps(observation_context(store, max_chars=2200), separators=(",", ":"))}
-ADAPTIVE TESTS:{json.dumps(AdaptiveLab(store).context(max_trials=3), separators=(",", ":"))}
-FORWARD EVIDENCE (provisional, separate from source review and broker P&L):{json.dumps(forward_evidence(store), separators=(",", ":"))}
-STRUCTURED OBSERVATIONS:{json.dumps(compact, default=str, separators=(",", ":"))}
+Existing lessons are proposals unless marked tested.
+Use these bounded reports only within their recorded validity window and source-check
+scope. Reverify time-sensitive facts for today's plan; accepted research grants no
+trade approval and cannot establish absence of unobserved company events.
+stale_source_leads contains previously verified source URLs only. Reopen them for
+fresh evidence before using any fact; prior event claims and clearance do not carry
+forward. These locators help recover useful weekend research after its facts expire.
+FILTER SAMPLING: filter_sampling diagnoses plan/quote eligibility, not broker approval.
+Forward/adaptive evidence is provisional and separate from source review and broker P&L.
+CONTEXT:
 """
     )
+    # Bound the entire prompt, not just one subsection. Preserve current focus
+    # prices and their timestamps before old contextual studies/lessons; never
+    # silently slice JSON or pretend omitted records were inspected.
+    optional = [
+        ("lessons", context["memory"]),
+        ("observation_questions", context["observation_questions"]["records"]),
+        ("reviewed_cards", context["research_knowledge"]["reviewed_research"]),
+        ("adaptive_tests", context["adaptive_tests"]["trials"]),
+        ("fixed_trials", context["forward_evidence"]["trials"]),
+        ("reviewed_background_reports", context["independently_reviewed_research"]),
+        ("stale_source_leads", context["stale_source_leads"]),
+    ]
+    while True:
+        prompt = instructions + json.dumps(context, default=str, separators=(",", ":"))
+        if len(prompt) <= 27500:
+            return prompt
+        choice = next(((name, records) for name, records in optional if records), None)
+        if choice is None:
+            raise ValueError("Research context exceeds complete current-evidence budget")
+        name, records = choice
+        records.pop()
+        context["omitted_for_context_budget"][name] = (
+            context["omitted_for_context_budget"].get(name, 0) + 1
+        )
 
 
 def decision_prompt(plan, quote, brief, held):
@@ -479,6 +534,7 @@ def review_prompt(day, store, *, end_day=None):
         "event_selection": "Most recent non-market-observation events; summaries bounded, raw journal retained locally",
         "experiments": trials,
         "experiment_count": len(all_trials),
+        "filter_sampling": Experiments(store).funnel(),
         "research_knowledge": knowledge_context(store, max_chars=3500),
         "forward_evidence": forward_evidence(store),
         "operational_evidence": operational_evidence(day, store),

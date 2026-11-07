@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 
 from .config import ET
-from .engine import timestamp
+from .engine import timestamp, current_execution_verified
 from .store import utc_now
 
 RESOURCES = [
@@ -114,6 +114,12 @@ DECISIONS = [
 ]
 
 AUTOMATIONS = [
+    {
+        "when": "Weekends; after close +90 minutes; overnight before 07:00 ET",
+        "work": "Focused evidence research followed by an independent reviewer",
+        "owner": "Background research queue",
+        "condition": "Distinct unresolved evidence; 50–80% weekly usage objective, 80% account stop, separate bounded attempts. No order or code-edit authority.",
+    },
     {
         "when": "Continuously / 30 seconds",
         "work": "Broker reconciliation, protection, triggers and heartbeat",
@@ -305,7 +311,7 @@ def project_snapshot(config, store):
         "assessment": assessment,
         "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
         "stage": "operational_validation"
-        if not ready.get("execution_verified")
+        if not current_execution_verified(ready)
         else "forward_paper_evidence",
         "evidence": {
             "filled_orders": fills,
@@ -340,9 +346,14 @@ def project_snapshot(config, store):
                 + " cards passed source/method review. None is certified profitable by that review.",
             },
             {
-                "name": "Broker fill/exit verification",
+                "name": "Historical broker fill/exit verification",
                 "state": "passed" if ready.get("execution_verified") else "pending",
                 "detail": "The market-open one-share paper gate has its own explicit receipt.",
+            },
+            {
+                "name": "Current execution release acceptance",
+                "state": "passed" if current_execution_verified(ready) else "pending",
+                "detail": "A changed execution kernel requires its own bounded regular-session paper check; earlier success remains historical evidence.",
             },
             {
                 "name": "Forward net expectancy",

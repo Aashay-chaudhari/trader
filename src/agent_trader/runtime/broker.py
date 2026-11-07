@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+from uuid import uuid4
 
 from .config import ET
 
@@ -32,13 +33,51 @@ class Broker:
 
     def request(self, method, path, *, data=False, params=None, payload=None):
         base = DATA_URL if data else PAPER_URL
-        r = self.client.request(method, base + path, params=params, json=payload)
-        if r.status_code >= 400:
-            raise BrokerError(r.status_code)
-        return r.json() if r.content else None
+        # Route templates identify failures without persisting symbols, broker
+        # identifiers, payloads, credentials or provider error response bodies.
+        route = path
+        for prefix in ("/v2/orders/", "/v2/assets/", "/v1beta1/options/snapshots/"):
+            if path.startswith(prefix):
+                route = prefix + ":item"
+        details = {"service": "market_data" if data else "paper_broker",
+                   "method": method, "route": route, "attempt_id": str(uuid4())}
+        try:
+            r = self.client.request(method, base + path, params=params, json=payload)
+            if r.status_code >= 400:
+                details["http_status"] = r.status_code
+                raise BrokerError(r.status_code)
+            return r.json() if r.content else None
+        except (httpx.HTTPError, BrokerError, ValueError) as exc:
+            exc.operation_details = details
+            raise
 
     def account(self):
         return self.request("GET", "/v2/account")
+
+    def account_activities(self, *, page_size=100, max_pages=100):
+        """Read complete paper-account activity history or reject a partial batch.
+
+        The trading API uses the last activity ID as its next-page token. No
+        date filter is used: fees can be created after their associated trade.
+        """
+        if not 1 <= page_size <= 100 or max_pages < 1:
+            raise ValueError("Invalid account activity pagination limits")
+        params = {"direction": "asc", "page_size": page_size}
+        result, seen = [], set()
+        for _ in range(max_pages):
+            page = self.request("GET", "/v2/account/activities", params=params)
+            if not isinstance(page, list) or len(page) > page_size:
+                raise ValueError("Invalid account activity response")
+            for activity in page:
+                identity = activity.get("id") if isinstance(activity, dict) else None
+                if not isinstance(identity, str) or not identity or identity in seen:
+                    raise ValueError("Missing or repeated account activity identity")
+                seen.add(identity)
+                result.append(activity)
+            if len(page) < page_size:
+                return result
+            params = {**params, "page_token": page[-1]["id"]}
+        raise ValueError("Account activity pagination exhausted; partial batch rejected")
 
     def clock(self):
         return self.request("GET", "/v2/clock")
