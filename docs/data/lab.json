@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T23:15:00.825365+00:00",
+  "generated_at": "2026-11-07T23:15:45.050964+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T18:13:38.241625-05:00",
+  "heartbeat": "2026-11-07T18:15:35.279910-05:00",
   "watchdog": {
     "checked_at": "2026-11-07T23:14:03.4559644+00:00",
     "incident": false,
@@ -12,10 +12,10 @@
     "models_paused": true,
     "maintenance": true
   },
-  "status": "Local supervisor stopped; independent watchdog owns recovery.",
+  "status": "Market holiday or weekend. Reconciled; background research is available.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T23:14:31.872767+00:00",
+    "at": "2026-11-07T23:15:39.368206+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -78,7 +78,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T23:14:24.429214+00:00",
+    "as_of": "2026-11-07T23:15:39.377328+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -112,7 +112,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T23:14:24.429214+00:00",
+      "broker_cash_observed_at": "2026-11-07T23:15:39.377328+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -197,6 +197,24 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T23:15:39.377328+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:15:39.377328+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:15:39.377328+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T23:14:24.429214+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10974,24 +10992,6 @@
     },
     {
       "at": "2026-11-07T11:44:41.603939+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:43:37.473085+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:43:37.473085+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:43:37.473085+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11109,7 +11109,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T23:15:01.163639+00:00",
+    "as_of": "2026-11-07T23:15:45.405999+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11499,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T23:15:01.165709+00:00",
+    "as_of": "2026-11-07T23:15:45.407096+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11513,7 +11513,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T23:14:24.429214+00:00",
+      "as_of": "2026-11-07T23:15:39.377328+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11559,7 +11559,7 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 29.230370745000002,
+      "input_age_hours": 29.242660019166667,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
@@ -11601,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T23:15:02.567843+00:00",
+    "as_of": "2026-11-07T23:15:46.997615+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15046,6 +15046,15 @@
   "plans": [],
   "events": [
     {
+      "id": 553,
+      "at": "2026-11-07T23:15:35.273090+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
       "id": 552,
       "at": "2026-11-07T23:14:05.502395+00:00",
       "kind": "supervisor_stopped",
@@ -17300,46 +17309,6 @@
         "disposition": "revise",
         "summary": "All five findings are supported at their stated scope. XLK's 97.63% interval coverage and both age discrepancies check arithmetically. Reported preopen limitations are appropriately distinguished from independently verified defects. No analyst URLs require checking. The proposed acceptance check is incomplete: its validation_plan ends mid-word and lacks explicit acceptance rules."
       }
-    },
-    {
-      "id": 453,
-      "at": "2026-11-07T21:55:25.010803+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "0fa83d1726c87695c4cc103c6179a7984cd0b9ecca53754ae51f2b5526b4640f",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T21:54:46.906043+00:00",
-        "attempt_id": "usage:116",
-        "searches": 0,
-        "cycles": 5,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:55:25.007126+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 29,
-          "after_used_percent": 29,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
     }
   ],
   "experiments": [
@@ -18873,12 +18842,12 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T23:14:31.582210+00:00",
+    "at": "2026-11-07T23:15:39.319282+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 57,
+        "usedPercent": 58,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
@@ -18912,7 +18881,7 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T23:15:02.964339+00:00",
+    "as_of": "2026-11-07T23:15:47.413012+00:00",
     "status": {
       "state": "awaiting_queue_refresh",
       "role": "deep_research_review",
@@ -22921,9 +22890,9 @@
     "daily_call_ceiling": 24,
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "account_used_percent": 57.0,
-    "quota_observed_at": "2026-11-07T23:14:31.582210+00:00",
-    "target_gap_percentage_points": 23.0,
+    "account_used_percent": 58.0,
+    "quota_observed_at": "2026-11-07T23:15:39.319282+00:00",
+    "target_gap_percentage_points": 22.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
