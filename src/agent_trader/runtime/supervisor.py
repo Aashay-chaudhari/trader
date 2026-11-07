@@ -60,6 +60,14 @@ def worker(config, role, context, day, task_key=None):
                 return Accounting(store).refresh(broker)
             finally:
                 broker.client.close()
+        if role == "options_coverage":
+            from .options_coverage import run_capture
+
+            broker = Broker(config)
+            try:
+                return run_capture(store, broker, context["slot"])
+            finally:
+                broker.client.close()
         if role in ("deep_research", "deep_research_review"):
             from .research_work import prepare_task
 
@@ -259,6 +267,11 @@ class Supervisor:
                     "fee_count": result.get("fee_count", 0),
                     "cash_bridge": result.get("cash_bridge", {}),
                 })
+            elif role == "options_coverage":
+                self.store.event("options_coverage_worker_completed", {
+                    "summary": "Bounded indicative options coverage receipts recorded; no execution authority.",
+                    "slot": context["slot"], "execution_eligible": False,
+                })
             elif role in ("deep_research", "deep_research_review"):
                 from .research_work import record_analysis, record_review
 
@@ -451,11 +464,11 @@ class Supervisor:
 
                 stage_change(self.config, self.store, result)
             self.store.job_end(key, True, {"role": role, "completed": utc_now()})
-            if role not in ("quota_refresh", "accounting_refresh"):
+            if role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
                 record_application_outcome(self.store, key, "accepted")
                 self.record_quality(day, role, original_result, key, "applied")
         except Exception as exc:
-            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh"):
+            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
                 record_application_outcome(
                     self.store, key, "rejected", getattr(exc, "validation_code", None)
                 )
@@ -463,7 +476,7 @@ class Supervisor:
                 from .research_work import record_failure
 
                 record_failure(self.store, key, exc, datetime.now(ET))
-            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh"):
+            if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
                 self.record_quality(day, role, original_result, key, "rejected")
             if role in ("research", "decision", "position_review", "pulse"):
                 self.store.set("entry_budget_blocked", True)
@@ -555,6 +568,29 @@ class Supervisor:
             "research_quality_audit", lambda: daily_audit(self.store, day, persist=True)
         )
         return True
+
+    def launch_options_coverage(self, now, close):
+        from .options_coverage import capture_admission, public_summary
+
+        if self.future or not self.store.get("market_open") or now >= close - timedelta(minutes=12):
+            return False
+        slot = self.cohort_check("options coverage due", lambda: capture_admission(self.store, now))
+        if slot is None:
+            return False
+        # Execution decisions and the shared quota refresh retain queue priority.
+        if self.launch_candidate(now, close):
+            return True
+        quota = self.store.get("quota", {})
+        try:
+            age = (now - timestamp(quota["at"])).total_seconds()
+        except (KeyError, TypeError, ValueError):
+            age = float("inf")
+        if age < -60 or age > 900:
+            return self.launch("quota-refresh:" + now.strftime("%Y-%m-%d:%H:") + str(now.minute // 5),
+                               "quota_refresh", {}, now.date().isoformat())
+        summary = public_summary(self.store)
+        return self.launch("options-coverage:" + summary["registration_id"] + ":" + str(slot),
+                           "options_coverage", {"slot": slot}, now.date().isoformat())
 
     def preflight(self):
         good = self.engine.reconcile()
@@ -853,6 +889,9 @@ class Supervisor:
         self.store.set("heartbeat", now.isoformat())
         self.cohort_check("expiry", lambda: self.cohorts.expire(now))
         self.cohort_check("adaptive expiry", lambda: self.adaptive.expire(now))
+        from .options_coverage import due_capture
+
+        self.cohort_check("options coverage deadlines", lambda: due_capture(self.store, now))
         # The Windows watchdog reads this directly even when Pages/export fail.
         self.config.state_dir.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(
@@ -1064,15 +1103,17 @@ class Supervisor:
                     self.launch("research:" + day, "research", {}, day)
                 elif now >= opened and self.launch_position_review(now):
                     pass
-                elif self.pending_research_validation(day):
-                    pass
-                elif self.launch_exploration(now, close):
+                elif now >= opened and self.launch_options_coverage(now, close):
                     pass
                 elif (
                     not self.engine.plans()
                     and 9 * 60 + 45 <= now.hour * 60 + now.minute < 10 * 60 + 15
                     and self.launch("fresh-open-research:" + day, "research", {}, day)
                 ):
+                    pass
+                elif self.pending_research_validation(day):
+                    pass
+                elif self.launch_exploration(now, close):
                     pass
                 elif self.store.get("needs_research") and self.launch(
                     "refresh:" + day + ":" + now.strftime("%H"), "research", {}, day
@@ -1481,7 +1522,7 @@ class Supervisor:
         key, role, context, day = self.task
         safe_roles = {
             "deep_research", "deep_research_review", "weekly", "monthly",
-            "quota_refresh", "accounting_refresh",
+            "quota_refresh", "accounting_refresh", "options_coverage",
         }
         if not self.future.cancelled() and role in safe_roles:
             self.finish_task()

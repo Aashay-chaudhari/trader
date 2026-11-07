@@ -76,3 +76,19 @@ SPY regime data excludes its dependent rule rather than recording a cash abstent
 All six historical freezes passed a read-only calendar audit (180 symbol/date
 combinations), and their original inputs and hashes remain intact. New validation
 does not retrospectively certify unrecorded quote details or profitability.
+
+
+## Prospective research cleanup prepared November 7
+
+A further isolated review prepares four finite research questions tied to exact
+held cards and their original evidence. It also prepares a bounded prospective
+options coverage probe: the retained historical sample is 30 same-day calls,
+not evidence that all later-expiry free IV is unavailable. The probe will retain
+calls and puts across two fixed future windows, with eight planned observations
+and twelve lifetime request reservations. It has no execution authority.
+Registration, activation and session outcomes require separate observed receipts.
+
+The proposed VIX/SPX diagnostic remains a design document, not an active study.
+Its daily-close timestamp limitation prevents a strict synchronized calibration
+claim. Confirmed holidays/weekends now have an expected non-session diagnostic;
+an unverified missing calendar remains deferred.

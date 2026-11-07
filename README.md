@@ -90,10 +90,36 @@ No automatic purchases, paid fallbacks, or reset-credit consumption occur.
 
 ## Development
 
+The active runtime supports Linux, including WSL Ubuntu, and requires Python 3.11+
+and system timezone data. It uses Linux file locks and a systemd service; native
+Windows Python is not a supported runtime. A new checkout needs only the base
+dependencies for the active CLI:
+
 ```bash
-.venv/bin/python -m pytest tests -q
-.venv/bin/python -m ruff check src/agent_trader/runtime src/agent_trader/strategies
+uv sync --locked
+.venv/bin/agent-trader --help
 ```
+
+Use a separate checkout and environment for development so the running service's
+environment stays unchanged. With uv 0.11.16, install the explicit development and
+legacy extras to run the complete regression suite:
+
+```bash
+UV_PROJECT_ENVIRONMENT=venv uv sync --locked --extra dev --extra legacy
+venv/bin/python -m pytest tests -q
+venv/bin/python -m ruff check src/agent_trader/runtime src/agent_trader/strategies
+```
+
+The base install uses NumPy, Pydantic, python-dotenv and httpx. The `legacy` extra
+retains the older agents' SDKs and analysis libraries for reference and regression
+coverage; installing it does not enable paid model calls or change the active CLI.
+The optional `alerts` extra remains separate. Lockfile updates keep all extras
+resolved, while installation includes only the requested extras.
+
+CI also checks both CLI entrypoints and imports with only the base dependencies,
+then adds `dev` and runs `pytest --confcutdir=tests/runtime tests/runtime -q`. The explicit
+fixture boundary excludes `tests/conftest.py`, which imports legacy settings and
+orchestration; the complete suite still exercises those fixtures with `legacy`.
 
 Actions runs tests and deploys Pages only. Legacy cloud trading/reminder/reset
 workflows are retained outside the active workflows directory. The older Python

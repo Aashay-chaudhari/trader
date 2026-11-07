@@ -193,3 +193,22 @@ class Broker:
             data=True,
             params={"feed": "indicative", "limit": 30},
         )
+
+    def option_contracts_page(self, underlying, first_expiry, last_expiry, low_strike, high_strike, *, page_token=None):
+        """One read-only metadata request; caller owns durable pagination budget."""
+        if underlying not in ("SPY", "QQQ"):
+            raise ValueError("Coverage metadata is limited to the two registered ETFs")
+        params = {"underlying_symbols": underlying, "root_symbol": underlying, "status": "active",
+                  "show_deliverables": "true", "expiration_date_gte": first_expiry,
+                  "expiration_date_lte": last_expiry, "strike_price_gte": low_strike,
+                  "strike_price_lte": high_strike, "limit": 1000}
+        if page_token:
+            params["page_token"] = page_token
+        return self.request("GET", "/v2/options/contracts", params=params)
+
+    def option_snapshots(self, symbols):
+        """Explicit-contract indicative snapshots; never broadens to a whole chain."""
+        if not symbols or len(symbols) > 4 or len(set(symbols)) != len(symbols):
+            raise ValueError("Coverage snapshots require one to four distinct selected contracts")
+        return self.request("GET", "/v1beta1/options/snapshots", data=True,
+                            params={"symbols": ",".join(sorted(symbols)), "feed": "indicative", "limit": 4})

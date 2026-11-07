@@ -302,7 +302,11 @@ Weekends, overnight before 07:00 ET, and after the actual close plus 90 minutes,
 the free worker can investigate unresolved retained evidence. Core daily/weekly
 reviews receive scheduling priority. The queue covers event/source verification,
 company-specific coverage, feature lineage, sampling, accounting and reliability.
-Each analyst report requires a fresh independent reviewer. Accepted reports have
+Four additional questions follow exact held-card identities: VIX horizon/units,
+earnings IV coverage, reversal evidence lineage and rally/giveback universe
+consistency. They preserve original drafts, contracts, contrary evidence and
+missing-source receipts. Quote refreshes and repeated unchanged drafts do not
+create new work. Each analyst report requires a fresh independent reviewer. Accepted reports have
 explicit validity windows and enter research context only; they cannot submit
 orders, promote filters, edit code, or rewrite frozen studies.
 
@@ -322,6 +326,41 @@ An objective is not a guarantee that sufficient useful work or allowance exists.
 Use .runtime/agent-pause.flag to pause all model jobs while Python protection
 continues. Existing maintenance/watchdog procedures remain unchanged.
 
+
+## Prospective options coverage
+
+The coverage probe is a one-time, independently reviewed registration, separate
+from the ordinary morning chain sample. It can make at most 12 read-only HTTP
+attempts over its entire registration; interrupted requests consume reservations.
+It uses no model turn and grants no order, promotion or execution authority.
+
+The first future broker session is fixed at registration. At open +30 minutes,
+metadata selects the earliest eligible 7–14-calendar-day expiry and nearest strike
+with both a standard 100-share call and put, within ±1% of the initial underlying
+midpoint. SPY and QQQ retain those same contracts at open +45 minutes. Both receipt
+windows last two minutes. Selection never depends on IV availability. Pagination
+must be complete within its bound, and missing metadata never becomes a default.
+The denominator remains eight planned contract observations even when selection,
+collection or a window fails. No rescheduling, retry, substitute contract or backfill.
+
+Protection, closing, position review, candidate decisions and quota refresh keep
+priority. A busy or paused worker can miss a window; the result remains explicitly
+unknown. A changed broker-session calendar prevents collection under the old window.
+The existing morning sampler continues independently and does not spend this
+registration's request reservations.
+
+The Options view separates the frozen old sampler, future fixed selections and
+same-window legacy sampler comparisons. Positive IV, fresh ordered quotes and a
+nearby underlying timestamp are coverage checks. They cannot establish synchronized
+valuation because IV/Greek as-of times are unavailable. Indicative quotes are
+modified and are not executable OPRA quotes. This ETF probe cannot establish an
+issuer earnings effect or profitable option strategy.
+
+Register only after review of the exact protocol hash and completed tests, while
+the supervisor is stopped under the normal maintenance procedure. Preserve the
+calendar receipt and original baseline. An existing registration cannot be silently
+replaced or extended. The [VIX variance-gap proposal](docs/research/vix-variance-gap-protocol.md)
+is a separate design document, not a registered or scheduled study.
 
 ## Execution release verification and recovery
 

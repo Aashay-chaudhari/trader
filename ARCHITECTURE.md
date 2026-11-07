@@ -8,7 +8,7 @@ Hidden Windows WSL host + independent 2-minute watchdog
   │    ├─ SQLite transactional branch ledger and durable work queue
   │    ├─ deterministic limits, trigger revalidation, protective orders, closing
   │    └─ sanitized static snapshot → Git push → Actions → GitHub Pages
-  ├─ one bounded background model worker
+  ├─ one bounded background research/data worker
   │    └─ local Codex app-server / existing subscription authentication
   │         ├─ bounded role-specific threads, role/model selection between turns
   │         ├─ morning researcher, official calendars and live web event updates
@@ -42,8 +42,10 @@ Promotion changes only supported filters within fixed risk. Maintenance candidat
 are committed in isolated worktrees and remain shadow candidates until evaluated.
 The kernel, test suite, and promotion criteria are outside the automated mutation path.
 
-Only `docs/index.html`, `style.css`, `app.js`, `data/lab.json`, and `.nojekyll` are
-published. Raw credentials, SQLite files and session artifacts are excluded.
+The automatic publisher stages only `docs/index.html`, `style.css`, `app.js`,
+`data/lab.json`, and `.nojekyll`. Separately reviewed source commits may add public
+research documentation under `docs/research/`. Raw credentials, SQLite files and
+session artifacts are excluded.
 Publisher failures do not stop trading protection. GitHub is not a runtime dependency
 for order handling. See `SYSTEM_GUIDE.md` for failure recovery and current limits.
 
@@ -129,3 +131,26 @@ application rejection, transport failure and missing measurements.
 cash bridge. Read-only intake cannot mutate branch cash. Explicit fee application
 requires uniquely matched owned executions, an unchanged receipt and an exact
 cash bridge, and is atomic and idempotent. Ambiguous fees remain unassigned.
+
+
+## Bounded prospective options coverage
+
+`options_coverage.py` owns a reviewed, immutable, one-time coverage registration.
+Its background worker makes read-only broker/indicative-data requests, reserving
+each attempt durably before sending. Two fixed future windows share the same
+metadata-selected call/put pairs. The entire registration permits twelve requests;
+eight planned observations remain the denominator through failures and restarts.
+No retry, outcome-based reselection, delayed backfill or automatic extension is
+allowed. A broker-session mismatch holds collection under the original windows.
+
+This path does not call the model harness or touch orders, strategy activation,
+branch accounting or promotion. Protective routines continue on the main tick;
+position/candidate reviews and quota refresh retain worker priority. Only terminal
+coverage summaries enter held-card research evidence. Current quotes or in-progress
+counters cannot repeatedly seed the same question. Raw HTTP responses remain private.
+
+The package base contains only the active runtime's dependencies. Retired SDK and
+analysis packages live in the optional `legacy` extra. CI validates the base CLI
+and module imports, runtime tests without legacy shared fixtures, and the complete
+regression suite with explicit legacy dependencies. This does not change the live
+service's environment or enable retired execution paths.

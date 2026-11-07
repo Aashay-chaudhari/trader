@@ -115,6 +115,46 @@ def test_existing_freeze_preserves_original_inputs_scope_and_protocol(store):
     assert store.get("cohort-inputs:" + now.date().isoformat()) == inputs_before
 
 
+@pytest.mark.parametrize("day", ["2026-11-26", "2026-11-28"])
+def test_verified_holiday_or_weekend_is_expected_absence(store, day):
+    now, calendar, bars = inputs(day)
+    store.set("calendar-receipt", {
+        "sha256": content_hash(calendar), "sessions": calendar,
+        "requested_start": "2026-09-01", "requested_end": "2027-01-01",
+    })
+    assert cohorts.freeze_signals(
+        store, bars, calendar, now, calendar_reference="calendar-receipt"
+    ) is None
+    receipt = store.get("cohort_freeze_latest")
+    assert (receipt["state"], receipt["reason"]) == ("not_scheduled", "no_broker_session")
+    assert not store.get("cohort_study")
+    assert not store.rows("SELECT id FROM cohort_expected")
+
+
+@pytest.mark.parametrize("case", ["missing", "hash", "bounds", "malformed"])
+def test_unverified_missing_session_does_not_assert_market_closed(store, case):
+    now, calendar, bars = inputs("2026-11-28")
+    retained = {"sha256": content_hash(calendar), "sessions": calendar,
+                "requested_start": "2026-09-01", "requested_end": "2027-01-01"}
+    if case == "hash":
+        retained["sha256"] = "not-the-calendar-hash"
+    elif case == "bounds":
+        retained["requested_end"] = "2026-11-27"
+    elif case == "malformed":
+        calendar[0]["open"] = "invalid-time"
+        retained["sha256"] = content_hash(calendar)
+    if case != "missing":
+        store.set("calendar-receipt", retained)
+    assert cohorts.freeze_signals(
+        store, bars, calendar, now, calendar_reference="calendar-receipt"
+    ) is None
+    receipt = store.get("cohort_freeze_latest")
+    assert (receipt["state"], receipt["reason"]) == (
+        "deferred", "required_broker_calendar_unavailable"
+    )
+    assert not store.rows("SELECT id FROM cohort_expected")
+
+
 def test_named_calendar_receipt_must_match_exact_supplied_calendar(store):
     now, calendar, bars = inputs()
     store.set("calendar-receipt", {"sha256": "wrong", "sessions": calendar})

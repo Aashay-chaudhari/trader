@@ -38,6 +38,8 @@ PUBLIC_EVENTS = {
     "fee_booked",
     "research_work_analyzed",
     "research_work_reviewed",
+    "options_coverage_registered",
+    "options_coverage_captured",
     "budget_skip",
     "notification_sent",
     "experiment_registered",
@@ -102,6 +104,7 @@ def snapshot(config, store):
     from .adaptive_lab import AdaptiveLab
     from .budget import usage_policy
     from .research_work import public_summary
+    from .options_coverage import public_summary as options_coverage_summary
     from .accounting import accounting_summary
     from .engine import current_execution_verified
 
@@ -283,6 +286,7 @@ def snapshot(config, store):
             },
             "benchmarks": store.get("benchmarks", {}),
             "options_research": store.get("options_research", {}),
+            "options_coverage": options_coverage_summary(store),
             "release": store.get("release", {}),
             "limitations": [
                 "Paper results are not live returns.",

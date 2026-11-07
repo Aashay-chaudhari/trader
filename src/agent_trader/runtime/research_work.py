@@ -88,6 +88,70 @@ TOPICS = {
         "definitions against their claimed horizons and counts. Preserve fixed "
         "protocols and explain inconclusive evidence without tuning thresholds."
     ),
+    "held_vix_horizon": (
+        "Resolve the held VIX/SPX variance question as a data-and-method feasibility audit. "
+        "Verify primary VIX methodology, percentage/squared units, exact 30-calendar-day "
+        "horizons, SPX close availability and compatible observation clocks. Specify a "
+        "prospective nonoverlapping FOMC-labelled comparison with honest missing endpoints. "
+        "A daily-close realized-variance proxy is not option P&L. Preserve inspected-data "
+        "limits; do not expand this into another generic Fed/regime or NBER source review."
+    ),
+    "held_earnings_iv": (
+        "Resolve the supplied held earnings-IV cards together using the actual retained option "
+        "coverage. Distinguish sampled zero-day calls, quote availability, missing IV/Greeks "
+        "and absent matched issuer-event observations. Verify provider methodology and "
+        "free indicative-data coverage before alleging that free IV is unavailable. Design "
+        "one bounded prospective read-only coverage probe with matched expiry, moneyness, "
+        "calls/puts, time and independently verified event timing. An ETF pilot cannot "
+        "establish an issuer earnings effect, and IV crush cannot establish trading profit."
+    ),
+    "held_reversal_lineage": (
+        "Audit the rejected reversal revision against its exact earlier and later drafts, "
+        "declared screen references, matched observations and contracts. Separate a retained "
+        "historical screen from evidence actually supplied to the rejected review. Compare "
+        "the original strict threshold with the later inclusive threshold and relative-ask "
+        "conditions. Propose a new explicit prospective lineage repair preserving contrary "
+        "development results, missing inputs and original frozen history; no retrospective "
+        "validation or repeated generic reversal-paper search."
+    ),
+    "held_rally_universe": (
+        "Resolve the held rally/giveback hypothesis's predicted-universe versus saved-contract "
+        "mismatch using the exact WMT observation and draft. Check whether the motivating "
+        "symbol is included or an explicit transfer claim is needed. Specify one consistent "
+        "prospective universe, predicates, horizon, costs and date-weighted estimator. "
+        "Six symbols over 60 entry sessions yield 360 opportunities, not 30 guaranteed "
+        "signals. Preserve missing inputs and unverified prices; do not alter old contracts "
+        "or treat this local conjecture as an established external finding."
+    ),
+}
+
+# These four distinct gaps have actual held cards. New reports, refreshed quotes,
+# or another paper in the same family cannot manufacture additional topic slots.
+HELD_GROUPS = {
+    "held_vix_horizon": ("20261029-options-macro-variance",),
+    "held_earnings_iv": ("20261029-options-earnings", "2026-10-30-options-event-volatility"),
+    "held_reversal_lineage": ("2026-10-30-swing-reversal",),
+    "held_rally_universe": ("20261104-swing-rally-giveback-recovery",),
+}
+HELD_SOURCE_LOCATORS = {
+    "held_vix_horizon": (
+        "https://cdn.cboe.com/resources/vix/VIX_Methodology.pdf",
+        "https://cdn.cboe.com/api/global/us_indices/governance/Cboe_Volatility_Index_Mathematics_Methodology.pdf",
+        "https://www.cboe.com/tradable-products/vix/vix-historical-data",
+        "https://cdn-api.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv",
+        "https://fred.stlouisfed.org/series/SP500",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "https://www.federalreserve.gov/pubs/feds/2011/201145/index.html",
+    ),
+    "held_earnings_iv": (
+        "https://www.optionseducation.org/news/the-crush-is-real",
+        "https://docs.alpaca.markets/us/docs/market-data-faq",
+        "https://docs.alpaca.markets/us/reference/optionchain",
+        "https://docs.alpaca.markets/us/reference/optionsnapshots",
+        "https://docs.alpaca.markets/us/reference/get-options-contracts",
+    ),
+    "held_reversal_lineage": (),
+    "held_rally_universe": (),
 }
 
 MACRO_SOURCES = {
@@ -222,6 +286,293 @@ def _immutable(store, key, payload, at):
 
 def _select(value, keys):
     return {key: value[key] for key in keys if key in value}
+
+
+def _held_draft(store, card_id, direction="DESC"):
+    # Match identity, not a similar family/title, and never use deep-research
+    # conclusions as new discovery evidence. Old cards remain discoverable.
+    rows = store.rows(
+        "SELECT id,at,payload FROM memory WHERE layer='research_artifact' "
+        "AND json_extract(payload,'$.role')='exploration' "
+        "AND EXISTS (SELECT 1 FROM json_each(memory.payload,'$.result.hypotheses') h "
+        "WHERE json_extract(h.value,'$.id')=?) ORDER BY at " + direction + ",id " + direction + " LIMIT 1",
+        (card_id,),
+    )
+    if not rows:
+        return None
+    row = rows[0]
+    artifact = json.loads(row["payload"])
+    result = artifact["result"]
+    hypothesis = next(h for h in result["hypotheses"] if h.get("id") == card_id)
+    contracts = [c for c in result.get("adaptive_contracts", []) if c.get("hypothesis_id") == card_id]
+    return {
+        "hypothesis": hypothesis, "contracts": contracts,
+        "receipt": {"artifact_id": row["id"], "retained_at": row["at"],
+                    "artifact_sha256": _hash(artifact)},
+    }
+
+
+def _option_coverage(store):
+    sample = store.get("options_research", {})
+    if not sample:
+        return {"status": "missing", "scope": "No retained option sample; coverage remains unknown."}
+    contracts = sample.get("contracts", [])
+    try:
+        observed = datetime.fromisoformat(sample["observed_at"].replace("Z", "+00:00"))
+        observed_day = observed.astimezone(ET).date() if observed.tzinfo else None
+    except (KeyError, TypeError, ValueError):
+        observed_day = None
+
+    def finite(value, positive=False):
+        return (isinstance(value, (int, float)) and not isinstance(value, bool)
+                and math.isfinite(value) and (not positive or value > 0))
+
+    totals, by_underlying, expiry_buckets, rights = {}, {}, {}, {}
+    names = ("contracts", "positive_two_sided_quotes", "noncrossed_positive_quotes",
+             "quote_timestamps_present", "positive_iv", "numeric_greeks")
+    totals = dict.fromkeys(names, 0)
+    for contract in contracts:
+        underlying = contract.get("underlying") or "unknown"
+        counts = by_underlying.setdefault(underlying, dict.fromkeys(names, 0))
+        quote = contract.get("quote") or {}
+        positive = finite(quote.get("bp"), True) and finite(quote.get("ap"), True)
+        greeks = contract.get("greeks") or {}
+        values = {
+            "contracts": 1, "positive_two_sided_quotes": int(positive),
+            "noncrossed_positive_quotes": int(positive and quote["ap"] >= quote["bp"]),
+            "quote_timestamps_present": int(bool(quote.get("t"))),
+            "positive_iv": int(finite(contract.get("implied_volatility"), True)),
+            "numeric_greeks": int(isinstance(greeks, dict) and any(
+                finite(greeks.get(name)) for name in ("delta", "gamma", "theta", "vega", "rho")
+            )),
+        }
+        for name, number in values.items():
+            totals[name] += number
+            counts[name] += number
+        match = re.fullmatch(r"[A-Z]+(\d{6})([CP])\d{8}", contract.get("symbol", ""))
+        bucket, right = "unknown", "unknown"
+        if match:
+            right = "call" if match[2] == "C" else "put"
+            try:
+                expiry = datetime.strptime("20" + match[1], "%Y%m%d").date()
+                days = (expiry - observed_day).days if observed_day else None
+                if days is not None:
+                    bucket = ("expired" if days < 0 else "same_day" if days == 0 else
+                              "1_to_7_days" if days <= 7 else "8_to_45_days" if days <= 45 else "over_45_days")
+            except ValueError:
+                pass
+        expiry_buckets[bucket] = expiry_buckets.get(bucket, 0) + 1
+        rights[right] = rights.get(right, 0) + 1
+    symbols = sorted(c.get("symbol", "") for c in contracts)
+    facts = {
+        "status": "retained_sample", "feed": sample.get("feed"), "counts": totals,
+        "by_underlying": dict(sorted(by_underlying.items())),
+        "expiry_from_observed_date": dict(sorted(expiry_buckets.items())), "rights": dict(sorted(rights.items())),
+        "event_matching": "unknown: no issuer-event alignment is established by this snapshot",
+        "scope": "Sample coverage only; timestamps present do not prove freshness. Numeric IV/Greeks do not prove accuracy. No execution eligibility or option P&L.",
+    }
+    facts["coverage_sha256"] = _hash(facts)
+    facts["_observation_metadata"] = {
+        "observed_at": sample.get("observed_at"),
+        # Exact snapshot and sample identities are retained for audit, but a
+        # quote refresh/expiry roll with unchanged coverage cannot reseed work.
+        "snapshot_sha256": hashlib.sha256(dumps(sample).encode()).hexdigest(),
+        "contract_set_sha256": _hash(symbols), "sample_contract_ids": symbols[:12],
+        "omitted_contract_ids": max(0, len(symbols) - 12),
+    }
+    return facts
+
+
+def _held_observation(store, observation_id):
+    rows = store.rows("SELECT payload FROM memory WHERE id=? AND layer='market_observation_lead'", (observation_id,))
+    if not rows:
+        return {"observation_id": observation_id, "status": "missing"}
+    observation = json.loads(rows[0]["payload"])
+    value = {"observation_id": observation_id, "observation_sha256": _hash(observation),
+             **_select(observation, ("subject", "kind", "observed_at", "input_observed_at", "event_asof", "values")),
+             "source": observation.get("provenance", {}).get("source"),
+             "scope": "Descriptively selected lead, not independent evidence or a signal."}
+    input_ref = observation.get("provenance", {}).get("input_ref")
+    inputs = store.rows("SELECT id,payload FROM memory WHERE id=? AND layer='research_input'", (input_ref,)) if input_ref else []
+    value["exact_input"] = {"id": input_ref, "status": "missing"}
+    if inputs:
+        captured = json.loads(inputs[0]["payload"])
+        subject = observation.get("subject")
+        value["exact_input"] = {
+            "id": inputs[0]["id"], "status": "retained", "sha256": _hash(captured),
+            "observed_at": captured.get("observed_at"),
+            "subject_daily": _select(captured.get("packet", {}).get("daily_indicators", {}).get(subject, {}),
+                                     ("last_daily_close", "return_1d", "return_3d", "asof")),
+            "scope": "Retained supplied features, not independent verification of source bars.",
+        }
+    return value
+
+
+def _terminal_option_probe(store):
+    """Two completed observation windows are evidence; scheduling is not evidence."""
+    from .options_coverage import public_summary
+
+    summary = public_summary(store)
+    captures = summary.get("captures", [])
+    if (not summary.get("registered") or len(captures) != 2
+            or {c.get("slot") for c in captures} != {1, 2}
+            or any(c.get("state") not in ("completed", "missed", "interrupted") for c in captures)):
+        return None
+    captures = sorted(captures, key=lambda c: c["slot"])
+    rows, categories, reasons = [], {}, []
+    for capture in captures:
+        supplied = {(r.get("underlying"), r.get("type")): r for r in capture.get("observations", [])}
+        for underlying in ("SPY", "QQQ"):
+            for side in ("call", "put"):
+                row = supplied.get((underlying, side), {})
+                iv = row.get("iv_category", "unobserved")
+                categories[iv] = categories.get(iv, 0) + 1
+                reason = None if row.get("reason") == "coverage_only" else row.get("reason", "capture_observation_missing")
+                if reason and reason not in reasons:
+                    reasons.append(reason)
+                rows.append([
+                    capture["slot"], underlying, side, row.get("symbol"), iv,
+                    row.get("quote_status", "unobserved"), row.get("positive_iv_with_quote_checks", False),
+                    reasons.index(reason) if reason else None,
+                ])
+
+    def counts(value):
+        return {"counts": [value.get(k) for k in (
+            "contracts", "call_count", "put_count", "same_day_expiry_count", "valid_quotes", "contracts_with_any_finite_greek",
+        )], "iv": value.get("iv_categories", {})}
+
+    selection = summary.get("selection", [])
+    result = {
+        "version": summary["version"], "protocol_sha256": summary["protocol_sha256"],
+        "registration_id": summary["registration_id"], "session_day": summary["session_day"],
+        "expected_observations": 8, "capture_states": [[c["slot"], c["state"]] for c in captures],
+        "selection": [[s.get("underlying"), s.get("state"), s.get("expiry"), s.get("metadata_complete")] for s in selection],
+        "selection_columns": ["underlying", "state", "expiry", "metadata_complete"],
+        "selected_side_counts": {side: sum(bool(s.get(side)) for s in selection if s.get("state") == "selected") for side in ("call", "put")},
+        "iv_categories": categories,
+        "observation_columns": ["slot", "underlying", "side", "symbol", "iv", "quote", "iv_with_checks", "reason_index"],
+        "observations": rows, "missing_reasons": reasons,
+        "count_columns": ["contracts", "calls", "puts", "same_day", "ordered_quotes", "any_finite_greek"],
+        "frozen_baseline": counts(summary.get("baseline", {})),
+        "legacy_comparator": [{"underlying": c.get("underlying"), **counts(c)} for capture in captures for c in capture.get("legacy_comparator", [])],
+        "scope": "Coverage only, not issuer-event evidence or P&L. IV checks require both IEX brackets, valid quotes and gap <=30s; IV as-of remains unknown. Missing is not zero.",
+        "_observation_metadata": {
+            "capture_sha256": [[c["slot"], c["capture_sha256"]] for c in captures],
+            "selection_sha256": [[s.get("underlying"), s.get("selection_sha256")] for s in selection],
+            "baseline_packet_sha256": summary.get("baseline", {}).get("packet_sha256"),
+        },
+    }
+    return result
+
+
+def _held_group_records(store, catalogue):
+    cards_by_id = {c["id"]: c for c in catalogue}
+    tables = {r["name"] for r in store.rows("SELECT name FROM sqlite_master WHERE type='table'")}
+    groups = {}
+    card_fields = ("id", "branch", "family", "claim", "state", "review_reason", "falsification",
+                   "predicted_outcome", "evidence_basis", "observation_ids", "screen_trial_ids", "experiment_ids", "source_urls")
+    for topic, card_ids in HELD_GROUPS.items():
+        cards = [cards_by_id[i] for i in card_ids if i in cards_by_id and cards_by_id[i].get("state") != "reviewed_for_testing"]
+        if not cards:
+            continue
+        records, observations, screen_refs, source_urls = [], set(), set(), set()
+        missing = [i for i in card_ids if i not in cards_by_id]
+        reviewed = [i for i in card_ids if i in cards_by_id and cards_by_id[i].get("state") == "reviewed_for_testing"]
+        if missing or reviewed:
+            records.append(("group_scope", {"missing_card_ids": missing, "already_reviewed_card_ids": reviewed,
+                                            "scope": "Only supplied held cards require this audit."}))
+        for card in cards:
+            projection = _select(card, card_fields)
+            records.append(("held_card", {**projection, "card_semantic_sha256": _hash(projection)}))
+            observations.update(card.get("observation_ids", []))
+            source_urls.update(card.get("source_urls", []))
+            screen_refs.update(card.get("screen_trial_ids", []))
+        if topic == "held_earnings_iv":
+            records.append(("option_coverage", _option_coverage(store)))
+            terminal = _terminal_option_probe(store)
+            if terminal:
+                records.append(("terminal_option_probe", terminal))
+        for card in cards:
+            latest, first = _held_draft(store, card["id"]), _held_draft(store, card["id"], "ASC")
+            if latest:
+                hypothesis = latest["hypothesis"]
+                differences = {k: v for k, v in _select(hypothesis, card_fields).items() if k not in card or v != card[k]}
+                records.append(("draft_lineage", {
+                    "hypothesis_id": card["id"], "latest_hypothesis_sha256": _hash(hypothesis),
+                    "latest_declared_screen_trial_ids": hypothesis.get("screen_trial_ids", []),
+                    "catalogue_differences": differences,
+                    "draft_contract_ids": [c["id"] for c in latest["contracts"]],
+                    "_observation_metadata": latest["receipt"],
+                }))
+                observations.update(hypothesis.get("observation_ids", []))
+                screen_refs.update(hypothesis.get("screen_trial_ids", []))
+                for contract in latest["contracts"]:
+                    records.append(("matched_draft_contract", {"status": "proposed_not_registration",
+                                                              "contract_sha256": _hash(contract), "definition": contract}))
+                if first and _hash(first["hypothesis"]) != _hash(hypothesis):
+                    parent = first["hypothesis"]
+                    screen_refs.update(parent.get("screen_trial_ids", []))
+                    source_urls.update(parent.get("source_urls", []))
+                    # Co-locate immutable retrieval receipts so their fixed
+                    # freshness reservation does not displace decision evidence.
+                    lineage = next(v for k, v in records if k == "draft_lineage" and v.get("hypothesis_id") == card["id"])
+                    lineage["_observation_metadata"]["earlier_artifact"] = first["receipt"]
+                    records.append(("earlier_card_version", {
+                        "hypothesis_sha256": _hash(parent),
+                        **_select(parent, ("id", "claim", "screen_trial_ids", "source_urls")),
+                        "scope": "Earlier retained same-ID draft; not proof it was supplied to a later reviewer.",
+                    }))
+            else:
+                records.append(("draft_lineage", {"hypothesis_id": card["id"], "status": "missing",
+                                                   "draft_contract_ids": None}))
+            registered = store.rows(
+                "SELECT id,state,payload,specification_sha256 FROM adaptive_contracts "
+                "WHERE json_extract(payload,'$.hypothesis_id')=? ORDER BY id", (card["id"],),
+            ) if "adaptive_contracts" in tables else []
+            records.append(("registration_lookup", {
+                "hypothesis_id": card["id"], "matched_contracts": [
+                    {"id": row["id"], "state": row["state"], "specification_sha256": row["specification_sha256"],
+                     "definition": json.loads(row["payload"]),
+                     "observations_by_state": store.rows(
+                         "SELECT state,count(*) n FROM adaptive_observations WHERE contract_id=? GROUP BY state ORDER BY state",
+                         (row["id"],),
+                     ) if "adaptive_observations" in tables else None} for row in registered[:4]
+                ], "omitted_contracts": max(0, len(registered) - 4),
+                "scope": "Exact hypothesis-ID match only; an empty list is not a negative performance result.",
+            }))
+        for observation_id in sorted(observations):
+            records.append(("matched_observation", _held_observation(store, observation_id)))
+        if screen_refs:
+            screen = store.get("historical_screen", {})
+            trials = [t for t in screen.get("trials", []) if t.get("id") in screen_refs]
+            lineage = next((v for k, v in records if k == "draft_lineage" and "_observation_metadata" in v), None)
+            if lineage is not None:
+                lineage["_observation_metadata"]["screen_at"] = screen.get("at")
+            records.append(("referenced_historical_screen", {
+                **_select(screen, ("as_of_exclusive", "first_session", "last_session", "split", "symbols", "dataset_sha256")),
+                "limitations_sha256": _hash(screen.get("limitations", [])),
+                "requested_trial_ids": sorted(screen_refs), "trials": trials,
+                "missing_trial_ids": sorted(screen_refs - {t["id"] for t in trials}),
+                "scope": "Retained screen matched by explicit draft references; exact old reviewer input is not retained here. Inspected holdout, survivor universe and overlapping clusters; assumed 20/50bp costs, daily IEX data not fills. New predicates have no retrospective validation.",
+                **({"_observation_metadata": {"screen_at": screen.get("at")}} if lineage is None else {}),
+            }))
+        locators = sorted(source_urls | set(HELD_SOURCE_LOCATORS[topic]))
+        source_sets = []
+        for card in cards:
+            if not card.get("source_urls"):
+                continue
+            supplied = [_select(s, ("url", "title", "takeaway", "published_at")) for s in card.get("sources", [])]
+            source_sets.append({
+                "card_id": card["id"], "cited_urls": card["source_urls"], "supplied_sources": supplied,
+                "missing_supplied_urls": sorted(set(card["source_urls"]) - {s.get("url") for s in supplied}),
+            })
+        records.append(("source_set", {
+            "source_set_sha256": _hash([locators, source_sets]), "urls": locators,
+            **({"card_source_sets": source_sets} if source_sets else {}),
+            "scope": "Declared or candidate locators only, not source-verification receipts. Reopen relevant primary sources; unavailable claims remain unknown.",
+        }))
+        groups[topic] = records
+    return groups
 
 
 def _runtime_receipts(store):
@@ -394,6 +745,7 @@ def evidence_packets(store):
         + [("finding", r) for r in findings],
         "evidence_integrity": [("definition", r) for r in definitions],
     }
+    raw.update(_held_group_records(store, catalogue))
     runtime_receipt = _runtime_receipts(store)
     if runtime_receipt:
         raw["runtime_reliability"].insert(0, ("current_verification_and_coverage", runtime_receipt))
@@ -648,6 +1000,11 @@ def prepare_task(store, context, review=False):
         "Use a summary under 500 characters, normally 3–5 findings with claim under 350 "
         "and qualification under 200, source claims under 200 and limitations under 150, "
         "at most 2 proposals and 4 unresolved items under 200 each. Retain decisive "
+        "checks in complete sentences: keep each proposal's problem under 200, "
+        "requested_change under 350 and validation_plan under 650 characters. A "
+        "validation plan must name the comparison and pass/fail/unknown outcomes; "
+        "group related fields instead of exhaustively listing them. Rewrite to fit, "
+        "never cut a word or sentence at the schema limit. Retain decisive "
         "evidence rather than filling every schema maximum. A partial/unavailable "
         "source alone supports an explicit unknown, not a factual observation or "
         "inference. Such findings need checked local evidence or at least one "
@@ -1000,6 +1357,10 @@ def _handoff_priority(topic, finding, focus_symbols):
         return 1
     if event:
         return 2
+    # Held-method work can inform future options/shadow briefs, but must not
+    # crowd current event/feature checks out of the bounded morning handoff.
+    if topic in HELD_GROUPS:
+        return 5
     return 3 if topic in ("feature_lineage", "source_verification") else 4
 
 
@@ -1019,6 +1380,11 @@ def reviewed_context(store, max_chars=3000, now=None, focus_symbols=None):
             "omitted_findings": len(draft["findings"]),
             "scope": "Selected reviewed findings only; omitted findings may contain further unknowns. Recheck event facts and execution gates.",
         }
+        if context["topic"] in HELD_GROUPS:
+            records[work_id]["scope"] = (
+                "Prospective options/shadow-method context only; held cards remain held. "
+                "No order, event clearance, contract rewrite or promotion authority."
+            )
         receipts = {s["url"]: s for s in item["result"]["sources"]}
         sources_by_work[work_id] = {
             "source:" + str(i): {"ref": "source:" + str(i), **_select(receipts[s["url"]], ("url", "outcome", "checked_at", "limitation"))}

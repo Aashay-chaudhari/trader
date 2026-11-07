@@ -117,6 +117,10 @@ def _freeze_diagnostic(store, day, now, state, reason, **details):
     return receipt
 
 
+class _NoBrokerSession(ValueError):
+    pass
+
+
 def _required_sessions(sessions, day):
     """Require explicit broker sessions, never infer a missing day from price bars."""
     if not isinstance(sessions, list) or not sessions:
@@ -134,7 +138,7 @@ def _required_sessions(sessions, day):
     if len(set(dates)) != len(dates):
         raise ValueError("Broker calendar contains ambiguous duplicate sessions")
     if day not in dates:
-        raise ValueError("Target entry date has no broker session")
+        raise _NoBrokerSession("Target entry date has no broker session")
     prior = sorted(d for d in dates if d < day)
     if len(prior) < 21:
         raise ValueError("Broker calendar does not establish the required 21 prior sessions")
@@ -174,6 +178,22 @@ def freeze_signals(store, bars, sessions, now=None, for_day=None, calendar_refer
         return store.get(key)  # Frozen inputs and their original validation scope never change.
     try:
         required = _required_sessions(sessions, day)
+    except _NoBrokerSession as exc:
+        retained = store.get(calendar_reference, {}) if calendar_reference else {}
+        confirmed_closed = (
+            retained.get("sha256") == content_hash(sessions)
+            and retained.get("sessions") == sessions
+            and isinstance(retained.get("requested_start"), str)
+            and isinstance(retained.get("requested_end"), str)
+            and retained["requested_start"] <= day <= retained["requested_end"]
+        )
+        _freeze_diagnostic(
+            store, day, now,
+            "not_scheduled" if confirmed_closed else "deferred",
+            "no_broker_session" if confirmed_closed else "required_broker_calendar_unavailable",
+            detail=str(exc), calendar_reference=calendar_reference,
+        )
+        return None
     except (KeyError, TypeError, ValueError, AttributeError) as exc:
         _freeze_diagnostic(
             store,

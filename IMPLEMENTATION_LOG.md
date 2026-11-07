@@ -660,3 +660,63 @@ release metadata. No maintenance broker order was submitted.
 Automatic safety review rejected the optional maintenance sandbox audit and its
 narrower follow-up. That portion remains unverified; this is not a finding of a
 repository vulnerability. The ordinary data/recovery/research reviews above completed.
+
+
+## November 7 research evidence and package cleanup — isolated validation
+
+Four finite held-card questions now retain exact original/latest drafts, contract
+and supplied-input hashes, named observations, explicit screen references and
+contrary historical development. The existing held state is preserved. Retained
+options coverage is 30 same-day calls with no IV/Greeks; that sampler cannot establish
+later-expiry feed unavailability. Fresh quote prices, expiry rolls and unchanged
+reports do not independently generate new work. Actual completed prospective
+coverage can provide a new bounded evidence packet after both windows terminate.
+
+Two reviewed validation plans were incomplete at exactly 1,200 characters. The
+original provider JSON equals the stored reports, establishing that storage did
+not truncate them. Prompt guidance now requests complete acceptance criteria below
+650 characters; historical replies remain unchanged. A separate retained-prompt
+audit found fresh-open research on all six evaluated sessions, each returning zero
+plans. November 2–6 delivered all selected daily/minute features exactly as archived;
+the open/midday reports had their focus-symbol opening ranges and VWAP. October 30's
+older delivered prompt lacked these fields and its exact input row is unretained.
+This does not establish an executable opportunity or justify forced trades.
+
+The options coverage collector uses metadata-only, immutable paired selection,
+eight fixed prospective observations and twelve lifetime HTTP reservations.
+Restart, deadline, partial-page, calendar mismatch, missing-field and unknown-request
+outcomes remain explicit. Both underlying receipts are needed for the complete quote
+check; IV/Greek as-of times remain unknown. Indicative observations do not authorize
+execution. One separate development-only metadata GET verified that the actual
+provider supplies size, multiplier and full 100-share deliverable evidence; it made
+no quote request, selection, registration, order or operational database write.
+Independent method review checked the implemented protocol and fault cases.
+
+Confirmed broker-calendar holidays/weekends now report expected non-session absence;
+missing, malformed, out-of-range or mismatched evidence remains deferred. Nineteen
+calendar-integrity tests pass. The new Options view passed all seven local views at
+1440px and 390px and separate pending/mixed/invalid/unregistered fixture checks.
+The project headline now uses current-version execution acceptance; a historical
+round-trip pass cannot certify the changed release. Unknown benchmark/illustrative
+equity values no longer display as measured zeros.
+
+The separate VIX/SPX design document freezes proposed estimator and calendar rules
+while explicitly retaining the daily-close timestamp mismatch. It is not registered,
+scheduled or activated and cannot establish an event premium or option profit.
+
+Package cleanup separates retired orchestration dependencies into an explicit
+legacy extra. The active WSL/Linux runtime retains NumPy, Pydantic, dotenv and HTTPX.
+All 69 third-party lock records remain byte-for-structure unchanged; only root
+requirements/extras move. Disposable Python 3.12 installs contain 14 distributions
+for the base, 23 for base plus development, and 56 for development plus legacy,
+including this package. The running environment is untouched. CI checks the minimal
+runtime separately and retains the complete legacy regression job.
+
+Final clean-environment validation: 727 full regression tests passed in 175.20s
+with the existing single websockets legacy deprecation warning; 557 runtime tests
+passed in 194.54s without legacy dependencies. The base-only environment passed
+both CLI entrypoints and all 32 runtime-module imports. Dependency consistency,
+lock freshness, active runtime/test lint, JavaScript syntax and whitespace checks
+passed. Fourteen populated page/viewport browser checks and ten focused coverage,
+current-kernel and unknown-value fixtures passed. Registration and activation
+receipts follow separately; these tests do not certify a future market outcome.
