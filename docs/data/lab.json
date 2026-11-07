@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T22:58:12.332605+00:00",
+  "generated_at": "2026-11-07T22:58:39.012150+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T17:57:04.246965-05:00",
+  "heartbeat": "2026-11-07T17:58:32.713790-05:00",
   "watchdog": {
     "checked_at": "2026-11-07T22:58:03.7021014+00:00",
     "incident": false,
@@ -12,10 +12,10 @@
     "models_paused": true,
     "maintenance": true
   },
-  "status": "Local supervisor stopped; independent watchdog owns recovery.",
+  "status": "Market holiday or weekend. Reconciled; background research is available.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T22:57:50.752239+00:00",
+    "at": "2026-11-07T22:58:34.687129+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -78,7 +78,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T22:57:48.710983+00:00",
+    "as_of": "2026-11-07T22:58:34.697162+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -112,7 +112,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T22:57:48.710983+00:00",
+      "broker_cash_observed_at": "2026-11-07T22:58:34.697162+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -197,6 +197,24 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T22:58:34.697162+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:58:34.697162+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:58:34.697162+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T22:57:48.710983+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10974,24 +10992,6 @@
     },
     {
       "at": "2026-11-07T11:27:39.152305+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:26:35.554242+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:26:35.554242+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:26:35.554242+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11109,7 +11109,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T22:58:12.849253+00:00",
+    "as_of": "2026-11-07T22:58:39.353506+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11499,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T22:58:12.851026+00:00",
+    "as_of": "2026-11-07T22:58:39.354376+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11513,7 +11513,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T22:57:48.710983+00:00",
+      "as_of": "2026-11-07T22:58:34.697162+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11559,7 +11559,7 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 28.950283333055555,
+      "input_age_hours": 28.957645374722222,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
@@ -11601,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T22:58:13.849018+00:00",
+    "as_of": "2026-11-07T22:58:42.605734+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15046,6 +15046,15 @@
   "plans": [],
   "events": [
     {
+      "id": 531,
+      "at": "2026-11-07T22:58:32.708562+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
       "id": 530,
       "at": "2026-11-07T22:57:12.700357+00:00",
       "kind": "supervisor_stopped",
@@ -17280,16 +17289,6 @@
         "metadata_errors": [],
         "application_outcome": "pending"
       }
-    },
-    {
-      "id": 422,
-      "at": "2026-11-07T21:14:02.412251+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
-        "topic": "event_coverage"
-      }
     }
   ],
   "experiments": [
@@ -18823,7 +18822,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T22:57:50.699406+00:00",
+    "at": "2026-11-07T22:58:34.634610+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -18862,7 +18861,7 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T22:58:14.168608+00:00",
+    "as_of": "2026-11-07T22:58:42.972119+00:00",
     "status": {
       "state": "retry_cooldown",
       "role": "deep_research",
@@ -22901,7 +22900,7 @@
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
     "account_used_percent": 51.0,
-    "quota_observed_at": "2026-11-07T22:57:50.699406+00:00",
+    "quota_observed_at": "2026-11-07T22:58:34.634610+00:00",
     "target_gap_percentage_points": 29.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
