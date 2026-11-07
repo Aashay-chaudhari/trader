@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T23:00:01.648739+00:00",
+  "generated_at": "2026-11-07T23:15:00.825365+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T17:59:52.668512-05:00",
+  "heartbeat": "2026-11-07T18:13:38.241625-05:00",
   "watchdog": {
-    "checked_at": "2026-11-07T22:58:03.7021014+00:00",
+    "checked_at": "2026-11-07T23:14:03.4559644+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
-    "models_paused": false,
-    "maintenance": false
+    "models_paused": true,
+    "maintenance": true
   },
-  "status": "Market holiday or weekend. Reconciled; background research is available.",
+  "status": "Local supervisor stopped; independent watchdog owns recovery.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T22:59:54.587680+00:00",
+    "at": "2026-11-07T23:14:31.872767+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -26,7 +26,7 @@
     "order_submission_verified": true,
     "submission_checked_at": "2026-10-29T04:50:49.744729+00:00",
     "execution_verified_at": "2026-11-02T14:35:37.790606+00:00",
-    "required_execution_kernel": "paper-execution-20261107-r2",
+    "required_execution_kernel": "paper-execution-20261107-r3",
     "current_execution_verified": false
   },
   "reconciliation_errors": [],
@@ -78,7 +78,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T22:59:54.597575+00:00",
+    "as_of": "2026-11-07T23:14:24.429214+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -112,7 +112,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T22:59:54.597575+00:00",
+      "broker_cash_observed_at": "2026-11-07T23:14:24.429214+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -197,6 +197,276 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T23:14:24.429214+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:14:24.429214+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:14:24.429214+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:13:38.885978+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:13:38.885978+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:13:38.885978+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:12:25.903981+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:12:25.903981+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:12:25.903981+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:11:34.539030+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:11:34.539030+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:11:34.539030+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:10:57.139415+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:10:57.139415+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:10:57.139415+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:09:39.489154+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:09:39.489154+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:09:39.489154+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:08:25.902325+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:08:25.902325+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:08:25.902325+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:07:49.855389+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:07:49.855389+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:07:49.855389+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:06:34.324806+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:06:34.324806+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:06:34.324806+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:05:58.585831+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:05:58.585831+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:05:58.585831+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:04:46.720674+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:04:46.720674+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:04:46.720674+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:03:35.564094+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:03:35.564094+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:03:35.564094+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:02:56.939432+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:02:56.939432+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:02:56.939432+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:01:44.240348+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:01:44.240348+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:01:44.240348+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T23:00:32.510509+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:00:32.510509+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T23:00:32.510509+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T22:59:54.597575+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10722,276 +10992,6 @@
     },
     {
       "at": "2026-11-07T11:43:37.473085+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:42:33.341740+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:42:33.341740+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:42:33.341740+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:41:29.680999+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:41:29.680999+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:41:29.680999+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:40:57.782240+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:40:57.782240+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:40:57.782240+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:39:53.848846+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:39:53.848846+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:39:53.848846+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:38:49.930015+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:38:49.930015+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:38:49.930015+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:37:46.155480+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:37:46.155480+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:37:46.155480+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:36:42.474890+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:36:42.474890+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:36:42.474890+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:35:38.687975+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:35:38.687975+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:35:38.687975+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:34:35.094159+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:34:35.094159+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:34:35.094159+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:33:31.484168+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:33:31.484168+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:33:31.484168+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:32:59.414757+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:32:59.414757+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:32:59.414757+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:31:55.534023+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:31:55.534023+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:31:55.534023+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:30:51.189798+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:30:51.189798+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:30:51.189798+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:29:47.051431+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:29:47.051431+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:29:47.051431+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T11:28:43.221184+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:28:43.221184+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T11:28:43.221184+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11109,7 +11109,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T23:00:02.051105+00:00",
+    "as_of": "2026-11-07T23:15:01.163639+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11499,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T23:00:02.052626+00:00",
+    "as_of": "2026-11-07T23:15:01.165709+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11513,7 +11513,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T22:59:54.597575+00:00",
+      "as_of": "2026-11-07T23:14:24.429214+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11559,14 +11559,14 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 28.980617110833332,
+      "input_age_hours": 29.230370745000002,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
-      "total_proposals": 43,
+      "total_proposals": 45,
       "stage_counts": {
         "awaiting_observation": 5,
-        "proposed": 38
+        "proposed": 40
       },
       "automated_scope": "Pure entry-filter candidates only; broader application repairs require the development release workflow."
     },
@@ -11601,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T23:00:03.079563+00:00",
+    "as_of": "2026-11-07T23:15:02.567843+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15046,6 +15046,433 @@
   "plans": [],
   "events": [
     {
+      "id": 552,
+      "at": "2026-11-07T23:14:05.502395+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 59841
+      }
+    },
+    {
+      "id": 551,
+      "at": "2026-11-07T23:14:04.995495+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 59841
+      }
+    },
+    {
+      "id": 550,
+      "at": "2026-11-07T23:13:38.338342+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "4599506580f8315764a3f571:0",
+        "topic": "symbol_events:GOOGL",
+        "disposition": "revise",
+        "summary": "Findings 0, 1, 3 and 4 are supported at their stated scopes, using zero-based indexes. Finding 2 requires correction: source:2 does not corroborate dividend declarations or their dates. The retrieved exhibit supports the dividend amounts and record/payment dates, but only identifies the declaration month. Next earnings and disclosure completeness remain explicit unknowns."
+      }
+    },
+    {
+      "id": 549,
+      "at": "2026-11-07T23:13:13.283031+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "9ed38ad4af351a6db2ff05b814a6ea0c8f5ed1f1d493894cc49e23e56fca7931",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:12:28.863486+00:00",
+        "attempt_id": "usage:157",
+        "searches": 2,
+        "cycles": 7,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:13:13.279112+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 57,
+          "after_used_percent": 57,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 548,
+      "at": "2026-11-07T23:12:25.245427+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "4599506580f8315764a3f571:0",
+        "topic": "symbol_events:GOOGL"
+      }
+    },
+    {
+      "id": 547,
+      "at": "2026-11-07T23:12:14.287399+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "5efb2be0f6677aa01cb2516e2a9f91ea62e8c164d8dd7445642c0d9f94119f25",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:10:23.239213+00:00",
+        "attempt_id": "usage:156",
+        "searches": 4,
+        "cycles": 13,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:12:14.283537+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 56,
+          "after_used_percent": 57,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 546,
+      "at": "2026-11-07T23:10:15.031702+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:2",
+        "topic": "symbol_events:AMZN",
+        "disposition": "accepted",
+        "summary": "All five findings (zero-based indexes 0\u20134) are supported at their stated scope. Direct checks confirm every source marked verified, including both conference-call passages. Session arithmetic is correct under the conditional anchors. CPI timing is explicitly attributed to supplied evidence. Future financial events and latest material filings remain unknown; acceptance does not establish event clearance or authorize any trading or study change."
+      }
+    },
+    {
+      "id": 545,
+      "at": "2026-11-07T23:09:40.760910+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "7ab6077e17e884ca2aa12f5b8dd6cc8f3653de83f59cf05161dabd855babda30",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:08:28.962922+00:00",
+        "attempt_id": "usage:155",
+        "searches": 4,
+        "cycles": 12,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:09:40.755094+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 55,
+          "after_used_percent": 56,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 544,
+      "at": "2026-11-07T23:08:25.262968+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:2",
+        "topic": "symbol_events:AMZN"
+      }
+    },
+    {
+      "id": 543,
+      "at": "2026-11-07T23:08:15.348816+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "717932e8db0ef10cfc8bc361fbbb1c5ed6f0d2704dd6a5d5fd8febe99d1e61ca",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:06:41.092993+00:00",
+        "attempt_id": "usage:154",
+        "searches": 3,
+        "cycles": 11,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:08:15.344782+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 55,
+          "after_used_percent": 55,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 542,
+      "at": "2026-11-07T23:06:33.905356+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:1",
+        "topic": "symbol_events:AMZN",
+        "disposition": "revise",
+        "summary": "Findings 0\u20133 are supported at their stated scopes. The main coverage unknown in finding 4 is supported, but source:7 confirms a dated article title, not a separately established publication date. All three sources marked verified by the analyst were independently checked and support their claims. Acceptance requires the narrow date/provenance corrections below; future event and disclosure coverage remains unresolved."
+      }
+    },
+    {
+      "id": 541,
+      "at": "2026-11-07T23:06:20.306242+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "106fad2dbe6b7128ff9666bf58feae45c2e1ebf4e29934f999cb0c308628d6a3",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:04:49.250480+00:00",
+        "attempt_id": "usage:153",
+        "searches": 4,
+        "cycles": 13,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:06:20.302606+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 54,
+          "after_used_percent": 54,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 540,
+      "at": "2026-11-07T23:04:46.111017+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:1",
+        "topic": "symbol_events:AMZN"
+      }
+    },
+    {
+      "id": 539,
+      "at": "2026-11-07T23:04:41.912278+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "796dff770b0abf0c424cd14621e393ebacb77276fa6e97d2e30be1355093f7cd",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:03:01.690741+00:00",
+        "attempt_id": "usage:152",
+        "searches": 3,
+        "cycles": 11,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:04:41.907799+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 53,
+          "after_used_percent": 54,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 538,
+      "at": "2026-11-07T23:02:56.494508+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:0",
+        "topic": "symbol_events:AMZN",
+        "disposition": "revise",
+        "summary": "The financial figures and session calculations are supported. Findings 0, 3 and 4 appropriately retain bounded unknowns. Finding 1 needs a timing correction: source:1 and source:2 explicitly announce the October 29 conference call for 14:00 PT/17:00 ET. Future event timing, subsequent disclosure coverage and the study anchor remain unresolved."
+      }
+    },
+    {
+      "id": 537,
+      "at": "2026-11-07T23:02:40.559604+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "1976a63cdb6ba7b6b2c680a72b8e9a2c888f93c817fa4c038f9ff3df0db0b44e",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T23:01:46.348705+00:00",
+        "attempt_id": "usage:151",
+        "searches": 3,
+        "cycles": 9,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:02:40.548339+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 52,
+          "after_used_percent": 53,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 536,
+      "at": "2026-11-07T23:01:43.784010+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "e8dec68789411a0a9aac0c5b:0",
+        "topic": "symbol_events:AMZN"
+      }
+    },
+    {
+      "id": 535,
+      "at": "2026-11-07T23:01:41.011749+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "d29e3056f18544b89ba036389fb754e6872feac1ca04da9c1f5d06fe74249a9c",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T22:59:59.275454+00:00",
+        "attempt_id": "usage:150",
+        "searches": 4,
+        "cycles": 12,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T23:01:41.004792+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 52,
+          "after_used_percent": 52,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
       "id": 534,
       "at": "2026-11-07T22:59:52.664414+00:00",
       "kind": "startup",
@@ -16913,340 +17340,6 @@
         "metadata_errors": [],
         "application_outcome": "pending"
       }
-    },
-    {
-      "id": 452,
-      "at": "2026-11-07T21:54:44.457020+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "77a617ed92522aae7ead5d7d:2",
-        "topic": "feature_lineage"
-      }
-    },
-    {
-      "id": 451,
-      "at": "2026-11-07T21:54:36.178174+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "653b7c5b99bf167569d149d447967cec3f55c7a75e2af8cba400e07607c89ccf",
-        "task_day": "2026-11-07",
-        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
-        "schema_name": "ResearchWorkReport",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T21:53:36.725058+00:00",
-        "attempt_id": "usage:115",
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:54:36.174504+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 29,
-          "after_used_percent": 29,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 450,
-      "at": "2026-11-07T21:53:32.008604+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "77a617ed92522aae7ead5d7d:1",
-        "topic": "feature_lineage",
-        "disposition": "revise",
-        "summary": "All five findings are supported at their stated observation scope, including their limits on quote verification, model use and calculation lineage. The coverage arithmetic and clock differences are correct. No analyst URLs require checking. The proposed acceptance check is truncated and needs explicit handling of unreproducible features."
-      }
-    },
-    {
-      "id": 449,
-      "at": "2026-11-07T21:53:26.274627+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "c0538a5429163c2d8902fb63cf23ef1a6d4042e398f1701690e3797efa4c2bbd",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T21:53:00.526352+00:00",
-        "attempt_id": "usage:114",
-        "searches": 0,
-        "cycles": 5,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:53:26.271155+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 29,
-          "after_used_percent": 29,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 448,
-      "at": "2026-11-07T21:52:56.455549+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "77a617ed92522aae7ead5d7d:1",
-        "topic": "feature_lineage"
-      }
-    },
-    {
-      "id": 447,
-      "at": "2026-11-07T21:52:45.075850+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "507aa66f72566392111ec3e451c9d64c745cd4c09aba7e6865c9ae2cd0bc07bf",
-        "task_day": "2026-11-07",
-        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
-        "schema_name": "ResearchWorkReport",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T21:51:48.930878+00:00",
-        "attempt_id": "usage:113",
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:52:45.071957+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 28,
-          "after_used_percent": 29,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 446,
-      "at": "2026-11-07T21:51:45.955894+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "77a617ed92522aae7ead5d7d:0",
-        "topic": "feature_lineage",
-        "disposition": "revise",
-        "summary": "All five findings are supported at their stated observation or inference scope. The report distinguishes retained feature availability from unverified calculations, delivery and quote quality. The XLK coverage arithmetic and afternoon NVDA/XLK comparisons check out. However, proposal 0's validation plan ends mid-sentence, leaving its timing acceptance check incomplete. The analyst lists no external sources requiring verification."
-      }
-    },
-    {
-      "id": 445,
-      "at": "2026-11-07T21:51:14.475886+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "f244a744cddb0c5f1e2e06f34b6f281a8229f730d6b9817e4e1b41895a01baf1",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T21:50:37.670522+00:00",
-        "attempt_id": "usage:112",
-        "searches": 0,
-        "cycles": 5,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:51:14.471920+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 28,
-          "after_used_percent": 28,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 444,
-      "at": "2026-11-07T21:50:35.068203+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "db861fff18cb73f2af9f2258:0",
-        "topic": "source_verification",
-        "disposition": "revise",
-        "summary": "Finding 0 needs a narrow update: source:4 now yields readable primary transaction-cost evidence. Findings 1\u20134 are supported within their stated supplied-evidence, inference or unknown scope; the reported screen figures remain unreplicated. The MIT verification is independently supported. These checks neither authenticate earlier retrieval receipts nor authorize any card or study change."
-      }
-    },
-    {
-      "id": 443,
-      "at": "2026-11-07T21:50:21.364063+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": true,
-        "state": "completed",
-        "request_id": "c65befab43c094e9406645d7b93f59d917060f24e6d0e7842683f8213f21dd43",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": "usage:99",
-        "started_at": "2026-11-07T21:49:26.557807+00:00",
-        "attempt_id": "usage:111",
-        "searches": 2,
-        "cycles": 7,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T21:50:21.360110+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 28,
-          "after_used_percent": 28,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 442,
-      "at": "2026-11-07T21:49:22.617283+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 441,
-      "at": "2026-11-07T21:49:20.692478+00:00",
-      "kind": "supervisor_stopped",
-      "branch": null,
-      "payload": {
-        "pid": 36082
-      }
-    },
-    {
-      "id": 440,
-      "at": "2026-11-07T21:49:19.938751+00:00",
-      "kind": "supervisor_stopping",
-      "branch": null,
-      "payload": {
-        "signal": 15,
-        "pid": 36082
-      }
-    },
-    {
-      "id": 439,
-      "at": "2026-11-07T21:48:23.260976+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 438,
-      "at": "2026-11-07T21:45:42.762050+00:00",
-      "kind": "release",
-      "branch": null,
-      "payload": {
-        "summary": "Operational ownership, quote-independent exits, reviewed publication, prospective observation and promotion integrity.",
-        "source_commit": "7c25b16f0718251c42b2582ff060769fbcd8fe71",
-        "regression_tests": 660,
-        "current_kernel_market_acceptance": "pending_regular_session"
-      }
-    },
-    {
-      "id": 428,
-      "at": "2026-11-07T21:16:37.951004+00:00",
-      "kind": "supervisor_stopped",
-      "branch": null,
-      "payload": {
-        "pid": 27296
-      }
-    },
-    {
-      "id": 427,
-      "at": "2026-11-07T21:16:37.383904+00:00",
-      "kind": "supervisor_stopping",
-      "branch": null,
-      "payload": {
-        "signal": 15,
-        "pid": 27296
-      }
-    },
-    {
-      "id": 426,
-      "at": "2026-11-07T21:16:25.838570+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "77a617ed92522aae7ead5d7d:0",
-        "topic": "feature_lineage"
-      }
     }
   ],
   "experiments": [
@@ -18359,23 +18452,23 @@
   },
   "quality_audit": {
     "day": "2026-11-07",
-    "as_of": "2026-11-07T22:54:35.126382+00:00",
+    "as_of": "2026-11-07T23:13:38.574244+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 57,
+      "calls": 66,
       "by_role": {
-        "deep_research": 29,
-        "deep_research_review": 28
+        "deep_research": 34,
+        "deep_research_review": 32
       },
-      "input_tokens": 1787420,
-      "cached_input_tokens": 1257856,
-      "output_tokens": 128309,
-      "web_actions": 103,
+      "input_tokens": 2132097,
+      "cached_input_tokens": 1550080,
+      "output_tokens": 152448,
+      "web_actions": 133,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "deep_research": 26,
-      "deep_research_review": 26
+      "deep_research": 30,
+      "deep_research_review": 30
     },
     "legacy_snapshot_artifacts": 0,
     "derived_period_reviews": 0,
@@ -18390,7 +18483,7 @@
       "omitted_records": 0,
       "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup."
     },
-    "unique_cited_urls": 66,
+    "unique_cited_urls": 79,
     "known_no_plan_research_outputs": 0,
     "pulse_outputs": 0,
     "pulses_without_verified_delta": 0,
@@ -18780,12 +18873,12 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T22:59:59.253448+00:00",
+    "at": "2026-11-07T23:14:31.582210+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 52,
+        "usedPercent": 57,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
@@ -18819,92 +18912,481 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T23:00:03.559272+00:00",
+    "as_of": "2026-11-07T23:15:02.964339+00:00",
     "status": {
-      "state": "running",
-      "role": "deep_research",
-      "topic": "symbol_events:AMZN",
-      "work_id": "e8dec68789411a0a9aac0c5b:0",
-      "as_of": "2026-11-07T17:59:52.668512-05:00",
+      "state": "awaiting_queue_refresh",
+      "role": "deep_research_review",
+      "topic": "symbol_events:GOOGL",
+      "work_id": "4599506580f8315764a3f571:0",
+      "as_of": "2026-11-07T18:12:25.185030-05:00",
       "next_eligible_at": null,
-      "idle_reasons": [
-        {
-          "topic": "event_coverage",
-          "reason": "accepted"
-        },
-        {
-          "topic": "feature_lineage",
-          "reason": "revise"
-        },
-        {
-          "topic": "experiment_lifecycle",
-          "reason": "accepted"
-        },
-        {
-          "topic": "source_verification",
-          "reason": "accepted"
-        },
-        {
-          "topic": "accounting_attribution",
-          "reason": "accepted"
-        },
-        {
-          "topic": "runtime_reliability",
-          "reason": "accepted"
-        },
-        {
-          "topic": "evidence_integrity",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_vix_horizon",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_earnings_iv",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_reversal_lineage",
-          "reason": "accepted"
-        },
-        {
-          "topic": "held_rally_universe",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:NVDA",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:TSLA",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:XLK",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:AAPL",
-          "reason": "accepted"
-        },
-        {
-          "topic": "symbol_events:MSFT",
-          "reason": "retry_cooldown"
-        }
-      ],
+      "idle_reasons": [],
       "last_budget_decision": {
-        "at": "2026-11-07T17:59:52.668512-05:00",
+        "at": "2026-11-07T18:12:25.185030-05:00",
         "allowed": true,
         "reason": "Useful background work within account reserve and attempt ceiling"
       },
-      "reason": "A background research stage is running.",
-      "active_task": {
-        "role": "deep_research",
-        "started": "2026-11-07T22:59:58.358606+00:00"
-      }
+      "reason": "The previously selected stage is complete; the scheduler must select the next retained question or review."
     },
     "reports": [
+      {
+        "work_id": "4599506580f8315764a3f571:0",
+        "topic": "symbol_events:GOOGL",
+        "stage": "review",
+        "at": "2026-11-07T23:13:38.337462+00:00",
+        "disposition": "revise",
+        "summary": "Findings 0, 1, 3 and 4 are supported at their stated scopes, using zero-based indexes. Finding 2 requires correction: source:2 does not corroborate dividend declarations or their dates. The retrieved exhibit supports the dividend amounts and record/payment dates, but only identifies the declaration month. Next earnings and disclosure completeness remain explicit unknowns.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "source:0 confirms weekday equity hours of 09:30\u201316:00 Eastern and no scheduled closure during Nov 9\u201313, supporting the conditional session mapping.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:12:36+00:00",
+            "limitation": "Scheduled hours do not exclude extraordinary closures. The laboratory's horizon anchor remains unverified."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm",
+            "claim": "source:1 supports the Oct 28 release, Sept 30 quarter, 16:30 ET call, reported revenue/EPS, issuance figures and both dividend schedules.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:12:40+00:00",
+            "limitation": "It specifies October declarations, not their exact dates. Filing acceptance, subsequent filings and ex-dates remain unchecked."
+          },
+          {
+            "url": "https://abc.xyz/investor/faqs-and-general-information/",
+            "claim": "source:2 returned a financial glossary with information stated as of Sept 30, 2025. The retrieved page contains no claimed dividend-declaration corroboration.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:12:40+00:00",
+            "limitation": "The analyst's verified dividend receipt was not reproduced. This does not negate the schedules stated in source:1."
+          },
+          {
+            "url": "https://abc.xyz/investor/events/default.aspx",
+            "claim": "source:3 returned an Events & Presentations heading and navigation without dated event entries; next earnings timing remains unresolved.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:12:36+00:00",
+            "limitation": "The extract cannot establish absence of an announcement or authenticate a complete event inventory."
+          },
+          {
+            "url": "https://abc.xyz/investor/sec-filings/default.aspx",
+            "claim": "source:4 returned filing filters and table headings without filing rows; the current filing inventory and subsequent disclosure contents remain unresolved.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:12:36+00:00",
+            "limitation": "No complete inventory, latest filing date, Q3 10-Q contents or subsequent material filings were established."
+          }
+        ]
+      },
+      {
+        "work_id": "4599506580f8315764a3f571:0",
+        "topic": "symbol_events:GOOGL",
+        "stage": "analysis",
+        "at": "2026-11-07T23:12:25.244329+00:00",
+        "disposition": "awaiting_review",
+        "summary": "Alphabet's Oct 28 earnings release and declared common dividend are supported by retrieved primary documents. The next regular session is Nov 9; horizons counted from Nov 6 end Nov 9 and Nov 13. Next earnings timing and completeness of subsequent disclosures remain unresolved. This is research coverage only and changes no plan, study or gate.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "The 2026 holiday schedule lists no Nov 9\u201313 equity closure; regular Nasdaq stock-market hours are Monday\u2013Friday, 09:30\u201316:00 Eastern.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:10:28+00:00",
+            "limitation": "Page publication date is unstated. Scheduled hours do not guarantee absence of an extraordinary closure."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm",
+            "claim": "Exhibit 99.1 is dated Oct 28, 2026 and contains Q3 results, share issuance disclosures, dividend dates and a 16:30 Eastern earnings-call time.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:11:01+00:00",
+            "limitation": "An earnings exhibit, not a complete filings inventory. EDGAR acceptance time and later amendments were not checked."
+          },
+          {
+            "url": "https://abc.xyz/investor/faqs-and-general-information/",
+            "claim": "Alphabet's FAQ identifies the Oct 28 common dividend and Oct 22 preferred dividend declarations, with distinct record and payment dates.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:10:51+00:00",
+            "limitation": "FAQ publication/update time is unstated. It corroborates the exhibit but is not independent of the issuer."
+          },
+          {
+            "url": "https://abc.xyz/investor/events/default.aspx",
+            "claim": "The event-page retrieval did not establish a dated next earnings announcement or a complete upcoming-event inventory.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:10:37+00:00",
+            "limitation": "The returned extract was insufficient. No-event status cannot be inferred."
+          },
+          {
+            "url": "https://abc.xyz/investor/sec-filings/default.aspx",
+            "claim": "The filing-page retrieval did not establish the latest filing date or recover a complete current filing inventory.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:10:37+00:00",
+            "limitation": "Current Q3 10-Q contents and subsequent material filings remain unchecked."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:2",
+        "topic": "symbol_events:AMZN",
+        "stage": "review",
+        "at": "2026-11-07T23:10:15.029366+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings (zero-based indexes 0\u20134) are supported at their stated scope. Direct checks confirm every source marked verified, including both conference-call passages. Session arithmetic is correct under the conditional anchors. CPI timing is explicitly attributed to supplied evidence. Future financial events and latest material filings remain unknown; acceptance does not establish event clearance or authorize any trading or study change.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "source:0 confirms weekday 09:30\u201316:00 Eastern hours and no scheduled closure or early close November 9\u201316, 2026, supporting the conditional session calculations.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:08:37+00:00",
+            "limitation": "A scheduled session is not proof of future occurrence. The frozen horizon anchor remains unspecified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "source:1 supports the October 29 release date, September 30 quarter end, all five cited financial figures and their comparison directions, and the announced 14:00 PT/17:00 ET call.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:08:59+00:00",
+            "limitation": "Issuer statements; publication time, actual call occurrence and next earnings timing are unverified."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "source:2 agrees with source:1 on the dated release, quarter end, cited financial figures and directions, and announced call time in its Conference Call Information passage.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:08:59+00:00",
+            "limitation": "The exhibit reproduces issuer claims. Filing acceptance time, latest-filing status and actual call occurrence remain unverified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "source:3 exposes Upcoming Events and Past Events headings without readable dated entries, matching the analyst's extraction limitation.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:09:07+00:00",
+            "limitation": "The extraction cannot resolve future timing or establish absence of events."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "source:4 returned an application/json resource without an inspectable submissions payload; accession and acceptance records could not be checked.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:08:46+00:00",
+            "limitation": "No conclusion about latest filings or disclosure completeness follows from this unavailable payload."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "source:5 shows filing filters and table headings but no readable filing rows, consistent with the analyst's limited-access receipt.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:09:07+00:00",
+            "limitation": "Current accessions, subsequent disclosures and relevant filing contents remain unresolved."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news/amazon-news-today-top-stories-company",
+            "claim": "source:6 supports the described shopping-by-text rollout, Uber Eats benefit, merchant portal and announced January 8, 2027 television premiere.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:08:59+00:00",
+            "limitation": "Separate publication metadata, commercial event dates and financial materiality are not established by the inspected digest."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news",
+            "claim": "source:7 lists the digest title containing November 6, 2026. No separate publication-date field appears in the inspected index.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:08:59+00:00",
+            "limitation": "The title supports a title-date observation, not a publication timestamp or dates of underlying commercial events."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:2",
+        "topic": "symbol_events:AMZN",
+        "stage": "analysis",
+        "at": "2026-11-07T23:08:25.261976+00:00",
+        "disposition": "awaiting_review",
+        "summary": "October 29 earnings disclosures and announced call timing agree across Amazon IR and its SEC exhibit. November 9 is the next scheduled session; horizon endpoints depend on the missing frozen anchor. Future earnings/distribution timing and latest material-filing coverage remain unresolved. The November 6 news title does not establish publication date. Research only; no plan, strategy, study, limit or promotion gate changes.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "Nasdaq lists weekday regular hours of 09:30\u201316:00 Eastern and no scheduled holiday closure or early close during November 9\u201316, 2026.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:06:53+00:00",
+            "limitation": "Calendar schedules do not prove future sessions occurred. The frozen study anchor and counting convention were not supplied."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "October 29 Q3 release supplies the September 30 quarter end, cited financial results and same-day 14:00 PT/17:00 ET announced conference call.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:07:07+00:00",
+            "limitation": "Exact publication timestamp, actual call occurrence, subsequent revisions and next future earnings timing are unverified."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "Exhibit 99.1 agrees with Amazon IR on release date, quarter end, cited financial figures and announced conference-call time.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:07:07+00:00",
+            "limitation": "Issuer-release reproduction; parent filing acceptance time, latest-filing status and actual call occurrence are unverified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "The events page returned a shell without inspectable dated event entries.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:07:01+00:00",
+            "limitation": "The extraction cannot establish future event timing or absence of events."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "The endpoint returned an application/json resource without an inspectable submissions payload.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:07:01+00:00",
+            "limitation": "No accession list, filing dates or acceptance timestamps could be verified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "The filing-page extraction supplied no inspectable current filing rows.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:07:01+00:00",
+            "limitation": "Latest filings, subsequent disclosures and their contents remain unresolved."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news/amazon-news-today-top-stories-company",
+            "claim": "The digest describes shopping by text, an Uber Eats benefit, a merchant portal and an announced January 8, 2027 TV premiere.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:07:07+00:00",
+            "limitation": "Separate publication metadata, commercial event dates and financial materiality were not established."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news",
+            "claim": "The index lists the title 'What you need to know about Amazon today: November 6, 2026'; a separate publication-date field was not established.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:06:53+00:00",
+            "limitation": "A date embedded in a title does not establish publication date, underlying event dates or materiality."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:1",
+        "topic": "symbol_events:AMZN",
+        "stage": "review",
+        "at": "2026-11-07T23:06:33.904459+00:00",
+        "disposition": "revise",
+        "summary": "Findings 0\u20133 are supported at their stated scopes. The main coverage unknown in finding 4 is supported, but source:7 confirms a dated article title, not a separately established publication date. All three sources marked verified by the analyst were independently checked and support their claims. Acceptance requires the narrow date/provenance corrections below; future event and disclosure coverage remains unresolved.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "source:0 confirms weekday 09:30\u201316:00 Eastern hours and no scheduled holiday closure during November 9\u201316, 2026. Both conditional session counts are correct.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:04:58+00:00",
+            "limitation": "Scheduled sessions do not establish actual future occurrence. The frozen study anchor and counting convention remain unspecified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "source:1 confirms the October 29 date, September 30 quarter end, all five cited financial figures, and the announced same-day 14:00 PT/17:00 ET call.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:05:09+00:00",
+            "limitation": "Exact publication timestamp, actual call occurrence, subsequent revisions and the next future earnings date were not established."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "source:2 agrees with source:1 on the release date, quarter end, cited financial figures and announced conference-call time.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:05:09+00:00",
+            "limitation": "This exhibit does not establish parent filing acceptance time, actual call occurrence or latest-filing status."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "source:3 returned an events-page extraction without inspectable dated event entries.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:05:05+00:00",
+            "limitation": "The extraction cannot establish future timing or absence of events."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "source:4 returned an application/json resource without an inspectable submissions payload.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:05:31+00:00",
+            "limitation": "No accession list, filing dates or acceptance timestamps could be verified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "source:5 exposed no inspectable current filing rows; a search within the extraction found no 2026 text.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:05:31+00:00",
+            "limitation": "Latest filings and subsequent material disclosure contents remain unresolved."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/",
+            "claim": "source:6 directly opened as an events-page shell; its extraction contained no October 29 match. The historical call time is independently supported by source:1 and source:2.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:05:31+00:00",
+            "limitation": "The analyst's past-events search extract was not reproduced. No future event timing was established."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news",
+            "claim": "source:7 directly lists the title 'What you need to know about Amazon today: November 6, 2026'. A separate publication-date field was not established.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:05:31+00:00",
+            "limitation": "Article contents, actual publication metadata, event dates and materiality remain unchecked."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:1",
+        "topic": "symbol_events:AMZN",
+        "stage": "analysis",
+        "at": "2026-11-07T23:04:46.109795+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The October 29 earnings release and SEC exhibit announce that day's call at 14:00 PT/17:00 ET, correcting the prior timing gap. The next scheduled session is November 9. Future earnings/distribution timing, subsequent material disclosures and the study anchor remain unresolved. Historical results show operating growth alongside negative free cash flow. This research changes no plan, frozen study, risk limit or promotion gate.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "Nasdaq lists weekday regular hours of 09:30\u201316:00 Eastern and no scheduled closure on November 9\u201316, 2026.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:03:09+00:00",
+            "limitation": "This is the scheduled calendar, not proof of future session occurrence or the study's anchor."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "October 29 Q3 release supplies the cited financial figures and announces that day's conference call at 14:00 PT/17:00 ET.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:03:24+00:00",
+            "limitation": "Exact release timestamp, actual call occurrence and subsequent revisions were not established."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "The SEC exhibit corroborates the October 29 release, September 30 quarter end, cited figures and announced 14:00 PT/17:00 ET call.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:03:24+00:00",
+            "limitation": "Parent filing acceptance time, actual call occurrence and latest-filing status remain unverified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "Direct retrieval exposed an events-page shell without inspectable dated event entries.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:03:17+00:00",
+            "limitation": "An empty extraction establishes neither future timing nor absence of events."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "The endpoint returned an application/json resource without an inspectable submissions payload.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:03:17+00:00",
+            "limitation": "No accession list, filing dates or acceptance timestamps could be checked."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "The retrieved filing page did not expose inspectable filing rows.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:03:17+00:00",
+            "limitation": "This rendering cannot identify the latest filing or exclude subsequent material disclosures."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/",
+            "claim": "A primary-page search extract lists the Q3 2026 call on October 29 at 02:00 PM PT under past events.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:03:24+00:00",
+            "limitation": "Search extraction only; the page was not directly opened. No future event timing was established."
+          },
+          {
+            "url": "https://www.aboutamazon.com/news/company-news",
+            "claim": "A primary-page search extract lists 'What you need to know about Amazon today: November 6, 2026' with a November 6 publication date.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:03:24+00:00",
+            "limitation": "The index and article were not directly opened; contents, event dates and materiality remain unchecked."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:0",
+        "topic": "symbol_events:AMZN",
+        "stage": "review",
+        "at": "2026-11-07T23:02:56.493670+00:00",
+        "disposition": "revise",
+        "summary": "The financial figures and session calculations are supported. Findings 0, 3 and 4 appropriately retain bounded unknowns. Finding 1 needs a timing correction: source:1 and source:2 explicitly announce the October 29 conference call for 14:00 PT/17:00 ET. Future event timing, subsequent disclosure coverage and the study anchor remain unresolved.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "source:0 confirms weekday regular hours of 09:30\u201316:00 Eastern and no listed November 9\u201316 closure. Both conditional session mappings are correct.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:01:53+00:00",
+            "limitation": "Scheduled sessions remain subject to exceptional closures; this page cannot establish the study's anchor."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "source:1 confirms the October 29 release, September 30 quarter end and all cited financial figures. It announces that day's call at 14:00 PT/17:00 ET.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:02:07+00:00",
+            "limitation": "The announced call time is explicit. Actual occurrence, exact release timestamp and subsequent revision history were not established."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "source:2 corroborates the release date, reporting period and cited financial figures. Its Conference Call Information also specifies 14:00 PT/17:00 ET.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:02:07+00:00",
+            "limitation": "The exhibit does not establish parent filing acceptance time, latest-filing status or complete subsequent disclosure coverage."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "source:3 exposes Upcoming Events and Past Events headings without dated entries in the retrieved text.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:02:07+00:00",
+            "limitation": "The analyst's search snippet was not independently reproduced. Empty extraction establishes neither future timing nor absence of events."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "source:4 returned an application/json endpoint without an inspectable submissions payload.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:01:59+00:00",
+            "limitation": "No accessions, filing dates or acceptance timestamps could be independently checked."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "source:5 exposes filing filters and table headings but no inspectable filing rows.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:02:07+00:00",
+            "limitation": "This rendering cannot identify the latest filing or exclude later material disclosures."
+          }
+        ]
+      },
+      {
+        "work_id": "e8dec68789411a0a9aac0c5b:0",
+        "topic": "symbol_events:AMZN",
+        "stage": "analysis",
+        "at": "2026-11-07T23:01:43.783097+00:00",
+        "disposition": "awaiting_review",
+        "summary": "Amazon's October 29 earnings disclosure is accessible and agrees with its SEC exhibit. The next earnings/release/distribution timing remains unverified; event and filing feeds did not provide usable current coverage. The next scheduled regular session is November 9. Horizon dates depend on the study's unspecified anchor. This research provides no event clearance or change to any plan, strategy, study, limit or gate.",
+        "sources": [
+          {
+            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
+            "claim": "Official 2026 holiday table and Monday\u2013Friday regular hours support the November session calculations; no November 9\u201316 closure is listed.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:00:06+00:00",
+            "limitation": "Page publication time was not displayed. Scheduled hours do not guarantee against exceptional closures."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/",
+            "claim": "Release dated October 29, 2026 reports September-quarter results, including AWS growth, operating income and negative trailing-year free cash flow.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:00:23+00:00",
+            "limitation": "Exact release/call time and any later revision history were not established."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000038/amzn-20260930xex991.htm",
+            "claim": "SEC-hosted Exhibit 99.1 repeats the October 29 release and agrees on the cited financial figures.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T23:00:23+00:00",
+            "limitation": "Exhibit text was inspected; parent filing acceptance time, latest-filing status and the complete 10-Q were not verified."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/events/default.aspx",
+            "claim": "Direct retrieval exposed upcoming/past headings without dated entries; search rendering mentioned Q3 2026 and a 'test' item.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:00:23+00:00",
+            "limitation": "Rendering discrepancy prevents establishing the next event. Empty extracted headings do not mean an empty company calendar."
+          },
+          {
+            "url": "https://data.sec.gov/submissions/CIK0001018724.json",
+            "claim": "Retrieval identified a JSON endpoint but exposed no inspectable submissions payload.",
+            "outcome": "unavailable",
+            "checked_at": "2026-11-07T23:00:37+00:00",
+            "limitation": "No recent accession list, filing dates or acceptance timestamps could be checked."
+          },
+          {
+            "url": "https://ir.aboutamazon.com/sec-filings/default.aspx",
+            "claim": "The issuer's SEC filings page was retrieved, but no usable filing inventory was exposed.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T23:00:15+00:00",
+            "limitation": "This extraction cannot identify the latest 8-K or 10-Q or exclude subsequent material filings."
+          }
+        ]
+      },
       {
         "work_id": "f910a00bb7b1f84db5ecad4b:0",
         "topic": "symbol_events:MSFT",
@@ -19720,450 +20202,6 @@
             "limitation": "Search-index-only discrepancy; stale content, another filing or indexing error cannot be distinguished."
           }
         ]
-      },
-      {
-        "work_id": "6d2dad759c0bdaac9ab66197:0",
-        "topic": "symbol_events:XLK",
-        "stage": "review",
-        "at": "2026-11-07T22:20:22.874353+00:00",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scope; indexes below are zero-based. Independently checked all six analyst URLs, including holdings, XLK's distribution group, session hours, issuer notices and AMD's exhibit. Session counts and event-window mappings agree. Anchor ambiguity, incomplete disclosure coverage, unverified CPI timing and publication-time limits remain explicit. Acceptance does not establish comprehensive event clearance or alter any plan or gate.",
-        "sources": [
-          {
-            "url": "https://www.ssga.com/us/en/individual/etfs/state-street-technology-select-sector-spdr-etf-xlk",
-            "claim": "source:0: Issuer page identifies XLK and confirms November 5 fund weights: NVIDIA 14.76%, AMD 4.01%, Cisco 2.57%, plus document and distribution links.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:29+00:00",
-            "limitation": "Dated top holdings, not retrieval-day full holdings. Linked filings were not inspected; receipt does not independently authenticate underlying data."
-          },
-          {
-            "url": "https://www.ssga.com/library-content/products/fund-data/etfs/us/distribution/SPDR_Dividend_Distribution_Schedule.pdf",
-            "claim": "source:1: XLK's group lists December 21 ex/record, December 23 payment; potential December 31 excise, January 5, 2027 payment. Version label is 2026.10.31.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:38+00:00",
-            "limitation": "Schedule rather than declaration; amount and publication timestamp unverified. XLKI and XLKM appear in separate groups."
-          },
-          {
-            "url": "https://www.nyse.com/trade/hours-calendars",
-            "claim": "source:2: NYSE Arca core hours are 09:30\u201316:00 Eastern; listed 2026 holidays and early closes do not interrupt November 9\u201316.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:29+00:00",
-            "limitation": "Standing schedule supports calendar-based counts, not a guarantee against unforeseen closures. Study horizon anchor remains unspecified."
-          },
-          {
-            "url": "https://investor.cisco.com/news/news-details/2026/Cisco-Schedules-Conference-Call-for-Q1-Fiscal-Year-2027-Financial-Results/default.aspx",
-            "claim": "source:3: Full November 3 issuer notice confirms November 12 after-close Q1 FY2027 results and a 16:30 Eastern conference call.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:22+00:00",
-            "limitation": "Exact results-publication minute and notice publication minute are unspecified. Scheduled timing does not guarantee occurrence."
-          },
-          {
-            "url": "https://nvidianews.nvidia.com/helper-search-news?ct=releases&page=1&q=quarter+year",
-            "claim": "source:4: Official index dates the announcement October 28, 2026 and states a November 17 Q3 FY2027 call at 14:00 Pacific/17:00 Eastern.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:22+00:00",
-            "limitation": "Verified at the explicitly claimed index-excerpt scope. Individual announcement and exact results-publication time remain unchecked."
-          },
-          {
-            "url": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000188/q32026991.htm",
-            "claim": "source:5: November 3 exhibit confirms Q3 revenue $13.377 billion, +45%; Data Center +97%, Gaming \u221240%; Q4 revenue forecast $17 billion \u00b13%.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:19:38+00:00",
-            "limitation": "Issuer-hosted exhibit checked; SEC accession not independently authenticated. Guidance is forward-looking; publication minute unverified."
-          }
-        ]
-      },
-      {
-        "work_id": "6d2dad759c0bdaac9ab66197:0",
-        "topic": "symbol_events:XLK",
-        "stage": "analysis",
-        "at": "2026-11-07T22:19:10.003343+00:00",
-        "disposition": "awaiting_review",
-        "summary": "XLK\u2019s next scheduled core session is November 9. From the November 6 anchor, +1/+5 end November 9/13; Cisco\u2019s November 12 after-close results fall inside +5. NVIDIA\u2019s November 17 call and XLK\u2019s December distribution schedule are later. Recent AMD disclosure is verified, but remaining constituent disclosures and the supplied CPI date are unresolved. Research only; no plan or gate changes.",
-        "sources": [
-          {
-            "url": "https://www.ssga.com/us/en/individual/etfs/state-street-technology-select-sector-spdr-etf-xlk",
-            "claim": "Issuer identifies XLK as an ETF and lists November 5, 2026 holdings: NVIDIA 14.76%, AMD 4.01%, Cisco 2.57%; links fund documents and distribution schedule.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:31+00:00",
-            "limitation": "Holdings are dated November 5, not retrieval day. Full holdings and linked prospectus/financial reports were not inspected."
-          },
-          {
-            "url": "https://www.ssga.com/library-content/products/fund-data/etfs/us/distribution/SPDR_Dividend_Distribution_Schedule.pdf",
-            "claim": "2026.10.31-labeled schedule groups XLK with December 21 ex/record, December 23 payment, and potential December 31 excise/January 5, 2027 payment.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:31+00:00",
-            "limitation": "Dates verified in XLK\u2019s quarterly group on PDF page 3. No declared amount, event clock time or authenticated publication timestamp."
-          },
-          {
-            "url": "https://www.nyse.com/trade/hours-calendars",
-            "claim": "NYSE Arca core hours are 09:30\u201316:00 Eastern. The 2026 holiday calendar lists no closure or early close during November 9\u201316.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:08+00:00",
-            "limitation": "Standing calendar and hours; unforeseen exchange closures remain possible. Page publication time is unspecified."
-          },
-          {
-            "url": "https://investor.cisco.com/news/news-details/2026/Cisco-Schedules-Conference-Call-for-Q1-Fiscal-Year-2027-Financial-Results/default.aspx",
-            "claim": "November 3, 2026 issuer notice schedules November 12 results after market close and a 16:30 Eastern Q1 FY2027 call.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:17+00:00",
-            "limitation": "Retrieved official search excerpt includes the release notice. Publication minute and exact earnings-release minute are unspecified."
-          },
-          {
-            "url": "https://nvidianews.nvidia.com/helper-search-news?ct=releases&page=1&q=quarter+year",
-            "claim": "Official index excerpt dates the Q3 FY2027 call announcement October 28, 2026 and schedules November 17 at 14:00 Pacific/17:00 Eastern.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:17+00:00",
-            "limitation": "Verification is limited to the official index search excerpt; individual release text and earnings-publication time were not inspected."
-          },
-          {
-            "url": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000188/q32026991.htm",
-            "claim": "November 3, 2026 issuer-hosted 8-K exhibit reports Q3 results, divergent Data Center/Gaming growth and Q4 revenue guidance of $17 billion \u00b13%.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:17:39+00:00",
-            "limitation": "Issuer-hosted exhibit inspected; SEC accession independently unconfirmed. Guidance remains forward-looking; publication minute unverified."
-          }
-        ]
-      },
-      {
-        "work_id": "0a1acffa2f7e3da1ba9f8367:1",
-        "topic": "symbol_events:TSLA",
-        "stage": "review",
-        "at": "2026-11-07T22:16:44.281703+00:00",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scope. Independently checked pages confirm the historical earnings announcement, Q3 financing disclosures and scheduled session calendar. Conditional horizon counts are correct. Next-event timing and subsequent disclosure coverage remain explicit unknowns; the report does not imply comprehensive clearance or change study conventions.",
-        "sources": [
-          {
-            "url": "https://ir.tesla.com/",
-            "claim": "source:0: Quarterly table lists Q3 2026 earnings on October 21 and links a 10-Q, corroborating the supplied historical observation.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:15:43+00:00",
-            "limitation": "Historical table supports the stated date; it does not establish the next earnings date or comprehensive event coverage."
-          },
-          {
-            "url": "https://ir.tesla.com/press-release/tesla-third-quarter-2026-production-deliveries-and-deployments",
-            "claim": "source:1: Displays October 2, 2026; schedules October 21 results after close and a 16:30 Central / 17:30 Eastern webcast.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:15:43+00:00",
-            "limitation": "Displayed publication date and announced timing are supported; exact publication time and actual webcast occurrence remain unchecked."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
-            "claim": "source:2: Confirms three September agreements totaling $30bn, $30bn unused senior unsecured commitments at quarter-end and expected 2026 capex above $20bn.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:15:43+00:00",
-            "limitation": "Company-reported commitments and expectations; filing acceptance time and subsequent disclosure completeness are not established."
-          },
-          {
-            "url": "https://www.sec.gov/edgar/browse/?CIK=1318605&owner=exclude",
-            "claim": "source:3: Retrieved landing-page text exposes no usable current accession list, consistent with the analyst's access limitation.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:16:03+00:00",
-            "limitation": "The rendered 'No Filings' placeholder cannot establish that Tesla has no filings or identify the latest disclosure."
-          },
-          {
-            "url": "https://data.sec.gov/submissions/CIK0001318605.json",
-            "claim": "source:4: Retrieval identifies application/json content but exposes no filing records for inspection.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:16:03+00:00",
-            "limitation": "No inspectable accessions, filing dates or acceptance timestamps; subsequent filing coverage remains unresolved."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "source:5: Confirms weekday regular hours of 09:30\u201316:00 Eastern and no listed closure or early close during November 9\u201316, 2026.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:15:43+00:00",
-            "limitation": "Scheduled calendar only; actual session operation, symbol halts and the frozen study's counting convention are outside its scope."
-          }
-        ]
-      },
-      {
-        "work_id": "0a1acffa2f7e3da1ba9f8367:1",
-        "topic": "symbol_events:TSLA",
-        "stage": "analysis",
-        "at": "2026-11-07T22:15:31.546908+00:00",
-        "disposition": "awaiting_review",
-        "summary": "The historical earnings announcement is resolved: published October 2, it scheduled October 21 results after close and a 17:30 Eastern webcast. Next earnings, delivery-release and distribution timing remain unverified. November 9 is the next scheduled session; horizon dates depend on the existing study anchor. Material Q3 financing disclosures are accessible, but subsequent filing coverage remains incomplete.",
-        "sources": [
-          {
-            "url": "https://ir.tesla.com/",
-            "claim": "Quarterly table lists Q3 2026 earnings on October 21, 2026 and links a 10-Q; corroborates the supplied historical IR observation.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:14:13+00:00",
-            "limitation": "Quarterly table only; other-events coverage and announcement publication time remain unverified."
-          },
-          {
-            "url": "https://ir.tesla.com/press-release/tesla-third-quarter-2026-production-deliveries-and-deployments",
-            "claim": "Accessible body displays October 2, 2026; announces October 21 results after close and webcast at 16:30 Central / 17:30 Eastern.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:14:13+00:00",
-            "limitation": "Historical announcement; exact publication time and next earnings or delivery-release timing are not established."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
-            "claim": "September 30 10-Q discloses September agreements with $30bn commitments, $30bn unused quarter-end facilities and expected 2026 capex above $20bn.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:14:13+00:00",
-            "limitation": "Company-reported amounts and expectations; filing publication/acceptance time and subsequent disclosure completeness remain unverified."
-          },
-          {
-            "url": "https://www.sec.gov/edgar/browse/?CIK=1318605&owner=exclude",
-            "claim": "SEC landing-page retrieval did not expose an inspectable current filing list.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:14:04+00:00",
-            "limitation": "Cannot identify the latest filing or establish absence of subsequent filings."
-          },
-          {
-            "url": "https://data.sec.gov/submissions/CIK0001318605.json",
-            "claim": "Endpoint returned application/json metadata, without filing records exposed for inspection.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:14:04+00:00",
-            "limitation": "Accession list, filing dates, acceptance timestamps and subsequent disclosure coverage remain unverified."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "Nasdaq lists Monday\u2013Friday regular hours of 09:30\u201316:00 Eastern; its 2026 calendar lists no closure or early close during November 9\u201316.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:14:13+00:00",
-            "limitation": "Scheduled exchange calendar only; unscheduled closures, symbol halts and study conventions are outside its scope."
-          }
-        ]
-      },
-      {
-        "work_id": "0a1acffa2f7e3da1ba9f8367:0",
-        "topic": "symbol_events:TSLA",
-        "stage": "review",
-        "at": "2026-11-07T22:13:43.643474+00:00",
-        "disposition": "revise",
-        "summary": "Findings 0\u20133 are supported at their stated scopes, using zero-based indexes. All three analyst sources marked verified were independently checked. Finding 4's future-event unknowns remain supported, but its release-body limitation needs correction: source:1 exposes its publication date and historical webcast timing. Current event coverage remains incomplete.",
-        "sources": [
-          {
-            "url": "https://ir.tesla.com/",
-            "claim": "source:0: Quarterly table lists Q3 2026 earnings on October 21, 2026 and a Q3 10-Q link, corroborating ev:4a8225c975874525.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:12:42+00:00",
-            "limitation": "Other-events coverage and announcement publication time remain unverified; the table cannot establish comprehensive event clearance."
-          },
-          {
-            "url": "https://ir.tesla.com/press-release/tesla-third-quarter-2026-production-deliveries-and-deployments",
-            "claim": "source:1: Release body is accessible, dated October 2, 2026, and announces the October 21, 2026 webcast at 4:30 p.m. Central / 5:30 p.m. Eastern.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:12:42+00:00",
-            "limitation": "Historical announcement; it does not establish next earnings or delivery-release timing. Exact publication time remains unverified."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
-            "claim": "source:2: September 30, 2026 10-Q reports nine-month capex of $13.01bn, expected 2026 capex above $20bn, and three September credit agreements totaling $30bn in commitments.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:12:42+00:00",
-            "limitation": "Company disclosures and expectations; commitments are not drawdowns. Acceptance time and subsequent filing completeness remain unverified."
-          },
-          {
-            "url": "https://www.sec.gov/edgar/browse/?CIK=1318605&owner=exclude",
-            "claim": "source:3: Rendered page displays a no-filings placeholder and fetching-data indicator without a usable current filing list.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:12:29+00:00",
-            "limitation": "Rendering cannot establish absence of filings, latest filing identity or complete disclosure coverage."
-          },
-          {
-            "url": "https://data.sec.gov/submissions/CIK0001318605.json",
-            "claim": "source:4: Endpoint returned application/json metadata, but no filing records were exposed for inspection.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:12:42+00:00",
-            "limitation": "Accession list, filing dates, acceptance timestamps and subsequent disclosure coverage remain unverified."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "source:5: Nasdaq lists Monday\u2013Friday regular hours of 09:30\u201316:00 Eastern and no scheduled closure or early close during November 9\u201316, 2026.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:12:21+00:00",
-            "limitation": "Scheduled calendar only; unscheduled closures and symbol halts remain possible. Study anchor conventions were not supplied."
-          }
-        ]
-      },
-      {
-        "work_id": "0a1acffa2f7e3da1ba9f8367:0",
-        "topic": "symbol_events:TSLA",
-        "stage": "analysis",
-        "at": "2026-11-07T22:11:56.735188+00:00",
-        "disposition": "awaiting_review",
-        "summary": "Tesla's retrieved IR table corroborates October 21, 2026 earnings, a past event. The linked Q3 10-Q supplies material funding and spending disclosures. Next earnings, delivery-release and corporate-action timing remain unverified. The next scheduled regular session is November 9; horizon dates depend on the study's missing anchor convention. This research changes no plan or gate.",
-        "sources": [
-          {
-            "url": "https://ir.tesla.com/",
-            "claim": "Retrieved quarterly table lists October 21, 2026 Q3 earnings and links a Q3 10-Q; no later earnings row was shown.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:10:19+00:00",
-            "limitation": "Publication time absent; Other Documents & Events tab not exposed. Table coverage does not establish absence of future announcements."
-          },
-          {
-            "url": "https://ir.tesla.com/press-release/tesla-third-quarter-2026-production-deliveries-and-deployments",
-            "claim": "IR's Q3 production/delivery link resolved, but tool output exposed title and metadata without the release body.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:10:37+00:00",
-            "limitation": "Publication date, figures, earnings announcement text and webcast time were not verified."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
-            "claim": "Q3 10-Q text reports nine-month capex of $13.01bn, expected 2026 capex above $20bn and September credit commitments totaling $30bn.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:10:37+00:00",
-            "limitation": "Inspected excerpts concern the September 30 reporting period; filing acceptance date and subsequent disclosure completeness remain unverified."
-          },
-          {
-            "url": "https://www.sec.gov/edgar/browse/?CIK=1318605&owner=exclude",
-            "claim": "Rendered EDGAR page exposed empty filing sections and a fetching-data placeholder rather than a usable current filing list.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:10:19+00:00",
-            "limitation": "Cannot support a no-filings conclusion or identify the latest 8-K, proxy or other disclosure."
-          },
-          {
-            "url": "https://data.sec.gov/submissions/CIK0001318605.json",
-            "claim": "Endpoint returned JSON metadata, but the tool response did not expose filing records for inspection.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:10:37+00:00",
-            "limitation": "No verified accession list, filing dates or acceptance timestamps were recovered."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "Nasdaq lists regular weekday trading at 09:30\u201316:00 Eastern; its 2026 holiday table has no closure or early close during November 9\u201316.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:10:37+00:00",
-            "limitation": "Scheduled hours do not guarantee future operation or exclude unscheduled closures and symbol halts."
-          }
-        ]
-      },
-      {
-        "work_id": "370d8ea88663bd0806df9eb1:1",
-        "topic": "symbol_events:NVDA",
-        "stage": "review",
-        "at": "2026-11-07T22:10:09.915161+00:00",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scope; indexes below are zero-based. Independently checked all eight analyst URLs in nine opens. The announced earnings timing and conditional session calculations agree with source:0 and source:1. Dividend and acquisition statements accurately describe retrieved text without asserting payment or closing. Publication, event, signature and retrieval dates remain distinct. Current filing coverage, next distribution and the study anchor remain unresolved; acceptance establishes no event clearance or trading authorization.",
-        "sources": [
-          {
-            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/default.aspx",
-            "claim": "source:0 reproduced: October 28 notice; November 17 results approximately 13:20 PT, commentary immediately afterward, call 14:00 PT; quarter ended October 25.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:08+00:00",
-            "limitation": "Announced schedule only. Approximate release time; does not prove future occurrence or November 6 analyst access."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "source:1 reproduced: weekday regular hours 09:30\u201316:00 ET; November 26 closure and November 27 early close. Conditional November 9/13 and 10/16 endpoints agree.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:08+00:00",
-            "limitation": "Scheduled sessions only. Endpoint calculations exclude t0; actual study anchor and counting convention remain unspecified."
-          },
-          {
-            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Second-Quarter-Fiscal-2027/",
-            "claim": "source:2 reproduced: August 26, 2026 release announces $0.25 per share payable October 1 to shareholders of record September 10.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:08+00:00",
-            "limitation": "Historical declaration text; completed payment, ex-date and next distribution are not established."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
-            "claim": "source:3 reproduced: September 2 Hugging Face agreement, approximately $11.9B price, up to $1B retention, conditional first-half 2027 closing; September 3 signature.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:19+00:00",
-            "limitation": "Retrieved text checked, including signature. Filing acceptance, independent transaction authentication and subsequent developments remain unchecked."
-          },
-          {
-            "url": "https://investor.nvidia.com/financial-info/sec-filings/default.aspx",
-            "claim": "source:4 reproduced: retrieved page contains filing filters and table headings without dated filing rows.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:09:14+00:00",
-            "limitation": "No latest-filing identification or current disclosure clearance follows from the incomplete rendering."
-          },
-          {
-            "url": "https://nvidianews.nvidia.com/news",
-            "claim": "source:5 reproduced: index dates CPU and memory entries November 5, 6G November 6, and earnings notice October 28, 2026.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:14+00:00",
-            "limitation": "Index dates and excerpts only; CPU/6G full text and archive completeness were not checked."
-          },
-          {
-            "url": "https://investor.nvidia.com/news-and-events/press-releases/default.aspx",
-            "claim": "source:6 check again returned HTTP 404; no substantive announcement content retrieved.",
-            "outcome": "unavailable",
-            "checked_at": "2026-11-07T22:09:14+00:00",
-            "limitation": "Retrieval failure supplies no evidence that announcements are absent."
-          },
-          {
-            "url": "https://blogs.nvidia.com/blog/memory-full-stack-codesign/",
-            "claim": "source:7 reproduced: November 5, 2026 company article describes memory pressure, tightening supply, rising prices and design measures intended to improve efficiency.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:09:14+00:00",
-            "limitation": "Company-authored statements; no independent technical validation or quantified NVIDIA earnings impact established."
-          }
-        ]
-      },
-      {
-        "work_id": "370d8ea88663bd0806df9eb1:1",
-        "topic": "symbol_events:NVDA",
-        "stage": "analysis",
-        "at": "2026-11-07T22:08:58.925436+00:00",
-        "disposition": "awaiting_review",
-        "summary": "NVIDIA announces November 17 results around 16:20 EST and a 17:00 EST call. The next scheduled session is November 9; both conditional five-session endpoints precede earnings. September 3 is the acquisition report's signature date, not a verified filing date. Next dividend timing and complete current disclosure coverage remain unresolved. This research changes no trading plan, study or gate.",
-        "sources": [
-          {
-            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/default.aspx",
-            "claim": "Published October 28, 2026: November 17 results approximately 13:20 PT, call 14:00 PT; Q3 FY2027 ended October 25.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:27+00:00",
-            "limitation": "Announced schedule only; release timing is approximate. Does not establish future occurrence or earlier analyst access."
-          },
-          {
-            "url": "https://www.nasdaq.com/market-activity/stock-market-holiday-schedule",
-            "claim": "2026 calendar lists November 26 closure and November 27 early close. Regular stock-market hours are Monday\u2013Friday, 09:30\u201316:00 ET.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:27+00:00",
-            "limitation": "Scheduled hours, not proof future sessions occur. Page publication date was not established."
-          },
-          {
-            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Second-Quarter-Fiscal-2027/",
-            "claim": "August 26, 2026 release announces $0.25/share payable October 1, 2026, to holders of record September 10.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:27+00:00",
-            "limitation": "Does not establish completed payment, an ex-date or the next distribution declaration."
-          },
-          {
-            "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
-            "claim": "8-K text reports September 2 agreement, approximately $11.9B price, up to $1.0B retention and conditional first-half 2027 closing; signature dated September 3.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:34+00:00",
-            "limitation": "Verification covers retrieved text. Filing/acceptance metadata, independent transaction authentication and later updates remain unchecked."
-          },
-          {
-            "url": "https://investor.nvidia.com/financial-info/sec-filings/default.aspx",
-            "claim": "Retrieved filing page supplies filters and table headings but no dated filing rows; latest-filing coverage remains unavailable.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T22:07:34+00:00",
-            "limitation": "Cannot identify the latest filing, subsequent acquisition developments or absence of material disclosures."
-          },
-          {
-            "url": "https://nvidianews.nvidia.com/news",
-            "claim": "Index displays November 5, 2026 CPU and memory entries, November 6 6G entry, and October 28 earnings notice.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:34+00:00",
-            "limitation": "Index dates and excerpts checked; CPU/6G full articles and archive completeness were not checked."
-          },
-          {
-            "url": "https://investor.nvidia.com/news-and-events/press-releases/default.aspx",
-            "claim": "The attempted press-release index URL returned HTTP 404.",
-            "outcome": "unavailable",
-            "checked_at": "2026-11-07T22:07:50+00:00",
-            "limitation": "No substantive content retrieved; failure cannot establish absence of announcements."
-          },
-          {
-            "url": "https://blogs.nvidia.com/blog/memory-full-stack-codesign/",
-            "claim": "November 5, 2026 article describes GPU memory pressure, tightening supply and rising prices, alongside company design measures intended to improve efficiency.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T22:07:50+00:00",
-            "limitation": "Company-authored technical claims; no quantified effect on NVIDIA earnings, shipments or margins established."
-          }
-        ]
       }
     ],
     "scope": "Focused research and independently reviewed developer proposals; no plan, order, strategy promotion or code-edit authority.",
@@ -20175,22 +20213,148 @@
   },
   "usage": [
     {
-      "at": "2026-11-07T22:59:59.275454+00:00",
+      "at": "2026-11-07T23:13:13.279129+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 34796,
+      "cached_tokens": 26368,
+      "output_tokens": 1522,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:157",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":57,\"after_used_percent\":57,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:12:14.283550+00:00",
       "day": "2026-11-07",
       "role": "deep_research",
       "model": "gpt-6.1-sol",
-      "input_tokens": 0,
-      "cached_tokens": 0,
-      "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started",
-      "outcome": null,
-      "attempt_id": "usage:150",
-      "application_outcome": null,
+      "input_tokens": 45744,
+      "cached_tokens": 37376,
+      "output_tokens": 3232,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:156",
+      "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":56,\"after_used_percent\":57,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:09:40.755114+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 41037,
+      "cached_tokens": 39680,
+      "output_tokens": 1562,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:155",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":55,\"after_used_percent\":56,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:08:15.344801+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 35591,
+      "cached_tokens": 27264,
+      "output_tokens": 3276,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:154",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":55,\"after_used_percent\":55,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:06:20.302625+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 37703,
+      "cached_tokens": 36992,
+      "output_tokens": 2314,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:153",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":54,\"after_used_percent\":54,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:04:41.907818+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 37411,
+      "cached_tokens": 29056,
+      "output_tokens": 3706,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:152",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":53,\"after_used_percent\":54,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:02:40.548381+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 35710,
+      "cached_tokens": 27392,
+      "output_tokens": 1511,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:151",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":52,\"after_used_percent\":53,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
+    {
+      "at": "2026-11-07T23:01:41.004841+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 38267,
+      "cached_tokens": 38016,
+      "output_tokens": 3024,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:150",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":52,\"after_used_percent\":52,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
     },
     {
       "at": "2026-11-07T22:54:41.312958+00:00",
@@ -22747,132 +22911,6 @@
       "reply_usage_reported": null,
       "quota_delta_reported": null,
       "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T22:56:58.115143+00:00",
-      "day": "2026-10-29",
-      "role": "probe_research",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 0,
-      "cached_tokens": 0,
-      "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T22:50:46.711599+00:00",
-      "day": "2026-10-29",
-      "role": "maintenance",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 120782,
-      "cached_tokens": 0,
-      "output_tokens": 134,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T22:50:29.627571+00:00",
-      "day": "2026-10-29",
-      "role": "retrospective",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 118894,
-      "cached_tokens": 0,
-      "output_tokens": 1364,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T11:42:17.857712+00:00",
-      "day": "2026-10-29",
-      "role": "research_validation",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 62158,
-      "cached_tokens": 53760,
-      "output_tokens": 1220,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T11:40:26.275050+00:00",
-      "day": "2026-10-29",
-      "role": "research_validation",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 38285,
-      "cached_tokens": 36224,
-      "output_tokens": 1235,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T11:39:22.945428+00:00",
-      "day": "2026-10-29",
-      "role": "research_validation",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 109263,
-      "cached_tokens": 100864,
-      "output_tokens": 1626,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
-    },
-    {
-      "at": "2026-10-29T11:37:40.196731+00:00",
-      "day": "2026-10-29",
-      "role": "exploration",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 72729,
-      "cached_tokens": 67072,
-      "output_tokens": 6381,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": null,
-      "attempt_id": null,
-      "application_outcome": null,
-      "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
     }
   ],
   "budget": {
@@ -22883,9 +22921,9 @@
     "daily_call_ceiling": 24,
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "account_used_percent": 52.0,
-    "quota_observed_at": "2026-11-07T22:59:59.253448+00:00",
-    "target_gap_percentage_points": 28.0,
+    "account_used_percent": 57.0,
+    "quota_observed_at": "2026-11-07T23:14:31.582210+00:00",
+    "target_gap_percentage_points": 23.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
@@ -23716,17 +23754,17 @@
     "scope": "Calendar-linked feature availability, not independent provider-price verification. Earlier packets retain their original validation scope."
   },
   "release": {
-    "source_commit": "4e834ef7c98503b273ee16a0d5350d9f853613cf",
-    "validated_at": "2026-11-07T22:57:50.783264+00:00",
-    "regression_tests": 833,
-    "runtime_tests": 663,
+    "source_commit": "26f5f47d4ac06b44953e87145c4a99ed16fdab51",
+    "validated_at": "2026-11-07T23:14:31.945660+00:00",
+    "regression_tests": 922,
+    "runtime_tests": 752,
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "historical_passed_current_kernel_pending",
-    "ci": "passed",
-    "pages": "passed",
-    "public_browser_qa": "passed_14_checks_at_1440_and_390_exact_source_and_registration",
-    "activated_at": "2026-11-07T22:58:32.708562+00:00",
+    "ci": "pending",
+    "pages": "pending",
+    "public_browser_qa": "pending",
+    "activated_at": null,
     "research_sprint": true,
     "research_handoff_verified": true,
     "updated_at": "2026-11-07T22:59:50.546936+00:00",
@@ -23743,15 +23781,15 @@
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
     "profitability": "unproven",
-    "source_ci_run": 42423062826,
-    "pages_verified_run": 42423095533,
+    "source_ci_run": null,
+    "pages_verified_run": null,
     "asset_versioning": true,
     "execution_check_repair": true,
     "operational_evidence_review_verified": true,
     "research_quality_audit": true,
     "source_check_attestations": true,
     "at": "2026-10-31T16:35:37.008768+00:00",
-    "summary": "Calendar-validated daily input receipts, prospective adaptive provenance and explicit resource cleanup.",
+    "summary": "Atomic research-result application, exact broker receipt ownership and complete graph/reconciliation transactions.",
     "observation_led_discovery": true,
     "adaptive_studies": 3,
     "adaptive_handoff_verified": true,
@@ -23761,11 +23799,11 @@
         80
       ],
       "initial_account_usage_percent": 2,
-      "latest_observed_account_usage_percent": 51,
+      "latest_observed_account_usage_percent": 57,
       "background_daily_attempts": 96,
       "core_daily_attempts": 24,
-      "kernel": "paper-execution-20261107-r2",
-      "current_kernel_market_acceptance": "pending_regular_session",
+      "kernel": "paper-execution-20261107-r3",
+      "current_kernel_market_acceptance": "pending_regular_session_and_quota_admission",
       "fee_receipts_booked": 2,
       "frozen_protocols_preserved": true,
       "orders_submitted_by_maintenance": 0,
@@ -23781,8 +23819,8 @@
       "legacy_adaptive_entries_preserved": 64
     },
     "local_browser_qa": "passed_20_checks_at_1440_and_390",
-    "previous_source_commit": "939b232e5c6980cd63e5054ba7e0135a72d95971",
-    "local_validation": "829 full and 659 minimal passed; outdated fixture corrected and its 10 tests passed in both environments; final reporting regressions passed"
+    "previous_source_commit": "4e834ef7c98503b273ee16a0d5350d9f853613cf",
+    "local_validation": "922 full and 752 minimal passed in fresh environments; independent fault injection and review passed"
   },
   "limitations": [
     "Paper results are not live returns.",
