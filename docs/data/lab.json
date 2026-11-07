@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T22:21:40.481105+00:00",
+  "generated_at": "2026-11-07T22:25:34.530360+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T17:21:35.541383-05:00",
+  "heartbeat": "2026-11-07T17:22:45.834424-05:00",
   "watchdog": {
-    "checked_at": "2026-11-07T22:20:06.9602004+00:00",
+    "checked_at": "2026-11-07T22:24:03.3674049+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
-    "models_paused": false,
-    "maintenance": false
+    "models_paused": true,
+    "maintenance": true
   },
-  "status": "Market holiday or weekend. Reconciled; background research is available.",
+  "status": "Local supervisor stopped; independent watchdog owns recovery.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T21:49:24.507153+00:00",
+    "at": "2026-11-07T22:24:47.666072+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -78,7 +78,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T22:21:35.608728+00:00",
+    "as_of": "2026-11-07T22:24:45.639707+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -112,7 +112,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T22:21:35.608728+00:00",
+      "broker_cash_observed_at": "2026-11-07T22:24:45.639707+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -197,6 +197,42 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T22:24:45.639707+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:24:45.639707+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:24:45.639707+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T22:22:46.344131+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:22:46.344131+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T22:22:46.344131+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T22:21:35.608728+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10956,42 +10992,6 @@
     },
     {
       "at": "2026-11-07T10:53:31.174141+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:52:59.158252+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:52:59.158252+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:52:59.158252+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:51:55.143301+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:51:55.143301+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:51:55.143301+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11109,7 +11109,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T22:21:40.777374+00:00",
+    "as_of": "2026-11-07T22:25:34.727459+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11499,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T22:21:40.778290+00:00",
+    "as_of": "2026-11-07T22:25:34.728454+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11513,7 +11513,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T22:21:35.608728+00:00",
+      "as_of": "2026-11-07T22:24:45.639707+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11559,7 +11559,7 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 28.34137423972222,
+      "input_age_hours": 28.40636039638889,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
@@ -11601,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T22:21:41.836636+00:00",
+    "as_of": "2026-11-07T22:25:35.470248+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15016,6 +15016,87 @@
   "plans": [],
   "events": [
     {
+      "id": 491,
+      "at": "2026-11-07T22:24:47.717664+00:00",
+      "kind": "options_coverage_registered",
+      "branch": null,
+      "payload": {
+        "registration_id": "e477af4b0d7edf53700534dfce5c7c04aaf8946cdb1ec0c5a9431ce90321ece8",
+        "session_day": "2026-11-09",
+        "protocol_sha256": "8d709ba57671222243c2b611d859813484e82bf939548d3b728a00a2deef40fd",
+        "execution_eligible": false
+      }
+    },
+    {
+      "id": 490,
+      "at": "2026-11-07T22:23:19.351686+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 36418
+      }
+    },
+    {
+      "id": 489,
+      "at": "2026-11-07T22:23:18.877179+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 36418
+      }
+    },
+    {
+      "id": 488,
+      "at": "2026-11-07T22:22:45.893782+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "1d1ca49a13fd5e007f53145d:0",
+        "topic": "symbol_events:AAPL"
+      }
+    },
+    {
+      "id": 487,
+      "at": "2026-11-07T22:22:16.210161+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "df61dfd87f494372599a9d7d34617c0ab2da01311545aef7c7007df5c0177a81",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T22:20:26.990125+00:00",
+        "attempt_id": "usage:133",
+        "searches": 3,
+        "cycles": 12,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T22:22:16.206745+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 38,
+          "after_used_percent": 39,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
       "id": 486,
       "at": "2026-11-07T22:20:22.875089+00:00",
       "kind": "research_work_reviewed",
@@ -17009,53 +17090,6 @@
         "signal": 15,
         "pid": 554
       }
-    },
-    {
-      "id": 379,
-      "at": "2026-11-07T18:14:18.061243+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 378,
-      "at": "2026-11-07T18:14:14.337602+00:00",
-      "kind": "supervisor_stopped",
-      "branch": null,
-      "payload": {
-        "pid": 310
-      }
-    },
-    {
-      "id": 377,
-      "at": "2026-11-07T18:14:06.811308+00:00",
-      "kind": "supervisor_stopping",
-      "branch": null,
-      "payload": {
-        "signal": 15,
-        "pid": 310
-      }
-    },
-    {
-      "id": 376,
-      "at": "2026-11-07T18:14:05.510753+00:00",
-      "kind": "startup",
-      "branch": null,
-      "payload": {
-        "summary": "Local supervisor started; recovering durable state."
-      }
-    },
-    {
-      "id": 375,
-      "at": "2026-11-07T13:35:26.520581+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "runtime_ReadTimeout",
-        "reason": "Runtime check failed (ReadTimeout); retrying in 30 seconds."
-      }
     }
   ],
   "experiments": [
@@ -18168,22 +18202,22 @@
   },
   "quality_audit": {
     "day": "2026-11-07",
-    "as_of": "2026-11-07T22:20:23.102182+00:00",
+    "as_of": "2026-11-07T22:22:46.070088+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 41,
+      "calls": 42,
       "by_role": {
-        "deep_research": 21,
+        "deep_research": 22,
         "deep_research_review": 20
       },
-      "input_tokens": 1198050,
-      "cached_input_tokens": 781568,
-      "output_tokens": 83361,
-      "web_actions": 65,
+      "input_tokens": 1239666,
+      "cached_input_tokens": 814848,
+      "output_tokens": 87211,
+      "web_actions": 68,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "deep_research": 18,
+      "deep_research": 19,
       "deep_research_review": 18
     },
     "legacy_snapshot_artifacts": 0,
@@ -18199,7 +18233,7 @@
       "omitted_records": 0,
       "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup."
     },
-    "unique_cited_urls": 37,
+    "unique_cited_urls": 43,
     "known_no_plan_research_outputs": 0,
     "pulse_outputs": 0,
     "pulses_without_verified_delta": 0,
@@ -18589,12 +18623,12 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T22:20:26.975101+00:00",
+    "at": "2026-11-07T22:24:47.622802+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 38,
+        "usedPercent": 40,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
@@ -18628,9 +18662,9 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T22:21:42.112128+00:00",
+    "as_of": "2026-11-07T22:25:35.700759+00:00",
     "status": {
-      "state": "running",
+      "state": "awaiting_queue_refresh",
       "role": "deep_research",
       "topic": "symbol_events:AAPL",
       "work_id": "1d1ca49a13fd5e007f53145d:0",
@@ -18683,13 +18717,68 @@
         "allowed": true,
         "reason": "Useful background work within account reserve and attempt ceiling"
       },
-      "reason": "A background research stage is running.",
-      "active_task": {
-        "role": "deep_research",
-        "started": "2026-11-07T22:20:26.030878+00:00"
-      }
+      "reason": "The previously selected stage is complete; the scheduler must select the next retained question or review."
     },
     "reports": [
+      {
+        "work_id": "1d1ca49a13fd5e007f53145d:0",
+        "topic": "symbol_events:AAPL",
+        "stage": "analysis",
+        "at": "2026-11-07T22:22:45.892929+00:00",
+        "disposition": "awaiting_review",
+        "summary": "Apple's November 2 earnings release confirms a November 12 dividend record date and November 16 payment. The next scheduled equity session is November 9; horizon counting determines whether payment falls within five sessions. Next earnings/product-release timing and recent filing contents remain unresolved. November 7 checks must not be backdated into the November 6 research snapshot. No plan or gate change is implied.",
+        "sources": [
+          {
+            "url": "https://www.apple.com/newsroom/2026/11/apple-reports-fourth-quarter-results/",
+            "claim": "Dated November 2, 2026; confirms Q4 results, November 2 14:00 PT call, $0.27 dividend, November 12 record date and November 16 payment.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T22:20:55+00:00",
+            "limitation": "No next-quarter earnings announcement, ex-dividend date or precise publication timestamp established."
+          },
+          {
+            "url": "https://investor.apple.com/dividend-history/",
+            "claim": "Issuer search result lists November 2 declaration, November 12 record, November 16 payment and $0.27; corroborated by the opened earnings release.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T22:20:42+00:00",
+            "limitation": "Opened excerpt showed navigation; table values came from the search index. Ex-dividend date is absent."
+          },
+          {
+            "url": "https://investor.apple.com/investor-relations/default.aspx",
+            "claim": "Search index describes FY26 Q4 results and November 3/October 28 Newsroom items; opened page contains empty Investor Updates and Newsroom sections.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T22:20:55+00:00",
+            "limitation": "Dynamic content and future event coverage were not recovered. Index/open mismatch prevents an absence-of-events conclusion."
+          },
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm",
+            "claim": "Retrieved SEC document identifies Apple FY2026 Form 10-K for year ended September 26, 2026, and AAPL common stock listed on Nasdaq.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T22:20:55+00:00",
+            "limitation": "Header inspected; substantive risks, subsequent events and filing acceptance timestamp were not reviewed."
+          },
+          {
+            "url": "https://investor.apple.com/investor-relations/sec-filings/",
+            "claim": "Search index lists November 3 10-K, November 2 8-K and November 5\u20136 prospectus/FWP entries. Opened page supplies table headings without rows.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T22:20:55+00:00",
+            "limitation": "Indexed entries are discovery leads; underlying documents and accession-level chronology remain unchecked."
+          },
+          {
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "claim": "Official 2026 equity holiday table lists November 26 Thanksgiving closure and November 27 early close; no November 9\u201313 holiday closure is listed.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T22:20:42+00:00",
+            "limitation": "Scheduled NYSE calendar, not an AAPL-specific Nasdaq corporate-action record or guarantee against exceptional closures."
+          },
+          {
+            "url": "https://investor.apple.com/sec-filings/default.aspx",
+            "claim": "Alternate issuer filing-page search result indexes a September 10, 2026 10-K, conflicting with November 3 on the other issuer-page result.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T22:20:42+00:00",
+            "limitation": "Search-index-only discrepancy; stale content, another filing or indexing error cannot be distinguished."
+          }
+        ]
+      },
       {
         "work_id": "6d2dad759c0bdaac9ab66197:0",
         "topic": "symbol_events:XLK",
@@ -19539,72 +19628,6 @@
         "disposition": "awaiting_review",
         "summary": "The pre-open report describes unavailable session features and stale quotes. Retained 09:45 and 13:01 inputs contain opening ranges and VWAP; later XLK coverage has five missing intervals. Field semantics and raw calculation lineage remain unresolved. The reports acknowledge supplied features, so model omission is unproven. Checks below are proposals only; no trading controls or historical observations change.",
         "sources": []
-      },
-      {
-        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
-        "topic": "event_coverage",
-        "stage": "review",
-        "at": "2026-11-07T21:15:13.862081+00:00",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scope. Independently opened all eight analyst URLs and reproduced the seven verified source claims; Census remains partial. Event times, calendar omissions and qualifications match the pages. Supplied evidence supports the remaining coverage unknown. The reusable receipt proposal preserves that distinction. This acceptance does not establish comprehensive event clearance or change trading controls.",
-        "sources": [
-          {
-            "url": "https://www.nyse.com/trade/hours-calendars",
-            "claim": "source:0: Holiday table and early-close notes omit November 9, 2026; core equity hours are 09:30\u201316:00 ET. These support finding 0's scheduled-session inference.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:12+00:00",
-            "limitation": "Published schedule cannot exclude extraordinary closures."
-          },
-          {
-            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/default.aspx",
-            "claim": "source:1: October 28 announcement confirms November 17 Q3 FY2027 call at 14:00 PT/17:00 ET and results at approximately 13:20 PT, equivalent to 16:20 ET.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:12+00:00",
-            "limitation": "Results timing is approximate. Announcement verifies this appointment, not comprehensive company-event coverage."
-          },
-          {
-            "url": "https://ir.amd.com/news-events/ir-calendar",
-            "claim": "source:2: Calendar shows November 3 results event at 14:00 PST; upcoming UBS December 1 and Barclays December 9 entries show dates without times. No November 9 entry appears.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:12+00:00",
-            "limitation": "Visible calendar only; omitted dates cannot exclude other announcements or filings."
-          },
-          {
-            "url": "https://ir.amd.com/news-events/press-releases",
-            "claim": "source:3: Index labels AMD Reports Third Quarter 2026 Financial Results with November 3, 2026, 16:15 EST.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:12+00:00",
-            "limitation": "Confirms the displayed publication timestamp, not independently measured dissemination or filing contents."
-          },
-          {
-            "url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
-            "claim": "source:4: November calendar lists Bowman's Community Banking discussion on the 9th at 08:40 and October 27\u201328 FOMC minutes on the 18th at 14:00.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:17+00:00",
-            "limitation": "No timezone stated in retrieved text; last update reads November 3, 2025. Listing does not establish complete speaker coverage."
-          },
-          {
-            "url": "https://www.bls.gov/schedule/2026/11_sched.htm",
-            "claim": "source:5: November 9 is blank; November 10 lists CPI and Real Earnings at 08:30. Page specifies Eastern Time and last modification November 3, 2026.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:22+00:00",
-            "limitation": "Selected BLS calendar only; no ICS retrieval or comprehensive macro clearance established."
-          },
-          {
-            "url": "https://www.newyorkfed.org/research/calendars/nationalecon_cal",
-            "claim": "source:6: November 9 lists Wholesale Trade at 10:00 and Survey of Consumer Expectations at 11:00. Page specifies Eastern Time and warns schedules can change.",
-            "outcome": "verified",
-            "checked_at": "2026-11-07T21:14:22+00:00",
-            "limitation": "Issuer confirmation for its survey; calendar aggregation for Wholesale Trade. Dates and times are tentative."
-          },
-          {
-            "url": "https://www.census.gov/economic-indicators/calendar-listview.html",
-            "claim": "source:7: Retrieved page identifies itself as the 2027 release schedule and links to a separate 2026 calendar; target November 9, 2026 event was not confirmed.",
-            "outcome": "partial",
-            "checked_at": "2026-11-07T21:14:17+00:00",
-            "limitation": "Wrong-year content cannot confirm the target event; linked 2026 calendar was not opened."
-          }
-        ]
       }
     ],
     "scope": "Focused research and independently reviewed developer proposals; no plan, order, strategy promotion or code-edit authority.",
@@ -19616,22 +19639,22 @@
   },
   "usage": [
     {
-      "at": "2026-11-07T22:20:26.990125+00:00",
+      "at": "2026-11-07T22:22:16.206761+00:00",
       "day": "2026-11-07",
       "role": "deep_research",
       "model": "gpt-6.1-sol",
-      "input_tokens": 0,
-      "cached_tokens": 0,
-      "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started",
-      "outcome": null,
+      "input_tokens": 41616,
+      "cached_tokens": 33280,
+      "output_tokens": 3850,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
       "attempt_id": "usage:133",
-      "application_outcome": null,
+      "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":38,\"after_used_percent\":39,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
     },
     {
       "at": "2026-11-07T22:20:06.116299+00:00",
@@ -22018,9 +22041,9 @@
     "daily_call_ceiling": 24,
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "account_used_percent": 38.0,
-    "quota_observed_at": "2026-11-07T22:20:26.975101+00:00",
-    "target_gap_percentage_points": 42.0,
+    "account_used_percent": 40.0,
+    "quota_observed_at": "2026-11-07T22:24:47.622802+00:00",
+    "target_gap_percentage_points": 40.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
@@ -22753,21 +22776,101 @@
     ],
     "unknowns": []
   },
+  "options_coverage": {
+    "registered": true,
+    "version": "etf-options-coverage-v1",
+    "protocol_sha256": "8d709ba57671222243c2b611d859813484e82bf939548d3b728a00a2deef40fd",
+    "registration_id": "e477af4b0d7edf53700534dfce5c7c04aaf8946cdb1ec0c5a9431ce90321ece8",
+    "registered_at": "2026-11-07T22:24:47.712375+00:00",
+    "session_day": "2026-11-09",
+    "scope": "coverage_only",
+    "execution_eligible": false,
+    "promotion_eligible": false,
+    "request_budget": {
+      "limit": 12,
+      "reserved": 0,
+      "remaining": 12,
+      "unknown_outcomes": 0,
+      "failed": 0,
+      "late": 0
+    },
+    "expected_observations": 8,
+    "baseline": {
+      "observed_at": "2026-11-06T18:01:11.831027+00:00",
+      "packet_sha256": "c41ac94f6a0a429135474ceaf4e3af45003e678ea2a986cfdc3a6762aec2e33d",
+      "contracts": 30,
+      "call_count": 30,
+      "put_count": 0,
+      "same_day_expiry_count": 30,
+      "valid_quotes": 30,
+      "iv_categories": {
+        "missing": 30
+      },
+      "finite_greek_fields": {
+        "delta": 0,
+        "gamma": 0,
+        "rho": 0,
+        "theta": 0,
+        "vega": 0
+      },
+      "contracts_with_any_finite_greek": 0,
+      "contracts_with_all_five_finite_greeks": 0,
+      "ordered_positive_quotes": 30,
+      "valid_quotes_scope": "Finite positive ordered prices only; historical freshness is not certified.",
+      "scope": "Historical sampler evidence only; original packet preserved."
+    },
+    "selection": [
+      {
+        "underlying": "SPY",
+        "state": "awaiting_selection",
+        "selection_sha256": "34c6094eb7e34d1c0a002511960965a156aa6862457803dd9a6c76c9d681c08e"
+      },
+      {
+        "underlying": "QQQ",
+        "state": "awaiting_selection",
+        "selection_sha256": "f18727cd6669654313a5d5186342fa67e164fe7190aa39cd66fc0932fc42aeac"
+      }
+    ],
+    "captures": [
+      {
+        "slot": 1,
+        "scheduled_at": "2026-11-09T10:00:00-05:00",
+        "deadline": "2026-11-09T10:02:00-05:00",
+        "state": "pending",
+        "expected_contracts": 4,
+        "capture_sha256": "84b9624c5df91e3ab981ea89bbb58097b99b084451d21a5c38afeb2376989eff"
+      },
+      {
+        "slot": 2,
+        "scheduled_at": "2026-11-09T10:15:00-05:00",
+        "deadline": "2026-11-09T10:17:00-05:00",
+        "state": "pending",
+        "expected_contracts": 4,
+        "capture_sha256": "a2776fad94e218dd9bc3dff7b6ee35918532b4d17d4193e674a3b86bef8ab870"
+      }
+    ],
+    "limitations": [
+      "Coverage only; no orders, activation, promotion, fills or profitability inference.",
+      "Alpaca free indicative options quotes are modified, not actual OPRA executable quotes; trades delayed. Underlying quotes IEX only. No paid feed fallback.",
+      "IV and Greek as-of timestamps are not supplied; quote checks cannot certify synchronized valuation.",
+      "Missing or late observations are unknown, never zeros or reconstructed observations."
+    ]
+  },
   "release": {
-    "source_commit": "7c25b16f0718251c42b2582ff060769fbcd8fe71",
-    "validated_at": "2026-11-07T21:45:42.756236+00:00",
-    "regression_tests": 660,
-    "runtime_tests": 490,
+    "source_commit": "939b232e5c6980cd63e5054ba7e0135a72d95971",
+    "validated_at": "2026-11-07T22:24:47.726195+00:00",
+    "regression_tests": 727,
+    "runtime_tests": 557,
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "historical_passed_current_kernel_pending",
-    "ci": "passed",
-    "pages": "passed",
-    "public_browser_qa": "passed_7_views_1440_and_390_exact_source_and_kernel",
-    "activated_at": "2026-11-07T21:48:23.260976+00:00",
+    "ci": "pending",
+    "pages": "pending",
+    "public_browser_qa": "pending_current_release",
+    "activated_at": null,
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-11-07T21:49:21.014308+00:00",
+    "updated_at": "2026-11-07T22:24:47.726209+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -22781,15 +22884,15 @@
     "forward_morning_handoff_verified": true,
     "cohort_study": "fixed-signal-v1:2026-10-30",
     "profitability": "unproven",
-    "source_ci_run": 42417399721,
-    "pages_verified_run": 42417399708,
+    "source_ci_run": null,
+    "pages_verified_run": null,
     "asset_versioning": true,
     "execution_check_repair": true,
     "operational_evidence_review_verified": true,
     "research_quality_audit": true,
     "source_check_attestations": true,
     "at": "2026-10-31T16:35:37.008768+00:00",
-    "summary": "Operational ownership, quote-independent exits, reviewed publication, prospective observation and promotion integrity.",
+    "summary": "Exact held-research evidence, prospective options coverage, fresh-open priority and minimal runtime packaging.",
     "observation_led_discovery": true,
     "adaptive_studies": 3,
     "adaptive_handoff_verified": true,
@@ -22799,7 +22902,7 @@
         80
       ],
       "initial_account_usage_percent": 2,
-      "latest_observed_account_usage_percent": 27,
+      "latest_observed_account_usage_percent": 40,
       "background_daily_attempts": 96,
       "core_daily_attempts": 24,
       "kernel": "paper-execution-20261107-r2",
@@ -22811,9 +22914,13 @@
       "desktop_viewport_px": 1440,
       "promotion_policy": "paired-entry-date-absolute-v2",
       "policy_migrated_untouched_challengers": 8,
-      "calendar_archive_sequences_verified": 180
+      "calendar_archive_sequences_verified": 180,
+      "held_research_groups": 4,
+      "options_coverage_registration": "e477af4b0d7edf53700534dfce5c7c04aaf8946cdb1ec0c5a9431ce90321ece8",
+      "base_install_distributions": 14
     },
-    "local_browser_qa": "passed_7_views_1440_and_390"
+    "local_browser_qa": "passed_7_views_1440_and_390_plus_10_fixtures",
+    "previous_source_commit": "7c25b16f0718251c42b2582ff060769fbcd8fe71"
   },
   "limitations": [
     "Paper results are not live returns.",
