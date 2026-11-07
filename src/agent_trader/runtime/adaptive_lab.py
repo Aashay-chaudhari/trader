@@ -15,6 +15,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .config import ET, RESEARCH_UNIVERSE
+from .observation_audit import date_composition, record_quote
 from .store import dumps
 
 
@@ -360,10 +361,26 @@ class AdaptiveLab:
                         "promotion_eligible": False,
                     }
                 )
-                self.store.db.execute(
-                    "UPDATE adaptive_observations SET state='open',payload=? WHERE id=? AND state='pending'",
-                    (dumps(p), row["id"]),
-                )
+                with self.store.transaction():
+                    updated = self.store.db.execute(
+                        "UPDATE adaptive_observations SET state='open',payload=? WHERE id=? AND state='pending'",
+                        (dumps(p), row["id"]),
+                    )
+                    if updated.rowcount:
+                        record_quote(
+                            self.store,
+                            "adaptive",
+                            row["id"],
+                            "entry",
+                            q,
+                            now,
+                            {
+                                "entry_ask": ask,
+                                "assumed_base_cost_fraction": 0.002,
+                                "input_sha256": p["input_sha256"],
+                                "specification_sha256": p["specification_sha256"],
+                            },
+                        )
         self.mark(quotes, now)
 
     def expire(self, now):
@@ -424,10 +441,30 @@ class AdaptiveLab:
                     }
                 )
             p["closed_at"] = now.isoformat()
-            self.store.db.execute(
-                "UPDATE adaptive_observations SET state=?,payload=? WHERE id=?",
-                (state, dumps(p), row["id"]),
-            )
+            with self.store.transaction():
+                updated = self.store.db.execute(
+                    "UPDATE adaptive_observations SET state=?,payload=? WHERE id=? AND state='open'",
+                    (state, dumps(p), row["id"]),
+                )
+                if updated.rowcount:
+                    record_quote(
+                        self.store,
+                        "adaptive",
+                        row["id"],
+                        "exit",
+                        quotes[row["symbol"]],
+                        now,
+                        {
+                            "entry_ask": p["entry_ask"],
+                            "gross": gross,
+                            "outcome": state,
+                            "assumed_base_cost_fraction": 0.002,
+                            "assumed_stressed_cost_fraction": 0.005,
+                            "baseline_net": p.get("baseline_net"),
+                            "signal": p["signal"],
+                            "signal_net": p.get("signal_net"),
+                        },
+                    )
         self._complete()
 
     def _complete(self):
@@ -476,6 +513,9 @@ class AdaptiveLab:
                     "closed": len(closed),
                     "closed_signals": signals,
                     "closed_sessions": len(dates),
+                    "date_composition": date_composition(
+                        [(day, p["signal_net"], p["signal"]) for day, p in closed]
+                    ),
                     "not_evaluable": sum(r["state"] == "not_evaluable" for r in observations),
                     "cumulative": means(closed),
                     "recent_five_entry_sessions": means(

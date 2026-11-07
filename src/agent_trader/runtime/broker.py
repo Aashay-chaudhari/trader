@@ -97,7 +97,9 @@ class Broker:
         )
 
     def order(self, broker_id):
-        return self.request("GET", f"/v2/orders/{broker_id}")
+        # Alpaca omits legs unless nested retrieval is requested. Reconciliation
+        # needs the complete parent receipt even after the entry has filled.
+        return self.request("GET", f"/v2/orders/{broker_id}", params={"nested": "true"})
 
     def by_client(self, client_id):
         try:

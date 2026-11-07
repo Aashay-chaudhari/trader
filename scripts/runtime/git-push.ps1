@@ -1,9 +1,15 @@
 # Noninteractive publication fallback; never allocate a Windows console.
+param(
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(40,40)]
+    [ValidatePattern('^[0-9a-f]{40}$')]
+    [string]$Revision
+)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $info = New-Object Diagnostics.ProcessStartInfo
 $info.FileName = 'C:\Program Files\Git\cmd\git.exe'
-$info.Arguments = 'push origin HEAD:main'
+$info.Arguments = 'push origin ' + $Revision + ':main'
 $info.WorkingDirectory = $repo
 $info.UseShellExecute = $false
 $info.CreateNoWindow = $true

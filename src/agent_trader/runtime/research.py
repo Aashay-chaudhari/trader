@@ -78,10 +78,28 @@ def market_packet(broker, store):
                 }
         packet["daily_indicators"] = indicators
         if hasattr(broker, "calendar_range"):
-            sessions = broker.calendar_range(
-                trade_day, (datetime.now(ET).date() + timedelta(days=45)).isoformat()
-            )
-            freeze_signals(store, bars, sessions)
+            from .observation_audit import content_hash
+
+            calendar_now = datetime.now(ET)
+            start = (calendar_now.date() - timedelta(days=80)).isoformat()
+            end = (calendar_now.date() + timedelta(days=45)).isoformat()
+            try:
+                sessions = broker.calendar_range(start, end)
+            except Exception as exc:
+                packet["unknowns"].append(f"Broker calendar unavailable for cohort validation: {type(exc).__name__}")
+                freeze_signals(store, bars, [])
+            else:
+                calendar_hash = content_hash(sessions)
+                calendar_key = "cohort-calendar:" + trade_day + ":" + calendar_hash
+                if not store.get(calendar_key):
+                    store.set(calendar_key, {
+                        "source": "Alpaca broker calendar", "observed_at": calendar_now.isoformat(),
+                        "requested_start": start, "requested_end": end,
+                        "sessions": sessions, "sha256": calendar_hash,
+                    })
+                freeze_signals(store, bars, sessions, calendar_reference=calendar_key)
+        else:
+            freeze_signals(store, bars, [])
     except Exception as exc:
         packet["unknowns"].append(f"Daily bars unavailable: {type(exc).__name__}")
     packet["intraday_indicators"] = {}
@@ -332,8 +350,8 @@ def research_prompt(day, packet, store):
     context = {
         "research_knowledge": knowledge,
         "memory": memory,
-        "independently_reviewed_research": reviewed_context(store, max_chars=1800),
-        "stale_source_leads": stale_source_leads(store, max_chars=1000),
+        "independently_reviewed_research": reviewed_context(store, max_chars=3500, focus_symbols=packet.get("focus_symbols", [])),
+        "stale_source_leads": stale_source_leads(store, max_chars=1000, focus_symbols=packet.get("focus_symbols", [])),
         "observation_questions": observation_context(store, max_chars=2200),
         "adaptive_tests": AdaptiveLab(store).context(max_trials=3),
         "filter_sampling": Experiments(store).funnel(),
@@ -395,6 +413,10 @@ Existing lessons are proposals unless marked tested.
 Use these bounded reports only within their recorded validity window and source-check
 scope. Reverify time-sensitive facts for today's plan; accepted research grants no
 trade approval and cannot establish absence of unobserved company events.
+The handoff selects complete findings with qualifications and cited source receipts.
+omitted_findings means additional findings and unknowns remain outside this packet;
+absence here is not resolution. Local ev: references identify retained reviewed
+evidence, not independently reproduced current inputs.
 stale_source_leads contains previously verified source URLs only. Reopen them for
 fresh evidence before using any fact; prior event claims and clearance do not carry
 forward. These locators help recover useful weekend research after its facts expire.
@@ -577,6 +599,7 @@ def parse_macro_download(content, series, as_of):
     """FRED returns a ZIP for mixed calendars/frequencies, CSV for one table."""
     import csv
     import io
+    import math
     import zipfile
 
     texts = []
@@ -606,7 +629,8 @@ def parse_macro_download(content, series, as_of):
                     date.fromisoformat(stamp)
                 except (ValueError, TypeError):
                     continue
+                if not math.isfinite(value):
+                    continue
                 if name not in result or stamp > result[name]["observation_date"]:
                     result[name] = {"value": value, "observation_date": stamp}
-                break
     return result

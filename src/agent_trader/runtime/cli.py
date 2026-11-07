@@ -7,25 +7,23 @@ import shutil
 import time
 from datetime import datetime
 
-from .agent import CodexRPC
+from .agent import run_task
 from .broker import Broker
 from .config import Config, ET
 from .engine import Engine, TERMINAL, EXECUTION_KERNEL, order_id
 from .publish import export, publish
 from .store import Store, utc_now
+from .ownership import RuntimeBusy, runtime_ownership
 
 
-def reset_application(config, confirm):
+def reset_application(config, confirm, *, ownership=None):
+    with runtime_ownership(config.state_dir, ownership):
+        return _reset_application(config, confirm)
+
+
+def _reset_application(config, confirm):
     if confirm != "RESET":
         raise ValueError("Reset requires --confirm RESET")
-    if (config.state_dir / "supervisor.lock").exists():
-        import fcntl
-
-        with open(config.state_dir / "supervisor.lock", "a") as lock:
-            try:
-                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError:
-                raise ValueError("Stop supervisor before resetting")
     broker = Broker(config)
     if broker.positions() or broker.orders():
         raise ValueError("Broker must have no positions or open orders for a fresh ledger")
@@ -67,7 +65,12 @@ def reset_application(config, confirm):
     return {"reset": "complete", "start_date": config.start_date, "git_history": "preserved"}
 
 
-def smoke_submission(config, store):
+def smoke_submission(config, store, *, ownership=None):
+    with runtime_ownership(config.state_dir, ownership):
+        return _smoke_submission(config, store)
+
+
+def _smoke_submission(config, store):
     broker = Broker(config)
     if broker.positions() or broker.orders():
         raise ValueError("Submission test requires flat paper account")
@@ -163,8 +166,21 @@ def main():
         ],
     )
     logging.getLogger("httpx").setLevel(logging.WARNING)
+    exclusive_commands = {
+        "run", "tick", "doctor", "reset", "smoke", "explore", "research-test", "agent-check",
+    }
+    try:
+        if args.command in exclusive_commands:
+            with runtime_ownership(config.state_dir) as ownership:
+                return dispatch(config, args, ownership=ownership)
+        return dispatch(config, args)
+    except RuntimeBusy as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def dispatch(config, args, *, ownership=None):
     if args.command == "reset":
-        print(json.dumps(reset_application(config, args.confirm)))
+        print(json.dumps(reset_application(config, args.confirm, ownership=ownership)))
         return
     if args.command in ("run", "tick", "doctor"):
         from .supervisor import Supervisor
@@ -187,23 +203,32 @@ def main():
             )
             failed.close()
             raise SystemExit(1) from None
-        if args.command == "run":
-            s.run()
-        elif args.command == "tick":
-            s.tick()
-            s.pool.shutdown(wait=True)
-        else:
-            good = s.preflight()
-            export(config, s.store)
-            print(
-                json.dumps(
-                    {
-                        "ready_for_research": good,
-                        "checks": s.store.get("readiness"),
-                        "reconciliation_errors": s.store.get("reconciliation_errors"),
-                    }
+        try:
+            if args.command == "run":
+                s.run(ownership=ownership)
+            elif args.command == "tick":
+                from .store import process_owner
+
+                s.store.job_owner = process_owner("supervisor")
+                s.tick()
+                s.pool.shutdown(wait=True)
+                s.finish_task()
+            else:
+                good = s.preflight()
+                export(config, s.store)
+                print(
+                    json.dumps(
+                        {
+                            "ready_for_research": good,
+                            "checks": s.store.get("readiness"),
+                            "reconciliation_errors": s.store.get("reconciliation_errors"),
+                        }
+                    )
                 )
-            )
+        finally:
+            s.pool.shutdown(wait=True, cancel_futures=True)
+            s.publisher_pool.shutdown(wait=True, cancel_futures=True)
+            s.store.close()
         return
     store = Store(config.state_dir / "trader.sqlite3")
     try:
@@ -225,34 +250,9 @@ def main():
         elif args.command == "publish":
             print(json.dumps(publish(config, store)))
         elif args.command == "smoke":
-            print(json.dumps(smoke_submission(config, store)))
+            print(json.dumps(smoke_submission(config, store, ownership=ownership)))
         elif args.command == "agent-check":
-            from .models import Decision
-
-            with CodexRPC(config) as rpc:
-                print("Available models:", [m.get("id") for m in rpc.models()])
-                print("Quota:", json.dumps(rpc.rate_limits()))
-                tid, result, usage, counts = rpc.run(
-                    None,
-                    'Return Decision with plan_id connectivity-test, action wait, reason "Connectivity test; no trade requested.", contradictions [], evidence_fresh false. No tools.',
-                    config.light_model,
-                    "low",
-                    Decision.model_json_schema(),
-                    max_searches=0,
-                    max_cycles=8,
-                )
-                tid, result2, _, _ = rpc.run(
-                    tid,
-                    "Return the same connectivity-test wait Decision. This turn checks model switching on the same thread. No tools.",
-                    config.decision_model,
-                    "low",
-                    Decision.model_json_schema(),
-                    max_searches=0,
-                    max_cycles=8,
-                )
-                print(
-                    "Inference and same-thread model switch:", result["action"], result2["action"]
-                )
+            print(json.dumps(check_agent(config)))
         elif args.command == "explore":
             from .supervisor import worker
             from .exploration import seed_challengers, record_report, record_validation
@@ -326,3 +326,23 @@ def main():
             )
     finally:
         store.close()
+
+
+def check_agent(config):
+    """Two bounded, accounted turns verify a model switch on one isolated thread."""
+    from uuid import uuid4
+    from .models import Decision
+
+    day = datetime.now(ET).date().isoformat()
+    scope = "connectivity-check:" + uuid4().hex
+    results = []
+    for model in (config.light_model, config.decision_model):
+        result = run_task(
+            config, "connectivity_check",
+            'Return Decision with plan_id connectivity-test, action wait, reason '
+            '"Connectivity test; no trade requested.", contradictions [], '
+            'evidence_fresh false. No tools. Resume the same test if this is a second turn.',
+            Decision, model, "low", day, searches=0, cycles=8, scope=scope,
+        )
+        results.append(result["action"])
+    return {"inference": results, "same_thread_model_switch": "checked", "orders_authorized": False}

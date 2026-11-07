@@ -339,3 +339,51 @@ canceling protection. Carried intraday exposure is recovered at the next confirm
 market session; liquidation takes priority over quote-dependent stop repair.
 Broker quantity/identity changes and nonfinite fields block automatic accounting
 or new execution until reviewed. These checks do not guarantee an available fill.
+
+## Manual command ownership
+
+`run`, `tick`, `doctor`, `reset`, `smoke`, `explore`, `research-test` and `agent-check`
+require the same ownership lock. Stop the service before running them; use the
+maintenance flag during planned work so the independent watchdog does not restart
+it. `status`, `dashboard` and publication can read/export the running service's
+state. The lock is held through command completion and worker cleanup. A one-shot
+`tick` applies its completed worker result before releasing ownership.
+
+`doctor` makes read-only external requests but updates local readiness and
+reconciliation. `agent-check` uses two bounded turns on an isolated thread to
+check a model switch; both require fresh quota admission and count toward the
+ordinary daily allowance. Reaching the account reserve between turns stops the
+second turn. Neither command certifies a market fill/exit.
+
+Graceful shutdown retains completed worker evidence while holding ownership.
+Background reports and data refreshes may finish their safe recording step.
+Execution decisions, position reviews, pulses and maintenance replies are retained
+privately as deferred, with their original token accounting; shutdown does not
+apply their operational authority. A later scheduled task must reassess them.
+An operating-system kill can still interrupt an unfinished turn.
+
+## Publication review boundary
+
+`TRADER_PUBLISH_BRANCH` names the established local release branch (default `main`).
+Publication requires a reviewed `release.source_commit` ancestor. Every subsequent
+commit and tracked working change must be limited to the five generated dashboard
+paths; a source change followed by a revert still requires review. Unrelated staged
+files are preserved and postpone publication. The publisher pushes the exact
+validated commit SHA with a normal fast-forward push, including through the hidden
+Windows launcher. Trading protection does not depend on publication succeeding.
+
+## Prospective observation and promotion receipts
+
+New observation transitions retain the exact bid, ask, quote time and cost terms
+in immutable sidecar receipts. Earlier observations remain without those receipts;
+their missing fields cannot be reconstructed later and presented as contemporaneous.
+Date composition shows how equal-date estimates weight unequal numbers of outcomes.
+The displayed date and symbol counts are not independent sample counts.
+
+The reviewed `paired-entry-date-absolute-v2` promotion policy requires positive
+absolute returns under both equal-date and equal-opportunity weighting, alongside
+the existing paired, cost, minimum-evidence and rollback gates. Existing experiments
+need an explicit zero-observation, no-prior-look migration receipt. A global approval
+of the exact policy lets future registrations pin it before their first observation;
+it cannot silently migrate historical studies. Policy and review bookkeeping are
+atomic. Frozen experiment definitions and prior results are retained.

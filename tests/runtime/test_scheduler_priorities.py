@@ -1,5 +1,5 @@
 from concurrent.futures import Future
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 
@@ -140,4 +140,4 @@ def test_overnight_idle_worker_can_run_useful_background_research(scheduler, bro
     calls = []
     monkeypatch.setattr(scheduler, "launch_deep_research", lambda at: calls.append(at))
     scheduler.tick(now)
-    assert calls == [now]
+    assert len(calls) == 1 and now <= calls[0] < now + timedelta(minutes=1)

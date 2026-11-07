@@ -11,7 +11,9 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal, InvalidOperation
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -222,6 +224,104 @@ def _select(value, keys):
     return {key: value[key] for key in keys if key in value}
 
 
+def _runtime_receipts(store):
+    """Bounded actual verification/coverage evidence, not heartbeat freshness seeds."""
+    from .engine import EXECUTION_KERNEL, current_execution_verified
+
+    ready = store.get("readiness", {})
+    rows = store.rows("SELECT key,value FROM kv WHERE key LIKE 'smoke:____-__-__' ORDER BY key DESC LIMIT 3")
+    checks = [{"day": row["key"].split(":", 1)[1], **_select(json.loads(row["value"]), (
+        "state", "verified_at", "entry_filled_qty", "exit_filled_qty", "execution_kernel",
+    ))} for row in rows]
+    coverage, observed = [], {}
+    now = datetime.now(timezone.utc)
+    for row in store.rows("SELECT key,value FROM kv WHERE key LIKE 'calendar:____-__-__' ORDER BY key DESC LIMIT 30"):
+        day, calendar = row["key"].split(":", 1)[1], json.loads(row["value"])
+        if not calendar:
+            continue
+        try:
+            opened = datetime.fromisoformat(day + "T" + calendar[0]["open"]).replace(tzinfo=ET)
+            closed = datetime.fromisoformat(day + "T" + calendar[0]["close"]).replace(tzinfo=ET)
+            if closed > now or closed <= opened:
+                continue
+            expected = math.ceil((closed - opened).total_seconds() / 300)
+        except (KeyError, ValueError, TypeError, IndexError):
+            continue
+        health = store.rows("SELECT slot,at,broker_confirmed,research_ready FROM session_health WHERE day=?", (day,))
+        recorded = {r["slot"] for r in health if 0 <= r["slot"] < expected}
+        broker = {r["slot"] for r in health if 0 <= r["slot"] < expected and r["broker_confirmed"] == 1}
+        research = {r["slot"] for r in health if r["slot"] in broker and r["research_ready"] == 1}
+        edges = sorted({-1, expected, *broker})
+        coverage.append({"day": day, "open": calendar[0]["open"], "close": calendar[0]["close"],
+                         "expected_slots": expected, "distinct_recorded_slots": len(recorded),
+                         "broker_confirmed_slots": len(broker), "research_ready_slots": len(research),
+                         "longest_unconfirmed_gap_minutes": max(b - a - 1 for a, b in zip(edges, edges[1:])) * 5})
+        observed[day] = max((r["at"] for r in health), default=None)
+        if len(coverage) >= 6:
+            break
+    if not ready and not checks and not coverage:
+        return None
+    return {
+        "code_execution_kernel": EXECUTION_KERNEL,
+        "readiness_receipt": _select(ready, ("execution_verified", "execution_verified_at", "required_execution_kernel", "verified_execution_kernel")),
+        "current_required_kernel_verified": current_execution_verified(ready),
+        "code_kernel_verified": bool(ready.get("execution_verified") and ready.get("verified_execution_kernel") == EXECUTION_KERNEL),
+        "historical_execution_checks": checks,
+        "coverage_tracking_started": store.get("coverage_tracking_started"),
+        "completed_session_coverage": coverage,
+        "scope": "Coverage is distinct five-minute sampled broker/session and research-readiness evidence, not continuous protection, execution verification or proof of recovery from each fault. Historical checks do not certify a different execution kernel. Missing calendar coverage remains unverified.",
+        "_observation_metadata": {"readiness_observed_at": ready.get("at"), "last_reconciled": store.get("last_reconciled"), "coverage_last_recorded_at": observed},
+    }
+
+
+def _activity_cash_receipts(store, receipt):
+    """Signed cash arithmetic from the retained receipt; no raw broker identifiers."""
+    if not store.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='broker_activities'"):
+        return None
+    allowed = set(receipt.get("activity_ids", []))
+    totals, counts, invalid, skipped, journals, dates = {}, {}, 0, 0, [], []
+    for row in store.rows("SELECT id,payload FROM broker_activities"):
+        if row["id"] not in allowed:
+            continue
+        item = json.loads(row["payload"])
+        kind = item.get("activity_type", "OTHER")
+        kind = kind if re.fullmatch(r"[A-Z_]{1,16}", str(kind)) else "OTHER"
+        counts[kind] = counts.get(kind, 0) + 1
+        if item.get("status") not in (None, "executed"):
+            skipped += 1
+            continue
+        try:
+            if kind == "FILL":
+                qty, price = Decimal(str(item["qty"])), Decimal(str(item["price"]))
+                if not qty.is_finite() or not price.is_finite() or qty <= 0 or price <= 0 or item["side"] not in ("buy", "sell"):
+                    raise ValueError("Invalid cash receipt")
+                amount = qty * price * (-1 if item["side"] == "buy" else 1)
+            else:
+                amount = Decimal(str(item["net_amount"]))
+            if not amount.is_finite():
+                raise ValueError("Invalid cash receipt")
+        except (KeyError, InvalidOperation, ValueError):
+            invalid += 1
+            continue
+        totals[kind] = totals.get(kind, Decimal(0)) + amount
+        stamp = item.get("transaction_time") or item.get("date")
+        if stamp:
+            dates.append(str(stamp))
+        if kind == "JNLC":
+            journals.append({"date": item.get("date"), "signed_amount": str(amount), "status": item.get("status")})
+    return {
+        "receipt_hash": receipt.get("receipt_hash"), "complete_history_reported": receipt.get("complete_history", False),
+        "activity_counts": counts, "signed_cash_net_by_type": {k: str(v) for k, v in sorted(totals.items())},
+        "signed_cash_net_total": str(sum(totals.values(), Decimal(0))),
+        "unquantified_rows": invalid, "nonexecuted_rows_excluded": skipped,
+        "journal_receipts": journals[:6], "omitted_journal_rows": max(0, len(journals) - 6),
+        "first_activity_date_or_time": min(dates) if dates else None,
+        "last_activity_date_or_time": max(dates) if dates else None,
+        "scope": "Signed broker-receipt cash flows only. A journal credit is observed funding, not proof of a prior zero balance or branch opening allocations. Complete-history is the intake assertion. Compare receipt and broker snapshot cutoffs; current cash already includes booked fees. Raw IDs/descriptions excluded.",
+        "_observation_metadata": {"receipt_observed_at": receipt.get("observed_at"), "broker_cash_observed_at": store.get("last_reconciled")},
+    }
+
+
 def evidence_packets(store):
     """Build bounded, complete selected records; avoid tick timestamps in identities."""
     artifacts = [
@@ -294,6 +394,9 @@ def evidence_packets(store):
         + [("finding", r) for r in findings],
         "evidence_integrity": [("definition", r) for r in definitions],
     }
+    runtime_receipt = _runtime_receipts(store)
+    if runtime_receipt:
+        raw["runtime_reliability"].insert(0, ("current_verification_and_coverage", runtime_receipt))
     if research:
         raw["experiment_lifecycle"] += [("research", research[0])]
         for a in artifacts[:2]:
@@ -333,6 +436,9 @@ def evidence_packets(store):
 
         accounting = accounting_summary(store)
         receipt = store.get("account_activity_receipt", {})
+        cash_receipt = _activity_cash_receipts(store, receipt)
+        if cash_receipt:
+            raw["accounting_attribution"].append(("signed_broker_activity", cash_receipt))
         raw["accounting_attribution"].append(("broker_activity_bridge", {
             "receipt_hash": receipt.get("receipt_hash"),
             **_select(accounting, ("complete_history", "activity_counts", "fee_count", "fees", "omitted_fee_rows", "basis")),
@@ -395,8 +501,21 @@ def evidence_packets(store):
             ]
         selected, omitted = [], 0
         for kind, value in records:
+            metadata = value.get("_observation_metadata") if isinstance(value, dict) else None
+            if metadata is not None:
+                value = {k: v for k, v in value.items() if k != "_observation_metadata"}
             record = {"id": "ev:" + _hash([kind, value])[:16], "kind": kind, "value": value}
-            if len(dumps([*selected, record])) <= PACKET_LIMIT:
+            if metadata is not None:
+                if len(dumps(metadata)) > 900:
+                    raise ValueError("Research observation metadata exceeds its reserved budget")
+                record["observation_metadata"] = metadata
+            trial = [*selected, record]
+            # Reserve fixed space for freshness metadata. Its changing string
+            # length must not alter whole-record selection or discovery identity.
+            reserved_size = len(dumps([
+                {k: v for k, v in r.items() if k != "observation_metadata"} for r in trial
+            ])) + sum(930 for r in trial if "observation_metadata" in r)
+            if reserved_size <= PACKET_LIMIT:
                 selected.append(record)
             else:
                 omitted += 1
@@ -406,8 +525,12 @@ def evidence_packets(store):
 
 
 def _context(topic, evidence, revision=0, previous=None):
-    fingerprint = _hash({"version": VERSION, "topic": topic, "evidence": evidence})
-    return {
+    identity = {**evidence, "records": [
+        {key: value for key, value in record.items() if key != "observation_metadata"}
+        for record in evidence["records"]
+    ]}
+    fingerprint = _hash({"version": VERSION, "topic": topic, "evidence": identity})
+    context = {
         "work_id": fingerprint[:24] + ":" + str(revision),
         "topic": topic,
         "question": _question(topic),
@@ -416,6 +539,9 @@ def _context(topic, evidence, revision=0, previous=None):
         "revision": revision,
         "previous_review": previous,
     }
+    if identity != evidence:
+        context["snapshot_hash"] = _hash(evidence)
+    return context
 
 
 def _stage_allowed(store, key, now):
@@ -828,55 +954,131 @@ def public_summary(store, now=None):
     }
 
 
-def reviewed_context(store, max_chars=3000, now=None):
-    """Expose reviewed conclusions with their time/scope, never evergreen clearance."""
-    now = now or datetime.now(timezone.utc)
-    selected = []
-    for row in store.rows("SELECT payload FROM memory WHERE layer='research_work' ORDER BY at DESC LIMIT 40"):
+def _accepted_reports(store):
+    """Latest reviewed generation per topic, only if accepted; originals remain."""
+    seen = set()
+    for row in store.rows(
+        "SELECT payload FROM memory WHERE layer='research_work' "
+        "AND json_extract(payload,'$.stage')='review' "
+        "ORDER BY at DESC LIMIT 120"
+    ):
         item = json.loads(row["payload"])
-        if item["stage"] != "review" or item["result"]["disposition"] != "accepted":
+        topic = item["context"]["topic"]
+        if topic in seen:
             continue
-        context = item["context"]
-        draft = _memory(store, "research-work:" + context["work_id"] + ":analysis")["result"]
-        time_sensitive = context["topic"].startswith(("event_coverage", "symbol_events:", "macro_events:"))
-        valid_until = datetime.fromisoformat(item["observed_at"]) + timedelta(hours=24 if time_sensitive else 72)
+        seen.add(topic)
+        if item["result"]["disposition"] != "accepted":
+            continue
+        analysis = _memory(store, "research-work:" + item["context"]["work_id"] + ":analysis")
+        if analysis:
+            yield item, analysis["result"]
+
+
+def _valid_until(item):
+    topic = item["context"]["topic"]
+    hours = 24 if topic.startswith(("event_coverage", "symbol_events:", "macro_events:")) else 72
+    stamps = [datetime.fromisoformat(item["observed_at"])] + [
+        datetime.fromisoformat(source["checked_at"].replace("Z", "+00:00"))
+        for source in item["result"]["sources"]
+    ]
+    # A later review cannot renew an older source check's factual freshness.
+    return min(stamps) + timedelta(hours=hours)
+
+
+def _handoff_priority(topic, finding, focus_symbols):
+    text = finding["claim"] + " " + finding["qualification"]
+    focus = any(re.search(r"\b" + re.escape(s) + r"\b", text, re.I) for s in focus_symbols)
+    if topic.startswith("symbol_events:") and topic.split(":", 1)[1] in focus_symbols:
+        focus = True
+    event = topic.startswith(("event_coverage", "symbol_events:", "macro_events:"))
+    macro = topic.startswith("macro_events:") or bool(re.search(
+        r"\b(?:macro|Fed|Federal Reserve|BLS|BEA|CPI|FOMC|Treasury|inflation)\b", text, re.I,
+    ))
+    if event and focus and finding["kind"] != "unknown":
+        return 0
+    if event and macro and finding["kind"] != "unknown":
+        return 1
+    if event:
+        return 2
+    return 3 if topic in ("feature_lineage", "source_verification") else 4
+
+
+def reviewed_context(store, max_chars=3000, now=None, focus_symbols=None):
+    """Fit complete relevant findings, qualifications and support instead of summaries."""
+    now = now or datetime.now(timezone.utc)
+    focus_symbols = focus_symbols or []
+    candidates, records, sources_by_work = [], {}, {}
+    for order, (item, draft) in enumerate(_accepted_reports(store)):
+        context, valid_until = item["context"], _valid_until(item)
         if now >= valid_until:
             continue
-        record = {
-            "work_id": context["work_id"], "topic": context["topic"], "as_of": item["observed_at"],
-            "valid_until": valid_until.isoformat(),
-            "summary": draft["summary"],
-            "sources": [_select(s, ("url", "outcome", "checked_at")) for s in item["result"]["sources"]],
-            "unresolved": draft["unresolved"],
-            "scope": "Reviewed research only; recheck time-sensitive events and all execution gates.",
+        work_id = context["work_id"]
+        records[work_id] = {
+            "work_id": work_id, "topic": context["topic"], "as_of": item["observed_at"],
+            "valid_until": valid_until.isoformat(), "findings": [], "sources": [],
+            "omitted_findings": len(draft["findings"]),
+            "scope": "Selected reviewed findings only; omitted findings may contain further unknowns. Recheck event facts and execution gates.",
         }
-        if len(dumps([*selected, record])) <= max_chars:
-            selected.append(record)
+        receipts = {s["url"]: s for s in item["result"]["sources"]}
+        sources_by_work[work_id] = {
+            "source:" + str(i): {"ref": "source:" + str(i), **_select(receipts[s["url"]], ("url", "outcome", "checked_at", "limitation"))}
+            for i, s in enumerate(draft["sources"]) if s["url"] in receipts
+        }
+        for index, finding in enumerate(draft["findings"]):
+            candidates.append((_handoff_priority(context["topic"], finding, focus_symbols), order, index, work_id, finding))
+    ordered = sorted(candidates, key=lambda c: c[:3])
+    focused = [c for c in ordered if c[0] == 0]
+    macro = [c for c in ordered if c[0] == 1]
+    # Alternate focus and macro coverage so several company findings cannot
+    # consume the whole allowance before the first release-risk finding.
+    priority = []
+    for i in range(max(len(focused), len(macro))):
+        priority += focused[i:i + 1] + macro[i:i + 1]
+    priority += [c for c in ordered if c[0] > 1]
+    selected = []
+    for _, _, index, work_id, finding in priority:
+        prior = next((r for r in selected if r["work_id"] == work_id), records[work_id])
+        source_refs = {s["ref"] for s in prior["sources"]} | {
+            ref for ref in finding["evidence_refs"] if ref.startswith("source:")
+        }
+        # Never hand off an external claim without its reviewer source receipt,
+        # even when an accepted unknown only needed a partial check.
+        missing_refs = source_refs - sources_by_work[work_id].keys()
+        if missing_refs:
+            continue
+        candidate = {**prior,
+                     "findings": [*prior["findings"], {"index": index, **finding}],
+                     "sources": [sources_by_work[work_id][ref] for ref in sorted(source_refs)],
+                     "omitted_findings": prior["omitted_findings"] - 1}
+        trial = [candidate if r["work_id"] == work_id else r for r in selected]
+        if not any(r["work_id"] == work_id for r in selected):
+            trial.append(candidate)
+        if len(dumps(trial)) <= max_chars:
+            selected = trial
     return selected
 
 
 accepted_context = reviewed_context
 
 
-def stale_source_leads(store, max_chars=1000, now=None):
+def stale_source_leads(store, max_chars=1000, now=None, focus_symbols=None):
     """Retain expired research's verified source locators, never its event facts."""
     now = now or datetime.now(timezone.utc)
-    selected, seen = [], set()
-    for row in store.rows(
-        "SELECT payload FROM memory WHERE layer='research_work' "
-        "AND json_extract(payload,'$.stage')='review' "
-        "AND json_extract(payload,'$.result.disposition')='accepted' ORDER BY at DESC LIMIT 120"
-    ):
-        item = json.loads(row["payload"])
-        if item["stage"] != "review" or item["result"]["disposition"] != "accepted":
-            continue
+    from urllib.parse import urlparse
+
+    selected, seen, candidates = [], set(), []
+    for order, (item, draft) in enumerate(_accepted_reports(store)):
         topic = item["context"]["topic"]
-        time_sensitive = topic.startswith(("event_coverage", "symbol_events:", "macro_events:"))
-        valid_until = datetime.fromisoformat(item["observed_at"]) + timedelta(hours=24 if time_sensitive else 72)
-        if now < valid_until:
+        if now < _valid_until(item):
             continue
+        ranks = {}
+        for finding in draft["findings"]:
+            rank = _handoff_priority(topic, finding, focus_symbols or [])
+            for index, source in enumerate(draft["sources"]):
+                if "source:" + str(index) in finding["evidence_refs"]:
+                    ranks[source["url"]] = min(rank, ranks.get(source["url"], 5))
         for source in item["result"]["sources"]:
-            if source["outcome"] != "verified" or source["url"] in seen:
+            if source["outcome"] != "verified":
                 continue
             try:
                 SourceReceipt.public_url(source["url"])
@@ -886,7 +1088,18 @@ def stale_source_leads(store, max_chars=1000, now=None):
                 "topic": topic, "url": source["url"], "last_checked": source["checked_at"],
                 "requires_recheck": True,
             }
+            candidates.append((ranks.get(source["url"], 5), order, lead))
+    # First cover distinct source hosts, then use remaining space for another
+    # page from a covered issuer. Receipt order must not crowd out macro sources.
+    hosts = set()
+    ordered = sorted(candidates, key=lambda c: c[:2])
+    for distinct_hosts in (True, False):
+        for _, _, lead in ordered:
+            host = urlparse(lead["url"]).hostname
+            if lead["url"] in seen or (distinct_hosts and host in hosts):
+                continue
             if len(dumps([*selected, lead])) <= max_chars:
                 selected.append(lead)
-                seen.add(source["url"])
+                seen.add(lead["url"])
+                hosts.add(host)
     return selected

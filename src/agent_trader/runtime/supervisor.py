@@ -514,8 +514,12 @@ class Supervisor:
         day = now.date().isoformat()
         if self.store.get("accounting_refresh_day") != day:
             key = "accounting-refresh:" + day
-            prior = self.store.rows("SELECT state,attempts FROM jobs WHERE key=?", (key,))
-            if not prior and self.launch(key, "accounting_refresh", {}, day):
+            prior = self.store.rows("SELECT state,attempts,at FROM jobs WHERE key=?", (key,))
+            due = not prior or (
+                prior[0]["state"] in ("failed", "retry")
+                and (now - timestamp(prior[0]["at"])).total_seconds() >= 1800
+            )
+            if due and self.launch(key, "accounting_refresh", {}, day):
                 return True
         work = next_work(self.store, now)
         if not work:
@@ -841,8 +845,10 @@ class Supervisor:
         self.store.set("benchmarks", benchmarks)
 
     def tick(self, now=None):
+        tick_started = time.monotonic()
         now = now or datetime.now(ET)
         now = now.astimezone(ET)
+        tick_time = now
         day = now.date().isoformat()
         self.store.set("heartbeat", now.isoformat())
         self.cohort_check("expiry", lambda: self.cohorts.expire(now))
@@ -945,11 +951,16 @@ class Supervisor:
                 "Trader - good morning",
                 "The local trading laboratory is running. Research begins at 08:15 ET. Three separate $10,000 paper allocations; options shadow-only.",
             )
+        # Reconciliation and notification requests can take tens of seconds.
+        # Advance the supplied clock by monotonic elapsed time, preserving
+        # deterministic test clocks without mistaking request latency for drift.
+        now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
         if now >= opened and now < close:
             clock = self.broker.clock()
+            now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
             market_open = bool(clock.get("is_open"))
             clock_age = abs((now - timestamp(clock["timestamp"])).total_seconds())
-            self.store.set("market_open", market_open and clock_age <= 30)
+            self.store.set("market_open", market_open and clock_age <= 30 and now < close)
             if clock_age > 30:
                 self.incident(
                     "clock_drift", "Local and broker clocks disagree. New entries blocked."
@@ -991,23 +1002,44 @@ class Supervisor:
                         "smoke",
                         f"Paper execution check deferred ({type(exc).__name__}); entries remain blocked.",
                     )
-            if now >= close - timedelta(minutes=12):
-                self.store.set("status", "Closing intraday positions and verifying fills.")
-                self.store.set("next_action", "After-close reconciliation and daily results.")
-                self.engine.close_intraday()
-                self.finish_shadow(now, closing=True)
-            else:
-                self.engine.ensure_protection()
-                self.store.set(
-                    "status",
-                    "Monitoring the session. Agent reviews material changes and eligible setups.",
-                )
-                self.store.set(
-                    "next_action",
-                    f"Intraday closing routine at {(close - timedelta(minutes=12)).strftime('%H:%M')} ET.",
-                )
-                self.market_tick(now, close)
+            def session_deadline_reached(at):
+                if at >= close:
+                    self.store.set("market_open", False)
+                    self.store.set("status", "Market closed while broker checks were pending. Existing protection retained.")
+                    self.store.set("next_action", "After-close reconciliation and recovery review.")
+                    if self.store.rows("SELECT symbol FROM holdings WHERE branch='intraday'"):
+                        self.incident(
+                            "unclosed_intraday",
+                            "Intraday holdings remain after the close. Broker-held protection remains; immediate inspection required.",
+                        )
+                    return True
+                if at >= close - timedelta(minutes=12):
+                    self.store.set("status", "Closing intraday positions and verifying fills.")
+                    self.store.set("next_action", "After-close reconciliation and daily results.")
+                    self.engine.close_intraday()
+                    self.finish_shadow(at, closing=True)
+                    return True
+                return False
+
+            now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
+            if not session_deadline_reached(now):
+                attempted_exits = self.apply_pending_exits(now)
+                now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
+                if not session_deadline_reached(now):
+                    self.engine.ensure_protection()
+                    now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
+                    if not session_deadline_reached(now):
+                        self.store.set(
+                            "status",
+                            "Monitoring the session. Agent reviews material changes and eligible setups.",
+                        )
+                        self.store.set(
+                            "next_action",
+                            f"Intraday closing routine at {(close - timedelta(minutes=12)).strftime('%H:%M')} ET.",
+                        )
+                        self.market_tick(now, close, attempted_exits)
         elif now >= close:
+            self.store.set("market_open", False)
             held = self.store.rows("SELECT * FROM holdings WHERE branch='intraday'")
             if held:
                 self.incident(
@@ -1152,7 +1184,33 @@ class Supervisor:
         self.cohort_check("adaptive mark", lambda: self.adaptive.mark(quotes, now))
         self.benchmarks(quotes, now)
 
-    def market_tick(self, now, close):
+    def apply_exit_intent(self, holding, now, attempted_exits):
+        # An already validated exit is bound to the current holding identity;
+        # executing it requires broker reconciliation, not another quote fetch.
+        # Keep its intent when cancellation/submission is pending or fails.
+        key = "exit-intent:" + holding["symbol"]
+        intent = self.store.get(key)
+        if intent and (
+            intent.get("plan_id") != holding["plan_id"]
+            or intent.get("branch") != holding["branch"]
+        ):
+            self.store.set(key, None)
+            return
+        if (intent and holding["symbol"] not in attempted_exits
+                and 0 <= (now - timestamp(intent["at"])).total_seconds() < 300):
+            attempted_exits.add(holding["symbol"])
+            if self.engine.exit_holding(holding["symbol"], intent["reason"]):
+                self.store.set(key, None)
+
+    def apply_pending_exits(self, now, attempted_exits=None):
+        attempted_exits = set() if attempted_exits is None else attempted_exits
+        for holding in self.store.rows("SELECT * FROM holdings"):
+            self.apply_exit_intent(holding, now, attempted_exits)
+        return attempted_exits
+
+    def market_tick(self, now, close, attempted_exits=None):
+        market_started, market_time = time.monotonic(), now
+        attempted_exits = self.apply_pending_exits(now, attempted_exits)
         plans = self.engine.plans()
         exploration_plans = self.store.get("exploration_shadow_plans", [])
         cohort_symbols = self.cohort_check(
@@ -1169,7 +1227,11 @@ class Supervisor:
             | set(UNIVERSE)
         )
         quotes = self.broker.quotes(symbols)
+        now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
         self.store.set("quotes", quotes)
+        if now >= close:
+            self.store.set("market_open", False)
+            return
         calendar = self.store.get("calendar:" + now.date().isoformat(), [])
         session = session_times(calendar, now.date().isoformat())
         self.benchmarks(quotes, now)
@@ -1187,11 +1249,11 @@ class Supervisor:
                 try:
                     bid, _ = quote_values(q, now)
                     owned_plan = json.loads(plan_rows[0]["payload"])
-                    if bid >= owned_plan["target"]:
+                    if bid >= owned_plan["target"] and h["symbol"] not in attempted_exits:
                         self.store.set(
                             "exit-intent:" + h["symbol"],
                             {
-                                "at": utc_now(),
+                                "at": now.isoformat(),
                                 "reason": "Recorded target reached on a fresh quote",
                                 "plan_id": h["plan_id"],
                                 "branch": h["branch"],
@@ -1199,15 +1261,7 @@ class Supervisor:
                         )
                 except ValueError:
                     pass
-            intent = self.store.get("exit-intent:" + h["symbol"])
-            if intent and (
-                intent.get("plan_id") != h["plan_id"] or intent.get("branch") != h["branch"]
-            ):
-                self.store.set("exit-intent:" + h["symbol"], None)
-                intent = None
-            if intent and (now - timestamp(intent["at"])).total_seconds() < 300:
-                if self.engine.exit_holding(h["symbol"], intent["reason"]):
-                    self.store.set("exit-intent:" + h["symbol"], None)
+                self.apply_exit_intent(h, now, attempted_exits)
         for p in plans:
             q = quotes.get(p["symbol"])
             if not q or p["branch"] == "options":
@@ -1403,15 +1457,71 @@ class Supervisor:
         self.last_publish = time.monotonic()
         self.publication_future = self.publisher_pool.submit(publish_worker, self.config)
 
-    def run(self):
-        import fcntl
+    def run(self, *, ownership=None):
+        from .ownership import runtime_ownership
 
-        self.config.state_dir.mkdir(parents=True, exist_ok=True)
-        lock = open(self.config.state_dir / "supervisor.lock", "w")
+        with runtime_ownership(self.config.state_dir, ownership):
+            try:
+                self._run_owned()
+            finally:
+                # Do not release execution ownership while a research/publisher
+                # worker can still write state. Systemd retains its stop timeout.
+                self.pool.shutdown(wait=True, cancel_futures=True)
+                try:
+                    self.finish_shutdown_task()
+                finally:
+                    self.publisher_pool.shutdown(wait=True, cancel_futures=True)
+                self.store.set("status", "Local supervisor stopped; independent watchdog owns recovery.")
+                self.store.event("supervisor_stopped", {"pid": os.getpid()})
+
+    def finish_shutdown_task(self):
+        """Keep completed evidence without applying execution decisions on stop."""
+        if not self.future or not self.future.done():
+            return
+        key, role, context, day = self.task
+        safe_roles = {
+            "deep_research", "deep_research_review", "weekly", "monthly",
+            "quota_refresh", "accounting_refresh",
+        }
+        if not self.future.cancelled() and role in safe_roles:
+            self.finish_task()
+            return
         try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            raise SystemExit("Supervisor is already running")
+            result = self.future.result()
+        except Exception as exc:
+            # A canceled/failed worker has no completed result to preserve.
+            completed = self.store.job_end(key, False, {
+                "role": role, "outcome": "shutdown_worker_incomplete",
+                "error_type": type(exc).__name__,
+            })
+            if not completed:
+                raise RuntimeError("Shutdown task ownership changed") from exc
+        else:
+            import hashlib
+
+            captured = utc_now()
+            identity = hashlib.sha256((key + ":" + captured).encode()).hexdigest()[:24]
+            with self.store.transaction():
+                self.store.memory_put("shutdown-result:" + identity, "deferred_agent_result", {
+                    "task_key": key, "role": role, "day": day, "captured_at": captured,
+                    "outcome": "deferred_shutdown", "result": result, "context": context,
+                    "authority": "Private retained reply only; not an approval or applied result.",
+                })
+                record_application_outcome(self.store, key, "deferred")
+                completed = self.store.job_end(key, False, {
+                    "role": role, "outcome": "deferred_shutdown",
+                    "reason": "Completed reply retained; application requires a fresh scheduled task.",
+                })
+                if not completed:
+                    raise RuntimeError("Shutdown task ownership changed")
+                self.store.event("agent_task_deferred", {
+                    "role": role, "reason": "Supervisor shutdown; completed reply retained privately.",
+                })
+        self.future = None
+        self.task = None
+        self.store.set("active_task", None)
+
+    def _run_owned(self):
         from .store import process_owner
 
         self.store.job_owner = process_owner("supervisor")
@@ -1450,12 +1560,6 @@ class Supervisor:
                 if self.stopping:
                     break
                 time.sleep(1)
-        self.pool.shutdown(wait=False, cancel_futures=True)
-        self.publisher_pool.shutdown(wait=False, cancel_futures=True)
-        self.store.set("status", "Local supervisor stopped; independent watchdog owns recovery.")
-        self.store.event("supervisor_stopped", {"pid": os.getpid()})
-        lock.close()
-
     def launch_position_review(self, now):
         holdings = [
             h

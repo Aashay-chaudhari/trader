@@ -9,9 +9,11 @@ from datetime import datetime, timedelta
 from .config import ET
 from .engine import quote_values, timestamp
 from .exploration import RULES, clean_bars, rule_signal
+from .observation_audit import content_hash, date_composition, record_quote
 from .store import dumps
 
 VERSION = "fixed-signal-v1"
+FEATURE_VALIDATION_VERSION = "fixed-broker-session-inputs-v3"
 PROTOCOL = {
     "version": VERSION,
     "signals": "Prior completed Alpaca IEX daily bars only; provider daily closes are not guaranteed consolidated closing-auction prices. Six fixed rules. Raw reversal is not a classified non-fundamental liquidity shock.",
@@ -101,9 +103,94 @@ def normalized_screen(screen):
     return result
 
 
-def freeze_signals(store, bars, sessions, now=None, for_day=None):
+def _freeze_diagnostic(store, day, now, state, reason, **details):
+    receipt = {
+        "day": day,
+        "at": now.isoformat(),
+        "state": state,
+        "reason": reason,
+        "feature_validation_version": FEATURE_VALIDATION_VERSION,
+        **details,
+    }
+    store.set("cohort-freeze:" + day, receipt)
+    store.set("cohort_freeze_latest", receipt)
+    return receipt
+
+
+def _required_sessions(sessions, day):
+    """Require explicit broker sessions, never infer a missing day from price bars."""
+    if not isinstance(sessions, list) or not sessions:
+        raise ValueError("Broker calendar is unavailable")
+    dates = []
+    for session in sessions:
+        date = datetime.fromisoformat(session["date"]).date().isoformat()
+        if date != session["date"]:
+            raise ValueError("Broker calendar date is malformed")
+        opened = datetime.fromisoformat(date + "T" + session["open"])
+        closed = datetime.fromisoformat(date + "T" + session["close"])
+        if opened >= closed:
+            raise ValueError("Broker calendar session is malformed")
+        dates.append(date)
+    if len(set(dates)) != len(dates):
+        raise ValueError("Broker calendar contains ambiguous duplicate sessions")
+    if day not in dates:
+        raise ValueError("Target entry date has no broker session")
+    prior = sorted(d for d in dates if d < day)
+    if len(prior) < 21:
+        raise ValueError("Broker calendar does not establish the required 21 prior sessions")
+    return prior[-21:]
+
+
+def _history_issue(history, required):
+    actual = [row["day"] for row in history[-21:]]
+    if actual == required:
+        return None
+    reason = (
+        "missing_or_short_history"
+        if len(history) < 21
+        else (
+            "mismatched_last_session"
+            if actual[-1] != required[-1]
+            else "noncontiguous_required_sessions"
+        )
+    )
+    return {
+        "reason": reason,
+        "required_bars": 21,
+        "available_bars": len(history),
+        "expected_last_session": required[-1],
+        "reference_session_basis": "explicit_broker_calendar",
+        "observed_last_session": actual[-1] if actual else None,
+        "missing_sessions": sorted(set(required) - set(actual)),
+        "unexpected_sessions": sorted(set(actual) - set(required)),
+    }
+
+
+def freeze_signals(store, bars, sessions, now=None, for_day=None, calendar_reference=None):
     now = (now or datetime.now(ET)).astimezone(ET)
     day = for_day or now.date().isoformat()
+    key = "cohort-signals:" + day
+    if store.get(key):
+        return store.get(key)  # Frozen inputs and their original validation scope never change.
+    try:
+        required = _required_sessions(sessions, day)
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        _freeze_diagnostic(
+            store,
+            day,
+            now,
+            "deferred",
+            "required_broker_calendar_unavailable",
+            detail=str(exc)[:200],
+        )
+        return None
+    calendar_hash = content_hash(sessions)
+    if calendar_reference:
+        retained = store.get(calendar_reference, {})
+        if retained.get("sha256") != calendar_hash or retained.get("sessions") != sessions:
+            _freeze_diagnostic(store, day, now, "deferred", "broker_calendar_receipt_mismatch")
+            return None
+    sessions = sorted(sessions, key=lambda s: s["date"])
     if for_day:
         next_session = next(
             (
@@ -121,9 +208,6 @@ def freeze_signals(store, bars, sessions, now=None, for_day=None):
         ).replace(tzinfo=ET):
             return None  # do not freeze a still-forming prior-session daily bar
     study = register_study(store, sessions, now)
-    key = "cohort-signals:" + day
-    if store.get(key):
-        return store.get(key)
     today = next((x for x in sessions if x["date"] == day), None)
     if (
         not study
@@ -134,20 +218,67 @@ def freeze_signals(store, bars, sessions, now=None, for_day=None):
         return None  # no same-session reconstruction or post-open universe selection
     data = clean_bars(bars, day)
     market = data.get("SPY", [])
-    risk_on = bool(len(market) >= 21 and market[-1]["c"] > sum(x["c"] for x in market[-20:]) / 20)
     flags = {}
-    previous = max((x["day"] for rows in data.values() for x in rows), default=None)
+    previous = required[-1]
+    market_issue = _history_issue(market, required)
+    market_known = market_issue is None
+    risk_on = market_known and market[-1]["c"] > sum(x["c"] for x in market[-20:]) / 20
+    input_exclusions = []
+    dependent_overlap_excluded = 0
     for symbol, history in data.items():
-        if len(history) < 21 or history[-1]["day"] != previous:
+        issue = _history_issue(history, required)
+        if issue:
+            input_exclusions.append(
+                {"symbol": symbol, "rule": "all_rules", "dependency": symbol, **issue}
+            )
             continue
-        flags[symbol] = {rule: rule_signal(rule, history[-21:], risk_on) for rule in RULES}
+        flags[symbol] = {
+            rule: rule_signal(rule, history[-21:], risk_on)
+            for rule in RULES
+            if rule != "market_confirmed_trend" or market_known
+        }
+        if not market_known:
+            branches = [
+                branch
+                for branch in ("intraday", "swing")
+                if not store.rows(
+                    "SELECT id FROM cohort_observations WHERE branch=? AND rule=? AND symbol=? AND state='open'",
+                    (branch, "market_confirmed_trend", symbol),
+                )
+            ]
+            dependent_overlap_excluded += 2 - len(branches)
+            input_exclusions.append(
+                {
+                    "symbol": symbol,
+                    "rule": "market_confirmed_trend",
+                    "dependency": "SPY",
+                    **market_issue,
+                    "branches": branches,
+                    "excluded_opportunities": len(branches),
+                }
+            )
     if not flags:
+        _freeze_diagnostic(
+            store,
+            day,
+            now,
+            "deferred",
+            "no_complete_prior_session_inputs",
+            expected_prior_session=previous,
+            required_session_dates=required,
+            calendar_sha256=calendar_hash,
+            input_exclusions=input_exclusions,
+        )
         return None
     payload = {
         "day": day,
         "version": VERSION,
         "frozen_at": now.isoformat(),
         "last_completed_session": previous,
+        "feature_validation_version": FEATURE_VALIDATION_VERSION,
+        "required_session_dates": required,
+        "calendar_sha256": calendar_hash,
+        "calendar_reference": calendar_reference,
         "flags": flags,
         "sessions": sessions,
         "data_sha256": hashlib.sha256(
@@ -157,7 +288,7 @@ def freeze_signals(store, bars, sessions, now=None, for_day=None):
     entry_deadline = datetime.fromisoformat(day + "T" + today["open"]).replace(
         tzinfo=ET
     ) + timedelta(minutes=30)
-    overlap_excluded = 0
+    overlap_excluded = dependent_overlap_excluded
     with store.transaction():
         store.set(key, payload)
         # Keep the exact normalized inputs privately; a hash alone cannot replay
@@ -198,7 +329,21 @@ def freeze_signals(store, bars, sessions, now=None, for_day=None):
         {
             "missing_history": sorted(set(UNIVERSE) - set(flags)),
             "overlap_opportunities": overlap_excluded,
+            "feature_validation_version": FEATURE_VALIDATION_VERSION,
+            "input_exclusions": input_exclusions,
         },
+    )
+    _freeze_diagnostic(
+        store,
+        day,
+        now,
+        "frozen",
+        "complete_calendar_aligned_inputs",
+        expected_prior_session=previous,
+        required_session_dates=required,
+        calendar_sha256=payload["calendar_sha256"],
+        included_symbols=len(flags),
+        excluded_symbols=sorted(set(data) - set(flags)),
     )
     store.event(
         "cohort_registered",
@@ -279,10 +424,25 @@ class ForwardLab:
                             "unit": "holding-horizon unit-opportunity return, not portfolio P&L",
                             "promotion_eligible": False,
                         }
-                        self.store.db.execute(
+                        inserted = self.store.db.execute(
                             "INSERT OR IGNORE INTO cohort_observations VALUES(?,?,?,?,?,?,?)",
                             (row_id, day, branch, rule, symbol, "open", dumps(payload)),
                         )
+                        if inserted.rowcount:
+                            record_quote(
+                                self.store,
+                                "cohort",
+                                row_id,
+                                "entry",
+                                quotes[symbol],
+                                now,
+                                {
+                                    "entry_ask": ask,
+                                    "entry_spread_fraction": payload["entry_spread_fraction"],
+                                    "assumed_base_cost_fraction": 0.002,
+                                    "input_sha256": prepared["data_sha256"],
+                                },
+                            )
 
     def expire(self, now):
         with self.store.transaction():
@@ -339,6 +499,7 @@ class ForwardLab:
                 except (ValueError, KeyError, TypeError):
                     continue
                 gross = bid / p["entry_ask"] - 1
+                calculation = {"entry_ask": p["entry_ask"], "gross": gross}
                 if abs(gross) > 0.30:
                     p.update(
                         {
@@ -349,6 +510,18 @@ class ForwardLab:
                     state = "not_evaluable"
                 else:
                     cost = 0.002 + p["entry_spread_fraction"] + (ask - bid) / ask
+                    calculation.update(
+                        {
+                            "entry_spread_fraction": p["entry_spread_fraction"],
+                            "exit_spread_fraction": (ask - bid) / ask,
+                            "assumed_base_cost_fraction": 0.002,
+                            "total_base_cost_fraction": cost,
+                            "additional_stress_cost_fraction": 0.003,
+                            "baseline_net": gross - cost,
+                            "signal": p["signal"],
+                            "signal_net": gross - cost if p["signal"] else 0.0,
+                        }
+                    )
                     p.update(
                         {
                             "exit_bid": bid,
@@ -364,6 +537,18 @@ class ForwardLab:
                 self.store.db.execute(
                     "UPDATE cohort_observations SET state=?,payload=? WHERE id=?",
                     (state, dumps(p), row["id"]),
+                )
+                record_quote(
+                    self.store,
+                    "cohort",
+                    row["id"],
+                    "exit",
+                    quotes[row["symbol"]],
+                    now,
+                    {
+                        **calculation,
+                        "outcome": state,
+                    },
                 )
 
     def summary(self):
@@ -399,6 +584,12 @@ class ForwardLab:
                             (branch, rule),
                         )[0]["n"],
                         "entry_sessions": len(groups),
+                        "date_composition": date_composition(
+                            [
+                                (day, p["observed_signal_horizon_return"], p.get("signal"))
+                                for day, p in closed
+                            ]
+                        ),
                         "not_evaluable": sum(r["state"] == "not_evaluable" for r in rows),
                         "mean_horizon_net_return": sum(means) / len(means) if means else None,
                         "mean_horizon_baseline_return": sum(baseline_means) / len(baseline_means)
@@ -416,6 +607,7 @@ class ForwardLab:
             "broker_orders_allowed": False,
             "automatic_promotion": False,
             "study": self.store.get("cohort_study"),
+            "latest_freeze_diagnostic": self.store.get("cohort_freeze_latest"),
             "exclusions": [
                 {"day": r["key"].split(":", 1)[1], **json.loads(r["value"])}
                 for r in self.store.rows(

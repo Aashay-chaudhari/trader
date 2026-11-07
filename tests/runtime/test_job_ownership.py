@@ -5,6 +5,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
+import pytest
+
 from agent_trader.runtime.store import Store, dumps, owner_is_dead, process_owner
 
 
@@ -83,8 +85,67 @@ def test_stale_claim_cannot_complete_reassigned_job(store):
         dumps({**owner, "claim": "different-owner-claim"}), "research:claim",
     ))
     assert not store.job_end("research:claim", True, {"stale": True})
+    assert "research:claim" in store._job_claims
     row = store.rows("SELECT state,result FROM jobs")[0]
     assert row == {"state": "running", "result": None}
+
+
+def test_job_claim_survives_transaction_rollback_and_releases_only_after_retry_commit(store):
+    key = "research:transactional-completion"
+    assert store.job_start(key)
+    owner = store._job_claims[key]
+    with pytest.raises(RuntimeError, match="later write failed"):
+        with store.transaction():
+            assert store.job_end(key, False, {"deferred": True})
+            assert store._job_claims[key] == owner
+            raise RuntimeError("later write failed")
+    assert store._job_claims[key] == owner
+    assert store.rows("SELECT state FROM jobs WHERE key=?", (key,))[0]["state"] == "running"
+    with store.transaction():
+        assert store.job_end(key, False, {"deferred": True})
+        assert store._job_claims[key] == owner
+    assert key not in store._job_claims
+    assert store.rows("SELECT state FROM jobs WHERE key=?", (key,))[0]["state"] == "failed"
+
+
+def test_job_claim_survives_nontransaction_sql_error(store):
+    key = "research:sql-failure"
+    assert store.job_start(key)
+    owner = store._job_claims[key]
+    store.db.execute("CREATE TRIGGER reject_job_end BEFORE UPDATE ON jobs WHEN NEW.state='done' BEGIN SELECT RAISE(ABORT,'injected completion failure'); END")
+    with pytest.raises(sqlite3.IntegrityError, match="injected completion failure"):
+        store.job_end(key, True, {})
+    assert store._job_claims[key] == owner
+    store.db.execute("DROP TRIGGER reject_job_end")
+    assert store.job_end(key, True, {})
+    assert key not in store._job_claims
+
+
+def test_job_claim_survives_deferred_commit_failure(store):
+    key = "research:commit-failure"
+    assert store.job_start(key)
+    owner = store._job_claims[key]
+    store.db.execute("CREATE TABLE commit_parent(id INTEGER PRIMARY KEY)")
+    store.db.execute("CREATE TABLE commit_child(parent_id INTEGER REFERENCES commit_parent(id) DEFERRABLE INITIALLY DEFERRED)")
+    with pytest.raises(sqlite3.IntegrityError, match="FOREIGN KEY"):
+        with store.transaction():
+            assert store.job_end(key, True, {})
+            store.db.execute("INSERT INTO commit_child VALUES(42)")
+    assert store._job_claims[key] == owner
+    assert not store.db.in_transaction
+    assert store.rows("SELECT state FROM jobs WHERE key=?", (key,))[0]["state"] == "running"
+    with store.transaction():
+        assert store.job_end(key, True, {})
+    assert key not in store._job_claims
+
+
+def test_old_transaction_completion_cannot_release_a_newer_in_memory_claim(store):
+    key = "research:changed-claim"
+    assert store.job_start(key)
+    with store.transaction():
+        assert store.job_end(key, True, {})
+        store._job_claims[key] = "newer-claim"
+    assert store._job_claims[key] == "newer-claim"
 
 
 def test_legacy_schema_migrates_without_abandoning_unowned_running_jobs(tmp_path):

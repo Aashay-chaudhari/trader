@@ -37,8 +37,12 @@ reconciliation and closing do not wait for a model response.
 .venv/bin/python -m agent_trader run
 ```
 
-`run` holds a single-instance lock. The systemd service is the normal execution owner.
-`doctor` performs read-only broker/quota/model checks. `smoke` performs an explicitly
+Operational commands share one ownership lock. The systemd service is the normal
+execution owner; stop it before `run`, `tick`, `doctor`, `reset`, `smoke`, `explore`,
+`research-test` or `agent-check`. `status` and `dashboard` remain available while it
+runs. `doctor` reads broker/quota/model services and updates local readiness.
+`agent-check` charges both connectivity turns to the normal quota and attempt ledger.
+`smoke` performs an explicitly
 nonmarketable paper submission/cancellation check; a separate market-open round-trip
 must pass before equity pilots can submit normal entries.
 
@@ -94,6 +98,10 @@ No automatic purchases, paid fallbacks, or reset-credit consumption occur.
 Actions runs tests and deploys Pages only. Legacy cloud trading/reminder/reset
 workflows are retained outside the active workflows directory. The older Python
 agents remain for reference and regression coverage; the CLI uses only the v2 runtime.
+
+Publication requires the configured release branch and a reviewed source-commit
+receipt. Unrelated staged files or later source changes postpone publication.
+The publisher pushes the exact validated SHA; it never force-pushes or resets work.
 
 Position reviews are batched hourly. Four core daily model-call slots and a portion of
 the paced daily quota are reserved for after-close review/maintenance. Calendar

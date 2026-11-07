@@ -161,12 +161,16 @@ def test_strategy_filter_cannot_invoke_forbidden_builtin():
 
 def test_supported_challenger_promotes_only_after_contract_passes(store):
     from agent_trader.runtime.store import dumps
+    from tests.runtime.test_observation_audit import install
 
     e = Experiments(store)
     e.register(proposal())
+    receipt, effective, _ = install(store)
     for i in range(40):
         p = {
-            "day": f"2026-09-{i // 2 + 1:02d}",
+            "day": (effective + timedelta(days=i // 2 + 1)).date().isoformat(),
+            "entered_at": (effective + timedelta(days=i // 2 + 1)).isoformat(),
+            "promotion_policy_receipt_sha256": receipt["receipt_sha256"],
             "incumbent_return": 0.005,
             "challenger_return": 0.01,
         }
@@ -475,6 +479,8 @@ def test_windows_push_and_authentication_use_hidden_gui_launcher(config, store, 
     from agent_trader.runtime import publish as module
 
     c = replace(config, root=Path("/mnt/c/Users/test/trader"), publish=True)
+    reviewed_revision = "a" * 40
+    store.set("release", {"source_commit": reviewed_revision})
     calls = []
     git_calls = []
     monkeypatch.setattr(module, "export", lambda *args: None)
@@ -486,7 +492,13 @@ def test_windows_push_and_authentication_use_hidden_gui_launcher(config, store, 
             git_calls.append(args)
             or SimpleNamespace(
                 returncode=0,
-                stdout="revision" if args[0] == "rev-parse" else "",
+                stdout=(
+                    reviewed_revision
+                    if args[0] == "rev-parse"
+                    else "main"
+                    if args[0] == "symbolic-ref"
+                    else ""
+                ),
             )
         ),
     )
@@ -504,5 +516,6 @@ def test_windows_push_and_authentication_use_hidden_gui_launcher(config, store, 
             "//NoLogo",
             r"C:\Users\test\trader\scripts\runtime\hidden-launch.vbs",
             "publish",
+            reviewed_revision,
         ]
     ]

@@ -90,6 +90,45 @@ def normalized_rate_limits(result):
     }
 
 
+def quota_change(before, after):
+    """Compare one identified weekly bucket, never unlike percentage scales."""
+    import math
+
+    def windows(quota):
+        result = []
+        for window in quota.get("windows", []):
+            if not isinstance(window, dict):
+                continue
+            values = [window.get(k) for k in ("usedPercent", "windowDurationMins", "resetsAt")]
+            if any(type(v) not in (int, float) or not math.isfinite(v) for v in values):
+                continue
+            used, duration, reset = values
+            if not 0 <= used <= 100 or duration < 10000:
+                continue
+            identity = (str(window.get("bucket", "")), str(window.get("kind", "")), duration, reset)
+            result.append((identity, used))
+        return result
+
+    prior = windows(before)
+    if not prior:
+        return 0, False, {"status": "weekly_window_unavailable"}
+    identity, used = min(prior, key=lambda item: (-item[1], item[0]))
+    matches = [value for key, value in windows(after) if key == identity]
+    unambiguous = sum(key == identity for key, _ in prior) == 1 and len(matches) == 1
+    current = matches[0] if unambiguous else None
+    reported = current is not None and current >= used
+    basis = {
+        "selection": "most_consumed_weekly_at_admission",
+        "bucket_fingerprint": hashlib.sha256(dumps(identity[:2]).encode()).hexdigest()[:16],
+        "kind": identity[1] if identity[1] in ("primary", "secondary") else "other",
+        "window_duration_minutes": identity[2], "resets_at": identity[3],
+        "before_used_percent": used, "after_used_percent": current,
+        "status": "comparable" if reported else ("counter_decreased" if current is not None else "reset_or_unavailable"),
+        "scope": "One account-wide meter change, including external usage; not project token consumption.",
+    }
+    return (current - used if reported else 0), reported, basis
+
+
 def response_schema(model):
     """Transport requires every property, including locally defaulted fields.
 
@@ -432,11 +471,12 @@ class CodexRPC:
 
 def record_application_outcome(store, task_key, outcome, validation_code=None):
     """Link application validation to inference without rewriting token evidence."""
-    if outcome not in ("accepted", "rejected"):
+    if outcome not in ("accepted", "rejected", "deferred"):
         raise ValueError("Unsupported application outcome")
     if not task_key:
         return None
     from .research_work import WORK_VALIDATION_CODES
+    from contextlib import nullcontext
 
     code = None
     if outcome == "rejected":
@@ -445,7 +485,7 @@ def record_application_outcome(store, task_key, outcome, validation_code=None):
             if isinstance(validation_code, str) and validation_code in WORK_VALIDATION_CODES
             else "application_error"
         )
-    with store.transaction():
+    with (nullcontext() if store.db.in_transaction else store.transaction()):
         row = store.db.execute(
             "SELECT id,payload FROM usage WHERE json_extract(payload,'$.task_key')=? "
             "ORDER BY id DESC LIMIT 1", (task_key,),
@@ -456,7 +496,7 @@ def record_application_outcome(store, task_key, outcome, validation_code=None):
         if payload.get("state") != "completed" or payload.get("terminal_outcome") != "validated":
             return None
         prior = payload.get("application_outcome")
-        if prior in ("accepted", "rejected"):
+        if prior in ("accepted", "rejected", "deferred"):
             return row["id"] if prior == outcome else None
         payload.update({
             "application_outcome": outcome,
@@ -603,16 +643,7 @@ def run_task(
                 or not store.get("readiness", {}).get("models_available", False)
                 or bool(account_limit_reason(after)),
             )
-            before_w = next(
-                (w for w in before.get("windows", []) if w.get("windowDurationMins", 0) >= 10000), {}
-            )
-            after_w = next(
-                (w for w in after.get("windows", []) if w.get("windowDurationMins", 0) >= 10000), {}
-            )
-            delta_reported = bool(before_w and after_w) and (
-                before_w.get("resetsAt") == after_w.get("resetsAt")
-            )
-            delta = max(0, after_w["usedPercent"] - before_w["usedPercent"]) if delta_reported else 0
+            delta, delta_reported, delta_basis = quota_change(before, after)
             last = usage.get("last") or usage.get("total") or {}
             store.set(
                 context_key,
@@ -626,6 +657,7 @@ def run_task(
             completed = {
                 **attempt, **counters, "state": "completed", "terminal_outcome": "validated",
                 "completed_at": utc_now(), "quota_delta_reported": delta_reported,
+                "quota_delta_basis": delta_basis,
                 "reply_usage_reported": "inputTokens" in last or "outputTokens" in last,
                 "metadata_errors": metadata_errors,
                 "application_outcome": "pending" if task_key else "untracked",

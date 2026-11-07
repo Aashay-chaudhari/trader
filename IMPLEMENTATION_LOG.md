@@ -571,3 +571,92 @@ Native Edge window sizing alone measured 492px for the requested 390px, so those
 older receipts were superseded by measured CDP viewport checks.
 
 Source CI, activation and subsequent live-loop receipts follow separately.
+
+Source d844f079 was published in snapshot b96b296e. Tests run 42414531421 and Pages
+run 42414531427 both completed successfully. The local service restarted at
+2026-11-07T21:10:29.563043Z and resumed useful analyst/reviewer jobs with a fresh
+heartbeat, reconciled market-closed state and no maintenance pause. Public-site
+browser QA then passed all seven views at exact 1440px and 390px widths, with no
+JavaScript errors/overflow and the correct $29,999.84 cash/equity and $0 exposure.
+The verified release receipt preserves this actual activation time and cloud run
+IDs; old October activation fields no longer stand in for this release.
+
+The live loop accepted an evidence-integrity review and independently reviewed
+NVDA/AMD event coverage. Subsequent audit found the event report was too large for
+the morning handoff and was omitted, motivating a bounded, purpose-aware handoff
+repair. Additional isolated boundary audits found operational CLI ownership and
+connectivity-budget gaps, exit handling coupled to quote availability, protective
+order ancestry loss, and a publisher staged-file allowlist gap. Follow-up changes
+are being validated under a maintenance stop after the active research task ended.
+At 21:20:15Z the live account meter was 19%; the requested 80% objective remains
+in progress, with no exact repo-attributable weekly token denominator claimed.
+
+## November 7 follow-up — operational boundaries and prospective evidence
+
+Independent reproductions drove a second controlled release. Nested broker order
+retrieval now preserves bracket ancestry through partial fills. Approved exits run
+before quote-dependent stop repair or quote fetching, retaining ownership checks
+and cancellation/reconciliation gates. Monotonic elapsed time advances the session
+clock after slow requests; crossing closing cutoffs routes to closing, while an
+actual-close boundary cannot authorize another market exit. The revised execution
+kernel is paper-execution-20261107-r2; its regular-session acceptance is pending.
+
+Operational CLI commands share the supervisor ownership lock through worker cleanup.
+One-shot ticks apply their completed result. Connectivity checks use two measured,
+quota-admitted turns rather than a raw uncounted inference path. Graceful shutdown
+records safe background reports and preserves other completed replies privately as
+deferred, without applying order/cancel/promotion/source-edit authority. A reproduced
+rollback defect in job completion was repaired: in-memory claims release only after
+the database commit, with SQL/commit failures and retry behavior covered by tests.
+
+Publication now protects exact generated paths, unrelated staged drafts, configured
+branch ownership and a reviewed source-commit ancestor. It rejects intervening
+source commits even if later reverted, and rejects dirty tracked source. The actual
+validated SHA is passed through the hidden Windows launcher and pushed normally.
+The established local branch remains disable-claude-enable-gpt-only, configured
+privately as the permitted publication branch; Git history was not rewritten.
+Windows PowerShell parsing and invalid/missing SHA rejection were checked without
+a push during tests. Failed account-activity intake now has bounded same-day retry.
+
+Actual event-research replay exposed a handoff truncation problem. The bounded
+projection now preserves complete relevant claims, qualifications and cited source
+receipts; at 3,000 characters it retains the verified NVDA and macro findings.
+Held/revised newer generations suppress older accepted conclusions. Reviewer timing
+cannot renew a stale source check. Runtime packets now distinguish six 78-slot
+historical coverage receipts from current-kernel verification; accounting packets
+include the actual $30,000 journal and signed fill/fee totals with scoped cutoffs.
+Refresh-only timestamps cannot create a new research question. Quota deltas compare
+one stable bucket identity; reset/missing/legacy measurements display unreported.
+
+The fixed-study audit found that 29 October 30 observations and one November 2 XOM
+observation give each date 50% weight under the frozen estimator. Additive composition
+tables now show that concentration. New quote sidecars retain bid/ask/time, costs and
+hashes atomically; no historical quote field was invented. Both absolute estimators
+are visible, and their sign disagreement cannot pass the newly reviewed policy.
+At 21:42:58.772258Z an independent global approval of
+paired-entry-date-absolute-v2 was recorded, plus explicit prospective receipts for
+the eight current zero-observation/no-prior-look challengers. Future registrations
+pin the globally approved exact version before sampling. Historical contracts are
+unchanged; review looks, promotion and rollback now commit atomically.
+
+Prospective fixed-cohort input validation requires the explicit prior 21 broker
+sessions, with hash-addressed calendar receipts. Stale or internally missing daily
+bars cannot become signals; absent SPY regime evidence excludes only its dependent
+rule. All six existing freezes passed a fresh read-only broker-calendar comparison:
+180 of 180 symbol/date sequences matched. Existing freezes/protocol hashes remain
+unchanged. Minute data must lie on minute boundaries; macro parsing excludes
+nonfinite numbers and selects the latest valid dated value even in unsorted rows.
+Provider timestamp/aggregation semantics were checked against the official Alpaca
+Market Data FAQ: https://docs.alpaca.markets/us/docs/market-data-faq.
+
+Full follow-up regression: 660 passed, with the existing single legacy websockets
+deprecation warning. Active runtime/tests lint, JavaScript syntax and whitespace
+checks passed. Local browser QA passed all seven views at 1440px and 390px, including
+expanded date-weight tables; no JavaScript errors or page overflow. A sensitive-value
+scan of the 41 changed/new release files found no configured secret, private order
+identity or model-thread identity. Cloud and activation receipts follow in local
+release metadata. No maintenance broker order was submitted.
+
+Automatic safety review rejected the optional maintenance sandbox audit and its
+narrower follow-up. That portion remains unverified; this is not a finding of a
+repository vulnerability. The ordinary data/recovery/research reviews above completed.

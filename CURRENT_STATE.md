@@ -57,3 +57,22 @@ Execution review also repaired confirmed-terminal exit retries, overnight intrad
 recovery, pending-order ownership/quantity checks, nonfinite broker data rejection,
 exact protection coverage and rounded-price sizing. New-version market acceptance
 is pending; fake-broker regressions are not an actual future-session receipt.
+
+Follow-up validation covers kernel `paper-execution-20261107-r2`: approved exits
+remain independent of quote retrieval, slow requests are accounted for at closing
+boundaries, and bracket refreshes retain protective-order ancestry. The release
+also shares ownership across operational CLI commands and retains completed
+research evidence during graceful shutdown.
+
+Fixed-study summaries now expose date weights: one completed symbol can carry
+half of a two-entry-date mean. Prospective quote receipts retain exact inputs;
+missing historical quote fields are not invented. A stricter, explicitly reviewed
+promotion policy requires positive absolute net under both date and opportunity
+weighting. Existing untouched challengers require a prospective policy receipt;
+future registrations can inherit the globally approved exact version.
+
+New fixed-cohort freezes validate the actual preceding 21 broker sessions. Missing
+SPY regime data excludes its dependent rule rather than recording a cash abstention.
+All six historical freezes passed a read-only calendar audit (180 symbol/date
+combinations), and their original inputs and hashes remain intact. New validation
+does not retrospectively certify unrecorded quote details or profitability.

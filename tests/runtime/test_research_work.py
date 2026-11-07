@@ -489,7 +489,8 @@ def test_accounting_packet_tracks_fee_facts_but_not_refreshed_timestamps_or_priv
     assert "private-fee-id" not in str(original) and "private account detail" not in str(original)
     store.set("last_reconciled", (now + timedelta(minutes=1)).isoformat())
     accounting.record(receipt, complete_history=True)
-    assert evidence_packets(store)["accounting_attribution"] == original
+    refreshed = evidence_packets(store)["accounting_attribution"]
+    assert _context("accounting_attribution", refreshed)["evidence_hash"] == _context("accounting_attribution", original)["evidence_hash"]
     receipt.append({**receipt[0], "id": "private-new-fee-id", "net_amount": "-0.03"})
     accounting.record(receipt, complete_history=True)
     assert evidence_packets(store)["accounting_attribution"] != original

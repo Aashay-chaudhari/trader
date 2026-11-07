@@ -59,6 +59,7 @@ class Store:
         self.path = path
         self.job_owner = process_owner()
         self._job_claims = {}
+        self._transaction_job_completions = None
         self.db = sqlite3.connect(path, timeout=30, isolation_level=None)
         self.db.row_factory = sqlite3.Row
         # Two first-time openers can contend while switching an empty database
@@ -138,12 +139,21 @@ class Store:
     @contextmanager
     def transaction(self):
         self.db.execute("BEGIN IMMEDIATE")
+        completions = []
+        self._transaction_job_completions = completions
         try:
             yield
             self.db.execute("COMMIT")
         except BaseException:
-            self.db.execute("ROLLBACK")
+            if self.db.in_transaction:
+                self.db.execute("ROLLBACK")
             raise
+        else:
+            for key, owner in completions:
+                if self._job_claims.get(key) == owner:
+                    self._job_claims.pop(key)
+        finally:
+            self._transaction_job_completions = None
 
     def rows(self, sql, args=()):
         return [dict(r) for r in self.db.execute(sql, args)]
@@ -198,14 +208,24 @@ class Store:
         return True
 
     def job_end(self, key, success, result):
-        owner = self._job_claims.pop(key, None)
+        owner = self._job_claims.get(key)
         if owner is None:
             return False
         cursor = self.db.execute(
             "UPDATE jobs SET state=?,result=?,at=? WHERE key=? AND state='running' AND owner=?",
             ("done" if success else "failed", dumps(result), utc_now(), key, owner),
         )
-        return bool(cursor.rowcount)
+        if not cursor.rowcount:
+            return False
+        if self.db.in_transaction:
+            # SQL success is provisional until its enclosing transaction commits.
+            # An unmanaged external transaction conservatively retains the claim;
+            # only Store.transaction can release it after a confirmed commit.
+            if self._transaction_job_completions is not None:
+                self._transaction_job_completions.append((key, owner))
+        elif self._job_claims.get(key) == owner:
+            self._job_claims.pop(key)
+        return True
 
     def recover_jobs(self, owner_kind="supervisor"):
         recovered = 0

@@ -14,7 +14,7 @@ from .store import dumps, utc_now
 # done_for_day can resume on the next session; GTC reservations and recovery
 # must retain it until the broker confirms an actual terminal state.
 TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced"}
-EXECUTION_KERNEL = "paper-execution-20261107"
+EXECUTION_KERNEL = "paper-execution-20261107-r2"
 
 
 def current_execution_verified(readiness):

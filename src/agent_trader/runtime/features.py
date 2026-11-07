@@ -21,6 +21,10 @@ def minute_features(bars, now, opened, closed):
                     not all(math.isfinite(x) for x in (o, h, low, c, v))
                     or not 0 < low <= min(o, c) <= max(o, c) <= h
                     or v < 0
+                    # Provider minute bars are labeled at the minute boundary.
+                    # Off-grid records cannot substitute for missing intervals.
+                    or at.second != 0
+                    or at.microsecond != 0
                     or at < opened
                     or at + timedelta(minutes=1) > cutoff
                 ):

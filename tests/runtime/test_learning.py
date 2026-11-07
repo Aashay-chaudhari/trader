@@ -12,17 +12,22 @@ from agent_trader.runtime.project import project_snapshot, session_coverage
 
 
 def raw_bars(day="2026-10-30"):
-    start = datetime.fromisoformat(day).replace(tzinfo=ET) - timedelta(days=50)
+    cutoff = datetime.fromisoformat(day).replace(tzinfo=ET)
+    days = sorted(
+        cutoff - timedelta(days=i)
+        for i in range(1, 81)
+        if (cutoff - timedelta(days=i)).weekday() < 5
+    )[-50:]
     rows = [
         {
-            "t": (start + timedelta(days=i)).isoformat(),
+            "t": day.isoformat(),
             "o": 100 + i,
             "h": 102 + i,
             "l": 99 + i,
             "c": 101 + i,
             "v": 1000,
         }
-        for i in range(50)
+        for i, day in enumerate(days)
     ]
     return {"AAPL": rows, "SPY": rows}
 
@@ -34,7 +39,13 @@ def sessions():
         if day.weekday() < 5:
             rows.append({"date": day.isoformat(), "open": "09:30", "close": "16:00"})
         day += timedelta(days=1)
-    return rows
+    start = datetime(2026, 10, 30).date()
+    previous = [
+        {"date": (start - timedelta(days=i)).isoformat(), "open": "09:30", "close": "16:00"}
+        for i in range(80, 0, -1)
+        if (start - timedelta(days=i)).weekday() < 5
+    ]
+    return previous + rows
 
 
 def quotes(now, bid=150, ask=150.01):
@@ -362,7 +373,7 @@ def test_missing_entry_is_counted_not_zero_return_or_silently_dropped(store):
 
 def test_advance_signal_freeze_uses_actual_capture_time_and_completed_day(store):
     data = raw_bars("2026-10-30")
-    cal = [{"date": "2026-10-29", "open": "09:30", "close": "16:00"}, *sessions()]
+    cal = sessions()
     too_early = datetime(2026, 10, 29, 17, 0, tzinfo=ET)
     assert freeze_signals(store, data, cal, too_early, for_day="2026-10-30") is None
     now = too_early.replace(hour=20, minute=30)

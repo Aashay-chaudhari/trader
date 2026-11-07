@@ -11,6 +11,10 @@ from datetime import datetime
 
 from .store import utc_now
 
+PUBLIC_PATHS = (
+    "docs/index.html", "docs/style.css", "docs/app.js", "docs/data/lab.json", "docs/.nojekyll",
+)
+
 PUBLIC_EVENTS = {
     "adaptive_registered",
     "adaptive_contract_rejected",
@@ -266,7 +270,9 @@ def snapshot(config, store):
                 "json_extract(payload,'$.attempt_id') attempt_id,"
                 "json_extract(payload,'$.application_outcome') application_outcome,"
                 "json_extract(payload,'$.application_validation_code') application_validation_code,"
-                "json_extract(payload,'$.reply_usage_reported') reply_usage_reported "
+                "json_extract(payload,'$.reply_usage_reported') reply_usage_reported,"
+                "json_extract(payload,'$.quota_delta_reported') quota_delta_reported,"
+                "json_extract(payload,'$.quota_delta_basis') quota_delta_basis "
                 "FROM usage ORDER BY id DESC LIMIT 150"
             ),
             "budget": usage_policy(store),
@@ -329,32 +335,79 @@ def git_run(config, args, timeout=60):
     )
 
 
+def publication_revision(config, store, expected_head=None):
+    """Require the configured branch and a reviewed source-commit ancestor.
+
+    Inspect every later commit, including merge-parent diffs, so a source change
+    followed by its reversal cannot be laundered into a dashboard-only history.
+    """
+    branch = git_run(config, ["symbolic-ref", "--quiet", "--short", "HEAD"])
+    if branch.returncode or branch.stdout.strip() != config.publish_branch:
+        raise RuntimeError("Publication requires the configured local branch")
+    revision = git_run(config, ["rev-parse", "HEAD"])
+    head = revision.stdout.strip()
+    if revision.returncode or not re.fullmatch(r"[0-9a-f]{40}", head):
+        raise RuntimeError("Cannot identify the publication revision")
+    if expected_head is not None and head != expected_head:
+        raise RuntimeError("Repository changed during publication; retry after review")
+    dirty = git_run(config, ["diff", "--name-only", "--no-renames", "-z", "HEAD", "--"])
+    if dirty.returncode:
+        raise RuntimeError("Cannot inspect tracked source changes")
+    if any(path not in PUBLIC_PATHS for path in dirty.stdout.split("\0") if path):
+        raise RuntimeError("Unreviewed tracked source changes; publication postponed")
+    approved = store.get("release", {}).get("source_commit")
+    if not isinstance(approved, str) or not re.fullmatch(r"[0-9a-f]{40}", approved):
+        raise RuntimeError("Publication requires a reviewed source-commit receipt")
+    if git_run(config, ["merge-base", "--is-ancestor", approved, head]).returncode:
+        raise RuntimeError("Reviewed source commit is not an ancestor of this revision")
+    changes = git_run(config, [
+        "log", "--format=", "--name-only", "--no-renames", "-z", "--diff-merges=separate",
+        f"{approved}..{head}",
+    ])
+    if changes.returncode:
+        raise RuntimeError("Cannot verify publication history")
+    if any(path not in PUBLIC_PATHS for path in changes.stdout.split("\0") if path):
+        raise RuntimeError("Unreviewed source commits; publication postponed")
+    return head
+
+
 def publish(config, store):
+    def staged_paths():
+        result = git_run(config, ["diff", "--cached", "--name-only", "--no-renames", "-z"])
+        if result.returncode:
+            raise RuntimeError("Cannot inspect staged files; publication postponed")
+        paths = [path for path in result.stdout.split("\0") if path]
+        if any(path not in PUBLIC_PATHS for path in paths):
+            raise RuntimeError("Unrelated staged files; publication postponed")
+        return paths
+
+    # Inspect before changing the index so an unrelated user-staged draft stays
+    # exactly as staged. A docs/ prefix alone is not a publication allowlist.
+    if config.publish:
+        staged_paths()
+        initial_head = publication_revision(config, store)
     export(config, store)
     if not config.publish:
         return {"status": "local_only"}
     # Stage only sanitized generated site files. Never git add the runtime directory.
     result = git_run(
         config,
-        [
-            "add",
-            "--",
-            "docs/index.html",
-            "docs/style.css",
-            "docs/app.js",
-            "docs/data/lab.json",
-            "docs/.nojekyll",
-        ],
+        ["add", "--", *PUBLIC_PATHS],
     )
     if result.returncode:
         raise RuntimeError("Dashboard staging failed")
-    paths = git_run(config, ["diff", "--cached", "--name-only"]).stdout.splitlines()
-    if any(not p.startswith("docs/") for p in paths):
-        raise RuntimeError("Unrelated staged files; publication postponed")
+    paths = staged_paths()
+    publication_revision(config, store, expected_head=initial_head)
     if paths:
-        result = git_run(config, ["commit", "-m", "[dashboard] local trading laboratory snapshot"])
+        # Explicit paths also prevent a concurrent git add after the inspection
+        # from leaking an unrelated staged file into the autonomous commit.
+        result = git_run(config, [
+            "commit", "--only", "-m", "[dashboard] local trading laboratory snapshot",
+            "--", *PUBLIC_PATHS,
+        ])
         if result.returncode:
             raise RuntimeError("Dashboard commit failed")
+    revision = publication_revision(config, store)
     # Never force-push or reset user edits. Failed synchronization is retried later.
     binary = "/mnt/c/Windows/System32/wscript.exe"
     if os.path.exists(binary) and str(config.root).startswith("/mnt/c/"):
@@ -364,7 +417,7 @@ def publish(config, store):
             "/", "\\"
         )
         result = subprocess.run(
-            [binary, "//B", "//NoLogo", launcher, "publish"],
+            [binary, "//B", "//NoLogo", launcher, "publish", revision],
             cwd=config.root,
             capture_output=True,
             text=True,
@@ -372,8 +425,8 @@ def publish(config, store):
             env={**os.environ, "GCM_INTERACTIVE": "Never"},
         )
     else:
-        result = git_run(config, ["push", "origin", "HEAD:main"])
+        result = git_run(config, ["push", "origin", revision + ":main"])
     if result.returncode:
         raise RuntimeError("GitHub push failed; local trading remains independent")
     store.set("last_published", utc_now())
-    return {"status": "pushed", "commit": git_run(config, ["rev-parse", "HEAD"]).stdout.strip()}
+    return {"status": "pushed", "commit": revision}

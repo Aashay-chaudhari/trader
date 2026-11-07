@@ -55,6 +55,7 @@ class Config:
     start_date: str = "2026-10-29"
     execution: bool = False
     publish: bool = True
+    publish_branch: str = "main"
     poll_seconds: int = 30
     research_model: str = "gpt-6.1-sol"
     decision_model: str = "gpt-6.1-sol"
@@ -83,6 +84,7 @@ class Config:
             start_date=values.get("TRADER_START_DATE", "2026-10-29"),
             execution=values.get("TRADER_EXECUTION", "false").lower() == "true",
             publish=values.get("TRADER_PUBLISH", "true").lower() == "true",
+            publish_branch=values.get("TRADER_PUBLISH_BRANCH", "main"),
             codex_bin=values.get("TRADER_CODEX_BIN", ""),
             research_model=values.get("TRADER_RESEARCH_MODEL", "gpt-6.1-sol"),
             decision_model=values.get("TRADER_DECISION_MODEL", "gpt-6.1-sol"),

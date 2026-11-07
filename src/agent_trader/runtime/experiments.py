@@ -6,6 +6,8 @@ from datetime import datetime, time, timedelta
 
 from .config import ET
 from .engine import quote_values, timestamp
+from .observation_audit import paired_estimators, record_quote
+from .promotion_policy import pin_approved_policy, policy_status
 from .store import dumps, utc_now
 
 
@@ -67,9 +69,7 @@ class Experiments:
             rows += [(p, True) for p in exploration_plans if p.get("branch") == branch]
             reasons = {}
             for plan, _ in rows:
-                reason = self.eligibility_reason(
-                    plan, quotes.get(plan.get("symbol")), now
-                )
+                reason = self.eligibility_reason(plan, quotes.get(plan.get("symbol")), now)
                 reasons[reason] = reasons.get(reason, 0) + 1
             branches[branch] = {
                 "executable_plans": sum(not research for _, research in rows),
@@ -190,15 +190,19 @@ class Experiments:
             "reward_risk_2",
         ) or (proposal["exact_change"].startswith("code:") and bool(proposal.get("source")))
         state = "shadow" if supported and proposal["branch"] != "options" else "proposed"
-        self.store.db.execute(
-            "INSERT INTO experiments VALUES(?,?,?,?,?)",
-            (proposal["id"], proposal["branch"], state, dumps(proposal), utc_now()),
-        )
-        self.store.event(
-            "experiment_registered",
-            {"id": proposal["id"], "state": state, "hypothesis": proposal["hypothesis"]},
-            proposal["branch"],
-        )
+        registered_at = utc_now()
+        with self.store.transaction():
+            self.store.db.execute(
+                "INSERT INTO experiments VALUES(?,?,?,?,?)",
+                (proposal["id"], proposal["branch"], state, dumps(proposal), registered_at),
+            )
+            if state == "shadow":
+                pin_approved_policy(self.store, proposal["id"], proposal, registered_at)
+            self.store.event(
+                "experiment_registered",
+                {"id": proposal["id"], "state": state, "hypothesis": proposal["hypothesis"]},
+                proposal["branch"],
+            )
         return True
 
     def consider(self, plan, quote, regime, now):
@@ -217,6 +221,9 @@ class Experiments:
             # A daily evaluator may not have marked the old experiment stale yet.
             # Never pair a new incumbent with an old parent's contract.
             return
+        policy = policy_status(self.store, experiment["id"], spec)
+        if policy["ready"] and now < timestamp(policy["effective_at"]):
+            return  # registered future policy boundary, never capture an unlinked earlier sample
         passes = self.filter_passes(spec, plan, regime)
         sid = hashlib.sha256((experiment["id"] + plan["id"]).encode()).hexdigest()[:24]
         local_now = now.astimezone(ET)
@@ -257,10 +264,28 @@ class Experiments:
             "challenger_return": None,
             "assumptions": "Forward quote observation only; $1 unit exposure; round-trip 20bp plus observed spread. No fill guarantee.",
         }
-        self.store.db.execute(
-            "INSERT OR IGNORE INTO shadow VALUES(?,?,?,?,?,?)",
-            (sid, experiment["id"], plan["symbol"], plan["branch"], "open", dumps(payload)),
-        )
+        if policy["ready"] and now >= timestamp(policy["effective_at"]):
+            payload["promotion_policy_receipt_sha256"] = policy["receipt_sha256"]
+        with self.store.transaction():
+            inserted = self.store.db.execute(
+                "INSERT OR IGNORE INTO shadow VALUES(?,?,?,?,?,?)",
+                (sid, experiment["id"], plan["symbol"], plan["branch"], "open", dumps(payload)),
+            )
+            if inserted.rowcount:
+                record_quote(
+                    self.store,
+                    "shadow",
+                    sid,
+                    "entry",
+                    quote,
+                    now,
+                    {
+                        "entry_ask": ask,
+                        "assumed_base_cost_fraction": 0.002,
+                        "challenger_trades": passes,
+                        "incumbent_trades": payload["incumbent_trades"],
+                    },
+                )
 
     def mark(self, quotes, now, closing=False):
         for row in self.store.rows("SELECT * FROM shadow WHERE state='open'"):
@@ -270,8 +295,10 @@ class Experiments:
                 # price. Older rows lack a stored calendar close: the entry-day
                 # boundary is the minimum defensible expiry for those records.
                 end = p.get("observation_end")
-                missed = now >= timestamp(end) if end else (
-                    now.astimezone(ET).date().isoformat() > p["day"]
+                missed = (
+                    now >= timestamp(end)
+                    if end
+                    else (now.astimezone(ET).date().isoformat() > p["day"])
                 )
                 if missed:
                     p.update(
@@ -310,9 +337,29 @@ class Experiments:
                     "challenger_return": ret if p["challenger_trades"] else 0.0,
                 }
             )
-            self.store.db.execute(
-                "UPDATE shadow SET state='closed',payload=? WHERE id=?", (dumps(p), row["id"])
-            )
+            with self.store.transaction():
+                updated = self.store.db.execute(
+                    "UPDATE shadow SET state='closed',payload=? WHERE id=? AND state='open'",
+                    (dumps(p), row["id"]),
+                )
+                if updated.rowcount:
+                    record_quote(
+                        self.store,
+                        "shadow",
+                        row["id"],
+                        "exit",
+                        q,
+                        now,
+                        {
+                            "entry_ask": p["entry"],
+                            "gross": bid / p["entry"] - 1,
+                            "assumed_base_cost_fraction": 0.002,
+                            "extra_exit_spread_fraction": (ask - bid) / p["entry"],
+                            "active_net": ret,
+                            "incumbent_return": p["incumbent_return"],
+                            "challenger_return": p["challenger_return"],
+                        },
+                    )
 
     def evaluate(self):
         for branch in ("intraday", "swing", "options"):
@@ -324,18 +371,19 @@ class Experiments:
             )
             value = latest[0]["value"] if latest else 10000
             if value <= active.get("equity_at_promotion", 10000) * 0.98:
-                self.store.set("incumbent_filter:" + branch, active.get("previous_incumbent"))
-                self.store.db.execute(
-                    "UPDATE experiments SET state='rolled_back' WHERE id=?", (active["id"],)
-                )
-                self.store.event(
-                    "strategy_rolled_back",
-                    {
-                        "id": active["id"],
-                        "reason": "Fixed rollback threshold: 2% equity loss since promotion",
-                    },
-                    branch,
-                )
+                with self.store.transaction():
+                    self.store.set("incumbent_filter:" + branch, active.get("previous_incumbent"))
+                    self.store.db.execute(
+                        "UPDATE experiments SET state='rolled_back' WHERE id=?", (active["id"],)
+                    )
+                    self.store.event(
+                        "strategy_rolled_back",
+                        {
+                            "id": active["id"],
+                            "reason": "Fixed rollback threshold: 2% equity loss since promotion",
+                        },
+                        branch,
+                    )
         promoted = []
         for e in self.store.rows("SELECT * FROM experiments WHERE state='shadow'"):
             spec = json.loads(e["payload"])
@@ -350,17 +398,18 @@ class Experiments:
             if len(eligibility_versions) > 1:
                 key = "experiment-mixed-eligibility:" + e["id"]
                 if not self.store.get(key):
-                    self.store.event(
-                        "experiment_review",
-                        {
-                            "id": e["id"],
-                            "promoted": False,
-                            "reason": "Mixed observation eligibility versions require a new prospective contract",
-                            "eligibility_versions": sorted(eligibility_versions),
-                        },
-                        e["branch"],
-                    )
-                    self.store.set(key, True)
+                    with self.store.transaction():
+                        self.store.event(
+                            "experiment_review",
+                            {
+                                "id": e["id"],
+                                "promoted": False,
+                                "reason": "Mixed observation eligibility versions require a new prospective contract",
+                                "eligibility_versions": sorted(eligibility_versions),
+                            },
+                            e["branch"],
+                        )
+                        self.store.set(key, True)
                 continue
             incumbent = self.store.get("incumbent_filter:" + e["branch"])
             current_parent = incumbent["id"] if incumbent else "pilot-v1"
@@ -371,6 +420,24 @@ class Experiments:
                 continue
             if sessions < spec["minimum_sessions"] or len(samples) < spec["minimum_samples"]:
                 continue
+            policy = policy_status(self.store, e["id"], spec, samples)
+            if not policy["ready"]:
+                key = "experiment-policy-held:" + e["id"]
+                if self.store.get(key) != policy["reason"]:
+                    with self.store.transaction():
+                        self.store.event(
+                            "experiment_review",
+                            {
+                                "id": e["id"],
+                                "promoted": False,
+                                "reason": policy["reason"],
+                                "samples": len(samples),
+                                "sessions": sessions,
+                            },
+                            e["branch"],
+                        )
+                        self.store.set(key, policy["reason"])
+                continue
             # Only predeclared doubling-session review looks; don't repeatedly
             # test significance every day after reaching minimum evidence.
             look = 0
@@ -379,89 +446,106 @@ class Experiments:
             look_key = "experiment-look:" + e["id"]
             if self.store.get(look_key, -1) >= look:
                 continue
-            self.store.set(look_key, look)
-            # Daily paired differences avoid treating correlated same-day trades as
-            # independent. Conservative sign consistency + lower-bound requirement.
-            import numpy as np
+            with self.store.transaction():
+                if self.store.get(look_key, -1) >= look:
+                    continue
+                self.store.set(look_key, look)
+                # Daily paired differences avoid treating correlated same-day trades as
+                # independent. Conservative sign consistency + lower-bound requirement.
+                import numpy as np
 
-            daily = {}
-            for x in samples:
-                daily.setdefault(x["day"], []).append(
-                    x["challenger_return"] - x["incumbent_return"]
+                daily = {}
+                for x in samples:
+                    daily.setdefault(x["day"], []).append(
+                        x["challenger_return"] - x["incumbent_return"]
+                    )
+                deltas = np.array([sum(v) / len(v) for v in daily.values()])
+                family_trials = self.store.rows(
+                    "SELECT count(*) AS n FROM experiments WHERE branch=?", (e["branch"],)
+                )[0]["n"]
+                # Conservative fixed-trial + repeated-look penalty; not a guarantee
+                # of statistical validity for dependent/nonstationary market data.
+                import math
+
+                critical = max(
+                    3.0, math.sqrt(2 * math.log(2 * max(1, family_trials) * (look + 1) ** 2 / 0.05))
                 )
-            deltas = np.array([sum(v) / len(v) for v in daily.values()])
-            family_trials = self.store.rows(
-                "SELECT count(*) AS n FROM experiments WHERE branch=?", (e["branch"],)
-            )[0]["n"]
-            # Conservative fixed-trial + repeated-look penalty; not a guarantee
-            # of statistical validity for dependent/nonstationary market data.
-            import math
-
-            critical = max(
-                3.0, math.sqrt(2 * math.log(2 * max(1, family_trials) * (look + 1) ** 2 / 0.05))
-            )
-            lower = float(deltas.mean() - critical * deltas.std(ddof=1) / np.sqrt(len(deltas)))
-            net = sum(x["challenger_return"] for x in samples) / len(samples)
-            if lower <= 0 or (deltas > 0).mean() < 0.6 or net <= 0:
+                lower = float(deltas.mean() - critical * deltas.std(ddof=1) / np.sqrt(len(deltas)))
+                estimators = paired_estimators(samples)
+                net = estimators["opportunity_weighted_absolute_net"]
+                daily_net = estimators["entry_date_weighted_absolute_net"]
+                if lower <= 0 or (deltas > 0).mean() < 0.6 or net <= 0 or daily_net <= 0:
+                    self.store.event(
+                        "experiment_review",
+                        {
+                            "id": e["id"],
+                            "sessions": sessions,
+                            "samples": len(samples),
+                            "lower_bound": lower,
+                            "promoted": False,
+                            "review_look": look,
+                            "family_trials": family_trials,
+                            "critical_multiplier": critical,
+                            "absolute_mean_net": net,
+                            "absolute_entry_date_mean_net": daily_net,
+                            "absolute_positive_disagreement": estimators[
+                                "absolute_positive_disagreement"
+                            ],
+                            "promotion_policy": policy,
+                        },
+                        e["branch"],
+                    )
+                    continue
+                # Promotion is filter activation within fixed policy; arbitrary code
+                # changes cannot pass through this path.
+                self.store.db.execute(
+                    "UPDATE experiments SET state='promoted' WHERE id=?", (e["id"],)
+                )
+                self.store.set(
+                    "incumbent_filter:" + e["branch"],
+                    {
+                        "id": e["id"],
+                        "filter": spec["exact_change"],
+                        "source": spec.get("source"),
+                        "stage": "25% pilot risk",
+                        "promoted_at": utc_now(),
+                        "previous_incumbent": self.store.get("incumbent_filter:" + e["branch"]),
+                        "equity_at_promotion": next(
+                            iter(
+                                self.store.rows(
+                                    "SELECT value FROM equity WHERE branch=? ORDER BY id DESC LIMIT 1",
+                                    (e["branch"],),
+                                )
+                            ),
+                            {"value": 10000},
+                        )["value"],
+                    },
+                )
                 self.store.event(
-                    "experiment_review",
+                    "strategy_promoted",
                     {
                         "id": e["id"],
                         "sessions": sessions,
                         "samples": len(samples),
                         "lower_bound": lower,
-                        "promoted": False,
                         "review_look": look,
                         "family_trials": family_trials,
                         "critical_multiplier": critical,
                         "absolute_mean_net": net,
+                        "absolute_entry_date_mean_net": daily_net,
+                        "absolute_positive_disagreement": estimators[
+                            "absolute_positive_disagreement"
+                        ],
+                        "promotion_policy": policy,
                     },
                     e["branch"],
                 )
-                continue
-            # Promotion is filter activation within fixed policy; arbitrary code
-            # changes cannot pass through this path.
-            self.store.db.execute("UPDATE experiments SET state='promoted' WHERE id=?", (e["id"],))
-            self.store.set(
-                "incumbent_filter:" + e["branch"],
-                {
-                    "id": e["id"],
-                    "filter": spec["exact_change"],
-                    "source": spec.get("source"),
-                    "stage": "25% pilot risk",
-                    "promoted_at": utc_now(),
-                    "previous_incumbent": self.store.get("incumbent_filter:" + e["branch"]),
-                    "equity_at_promotion": next(
-                        iter(
-                            self.store.rows(
-                                "SELECT value FROM equity WHERE branch=? ORDER BY id DESC LIMIT 1",
-                                (e["branch"],),
-                            )
-                        ),
-                        {"value": 10000},
-                    )["value"],
-                },
-            )
-            self.store.event(
-                "strategy_promoted",
-                {
-                    "id": e["id"],
-                    "sessions": sessions,
-                    "samples": len(samples),
-                    "lower_bound": lower,
-                    "review_look": look,
-                    "family_trials": family_trials,
-                    "critical_multiplier": critical,
-                    "absolute_mean_net": net,
-                },
-                e["branch"],
-            )
-            candidate = self.store.get("maintenance_candidate")
-            if candidate and e["id"] == "code-" + candidate["id"]:
-                self.store.set(
-                    "maintenance_candidate",
-                    {**candidate, "state": "active_reduced_risk", "activated_at": utc_now()},
-                )
+                candidate = self.store.get("maintenance_candidate")
+                if candidate and e["id"] == "code-" + candidate["id"]:
+                    self.store.set(
+                        "maintenance_candidate",
+                        {**candidate, "state": "active_reduced_risk", "activated_at": utc_now()},
+                    )
             promoted.append(e["id"])
         return promoted
 
@@ -494,7 +578,7 @@ class Experiments:
     def progress(self):
         summaries = {}
         funnel = self.funnel()["branches"]
-        for e in self.store.rows("SELECT id,branch FROM experiments"):
+        for e in self.store.rows("SELECT id,branch,payload FROM experiments"):
             closed = [
                 json.loads(r["payload"])
                 for r in self.store.rows(
@@ -505,6 +589,10 @@ class Experiments:
             summaries[e["id"]] = {
                 "samples": len(closed),
                 "sessions": len(days),
+                "estimators": paired_estimators(closed),
+                "promotion_policy": policy_status(
+                    self.store, e["id"], json.loads(e["payload"]), closed
+                ),
                 "eligibility_versions": sorted(
                     {x.get("eligibility_version", "legacy_unversioned") for x in closed}
                 ),
