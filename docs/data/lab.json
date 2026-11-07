@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-07T21:10:35.900564+00:00",
+  "generated_at": "2026-11-07T21:45:44.709153+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T16:10:29.567385-05:00",
+  "heartbeat": "2026-11-07T16:16:25.780671-05:00",
   "watchdog": {
-    "checked_at": "2026-11-07T21:10:03.0512637+00:00",
+    "checked_at": "2026-11-07T21:44:03.5340696+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
-    "models_paused": false,
-    "maintenance": false
+    "models_paused": true,
+    "maintenance": true
   },
-  "status": "Market holiday or weekend. Reconciled; background research is available.",
+  "status": "Local supervisor stopped; independent watchdog owns recovery.",
   "next_action": "Next trading session: automatic startup and calendar refresh.",
   "readiness": {
-    "at": "2026-11-07T21:10:31.829914+00:00",
+    "at": "2026-11-07T21:43:09.965376+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -26,7 +26,7 @@
     "order_submission_verified": true,
     "submission_checked_at": "2026-10-29T04:50:49.744729+00:00",
     "execution_verified_at": "2026-11-02T14:35:37.790606+00:00",
-    "required_execution_kernel": "paper-execution-20261107",
+    "required_execution_kernel": "paper-execution-20261107-r2",
     "current_execution_verified": false
   },
   "reconciliation_errors": [],
@@ -78,7 +78,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T21:10:31.838853+00:00",
+    "as_of": "2026-11-07T21:43:07.671577+00:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -112,7 +112,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T21:10:31.838853+00:00",
+      "broker_cash_observed_at": "2026-11-07T21:43:07.671577+00:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -197,6 +197,132 @@
   ],
   "equity": [
     {
+      "at": "2026-11-07T21:43:07.671577+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:43:07.671577+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:43:07.671577+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:16:26.187491+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:16:26.187491+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:16:26.187491+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:15:50.353428+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:15:50.353428+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:15:50.353428+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:14:39.260977+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:14:39.260977+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:14:39.260977+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:13:27.903637+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:13:27.903637+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:13:27.903637+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:12:53.180463+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:12:53.180463+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:12:53.180463+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T21:11:42.524649+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:11:42.524649+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T21:11:42.524649+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
       "at": "2026-11-07T21:10:31.838853+00:00",
       "day": "2026-11-07",
       "branch": "options",
@@ -10866,132 +10992,6 @@
     },
     {
       "at": "2026-11-07T10:17:45.516941+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:16:41.340887+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:16:41.340887+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:16:41.340887+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:15:37.312557+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:15:37.312557+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:15:37.312557+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:14:33.002914+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:14:33.002914+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:14:33.002914+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:13:28.841583+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:13:28.841583+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:13:28.841583+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:12:56.598973+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:12:56.598973+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:12:56.598973+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:11:52.483584+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:11:52.483584+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:11:52.483584+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T10:10:48.226519+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:10:48.226519+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T10:10:48.226519+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11109,7 +11109,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-07T21:10:36.143761+00:00",
+    "as_of": "2026-11-07T21:45:45.092790+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11499,7 +11499,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-07T21:10:36.145506+00:00",
+    "as_of": "2026-11-07T21:45:45.096227+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11513,7 +11513,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-07T21:10:31.838853+00:00",
+      "as_of": "2026-11-07T21:43:07.671577+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11559,14 +11559,14 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 27.156754021944444,
+      "input_age_hours": 27.742573666666665,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
-      "total_proposals": 25,
+      "total_proposals": 28,
       "stage_counts": {
         "awaiting_observation": 5,
-        "proposed": 20
+        "proposed": 23
       },
       "automated_scope": "Pure entry-filter candidates only; broader application repairs require the development release workflow."
     },
@@ -11601,7 +11601,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-07T21:10:37.215907+00:00",
+    "as_of": "2026-11-07T21:45:46.125957+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -12387,6 +12387,58 @@
         "closed": 30,
         "closed_signals": 5,
         "closed_sessions": 5,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 5,
+          "by_entry_date": [
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 6,
+              "active_signals": 2,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.00020150496963339316
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 6,
+              "active_signals": 3,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": -0.011660102876083489
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": false,
+          "smallest_date_opportunities": 6,
+          "largest_date_opportunities": 6,
+          "maximum_opportunity_weight": 0.03333333333333333,
+          "weight_concentration_vs_equal_opportunities": 1.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 0,
         "cumulative": {
           "signal_net": -0.0022917195812900194,
@@ -13002,6 +13054,58 @@
         "closed": 30,
         "closed_signals": 1,
         "closed_sessions": 5,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 5,
+          "by_entry_date": [
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 6,
+              "active_signals": 1,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": -0.004481036764468538
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 6,
+              "active_signals": 0,
+              "entry_date_weight": 0.2,
+              "per_opportunity_weight": 0.03333333333333333,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": false,
+          "smallest_date_opportunities": 6,
+          "largest_date_opportunities": 6,
+          "maximum_opportunity_weight": 0.03333333333333333,
+          "weight_concentration_vs_equal_opportunities": 1.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 0,
         "cumulative": {
           "signal_net": -0.0008962073528937075,
@@ -13612,6 +13716,50 @@
         "closed": 4,
         "closed_signals": 1,
         "closed_sessions": 4,
+        "date_composition": {
+          "closed_opportunities": 4,
+          "closed_entry_dates": 4,
+          "by_entry_date": [
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.25,
+              "per_opportunity_weight": 0.25,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 1,
+              "active_signals": 1,
+              "entry_date_weight": 0.25,
+              "per_opportunity_weight": 0.25,
+              "mean_net": -0.053611640349732426
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.25,
+              "per_opportunity_weight": 0.25,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.25,
+              "per_opportunity_weight": 0.25,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": false,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 1,
+          "maximum_opportunity_weight": 0.25,
+          "weight_concentration_vs_equal_opportunities": 1.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 0,
         "cumulative": {
           "signal_net": -0.013402910087433106,
@@ -13661,6 +13809,66 @@
         "closed_signals": 94,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 18,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": -0.005913806152183032
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 17,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0018934562370803898
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 14,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.005591662390174701
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 14,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.001006312099738684
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 17,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.02024247385624002
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 14,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.00011254243261925411
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.0054204240172200345,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13675,6 +13883,66 @@
         "closed_signals": 39,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 4,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": 6.523040373762444e-05
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 8,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.001398884646573493
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 6,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.002387919265111644
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 10,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0006383663006888507
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 1,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.002337284996088426
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 10,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.000247396592122024
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.000862182601870844,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13689,6 +13957,66 @@
         "closed_signals": 39,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 8,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": -0.003175263523120947
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 7,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -9.117665468623504e-05
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 6,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0019960396514899256
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 1,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0005501700796150561
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 14,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.014472335108015651
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 3,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0003042877774184126
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.003431545465724371,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13703,6 +14031,66 @@
         "closed_signals": 42,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 1,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": -0.00044812064788333654
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 8,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.006661347407333502
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 10,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.00036371162726087
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 8,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.002488859219657457
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 5,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.006911917315962973
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 10,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0018380643155979392
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.0029974328798623895,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13717,6 +14105,66 @@
         "closed_signals": 41,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 9,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": -0.005338706434912149
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 6,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0010963636035838222
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 7,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.0035047714512325494
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 6,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -9.11574185078997e-05
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 10,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": -0.013335547943225504
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 3,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 8.050126720080259e-05
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.003515553062848913,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13731,6 +14179,66 @@
         "closed_signals": 0,
         "preregistered_opportunities": 180,
         "entry_sessions": 6,
+        "date_composition": {
+          "closed_opportunities": 179,
+          "closed_entry_dates": 6,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005747126436781609,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 30,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-03",
+              "closed_opportunities": 30,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-04",
+              "closed_opportunities": 30,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-05",
+              "closed_opportunities": 30,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-06",
+              "closed_opportunities": 30,
+              "active_signals": 0,
+              "entry_date_weight": 0.16666666666666666,
+              "per_opportunity_weight": 0.005555555555555556,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 29,
+          "largest_date_opportunities": 30,
+          "maximum_opportunity_weight": 0.005747126436781609,
+          "weight_concentration_vs_equal_opportunities": 1.028735632183908,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": 0.0,
         "mean_horizon_baseline_return": -0.01087115507644578,
@@ -13745,6 +14253,34 @@
         "closed_signals": 19,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 18,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": -0.015861669982556104
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 1,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": -0.09387743613550166
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.05486955305902888,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13759,6 +14295,34 @@
         "closed_signals": 4,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 4,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": -0.00501095758322573
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.002505478791612865,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13773,6 +14337,34 @@
         "closed_signals": 9,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 8,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": -0.002485743918362951
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 1,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": -0.09387743613550166
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.04818159002693231,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13787,6 +14379,34 @@
         "closed_signals": 1,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 1,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": -3.048731470914774e-05
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -1.524365735457387e-05,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13801,6 +14421,34 @@
         "closed_signals": 10,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 9,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": -0.0265711345030405
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 1,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": -0.09387743613550166
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": -0.060224285319271084,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13815,6 +14463,34 @@
         "closed_signals": 0,
         "preregistered_opportunities": 60,
         "entry_sessions": 2,
+        "date_composition": {
+          "closed_opportunities": 30,
+          "closed_entry_dates": 2,
+          "by_entry_date": [
+            {
+              "day": "2026-10-30",
+              "closed_opportunities": 29,
+              "active_signals": 0,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.017241379310344827,
+              "mean_net": 0.0
+            },
+            {
+              "day": "2026-11-02",
+              "closed_opportunities": 1,
+              "active_signals": 0,
+              "entry_date_weight": 0.5,
+              "per_opportunity_weight": 0.5,
+              "mean_net": 0.0
+            }
+          ],
+          "uneven_date_composition": true,
+          "smallest_date_opportunities": 1,
+          "largest_date_opportunities": 29,
+          "maximum_opportunity_weight": 0.5,
+          "weight_concentration_vs_equal_opportunities": 15.0,
+          "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+        },
         "not_evaluable": 1,
         "mean_horizon_net_return": 0.0,
         "mean_horizon_baseline_return": -0.06346940149565901,
@@ -13865,6 +14541,7 @@
       "protocol_sha256": "37d7a40302170e2a6a97d1f3334b6a4fa8f1797947d388d0a1495be3a70f82c6",
       "amended_at": "2026-10-29T20:44:09.617871-04:00"
     },
+    "latest_freeze_diagnostic": null,
     "exclusions": [
       {
         "day": "2026-11-06",
@@ -14338,6 +15015,197 @@
   ],
   "plans": [],
   "events": [
+    {
+      "id": 438,
+      "at": "2026-11-07T21:45:42.762050+00:00",
+      "kind": "release",
+      "branch": null,
+      "payload": {
+        "summary": "Operational ownership, quote-independent exits, reviewed publication, prospective observation and promotion integrity.",
+        "source_commit": "7c25b16f0718251c42b2582ff060769fbcd8fe71",
+        "regression_tests": 660,
+        "current_kernel_market_acceptance": "pending_regular_session"
+      }
+    },
+    {
+      "id": 428,
+      "at": "2026-11-07T21:16:37.951004+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 27296
+      }
+    },
+    {
+      "id": 427,
+      "at": "2026-11-07T21:16:37.383904+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 27296
+      }
+    },
+    {
+      "id": 426,
+      "at": "2026-11-07T21:16:25.838570+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "77a617ed92522aae7ead5d7d:0",
+        "topic": "feature_lineage"
+      }
+    },
+    {
+      "id": 425,
+      "at": "2026-11-07T21:16:05.812265+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "44333ef8b0ba643e9aea5100c9db6de4a0b652789f0b9e90b81c78e076d426d2",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": "usage:93",
+        "started_at": "2026-11-07T21:15:16.853975+00:00",
+        "attempt_id": "usage:110",
+        "searches": 0,
+        "cycles": 3,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:16:05.808506+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 424,
+      "at": "2026-11-07T21:15:13.862577+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
+        "topic": "event_coverage",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. Independently opened all eight analyst URLs and reproduced the seven verified source claims; Census remains partial. Event times, calendar omissions and qualifications match the pages. Supplied evidence supports the remaining coverage unknown. The reusable receipt proposal preserves that distinction. This acceptance does not establish comprehensive event clearance or change trading controls."
+      }
+    },
+    {
+      "id": 423,
+      "at": "2026-11-07T21:14:54.859164+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "5ba5bd2b71f52452b0cc26ae7af375ee4df32775abd5acf51d8e2ded203d1884",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T21:14:05.432992+00:00",
+        "attempt_id": "usage:109",
+        "searches": 3,
+        "cycles": 8,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:14:54.849494+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 422,
+      "at": "2026-11-07T21:14:02.412251+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
+        "topic": "event_coverage"
+      }
+    },
+    {
+      "id": 421,
+      "at": "2026-11-07T21:13:34.720439+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": true,
+        "state": "completed",
+        "request_id": "b4c14e52d2b1c3608edb8e15f54331636122a16241e60da33f7287d4d1eed011",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": "usage:92",
+        "started_at": "2026-11-07T21:11:45.421097+00:00",
+        "attempt_id": "usage:108",
+        "searches": 4,
+        "cycles": 12,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:13:34.715781+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 420,
+      "at": "2026-11-07T21:11:42.152749+00:00",
+      "kind": "research_work_reviewed",
+      "branch": null,
+      "payload": {
+        "work_id": "42a03b3c82f0da2037e068fd:0",
+        "topic": "evidence_integrity",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope (indexes 0\u20134). Independently checked source:0 and reproduced 60 scheduled sessions in each window. USO's 120-versus-60 conflict is explicit. Horizon distinctions and dependence cautions match the definitions. Missing search history leaves selection bias unresolved. The 3.75bp decrement is compatible with 12.5% active weight under the stated assumptions; it does not verify that denominator. Acceptance changes no protocol or promotion gate."
+      }
+    },
+    {
+      "id": 419,
+      "at": "2026-11-07T21:11:11.380500+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research_review",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "b4ba413d322a4d4326811c3519607bbe0ad4cc686f03ed4932d09b0d2a268297",
+        "task_day": "2026-11-07",
+        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
+        "schema_name": "ResearchWorkReview",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-07T21:10:33.890006+00:00",
+        "attempt_id": "usage:107",
+        "searches": 1,
+        "cycles": 6,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-07T21:11:11.374573+00:00",
+        "quota_delta_reported": true,
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
     {
       "id": 418,
       "at": "2026-11-07T21:10:29.563043+00:00",
@@ -15555,129 +16423,6 @@
         "key": "incident:2026-11-06:runtime_RemoteProtocolError",
         "title": "Trader - attention required"
       }
-    },
-    {
-      "id": 322,
-      "at": "2026-11-06T14:08:49.521911+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "runtime_RemoteProtocolError",
-        "reason": "Runtime check failed (RemoteProtocolError); retrying in 30 seconds."
-      }
-    },
-    {
-      "id": 321,
-      "at": "2026-11-06T13:38:16.290330+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "agent_exploration",
-        "reason": "Exploration did not complete (ValidationError). Protective routines continue; new plans require valid research."
-      }
-    },
-    {
-      "id": 320,
-      "at": "2026-11-06T13:37:13.238418+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "incident:2026-11-06:agent_exploration",
-        "title": "Trader - attention required"
-      }
-    },
-    {
-      "id": 319,
-      "at": "2026-11-06T13:37:13.008966+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "agent_exploration",
-        "reason": "Exploration did not complete (ValidationError). Protective routines continue; new plans require valid research."
-      }
-    },
-    {
-      "id": 318,
-      "at": "2026-11-06T13:17:35.673449+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "research:2026-11-06",
-        "title": "Trader - morning research ready"
-      }
-    },
-    {
-      "id": 317,
-      "at": "2026-11-06T13:17:35.455770+00:00",
-      "kind": "research_completed",
-      "branch": null,
-      "payload": {
-        "summary": "No executable equity plans at 08:16 EST. October payrolls are scheduled for 08:30 EST, about 14 minutes away. The supplied equity data indicate risk-off conditions, but current-session opening ranges and bar VWAP are absent. Fresh post-release IEX features, verified symbol event coverage and passing execution gates would permit reassessment; a small premarket rebound alone does not establish a recovery.",
-        "plans": 0,
-        "regime": "risk_off"
-      }
-    },
-    {
-      "id": 316,
-      "at": "2026-11-06T13:17:26.647458+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 6,
-        "cycles": 13,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
-    },
-    {
-      "id": 314,
-      "at": "2026-11-06T13:15:30.182516+00:00",
-      "kind": "cohort_registered",
-      "branch": null,
-      "payload": {
-        "summary": "Fixed forward signal cohort frozen before the open; no orders or paper capital.",
-        "day": "2026-11-06",
-        "symbols": 30,
-        "protocols": 12,
-        "data_sha256": "b29ab9c91af9cb347a5bf45f74c3069523d3909b49054441d824f90e91742efc"
-      }
-    },
-    {
-      "id": 313,
-      "at": "2026-11-06T12:45:19.062237+00:00",
-      "kind": "notification_sent",
-      "branch": null,
-      "payload": {
-        "key": "morning:2026-11-06",
-        "title": "Trader - good morning"
-      }
-    },
-    {
-      "id": 312,
-      "at": "2026-11-05T21:35:43.111842+00:00",
-      "kind": "maintenance_no_change",
-      "branch": null,
-      "payload": {
-        "reason": "The review explicitly supports no new challenger or promotion. Five observed sessions, swing outcomes from one entry date, negative reported nonzero strategy means, and zero active market_confirmed_trend signals provide insufficient evidence for a filter rule. Research delivery improvements demonstrate mechanics rather than decision accuracy or profitability. Runtime, data, and orchestration repairs must be addressed directly."
-      }
-    },
-    {
-      "id": 311,
-      "at": "2026-11-05T21:35:27.508547+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "maintenance",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "searches": 0,
-        "cycles": 4,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent"
-      }
     }
   ],
   "experiments": [
@@ -15704,6 +16449,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "2f8d86ee60118e988fe91cbc657688aed275283ba3d4813bf34e12bef7b92aa9",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15736,6 +16504,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "a37b6925cd1f6ec43dd82b769c908dcd0b86988041d9ed86da6cd101dd144573",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15768,6 +16559,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "c3f106b42f9313adf04f42759c89046ba9164f1ce5f28f1313b3a78300111049",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15800,6 +16614,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "a9cdefbb91c117ab873f99f205cccbe6ee5decc3fef5d0d98eddb77ad81e4b0c",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15832,6 +16669,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "0bf5533f2da96059106a85aae2f2acc10068671ac56daa14e63e69b5ffb85850",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15864,6 +16724,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "f25816c77f7fedd424a3e95a574e4139ecc71eda27dabf000653bbe537285edd",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15896,6 +16779,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "06f02f8e92aef393e8a4068b7d56864ae44c1a86cf741f2048efac4e9559476a",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -15928,6 +16834,29 @@
       "progress": {
         "samples": 0,
         "sessions": 0,
+        "estimators": {
+          "opportunity_weighted_absolute_net": null,
+          "entry_date_weighted_absolute_net": null,
+          "entry_date_weighted_paired_net": null,
+          "absolute_positive_disagreement": false,
+          "composition": {
+            "closed_opportunities": 0,
+            "closed_entry_dates": 0,
+            "by_entry_date": [],
+            "uneven_date_composition": false,
+            "smallest_date_opportunities": 0,
+            "largest_date_opportunities": 0,
+            "maximum_opportunity_weight": null,
+            "weight_concentration_vs_equal_opportunities": null,
+            "interpretation": "Equal entry-date weights; date counts and symbols are not independent replications."
+          }
+        },
+        "promotion_policy": {
+          "ready": true,
+          "version": "paired-entry-date-absolute-v2",
+          "receipt_sha256": "b6f11b2435c1aacd99c124a4408929c36c187f25dff11db06db2f2d6b9434150",
+          "effective_at": "2026-11-07T21:42:58.772258+00:00"
+        },
         "eligibility_versions": [],
         "open_observations": 0,
         "not_evaluable_observations": 0,
@@ -16606,23 +17535,23 @@
   },
   "quality_audit": {
     "day": "2026-11-07",
-    "as_of": "2026-11-07T21:03:11.050291+00:00",
+    "as_of": "2026-11-07T21:16:25.992186+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 15,
+      "calls": 19,
       "by_role": {
-        "deep_research": 9,
-        "deep_research_review": 6
+        "deep_research": 11,
+        "deep_research_review": 8
       },
-      "input_tokens": 370140,
-      "cached_input_tokens": 192512,
-      "output_tokens": 32652,
-      "web_actions": 15,
+      "input_tokens": 536478,
+      "cached_input_tokens": 333056,
+      "output_tokens": 40234,
+      "web_actions": 23,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "deep_research": 6,
-      "deep_research_review": 4
+      "deep_research": 8,
+      "deep_research_review": 6
     },
     "legacy_snapshot_artifacts": 0,
     "derived_period_reviews": 0,
@@ -16637,7 +17566,7 @@
       "omitted_records": 0,
       "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup."
     },
-    "unique_cited_urls": 18,
+    "unique_cited_urls": 21,
     "known_no_plan_research_outputs": 0,
     "pulse_outputs": 0,
     "pulses_without_verified_delta": 0,
@@ -17027,12 +17956,12 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-07T21:10:33.879933+00:00",
+    "at": "2026-11-07T21:43:09.777339+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 17,
+        "usedPercent": 27,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
@@ -17066,32 +17995,190 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-07T21:10:37.507162+00:00",
+    "as_of": "2026-11-07T21:45:46.474354+00:00",
     "status": {
-      "state": "running",
-      "role": "deep_research_review",
-      "topic": "evidence_integrity",
-      "work_id": "42a03b3c82f0da2037e068fd:0",
-      "as_of": "2026-11-07T16:10:29.567385-05:00",
+      "state": "awaiting_queue_refresh",
+      "role": "deep_research",
+      "topic": "feature_lineage",
+      "work_id": "77a617ed92522aae7ead5d7d:0",
+      "as_of": "2026-11-07T16:15:13.781710-05:00",
       "next_eligible_at": null,
       "idle_reasons": [
         {
           "topic": "source_verification",
           "reason": "retry_cooldown"
+        },
+        {
+          "topic": "event_coverage",
+          "reason": "accepted"
         }
       ],
       "last_budget_decision": {
-        "at": "2026-11-07T16:10:29.567385-05:00",
+        "at": "2026-11-07T16:15:13.781710-05:00",
         "allowed": true,
         "reason": "Useful background work within account reserve and attempt ceiling"
       },
-      "reason": "A background research stage is running.",
-      "active_task": {
-        "role": "deep_research_review",
-        "started": "2026-11-07T21:10:33.102831+00:00"
-      }
+      "reason": "The previously selected stage is complete; the scheduler must select the next retained question or review."
     },
     "reports": [
+      {
+        "work_id": "77a617ed92522aae7ead5d7d:0",
+        "topic": "feature_lineage",
+        "stage": "analysis",
+        "at": "2026-11-07T21:16:25.837790+00:00",
+        "disposition": "awaiting_review",
+        "summary": "The pre-open report describes unavailable session features and stale quotes. Retained 09:45 and 13:01 inputs contain opening ranges and VWAP; later XLK coverage has five missing intervals. Field semantics and raw calculation lineage remain unresolved. The reports acknowledge supplied features, so model omission is unproven. Checks below are proposals only; no trading controls or historical observations change.",
+        "sources": []
+      },
+      {
+        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
+        "topic": "event_coverage",
+        "stage": "review",
+        "at": "2026-11-07T21:15:13.862081+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope. Independently opened all eight analyst URLs and reproduced the seven verified source claims; Census remains partial. Event times, calendar omissions and qualifications match the pages. Supplied evidence supports the remaining coverage unknown. The reusable receipt proposal preserves that distinction. This acceptance does not establish comprehensive event clearance or change trading controls.",
+        "sources": [
+          {
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "claim": "source:0: Holiday table and early-close notes omit November 9, 2026; core equity hours are 09:30\u201316:00 ET. These support finding 0's scheduled-session inference.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:12+00:00",
+            "limitation": "Published schedule cannot exclude extraordinary closures."
+          },
+          {
+            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/default.aspx",
+            "claim": "source:1: October 28 announcement confirms November 17 Q3 FY2027 call at 14:00 PT/17:00 ET and results at approximately 13:20 PT, equivalent to 16:20 ET.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:12+00:00",
+            "limitation": "Results timing is approximate. Announcement verifies this appointment, not comprehensive company-event coverage."
+          },
+          {
+            "url": "https://ir.amd.com/news-events/ir-calendar",
+            "claim": "source:2: Calendar shows November 3 results event at 14:00 PST; upcoming UBS December 1 and Barclays December 9 entries show dates without times. No November 9 entry appears.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:12+00:00",
+            "limitation": "Visible calendar only; omitted dates cannot exclude other announcements or filings."
+          },
+          {
+            "url": "https://ir.amd.com/news-events/press-releases",
+            "claim": "source:3: Index labels AMD Reports Third Quarter 2026 Financial Results with November 3, 2026, 16:15 EST.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:12+00:00",
+            "limitation": "Confirms the displayed publication timestamp, not independently measured dissemination or filing contents."
+          },
+          {
+            "url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+            "claim": "source:4: November calendar lists Bowman's Community Banking discussion on the 9th at 08:40 and October 27\u201328 FOMC minutes on the 18th at 14:00.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:17+00:00",
+            "limitation": "No timezone stated in retrieved text; last update reads November 3, 2025. Listing does not establish complete speaker coverage."
+          },
+          {
+            "url": "https://www.bls.gov/schedule/2026/11_sched.htm",
+            "claim": "source:5: November 9 is blank; November 10 lists CPI and Real Earnings at 08:30. Page specifies Eastern Time and last modification November 3, 2026.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:22+00:00",
+            "limitation": "Selected BLS calendar only; no ICS retrieval or comprehensive macro clearance established."
+          },
+          {
+            "url": "https://www.newyorkfed.org/research/calendars/nationalecon_cal",
+            "claim": "source:6: November 9 lists Wholesale Trade at 10:00 and Survey of Consumer Expectations at 11:00. Page specifies Eastern Time and warns schedules can change.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:14:22+00:00",
+            "limitation": "Issuer confirmation for its survey; calendar aggregation for Wholesale Trade. Dates and times are tentative."
+          },
+          {
+            "url": "https://www.census.gov/economic-indicators/calendar-listview.html",
+            "claim": "source:7: Retrieved page identifies itself as the 2027 release schedule and links to a separate 2026 calendar; target November 9, 2026 event was not confirmed.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T21:14:17+00:00",
+            "limitation": "Wrong-year content cannot confirm the target event; linked 2026 calendar was not opened."
+          }
+        ]
+      },
+      {
+        "work_id": "512c6c36dbc0eb83cd6dbb1f:0",
+        "topic": "event_coverage",
+        "stage": "analysis",
+        "at": "2026-11-07T21:14:02.410556+00:00",
+        "disposition": "awaiting_review",
+        "summary": "For NVDA and AMD, the next scheduled equity session is Monday, November 9. NVIDIA's current announcement resolves its earnings timing; AMD's release index resolves its prior release timestamp. Monday includes scheduled macro events despite a blank BLS date. Comprehensive company and macro clearance remains unresolved. This research changes no plan, strategy, study, risk limit or promotion gate.",
+        "sources": [
+          {
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "claim": "2026 holiday and early-close dates; regular equity session 09:30\u201316:00 Eastern.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:11:54+00:00",
+            "limitation": "Published schedule supports a scheduled session, not a guarantee against extraordinary closures."
+          },
+          {
+            "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/default.aspx",
+            "claim": "October 28 announcement: November 17 results approximately 13:20 PT; earnings call 14:00 PT/17:00 ET.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:12:30+00:00",
+            "limitation": "Direct announcement text checked. Approximate results timing; no comprehensive news or filing review."
+          },
+          {
+            "url": "https://ir.amd.com/news-events/ir-calendar",
+            "claim": "November 3 results call at 14:00 PST; upcoming December 1 UBS and December 9 Barclays conferences have dates only.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:11:54+00:00",
+            "limitation": "Visible calendar only; December times unspecified. No November 9 entry is not comprehensive clearance."
+          },
+          {
+            "url": "https://ir.amd.com/news-events/press-releases",
+            "claim": "Q3 2026 results entry is dated November 3, 2026, 16:15 EST.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:12:21+00:00",
+            "limitation": "Index timestamp checked; underlying release and subsequent SEC filing contents were not inspected."
+          },
+          {
+            "url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+            "claim": "November 9 Bowman Community Banking discussion listed at 08:40; November 18 FOMC minutes at 14:00.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:12:30+00:00",
+            "limitation": "No timezone found. Page says last updated November 3, 2025; regional Reserve Bank speakers are not comprehensively covered."
+          },
+          {
+            "url": "https://www.bls.gov/schedule/2026/11_sched.htm",
+            "claim": "November 9 blank; November 10 CPI and Real Earnings at 08:30 Eastern. Modification date November 3, 2026.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:12:21+00:00",
+            "limitation": "Selected BLS releases only. HTML recovery does not repair or authenticate the previously unavailable ICS feed."
+          },
+          {
+            "url": "https://www.newyorkfed.org/research/calendars/nationalecon_cal",
+            "claim": "November 2026 calendar lists November 9 Wholesale Trade 10:00 and Survey of Consumer Expectations 11:00; all times Eastern.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:12:30+00:00",
+            "limitation": "Issuer source for its own survey; official calendar aggregator for Wholesale Trade. Dates and times explicitly tentative."
+          },
+          {
+            "url": "https://www.census.gov/economic-indicators/calendar-listview.html",
+            "claim": "Requested issuer schedule returned a 2027 calendar; direct November 9, 2026 confirmation was not obtained.",
+            "outcome": "partial",
+            "checked_at": "2026-11-07T21:12:21+00:00",
+            "limitation": "Wrong-year content cannot verify the target event. The linked 2026 calendar was not opened within the action budget."
+          }
+        ]
+      },
+      {
+        "work_id": "42a03b3c82f0da2037e068fd:0",
+        "topic": "evidence_integrity",
+        "stage": "review",
+        "at": "2026-11-07T21:11:42.152188+00:00",
+        "disposition": "accepted",
+        "summary": "All five findings are supported at their stated scope (indexes 0\u20134). Independently checked source:0 and reproduced 60 scheduled sessions in each window. USO's 120-versus-60 conflict is explicit. Horizon distinctions and dependence cautions match the definitions. Missing search history leaves selection bias unresolved. The 3.75bp decrement is compatible with 12.5% active weight under the stated assumptions; it does not verify that denominator. Acceptance changes no protocol or promotion gate.",
+        "sources": [
+          {
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "claim": "source:0 confirms closures on Nov 26/Dec 25, 2026 and Jan 1/Jan 18, 2027, plus 13:00 ET early closes on Nov 27 and Dec 24, 2026.",
+            "outcome": "verified",
+            "checked_at": "2026-11-07T21:10:44+00:00",
+            "limitation": "Published schedule only; does not establish actual entry sessions, observations, unscheduled closures or registration authenticity."
+          }
+        ]
+      },
       {
         "work_id": "42a03b3c82f0da2037e068fd:0",
         "topic": "evidence_integrity",
@@ -17275,20 +18362,76 @@
   },
   "usage": [
     {
-      "at": "2026-11-07T21:10:33.890006+00:00",
+      "at": "2026-11-07T21:16:05.808549+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 44738,
+      "cached_tokens": 36224,
+      "output_tokens": 2288,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:110",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
+    },
+    {
+      "at": "2026-11-07T21:14:54.849520+00:00",
       "day": "2026-11-07",
       "role": "deep_research_review",
       "model": "gpt-6.1-sol",
-      "input_tokens": 0,
-      "cached_tokens": 0,
-      "output_tokens": 0,
+      "input_tokens": 44951,
+      "cached_tokens": 36480,
+      "output_tokens": 1514,
       "quota_delta": 0.0,
-      "state": "started",
-      "outcome": null,
-      "attempt_id": "usage:107",
-      "application_outcome": null,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:109",
+      "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
+    },
+    {
+      "at": "2026-11-07T21:13:34.715803+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 53369,
+      "cached_tokens": 44928,
+      "output_tokens": 3073,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:108",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
+    },
+    {
+      "at": "2026-11-07T21:11:11.374597+00:00",
+      "day": "2026-11-07",
+      "role": "deep_research_review",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 23280,
+      "cached_tokens": 22912,
+      "output_tokens": 707,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:107",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T21:03:10.452004+00:00",
@@ -17304,7 +18447,9 @@
       "attempt_id": "usage:106",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T21:01:13.860835+00:00",
@@ -17320,7 +18465,9 @@
       "attempt_id": "usage:105",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T21:00:45.331192+00:00",
@@ -17336,7 +18483,9 @@
       "attempt_id": "usage:104",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:55:48.642268+00:00",
@@ -17352,7 +18501,9 @@
       "attempt_id": "usage:103",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:55:21.189176+00:00",
@@ -17368,7 +18519,9 @@
       "attempt_id": "usage:102",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:54:00.144000+00:00",
@@ -17384,7 +18537,9 @@
       "attempt_id": "usage:101",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:53:40.365787+00:00",
@@ -17400,7 +18555,9 @@
       "attempt_id": "usage:100",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:52:59.389878+00:00",
@@ -17416,7 +18573,9 @@
       "attempt_id": "usage:99",
       "application_outcome": "rejected",
       "application_validation_code": "unknown_evidence_reference",
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:52:00.479707+00:00",
@@ -17432,7 +18591,9 @@
       "attempt_id": "usage:98",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:49:35.988659+00:00",
@@ -17448,7 +18609,9 @@
       "attempt_id": "usage:97",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:49:13.294398+00:00",
@@ -17464,7 +18627,9 @@
       "attempt_id": "usage:96",
       "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:42:37.818644+00:00",
@@ -17480,7 +18645,9 @@
       "attempt_id": "usage:95",
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:42:00.426657+00:00",
@@ -17496,7 +18663,9 @@
       "attempt_id": "usage:94",
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:40:46.488905+00:00",
@@ -17512,7 +18681,9 @@
       "attempt_id": "usage:93",
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-07T20:38:30.108509+00:00",
@@ -17528,7 +18699,9 @@
       "attempt_id": "usage:92",
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T22:01:18.055812+00:00",
@@ -17544,7 +18717,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T21:35:28.950305+00:00",
@@ -17560,7 +18735,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T21:16:05.266237+00:00",
@@ -17576,7 +18753,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T18:03:13.201323+00:00",
@@ -17592,7 +18771,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T18:00:39.987318+00:00",
@@ -17608,7 +18789,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T14:47:13.781329+00:00",
@@ -17624,7 +18807,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T14:11:31.792942+00:00",
@@ -17640,7 +18825,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T14:09:28.601544+00:00",
@@ -17656,7 +18843,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T14:08:53.615036+00:00",
@@ -17672,7 +18861,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T13:37:16.715684+00:00",
@@ -17688,7 +18879,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T13:35:11.182446+00:00",
@@ -17704,7 +18897,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-06T13:17:26.643234+00:00",
@@ -17720,7 +18915,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T21:35:27.504208+00:00",
@@ -17736,7 +18933,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T21:16:20.926724+00:00",
@@ -17752,7 +18951,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T18:03:12.349406+00:00",
@@ -17768,7 +18969,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T18:00:48.519836+00:00",
@@ -17784,7 +18987,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T14:47:38.942489+00:00",
@@ -17800,7 +19005,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T13:39:09.181973+00:00",
@@ -17816,7 +19023,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T13:36:47.615128+00:00",
@@ -17832,7 +19041,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T13:36:20.081993+00:00",
@@ -17848,7 +19059,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-05T13:17:12.769661+00:00",
@@ -17864,7 +19077,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T21:35:29.782551+00:00",
@@ -17880,7 +19095,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T21:16:27.274559+00:00",
@@ -17896,7 +19113,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T18:03:40.376744+00:00",
@@ -17912,7 +19131,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T18:01:02.924613+00:00",
@@ -17928,7 +19149,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T14:47:44.578866+00:00",
@@ -17944,7 +19167,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T13:39:55.307000+00:00",
@@ -17960,7 +19185,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T13:37:53.980752+00:00",
@@ -17976,7 +19203,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T13:37:02.551130+00:00",
@@ -17992,7 +19221,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-04T13:17:05.588669+00:00",
@@ -18008,7 +19239,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T21:35:35.895487+00:00",
@@ -18024,7 +19257,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T21:16:39.347123+00:00",
@@ -18040,7 +19275,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T18:03:10.150223+00:00",
@@ -18056,7 +19293,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T18:00:49.657222+00:00",
@@ -18072,7 +19311,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T14:47:48.779181+00:00",
@@ -18088,7 +19329,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T13:40:18.077869+00:00",
@@ -18104,7 +19347,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T13:38:13.357784+00:00",
@@ -18120,7 +19365,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T13:37:42.399173+00:00",
@@ -18136,7 +19383,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-03T13:18:21.903215+00:00",
@@ -18152,7 +19401,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T21:35:41.500941+00:00",
@@ -18168,7 +19419,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T21:16:51.545703+00:00",
@@ -18184,7 +19437,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T18:03:25.261179+00:00",
@@ -18200,7 +19455,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T18:00:34.654957+00:00",
@@ -18216,7 +19473,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T14:47:46.383181+00:00",
@@ -18232,7 +19491,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T13:40:57.450365+00:00",
@@ -18248,7 +19509,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T13:38:39.745333+00:00",
@@ -18264,7 +19527,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T13:38:01.442951+00:00",
@@ -18280,7 +19545,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T13:35:10.901827+00:00",
@@ -18296,7 +19563,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": 1
+      "reply_usage_reported": 1,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-11-02T13:17:45.272261+00:00",
@@ -18312,7 +19581,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:31:32.923496+00:00",
@@ -18328,7 +19599,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:28:59.080310+00:00",
@@ -18344,7 +19617,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:28:36.583165+00:00",
@@ -18360,7 +19635,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:24:47.518755+00:00",
@@ -18376,7 +19653,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:21:10.946715+00:00",
@@ -18392,7 +19671,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:18:42.125350+00:00",
@@ -18408,7 +19689,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:18:34.700162+00:00",
@@ -18424,7 +19707,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T16:16:01.381906+00:00",
@@ -18440,7 +19725,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T05:56:21.089086+00:00",
@@ -18456,7 +19743,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T05:53:43.840644+00:00",
@@ -18472,7 +19761,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-31T05:29:14.632829+00:00",
@@ -18488,7 +19779,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T21:01:48.862256+00:00",
@@ -18504,7 +19797,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T21:00:56.273614+00:00",
@@ -18520,7 +19815,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T20:35:46.757565+00:00",
@@ -18536,7 +19833,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T20:15:37.419857+00:00",
@@ -18552,7 +19851,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T18:30:42.386492+00:00",
@@ -18568,7 +19869,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T17:00:38.043078+00:00",
@@ -18584,7 +19887,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T15:00:18.711895+00:00",
@@ -18600,7 +19905,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T13:47:17.596478+00:00",
@@ -18616,7 +19923,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T12:40:03.193741+00:00",
@@ -18632,7 +19941,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T12:38:10.059234+00:00",
@@ -18648,7 +19959,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T12:37:22.346974+00:00",
@@ -18664,7 +19977,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T12:17:13.436809+00:00",
@@ -18680,7 +19995,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T00:53:57.270013+00:00",
@@ -18696,7 +20013,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T00:53:23.639349+00:00",
@@ -18712,7 +20031,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T00:44:35.725987+00:00",
@@ -18728,7 +20049,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T00:29:16.504082+00:00",
@@ -18744,7 +20067,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-30T00:28:45.995108+00:00",
@@ -18760,7 +20085,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T23:02:37.758968+00:00",
@@ -18776,7 +20103,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T23:02:18.220730+00:00",
@@ -18792,7 +20121,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T23:01:27.286840+00:00",
@@ -18808,7 +20139,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:59:58.302162+00:00",
@@ -18824,7 +20157,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:59:53.182569+00:00",
@@ -18840,7 +20175,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:59:31.757635+00:00",
@@ -18856,7 +20193,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:57:32.479168+00:00",
@@ -18872,7 +20211,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:56:58.115143+00:00",
@@ -18888,7 +20229,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:50:46.711599+00:00",
@@ -18904,7 +20247,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T22:50:29.627571+00:00",
@@ -18920,7 +20265,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T11:42:17.857712+00:00",
@@ -18936,7 +20283,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T11:40:26.275050+00:00",
@@ -18952,7 +20301,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T11:39:22.945428+00:00",
@@ -18968,7 +20319,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     },
     {
       "at": "2026-10-29T11:37:40.196731+00:00",
@@ -18984,7 +20337,9 @@
       "attempt_id": null,
       "application_outcome": null,
       "application_validation_code": null,
-      "reply_usage_reported": null
+      "reply_usage_reported": null,
+      "quota_delta_reported": null,
+      "quota_delta_basis": null
     }
   ],
   "budget": {
@@ -18995,9 +20350,9 @@
     "daily_call_ceiling": 24,
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "account_used_percent": 17.0,
-    "quota_observed_at": "2026-11-07T21:10:33.879933+00:00",
-    "target_gap_percentage_points": 63.0,
+    "account_used_percent": 27.0,
+    "quota_observed_at": "2026-11-07T21:43:09.777339+00:00",
+    "target_gap_percentage_points": 53.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
@@ -19731,20 +21086,20 @@
     "unknowns": []
   },
   "release": {
-    "source_commit": "d844f079fbd9a16c0585619b2362c3b6dbac00e5",
-    "validated_at": "2026-11-07T21:09:44.934653+00:00",
-    "regression_tests": 533,
-    "runtime_tests": 363,
+    "source_commit": "7c25b16f0718251c42b2582ff060769fbcd8fe71",
+    "validated_at": "2026-11-07T21:45:42.756236+00:00",
+    "regression_tests": 660,
+    "runtime_tests": 490,
     "browser_views": 7,
     "start_date": "2026-10-29",
     "fill_exit_gate": "historical_passed_current_kernel_pending",
     "ci": "pending_push_verification",
     "pages": "pending_new_snapshot",
-    "public_browser_qa": "passed",
-    "activated_at": "2026-10-31T16:38:33.258652+00:00",
+    "public_browser_qa": "pending_new_source_deployment",
+    "activated_at": null,
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-10-31T16:38:33.258671+00:00",
+    "updated_at": "2026-11-07T21:45:42.756248+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -19766,9 +21121,9 @@
     "research_quality_audit": true,
     "source_check_attestations": true,
     "at": "2026-10-31T16:35:37.008768+00:00",
-    "summary": "Useful off-hours research, atomic budgets/jobs, evidence integrity, accounted fees and revised execution recovery.",
+    "summary": "Operational ownership, quote-independent exits, reviewed publication, prospective observation and promotion integrity.",
     "observation_led_discovery": true,
-    "adaptive_studies": 2,
+    "adaptive_studies": 3,
     "adaptive_handoff_verified": true,
     "refinement_20261107": {
       "weekly_usage_target": [
@@ -19776,17 +21131,21 @@
         80
       ],
       "initial_account_usage_percent": 2,
-      "latest_observed_account_usage_percent": 17,
+      "latest_observed_account_usage_percent": 27,
       "background_daily_attempts": 96,
       "core_daily_attempts": 24,
-      "kernel": "paper-execution-20261107",
+      "kernel": "paper-execution-20261107-r2",
       "current_kernel_market_acceptance": "pending_regular_session",
       "fee_receipts_booked": 2,
       "frozen_protocols_preserved": true,
       "orders_submitted_by_maintenance": 0,
       "mobile_viewport_px": 390,
-      "desktop_viewport_px": 1440
-    }
+      "desktop_viewport_px": 1440,
+      "promotion_policy": "paired-entry-date-absolute-v2",
+      "policy_migrated_untouched_challengers": 8,
+      "calendar_archive_sequences_verified": 180
+    },
+    "local_browser_qa": "passed_7_views_1440_and_390"
   },
   "limitations": [
     "Paper results are not live returns.",
