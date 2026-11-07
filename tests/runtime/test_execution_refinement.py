@@ -259,6 +259,7 @@ def test_owned_bracket_leg_may_shrink_after_partial_take_profit(store, broker, c
         "stop_price": "97",
     }
     parent["legs"] = [leg]
+    parent["order_class"] = "bracket"
     engine.ingest_order(parent, "intraday", plan["id"])
     engine.ingest_order({**leg, "qty": "6"}, "intraday", plan["id"])
     assert store.rows("SELECT qty FROM orders WHERE broker_id='bracket-stop'")[0]["qty"] == 6

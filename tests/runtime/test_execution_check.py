@@ -232,6 +232,7 @@ def test_retrospective_operational_proposal_is_durable_and_not_executed(runtime)
         }
     )
     s.task = ("test-review", "retrospective", {}, now.date().isoformat())
+    assert s.store.job_start("test-review")
     s.finish_task()
     row = s.store.rows("SELECT payload FROM memory WHERE layer='improvement_proposal'")[0]
     saved = json.loads(row["payload"])

@@ -89,12 +89,21 @@ def _smoke_submission(config, store):
                 "extended_hours": False,
             }
             order = engine.submit_intent(payload, "intraday", "submission-preflight")
+        else:
+            # A by-client lookup must match this application's saved intent
+            # before its receipt can authorize even a cancellation request.
+            engine.ingest_order(
+                order, "intraday", "submission-preflight", expected_client_id=cid
+            )
         try:
             if order["status"] not in TERMINAL:
                 broker.cancel(order["id"])
             for _ in range(10):
                 latest = broker.order(order["id"])
-                engine.ingest_order(latest, "intraday", "submission-preflight")
+                engine.ingest_order(
+                    latest, "intraday", "submission-preflight",
+                    expected_client_id=cid, expected_broker_id=order["id"],
+                )
                 if latest["status"] in TERMINAL:
                     break
                 time.sleep(0.5)
@@ -129,8 +138,13 @@ def _smoke_submission(config, store):
         finally:
             # Never intentionally leave a test entry resting overnight.
             fresh = broker.by_client(cid)
-            if fresh and fresh["status"] not in TERMINAL:
-                broker.cancel(fresh["id"])
+            if fresh:
+                engine.ingest_order(
+                    fresh, "intraday", "submission-preflight",
+                    expected_client_id=cid, expected_broker_id=order["id"],
+                )
+                if fresh["status"] not in TERMINAL:
+                    broker.cancel(fresh["id"])
 
 
 def main():

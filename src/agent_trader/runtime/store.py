@@ -60,6 +60,9 @@ class Store:
         self.job_owner = process_owner()
         self._job_claims = {}
         self._transaction_job_completions = None
+        self._transaction_job_claim_changes = None
+        self._transaction_rollback_error = None
+        self._transaction_sequence = 0
         self.db = sqlite3.connect(path, timeout=30, isolation_level=None)
         try:
             self.db.row_factory = sqlite3.Row
@@ -145,22 +148,75 @@ class Store:
 
     @contextmanager
     def transaction(self):
-        self.db.execute("BEGIN IMMEDIATE")
-        completions = []
-        self._transaction_job_completions = completions
+        """Compose owned transactions with savepoints and commit-dependent claims.
+
+        The outer scope owns BEGIN IMMEDIATE/COMMIT. Inner scopes can roll back
+        independently, but their successful writes and job completions remain
+        provisional until the outer commit. Transactions begun directly on db
+        are not adopted: the caller must retain their commit/rollback ownership.
+        """
+        outer = self._transaction_job_completions is None
+        if outer:
+            if self.db.in_transaction:
+                raise RuntimeError("Store.transaction cannot adopt an unmanaged transaction")
+            self.db.execute("BEGIN IMMEDIATE")
+            self._transaction_job_completions = []
+            self._transaction_job_claim_changes = []
+            self._transaction_rollback_error = None
+            savepoint = None
+        else:
+            if self._transaction_rollback_error is not None:
+                raise RuntimeError("Managed transaction requires a full rollback") from self._transaction_rollback_error
+            if not self.db.in_transaction:
+                raise RuntimeError("Managed transaction ended before its owning scope")
+            self._transaction_sequence += 1
+            savepoint = f"store_scope_{self._transaction_sequence}"
+            self.db.execute("SAVEPOINT " + savepoint)
+        completions = self._transaction_job_completions
+        claim_changes = self._transaction_job_claim_changes
+        completion_mark, claim_mark = len(completions), len(claim_changes)
         try:
             yield
-            self.db.execute("COMMIT")
-        except BaseException:
-            if self.db.in_transaction:
-                self.db.execute("ROLLBACK")
+            if self._transaction_rollback_error is not None:
+                raise RuntimeError("Managed transaction requires a full rollback") from self._transaction_rollback_error
+            self.db.execute("COMMIT" if outer else "RELEASE SAVEPOINT " + savepoint)
+        except BaseException as exc:
+            try:
+                if self.db.in_transaction:
+                    if outer:
+                        self.db.execute("ROLLBACK")
+                    else:
+                        self.db.execute("ROLLBACK TO SAVEPOINT " + savepoint)
+                        self.db.execute("RELEASE SAVEPOINT " + savepoint)
+            except Exception as cleanup_error:
+                exc.add_note("Transaction rollback failed: " + type(cleanup_error).__name__)
+                # A caller may intentionally catch an item's validation error.
+                # If its savepoint rollback is uncertain, that must never permit
+                # a later outer COMMIT of the rejected item's partial writes.
+                self._transaction_rollback_error = exc
+            finally:
+                # A claim acquired by a rolled-back job_start never became
+                # durable. Do not overwrite a newer replacement owner token.
+                for key, previous, assigned in reversed(claim_changes[claim_mark:]):
+                    if self._job_claims.get(key) == assigned:
+                        if previous is None:
+                            self._job_claims.pop(key)
+                        else:
+                            self._job_claims[key] = previous
+                del claim_changes[claim_mark:]
+                del completions[completion_mark:]
             raise
         else:
-            for key, owner in completions:
-                if self._job_claims.get(key) == owner:
-                    self._job_claims.pop(key)
+            if outer:
+                for key, owner in completions:
+                    if self._job_claims.get(key) == owner:
+                        self._job_claims.pop(key)
         finally:
-            self._transaction_job_completions = None
+            if outer:
+                self._transaction_job_completions = None
+                self._transaction_job_claim_changes = None
+                if not self.db.in_transaction:
+                    self._transaction_rollback_error = None
 
     def rows(self, sql, args=()):
         return [dict(r) for r in self.db.execute(sql, args)]
@@ -210,6 +266,9 @@ class Store:
               ON CONFLICT(key) DO UPDATE SET state='running', attempts=attempts+1,
               at=excluded.at, owner=excluded.owner, result=NULL""",
                 (key, utc_now(), encoded_owner),
+            )
+            self._transaction_job_claim_changes.append(
+                (key, self._job_claims.get(key), encoded_owner)
             )
             self._job_claims[key] = encoded_owner
         return True

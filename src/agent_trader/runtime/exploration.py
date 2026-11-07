@@ -402,6 +402,11 @@ CONTEXT:
 
 
 def record_report(store, report, day, *, morning=True):
+    with store.transaction():
+        return _record_report(store, report, day, morning=morning)
+
+
+def _record_report(store, report, day, *, morning=True):
     revision = hashlib.sha256(dumps(report).encode()).hexdigest()[:16]
     store.set("exploration_draft", {**report, "day": day, "at": utc_now(), "revision": revision})
     if morning:
@@ -520,6 +525,11 @@ profitability validation. Return ResearchValidation JSON.
 
 
 def record_validation(store, result):
+    with store.transaction():
+        return _record_validation(store, result)
+
+
+def _record_validation(store, result):
     from datetime import datetime, timedelta, timezone
     from urllib.parse import urlsplit
     from .experiments import Experiments

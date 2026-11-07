@@ -255,7 +255,7 @@ def test_cli_early_guard_closes_client(config, monkeypatch, clients, operation):
 
 def test_smoke_cancellation_error_still_closes_client(config, broker, monkeypatch):
     monkeypatch.setattr(cli, "Broker", lambda _: broker)
-    monkeypatch.setattr(cli, "Engine", lambda *a: None)
+    monkeypatch.setattr(cli, "Engine", lambda *a: SimpleNamespace(ingest_order=lambda *a, **k: None))
     monkeypatch.setattr(broker, "by_client", lambda _: {"id": "fake", "status": "new"})
     monkeypatch.setattr(broker, "cancel", fail)
     with pytest.raises(RuntimeError):

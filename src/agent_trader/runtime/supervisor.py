@@ -7,6 +7,7 @@ import os
 import signal
 import tempfile
 import time
+from contextlib import nullcontext
 from datetime import UTC, datetime, timedelta
 
 from .agent import CodexRPC, record_application_outcome, run_task
@@ -272,226 +273,254 @@ class Supervisor:
         if not self.future or not self.future.done():
             return
         key, role, context, day = self.task
+        atomic_batch = role in {"research", "research_validation", "retrospective"}
+        notifications = []
+        application_succeeded = False
         try:
             result = self.future.result()
             original_result = json.loads(json.dumps(result))
-            if role == "quota_refresh":
-                from .budget import account_limit_reason
+            result = json.loads(json.dumps(original_result))
+            # These roles apply only local state. Their complete batch, usage
+            # outcome and job completion share one commit; notifications follow it.
+            with (self.store.transaction() if atomic_batch else nullcontext()):
+                if atomic_batch:
+                    prior_job = self.store.rows("SELECT state FROM jobs WHERE key=?", (key,))
+                    if prior_job and prior_job[0]["state"] == "done":
+                        return  # A delayed replay cannot replace a committed brief.
+                if role == "quota_refresh":
+                    from .budget import account_limit_reason
 
-                self.store.set("quota", result)
-                self.store.set("quota_refresh_error", None)
-                self.store.set("entry_budget_blocked", (
-                    bool(account_limit_reason(result))
-                    or not self.store.get("readiness", {}).get("models_available", False)
-                ))
-            elif role == "accounting_refresh":
-                self.store.set("accounting_refresh_day", day)
-                self.store.event("accounting_refreshed", {
-                    "summary": "Broker activity receipts refreshed; branch cash unchanged.",
-                    "fee_count": result.get("fee_count", 0),
-                    "cash_bridge": result.get("cash_bridge", {}),
-                })
-            elif role == "options_coverage":
-                self.store.event("options_coverage_worker_completed", {
-                    "summary": "Bounded indicative options coverage receipts recorded; no execution authority.",
-                    "slot": context["slot"], "execution_eligible": False,
-                })
-            elif role in ("deep_research", "deep_research_review"):
-                from .research_work import record_analysis, record_review
+                    self.store.set("quota", result)
+                    self.store.set("quota_refresh_error", None)
+                    self.store.set("entry_budget_blocked", (
+                        bool(account_limit_reason(result))
+                        or not self.store.get("readiness", {}).get("models_available", False)
+                    ))
+                elif role == "accounting_refresh":
+                    self.store.set("accounting_refresh_day", day)
+                    self.store.event("accounting_refreshed", {
+                        "summary": "Broker activity receipts refreshed; branch cash unchanged.",
+                        "fee_count": result.get("fee_count", 0),
+                        "cash_bridge": result.get("cash_bridge", {}),
+                    })
+                elif role == "options_coverage":
+                    self.store.event("options_coverage_worker_completed", {
+                        "summary": "Bounded indicative options coverage receipts recorded; no execution authority.",
+                        "slot": context["slot"], "execution_eligible": False,
+                    })
+                elif role in ("deep_research", "deep_research_review"):
+                    from .research_work import record_analysis, record_review
 
-                if role == "deep_research":
-                    record_analysis(self.store, context, result, day)
-                else:
-                    record_review(self.store, context, result, day)
-            elif role == "research":
-                # Never allow a research result from another session/date to enter
-                # the live queue. Expired plans remain visible but cannot execute.
-                self.store.set("brief", result)
-                self.store.set("brief_day", day)
-                self.store.set("brief_recorded_at", utc_now())
-                import hashlib
+                    if role == "deep_research":
+                        record_analysis(self.store, context, result, day)
+                    else:
+                        record_review(self.store, context, result, day)
+                elif role == "research":
+                    # Never allow a research result from another session/date to enter
+                    # the live queue. Expired plans remain visible but cannot execute.
+                    import hashlib
 
-                for plan in result["plans"]:
-                    active = self.store.get("incumbent_filter:" + plan["branch"])
-                    if active:
-                        plan["version"] = ("promoted-" + active["id"])[:30]
-                    suffix = hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest()[
-                        :8
-                    ]
-                    plan["id"] = plan["id"][:59] + "-" + suffix
-                self.store.db.execute(
-                    "UPDATE plans SET state='superseded' WHERE state IN ('planned','approved','suspended')"
-                )
-                self.engine.add_plans(result["plans"], day)
-                self.store.set("research_refresh_required", False)
-                self.store.set("needs_research", False)
-                self.store.memory_put(
-                    "brief:" + day,
-                    "observation",
-                    result,
-                    datetime.fromisoformat(day)
-                    .replace(hour=23, minute=59, second=59, tzinfo=ET)
-                    .astimezone(UTC)
-                    .isoformat(),
-                )
-                self.store.event(
-                    "research_completed",
-                    {
-                        "summary": result["summary"],
-                        "plans": len(result["plans"]),
-                        "regime": result["regime"],
-                    },
-                )
-                notify(
-                    self.config,
-                    self.store,
-                    "research:" + day,
-                    "Trader - morning research ready",
-                    result["summary"][:600]
-                    + f"\n{len(result['plans'])} plans. Options remain shadow-only.",
-                )
-            elif role == "exploration":
-                from .exploration import record_report
-
-                record_report(self.store, result, day)
-                self.store.set("exploration_observation_ids", context.get("observation_ids", []))
-            elif role == "research_validation":
-                from .exploration import record_validation
-
-                if context.get("revision") != self.store.get("exploration_draft", {}).get(
-                    "revision"
-                ):
-                    raise ValueError("Research draft changed while validation was running")
-                record_validation(self.store, result)
-                now = datetime.now(ET)
-                if now.hour < 9 or (now.hour == 9 and now.minute < 25):
-                    self.store.set("needs_research", True)
-            elif role == "decision":
-                if result["plan_id"] != context["plan"]["id"]:
-                    raise ValueError("Decision refers to a different plan")
-                action = result["action"]
-                if action == "approve" and not result["evidence_fresh"]:
-                    action = "wait"
-                self.store.db.execute(
-                    "UPDATE plans SET state=? WHERE id=?",
-                    (
-                        {"approve": "approved", "wait": "planned", "invalidate": "invalidated"}[
-                            action
-                        ],
-                        result["plan_id"],
-                    ),
-                )
-                self.store.set(
-                    "approval:" + result["plan_id"], {"at": utc_now(), "decision": result}
-                )
-                self.store.event("decision", result, context["plan"]["branch"])
-            elif role == "position_review":
-                owners = {
-                    h["holding"]["symbol"]: h["holding"]["branch"] for h in context["positions"]
-                }
-                ownership = {h["holding"]["symbol"]: h["holding"] for h in context["positions"]}
-                symbols = [d["symbol"] for d in result["decisions"]]
-                if set(symbols) != set(owners) or len(symbols) != len(set(symbols)):
-                    raise ValueError(
-                        "Position review must cover every requested symbol exactly once"
-                    )
-                seen = set()
-                for decision in result["decisions"]:
-                    symbol = decision["symbol"]
-                    if symbol not in owners or symbol in seen:
-                        raise ValueError("Position review contains an unknown/duplicate symbol")
-                    seen.add(symbol)
-                    self.store.event("decision", decision, owners[symbol])
-                    if (
-                        decision["action"] == "exit"
-                        and decision["evidence_fresh"]
-                        and decision["invalidation_observed"]
-                    ):
-                        self.store.set(
-                            "exit-intent:" + symbol,
-                            {
-                                "at": utc_now(),
-                                "reason": decision["reason"],
-                                "plan_id": ownership[symbol].get("plan_id"),
-                                "branch": owners[symbol],
-                            },
-                        )
-            elif role == "pulse":
-                result["at"] = utc_now()
-                self.store.set("pulses", [result, *self.store.get("pulses", [])][:10])
-                self.store.event(
-                    "pulse",
-                    {"summary": result["summary"], "material_change": result["material_change"]},
-                )
-                if result["material_change"]:
-                    # Invalidate approvals and stop new entries pending re-research;
-                    # numerical protection remains in operation.
-                    self.store.set(
-                        "material_change", {"at": utc_now(), "summary": result["summary"]}
-                    )
-                    self.store.db.execute("UPDATE plans SET state='planned' WHERE state='approved'")
-                    self.store.set("research_refresh_required", True)
+                    for plan in result["plans"]:
+                        active = self.store.get("incumbent_filter:" + plan["branch"])
+                        if active:
+                            plan["version"] = ("promoted-" + active["id"])[:30]
+                        suffix = hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest()[
+                            :8
+                        ]
+                        plan["id"] = plan["id"][:59] + "-" + suffix
+                    plan_ids = [plan["id"] for plan in result["plans"]]
+                    if len(plan_ids) != len(set(plan_ids)):
+                        raise ValueError("Research must contain distinct plan IDs")
+                    # A new brief needs fresh decisions, while immutable terminal
+                    # plan states must never be revived by repeating their content.
+                    placeholders = ",".join("?" for _ in plan_ids)
+                    absent = " AND id NOT IN (" + placeholders + ")" if plan_ids else ""
                     self.store.db.execute(
-                        "UPDATE plans SET state='suspended' WHERE state IN ('planned','approved')"
+                        "UPDATE plans SET state='superseded' WHERE state IN ('planned','approved','suspended')" + absent,
+                        plan_ids,
                     )
-                    for order in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
-                        if order["status"] not in TERMINAL and order["broker_id"]:
-                            self.broker.cancel(order["broker_id"])
-                    self.store.set("needs_research", True)
-            elif role in ("weekly", "monthly"):
-                self.store.set(role + ":" + day, result)
-                self.store.event("period_review", {"period": role, "summary": result["summary"]})
-                for i, lesson in enumerate(result["proposed_lessons"]):
+                    if plan_ids:
+                        self.store.db.execute(
+                            "UPDATE plans SET state='planned' WHERE state='approved' AND id IN (" + placeholders + ")",
+                            plan_ids,
+                        )
+                        if self.store.get("research_refresh_required", False):
+                            self.store.db.execute(
+                                "UPDATE plans SET state='planned' WHERE state='suspended' AND id IN (" + placeholders + ")",
+                                plan_ids,
+                            )
+                    self.engine.add_plans(result["plans"], day)
+                    self.store.set("brief", result)
+                    self.store.set("brief_day", day)
+                    self.store.set("brief_recorded_at", utc_now())
+                    self.store.set("research_refresh_required", False)
+                    self.store.set("needs_research", False)
                     self.store.memory_put(
-                        f"{role}:{day}:lesson:{i}",
-                        "lesson",
-                        {"claim": lesson, "state": "proposed", "period": role, "ending": day},
+                        "brief:" + day,
+                        "observation",
+                        result,
+                        datetime.fromisoformat(day)
+                        .replace(hour=23, minute=59, second=59, tzinfo=ET)
+                        .astimezone(UTC)
+                        .isoformat(),
                     )
-            elif role == "retrospective":
-                self.store.set("review", result)
-                self.store.set("review_day", day)
-                for i, proposal in enumerate(result["code_changes"]):
-                    self.store.memory_put(
-                        f"{day}:improvement:{i}",
-                        "improvement_proposal",
+                    self.store.event(
+                        "research_completed",
                         {
-                            **proposal,
-                            "state": "proposed",
-                            "evidence_day": day,
-                            "authority": "Recorded for developer review; does not expand automated maintenance scope",
+                            "summary": result["summary"],
+                            "plans": len(result["plans"]),
+                            "regime": result["regime"],
                         },
                     )
-                for i, lesson in enumerate(result["proposed_lessons"]):
-                    self.store.memory_put(
-                        f"{day}:lesson:{i}",
-                        "lesson",
-                        {"claim": lesson, "state": "proposed", "evidence_day": day},
-                    )
-                for proposal in result["experiments"]:
-                    try:
-                        self.experiments.register(proposal)
-                    except (ValueError, TypeError, KeyError):
-                        self.store.event(
-                            "experiment_rejected",
-                            {"reason": "Invalid or incomplete evaluation contract"},
-                        )
-                for exp in self.experiments.evaluate():
-                    notify(
-                        self.config,
-                        self.store,
-                        "promotion:" + exp,
-                        "Trader - strategy promoted",
-                        exp + " passed its recorded forward-evaluation gates.",
-                    )
-            elif role == "maintenance":
-                from .maintenance import stage_change
+                    notifications.append((
+                        "research:" + day,
+                        "Trader - morning research ready",
+                        result["summary"][:600]
+                        + f"\n{len(result['plans'])} plans. Options remain shadow-only.",
+                    ))
+                elif role == "exploration":
+                    from .exploration import record_report
 
-                stage_change(self.config, self.store, result)
-            self.store.job_end(key, True, {"role": role, "completed": utc_now()})
-            if role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
-                record_application_outcome(self.store, key, "accepted")
-                self.record_quality(day, role, original_result, key, "applied")
+                    record_report(self.store, result, day)
+                    self.store.set("exploration_observation_ids", context.get("observation_ids", []))
+                elif role == "research_validation":
+                    from .exploration import record_validation
+
+                    if context.get("revision") != self.store.get("exploration_draft", {}).get(
+                        "revision"
+                    ):
+                        raise ValueError("Research draft changed while validation was running")
+                    record_validation(self.store, result)
+                    now = datetime.now(ET)
+                    if now.hour < 9 or (now.hour == 9 and now.minute < 25):
+                        self.store.set("needs_research", True)
+                elif role == "decision":
+                    if result["plan_id"] != context["plan"]["id"]:
+                        raise ValueError("Decision refers to a different plan")
+                    action = result["action"]
+                    if action == "approve" and not result["evidence_fresh"]:
+                        action = "wait"
+                    self.store.db.execute(
+                        "UPDATE plans SET state=? WHERE id=?",
+                        (
+                            {"approve": "approved", "wait": "planned", "invalidate": "invalidated"}[
+                                action
+                            ],
+                            result["plan_id"],
+                        ),
+                    )
+                    self.store.set(
+                        "approval:" + result["plan_id"], {"at": utc_now(), "decision": result}
+                    )
+                    self.store.event("decision", result, context["plan"]["branch"])
+                elif role == "position_review":
+                    owners = {
+                        h["holding"]["symbol"]: h["holding"]["branch"] for h in context["positions"]
+                    }
+                    ownership = {h["holding"]["symbol"]: h["holding"] for h in context["positions"]}
+                    symbols = [d["symbol"] for d in result["decisions"]]
+                    if set(symbols) != set(owners) or len(symbols) != len(set(symbols)):
+                        raise ValueError(
+                            "Position review must cover every requested symbol exactly once"
+                        )
+                    seen = set()
+                    for decision in result["decisions"]:
+                        symbol = decision["symbol"]
+                        if symbol not in owners or symbol in seen:
+                            raise ValueError("Position review contains an unknown/duplicate symbol")
+                        seen.add(symbol)
+                        self.store.event("decision", decision, owners[symbol])
+                        if (
+                            decision["action"] == "exit"
+                            and decision["evidence_fresh"]
+                            and decision["invalidation_observed"]
+                        ):
+                            self.store.set(
+                                "exit-intent:" + symbol,
+                                {
+                                    "at": utc_now(),
+                                    "reason": decision["reason"],
+                                    "plan_id": ownership[symbol].get("plan_id"),
+                                    "branch": owners[symbol],
+                                },
+                            )
+                elif role == "pulse":
+                    result["at"] = utc_now()
+                    self.store.set("pulses", [result, *self.store.get("pulses", [])][:10])
+                    self.store.event(
+                        "pulse",
+                        {"summary": result["summary"], "material_change": result["material_change"]},
+                    )
+                    if result["material_change"]:
+                        # Invalidate approvals and stop new entries pending re-research;
+                        # numerical protection remains in operation.
+                        self.store.set(
+                            "material_change", {"at": utc_now(), "summary": result["summary"]}
+                        )
+                        self.store.db.execute("UPDATE plans SET state='planned' WHERE state='approved'")
+                        self.store.set("research_refresh_required", True)
+                        self.store.db.execute(
+                            "UPDATE plans SET state='suspended' WHERE state IN ('planned','approved')"
+                        )
+                        for order in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
+                            if order["status"] not in TERMINAL and order["broker_id"]:
+                                self.broker.cancel(order["broker_id"])
+                        self.store.set("needs_research", True)
+                elif role in ("weekly", "monthly"):
+                    self.store.set(role + ":" + day, result)
+                    self.store.event("period_review", {"period": role, "summary": result["summary"]})
+                    for i, lesson in enumerate(result["proposed_lessons"]):
+                        self.store.memory_put(
+                            f"{role}:{day}:lesson:{i}",
+                            "lesson",
+                            {"claim": lesson, "state": "proposed", "period": role, "ending": day},
+                        )
+                elif role == "retrospective":
+                    self.store.set("review", result)
+                    self.store.set("review_day", day)
+                    for i, proposal in enumerate(result["code_changes"]):
+                        self.store.memory_put(
+                            f"{day}:improvement:{i}",
+                            "improvement_proposal",
+                            {
+                                **proposal,
+                                "state": "proposed",
+                                "evidence_day": day,
+                                "authority": "Recorded for developer review; does not expand automated maintenance scope",
+                            },
+                        )
+                    for i, lesson in enumerate(result["proposed_lessons"]):
+                        self.store.memory_put(
+                            f"{day}:lesson:{i}",
+                            "lesson",
+                            {"claim": lesson, "state": "proposed", "evidence_day": day},
+                        )
+                    for proposal in result["experiments"]:
+                        try:
+                            self.experiments.register(proposal)
+                        except (ValueError, TypeError, KeyError):
+                            self.store.event(
+                                "experiment_rejected",
+                                {"id": proposal.get("id"), "reason": "Invalid or incomplete evaluation contract"},
+                            )
+                    for exp in self.experiments.evaluate():
+                        notifications.append((
+                            "promotion:" + exp,
+                            "Trader - strategy promoted",
+                            exp + " passed its recorded forward-evaluation gates.",
+                        ))
+                elif role == "maintenance":
+                    from .maintenance import stage_change
+
+                    stage_change(self.config, self.store, result)
+                completed = self.store.job_end(key, True, {"role": role, "completed": utc_now()})
+                if atomic_batch and not completed:
+                    raise RuntimeError("Result application lost its job claim")
+                if role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
+                    record_application_outcome(self.store, key, "accepted")
+            application_succeeded = True
         except Exception as exc:
+            notifications.clear()
             if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
                 record_application_outcome(
                     self.store, key, "rejected", getattr(exc, "validation_code", None)
@@ -501,7 +530,10 @@ class Supervisor:
 
                 record_failure(self.store, key, exc, datetime.now(ET))
             if "original_result" in locals() and role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
-                self.record_quality(day, role, original_result, key, "rejected")
+                try:
+                    self.record_quality(day, role, original_result, key, "rejected")
+                except Exception as capture_error:
+                    LOG.warning("Rejected-result quality capture deferred: %s", type(capture_error).__name__)
             if role in ("research", "decision", "position_review", "pulse"):
                 self.store.set("entry_budget_blocked", True)
             if role == "research":
@@ -520,6 +552,17 @@ class Supervisor:
             self.future = None
             self.task = None
             self.store.set("active_task", None)
+        if application_succeeded and role not in ("quota_refresh", "accounting_refresh", "options_coverage"):
+            try:
+                self.record_quality(day, role, original_result, key, "applied")
+            except Exception as exc:
+                LOG.warning("Completed-result quality capture deferred: %s", type(exc).__name__)
+        for notification in notifications:
+            try:
+                notify(self.config, self.store, *notification)
+            except Exception as exc:
+                # A delivery failure after commit does not undo a valid result.
+                LOG.warning("Completed-result notification deferred: %s", type(exc).__name__)
 
     def record_quality(self, day, role, result, key, outcome):
         from .quality import record_artifact, daily_audit

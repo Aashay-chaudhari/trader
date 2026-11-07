@@ -104,20 +104,25 @@ def _quote(quote, now):
 class AdaptiveLab:
     def __init__(self, store):
         self.store = store
-        store.db.executescript("""
-        CREATE TABLE IF NOT EXISTS adaptive_contracts(
+        # executescript would commit an enclosing result-application transaction.
+        # Individual DDL statements participate in whichever scope owns this store.
+        for statement in ("""CREATE TABLE IF NOT EXISTS adaptive_contracts(
           id TEXT PRIMARY KEY, branch TEXT NOT NULL, state TEXT NOT NULL,
           registered_at TEXT NOT NULL, registered_day TEXT NOT NULL,
           specification_sha256 TEXT NOT NULL, fingerprint TEXT NOT NULL UNIQUE,
-          payload TEXT NOT NULL, schedule TEXT);
-        CREATE TABLE IF NOT EXISTS adaptive_observations(
+          payload TEXT NOT NULL, schedule TEXT)""",
+        """CREATE TABLE IF NOT EXISTS adaptive_observations(
           id TEXT PRIMARY KEY, contract_id TEXT NOT NULL, day TEXT NOT NULL,
           symbol TEXT NOT NULL, state TEXT NOT NULL, payload TEXT NOT NULL,
-          UNIQUE(contract_id,day,symbol));
-        CREATE INDEX IF NOT EXISTS adaptive_open ON adaptive_observations(state,day);
-        """)
+          UNIQUE(contract_id,day,symbol))""",
+        "CREATE INDEX IF NOT EXISTS adaptive_open ON adaptive_observations(state,day)"):
+            store.db.execute(statement)
 
     def register(self, contract, now=None):
+        with self.store.transaction():
+            return self._register(contract, now)
+
+    def _register(self, contract, now=None):
         now = _stamp(now or datetime.now(ET)).astimezone(ET)
         c = (
             contract

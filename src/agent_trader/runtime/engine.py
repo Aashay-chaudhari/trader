@@ -14,7 +14,7 @@ from .store import dumps, utc_now
 # done_for_day can resume on the next session; GTC reservations and recovery
 # must retain it until the broker confirms an actual terminal state.
 TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced"}
-EXECUTION_KERNEL = "paper-execution-20261107-r2"
+EXECUTION_KERNEL = "paper-execution-20261107-r3"
 
 
 def current_execution_verified(readiness):
@@ -75,126 +75,342 @@ class Engine:
             )
         ]
 
-    def ingest_order(self, order, branch, plan_id):
+    @staticmethod
+    def _fill_values(order):
+        if any(
+            isinstance(order.get(key), bool) for key in ("qty", "filled_qty", "filled_avg_price")
+        ):
+            raise ValueError("Invalid broker fill quantity/price")
+        requested = float(order["qty"])
+        qty = float(order.get("filled_qty") or 0)
+        price = float(order.get("filled_avg_price") or 0)
+        if (
+            not all(math.isfinite(value) for value in (requested, qty, price))
+            or requested <= 0
+            or qty < 0
+            or qty > requested + 1e-8
+            or (qty > 0 and price <= 0)
+        ):
+            raise ValueError("Invalid broker fill quantity/price")
+        notional = qty * price
+        if not math.isfinite(notional):
+            raise ValueError("Invalid broker fill notional")
+        return requested, qty, notional
+
+    @classmethod
+    def _order_graph(cls, order):
+        """Only the long-entry bracket/OTO graphs this application can own."""
+        if not isinstance(order, dict):
+            raise ValueError("Malformed broker order receipt")
+        legs = order.get("legs")
+        if legs is not None and not isinstance(legs, list):
+            raise ValueError("Malformed broker order legs")
+        nodes = [order, *(legs or [])]
+        if legs and (
+            order.get("side") != "buy" or order.get("order_class") not in ("bracket", "oto")
+        ):
+            raise ValueError("Unsupported broker parent/child order graph")
+        if len(legs or []) > (1 if order.get("order_class") == "oto" else 2):
+            raise ValueError("Unsupported broker child count")
+        ids, clients, objects, exit_types = set(), set(), set(), set()
+        for index, node in enumerate(nodes):
+            if not isinstance(node, dict) or id(node) in objects:
+                raise ValueError("Duplicate or cyclic broker order graph")
+            objects.add(id(node))
+            identity = node.get("id")
+            client = node.get("client_order_id")
+            if not isinstance(identity, str) or not identity or identity in ids:
+                raise ValueError("Missing or duplicate broker order identity")
+            if client is not None and (
+                not isinstance(client, str) or not client or client in clients
+            ):
+                raise ValueError("Missing or duplicate broker client identity")
+            ids.add(identity)
+            if client is not None:
+                clients.add(client)
+            if (
+                not isinstance(node.get("symbol"), str)
+                or not node["symbol"]
+                or node.get("side") not in ("buy", "sell")
+                or not isinstance(node.get("status"), str)
+                or not node["status"]
+            ):
+                raise ValueError("Invalid broker symbol/side/status")
+            requested, _, _ = cls._fill_values(node)
+            if index:
+                if node.get("legs") not in (None, []):
+                    raise ValueError("Unsupported nested or cyclic broker child graph")
+                if node["symbol"] != order["symbol"] or node["side"] != "sell":
+                    raise ValueError("Broker child symbol/side differs from owned parent")
+                if requested > float(order["qty"]) + 1e-8:
+                    raise ValueError("Broker child quantity exceeds authorized parent")
+                kind = node.get("type")
+                if kind not in ("limit", "stop", "stop_limit"):
+                    raise ValueError("Unsupported broker protective child type")
+                group = "take_profit" if kind == "limit" else "stop_loss"
+                if group in exit_types:
+                    raise ValueError("Duplicate broker protective child role")
+                exit_types.add(group)
+        if (
+            legs
+            and sum(float(leg.get("filled_qty") or 0) for leg in legs)
+            > float(order.get("filled_qty") or 0) + 1e-7
+        ):
+            # Both exits can really fill before an OCO cancellation. Retain the
+            # anomaly for inspection; the long-only ledger must not invent a short.
+            raise ValueError("Broker child fills exceed confirmed parent fill")
+        return nodes
+
+    @staticmethod
+    def _rejection_value(value, ancestors=None, path="$", depth=0):
+        """Represent malformed/nonfinite/cyclic receipts without inventing values."""
+        ancestors = {} if ancestors is None else ancestors
+        if isinstance(value, float) and not math.isfinite(value):
+            return {"nonfinite_value": str(value)}
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        if id(value) in ancestors:
+            return {"cycle_reference": ancestors[id(value)]}
+        if depth >= 32:
+            return {"omitted_nested_value": "depth_limit", "type": type(value).__name__}
+        active = {**ancestors, id(value): path}
+        if isinstance(value, dict):
+            return {
+                str(key): Engine._rejection_value(item, active, path + "." + str(key), depth + 1)
+                for key, item in value.items()
+            }
+        if isinstance(value, (list, tuple)):
+            return [
+                Engine._rejection_value(item, active, path + "[" + str(i) + "]", depth + 1)
+                for i, item in enumerate(value)
+            ]
+        return {"unsupported_value_type": type(value).__name__}
+
+    def _record_order_rejection(self, order, branch, plan_id, exc, expected_root):
+        from .observation_audit import content_hash
+
+        self.store.set("reconciled", False)
+        payload = {
+            "version": "broker-order-rejection-v1",
+            "execution_kernel": EXECUTION_KERNEL,
+            "branch": branch,
+            "plan_id": plan_id,
+            "expected_root": expected_root,
+            "order": self._rejection_value(order),
+            "error_type": type(exc).__name__,
+            "reason": str(exc)[:300],
+            "scope": "Private rejected receipt; no inferred fills or recovery orders. Nonfinite values and object cycles are represented explicitly.",
+        }
+        digest = content_hash(payload)
+        key = "broker-order-rejection:" + digest
         with self.store.transaction():
-            known = self.store.rows("SELECT * FROM orders WHERE broker_id=?", (order["id"],))
-            cid = order.get("client_order_id") or (
-                known[0]["client_id"] if known else f"broker-{order['id']}"
-            )
-            if known and known[0]["client_id"] != cid:
-                raise ValueError("Broker order identity changed")
+            if self.store.get(key) is None:
+                self.store.set(key, {**payload, "sha256": digest, "first_seen": utc_now()})
+                self.store.event(
+                    "order_receipt_rejected",
+                    {
+                        "summary": "Broker order receipt rejected; its ledger application was rolled back.",
+                        "error_type": type(exc).__name__,
+                        "receipt_reference": key,
+                    },
+                    branch,
+                )
+
+    def ingest_order(
+        self, order, branch, plan_id, *, expected_client_id=None, expected_broker_id=None
+    ):
+        """Validate and apply an entire broker receipt in one local transaction."""
+        try:
+            nodes = self._order_graph(order)
+            with self.store.transaction():
+                if expected_broker_id is not None and order["id"] != expected_broker_id:
+                    raise ValueError("Broker root differs from the requested order identity")
+                if expected_client_id is not None:
+                    if not self.store.rows(
+                        "SELECT client_id FROM orders WHERE client_id=?", (expected_client_id,)
+                    ):
+                        raise ValueError("Requested broker root has no persisted owned intent")
+                    known = self.store.rows(
+                        "SELECT client_id FROM orders WHERE broker_id=?", (order["id"],)
+                    )
+                    returned_client = order.get("client_order_id") or (
+                        known[0]["client_id"] if known else None
+                    )
+                    if returned_client != expected_client_id:
+                        raise ValueError("Broker root differs from the requested client identity")
+                if not self.store.rows("SELECT name FROM branches WHERE name=?", (branch,)):
+                    raise ValueError("Unknown owned order branch")
+                holdings = {row["symbol"]: row for row in self.store.rows("SELECT * FROM holdings")}
+                child_ids = {node["id"] for node in nodes[1:]}
+                updates = [
+                    self._prepare_order(node, branch, plan_id, holdings, child_ids)
+                    for node in nodes
+                ]
+                if len({update["cid"] for update in updates}) != len(updates):
+                    raise ValueError("Duplicate resolved broker client identity")
+                # Preparation above performs no mutations. No parent or sibling
+                # becomes visible if validation or a later write fails.
+                for update in updates:
+                    self._apply_order(update, branch, plan_id)
+        except Exception as exc:
+            try:
+                self._record_order_rejection(
+                    order,
+                    branch,
+                    plan_id,
+                    exc,
+                    {"client_id": expected_client_id, "broker_id": expected_broker_id},
+                )
+            except Exception as evidence_error:
+                exc.add_note(
+                    "Rejected-receipt persistence failed: " + type(evidence_error).__name__
+                )
+            raise
+
+    def _prepare_order(self, order, branch, plan_id, holdings, child_ids):
+        known = self.store.rows("SELECT * FROM orders WHERE broker_id=?", (order["id"],))
+        cid = order.get("client_order_id") or (
+            known[0]["client_id"] if known else f"broker-{order['id']}"
+        )
+        if known and known[0]["client_id"] != cid:
+            raise ValueError("Broker order identity changed")
+        rows = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))
+        row = rows[0] if rows else None
+        requested, qty, notional = self._fill_values(order)
+        if row and (
+            row["symbol"] != order["symbol"]
+            or row["side"] != order["side"]
+            or row["branch"] != branch
+            or row["plan_id"] != plan_id
+            or (row["broker_id"] and row["broker_id"] != order["id"])
+        ):
+            raise ValueError("Broker order does not match its owned intent")
+        if row and abs(requested - row["qty"]) > 1e-8:
+            protective_leg = order["side"] == "sell" and order["id"] in child_ids
+            if order["side"] == "sell" and not protective_leg:
+                parents = self.store.rows(
+                    "SELECT payload FROM orders WHERE side='buy' AND symbol=? AND branch=? AND plan_id=?",
+                    (order["symbol"], branch, plan_id),
+                )
+                for parent in parents:
+                    data = json.loads(parent["payload"])
+                    protective_leg = any(
+                        leg.get("id") == order["id"]
+                        and leg.get("symbol") == order["symbol"]
+                        and leg.get("side") == "sell"
+                        and requested <= float(data["qty"])
+                        for leg in data.get("legs", []) or []
+                    )
+                    if protective_leg:
+                        break
+            if not protective_leg or requested > row["qty"]:
+                raise ValueError("Broker quantity differs from the authorized intent")
+        delta = qty - (row["filled"] if row else 0)
+        prior_notional = row["notional"] if row else 0
+        if delta < -1e-8:
+            raise ValueError("Broker cumulative fill quantity decreased")
+        if abs(delta) <= 1e-8 and abs(notional - prior_notional) > 1e-6:
+            raise ValueError("Broker corrected fill notional; explicit ledger review required")
+        money, holding, cash_delta = 0, None, 0
+        if delta > 1e-8:
+            money = notional - prior_notional
+            if money <= 0:
+                raise ValueError("Broker incremental fill notional is inconsistent")
+            h = holdings.get(order["symbol"])
+            if order["side"] == "buy":
+                if h and h["branch"] != branch:
+                    raise ValueError("Overlapping branch ownership")
+                holding = {
+                    "symbol": order["symbol"],
+                    "branch": branch,
+                    "qty": (h["qty"] if h else 0) + delta,
+                    "cost": (h["cost"] if h else 0) + money,
+                    "plan_id": h["plan_id"] if h else plan_id,
+                }
+                cash_delta = -money
+            else:
+                if not h or h["branch"] != branch or delta > h["qty"] + 1e-7:
+                    raise ValueError("Sell fill exceeds owned position")
+                remaining = h["qty"] - delta
+                holding = (
+                    {**h, "qty": remaining, "cost": h["cost"] * remaining / h["qty"]}
+                    if remaining >= 1e-7
+                    else None
+                )
+                cash_delta = money
+            if holding is None:
+                holdings.pop(order["symbol"], None)
+            else:
+                holdings[order["symbol"]] = holding
+        return {
+            "order": order,
+            "cid": cid,
+            "new": row is None,
+            "requested": requested,
+            "filled": qty,
+            "notional": notional,
+            "delta": delta,
+            "money": money,
+            "cash_delta": cash_delta,
+            "holding": holding,
+            "payload": dumps(order),
+        }
+
+    def _apply_order(self, update, branch, plan_id):
+        order, cid = update["order"], update["cid"]
+        if update["new"]:
             self.store.db.execute(
-                """INSERT OR IGNORE INTO orders
-              (client_id,broker_id,branch,symbol,side,qty,status,plan_id,payload,at)
-              VALUES(?,?,?,?,?,?,?,?,?,?)""",
+                """INSERT INTO orders(client_id,broker_id,branch,symbol,side,qty,status,plan_id,payload,at)
+                   VALUES(?,?,?,?,?,?,?,?,?,?)""",
                 (
                     cid,
                     order["id"],
                     branch,
                     order["symbol"],
                     order["side"],
-                    float(order["qty"]),
+                    update["requested"],
                     order["status"],
                     plan_id,
-                    dumps(order),
+                    update["payload"],
                     utc_now(),
                 ),
             )
-            row = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))[0]
-            if (
-                row["symbol"] != order["symbol"]
-                or row["side"] != order["side"]
-                or row["branch"] != branch
-                or row["plan_id"] != plan_id
-                or (row["broker_id"] and row["broker_id"] != order["id"])
-            ):
-                raise ValueError("Broker order does not match its owned intent")
-            qty = float(order.get("filled_qty") or 0)
-            price = float(order.get("filled_avg_price") or 0)
-            requested = float(order["qty"])
-            if (
-                not math.isfinite(qty)
-                or not math.isfinite(price)
-                or not math.isfinite(requested)
-                or requested <= 0
-                or qty < 0
-                or qty > requested + 1e-8
-                or (qty > 0 and price <= 0)
-            ):
-                raise ValueError("Invalid broker fill quantity/price")
-            if abs(requested - row["qty"]) > 1e-8:
-                parents = self.store.rows(
-                    "SELECT payload FROM orders WHERE side='buy' AND symbol=? AND branch=? AND plan_id=?",
-                    (row["symbol"], branch, plan_id),
-                )
-                protective_leg = order["side"] == "sell" and any(
-                    leg.get("id") == order["id"]
-                    for parent in parents
-                    for leg in json.loads(parent["payload"]).get("legs", []) or []
-                )
-                if not protective_leg or requested > row["qty"]:
-                    raise ValueError("Broker quantity differs from the authorized intent")
-            notional = qty * price
-            if not math.isfinite(notional):
-                raise ValueError("Invalid broker fill notional")
-            delta = qty - row["filled"]
-            if delta < -1e-8:
-                raise ValueError("Broker cumulative fill quantity decreased")
-            if abs(delta) <= 1e-8 and abs(notional - row["notional"]) > 1e-6:
-                raise ValueError("Broker corrected fill notional; explicit ledger review required")
-            if delta > 1e-8:
-                money = notional - row["notional"]
-                if money <= 0:
-                    raise ValueError("Broker incremental fill notional is inconsistent")
-                holdings = self.store.rows(
-                    "SELECT * FROM holdings WHERE symbol=?", (order["symbol"],)
-                )
-                h = holdings[0] if holdings else None
-                if order["side"] == "buy":
-                    if h and h["branch"] != branch:
-                        raise ValueError("Overlapping branch ownership")
-                    self.store.db.execute(
-                        "UPDATE branches SET cash=cash-? WHERE name=?", (money, branch)
-                    )
-                    self.store.db.execute(
-                        """INSERT INTO holdings VALUES(?,?,?,?,?)
-                      ON CONFLICT(symbol) DO UPDATE SET qty=qty+excluded.qty, cost=cost+excluded.cost""",
-                        (order["symbol"], branch, delta, money, plan_id),
-                    )
-                else:
-                    if not h or h["branch"] != branch or delta > h["qty"] + 1e-7:
-                        raise ValueError("Sell fill exceeds owned position")
-                    self.store.db.execute(
-                        "UPDATE branches SET cash=cash+? WHERE name=?", (money, branch)
-                    )
-                    remaining = h["qty"] - delta
-                    if remaining < 1e-7:
-                        self.store.db.execute(
-                            "DELETE FROM holdings WHERE symbol=?", (order["symbol"],)
-                        )
-                    else:
-                        self.store.db.execute(
-                            "UPDATE holdings SET qty=?,cost=? WHERE symbol=?",
-                            (remaining, h["cost"] * remaining / h["qty"], order["symbol"]),
-                        )
-                self.store.event(
-                    "fill",
-                    {
-                        "symbol": order["symbol"],
-                        "side": order["side"],
-                        "qty": delta,
-                        "price": money / delta,
-                        "plan_id": plan_id,
-                    },
-                    branch,
-                )
+        if update["delta"] > 1e-8:
             self.store.db.execute(
-                """UPDATE orders SET broker_id=?,status=?,qty=?,filled=?,notional=?,payload=?
-              WHERE client_id=?""",
-                (order["id"], order["status"], requested, qty, notional, dumps(order), cid),
+                "UPDATE branches SET cash=cash+? WHERE name=?", (update["cash_delta"], branch)
             )
-        for leg in order.get("legs") or []:
-            self.ingest_order(leg, branch, plan_id)
+            holding = update["holding"]
+            if holding is None:
+                self.store.db.execute("DELETE FROM holdings WHERE symbol=?", (order["symbol"],))
+            else:
+                self.store.db.execute(
+                    """INSERT INTO holdings VALUES(?,?,?,?,?) ON CONFLICT(symbol) DO UPDATE
+                       SET qty=excluded.qty,cost=excluded.cost""",
+                    tuple(holding[key] for key in ("symbol", "branch", "qty", "cost", "plan_id")),
+                )
+            self.store.event(
+                "fill",
+                {
+                    "symbol": order["symbol"],
+                    "side": order["side"],
+                    "qty": update["delta"],
+                    "price": update["money"] / update["delta"],
+                    "plan_id": plan_id,
+                },
+                branch,
+            )
+        self.store.db.execute(
+            """UPDATE orders SET broker_id=?,status=?,qty=?,filled=?,notional=?,payload=? WHERE client_id=?""",
+            (
+                order["id"],
+                order["status"],
+                update["requested"],
+                update["filled"],
+                update["notional"],
+                update["payload"],
+                cid,
+            ),
+        )
 
     def reconcile(self, now=None):
         now = now or datetime.now(timezone.utc)
@@ -209,7 +425,13 @@ class Engine:
                 else self.broker.by_client(row["client_id"])
             )
             if order:
-                self.ingest_order(order, row["branch"], row["plan_id"])
+                self.ingest_order(
+                    order,
+                    row["branch"],
+                    row["plan_id"],
+                    expected_client_id=row["client_id"],
+                    expected_broker_id=row["broker_id"],
+                )
             elif row["status"] == "prepared":
                 # A process can die between persisting intent and submitting it. Never
                 # blindly resubmit an ambiguous intent after recovery.
@@ -224,7 +446,11 @@ class Engine:
             for row in parents:
                 if row["broker_id"]:
                     self.ingest_order(
-                        self.broker.order(row["broker_id"]), row["branch"], row["plan_id"]
+                        self.broker.order(row["broker_id"]),
+                        row["branch"],
+                        row["plan_id"],
+                        expected_client_id=row["client_id"],
+                        expected_broker_id=row["broker_id"],
                     )
         account = self.broker.account()
         positions = self.broker.positions()
@@ -242,93 +468,95 @@ class Engine:
             raise ValueError("Broker position quantity/value is not finite")
         if len({p["symbol"] for p in positions}) != len(positions):
             raise ValueError("Broker returned duplicate position symbols")
-        known = {r["broker_id"] for r in self.store.rows("SELECT broker_id FROM orders")}
-        unknown_orders = [o for o in open_orders if o["id"] not in known]
-        ledger = {h["symbol"]: h for h in self.store.rows("SELECT * FROM holdings")}
-        actual = {p["symbol"]: p for p in positions}
-        mismatches = []
-        for symbol in set(ledger) | set(actual):
-            a = float(actual.get(symbol, {}).get("qty", 0))
-            b = ledger.get(symbol, {}).get("qty", 0)
-            if abs(a - b) > 1e-6:
-                mismatches.append(symbol)
-        if (
-            account.get("status") != "ACTIVE"
-            or account.get("trading_blocked")
-            or account.get("account_blocked")
-        ):
-            mismatches.append("account_blocked")
-        # Deposits, corporate actions, or external trading must not silently alter
-        # branch results. Reconciliation failure closes entry gates.
-        ledger_cash = sum(r["cash"] for r in self.store.rows("SELECT cash FROM branches"))
-        if abs(ledger_cash - float(account["cash"])) > 1.0:
-            mismatches.append("cash_ledger")
-        self.store.set(
-            "account",
-            {
-                k: account.get(k)
-                for k in ["status", "cash", "equity", "buying_power", "options_trading_level"]
-            },
-        )
-        self.store.set("broker_positions", positions)
-        self.store.set("broker_open_orders", len(open_orders))
-        self.store.set(
-            "reconciliation_errors",
-            mismatches + (["external_open_orders"] if unknown_orders else []),
-        )
-        valid = not mismatches and not unknown_orders
-        self.store.set("reconciled", valid)
-        self.store.set("last_reconciled", now.isoformat())
-        marks = {p["symbol"]: float(p["market_value"]) for p in positions}
-        day = now.astimezone(ET).date().isoformat()
-        for branch in self.store.rows("SELECT * FROM branches"):
-            equity = branch["cash"] + sum(
-                marks.get(h["symbol"], h["cost"])
-                for h in ledger.values()
-                if h["branch"] == branch["name"]
-            )
-            high = max(branch["high_water"], equity)
-            previous = self.store.rows(
-                "SELECT value FROM equity WHERE branch=? AND day<? ORDER BY id DESC LIMIT 1",
-                (branch["name"], day),
-            )
-            key = f"sod:{day}:{branch['name']}"
-            if self.store.get(key) is None:
-                self.store.set(key, previous[0]["value"] if previous else equity)
-            loss = equity - self.store.get(key)
-            reason = (
-                "Daily loss threshold reached"
-                if loss <= -200
-                else ("10% high-water drawdown" if equity <= high * 0.9 else "")
-            )
-            self.store.db.execute(
-                "UPDATE branches SET high_water=? WHERE name=?", (high, branch["name"])
-            )
-            if reason:
-                if reason == "Daily loss threshold reached":
-                    self.store.set("daily-halt:" + branch["name"], day)
-                self.store.db.execute(
-                    "UPDATE branches SET paused=1,pause_reason=? WHERE name=?",
-                    (reason, branch["name"]),
-                )
-            self.store.db.execute(
-                "INSERT OR IGNORE INTO equity(at,day,branch,value) VALUES(?,?,?,?)",
-                (now.isoformat(), day, branch["name"], equity),
-            )
-            # Daily halts expire on a new session, drawdown halts do not.
+        with self.store.transaction():
+            known = {r["broker_id"] for r in self.store.rows("SELECT broker_id FROM orders")}
+            unknown_orders = [o for o in open_orders if o["id"] not in known]
+            ledger = {h["symbol"]: h for h in self.store.rows("SELECT * FROM holdings")}
+            actual = {p["symbol"]: p for p in positions}
+            mismatches = []
+            for symbol in set(ledger) | set(actual):
+                a = float(actual.get(symbol, {}).get("qty", 0))
+                b = ledger.get(symbol, {}).get("qty", 0)
+                if abs(a - b) > 1e-6:
+                    mismatches.append(symbol)
             if (
-                not reason
-                and branch["pause_reason"] == "Daily loss threshold reached"
-                and loss > -200
-                and self.store.get("daily-halt:" + branch["name"]) != day
+                account.get("status") != "ACTIVE"
+                or account.get("trading_blocked")
+                or account.get("account_blocked")
             ):
-                self.store.db.execute(
-                    "UPDATE branches SET paused=0,pause_reason='' WHERE name=?", (branch["name"],)
-                )
-        if not valid:
-            self.store.event(
-                "reconciliation_block", {"errors": self.store.get("reconciliation_errors")}
+                mismatches.append("account_blocked")
+            # Deposits, corporate actions, or external trading must not silently alter
+            # branch results. Reconciliation failure closes entry gates.
+            ledger_cash = sum(r["cash"] for r in self.store.rows("SELECT cash FROM branches"))
+            if abs(ledger_cash - float(account["cash"])) > 1.0:
+                mismatches.append("cash_ledger")
+            self.store.set(
+                "account",
+                {
+                    k: account.get(k)
+                    for k in ["status", "cash", "equity", "buying_power", "options_trading_level"]
+                },
             )
+            self.store.set("broker_positions", positions)
+            self.store.set("broker_open_orders", len(open_orders))
+            self.store.set(
+                "reconciliation_errors",
+                mismatches + (["external_open_orders"] if unknown_orders else []),
+            )
+            valid = not mismatches and not unknown_orders
+            marks = {p["symbol"]: float(p["market_value"]) for p in positions}
+            day = now.astimezone(ET).date().isoformat()
+            for branch in self.store.rows("SELECT * FROM branches"):
+                equity = branch["cash"] + sum(
+                    marks.get(h["symbol"], h["cost"])
+                    for h in ledger.values()
+                    if h["branch"] == branch["name"]
+                )
+                high = max(branch["high_water"], equity)
+                previous = self.store.rows(
+                    "SELECT value FROM equity WHERE branch=? AND day<? ORDER BY id DESC LIMIT 1",
+                    (branch["name"], day),
+                )
+                key = f"sod:{day}:{branch['name']}"
+                if self.store.get(key) is None:
+                    self.store.set(key, previous[0]["value"] if previous else equity)
+                loss = equity - self.store.get(key)
+                reason = (
+                    "Daily loss threshold reached"
+                    if loss <= -200
+                    else ("10% high-water drawdown" if equity <= high * 0.9 else "")
+                )
+                self.store.db.execute(
+                    "UPDATE branches SET high_water=? WHERE name=?", (high, branch["name"])
+                )
+                if reason:
+                    if reason == "Daily loss threshold reached":
+                        self.store.set("daily-halt:" + branch["name"], day)
+                    self.store.db.execute(
+                        "UPDATE branches SET paused=1,pause_reason=? WHERE name=?",
+                        (reason, branch["name"]),
+                    )
+                self.store.db.execute(
+                    "INSERT OR IGNORE INTO equity(at,day,branch,value) VALUES(?,?,?,?)",
+                    (now.isoformat(), day, branch["name"], equity),
+                )
+                # Daily halts expire on a new session, drawdown halts do not.
+                if (
+                    not reason
+                    and branch["pause_reason"] == "Daily loss threshold reached"
+                    and loss > -200
+                    and self.store.get("daily-halt:" + branch["name"]) != day
+                ):
+                    self.store.db.execute(
+                        "UPDATE branches SET paused=0,pause_reason='' WHERE name=?",
+                        (branch["name"],),
+                    )
+            if not valid:
+                self.store.event(
+                    "reconciliation_block", {"errors": self.store.get("reconciliation_errors")}
+                )
+            self.store.set("last_reconciled", now.isoformat())
+            self.store.set("reconciled", valid)
         return valid
 
     def validate_entry(self, plan, quote, now, close):
@@ -447,7 +675,15 @@ class Engine:
         cid = payload["client_order_id"]
         existing = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))
         if existing:
-            return self.broker.by_client(cid)
+            order = self.broker.by_client(cid)
+            self.ingest_order(
+                order,
+                branch,
+                plan_id,
+                expected_client_id=cid,
+                expected_broker_id=existing[0]["broker_id"],
+            )
+            return order
         with self.store.transaction():
             self.store.db.execute(
                 """INSERT INTO orders
@@ -482,7 +718,7 @@ class Engine:
             order = self.broker.by_client(cid)
             if not order:
                 raise
-        self.ingest_order(order, branch, plan_id)
+        self.ingest_order(order, branch, plan_id, expected_client_id=cid)
         return order
 
     def enter(self, plan, quote, now, close):

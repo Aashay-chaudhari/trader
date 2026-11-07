@@ -781,3 +781,68 @@ The final daily failure-reporting refinement and its prompt integration passed
 were also run. Twenty populated and legacy/partial/provenance browser checks
 passed across desktop/mobile widths. Complete cloud suite results and actual
 activation receipts are recorded separately after publication.
+
+
+Fourth release activation: source 4e834ef7c98503b273ee16a0d5350d9f853613cf,
+initial publication c661892bd0e529b498eb50c29dff5c32c18e09d8. Tests 42423062826
+passed both full (833) and minimal-runtime (663) suites; Pages 42423095533 passed.
+Fourteen public browser checks confirmed the exact source, unchanged options
+registration, no JavaScript errors and no desktop/mobile overflow. First startup
+was 22:58:32.708562 UTC; final activation verification was 22:59:50.559868 UTC.
+The service resumed useful background research with both pause flags removed.
+Broker reconciliation was clean, cash/holdings stayed unchanged, and all seven
+frozen table hashes plus the options registration matched the pre-release backup.
+No maintenance orders were placed. Weekly account usage reached 51%; work toward
+the user's measured 80% target continues in an isolated transaction-repair checkout.
+
+
+## November 7 transaction and order-receipt refinement
+
+Scratch fault injection reproduced partial plan batches, partially registered
+research validation/retrospective results, and successful repeated plans becoming
+superseded. Earlier zero-plan history remains explained by empty model outputs;
+these defects are not asserted to have caused those sessions.
+
+Selected local result batches now share one transaction with conditional owned
+job completion and application acceptance. Identical committed-job replay is a
+no-op. A genuinely new brief preserves matching plan identities, resets surviving
+approvals for a fresh decision, and never revives submitted/terminal plans.
+Suspended plans recover only through the explicit research-refresh path. Original
+model result objects remain unmodified across failed application and retry.
+The existing 180-second approval lifetime remains unchanged.
+
+Nested database scopes use savepoints. Successful nested work and job completions
+remain provisional until outer commit; rolled-back admissions restore only their
+own claim tokens. Unknown rollback cleanup poisons the outer transaction so a
+caught per-item domain error cannot commit partial state. Registry initialization
+no longer implicitly commits the enclosing transaction. Domain-invalid proposals
+remain individually rejected, while storage failures roll back the batch.
+
+Engine scratch tests also reproduced a malformed child creating an unauthorized
+position and a returned root with unrelated identity bypassing the saved intent.
+Whole graph validation now precedes one atomic ledger application, with exact
+root client/broker identity binding at submit, recovery, reconcile and CLI check
+paths. Valid protective-order shrink remains supported. Both exits filling more
+than the confirmed entry is an explicit rejected broker anomaly: its private
+receipt is retained and reconciliation is false, with no invented recovery trade.
+Previously committed truthful receipts survive a later unrelated lookup failure.
+
+Final reconcile account/position status, branch risk/high-water marks, all equity
+rows and success markers commit together, after network reads. A failed write or
+commit leaves reconciliation false and preserves the last successful snapshot.
+The kernel changes to paper-execution-20261107-r3; offline regressions cannot
+substitute for its next bounded regular-session acceptance check.
+
+Independent review covered transaction/job ownership, application boundaries,
+complete order graphs and reconciliation. Additional isolated checks exercised
+a real deferred foreign-key failure at COMMIT and replay with both protective
+legs partially filled in reversed order. No broker requests, operational database
+writes or maintenance orders were used for these fault-injection checks.
+Complete-suite and activation receipts follow after candidate validation.
+
+Final Phase 5 clean-environment validation: 922 full tests passed in 255.59s
+(with the existing websockets legacy deprecation warning), and 752 minimal-runtime
+tests passed in 250.03s without legacy dependencies. All 33 runtime imports
+resolved to the candidate source in the minimal environment. Active/runtime-test
+lint, JavaScript syntax and whitespace checks passed. These are local fake/fixture
+regressions, not a broker-market acceptance receipt.

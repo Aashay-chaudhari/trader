@@ -135,6 +135,10 @@ class Experiments:
         }
 
     def register(self, proposal):
+        with self.store.transaction():
+            return self._register(proposal)
+
+    def _register(self, proposal):
         required = {
             "id",
             "branch",
@@ -191,18 +195,17 @@ class Experiments:
         ) or (proposal["exact_change"].startswith("code:") and bool(proposal.get("source")))
         state = "shadow" if supported and proposal["branch"] != "options" else "proposed"
         registered_at = utc_now()
-        with self.store.transaction():
-            self.store.db.execute(
-                "INSERT INTO experiments VALUES(?,?,?,?,?)",
-                (proposal["id"], proposal["branch"], state, dumps(proposal), registered_at),
-            )
-            if state == "shadow":
-                pin_approved_policy(self.store, proposal["id"], proposal, registered_at)
-            self.store.event(
-                "experiment_registered",
-                {"id": proposal["id"], "state": state, "hypothesis": proposal["hypothesis"]},
-                proposal["branch"],
-            )
+        self.store.db.execute(
+            "INSERT INTO experiments VALUES(?,?,?,?,?)",
+            (proposal["id"], proposal["branch"], state, dumps(proposal), registered_at),
+        )
+        if state == "shadow":
+            pin_approved_policy(self.store, proposal["id"], proposal, registered_at)
+        self.store.event(
+            "experiment_registered",
+            {"id": proposal["id"], "state": state, "hypothesis": proposal["hypothesis"]},
+            proposal["branch"],
+        )
         return True
 
     def consider(self, plan, quote, regime, now):

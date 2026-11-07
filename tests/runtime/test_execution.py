@@ -24,6 +24,7 @@ def fill(cid="entry-1", qty=10, price=100, side="buy", symbol="AAPL", status="pa
         "status": status,
         "filled_qty": str(qty),
         "filled_avg_price": str(price),
+        "type": "limit",
     }
 
 
@@ -202,7 +203,8 @@ def test_daily_halt_stays_closed_after_same_day_recovery(store, broker, config, 
 def test_child_bracket_fill_after_parent_terminal_is_reconciled(store, broker, config, now):
     e = Engine(config, store, broker)
     parent = fill(qty=10, status="filled")
-    parent["legs"] = [fill(cid="stop", qty=0, price=0, side="sell", status="held")]
+    parent["order_class"] = "bracket"
+    parent["legs"] = [{**fill(cid="stop", qty=0, price=0, side="sell", status="held"), "type": "stop"}]
     broker.items[parent["id"]] = parent
     broker.items[parent["legs"][0]["id"]] = parent["legs"][0]
     e.ingest_order(parent, "swing", "plan")
@@ -210,6 +212,7 @@ def test_child_bracket_fill_after_parent_terminal_is_reconciled(store, broker, c
     broker.pos = [{"symbol": "AAPL", "qty": "10", "market_value": "1000"}]
     assert e.reconcile(now)
     child = fill(cid="stop", qty=10, price=97, side="sell", status="filled")
+    child["type"] = "stop"
     broker.items[child["id"]] = child
     broker.items[parent["id"]]["legs"] = [child]
     broker.cash = 29970

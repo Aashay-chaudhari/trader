@@ -100,7 +100,7 @@ an unverified missing calendar remains deferred.
 
 ## Daily input and provenance refinement
 
-The next release validates each daily feature against its exact broker-calendar
+The fourth release validates each daily feature against its exact broker-calendar
 dependencies, retains immutable normalized source receipts, and distinguishes
 raw snapshots from adjusted daily indicators. A November 7 read-only provider
 check on a database copy recovered all 210 expected fields across 30 symbols.
@@ -113,3 +113,32 @@ quote evidence in another archive and 24 lack that archive. No historical inputs
 or protocol definitions are rewritten. The dashboard exposes these limitations.
 HTTP clients, database handles and model subprocesses now have explicit cleanup
 on success and failure, including partial construction and bounded process reap.
+
+Source `4e834ef7` activated at 22:58:32 UTC, with complete full/minimal cloud
+suites (833/663 tests), successful Pages deployment and fourteen public
+desktop/mobile checks. Broker/ledger reconciliation and model availability passed.
+Exact pre/post row hashes and the existing options registration were preserved.
+The service resumed research after verification at 22:59:50 UTC.
+
+
+## Atomic application and order-receipt refinement
+
+The fifth candidate addresses reproduced partial-write failures in research-plan
+application, validation and retrospectives. A successful identical refresh keeps
+its existing plan identity; a new brief requires a fresh decision. Submitted or
+terminal plan states are never revived. Complete local batches, job completion
+and application acceptance commit together. Reporting/notification failures after
+commit cannot relabel valid applied work as rejected.
+
+The execution change validates the complete parent/child order graph and binds
+each returned root to its requested saved identity before ledger application.
+Unsupported or overfilled graphs are retained privately and rejected atomically;
+no short position, inferred fill or recovery order is invented. Final account,
+risk, equity and reconciliation-success publication also commits together.
+This changes the kernel to `paper-execution-20261107-r3`; regular-session acceptance
+is still required, and all earlier execution receipts remain historical evidence.
+
+At the requested 80% weekly usage boundary, the unchanged account-reserve policy
+blocks new model work and new paper entries, including starting a fresh one-share
+acceptance check. Existing acceptance stages can still unwind safely. A fresh r3
+acceptance therefore waits for both a regular session and renewed quota admission.
