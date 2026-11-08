@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-08T00:16:22.897041+00:00",
+  "generated_at": "2026-11-08T00:18:20.987840+00:00",
   "start_date": "2026-10-29",
   "mode": "market_closed",
-  "heartbeat": "2026-11-07T19:16:12.998450-05:00",
+  "heartbeat": "2026-11-07T19:18:14.843142-05:00",
   "watchdog": {
-    "checked_at": "2026-11-08T00:16:02.9063828+00:00",
+    "checked_at": "2026-11-08T00:18:04.2734075+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
     "models_paused": false,
     "maintenance": false
   },
-  "status": "Market holiday or weekend. Reconciled; background research is available.",
-  "next_action": "Next trading session: automatic startup and calendar refresh.",
+  "status": "Market holiday or weekend. Reconciled Python monitoring continues; model work and new entries await quota admission.",
+  "next_action": "Continue monitoring and recheck quota admission before new model work or entries.",
   "readiness": {
-    "at": "2026-11-08T00:16:15.025276+00:00",
+    "at": "2026-11-08T00:18:16.775047+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -38,7 +38,7 @@
   "operational_session": {
     "validation_version": "operational-session-v1",
     "state": "non_session",
-    "assessed_at": "2026-11-07T19:16:22.897041-05:00",
+    "assessed_at": "2026-11-07T19:18:20.987840-05:00",
     "market_open": false,
     "reason_codes": [],
     "calendar": {
@@ -49,7 +49,7 @@
     },
     "clock": {
       "reported_is_open": false,
-      "timestamp": "2026-11-07T19:16:17.335230-05:00",
+      "timestamp": "2026-11-07T19:18:18.206248-05:00",
       "next_open": "2026-11-09T09:30:00-05:00",
       "next_close": "2026-11-09T16:00:00-05:00"
     },
@@ -60,9 +60,9 @@
         "received_at": "2026-11-07T19:14:21.625720-05:00"
       },
       "clock": {
-        "sha256": "f7707a7ac288c4eef00a339e233bca4c0ae19465d48a7a3e08b6b0de79ca183a",
-        "requested_at": "2026-11-07T19:16:16.211827-05:00",
-        "received_at": "2026-11-07T19:16:16.250726-05:00"
+        "sha256": "44ecc97ae940efc5f74107c4abe229dccf2de75da2423f73a502a854842888d3",
+        "requested_at": "2026-11-07T19:18:17.909365-05:00",
+        "received_at": "2026-11-07T19:18:17.945740-05:00"
       }
     },
     "scope": "Session evidence reassessed at snapshot time; not a guarantee of current execution readiness."
@@ -117,7 +117,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-07T19:16:12.998450-05:00",
+    "as_of": "2026-11-07T19:18:14.843142-05:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -151,7 +151,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-07T19:16:12.998450-05:00",
+      "broker_cash_observed_at": "2026-11-07T19:18:14.843142-05:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -236,19 +236,73 @@
   ],
   "equity": [
     {
-      "at": "2026-11-07T19:16:12.998450-05:00",
+      "at": "2026-11-07T19:18:14.843142-05:00",
       "day": "2026-11-07",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-11-07T19:16:12.998450-05:00",
+      "at": "2026-11-07T19:18:14.843142-05:00",
       "day": "2026-11-07",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-11-07T19:16:12.998450-05:00",
+      "at": "2026-11-07T19:18:14.843142-05:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-08T00:18:14.910017+00:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-08T00:18:14.910017+00:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-08T00:18:14.910017+00:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T19:17:28.548728-05:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T19:17:28.548728-05:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T19:17:28.548728-05:00",
+      "day": "2026-11-07",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-07T19:16:52.732820-05:00",
+      "day": "2026-11-07",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T19:16:52.732820-05:00",
+      "day": "2026-11-07",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-07T19:16:52.732820-05:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.84
@@ -4281,42 +4335,6 @@
     },
     {
       "at": "2026-11-07T19:19:21.923461+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T19:18:43.374158+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T19:18:43.374158+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T19:18:43.374158+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T19:17:23.418540+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T19:17:23.418540+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T19:17:23.418540+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11013,24 +11031,6 @@
     },
     {
       "at": "2026-11-07T12:53:55.470517+00:00",
-      "day": "2026-11-07",
-      "branch": "intraday",
-      "value": 9999.87
-    },
-    {
-      "at": "2026-11-07T12:52:51.282838+00:00",
-      "day": "2026-11-07",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T12:52:51.282838+00:00",
-      "day": "2026-11-07",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-07T12:52:51.282838+00:00",
       "day": "2026-11-07",
       "branch": "intraday",
       "value": 9999.87
@@ -11148,7 +11148,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-08T00:16:23.748403+00:00",
+    "as_of": "2026-11-08T00:18:22.172490+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11538,7 +11538,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-08T00:16:22.897041+00:00",
+    "as_of": "2026-11-08T00:18:20.987840+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11552,7 +11552,7 @@
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
       "verified_equity_marks": 13502,
       "reconciled": true,
-      "as_of": "2026-11-08T00:16:12.998450+00:00",
+      "as_of": "2026-11-08T00:18:14.843142+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11598,7 +11598,7 @@
       "proposed_lessons": 42,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-06T18:01:11.831027+00:00",
-      "input_age_hours": 30.253073892777778,
+      "input_age_hours": 30.2858768925,
       "latest_observation_at": "2026-11-06T19:45:22.633107+00:00"
     },
     "development": {
@@ -11640,7 +11640,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-08T00:16:24.184386+00:00",
+    "as_of": "2026-11-08T00:18:22.642275+00:00",
     "records": [
       {
         "id": "observation:2184e82ac20308f8c238ecb9",
@@ -15085,6 +15085,84 @@
   "plans": [],
   "events": [
     {
+      "id": 623,
+      "at": "2026-11-08T00:18:14.839128+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
+    {
+      "id": 622,
+      "at": "2026-11-08T00:18:12.495774+00:00",
+      "kind": "supervisor_stopped",
+      "branch": null,
+      "payload": {
+        "pid": 86934
+      }
+    },
+    {
+      "id": 621,
+      "at": "2026-11-08T00:18:11.957945+00:00",
+      "kind": "supervisor_stopping",
+      "branch": null,
+      "payload": {
+        "signal": 15,
+        "pid": 86934
+      }
+    },
+    {
+      "id": 620,
+      "at": "2026-11-08T00:17:28.650426+00:00",
+      "kind": "research_work_analyzed",
+      "branch": null,
+      "payload": {
+        "work_id": "71737abe05b80f9c009e9361:0",
+        "topic": "runtime_reliability"
+      }
+    },
+    {
+      "id": 619,
+      "at": "2026-11-08T00:17:16.645609+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "deep_research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "3de05bff0509e3f949920b52d5ced54c1e4ee4f821c75bf8fa709934df821e2f",
+        "task_day": "2026-11-07",
+        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
+        "schema_name": "ResearchWorkReport",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-08T00:16:19.733168+00:00",
+        "attempt_id": "usage:183",
+        "searches": 0,
+        "cycles": 4,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-08T00:17:16.641680+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1794448689,
+          "before_used_percent": 79,
+          "after_used_percent": 80,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
       "id": 618,
       "at": "2026-11-08T00:16:12.993955+00:00",
       "kind": "startup",
@@ -17103,118 +17181,6 @@
         "metadata_errors": [],
         "application_outcome": "pending"
       }
-    },
-    {
-      "id": 523,
-      "at": "2026-11-07T22:53:24.462742+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "f910a00bb7b1f84db5ecad4b:0",
-        "topic": "symbol_events:MSFT"
-      }
-    },
-    {
-      "id": 522,
-      "at": "2026-11-07T22:52:50.752790+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "3c5d4ba0da6a3c4f441bc878c0dc817ab2878079451732b0a2ffde456ccdeec2",
-        "task_day": "2026-11-07",
-        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
-        "schema_name": "ResearchWorkReport",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T22:51:06.885231+00:00",
-        "attempt_id": "usage:147",
-        "searches": 4,
-        "cycles": 12,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T22:52:50.748808+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 50,
-          "after_used_percent": 50,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 521,
-      "at": "2026-11-07T22:51:02.253346+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "1d1ca49a13fd5e007f53145d:1",
-        "topic": "symbol_events:AAPL",
-        "disposition": "accepted",
-        "summary": "All five findings are supported at their stated scopes. Independent retrieval reproduced every analyst source marked verified. The dividend dates and conditional session counts agree; selected filing text supports both realized refund benefits and collection risk. The supplied research supports the coverage unknown. Acceptance does not establish complete event clearance or authenticate historical receipts."
-      }
-    },
-    {
-      "id": 520,
-      "at": "2026-11-07T22:50:53.161000+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "d7ca3cb30692a0cb92a760c479a8a0e7a38a90bdf09e328a8e2af76f98eb4c7c",
-        "task_day": "2026-11-07",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-07T22:49:54.436067+00:00",
-        "attempt_id": "usage:146",
-        "searches": 3,
-        "cycles": 9,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-07T22:50:53.157186+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1794448689,
-          "before_used_percent": 50,
-          "after_used_percent": 50,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 519,
-      "at": "2026-11-07T22:49:51.809165+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "1d1ca49a13fd5e007f53145d:1",
-        "topic": "symbol_events:AAPL"
-      }
     }
   ],
   "experiments": [
@@ -18327,22 +18293,22 @@
   },
   "quality_audit": {
     "day": "2026-11-07",
-    "as_of": "2026-11-08T00:07:51.176060+00:00",
+    "as_of": "2026-11-08T00:17:28.849346+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 91,
+      "calls": 92,
       "by_role": {
-        "deep_research": 47,
+        "deep_research": 48,
         "deep_research_review": 44
       },
-      "input_tokens": 3201231,
-      "cached_input_tokens": 2467584,
-      "output_tokens": 211992,
+      "input_tokens": 3219065,
+      "cached_input_tokens": 2481920,
+      "output_tokens": 214254,
       "web_actions": 218,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "deep_research": 42,
+      "deep_research": 43,
       "deep_research_review": 42
     },
     "legacy_snapshot_artifacts": 0,
@@ -18748,12 +18714,12 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-08T00:16:19.716050+00:00",
+    "at": "2026-11-08T00:18:16.647376+00:00",
     "windows": [
       {
         "bucket": "codex",
         "kind": "primary",
-        "usedPercent": 79,
+        "usedPercent": 80,
         "windowDurationMins": 10080,
         "resetsAt": 1794448689
       }
@@ -18787,48 +18753,33 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-08T00:16:24.543006+00:00",
+    "as_of": "2026-11-08T00:18:23.046945+00:00",
     "status": {
-      "state": "running",
-      "role": "deep_research",
+      "state": "blocked_by_account_allowance",
+      "role": "deep_research_review",
       "topic": "runtime_reliability",
       "work_id": "71737abe05b80f9c009e9361:0",
-      "as_of": "2026-11-07T19:16:16.255586-05:00",
-      "next_eligible_at": null,
-      "idle_reasons": [
-        {
-          "topic": "event_coverage",
-          "reason": "accepted"
-        },
-        {
-          "topic": "feature_lineage",
-          "reason": "revise"
-        },
-        {
-          "topic": "experiment_lifecycle",
-          "reason": "accepted"
-        },
-        {
-          "topic": "source_verification",
-          "reason": "accepted"
-        },
-        {
-          "topic": "accounting_attribution",
-          "reason": "accepted"
-        }
-      ],
+      "as_of": "2026-11-07T19:18:17.950821-05:00",
+      "next_eligible_at": "2026-11-12T01:58:09+00:00",
+      "idle_reasons": [],
       "last_budget_decision": {
-        "at": "2026-11-07T19:16:16.255586-05:00",
-        "allowed": true,
-        "reason": "Useful background work within account reserve and attempt ceiling"
+        "at": "2026-11-07T19:18:17.950821-05:00",
+        "allowed": false,
+        "reason": "20% account reserve reached"
       },
-      "reason": "A background research stage is running.",
-      "active_task": {
-        "role": "deep_research",
-        "started": "2026-11-08T00:16:18.935713+00:00"
-      }
+      "reason": "20% account reserve reached",
+      "eligibility_scope": "Next eligible is an earliest recheck time, not a promised start; fresh allowance, evidence and worker availability are required."
     },
     "reports": [
+      {
+        "work_id": "71737abe05b80f9c009e9361:0",
+        "topic": "runtime_reliability",
+        "stage": "analysis",
+        "at": "2026-11-08T00:17:28.649792+00:00",
+        "disposition": "awaiting_review",
+        "summary": "November 2 fills supersede the earlier pending execution diagnosis for that check, but do not verify the current required kernel. Runtime incidents announce retries without linked recovery outcomes. Sampled session coverage and reported recovery drills provide narrower evidence. Propose one offline timeout-and-restart acceptance test; no repair or test was performed.",
+        "sources": []
+      },
       {
         "work_id": "7aabbf8b3d936279411696dd:0",
         "topic": "macro_events:bea",
@@ -20091,15 +20042,6 @@
         "disposition": "accepted",
         "summary": "All five findings are supported at their stated scope (indexes are zero-based). The cancellation request occurred approximately 30.12 seconds after intent start. The retained November 2 round trip resolves the historical pending check without certifying the current kernel. Retry notices, sampled coverage and asserted drill success are appropriately distinguished from linked recovery evidence. The proposed isolated timeout test defines a control, bounded timing and pass/fail/unknown outcomes. No external URLs were cited.",
         "sources": []
-      },
-      {
-        "work_id": "be1f2b8a2a8ed289ff023a64:0",
-        "topic": "runtime_reliability",
-        "stage": "analysis",
-        "at": "2026-11-07T23:18:27.931530+00:00",
-        "disposition": "awaiting_review",
-        "summary": "The November 2 round trip resolves the earlier cleanup finding's pending execution check, but does not verify the current kernel. Runtime failures retain retry intentions without linked recovery receipts. Six complete sampled sessions support subsequent coverage, not continuous protection or recovery from each fault. Propose one isolated, no-order timeout/retry acceptance test.",
-        "sources": []
       }
     ],
     "scope": "Focused research and independently reviewed developer proposals; no plan, order, strategy promotion or code-edit authority.",
@@ -20111,22 +20053,22 @@
   },
   "usage": [
     {
-      "at": "2026-11-08T00:16:19.733168+00:00",
+      "at": "2026-11-08T00:17:16.641700+00:00",
       "day": "2026-11-07",
       "role": "deep_research",
       "model": "gpt-6.1-sol",
-      "input_tokens": 0,
-      "cached_tokens": 0,
-      "output_tokens": 0,
-      "quota_delta": 0.0,
-      "state": "started",
-      "outcome": null,
+      "input_tokens": 17834,
+      "cached_tokens": 14336,
+      "output_tokens": 2262,
+      "quota_delta": 1.0,
+      "state": "completed",
+      "outcome": "validated",
       "attempt_id": "usage:183",
-      "application_outcome": null,
+      "application_outcome": "accepted",
       "application_validation_code": null,
-      "reply_usage_reported": null,
-      "quota_delta_reported": null,
-      "quota_delta_basis": null
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1794448689,\"before_used_percent\":79,\"after_used_percent\":80,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
     },
     {
       "at": "2026-11-08T00:07:40.783716+00:00",
@@ -22819,10 +22761,10 @@
     "daily_call_ceiling": 24,
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
-    "account_used_percent": 79.0,
-    "quota_observed_at": "2026-11-08T00:16:19.716050+00:00",
-    "target_gap_percentage_points": 1.0,
-    "account_limit_reason": null,
+    "account_used_percent": 80.0,
+    "quota_observed_at": "2026-11-08T00:18:16.647376+00:00",
+    "target_gap_percentage_points": 0,
+    "account_limit_reason": "20% account reserve reached",
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
   "execution_quality": {
@@ -23665,7 +23607,7 @@
     "activated_at": "2026-11-08T00:14:18.510329+00:00",
     "research_sprint": true,
     "research_handoff_verified": true,
-    "updated_at": "2026-11-08T00:16:11.279005+00:00",
+    "updated_at": "2026-11-08T00:18:13.031342+00:00",
     "recovery_drills": {
       "interrupt": true,
       "crash": true,
@@ -23697,7 +23639,7 @@
         80
       ],
       "initial_account_usage_percent": 2,
-      "latest_observed_account_usage_percent": 79,
+      "latest_observed_account_usage_percent": 80,
       "background_daily_attempts": 96,
       "core_daily_attempts": 24,
       "kernel": "paper-execution-20261107-r5",
@@ -23715,7 +23657,9 @@
       "base_install_distributions": 14,
       "live_daily_features_verified": 210,
       "legacy_adaptive_entries_preserved": 64,
-      "latest_observed_at": "2026-11-08T00:13:43.204424+00:00"
+      "latest_observed_at": "2026-11-08T00:17:16.623040+00:00",
+      "weekly_usage_target_reached": true,
+      "weekly_usage_target_reached_at": "2026-11-08T00:17:16.623040+00:00"
     },
     "local_browser_qa": "passed_22_checks_at_1440_and_390",
     "previous_source_commit": "443e6ca35847749d4cabb90f038a5411a2330357",
