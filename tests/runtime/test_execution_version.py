@@ -3,7 +3,8 @@ from datetime import timedelta, timezone
 import pytest
 
 from agent_trader.runtime.engine import EXECUTION_KERNEL, Engine, current_execution_verified
-from tests.runtime.test_execution_check import runtime as runtime, start, fill_entry, fill_exit
+from tests.runtime.test_execution_check import runtime as runtime, start, fill_entry, fill_exit, fresh_smoke
+from tests.runtime.session_fixtures import install
 
 
 OLD_RECEIPT = "2026-11-02T14:35:37.790606+00:00"
@@ -62,6 +63,7 @@ def test_historical_success_cannot_authorize_entry_for_required_kernel(
     engine = Engine(config, store, broker)
     assert engine.reconcile(now)
     store.set("market_open", True)
+    install(store, now, closed=now + timedelta(hours=4))
     require_new_kernel(store)
     with pytest.raises(ValueError, match="Execution smoke check not verified"):
         engine.validate_entry(plan, quote, now, now + timedelta(hours=4))
@@ -129,13 +131,13 @@ def test_new_round_trip_certifies_kernel_and_preserves_historical_timestamp(runt
     require_new_kernel(s.store)
     row = start(runtime)
     assert s.store.get("smoke:" + now.date().isoformat())["execution_kernel"] == EXECUTION_KERNEL
-    assert not s.smoke(now + timedelta(seconds=20), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=20), now.replace(minute=30), close)
     assert broker.submissions == 1
     assert not current_execution_verified(s.store.get("readiness"))
     fill_entry(s, broker, row, 1)
-    assert not s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     fill_exit(s, broker, 1)
-    assert s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close)
+    assert fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close)
     ready = s.store.get("readiness")
     assert current_execution_verified(ready)
     assert ready["execution_verified_at"] == OLD_RECEIPT
@@ -144,7 +146,7 @@ def test_new_round_trip_certifies_kernel_and_preserves_historical_timestamp(runt
     history = s.store.get("execution_verification_history")
     assert history[0]["verified_at"] == OLD_RECEIPT
     assert history[-1]["kernel"] == EXECUTION_KERNEL
-    assert s.smoke(now + timedelta(minutes=2), now.replace(minute=30), close)
+    assert fresh_smoke(s, now + timedelta(minutes=2), now.replace(minute=30), close)
     assert len(s.store.get("execution_verification_history")) == 2
     assert broker.submissions == 2
 
@@ -153,13 +155,13 @@ def test_old_kernel_receipt_cannot_be_relabelled_and_does_not_create_second_dail
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 1)
-    s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     fill_exit(s, broker, 1)
     key = "smoke:" + now.date().isoformat()
     s.store.set(key, {**s.store.get(key), "execution_kernel": "older"})
     require_new_kernel(s.store)
     for minutes in (1, 2, 3):
-        assert not s.smoke(now + timedelta(minutes=minutes), now.replace(minute=30), close)
+        assert not fresh_smoke(s, now + timedelta(minutes=minutes), now.replace(minute=30), close)
     assert not current_execution_verified(s.store.get("readiness"))
     assert s.store.get("readiness")["execution_verified_at"] == OLD_RECEIPT
     assert broker.submissions == 2
@@ -170,9 +172,9 @@ def test_required_reverification_never_submits_outside_session(runtime):
     s, broker, now, close = runtime
     require_new_kernel(s.store)
     opened = now.replace(minute=30)
-    assert not s.smoke(opened - timedelta(minutes=1), opened, close)
-    assert not s.smoke(close, opened, close)
-    assert not s.smoke(close + timedelta(hours=2), opened, close)
+    assert not fresh_smoke(s, opened - timedelta(minutes=1), opened, close)
+    assert not fresh_smoke(s, close, opened, close)
+    assert not fresh_smoke(s, close + timedelta(hours=2), opened, close)
     assert broker.submissions == 0
     assert not s.store.get("smoke:" + now.date().isoformat())
 
@@ -183,7 +185,7 @@ def test_older_binary_cannot_certify_a_different_required_release(runtime):
     s.store.set(
         "readiness", {**s.store.get("readiness"), "required_execution_kernel": "future-kernel"}
     )
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
 
 

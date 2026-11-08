@@ -319,11 +319,13 @@ def test_review_packet_is_complete_json_and_reports_selection(store):
 
 def test_observational_lab_failure_does_not_prevent_owned_exit(config, broker, monkeypatch, plan):
     from agent_trader.runtime import supervisor
+    from tests.runtime.session_fixtures import install
 
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     s = supervisor.Supervisor(config)
     try:
-        now = datetime.now(ET)
+        now = datetime(2026, 11, 6, 10, tzinfo=ET)
+        install(s.store, now)
         day = now.date().isoformat()
         p = {**plan, "expires_at": (now + timedelta(hours=1)).isoformat()}
         s.engine.add_plans([p], day)
@@ -339,7 +341,7 @@ def test_observational_lab_failure_does_not_prevent_owned_exit(config, broker, m
                 "branch": "intraday",
             },
         )
-        s.store.set("calendar:" + day, [{"open": "09:30", "close": "16:00"}])
+        s.store.set("calendar:" + day, [{"date": day, "open": "09:30", "close": "16:00"}])
         s.cohorts.symbols = lambda *args: (_ for _ in ()).throw(
             RuntimeError("research data problem")
         )
@@ -348,7 +350,7 @@ def test_observational_lab_failure_does_not_prevent_owned_exit(config, broker, m
         )
         s.cohorts.mark = lambda *args: (_ for _ in ()).throw(RuntimeError("research data problem"))
         exits = []
-        s.engine.exit_holding = lambda *args: exits.append(args) or True
+        s.engine.exit_holding = lambda *args, **kwargs: exits.append(args) or True
         s.market_tick(now, now + timedelta(hours=1))
         assert exits and exits[0][0] == "AAPL"
         assert s.store.rows("SELECT * FROM events WHERE kind='cohort_error'")

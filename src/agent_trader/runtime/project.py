@@ -95,7 +95,7 @@ DECISIONS = [
         "title": "Observe fixed signals without forcing orders",
         "why": "Waiting for model-generated price plans can starve research. Twelve preregistered cohorts can collect fresh paired quote observations across the liquid universe.",
         "evidence": "Pre-open signal freeze; first observed quotes; missing exits are not evaluable. No broker allocation or automatic promotion.",
-        "status": "active; forward collection awaits market",
+        "status": "active; forward observations retained",
     },
     {
         "date": "2026-10-29",

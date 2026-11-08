@@ -41,8 +41,17 @@ Evidence labels have limited meanings:
 
 The strategy dashboard displays research, all twelve screens, known limitations,
 parallel experiments and observed progress. Account-wide weekly allowance and the
-24-call daily ceiling remain; this sprint shifts work toward early research rather
-than buying more capacity or increasing financial risk.
+24-call core daily ceiling remain, including reserved review capacity. A separate
+bounded background queue permits up to 96 attempts per day across evidence-linked
+questions and independent reviews. Both queues stop admitting model work at 80%
+weekly account usage. They do not buy capacity, require trades, or relax risk gates.
+
+Background work is keyed to retained evidence, with limited revisions and retries;
+unchanged evidence is not repeatedly analyzed to fill a quota. Accepted findings
+carry sources, uncertainty and expiry into later briefs. The planning audit found
+23 historical research invocations with empty plan arrays, so adding model calls
+alone cannot be presented as a repair for dropped plans. New fresh-open priority
+and input-quality fixes require future-session observations to establish benefit.
 
 ## Source quality, input readiness and daily audit
 

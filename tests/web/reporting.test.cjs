@@ -63,3 +63,25 @@ test('unknown monetary values remain distinct from real zero and numeric fee str
   assert.equal(vm.runInContext('signed(0)', context), '+$0.00');
   assert.equal(vm.runInContext("money('-0.03')", context), '-$0.03');
 });
+
+test('session panel labels unknown evidence and actual regular close without claiming readiness', () => {
+  context.fixture = {operational_session: {state: 'unknown', assessed_at: '2026-11-27T12:49:31-05:00', reason_codes: ['clock_timestamp_stale'], calendar: {day: '2026-11-27', close_at: '2026-11-27T13:00:00-05:00'}, clock: {timestamp: '2026-11-27T12:49:00-05:00'}}};
+  vm.runInContext('state=fixture', context);
+  const html = vm.runInContext('sessionEvidencePanel()', context);
+  assert.ok(html.includes('Unknown / awaiting compatible evidence'));
+  assert.ok(html.includes('Regular close'));
+  assert.ok(html.toLowerCase().includes('clock timestamp stale'));
+  assert.ok(html.includes('Existing protection remains'));
+  assert.ok(!html.includes('Regular session confirmed'));
+});
+
+test('session panel distinguishes a confirmed non-session from missing evidence', () => {
+  context.fixture = {operational_session: {state: 'non_session', reason_codes: [], calendar: {day: '2026-11-07'}}};
+  vm.runInContext('state=fixture', context);
+  assert.ok(vm.runInContext('sessionEvidencePanel()', context).includes('No regular session today'));
+  context.fixture = {};
+  vm.runInContext('state=fixture', context);
+  const html = vm.runInContext('sessionEvidencePanel()', context);
+  assert.ok(html.includes('Unknown / awaiting compatible evidence'));
+  assert.ok(!html.includes('No regular session today'));
+});

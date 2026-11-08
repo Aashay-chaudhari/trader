@@ -9,11 +9,12 @@ from agent_trader.runtime.exploration import record_report, record_validation, e
 from agent_trader.runtime.intelligence import capture_observations
 from agent_trader.runtime.models import ExplorationReport, ResearchValidation
 from agent_trader.runtime.quality import daily_audit
+from agent_trader.runtime.config import ET
 
 
 def observation_draft(store):
     now = datetime.now(timezone.utc)
-    day = (now - timedelta(days=1)).date().isoformat()
+    day = (now.astimezone(ET) - timedelta(days=1)).date().isoformat()
     packet = {
         "observed_at": now.isoformat(),
         "daily_indicators": {
@@ -190,14 +191,16 @@ def test_oversized_input_rejected_before_model_call(config, monkeypatch):
 def test_completed_fresh_open_job_allows_requested_refresh(config, monkeypatch, broker):
     from agent_trader.runtime import supervisor
     from agent_trader.runtime.config import ET
+    from tests.runtime.test_operational_session import clock
 
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     monkeypatch.setattr(supervisor, "notify", lambda *a, **k: True)
     s = supervisor.Supervisor(config)
     now = datetime.now(ET).replace(hour=9, minute=55, second=0, microsecond=0)
     day = now.date().isoformat()
-    broker.clock = lambda: {"is_open": True, "timestamp": now.isoformat()}
-    s.store.set("calendar:" + day, [{"open": "09:30", "close": "16:00"}])
+    broker.clock = lambda: clock(now, next_day=(now + timedelta(days=1)).date().isoformat())
+    broker.calendar = lambda date: [{"date": date, "open": "09:30", "close": "16:00"}]
+    s.store.set("calendar:" + day, broker.calendar(day))
     s.store.set("preflight_day", day)
     s.store.set("brief_day", day)
     s.store.set("needs_research", True)
@@ -218,17 +221,19 @@ def test_completed_fresh_open_job_allows_requested_refresh(config, monkeypatch, 
 def test_shadow_bad_dates_cannot_interrupt_observation_marking(config, monkeypatch, broker, plan):
     from agent_trader.runtime import supervisor
     from agent_trader.runtime.config import ET
+    from tests.runtime.session_fixtures import install
 
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     s = supervisor.Supervisor(config)
-    now = datetime.now(ET)
+    now = datetime(2026, 11, 6, 10, tzinfo=ET)
+    install(s.store, now)
     p = {
         **plan,
         "expires_at": (now + timedelta(hours=1)).isoformat(),
         "evidence": [{**plan["evidence"][0], "observed_at": now.replace(tzinfo=None).isoformat()}],
     }
     s.store.set("exploration_shadow_plans", [p])
-    s.store.set("calendar:" + now.date().isoformat(), [{"open": "09:30", "close": "16:00"}])
+    s.store.set("calendar:" + now.date().isoformat(), [{"date": now.date().isoformat(), "open": "09:30", "close": "16:00"}])
     marked = []
     s.cohorts.mark = lambda *args: marked.append(True)
     try:

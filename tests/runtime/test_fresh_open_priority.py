@@ -8,6 +8,7 @@ import pytest
 from agent_trader.runtime.config import ET
 from agent_trader.runtime.supervisor import Supervisor
 from tests.runtime import test_scheduler_priorities as scheduler_tests
+from tests.runtime.test_operational_session import clock as session_clock
 
 scheduler = scheduler_tests.scheduler
 
@@ -17,7 +18,7 @@ def pending_review(scheduler, broker, monkeypatch, now, *, plans=()):
     scheduler.store.set("exploration_draft", {"revision": "overdue-review"})
     monkeypatch.setattr(scheduler, "pending_research_validation", Supervisor.pending_research_validation.__get__(scheduler))
     monkeypatch.setattr(scheduler, "smoke", lambda *args: None)
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: None)
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: None)
     monkeypatch.setattr(scheduler.engine, "plans", lambda *args: list(plans))
     launches = []
 
@@ -39,7 +40,7 @@ def test_last_fresh_open_minute_precedes_overdue_validation_without_discarding_r
     # Completing the fresh pass does not silently mark the research review done.
     scheduler.future = None
     later = now.replace(minute=16)
-    monkeypatch.setattr(broker, "clock", lambda: {"is_open": True, "timestamp": later.isoformat()})
+    monkeypatch.setattr(broker, "clock", lambda: session_clock(later, next_day="2026-11-09"))
     scheduler.tick(later)
     assert launches[-1] == ("research-validation:overdue-review", "research_validation")
     assert broker.submissions == 0

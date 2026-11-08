@@ -249,7 +249,7 @@ def test_early_tick_return_preserves_cancellation_delivery_after_priority_work(
     monkeypatch.setattr(scheduler, "launch", lambda *args: pytest.fail("Early return cannot dispatch model work"))
     if early_return == "overdue":
         monkeypatch.setattr(scheduler.engine, "overdue_intraday", lambda _: True)
-        monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: calls.append("close"))
+        monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: calls.append("close"))
     elif early_return == "clock":
         monkeypatch.setattr(broker, "clock", lambda: {"is_open": False, "timestamp": now.isoformat()})
     else:

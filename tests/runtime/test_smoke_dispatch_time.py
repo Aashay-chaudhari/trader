@@ -5,6 +5,7 @@ import pytest
 from agent_trader.runtime import supervisor
 from agent_trader.runtime.engine import EXECUTION_KERNEL, current_execution_verified, timestamp
 from tests.runtime.test_execution_check import (
+    fresh_smoke,
     runtime as runtime,
     fill_entry,
     fill_exit,
@@ -36,7 +37,7 @@ def test_quote_that_expires_during_fetch_cannot_create_smoke_intent(timed, monke
 
     monkeypatch.setattr(broker, "quotes", quotes)
     with pytest.raises(ValueError, match="stale"):
-        s.smoke(now, now.replace(minute=30), close)
+        fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
     assert not s.store.rows("SELECT * FROM orders")
     assert not s.store.get("smoke:" + now.date().isoformat())
@@ -50,7 +51,7 @@ def test_fresh_quote_after_slow_request_does_not_refresh_stale_account(timed, mo
         return {"SPY": {"bp": 100, "ap": 100.01, "t": (now + timedelta(seconds=100)).isoformat()}}
 
     monkeypatch.setattr(broker, "quotes", quotes)
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
     assert s.store.get("last_reconciled") == now.isoformat()
     assert not s.store.get("smoke:" + now.date().isoformat())
@@ -60,7 +61,7 @@ def test_fresh_quote_after_slow_request_does_not_refresh_stale_account(timed, mo
 def test_new_stage_uses_existing_account_freshness_boundaries(timed, age, admitted):
     s, broker, now, close, _ = timed
     s.store.set("last_reconciled", (now - timedelta(seconds=age)).isoformat())
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == int(admitted)
 
 
@@ -68,7 +69,7 @@ def test_new_stage_uses_existing_account_freshness_boundaries(timed, age, admitt
 def test_new_stage_requires_a_valid_aware_reconciliation_receipt(timed, receipt):
     s, broker, now, close, _ = timed
     s.store.set("last_reconciled", receipt)
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
 
 
@@ -88,7 +89,7 @@ def test_fresh_delayed_quote_starts_two_minute_horizon_at_actual_receipt(timed, 
 
     monkeypatch.setattr(broker, "orders", orders)
     monkeypatch.setattr(broker, "quotes", quotes)
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     stage = s.store.get("smoke:" + now.date().isoformat())
     submitted = now + timedelta(seconds=20)
     assert timestamp(stage["at"]) == submitted
@@ -100,7 +101,7 @@ def test_fresh_delayed_quote_starts_two_minute_horizon_at_actual_receipt(timed, 
     s.engine.cancel_entries(submitted + timedelta(minutes=2), close)
     assert broker.items[row["broker_id"]]["status"] == "canceled"
     assert s.engine.reconcile(submitted + timedelta(minutes=2, seconds=1))
-    assert not s.smoke(submitted + timedelta(minutes=3), now.replace(minute=30), close)
+    assert not fresh_smoke(s, submitted + timedelta(minutes=3), now.replace(minute=30), close)
     assert s.store.get("smoke:" + now.date().isoformat())["state"] == "unfilled"
     assert broker.submissions == 1
 
@@ -128,7 +129,7 @@ def test_slow_lookup_cannot_cross_new_smoke_cutoff(timed, monkeypatch, route, de
 
     monkeypatch.setattr(broker, "orders", orders)
     monkeypatch.setattr(broker, "quotes", quotes)
-    assert not s.smoke(now, now.replace(hour=9, minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(hour=9, minute=30, second=0), close)
     assert calls == (["orders"] if route == "orders" else ["orders", "quotes"])
     assert broker.submissions == 0
     assert not s.store.get("smoke:" + now.date().isoformat())
@@ -157,7 +158,7 @@ def test_admission_changed_during_quote_request_blocks_submission(timed, monkeyp
         return {"SPY": {"bp": 100, "ap": 100.01, "t": now.isoformat()}}
 
     monkeypatch.setattr(broker, "quotes", quotes)
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
     assert not s.store.get("smoke:" + now.date().isoformat())
 
@@ -166,7 +167,7 @@ def test_quota_block_prevents_new_smoke_without_any_quote_request(timed, monkeyp
     s, broker, now, close, _ = timed
     s.store.set("entry_budget_blocked", True)
     monkeypatch.setattr(broker, "quotes", lambda _: pytest.fail("Blocked before data request"))
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     assert broker.submissions == 0
     assert not current_execution_verified(s.store.get("readiness"))
     assert s.store.get("readiness")["execution_verified_at"] == "2026-11-02T14:35:37+00:00"
@@ -175,24 +176,24 @@ def test_quota_block_prevents_new_smoke_without_any_quote_request(timed, monkeyp
 @pytest.mark.parametrize("qty,verified", [(1, True), (0.5, False)])
 def test_existing_stage_unwinds_after_quota_block_without_new_entry(timed, qty, verified):
     s, broker, now, close, _ = timed
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     entry = s.store.rows("SELECT * FROM orders WHERE side='buy'")[0]
     s.store.set("entry_budget_blocked", True)
     fill_entry(s, broker, entry, qty)
-    assert not s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     fill_exit(s, broker, qty)
-    assert s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close) is verified
+    assert fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close) is verified
     assert current_execution_verified(s.store.get("readiness")) is verified
     assert s.store.get("entry_budget_blocked") is True
     assert s.store.get("readiness")["execution_verified_at"] == "2026-11-02T14:35:37+00:00"
     assert not s.store.rows("SELECT * FROM holdings")
-    s.smoke(now + timedelta(minutes=2), now.replace(minute=30), close)
+    fresh_smoke(s, now + timedelta(minutes=2), now.replace(minute=30), close)
     assert broker.submissions == 2
 
 
 def test_reconciliation_latency_cannot_extend_existing_stage_deadline(timed, monkeypatch):
     s, broker, now, close, elapsed = timed
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     day = now.date().isoformat()
     key = "smoke:" + day
     stage = s.store.get(key)
@@ -215,7 +216,13 @@ def test_reconciliation_latency_cannot_extend_existing_stage_deadline(timed, mon
         lambda: {
             "is_open": True,
             "timestamp": (tick_at + timedelta(seconds=elapsed[0])).isoformat(),
+            "next_open": (now.replace(minute=30) + timedelta(days=1)).isoformat(),
+            "next_close": close.isoformat(),
         },
+        raising=False,
+    )
+    monkeypatch.setattr(
+        broker, "calendar", lambda _: [{"date": day, "open": "09:30", "close": "16:00"}],
         raising=False,
     )
     monkeypatch.setattr(s, "market_tick", lambda *args: None)

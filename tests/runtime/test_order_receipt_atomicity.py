@@ -251,7 +251,7 @@ def test_completed_truthful_receipt_survives_later_network_failure_without_doubl
     assert len(fill_events(store)) == 1
 
 
-@pytest.mark.parametrize("prior_kernel", ["paper-execution-20261107-r2", "paper-execution-20261107-r3"])
+@pytest.mark.parametrize("prior_kernel", ["paper-execution-20261107-r2", "paper-execution-20261107-r3", "paper-execution-20261107-r4"])
 def test_prior_kernel_receipt_does_not_certify_current_execution_kernel(prior_kernel):
     ready = {
         "execution_verified": True,

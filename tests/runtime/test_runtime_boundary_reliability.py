@@ -12,6 +12,8 @@ from agent_trader.runtime.broker import Broker
 from agent_trader.runtime.config import ET
 from agent_trader.runtime.engine import Engine
 from tests.runtime.test_scheduler_priorities import prepare, scheduler as scheduler
+from tests.runtime.test_operational_session import clock as session_clock
+from tests.runtime.session_fixtures import install as install_session
 
 
 def test_nested_parent_survives_refresh_and_authorizes_real_protective_shrink(
@@ -70,7 +72,7 @@ def test_nested_parent_survives_refresh_and_authorizes_real_protective_shrink(
         broker.client.close()
 
 
-def test_slow_notification_and_clock_response_do_not_defer_intraday_closing(
+def test_slow_notification_defers_stale_clock_then_fresh_tick_prioritizes_closing(
     scheduler, broker, monkeypatch
 ):
     now = datetime(2026, 11, 6, 15, 49, tzinfo=ET)
@@ -86,17 +88,25 @@ def test_slow_notification_and_clock_response_do_not_defer_intraday_closing(
     def delayed_clock():
         stamp = now + timedelta(seconds=elapsed[0])
         elapsed[0] += 20
-        return {"is_open": True, "timestamp": stamp.isoformat()}
+        return session_clock(stamp, next_day="2026-11-09")
 
     monkeypatch.setattr(supervisor, "notify", delayed_notification)
     monkeypatch.setattr(broker, "clock", delayed_clock)
     closed = []
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: closed.append(True))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: closed.append(True))
     scheduler.tick(now)
+    assert closed == []
+    assert scheduler.store.get("market_open") is False
+    assert scheduler.store.get("operational_session")["assessment"]["reason_codes"] == ["clock_timestamp_stale"]
+    later = now + timedelta(seconds=elapsed[0])
+    prepare(scheduler, broker, monkeypatch, later)
+    monkeypatch.setattr(supervisor, "notify", lambda *args, **kwargs: False)
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: pytest.fail("Closing takes priority on recovery"))
+    scheduler.tick(later)
     assert closed == [True]
     assert scheduler.store.get("market_open") is True
     codes = [json.loads(row["payload"])["code"] for row in scheduler.store.rows("SELECT payload FROM events WHERE kind='incident'")]
-    assert "clock_drift" not in codes and "broker_clock" not in codes
+    assert codes == ["broker_clock"]  # The stale episode remains visible after recovery.
 
 
 def held_exit(scheduler, broker, now, *, protected=False):
@@ -129,8 +139,9 @@ def quotes_fail(*args):
 
 
 def test_validated_exit_submits_once_despite_market_data_outage(scheduler, broker, monkeypatch):
-    now = datetime.now(ET)
+    now = datetime(2026, 11, 9, 10, tzinfo=ET)
     held_exit(scheduler, broker, now)
+    install_session(scheduler.store, now)
     monkeypatch.setattr(broker, "quotes", quotes_fail)
     monkeypatch.setattr(scheduler.engine, "enter", lambda *a: pytest.fail("No entry without quotes"))
     # This fixture normally stubs market_tick; invoke the implementation explicitly.
@@ -148,8 +159,9 @@ def test_validated_exit_submits_once_despite_market_data_outage(scheduler, broke
 def test_quote_outage_keeps_exit_pending_until_protection_cancel_confirmed(
     scheduler, broker, monkeypatch
 ):
-    now = datetime.now(ET)
+    now = datetime(2026, 11, 9, 10, tzinfo=ET)
     held_exit(scheduler, broker, now, protected=True)
+    install_session(scheduler.store, now)
     monkeypatch.setattr(broker, "quotes", quotes_fail)
     monkeypatch.setattr(broker, "cancel", lambda oid: broker.items[oid].update(status="pending_cancel"))
     with pytest.raises(httpx.ReadTimeout):
@@ -158,6 +170,7 @@ def test_quote_outage_keeps_exit_pending_until_protection_cancel_confirmed(
     assert scheduler.store.get("exit-intent:AAPL")
     broker.items["stop"]["status"] = "canceled"
     assert scheduler.engine.reconcile(now)
+    install_session(scheduler.store, now + timedelta(seconds=30))
     with pytest.raises(httpx.ReadTimeout):
         supervisor.Supervisor.market_tick(scheduler, now + timedelta(seconds=30), now + timedelta(hours=1))
     assert broker.submissions == 1
@@ -281,7 +294,9 @@ def test_concurrent_staging_cannot_add_private_file_to_publication_commit(config
 
 
 def test_fresh_target_from_delayed_quote_exits_in_same_tick(scheduler, broker, monkeypatch):
-    now = datetime.now(ET)
+    from agent_trader.runtime import engine
+
+    now = datetime(2026, 11, 9, 10, tzinfo=ET)
     held_exit(scheduler, broker, now)
     scheduler.store.set("exit-intent:AAPL", None)
     scheduler.store.db.execute(
@@ -290,6 +305,16 @@ def test_fresh_target_from_delayed_quote_exits_in_same_tick(scheduler, broker, m
     )
     elapsed = [0.0]
     monkeypatch.setattr(supervisor.time, "monotonic", lambda: elapsed[0])
+    closed = now.replace(hour=16)
+    install_session(scheduler.store, now, closed=closed)
+    scheduler.store.set("calendar:" + now.date().isoformat(), scheduler.store.get("operational_session")["calendar_raw"])
+
+    class ExecutionClock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return (now + timedelta(seconds=elapsed[0])).astimezone(tz or ET)
+
+    monkeypatch.setattr(engine, "datetime", ExecutionClock)
 
     def delayed_quotes(symbols):
         elapsed[0] += 20
@@ -297,7 +322,7 @@ def test_fresh_target_from_delayed_quote_exits_in_same_tick(scheduler, broker, m
 
     monkeypatch.setattr(broker, "quotes", delayed_quotes)
     monkeypatch.setattr(scheduler, "benchmarks", lambda *a: None)
-    supervisor.Supervisor.market_tick(scheduler, now, now + timedelta(hours=1))
+    supervisor.Supervisor.market_tick(scheduler, now, closed)
     assert broker.submissions == 1
     assert scheduler.store.get("exit-intent:AAPL") is None
     sells = scheduler.store.rows("SELECT qty,status FROM orders WHERE side='sell'")
@@ -311,9 +336,9 @@ def test_slow_execution_check_crossing_close_cutoff_runs_closing(scheduler, brok
     elapsed = [0.0]
     monkeypatch.setattr(supervisor.time, "monotonic", lambda: elapsed[0])
     monkeypatch.setattr(scheduler, "smoke", lambda *a: elapsed.__setitem__(0, 30))
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: pytest.fail("Closing now takes priority"))
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: pytest.fail("Closing now takes priority"))
     closed = []
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: closed.append(True))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: closed.append(True))
     scheduler.tick(now)
     assert closed == [True]
 
@@ -454,23 +479,28 @@ def test_dirty_generated_dashboard_is_allowed_with_reviewed_clean_source(config,
     ]
 
 
-@pytest.mark.parametrize("elapsed_seconds,should_close", [(61, True), (781, False)])
+@pytest.mark.parametrize("elapsed_seconds,can_recover", [(61, True), (781, False)])
 def test_protection_latency_rechecks_closing_and_actual_session_end(
-    scheduler, broker, monkeypatch, elapsed_seconds, should_close
+    scheduler, broker, monkeypatch, elapsed_seconds, can_recover
 ):
     now = datetime(2026, 11, 6, 15, 47, 59, tzinfo=ET)
     prepare(scheduler, broker, monkeypatch, now)
     elapsed = [0.0]
     monkeypatch.setattr(supervisor.time, "monotonic", lambda: elapsed[0])
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: elapsed.__setitem__(0, elapsed_seconds))
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: elapsed.__setitem__(0, elapsed_seconds))
     monkeypatch.setattr(scheduler, "market_tick", lambda *a: pytest.fail("Session deadline takes priority"))
     closes = []
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: closes.append(True))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: closes.append(True))
     scheduler.tick(now)
-    assert bool(closes) is should_close
-    if not should_close:
-        assert scheduler.store.get("market_open") is False
-        assert "Existing protection retained" in scheduler.store.get("status")
+    assert closes == []
+    assert scheduler.store.get("market_open") is False
+    assert "Existing protection retained" in scheduler.store.get("status")
+    later = now + timedelta(seconds=elapsed_seconds)
+    prepare(scheduler, broker, monkeypatch, later)
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: pytest.fail("Fresh closing tick bypasses protection lookup"))
+    monkeypatch.setattr(scheduler, "launch", lambda *args: False)
+    scheduler.tick(later)
+    assert bool(closes) is can_recover
 
 
 def test_late_open_clock_response_cannot_authorize_market_exits_after_actual_close(
@@ -483,10 +513,10 @@ def test_late_open_clock_response_cannot_authorize_market_exits_after_actual_clo
 
     def delayed_clock():
         elapsed[0] = 20
-        return {"is_open": True, "timestamp": now.isoformat()}
+        return session_clock(now, next_day="2026-11-09")
 
     monkeypatch.setattr(broker, "clock", delayed_clock)
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: pytest.fail("No market exit after close"))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: pytest.fail("No market exit after close"))
     monkeypatch.setattr(scheduler, "apply_pending_exits", lambda *a: pytest.fail("No approved exit after close"))
     scheduler.tick(now)
     assert scheduler.store.get("market_open") is False
@@ -503,8 +533,14 @@ def test_pending_exit_latency_rechecks_cutoff_before_restoring_protection(schedu
         return set()
 
     monkeypatch.setattr(scheduler, "apply_pending_exits", delayed_pending)
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: pytest.fail("Closing already due"))
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: pytest.fail("Closing already due"))
     closes = []
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: closes.append(True))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: closes.append(True))
     scheduler.tick(now)
+    assert closes == []
+    assert scheduler.store.get("market_open") is False
+    later = now + timedelta(seconds=61)
+    prepare(scheduler, broker, monkeypatch, later)
+    monkeypatch.setattr(scheduler, "apply_pending_exits", lambda *args: pytest.fail("Fresh closing tick bypasses pending-exit lookup"))
+    scheduler.tick(later)
     assert closes == [True]

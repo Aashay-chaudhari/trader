@@ -163,6 +163,7 @@ def _snapshot(config, store):
     from .options_coverage import public_summary as options_coverage_summary
     from .accounting import accounting_summary
     from .engine import current_execution_verified
+    from .operational_session import assess_evidence
 
     progress = Experiments(store).progress()
     input_packet = store.get("market_packet", {})
@@ -189,6 +190,15 @@ def _snapshot(config, store):
         watchdog = {}
 
     generated_at = utc_now()
+    session_proof = store.get("operational_session")
+    operational_session = assess_evidence(session_proof, datetime.fromisoformat(generated_at)).summary()
+    proof = session_proof if isinstance(session_proof, dict) else {}
+    operational_session["receipts"] = {
+        source: {key: receipt.get(key) for key in ("sha256", "requested_at", "received_at")}
+        for source in ("calendar", "clock")
+        if isinstance(receipt := proof.get(source + "_receipt"), dict)
+    }
+    operational_session["scope"] = "Session evidence reassessed at snapshot time; not a guarantee of current execution readiness."
     day = datetime.fromisoformat(generated_at).astimezone(
         __import__("zoneinfo").ZoneInfo("America/New_York")
     ).date().isoformat()
@@ -255,6 +265,7 @@ def _snapshot(config, store):
             },
             "reconciliation_errors": store.get("reconciliation_errors", []),
             "calendar": store.get("calendar", {}),
+            "operational_session": operational_session,
             "branches": branches,
             "accounting": {
                 "broker_equity": broker_equity,

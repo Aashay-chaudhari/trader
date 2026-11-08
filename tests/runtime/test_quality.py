@@ -335,6 +335,7 @@ def test_daily_packet_has_exact_three_day_return_and_preserved_input(store, monk
 
 def test_flat_session_has_only_one_midday_context_pulse(config, broker, monkeypatch):
     from agent_trader.runtime import supervisor
+    from tests.runtime.test_operational_session import clock
 
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     monkeypatch.setattr(supervisor, "notify", lambda *a, **k: True)
@@ -342,8 +343,9 @@ def test_flat_session_has_only_one_midday_context_pulse(config, broker, monkeypa
     calls = []
     current = datetime.now(ET).replace(hour=11, minute=0, second=0, microsecond=0)
     day = current.date().isoformat()
-    broker.clock = lambda: {"is_open": True, "timestamp": current.isoformat()}
-    s.store.set("calendar:" + day, [{"open": "09:30", "close": "16:00"}])
+    broker.clock = lambda: clock(current, next_day=(current + timedelta(days=1)).date().isoformat())
+    broker.calendar = lambda date: [{"date": date, "open": "09:30", "close": "16:00"}]
+    s.store.set("calendar:" + day, broker.calendar(day))
     s.store.set("preflight_day", day)
     s.store.set("brief_day", day)
     s.store.set("readiness", {"execution_verified": True, "funded": True, "models_available": True})

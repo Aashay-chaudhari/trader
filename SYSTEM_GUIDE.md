@@ -44,9 +44,11 @@ rm .runtime/maintenance.flag
 systemctl --user start agent-trader.service
 ```
 
-`.runtime/agent-pause.flag` pauses new model jobs only, preserving Python broker
-reconciliation and closing. Remove it to resume research/review. The watchdog
-remains active during this model pause.
+`.runtime/agent-pause.flag` pauses new worker jobs, including model inference,
+quota/accounting refresh and data-only options capture. Deterministic Python broker
+reconciliation, protection and closing continue subject to their normal gates.
+Remove it to resume worker scheduling; the quota policy separately blocks model
+work when allowance is unavailable. The watchdog remains active during this pause.
 
 The supervisor uses Eastern market-calendar times: startup notification at/after
 07:45 ET, research from 08:15, and broker-calendar closing routines. A late startup
@@ -91,6 +93,10 @@ prices. Their allocation remains reserved. No live trading is supported.
 ## Failure behavior
 
 - Missing/stale quotes, stale approval, unknown event risk: reject entry.
+- Missing, malformed, stale or conflicting clock/calendar evidence: retain broker
+  protection and defer new entries, protective-order replacement and market exits.
+  Exact owned entry cancellations may continue for independently known expiry,
+  branch pause or material-change reasons. A guessed closing time is not used.
 - Broker timeout: query deterministic client ID; never blindly duplicate.
 - External positions/orders or cash mismatch: halt entries and alert. Inspect
   account activity, reconcile attribution deliberately; do not overwrite the ledger.

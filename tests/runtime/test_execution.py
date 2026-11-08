@@ -4,13 +4,14 @@ import pytest
 
 from agent_trader.runtime.engine import Engine, order_id
 from agent_trader.runtime.models import Plan
+from tests.runtime.session_fixtures import approve, install
 
 
 def ready(store, broker, config, now):
     e = Engine(config, store, broker)
     assert e.reconcile(now)
     store.set("readiness", {"execution_verified": True})
-    store.set("market_open", True)
+    install(store, now, closed=now + timedelta(hours=4))
     return e
 
 
@@ -31,7 +32,8 @@ def fill(cid="entry-1", qty=10, price=100, side="buy", symbol="AAPL", status="pa
 def test_submitted_orders_are_not_positions(store, broker, config, now, plan, quote):
     e = ready(store, broker, config, now)
     e.add_plans([plan], "2026-10-30")
-    e.enter(plan, quote, now, now + timedelta(hours=5))
+    approve(store, plan, now)
+    e.enter(plan, quote, now, now + timedelta(hours=4))
     assert not store.rows("SELECT * FROM holdings")
     assert store.rows("SELECT cash FROM branches WHERE name='intraday'")[0]["cash"] == 10000
 
@@ -135,6 +137,7 @@ def test_revalidation_blocks_stale_price_after_model_reply(store, broker, config
 
 def test_early_close_uses_actual_close(store, broker, config, now, plan, quote):
     e = ready(store, broker, config, now)
+    install(store, now, closed=now + timedelta(minutes=20))
     with pytest.raises(ValueError, match="cutoff"):
         e.validate_entry(plan, quote, now, now + timedelta(minutes=20))
 
@@ -143,6 +146,8 @@ def test_duplicate_plan_submission_and_cross_branch_overlap_blocked(
     store, broker, config, now, plan, quote
 ):
     e = ready(store, broker, config, now)
+    e.add_plans([plan], now.date().isoformat())
+    approve(store, plan, now)
     e.enter(plan, quote, now, now + timedelta(hours=4))
     with pytest.raises(ValueError, match="already submitted"):
         e.enter(plan, quote, now, now + timedelta(hours=4))
@@ -263,7 +268,9 @@ def test_missing_stop_is_restored_after_rejected_exit(store, broker, config, now
     broker.pos = [{"symbol": "AAPL", "qty": "10", "market_value": "1000"}]
     broker.cash = 29000
     assert e.reconcile(now)
-    e.ensure_protection()
+    install(store, now)
+    broker.quotes = lambda symbols: {s: {"bp": 100, "ap": 100.01, "t": now.isoformat()} for s in symbols}
+    e.ensure_protection(now=now)
     protect = [o for o in broker.items.values() if o["side"] == "sell"]
     assert len(protect) == 1 and protect[0]["type"] == "stop"
     assert protect[0]["stop_price"] == "97.0"

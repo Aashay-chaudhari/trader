@@ -138,7 +138,7 @@ def test_unimplemented_experiment_cannot_be_auto_promoted(store):
 
 
 def test_early_close_calendar():
-    opened, closed = session_times([{"open": "09:30", "close": "13:00"}], "2026-11-27")
+    opened, closed = session_times([{"date": "2026-11-27", "open": "09:30", "close": "13:00"}], "2026-11-27")
     assert closed.hour == 13 and opened.tzinfo is not None
     assert session_times([], "2026-12-25") is None
 

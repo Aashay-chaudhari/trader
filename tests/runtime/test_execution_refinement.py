@@ -4,6 +4,7 @@ from datetime import timedelta
 import pytest
 
 from agent_trader.runtime.engine import Engine
+from tests.runtime.session_fixtures import install
 
 
 def own_position(store, broker, config, now, plan, *, branch="intraday"):
@@ -27,6 +28,8 @@ def own_position(store, broker, config, now, plan, *, branch="intraday"):
     broker.cash = 29000
     broker.pos = [{"symbol": "AAPL", "qty": "10", "market_value": "1000"}]
     assert engine.reconcile(now)
+    install(store, now)
+    broker.quotes = lambda symbols: {s: {"bp": 100, "ap": 100.01, "t": now.isoformat()} for s in symbols}
     return engine, parent
 
 
@@ -34,7 +37,7 @@ def ready_empty(store, broker, config, now):
     engine = Engine(config, store, broker)
     assert engine.reconcile(now)
     store.set("readiness", {"execution_verified": True})
-    store.set("market_open", True)
+    install(store, now, closed=now + timedelta(hours=4))
     return engine
 
 
@@ -43,7 +46,7 @@ def test_exit_does_not_submit_after_post_cancel_reconciliation_fails(
 ):
     engine, _ = own_position(store, broker, config, now, plan)
     broker.cash -= 100  # An external change arrives after prior reconciliation.
-    assert engine.exit_holding("AAPL", "target reached") is False
+    assert engine.exit_holding("AAPL", "target reached", now=now) is False
     assert not store.get("reconciled")
     assert broker.submissions == 0
 
@@ -55,7 +58,7 @@ def test_confirmed_terminal_liquidation_can_retry_but_pending_attempt_is_preserv
 ):
     engine, _ = own_position(store, broker, config, now, plan)
     close = (
-        engine.close_intraday if kind == "close" else lambda: engine.exit_holding("AAPL", "exit")
+        (lambda: engine.close_intraday(now=now)) if kind == "close" else lambda: engine.exit_holding("AAPL", "exit", now=now)
     )
     close()
     first = next(o for o in broker.items.values() if o["side"] == "sell")
@@ -80,9 +83,9 @@ def test_ambiguous_liquidation_is_not_retried_under_a_new_id(store, broker, conf
 
     broker.submit = unknown
     with pytest.raises(TimeoutError):
-        engine.close_intraday()
+        engine.close_intraday(now=now)
     with pytest.raises(ValueError, match="Unresolved prepared"):
-        engine.close_intraday()
+        engine.close_intraday(now=now)
     assert len(calls) == 1
     assert store.rows("SELECT status FROM orders WHERE side='sell'")[0]["status"] == "prepared"
 
@@ -106,8 +109,8 @@ def test_cancel_request_is_not_confirmation_and_cannot_create_competing_exit(
     broker.items["stop"] = stop
     engine.ingest_order(stop, "intraday", plan["id"])
     broker.cancel = lambda oid: broker.items[oid].update(status="pending_cancel")
-    assert not engine.exit_holding("AAPL", "exit")
-    assert not engine.exit_holding("AAPL", "exit")
+    assert not engine.exit_holding("AAPL", "exit", now=now)
+    assert not engine.exit_holding("AAPL", "exit", now=now)
     assert broker.submissions == 0
 
 
@@ -176,8 +179,8 @@ def test_prior_day_pending_liquidation_not_in_open_list_cannot_duplicate(
     broker.items["old-exit"] = old
     engine.ingest_order(old, "intraday", "close:2026-10-29:AAPL")
     broker.orders = lambda: []  # Endpoint view is not a terminal-state receipt.
-    engine.close_intraday()
-    assert not engine.exit_holding("AAPL", "exit")
+    engine.close_intraday(now=now)
+    assert not engine.exit_holding("AAPL", "exit", now=now)
     assert broker.submissions == 0
 
 
@@ -321,10 +324,10 @@ def test_insufficient_stop_quantity_is_replaced_after_confirmed_cancellation(
     }
     broker.items[stop["id"]] = stop
     engine.ingest_order(stop, "intraday", plan["id"])
-    engine.ensure_protection()
+    engine.ensure_protection(now=now)
     assert stop["status"] == "canceled" and broker.submissions == 0
     assert engine.reconcile(now)
-    engine.ensure_protection()
+    engine.ensure_protection(now=now)
     active = [o for o in broker.orders() if o["side"] == "sell"]
     assert len(active) == 1 and float(active[0]["qty"]) == 10
 

@@ -29,13 +29,30 @@ def scheduler(config, broker, monkeypatch):
 
 def prepare(scheduler, broker, monkeypatch, now, *, session=True, reconciles=True, close="16:00"):
     day = now.date().isoformat()
-    scheduler.store.set("calendar:" + day, [{"date": day, "open": "09:30", "close": close}] if session else [])
+    calendar = [{"date": day, "open": "09:30", "close": close}] if session else []
+    scheduler.store.set("calendar:" + day, calendar)
+    monkeypatch.setattr(broker, "calendar", lambda _: calendar, raising=False)
     scheduler.store.set("preflight_day", day)
     scheduler.store.set("brief_day", day)
     scheduler.store.set("readiness", {"execution_verified": True, "models_available": True})
     scheduler.store.set("last-week-session:" + day, False)
     scheduler.store.set("last-session:" + day, False)
-    monkeypatch.setattr(broker, "clock", lambda: {"is_open": True, "timestamp": now.isoformat()}, raising=False)
+    opened = now.replace(hour=9, minute=30, second=0, microsecond=0)
+    closed = now.replace(hour=int(close[:2]), minute=int(close[3:]), second=0, microsecond=0)
+    next_day = now.date() + timedelta(days=1)
+    while next_day.weekday() >= 5:
+        next_day += timedelta(days=1)
+    next_open = opened.replace(year=next_day.year, month=next_day.month, day=next_day.day)
+    next_close = closed.replace(year=next_day.year, month=next_day.month, day=next_day.day)
+    is_open = session and opened <= now < closed
+    if session and now < opened:
+        next_open, next_close = opened, closed
+    elif is_open:
+        next_close = closed
+    monkeypatch.setattr(broker, "clock", lambda: {
+        "is_open": is_open, "timestamp": now.isoformat(),
+        "next_open": next_open.isoformat(), "next_close": next_close.isoformat(),
+    }, raising=False)
     monkeypatch.setattr(scheduler.engine, "reconcile", lambda *args: reconciles)
     monkeypatch.setattr(scheduler.engine, "cancel_entries", lambda *args: None)
     return day
@@ -52,12 +69,12 @@ def test_session_close_runs_before_a_failing_protection_check_even_with_busy_mod
     calls = []
     scheduler.future = Future()  # inference is still pending; Python must not wait
 
-    def protection_failure():
+    def protection_failure(**kwargs):
         calls.append("protection")
         raise TimeoutError("simulated protection lookup failure")
 
     monkeypatch.setattr(scheduler.engine, "ensure_protection", protection_failure)
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: calls.append("close"))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: calls.append("close"))
     monkeypatch.setattr(scheduler, "launch_deep_research", lambda *_: pytest.fail("Closing has priority"))
     scheduler.tick(now)
     assert calls and calls[0] == "close"
@@ -75,7 +92,7 @@ def test_weekend_reconciles_and_cancels_before_background_work(
     prepare(scheduler, broker, monkeypatch, now, session=False, reconciles=healthy)
     scheduler.store.set("mode", "halted")
     calls = []
-    monkeypatch.setattr(scheduler.engine, "reconcile", lambda: calls.append("reconcile") or healthy)
+    monkeypatch.setattr(scheduler.engine, "reconcile", lambda *args: calls.append("reconcile") or healthy)
     monkeypatch.setattr(scheduler.engine, "cancel_entries", lambda *args: calls.append("cancel_entries"))
     monkeypatch.setattr(scheduler, "launch_deep_research", lambda *_: calls.append("background"))
     monkeypatch.setattr(scheduler, "model_quota_state", lambda _: quota_state)
@@ -137,8 +154,8 @@ def test_background_work_does_not_launch_during_morning_or_market_priority_windo
     now = datetime(2026, 11, 6, hour, minute, tzinfo=ET)
     prepare(scheduler, broker, monkeypatch, now)
     monkeypatch.setattr(scheduler, "launch", lambda *args: False)
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: None)
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: None)
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: None)
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: None)
     monkeypatch.setattr(scheduler, "launch_deep_research", lambda *_: pytest.fail("Background work must wait outside market priority hours"))
     scheduler.tick(now)
     assert broker.submissions == 0

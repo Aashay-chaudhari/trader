@@ -72,7 +72,7 @@ def test_full_tick_protection_and_position_review_precede_data_probe(
 ):
     now, _ = prepare_probe(scheduler, broker, monkeypatch)
     calls = []
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: calls.append("protection"))
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: calls.append("protection"))
     monkeypatch.setattr(scheduler, "market_tick", lambda *args: calls.append("market"))
     monkeypatch.setattr(
         scheduler, "launch_position_review", lambda *args: calls.append("position_review") or False

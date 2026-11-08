@@ -9,12 +9,17 @@ from time import monotonic
 from .config import ET
 from .broker import BrokerError
 from .models import Plan
+from .operational_session import assess_evidence
 from .store import dumps, utc_now
 
 # done_for_day can resume on the next session; GTC reservations and recovery
 # must retain it until the broker confirms an actual terminal state.
 TERMINAL = {"filled", "canceled", "expired", "rejected", "replaced"}
-EXECUTION_KERNEL = "paper-execution-20261107-r4"
+EXECUTION_KERNEL = "paper-execution-20261107-r5"
+
+
+class SessionProofUnavailable(ValueError):
+    """Market side effects must wait; independently owned buy cancels may proceed."""
 
 
 def current_execution_verified(readiness):
@@ -53,6 +58,41 @@ def quote_values(q, now):
 class Engine:
     def __init__(self, config, store, broker):
         self.config, self.store, self.broker = config, store, broker
+
+    def _session_window(self, now, close=None):
+        return self._checked_session(self.store.get("operational_session"), now, close)
+
+    @staticmethod
+    def _checked_session(evidence, now, close=None):
+        assessment = assess_evidence(evidence, now)
+        window = assessment.market_window
+        if window is None:
+            raise SessionProofUnavailable("Current broker session proof unavailable: " + ",".join(assessment.reasons or (assessment.state,)))
+        if close is not None and close != window[1]:
+            raise SessionProofUnavailable("Supplied close differs from validated broker session")
+        return window
+
+    def _session_guard(self, now=None):
+        observed, started = now or datetime.now(timezone.utc), monotonic()
+
+        def current():
+            return observed + timedelta(seconds=max(0, monotonic() - started))
+
+        def validate():
+            evidence = self.store.get("operational_session")
+            return self._checked_session(evidence, current())
+
+        return current, validate
+
+    def _proven_not_sent(self, row):
+        if row["status"] != "not_sent" or row["broker_id"] or row["filled"] != 0 or row["notional"] != 0:
+            return False
+        proof = self.store.get("order-not-sent:" + row["client_id"], {})
+        identity = {key: row[key] for key in ("client_id", "branch", "symbol", "side", "qty", "plan_id", "payload")}
+        return proof.get("identity") == identity and proof.get("basis") == "local_admission_rejected_before_first_http"
+
+    def _active_orders(self, rows):
+        return [row for row in rows if not self._proven_not_sent(row)]
 
     def add_plans(self, plans, day):
         for plan in plans:
@@ -419,6 +459,8 @@ class Engine:
             "SELECT * FROM orders WHERE status NOT IN (%s)" % ",".join("?" for _ in TERMINAL),
             tuple(TERMINAL),
         ):
+            if self._proven_not_sent(row):
+                continue
             order = (
                 self.broker.order(row["broker_id"])
                 if row["broker_id"]
@@ -432,7 +474,7 @@ class Engine:
                     expected_client_id=row["client_id"],
                     expected_broker_id=row["broker_id"],
                 )
-            elif row["status"] == "prepared":
+            elif row["status"] in ("prepared", "not_sent"):
                 # A process can die between persisting intent and submitting it. Never
                 # blindly resubmit an ambiguous intent after recovery.
                 self.store.event("ambiguous_order", {"client_id": row["client_id"]}, row["branch"])
@@ -559,7 +601,7 @@ class Engine:
             self.store.set("reconciled", valid)
         return valid
 
-    def validate_entry(self, plan, quote, now, close):
+    def _entry_admission(self, plan, quote, now, close):
         if (
             not self.config.execution
             or now.astimezone(ET).date().isoformat() < self.config.start_date
@@ -567,6 +609,7 @@ class Engine:
             raise ValueError("Paper execution disabled or start date not reached")
         if not self.store.get("market_open", False):
             raise ValueError("Broker regular session is not confirmed open")
+        self._session_window(now, close)
         if not current_execution_verified(self.store.get("readiness", {})):
             raise ValueError("Execution smoke check not verified")
         if not self.store.get("reconciled"):
@@ -592,17 +635,22 @@ class Engine:
         branch = self.store.rows("SELECT * FROM branches WHERE name=?", (p.branch,))[0]
         if branch["paused"]:
             raise ValueError(branch["pause_reason"])
-        if self.store.rows("SELECT * FROM orders WHERE plan_id=?", (p.id,)):
+        quote_values(quote, now)
+        return p, branch
+
+    def validate_entry(self, plan, quote, now, close):
+        p, branch = self._entry_admission(plan, quote, now, close)
+        if self._active_orders(self.store.rows("SELECT * FROM orders WHERE plan_id=?", (p.id,))):
             raise ValueError("Plan already submitted; no duplicate entry")
         if self.store.rows("SELECT * FROM holdings WHERE symbol=?", (p.symbol,)):
             raise ValueError("Symbol already held; overlapping branches/pyramiding blocked")
         if any(o["symbol"] == p.symbol for o in self.store.get("broker_pending", [])):
             raise ValueError("Symbol has pending order")
-        if self.store.rows(
+        if self._active_orders(self.store.rows(
             "SELECT * FROM orders WHERE symbol=? AND status NOT IN (%s)"
             % ",".join("?" for _ in TERMINAL),
             (p.symbol, *TERMINAL),
-        ):
+        )):
             raise ValueError("Symbol has a pending order")
         bid, ask = quote_values(quote, now)
         if ask < 5:
@@ -614,11 +662,11 @@ class Engine:
             raise ValueError("Rounded broker prices violate the plan's entry/risk interval")
         if (target - limit) / (limit - stop) < 1.5:
             raise ValueError("Reward/risk below 1.5")
-        pending = self.store.rows(
+        pending = self._active_orders(self.store.rows(
             "SELECT * FROM orders WHERE branch=? AND side='buy' AND status NOT IN (%s)"
             % ",".join("?" for _ in TERMINAL),
             (p.branch, *TERMINAL),
-        )
+        ))
         owned_symbols = {
             h["symbol"]
             for h in self.store.rows("SELECT symbol FROM holdings WHERE branch=?", (p.branch,))
@@ -632,11 +680,11 @@ class Engine:
         )
         aggregate_reserved = sum(
             (r["qty"] - r["filled"]) * float(json.loads(r["payload"]).get("limit_price") or 0)
-            for r in self.store.rows(
+            for r in self._active_orders(self.store.rows(
                 "SELECT * FROM orders WHERE side='buy' AND status NOT IN (%s)"
                 % ",".join("?" for _ in TERMINAL),
                 tuple(TERMINAL),
-            )
+            ))
         )
         cash = min(
             branch["cash"] - reserved, float(self.store.get("account")["cash"]) - aggregate_reserved
@@ -671,10 +719,16 @@ class Engine:
             raise ValueError("Insufficient unencumbered capital/risk capacity")
         return qty, limit
 
-    def submit_intent(self, payload, branch, plan_id):
+    def submit_intent(self, payload, branch, plan_id, *, pre_dispatch=None):
         cid = payload["client_order_id"]
         existing = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))
-        if existing:
+        retry = bool(existing and self._proven_not_sent(existing[0]))
+        if retry and (
+            pre_dispatch is None or existing[0]["branch"] != branch or existing[0]["plan_id"] != plan_id
+            or json.loads(existing[0]["payload"]) != payload
+        ):
+            raise ValueError("Local not-sent retry requires fresh admission and unchanged intent")
+        if existing and not retry:
             order = self.broker.by_client(cid)
             self.ingest_order(
                 order,
@@ -685,7 +739,13 @@ class Engine:
             )
             return order
         with self.store.transaction():
-            self.store.db.execute(
+            if retry:
+                current = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))[0]
+                if not self._proven_not_sent(current) or current != existing[0]:
+                    raise ValueError("Local not-sent intent changed before readmission")
+                self.store.db.execute("UPDATE orders SET status='prepared' WHERE client_id=?", (cid,))
+            else:
+                self.store.db.execute(
                 """INSERT INTO orders
               (client_id,branch,symbol,side,qty,status,plan_id,payload,at)
               VALUES(?,?,?,?,?,'prepared',?,?,?)""",
@@ -699,7 +759,22 @@ class Engine:
                     dumps(payload),
                     utc_now(),
                 ),
-            )
+                )
+        if pre_dispatch is not None:
+            try:
+                pre_dispatch()  # Local checks only, after any write-lock/commit delay.
+            except Exception as exc:
+                with self.store.transaction():
+                    row = self.store.rows("SELECT * FROM orders WHERE client_id=?", (cid,))[0]
+                    if row["status"] != "prepared" or row["broker_id"] or row["filled"] or row["notional"]:
+                        raise RuntimeError("Cannot classify a possibly sent intent as local not-sent") from exc
+                    identity = {key: row[key] for key in ("client_id", "branch", "symbol", "side", "qty", "plan_id", "payload")}
+                    proof = {"identity": identity, "basis": "local_admission_rejected_before_first_http",
+                             "at": utc_now(), "error_type": type(exc).__name__}
+                    self.store.db.execute("UPDATE orders SET status='not_sent' WHERE client_id=?", (cid,))
+                    self.store.set("order-not-sent:" + cid, proof)
+                    self.store.event("order_not_sent", proof, branch)
+                raise
         try:
             order = self.broker.submit(payload)
         except Exception as exc:
@@ -721,6 +796,16 @@ class Engine:
         self.ingest_order(order, branch, plan_id, expected_client_id=cid)
         return order
 
+    def _entry_approval(self, plan, now):
+        rows = self.store.rows("SELECT state FROM plans WHERE id=?", (plan["id"],))
+        approval = self.store.get("approval:" + plan["id"], {})
+        if not rows or rows[0]["state"] != "approved" or not approval:
+            raise ValueError("Current plan approval is required")
+        approved_at = timestamp(approval["at"])
+        if (now - approved_at).total_seconds() > 180:
+            raise ValueError("Plan approval expired before dispatch")
+        return approved_at
+
     def enter(self, plan, quote, now, close):
         started = monotonic()
         qty, limit = self.validate_entry(plan, quote, now, close)
@@ -732,6 +817,7 @@ class Engine:
         qty, limit = self.validate_entry(
             plan, quote, now + timedelta(seconds=max(0, monotonic() - started)), close
         )
+        self._entry_approval(plan, now + timedelta(seconds=max(0, monotonic() - started)))
         payload = {
             "symbol": plan["symbol"],
             "qty": str(qty),
@@ -745,7 +831,29 @@ class Engine:
             "take_profit": {"limit_price": str(round(plan["target"], 2))},
             "stop_loss": {"stop_price": str(round(plan["stop"], 2))},
         }
-        order = self.submit_intent(payload, plan["branch"], plan["id"])
+
+        def admission():
+            at = now + timedelta(seconds=max(0, monotonic() - started))
+            p, _ = self._entry_admission(plan, quote, at, close)
+            approved_at = self._entry_approval(plan, at)
+            reconciled_at = timestamp(self.store.get("last_reconciled"))
+            evidence = self.store.get("operational_session")
+            # All local reads precede the final clock sample as well: a SQLite
+            # wait must not preserve earlier approval, quote or session ages.
+            at = now + timedelta(seconds=max(0, monotonic() - started))
+            self._checked_session(evidence, at, close)
+            if not -5 <= (at - reconciled_at).total_seconds() <= 90:
+                raise ValueError("Account reconciliation stale")
+            if (at - approved_at).total_seconds() > 180:
+                raise ValueError("Plan approval expired before dispatch")
+            if at >= p.expires_at or at >= close - timedelta(minutes=30):
+                raise ValueError("Plan expired or entry cutoff reached")
+            for source in p.evidence:
+                if not -5 <= (at - source.observed_at).total_seconds() <= 86400:
+                    raise ValueError("Evidence stale or invalid")
+            quote_values(quote, at)
+
+        order = self.submit_intent(payload, plan["branch"], plan["id"], pre_dispatch=admission)
         self.store.db.execute("UPDATE plans SET state='submitted' WHERE id=?", (plan["id"],))
         self.store.event(
             "order_submitted",
@@ -813,12 +921,12 @@ class Engine:
         return True  # Request acknowledgement, never a terminal broker receipt.
 
     def _unconfirmed_entries(self, symbol=None, branch=None):
-        return [row for row in self.store.rows("SELECT * FROM orders WHERE side='buy'")
+        return [row for row in self._active_orders(self.store.rows("SELECT * FROM orders WHERE side='buy'"))
                 if row["status"] not in TERMINAL
                 and (symbol is None or row["symbol"] == symbol)
                 and (branch is None or row["branch"] == branch)]
 
-    def cancel_entries(self, now, close):
+    def cancel_entries(self, now, close=None):
         for row in self.store.rows("SELECT * FROM orders WHERE side='buy'"):
             if row["status"] in TERMINAL or not row["broker_id"]:
                 continue
@@ -831,12 +939,13 @@ class Engine:
             paused = self.store.rows("SELECT paused FROM branches WHERE name=?", (row["branch"],))[
                 0
             ]["paused"]
-            if expired or paused or now >= close - timedelta(minutes=30):
+            closing = close is not None and now >= close - timedelta(minutes=30)
+            if expired or paused or closing:
                 reason = (
                     "branch_paused"
                     if paused
                     else "closing_cutoff"
-                    if now >= close - timedelta(minutes=30)
+                    if closing
                     else "missing_plan_or_intent"
                     if deadline is None
                     else "execution_check_timeout"
@@ -875,13 +984,23 @@ class Engine:
             and json.loads(row["payload"]).get("type") == "market"
         )
 
-    def _submit_liquidation(self, holding, purpose, day):
+    def _reuse_unsent_payload(self, payload, branch, plan_id, previous):
+        """Reuse identical proven-unsent intent; changed quantities get a new ID."""
+        for row in reversed(previous):
+            if row["branch"] != branch or row["plan_id"] != plan_id or not self._proven_not_sent(row):
+                continue
+            candidate = {**payload, "client_order_id": row["client_id"]}
+            if json.loads(row["payload"]) == candidate:
+                return candidate
+        return payload
+
+    def _submit_liquidation(self, holding, purpose, day, *, pre_dispatch):
         """Retry only a confirmed terminal attempt; ambiguous intents keep their ID."""
-        if self.store.rows(
-            "SELECT client_id FROM orders WHERE symbol=? AND status NOT IN (%s)"
+        if self._active_orders(self.store.rows(
+            "SELECT * FROM orders WHERE symbol=? AND status NOT IN (%s)"
             % ",".join("?" for _ in TERMINAL),
             (holding["symbol"], *TERMINAL),
-        ):
+        )):
             # A prior-day done_for_day order, held child, or unconfirmed cancel
             # may be absent from status=open responses and still resume later.
             return False
@@ -889,7 +1008,7 @@ class Engine:
         previous = self.store.rows(
             "SELECT * FROM orders WHERE plan_id=? AND side='sell' ORDER BY at,client_id", (scope,)
         )
-        if any(row["status"] not in TERMINAL for row in previous):
+        if any(row["status"] not in TERMINAL for row in self._active_orders(previous)):
             return False
         attempt = len(previous)
         payload = {
@@ -902,6 +1021,7 @@ class Engine:
                 purpose, day, holding["symbol"], holding["plan_id"], attempt
             ),
         }
+        payload = self._reuse_unsent_payload(payload, holding["branch"], scope, previous)
         self.store.event(
             "liquidation_attempt",
             {
@@ -909,11 +1029,11 @@ class Engine:
                 "purpose": purpose,
                 "attempt": attempt + 1,
                 "quantity": holding["qty"],
-                "previous_terminal_attempts": len(previous),
+                "previous_terminal_attempts": sum(row["status"] in TERMINAL for row in previous),
             },
             holding["branch"],
         )
-        order = self.submit_intent(payload, holding["branch"], scope)
+        order = self.submit_intent(payload, holding["branch"], scope, pre_dispatch=pre_dispatch)
         return bool(order and order.get("status") not in {"rejected", "canceled", "expired"})
 
     def overdue_intraday(self, now):
@@ -941,15 +1061,17 @@ class Engine:
                 overdue.append(holding["symbol"])
         return overdue
 
-    def close_intraday(self):
+    def close_intraday(self, *, now=None):
         if not self.store.get("reconciled"):
             raise ValueError("Cannot cancel protection while broker state is unreconciled")
+        current, session_guard = self._session_guard(now)
+        session_guard()
         # Keep protective sells until every entry remainder for its symbol is
         # confirmed terminal. A pulse-owned buy is delivered only by its outbox.
         entries = self._unconfirmed_entries(branch="intraday")
         for row in entries:
             self._cancel_owned_order(row, "intraday_entry_close")
-        if entries and not self.reconcile():
+        if entries and not self.reconcile(current()):
             return
         blocked = {row["symbol"] for row in self._unconfirmed_entries()}
         rows = self.store.rows("SELECT * FROM orders WHERE branch='intraday'")
@@ -957,8 +1079,9 @@ class Engine:
             if row["symbol"] not in blocked and row["status"] not in TERMINAL and row["broker_id"]:
                 if self._is_liquidation_order(row):
                     continue
+                session_guard()
                 self._cancel_owned_order(row, "intraday_protection_close")
-        if not self.reconcile():
+        if not self.reconcile(current()):
             return
         open_symbols = {o["symbol"] for o in self.broker.orders()}
         for h in self.store.rows("SELECT * FROM holdings WHERE branch='intraday'"):
@@ -966,19 +1089,21 @@ class Engine:
                 continue
             if not self.store.get("reconciled"):
                 raise ValueError("Cannot close mismatched ledger automatically")
-            day = datetime.now(ET).date().isoformat()
-            self._submit_liquidation(h, "close", day)
+            day = current().astimezone(ET).date().isoformat()
+            self._submit_liquidation(h, "close", day, pre_dispatch=session_guard)
 
-    def exit_holding(self, symbol, reason):
+    def exit_holding(self, symbol, reason, *, now=None):
         rows = self.store.rows("SELECT * FROM holdings WHERE symbol=?", (symbol,))
         if not rows or not self.store.get("reconciled"):
             return False
+        current, session_guard = self._session_guard(now)
+        session_guard()
         h = rows[0]
         entries = self._unconfirmed_entries(symbol=symbol)
         for row in entries:
             self._cancel_owned_order(row, "authorized_exit_entry")
         if entries:
-            if not self.reconcile() or self._unconfirmed_entries(symbol=symbol):
+            if not self.reconcile(current()) or self._unconfirmed_entries(symbol=symbol):
                 return False
         # Cancel and confirm protective orders before an independent sell. Keep
         # existing protection until an exit has actually been authorized.
@@ -986,8 +1111,9 @@ class Engine:
             if row["status"] not in TERMINAL and row["broker_id"]:
                 if self._is_liquidation_order(row):
                     continue
+                session_guard()
                 self._cancel_owned_order(row, "authorized_exit_protection")
-        if not self.reconcile():
+        if not self.reconcile(current()):
             return False
         if any(o["symbol"] == symbol for o in self.broker.orders()):
             return False
@@ -995,18 +1121,20 @@ class Engine:
         if not rows:
             return True
         h = rows[0]
-        day = datetime.now(ET).date().isoformat()
-        if not self._submit_liquidation(h, "exit", day):
+        day = current().astimezone(ET).date().isoformat()
+        if not self._submit_liquidation(h, "exit", day, pre_dispatch=session_guard):
             return False
         self.store.event(
             "decision", {"symbol": symbol, "action": "exit", "reason": reason}, h["branch"]
         )
         return True
 
-    def ensure_protection(self):
+    def ensure_protection(self, *, now=None):
         """Repair missing protective stops after rejected exits/canceled brackets."""
         if not self.store.get("reconciled"):
             return
+        current, session_guard = self._session_guard(now)
+        session_guard()
         open_orders = self.broker.orders()
 
         def flatten(items):
@@ -1064,7 +1192,16 @@ class Engine:
                 # another sell; never stack competing exits on the same shares.
                 for order in active:
                     if order["id"] in owned:
+                        session_guard()
                         self._cancel_owned_order(owned[order["id"]], "replace_incomplete_protection")
+                continue
+            pending_sells = self.store.rows(
+                "SELECT * FROM orders WHERE symbol=? AND side='sell' AND status NOT IN (%s)"
+                % ",".join("?" for _ in TERMINAL), (h["symbol"], *TERMINAL),
+            )
+            if self._active_orders(pending_sells):
+                # Missing from status=open is not proof that an ambiguous stop
+                # or other owned sell is terminal; do not create a competing sell.
                 continue
             rows = self.store.rows("SELECT payload FROM plans WHERE id=?", (h["plan_id"],))
             stop = json.loads(rows[0]["payload"])["stop"] if rows else None
@@ -1083,18 +1220,19 @@ class Engine:
                 self.exit_holding(
                     h["symbol"],
                     "Fractional partial fill cannot use whole-share protective stop; closing confirmed quantity",
+                    now=current(),
                 )
                 continue
             q = self.broker.quotes([h["symbol"]]).get(h["symbol"], {})
-            bid, _ = quote_values(q, datetime.now(timezone.utc))
+            bid, _ = quote_values(q, current())
             if bid <= stop:
                 self.exit_holding(
-                    h["symbol"], "Protective stop already breached while restoring protection"
+                    h["symbol"], "Protective stop already breached while restoring protection", now=current(),
                 )
                 continue
-            attempt = self.store.rows(
-                "SELECT count(*) n FROM orders WHERE symbol=? AND side='sell'", (h["symbol"],)
-            )[0]["n"]
+            previous = self.store.rows(
+                "SELECT * FROM orders WHERE symbol=? AND side='sell' ORDER BY at,client_id", (h["symbol"],)
+            )
             payload = {
                 "symbol": h["symbol"],
                 "side": "sell",
@@ -1102,9 +1240,10 @@ class Engine:
                 "type": "stop",
                 "stop_price": str(round(stop, 2)),
                 "time_in_force": "gtc",
-                "client_order_id": order_id("protect", h["plan_id"], attempt),
+                "client_order_id": order_id("protect", h["plan_id"], len(previous)),
             }
-            self.submit_intent(payload, h["branch"], h["plan_id"])
+            payload = self._reuse_unsent_payload(payload, h["branch"], h["plan_id"], previous)
+            self.submit_intent(payload, h["branch"], h["plan_id"], pre_dispatch=session_guard)
             self.store.event(
                 "protection_repair",
                 {

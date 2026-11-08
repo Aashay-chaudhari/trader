@@ -11,6 +11,7 @@ from agent_trader.runtime import supervisor
 from tests.runtime import test_atomic_applications as applications
 from tests.runtime import test_scheduler_priorities as priorities
 from tests.runtime.test_pulse_cancellation_delivery import intents
+from tests.runtime.session_fixtures import install
 
 runtime = applications.runtime
 scheduler = priorities.scheduler
@@ -38,6 +39,8 @@ def seed_positions(instance, broker, now):
     broker.cash = 29800
     broker.pos = [{"symbol": symbol, "qty": "1", "market_value": "100"} for symbol in rows]
     assert instance.engine.reconcile(now)
+    install(instance.store, now)
+    broker.quotes = lambda symbols: {s: {"bp": 100, "ap": 100.01, "t": now.isoformat()} for s in symbols}
     return rows
 
 
@@ -80,9 +83,9 @@ def test_actual_tick_attempts_sibling_cancellation_and_reaches_protection_after_
             raise TimeoutError("First cancellation fails independently")
         original_cancel(identity)
 
-    def ensure_protection():
+    def ensure_protection(**kwargs):
         reached.append("protection")
-        protection()
+        protection(**kwargs)
 
     monkeypatch.setattr(broker, "cancel", cancel)
     monkeypatch.setattr(scheduler.engine, "ensure_protection", ensure_protection)
@@ -123,6 +126,7 @@ def test_same_tick_market_candidate_cannot_enter_after_ordinary_cancel_failure(
     quote = {"bp": 99.99, "ap": 100.0, "t": now.isoformat()}
     monkeypatch.setattr(broker, "quotes", lambda symbols: {symbol: quote for symbol in symbols})
     assert scheduler.engine.reconcile(now)
+    install(scheduler.store, now)
     assert scheduler.engine.validate_entry(plan, quote, now, close)[0] > 0
 
     def fail_cancel(identity):
@@ -154,7 +158,7 @@ def test_failed_or_deferred_entry_keeps_its_stop_while_other_symbol_closes(runti
         original(identity)
 
     monkeypatch.setattr(broker, "cancel", cancel)
-    runtime.engine.close_intraday()
+    runtime.engine.close_intraday(now=now)
     assert broker.items[rows["AAPL"][1]]["status"] == "new"
     assert rows["AAPL"][1] not in requests
     assert (rows["AAPL"][0] in requests) is not pulse_owned
@@ -172,13 +176,13 @@ def test_authorized_exit_waits_for_terminal_entry_before_canceling_protection(ru
     runtime.finish_task()
     requests, original = [], broker.cancel
     monkeypatch.setattr(broker, "cancel", lambda identity: requests.append(identity) or original(identity))
-    assert runtime.engine.exit_holding("AAPL", "Verified exit condition") is False
+    assert runtime.engine.exit_holding("AAPL", "Verified exit condition", now=now) is False
     assert requests == []
     assert broker.items[rows["AAPL"][1]]["status"] == "new"
     runtime.apply_pulse_cancellations(now)
     assert requests == [rows["AAPL"][0]]
     assert runtime.engine.reconcile(now)
-    assert runtime.engine.exit_holding("AAPL", "Verified exit condition") is True
+    assert runtime.engine.exit_holding("AAPL", "Verified exit condition", now=now) is True
     assert requests == [rows["AAPL"][0], rows["AAPL"][1]]
     assert [o["symbol"] for o in broker.items.values() if o["type"] == "market"] == ["AAPL"]
 
@@ -191,7 +195,7 @@ def test_protection_repair_keeps_pending_entry_stop_and_repairs_unrelated_symbol
     broker.items[rows["MSFT"][1]]["status"] = "canceled"
     assert runtime.engine.reconcile(now)
     previous = broker.submissions
-    runtime.engine.ensure_protection()
+    runtime.engine.ensure_protection(now=now)
     assert broker.items[rows["AAPL"][0]]["status"] == "partially_filled"
     assert broker.items[rows["AAPL"][1]]["status"] == "new"
     assert broker.submissions == previous + 1
@@ -233,7 +237,7 @@ def test_real_tick_isolates_pulse_transport_failure_and_preserves_cooldown(
     else:
         assert not any(o["type"] == "market" for o in broker.items.values())
     scheduler.engine.cancel_entries(now + timedelta(seconds=10), now.replace(hour=16, minute=0))
-    scheduler.engine.close_intraday()
+    scheduler.engine.close_intraday(now=now + timedelta(seconds=10))
     scheduler.apply_pulse_cancellations(now + timedelta(seconds=10))
     assert requests.count(rows["AAPL"][0]) == 1
     assert broker.items[rows["AAPL"][1]]["status"] == "new"

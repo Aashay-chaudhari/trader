@@ -16,7 +16,7 @@ from .config import ET
 from .cohorts import ForwardLab
 from .engine import (
     Engine, TERMINAL, EXECUTION_KERNEL, current_execution_verified,
-    order_id, quote_values, timestamp,
+    order_id, quote_values, timestamp, SessionProofUnavailable,
 )
 from .experiments import Experiments
 from .models import (
@@ -38,13 +38,10 @@ LOG = logging.getLogger(__name__)
 
 
 def session_times(calendar, day):
-    if not calendar:
-        return None
-    c = calendar[0]
-    return (
-        datetime.fromisoformat(day + "T" + c["open"]).replace(tzinfo=ET),
-        datetime.fromisoformat(day + "T" + c["close"]).replace(tzinfo=ET),
-    )
+    from .operational_session import parse_calendar
+
+    parsed = parse_calendar(calendar, day)
+    return (parsed.opened, parsed.closed) if parsed.state == "session" else None
 
 
 def worker(config, role, context, day, task_key=None):
@@ -826,6 +823,8 @@ class Supervisor:
         return good and funded and models_ok and not quota_blocked
 
     def smoke(self, now, opened, close):
+        from .operational_session import assess_evidence
+
         started, observed_at = time.monotonic(), now
         r = self.store.get("readiness", {})
         if current_execution_verified(r):
@@ -837,15 +836,34 @@ class Supervisor:
         day = now.date().isoformat()
         key = "smoke:" + day
         stage = self.store.get(key, {})
-        if not stage:
+        rows = self.store.rows(
+            "SELECT * FROM orders WHERE plan_id=? AND side='buy'", ("operational-smoke-" + day,)
+        )
+        order = rows[0] if len(rows) == 1 else None
+        local_retry = bool(
+            stage and order and self.engine._proven_not_sent(order)
+            and stage.get("state") == "submitted"
+            and stage.get("execution_kernel") == EXECUTION_KERNEL
+            and self.engine.execution_check_deadline(order, now)
+        )
+
+        def current_time():
+            return observed_at + timedelta(seconds=max(0, time.monotonic() - started))
+
+        if not stage or local_retry:
+            expected_stage = stage
+            deadline = self.engine.execution_check_deadline(order, now) if local_retry else None
+
             def new_stage_ready(at):
                 ready = self.store.get("readiness", {})
+                session = assess_evidence(self.store.get("operational_session"), at)
                 try:
                     reconciliation_age = (at - timestamp(self.store.get("last_reconciled"))).total_seconds()
                 except (TypeError, ValueError):
                     return False
                 return (
                     self.config.execution
+                    and session.market_window == (opened, close)
                     and not self.store.get("entry_budget_blocked", False)
                     and day >= self.config.start_date
                     and at.date().isoformat() == day
@@ -856,7 +874,8 @@ class Supervisor:
                     and ready.get("models_available")
                     and ready.get("required_execution_kernel", EXECUTION_KERNEL) == EXECUTION_KERNEL
                     and not current_execution_verified(ready)
-                    and not self.store.get(key)
+                    and self.store.get(key, {}) == expected_stage
+                    and (deadline is None or at < deadline)
                     and not self.store.rows("SELECT symbol FROM holdings")
                 )
 
@@ -864,14 +883,14 @@ class Supervisor:
                 return False
             if self.broker.orders():
                 return False  # operational round-trip starts only from a flat account
-            now = observed_at + timedelta(seconds=max(0, time.monotonic() - started))
+            now = current_time()
             if not new_stage_ready(now):
                 return False
             q = self.broker.quotes(["SPY"]).get("SPY", {})
             # Order/quote lookups can consume the quote's remaining lifetime or
             # cross the entry cutoff. Recheck local admission at receipt time;
             # a quota update while those requests run cannot authorize an entry.
-            now = observed_at + timedelta(seconds=max(0, time.monotonic() - started))
+            now = current_time()
             if not new_stage_ready(now):
                 return False
             _, ask = quote_values(q, now)
@@ -888,19 +907,47 @@ class Supervisor:
                 "stop_loss": {"stop_price": str(round(entry - 2, 2))},
                 "client_order_id": order_id("smoke", day, "buy"),
             }
-            # Persist the bounded operational intent before submission, including
-            # timeout/response-loss recovery. This is not a strategy-plan exemption.
-            self.store.set(
-                key,
-                {
+            if local_retry:
+                # Only an exact, locally proven never-sent intent may be readmitted.
+                # The original bracket, price, ID, and two-minute expiry stay fixed.
+                if json.loads(order["payload"]) != payload:
+                    return False
+            else:
+                # Persist the bounded operational intent before submission, including
+                # timeout/response-loss recovery. This is not a strategy-plan exemption.
+                expected_stage = {
                     "at": now.isoformat(),
                     "state": "submitted",
                     "expires_at": (now + timedelta(minutes=2)).isoformat(),
                     "entry_client_id": payload["client_order_id"],
                     "execution_kernel": EXECUTION_KERNEL,
-                },
+                }
+                deadline = timestamp(expected_stage["expires_at"])
+                self.store.set(key, expected_stage)
+
+            def before_submission():
+                if not new_stage_ready(current_time()):
+                    raise ValueError("Paper execution check admission expired before dispatch")
+                # Read local receipts before sampling dispatch time. A blocked
+                # database read cannot refresh the clock or account observation.
+                proof = self.store.get("operational_session")
+                reconciled_at = timestamp(self.store.get("last_reconciled"))
+                at = current_time()
+                if (
+                    assess_evidence(proof, at).market_window != (opened, close)
+                    or not -5 <= (at - reconciled_at).total_seconds() <= 90
+                    or at >= deadline
+                    or at > close - timedelta(minutes=40)
+                ):
+                    raise ValueError("Paper execution check admission expired before dispatch")
+                _, current_ask = quote_values(q, at)
+                if round(current_ask, 2) != entry:
+                    raise ValueError("Paper execution check price changed before dispatch")
+
+            self.engine.submit_intent(
+                payload, "intraday", "operational-smoke-" + day,
+                pre_dispatch=before_submission,
             )
-            self.engine.submit_intent(payload, "intraday", "operational-smoke-" + day)
             self.store.event(
                 "startup",
                 {
@@ -908,20 +955,19 @@ class Supervisor:
                 },
             )
             return False
-        rows = self.store.rows(
-            "SELECT * FROM orders WHERE plan_id=? AND side='buy'", ("operational-smoke-" + day,)
-        )
-        if not rows:
+        if not order:
             return False
-        order = rows[0]
         deadline = (
             timestamp(stage["expires_at"])
             if stage.get("expires_at")
             else timestamp(stage["at"]) + timedelta(minutes=2)
         )
         if order["filled"] > 0:
-            self.engine.close_intraday()
-            reconciled = self.engine.reconcile()
+            now = current_time()
+            if assess_evidence(self.store.get("operational_session"), now).market_window != (opened, close):
+                return False  # Ambiguous timing cannot remove broker-held protection.
+            self.engine.close_intraday(now=now)
+            reconciled = self.engine.reconcile(current_time())
             exits = self.store.rows(
                 "SELECT filled FROM orders WHERE symbol='SPY' AND side='sell' AND branch='intraday' AND plan_id IN (?,?,?)",
                 ("operational-smoke-" + day, "close:" + day + ":SPY", "exit:" + day + ":SPY"),
@@ -1009,10 +1055,11 @@ class Supervisor:
                 + order["status"]
                 + ". Pilots remain disabled.",
             )
-        elif now >= deadline:
+        elif now >= deadline and self.engine.execution_check_deadline(order, now) == deadline:
             if order["broker_id"] and order["status"] not in TERMINAL:
                 if stage.get("state") != "cancel_requested":
-                    self.broker.cancel(order["broker_id"])
+                    if not self.engine._cancel_owned_order(order, "execution_check_timeout"):
+                        return False
                     self.store.set(
                         key,
                         {
@@ -1079,12 +1126,150 @@ class Supervisor:
                 pass
         self.store.set("benchmarks", benchmarks)
 
+    def acquire_operational_session(self, now):
+        """Retain exact sources; at most one calendar request per tick/60 seconds."""
+        from .observation_audit import content_hash
+        from .operational_session import assess_session, assess_evidence, parse_calendar, SessionValidationError
+
+        started, day = time.monotonic(), now.astimezone(ET).date().isoformat()
+
+        def current_time():
+            return now + timedelta(seconds=max(0, time.monotonic() - started))
+
+        def retain(record):
+            digest = content_hash(record)
+            reference = "operational-session-receipt:" + digest
+            if self.store.get(reference) is None:
+                self.store.set(reference, record)
+            return {"reference": reference, "sha256": digest,
+                    "requested_at": record.get("requested_at"), "received_at": record.get("received_at")}
+
+        calendar_key = "operational-calendar-current:" + day
+        calendar_meta = self.store.get(calendar_key)
+        calendar_record = self.store.get(calendar_meta["reference"]) if calendar_meta else None
+        if calendar_record is None:
+            # Preserve a legacy cache before replacing it; its acquisition time
+            # is unknown and it cannot substitute for a current provider receipt.
+            calendar_record = {"source": "calendar_cache", "day": day,
+                               "requested_at": None, "received_at": None,
+                               "response": self.store.get("calendar:" + day), "error_code": None}
+            calendar_meta = retain(calendar_record)
+            self.store.set(calendar_key, calendar_meta)
+        calendar_fetched = False
+
+        def fetch_calendar():
+            nonlocal calendar_record, calendar_meta, calendar_fetched
+            if calendar_fetched:
+                return False
+            requested = current_time()
+            last = calendar_record.get("requested_at")
+            if last is not None and (requested - timestamp(last)).total_seconds() < 60:
+                return False
+            calendar_fetched = True
+            response, error_code, error_type = None, None, None
+            try:
+                response = self.broker.calendar(day)
+            except Exception as exc:
+                error_code, error_type = "calendar_fetch_failed", type(exc).__name__
+            calendar_record = {"source": "calendar", "day": day,
+                               "requested_at": requested.isoformat(), "received_at": current_time().isoformat(),
+                               "response": response, "error_code": error_code, "error_type": error_type}
+            calendar_meta = retain(calendar_record)
+            self.store.set(calendar_key, calendar_meta)
+            try:
+                parse_calendar(response, day)
+            except SessionValidationError:
+                pass
+            else:
+                self.store.set("calendar:" + day, response)
+            return True
+
+        try:
+            parse_calendar(calendar_record.get("response"), day)
+            needs_calendar = calendar_record.get("source") != "calendar"
+        except SessionValidationError:
+            needs_calendar = True
+        if needs_calendar:
+            fetch_calendar()
+        requested = current_time()
+        raw_clock, error_code, error_type = None, None, None
+        try:
+            raw_clock = self.broker.clock()
+        except Exception as exc:
+            error_code, error_type = "clock_fetch_failed", type(exc).__name__
+        clock_record = {"source": "clock", "day": day, "requested_at": requested.isoformat(),
+                        "received_at": current_time().isoformat(), "response": raw_clock,
+                        "error_code": error_code, "error_type": error_type}
+        clock_meta = retain(clock_record)
+        assessment = assess_session(calendar_record.get("response"), raw_clock, day, current_time())
+        conflicts = {"non_session_clock_conflict", "clock_open_outside_calendar_session",
+                     "clock_calendar_close_mismatch", "clock_calendar_upcoming_session_mismatch",
+                     "clock_closed_during_calendar_session"}
+        if conflicts.intersection(assessment.reasons) and fetch_calendar():
+            assessment = assess_session(calendar_record.get("response"), raw_clock, day, current_time())
+        proof = {"version": "operational-session-evidence-v1", "day": day,
+                 "calendar_raw": calendar_record.get("response"), "clock_raw": raw_clock,
+                 "calendar_receipt": calendar_meta, "clock_receipt": clock_meta,
+                 "source_errors": [r["error_code"] for r in (calendar_record, clock_record) if r.get("error_code")],
+                 "assessment": assessment.summary()}
+        last_request = calendar_record.get("requested_at")
+        proof["calendar_retry_eligible_at"] = (
+            (timestamp(last_request) + timedelta(seconds=60)).isoformat() if last_request else None
+        )
+        assessment = assess_evidence(proof, current_time())
+        proof["assessment"] = assessment.summary()
+        self.store.set("operational_session", proof)
+        self.store.set("calendar", {"date": day, "session": proof["calendar_raw"],
+                                    "state": assessment.calendar.state if assessment.calendar else "unknown"})
+        self.store.set("market_open", assessment.market_open)
+        if assessment.state != "unknown":
+            self.store.set("operational_session_problem", None)
+        return assessment
+
+    def operational_assessment(self, now):
+        """Reassessment never refreshes either source's observation timestamp."""
+        from .operational_session import assess_evidence
+
+        proof = self.store.get("operational_session") or {}
+        assessment = assess_evidence(proof, now)
+        if proof:
+            self.store.set("operational_session", {**proof, "assessment": assessment.summary()})
+        self.store.set("market_open", assessment.market_open)
+        if assessment.state != "unknown":
+            self.store.set("operational_session_problem", None)
+        return assessment
+
+    def unknown_session_status(self):
+        self.store.set("mode", "halted")
+        self.store.set("market_open", False)
+        self.store.set("status", "Session evidence is unavailable or conflicting. Existing protection retained; entries and market exits deferred.")
+        self.store.set("next_action", "Recheck broker clock and calendar evidence; independently known entry cancellations continue.")
+        proof = self.store.get("operational_session") or {}
+        problem = {"day": proof.get("day"),
+                   "reason_codes": proof.get("assessment", {}).get("reason_codes", ["session_evidence_missing"]),
+                   "source_errors": proof.get("source_errors", [])}
+        if self.store.get("operational_session_problem") != problem:
+            self.store.set("operational_session_problem", problem)
+            self.incident("broker_clock", "Broker session evidence is unavailable or conflicting. Existing protection remains; entries and market exits are deferred.", problem)
+
+    def session_action(self, action, now):
+        """Only session-proof expiry defers an action without aborting safe cancels."""
+        started = time.monotonic()
+        try:
+            return True, action()
+        except SessionProofUnavailable:
+            self.operational_assessment(now + timedelta(seconds=max(0, time.monotonic() - started)))
+            self.unknown_session_status()
+            return False, None
+
     def tick(self, now=None):
         tick_started = time.monotonic()
         now = now or datetime.now(ET)
         now = now.astimezone(ET)
         tick_time = now
         day = now.date().isoformat()
+        self.store.set("market_open", False)
+        self.store.set("operational_session", None)
         self.store.set("heartbeat", now.isoformat())
         self.cohort_check("expiry", lambda: self.cohorts.expire(now))
         self.cohort_check("adaptive expiry", lambda: self.adaptive.expire(now))
@@ -1102,16 +1287,19 @@ class Supervisor:
         self.finish_task()
         if self.store.retry_failed_jobs((now.astimezone(UTC) - timedelta(minutes=30)).isoformat()):
             self.store.set("needs_research", True)
-        calkey = "calendar:" + day
-        cal = self.store.get(calkey)
-        if cal is None:
-            cal = self.broker.calendar(day)
-            self.store.set(calkey, cal)
-        times = session_times(cal, day)
-        self.store.set("calendar", {"date": day, "session": cal})
         if self.store.get("preflight_day") != day:
             self.preflight()
             self.store.set("preflight_day", day)
+        valid = self.engine.reconcile(now)
+        now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
+        assessment = self.acquire_operational_session(now)
+        now = assessment.assessed_at
+        if assessment.state == "unknown":
+            self.engine.cancel_entries(now, None)
+            self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
+            self.unknown_session_status()
+            self.maybe_publish()
+            return
         if day < self.config.start_date:
             self.store.set("mode", "research_shadow")
             self.store.set(
@@ -1121,11 +1309,11 @@ class Supervisor:
             self.store.set(
                 "next_action", "07:45 ET startup and phone notification on the first trading day."
             )
+            self.engine.cancel_entries(now, None)
             self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
             self.maybe_publish()
             return
-        if not times:
-            valid = self.engine.reconcile()
+        if assessment.state == "non_session":
             # A successful weekend check must clear a prior transient halt label,
             # while an actual mismatch must remain visible and block entries.
             self.store.set("mode", "market_closed" if valid else "halted")
@@ -1144,13 +1332,12 @@ class Supervisor:
                     status = "Market holiday or weekend. Reconciled; background research is available."
             self.store.set("status", status)
             self.store.set("next_action", next_action)
-            self.engine.cancel_entries(now, now + timedelta(days=1))
+            self.engine.cancel_entries(now, None)
             self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
             self.cohort_check("background research", lambda: self.launch_deep_research(now))
             self.maybe_publish()
             return
-        opened, close = times
-        valid = self.engine.reconcile(now)
+        opened, close = assessment.calendar.opened, assessment.calendar.closed
         if valid:
             from .intelligence import record_reconciled_equity
 
@@ -1202,29 +1389,13 @@ class Supervisor:
         # Advance the supplied clock by monotonic elapsed time, preserving
         # deterministic test clocks without mistaking request latency for drift.
         now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
-        if now >= opened and now < close:
-            clock = self.broker.clock()
-            now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
-            market_open = bool(clock.get("is_open"))
-            clock_age = abs((now - timestamp(clock["timestamp"])).total_seconds())
-            self.store.set("market_open", market_open and clock_age <= 30 and now < close)
-            if clock_age > 30:
-                self.incident(
-                    "clock_drift", "Local and broker clocks disagree. New entries blocked."
-                )
-            if not self.store.get("market_open"):
-                self.store.set("mode", "halted")
-                self.store.set(
-                    "status",
-                    "Broker session/clock does not confirm the calendar. New entries and market exits deferred.",
-                )
-                self.incident(
-                    "broker_clock",
-                    "Broker session or clock disagrees with the calendar. Existing broker protection remains in place.",
-                )
-                self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
-                self.maybe_publish()
-                return
+        assessment = self.operational_assessment(now)
+        if assessment.state == "unknown":
+            self.unknown_session_status()
+            self.apply_pulse_cancellations(now)
+            self.maybe_publish()
+            return
+        if assessment.market_open:
             slot = int((now - opened).total_seconds() // 300)
             self.cohort_check(
                 "session_health",
@@ -1238,7 +1409,7 @@ class Supervisor:
                 self.store.set("mode", "halted")
                 self.store.set("status", "Recovering intraday exposure carried beyond its entry session.")
                 self.store.set("next_action", "Verify paper exit fills and reconciliation before resuming entries.")
-                self.engine.close_intraday()
+                self.session_action(lambda: self.engine.close_intraday(now=now), now)
                 self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
                 self.maybe_publish()
                 return
@@ -1252,6 +1423,9 @@ class Supervisor:
                         f"Paper execution check deferred ({type(exc).__name__}); entries remain blocked.",
                     )
             def session_deadline_reached(at):
+                if self.operational_assessment(at).state == "unknown":
+                    self.unknown_session_status()
+                    return True
                 if at >= close:
                     self.store.set("market_open", False)
                     self.store.set("status", "Market closed while broker checks were pending. Existing protection retained.")
@@ -1265,8 +1439,9 @@ class Supervisor:
                 if at >= close - timedelta(minutes=12):
                     self.store.set("status", "Closing intraday positions and verifying fills.")
                     self.store.set("next_action", "After-close reconciliation and daily results.")
-                    self.engine.close_intraday()
-                    self.finish_shadow(at, closing=True)
+                    completed, _ = self.session_action(lambda: self.engine.close_intraday(now=at), at)
+                    if completed:
+                        self.finish_shadow(at, closing=True)
                     return True
                 return False
 
@@ -1275,7 +1450,7 @@ class Supervisor:
                 attempted_exits = self.apply_pending_exits(now)
                 now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
                 if not session_deadline_reached(now):
-                    self.engine.ensure_protection()
+                    self.session_action(lambda: self.engine.ensure_protection(now=now), now)
                     now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
                     if not session_deadline_reached(now):
                         self.store.set(
@@ -1287,7 +1462,7 @@ class Supervisor:
                             f"Intraday closing routine at {(close - timedelta(minutes=12)).strftime('%H:%M')} ET.",
                         )
                         self.market_tick(now, close, attempted_exits)
-        elif now >= close:
+        elif assessment.state == "after_close":
             self.store.set("market_open", False)
             held = self.store.rows("SELECT * FROM holdings WHERE branch='intraday'")
             if held:
@@ -1308,6 +1483,11 @@ class Supervisor:
             )
         # Launch roles only when the worker is free; deterministic tick keeps running.
         self.apply_pulse_cancellations(tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started)))
+        now = tick_time + timedelta(seconds=max(0, time.monotonic() - tick_started))
+        if self.operational_assessment(now).state == "unknown":
+            self.unknown_session_status()
+            self.maybe_publish()
+            return
         if not self.future:
             if now >= opened.replace(hour=8, minute=15) and now < close - timedelta(minutes=45):
                 if now >= opened and self.model_quota_state(now) != "ready" and self.launch_options_coverage(now, close):
@@ -1453,13 +1633,17 @@ class Supervisor:
         if (intent and holding["symbol"] not in attempted_exits
                 and 0 <= (now - timestamp(intent["at"])).total_seconds() < 300):
             attempted_exits.add(holding["symbol"])
-            if self.engine.exit_holding(holding["symbol"], intent["reason"]):
+            completed, exited = self.session_action(
+                lambda: self.engine.exit_holding(holding["symbol"], intent["reason"], now=now), now,
+            )
+            if completed and exited:
                 self.store.set(key, None)
 
     def apply_pending_exits(self, now, attempted_exits=None):
+        started = time.monotonic()
         attempted_exits = set() if attempted_exits is None else attempted_exits
         for holding in self.store.rows("SELECT * FROM holdings"):
-            self.apply_exit_intent(holding, now, attempted_exits)
+            self.apply_exit_intent(holding, now + timedelta(seconds=max(0, time.monotonic() - started)), attempted_exits)
         return attempted_exits
 
     def market_tick(self, now, close, attempted_exits=None):
@@ -1483,6 +1667,11 @@ class Supervisor:
         quotes = self.broker.quotes(symbols)
         now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
         self.store.set("quotes", quotes)
+        assessment = self.operational_assessment(now)
+        if not assessment.market_open:
+            if assessment.state == "unknown":
+                self.unknown_session_status()
+            return
         if now >= close:
             self.store.set("market_open", False)
             return
@@ -1497,6 +1686,7 @@ class Supervisor:
         from agent_trader.strategies.adaptive import candidate_filter
 
         for h in self.store.rows("SELECT * FROM holdings"):
+            now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
             plan_rows = self.store.rows("SELECT payload FROM plans WHERE id=?", (h["plan_id"],))
             q = quotes.get(h["symbol"])
             if plan_rows and q:
@@ -1517,6 +1707,7 @@ class Supervisor:
                     pass
                 self.apply_exit_intent(h, now, attempted_exits)
         for p in plans:
+            now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
             q = quotes.get(p["symbol"])
             if not q or p["branch"] == "options":
                 continue
@@ -1557,6 +1748,7 @@ class Supervisor:
                     )
                     self.store.set(key, True)
         for p in exploration_plans:
+            now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
             q = quotes.get(p["symbol"])
             if not q or p["branch"] == "options" or not p.get("event_risk_known"):
                 continue
@@ -1572,6 +1764,9 @@ class Supervisor:
                 self.experiments.consider(p, q, brief.get("regime"), now)
             except (ValueError, KeyError, TypeError):
                 continue
+        now = market_time + timedelta(seconds=max(0, time.monotonic() - market_started))
+        if not self.operational_assessment(now).market_open:
+            return
         self.experiments.mark(quotes, now)
         if session:
             self.cohort_check(

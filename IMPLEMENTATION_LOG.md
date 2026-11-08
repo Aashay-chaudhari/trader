@@ -920,3 +920,80 @@ after correction; no runtime source changed for this correction. The full run
 had the existing single websockets legacy deprecation warning. The final
 candidate contains 1,015 full/845 minimal Python tests and five Node cases.
 Cloud complete-suite receipts follow after publication.
+
+
+Phase 6 source `443e6ca35847749d4cabb90f038a5411a2330357` activated at
+23:47:36.113226 UTC. Tests run 42426807098 passed both complete environments:
+1,015 full and 845 minimal Python tests, with five Node cases. Pages run
+42426807124 succeeded and fourteen public checks verified the exact source,
+r4 kernel and original options registration at 1440 and 390 pixels. Final
+verification at 23:48:17.451055 UTC preserved all checked trading/study rows
+and registration bytes. Maintenance submitted no orders. Both pause flags were
+removed and the service resumed its independently reviewed background queue.
+
+## November 7 operational-session evidence candidate
+
+Fake-provider timing checks reproduced wrong-day/duplicate early-close calendars,
+truthy non-boolean market flags, timezone relabeling and slow quote/asset/account
+calls outliving the existing 30-second clock bound. These are prospective safety
+repairs, not evidence that such malformed responses or trades occurred in production.
+Two authorized read-only provider requests established wire compatibility: the
+clock uses a strict boolean and aware timestamps, and the November 27 calendar
+uses regular open 09:30/close 13:00. Extended-hours fields are not substituted.
+No order, account, positions or options request was needed for this shape check.
+
+The pure validator accepts exact requested-day/calendar cardinality and documented
+HH:MM calendar times, normalizes aware clock timestamps, and checks source
+compatibility plus actual-use age. Only an empty JSON list certifies a non-session
+day. Prior stored assessment booleans cannot refresh stale raw evidence. Immutable
+local receipts retain acquisition intervals and failed replacements for diagnosis.
+Bounded calendar correction is separate from clock refresh; unresolved evidence
+stays unknown, retaining broker protection while exact independently justified
+entry cancellations remain available. No frozen study calendar is rewritten.
+
+The public report reassesses session evidence at snapshot generation and exports
+only diagnostic fields and receipt hashes/times. Raw source receipts and private
+lookup references remain local. This diagnostic does not certify current execution
+readiness; new kernel r5 acceptance still requires a regular session and quota
+admission. Final integrated tests and activation will be recorded after completion.
+
+The provider format references are the official [calendar endpoint](https://docs.alpaca.markets/us/reference/legacycalendar)
+and [clock endpoint](https://docs.alpaca.markets/us/v1.1/reference/getclock-1).
+The two local compatibility receipts are an observation of response shape, not
+continuous-service evidence or a future-market acceptance test.
+
+The public projection passed three focused Python cases; combined helper/reporting
+validation passed 102 cases. Seven Node cases passed, including session labels.
+Twenty-two browser checks covered all seven views and four session-evidence fixtures
+at 1440/390 pixels; the mobile stale-clock panel was visually inspected. Candidate
+preview used a database copy only. Clean local environments resolve 56 full and
+23 minimal packages under supported Python 3.11.15; cloud CI uses Python 3.12.
+
+Integration extends that evidence check to the actual broker-dispatch boundary,
+after durable local preparation and any database wait. A locally rejected request
+with no HTTP attempt has an exact `not_sent` receipt; an uncertain prior request
+cannot acquire that label or be blindly resubmitted. Fresh admission can retry an
+unchanged proven-unsent intent. A changed confirmed liquidation/protection quantity
+uses a distinct validated intent and retains the original never-sent evidence.
+The existing three-minute plan approval is rechecked after slow asset/preparation
+work. The bounded one-share acceptance retry keeps its original payload, identity
+and two-minute expiry; it cannot chase a changed price or revive a cancellation.
+
+Closing, explicit exits and protective replacement also require compatible session
+evidence at use time, independently of model quota. Session-proof expiry keeps
+pending intents and existing protection; exact owned BUY cancellation delivery
+continues through the shared durable dispatcher. Sibling operations advance the
+enclosing elapsed clock instead of each reusing an old tick timestamp. Tests use
+explicit synthetic raw session receipts, rather than bypassing the production gate.
+
+Complete local Phase 7 suites ran under Python 3.11.15: 1,161 full-suite tests
+and 991 minimal-runtime tests passed, with the same three failures from older
+direct-market fixtures lacking the newly required raw session evidence. Those
+fixtures now supply explicit synthetic sessions without bypassing the gate. Both
+affected modules then passed all 37 cases in each environment. No production
+source changed in response to those failures. The full suite retained one existing
+websockets legacy deprecation warning. Final collection is 1,164 full/994 minimal
+Python tests; complete Python 3.12 cloud validation follows publication. All 34
+runtime modules import without legacy dependencies, and runtime lint is clean.
+The final seven Node cases, twenty-two local browser checks, independent reviews
+and exact preservation/activation checks complement the Python receipts.

@@ -149,9 +149,9 @@ Pages deployment and fourteen public browser checks. Final verification at
 and the one-time options registration. The service resumed background research.
 
 
-## Reporting and execution timing candidate
+## Reporting and execution timing release
 
-The sixth candidate makes remaining local model-result batches atomic, preserves
+The sixth release makes remaining local model-result batches atomic, preserves
 material-change refresh/cancellation intents across delivery failures, and routes
 each exact pulse-owned cancellation through one durable dispatcher. Protective
 orders remain while an entry remainder is unconfirmed; fresh reconciliation and
@@ -166,3 +166,34 @@ Public export uses a consistent read snapshot. Missing marks and daily baselines
 remain unknown, branch ledger estimates are labeled, and incomplete chart points
 are omitted without changing raw history. Twenty page/valuation browser checks,
 four focused chart checks and five Node tests passed before complete validation.
+
+
+Source `443e6ca3` activated at 23:47:36 UTC on November 7. Complete cloud CI
+passed 1,015 full-suite and 845 minimal-runtime Python tests plus five Node cases;
+fourteen public desktop/mobile checks passed. Final verification at 23:48:17 UTC
+confirmed unchanged orders, holdings, plans, frozen observations and options
+registration. The service resumed background work. Account-wide weekly usage
+was 70% at 23:46:59 UTC; this is separate from project inference-token totals.
+
+## Session-evidence release (r5)
+
+The r5 implementation validates the requested calendar day and exact provider wire
+formats, compares regular-session boundaries with the broker clock, and rechecks
+retained evidence at the time of use. Unknown or conflicting evidence must retain
+existing protective sells and defer new entries and market exits. Independently
+established entry cancellations remain available. Source receipt hashes and
+acquisition times support diagnosis; observing evidence again never makes it newer.
+
+Kernel r5 requires separate regular-session acceptance after quota admission.
+Validation and actual activation receipts are recorded in the implementation log
+and the dashboard’s current release metadata.
+Frozen research protocols and original observations remain unchanged. The public
+session panel describes evidence at snapshot time, not present trading readiness.
+
+
+At the November 7 19:07:53 ET read-only audit, background work had retained 43
+analyst reports and 43 independent reviews across 24 topics: 27 accepted reviews
+and 16 revision requests, with 22 accepted latest topic outcomes and two requiring
+revision. These audits remain separate from the original strategy catalogue and
+are not profitability evidence. They addressed source coverage, missing parent
+plans, protocol inconsistencies, fees and the limitations of the old options sample.

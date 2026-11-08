@@ -6,6 +6,8 @@ import pytest
 from agent_trader.runtime import options_coverage as probe, supervisor
 from tests.runtime.test_options_coverage import Clock, DataBroker, at, registration
 from tests.runtime.test_scheduler_priorities import prepare, scheduler as scheduler
+from tests.runtime.test_operational_session import clock as session_clock
+from tests.runtime.session_fixtures import install as install_session
 
 
 def quota(now, used=80, minutes=10080):
@@ -44,7 +46,7 @@ def test_due_data_capture_precedes_missing_brief_only_at_known_account_ceiling(
 ):
     now, _ = setup_due(scheduler, broker, monkeypatch, used=used, minutes=minutes)
     calls = []
-    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda: calls.append("protection"))
+    monkeypatch.setattr(scheduler.engine, "ensure_protection", lambda **kwargs: calls.append("protection"))
     monkeypatch.setattr(scheduler, "market_tick", lambda *args: calls.append("market"))
     monkeypatch.setattr(
         scheduler,
@@ -114,6 +116,7 @@ def test_fresh_ceiling_preempts_otherwise_eligible_candidate(scheduler, broker, 
     scheduler.store.set("entry_budget_blocked", False)
     quote = {"bp": 99.99, "ap": 100, "t": now.isoformat()}
     scheduler.store.set("quotes", {plan["symbol"]: quote})
+    install_session(scheduler.store, now)
     assert scheduler.engine.validate_entry(plan, quote, now, now.replace(hour=16))[0] > 0
     monkeypatch.setattr(
         scheduler, "launch_candidate", supervisor.Supervisor.launch_candidate.__get__(scheduler)
@@ -160,7 +163,7 @@ def test_closing_and_protection_failure_do_not_yield_to_data_collection(
     now, _ = setup_due(scheduler, broker, monkeypatch)
     calls = []
 
-    def failed_protection():
+    def failed_protection(**kwargs):
         raise TimeoutError("fixture protection lookup failed")
 
     monkeypatch.setattr(scheduler.engine, "ensure_protection", failed_protection)
@@ -171,9 +174,9 @@ def test_closing_and_protection_failure_do_not_yield_to_data_collection(
         scheduler.tick(now)
     closing = now.replace(hour=15, minute=49)
     monkeypatch.setattr(
-        broker, "clock", lambda: {"is_open": True, "timestamp": closing.isoformat()}
+        broker, "clock", lambda: session_clock(closing)
     )
-    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda: calls.append("close"))
+    monkeypatch.setattr(scheduler.engine, "close_intraday", lambda **kwargs: calls.append("close"))
     scheduler.tick(closing)
     assert calls == ["close"]
     assert probe.public_summary(scheduler.store)["request_budget"]["reserved"] == 0
@@ -220,7 +223,7 @@ def test_two_quota_blocked_windows_run_data_only_once_with_original_twelve_reque
     clock.now = at(clock="10:15")
     scheduler.store.set("quota", quota(clock()))
     monkeypatch.setattr(
-        broker, "clock", lambda: {"is_open": True, "timestamp": clock().isoformat()}
+        broker, "clock", lambda: session_clock(clock())
     )
     scheduler.tick(clock())
     final = probe.public_summary(scheduler.store)

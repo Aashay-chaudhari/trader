@@ -220,7 +220,18 @@ def test_research_shadow_plans_never_enter_broker_order_path(config, broker, mon
     monkeypatch.setattr(supervisor, "Broker", lambda _: broker)
     s = supervisor.Supervisor(config)
     try:
-        now = datetime.now(ET)
+        from tests.runtime.session_fixtures import install
+
+        # A future synthetic regular session preserves the registered policy's
+        # availability boundary without depending on the test runner's hour.
+        now = (datetime.now(ET) + timedelta(days=1)).replace(hour=10, minute=0, second=0, microsecond=0)
+        while now.weekday() >= 5:
+            now += timedelta(days=1)
+        proof = install(s.store, now)
+        s.store.set("calendar:" + proof["day"], proof["calendar_raw"])
+        monkeypatch.setattr(broker, "quotes", lambda symbols: {
+            symbol: {"bp": 100, "ap": 100.01, "t": now.isoformat()} for symbol in symbols
+        })
         p = {
             **plan,
             "expires_at": (now + timedelta(hours=1)).isoformat(),
@@ -229,7 +240,7 @@ def test_research_shadow_plans_never_enter_broker_order_path(config, broker, mon
         seed_challengers(s.store)
         s.store.set("exploration_shadow_plans", [p])
         s.store.set("brief", {"regime": "mixed"})
-        s.market_tick(now, now + timedelta(hours=4))
+        s.market_tick(now, now.replace(hour=16))
         assert len(s.store.rows("SELECT * FROM shadow")) == 4
         assert not s.store.rows("SELECT * FROM plans")
         assert broker.submissions == 0

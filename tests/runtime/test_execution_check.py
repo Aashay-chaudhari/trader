@@ -9,6 +9,7 @@ from agent_trader.runtime.operations import operational_evidence
 from agent_trader.runtime.research import review_prompt
 from agent_trader.runtime.store import Store
 from agent_trader.runtime import supervisor
+from tests.runtime.session_fixtures import install
 
 
 @pytest.fixture
@@ -29,9 +30,15 @@ def runtime(config, broker, monkeypatch):
     s.store.close()
 
 
+def fresh_smoke(s, now, opened, close):
+    """Model the fresh acquisition performed by tick before a direct smoke unit call."""
+    install(s.store, now, opened=opened, closed=close)
+    return s.smoke(now, opened, close)
+
+
 def start(runtime):
     s, broker, now, close = runtime
-    assert not s.smoke(now, now.replace(minute=30), close)
+    assert not fresh_smoke(s, now, now.replace(minute=30), close)
     return s.store.rows("SELECT * FROM orders WHERE side='buy'")[0]
 
 
@@ -55,7 +62,7 @@ def test_execution_intent_survives_cleanup_restart_and_expires(runtime):
     finally:
         reopened.close()
     s.engine.reconcile(now + timedelta(minutes=2, seconds=1))
-    assert not s.smoke(now + timedelta(minutes=2, seconds=1), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(minutes=2, seconds=1), now.replace(minute=30), close)
     assert s.store.get("smoke:" + now.date().isoformat())["state"] == "unfilled"
     assert not s.store.get("readiness")["execution_verified"]
     assert broker.submissions == 1
@@ -144,11 +151,11 @@ def test_gate_requires_real_confirmed_exit_fill_and_reconciliation(runtime):
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 1)
-    assert not s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     assert not s.store.get("readiness")["execution_verified"]
     assert broker.submissions == 2  # one entry + one exit, never a duplicate entry
     fill_exit(s, broker, 1)
-    assert s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close)
+    assert fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close)
     assert s.store.get("readiness")["execution_verified"]
     assert s.store.get("smoke:" + now.date().isoformat())["exit_filled_qty"] == 1
     assert broker.submissions == 2
@@ -158,9 +165,9 @@ def test_partial_entry_is_unwound_but_cannot_pass_one_share_gate(runtime):
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 0.5)
-    assert not s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     fill_exit(s, broker, 0.5)
-    assert not s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close)
     assert not s.store.get("readiness")["execution_verified"]
     assert not s.store.rows("SELECT * FROM holdings")
 
@@ -169,9 +176,9 @@ def test_owned_kernel_exit_fill_is_recognized_as_confirmed_roundtrip(runtime):
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 1)
-    assert s.engine.exit_holding("SPY", "Protective kernel requested an exit")
+    assert s.engine.exit_holding("SPY", "Protective kernel requested an exit", now=now)
     fill_exit(s, broker, 1)
-    assert s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close)
+    assert fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close)
     assert s.store.get("readiness")["execution_verified"]
 
 
@@ -182,7 +189,7 @@ def test_ambiguous_submission_recovery_never_duplicates_entry(runtime):
     assert s.store.get("smoke:" + now.date().isoformat())["entry_client_id"]
     assert s.engine.reconcile(now + timedelta(seconds=30))
     s.engine.cancel_entries(now + timedelta(seconds=30), close)
-    s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     assert broker.submissions == 1
     assert len(broker.orders()) == 1
 
@@ -191,11 +198,11 @@ def test_flat_account_without_exit_fill_receipt_cannot_pass(runtime, monkeypatch
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 1)
-    monkeypatch.setattr(s.engine, "close_intraday", lambda: None)
-    monkeypatch.setattr(s.engine, "reconcile", lambda: True)
+    monkeypatch.setattr(s.engine, "close_intraday", lambda **kwargs: None)
+    monkeypatch.setattr(s.engine, "reconcile", lambda *args: True)
     s.store.db.execute("DELETE FROM holdings")
     broker.pos = []
-    assert not s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     assert not s.store.get("readiness")["execution_verified"]
 
 
@@ -203,10 +210,10 @@ def test_reconciliation_failure_blocks_gate_after_confirmed_roundtrip(runtime):
     s, broker, now, close = runtime
     row = start(runtime)
     fill_entry(s, broker, row, 1)
-    s.smoke(now + timedelta(seconds=30), now.replace(minute=30), close)
+    fresh_smoke(s, now + timedelta(seconds=30), now.replace(minute=30), close)
     fill_exit(s, broker, 1)
     broker.cash += 100  # unexplained external cash cannot be silently accepted
-    assert not s.smoke(now + timedelta(minutes=1), now.replace(minute=30), close)
+    assert not fresh_smoke(s, now + timedelta(minutes=1), now.replace(minute=30), close)
     assert not s.store.get("readiness")["execution_verified"]
     assert "cash_ledger" in s.store.get("reconciliation_errors")
 

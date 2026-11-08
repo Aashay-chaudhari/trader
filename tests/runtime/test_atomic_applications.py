@@ -297,11 +297,15 @@ def test_postcommit_quality_failure_does_not_reject_result_or_prevent_notificati
 
 
 @pytest.mark.parametrize("approval_age,permitted", [(180, True), (181, False)])
-def test_replayed_plan_approval_still_expires_after_180_seconds(runtime, plan, monkeypatch, approval_age, permitted):
+def test_replayed_plan_approval_still_expires_after_180_seconds(runtime, plan, monkeypatch, approval_age, permitted, now):
     result = brief(plan)
     apply(runtime, result)
     identity = runtime.engine.plans()[0]["id"]
-    now = datetime.now(timezone.utc)
+    from tests.runtime.session_fixtures import install
+
+    proof = install(runtime.store, now)
+    runtime.store.set("calendar:" + proof["day"], proof["calendar_raw"])
+    close = now.astimezone(supervisor.ET).replace(hour=16, minute=0)
     runtime.store.db.execute("UPDATE plans SET state='approved' WHERE id=?", (identity,))
     runtime.store.set("approval:" + identity, {"at": (now - timedelta(seconds=approval_age)).isoformat()})
     runtime.task = ("batch-research", "research", {}, "2026-11-07")
@@ -317,7 +321,7 @@ def test_replayed_plan_approval_still_expires_after_180_seconds(runtime, plan, m
     monkeypatch.setattr(runtime, "cohort_check", lambda label, action, default=None: default)
     runtime.adaptive = SimpleNamespace(symbols=lambda: set())
     monkeypatch.setattr(supervisor.time, "monotonic", lambda: 1)
-    runtime.market_tick(now, now + timedelta(hours=1))
+    runtime.market_tick(now, close)
     assert entered == ([identity] if permitted else [])
     assert runtime.store.rows("SELECT state FROM plans")[0]["state"] == ("approved" if permitted else "planned")
     assert runtime.broker.submissions == 0

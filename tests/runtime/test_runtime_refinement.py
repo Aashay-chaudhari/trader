@@ -10,6 +10,14 @@ from agent_trader.runtime.operations import operational_evidence
 from agent_trader.runtime.store import dumps
 
 
+def weekend_sources(broker, monkeypatch, now):
+    monkeypatch.setattr(broker, "calendar", lambda day: [], raising=False)
+    monkeypatch.setattr(broker, "clock", lambda: {
+        "timestamp": now.isoformat(), "is_open": False,
+        "next_open": "2026-11-09T09:30:00-05:00", "next_close": "2026-11-09T16:00:00-05:00",
+    }, raising=False)
+
+
 def quota(now, used=2):
     return {
         "at": now.isoformat(), "ordinary_usage_allowed": True,
@@ -57,7 +65,8 @@ def test_weekend_mode_reflects_reconciliation(config, broker, monkeypatch, recon
     s.store.set("calendar:" + day, [])
     s.store.set("preflight_day", day)
     s.store.set("mode", "halted")
-    monkeypatch.setattr(s.engine, "reconcile", lambda: reconciles)
+    monkeypatch.setattr(s.engine, "reconcile", lambda *args: reconciles)
+    weekend_sources(broker, monkeypatch, now)
     monkeypatch.setattr(s.engine, "cancel_entries", lambda *_: None)
     monkeypatch.setattr(s, "maybe_publish", lambda: None)
     launched = []
@@ -66,7 +75,7 @@ def test_weekend_mode_reflects_reconciliation(config, broker, monkeypatch, recon
         s.tick(now)
         assert s.store.get("mode") == expected
         assert s.store.get("market_open") is False
-        assert launched == [now]
+        assert len(launched) == 1 and now <= launched[0] < now + timedelta(seconds=30)
         assert broker.submissions == 0
     finally:
         s.pool.shutdown(wait=False)
@@ -185,6 +194,7 @@ def test_weekend_scheduler_refreshes_stale_quota_before_selecting_model_work(
     s.store.set("calendar:" + day, [])
     s.store.set("preflight_day", day)
     s.store.set("quota", quota(now - timedelta(hours=1)))
+    weekend_sources(broker, monkeypatch, now)
     launched = []
     monkeypatch.setattr(s, "launch", lambda *args: launched.append(args) or True)
     monkeypatch.setattr(research_work, "next_work", lambda *_: pytest.fail("Refresh quota first"))
@@ -213,6 +223,7 @@ def test_quota_refresh_failure_blocks_entries_without_stopping_weekend_reconcili
     s.store.set("calendar:" + day, [])
     s.store.set("preflight_day", day)
     monkeypatch.setattr(s, "launch", lambda *args: False)
+    weekend_sources(broker, monkeypatch, now)
     s.tick(now)
     assert s.store.get("reconciled") is True
     assert s.store.get("mode") == "market_closed"
