@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-11T17:19:36.563866+00:00",
+  "generated_at": "2026-11-11T17:34:33.601677+00:00",
   "start_date": "2026-10-29",
   "mode": "research_shadow",
-  "heartbeat": "2026-11-11T12:19:13.207299-05:00",
+  "heartbeat": "2026-11-11T12:33:57.294113-05:00",
   "watchdog": {
-    "checked_at": "2026-11-11T17:18:18.9144324+00:00",
+    "checked_at": "2026-11-11T17:32:27.1190454+00:00",
     "incident": false,
     "last_restart": "2026-11-07T18:13:50.4904720+00:00",
     "service_owner": "systemd user service",
@@ -46,10 +46,12 @@
   },
   "operational_session": {
     "validation_version": "operational-session-v1",
-    "state": "open",
-    "assessed_at": "2026-11-11T12:19:36.563866-05:00",
-    "market_open": true,
-    "reason_codes": [],
+    "state": "unknown",
+    "assessed_at": "2026-11-11T12:34:33.601677-05:00",
+    "market_open": false,
+    "reason_codes": [
+      "clock_timestamp_stale"
+    ],
     "calendar": {
       "state": "session",
       "day": "2026-11-11",
@@ -58,7 +60,7 @@
     },
     "clock": {
       "reported_is_open": true,
-      "timestamp": "2026-11-11T12:19:17.615149-05:00",
+      "timestamp": "2026-11-11T12:34:03.403084-05:00",
       "next_open": "2026-11-12T09:30:00-05:00",
       "next_close": "2026-11-11T16:00:00-05:00"
     },
@@ -69,9 +71,9 @@
         "received_at": "2026-11-11T07:17:00.141125-05:00"
       },
       "clock": {
-        "sha256": "e79bd302cf66de24d8fe1175c07ffac691636ef659fdebacccb853089387b555",
-        "requested_at": "2026-11-11T12:19:18.143931-05:00",
-        "received_at": "2026-11-11T12:19:18.191949-05:00"
+        "sha256": "a6e9135b3c2968181b0a5d4ca7be1cdd56f35f53327c0f9869ad377b4a4291e3",
+        "requested_at": "2026-11-11T12:34:03.489713-05:00",
+        "received_at": "2026-11-11T12:34:03.748759-05:00"
       }
     },
     "scope": "Session evidence reassessed at snapshot time; not a guarantee of current execution readiness."
@@ -126,7 +128,7 @@
     "branch_ledger_equity": 29999.84,
     "unattributed_equity_difference": 0.0,
     "reconciled": true,
-    "as_of": "2026-11-11T12:19:13.207299-05:00",
+    "as_of": "2026-11-11T12:33:57.294113-05:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -160,7 +162,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.84,
       "broker_cash": 29999.84,
-      "broker_cash_observed_at": "2026-11-11T12:19:13.207299-05:00",
+      "broker_cash_observed_at": "2026-11-11T12:33:57.294113-05:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -245,19 +247,271 @@
   ],
   "equity": [
     {
-      "at": "2026-11-11T12:19:13.207299-05:00",
+      "at": "2026-11-11T12:33:57.294113-05:00",
       "day": "2026-11-11",
       "branch": "options",
       "value": 10000.0
     },
     {
-      "at": "2026-11-11T12:19:13.207299-05:00",
+      "at": "2026-11-11T12:33:57.294113-05:00",
       "day": "2026-11-11",
       "branch": "swing",
       "value": 10000.0
     },
     {
-      "at": "2026-11-11T12:19:13.207299-05:00",
+      "at": "2026-11-11T12:33:57.294113-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:32:32.020078-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:32:32.020078-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:32:32.020078-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:31:44.314792-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:31:44.314792-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:31:44.314792-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:30:21.215400-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:30:21.215400-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:30:21.215400-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:29:34.635028-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:29:34.635028-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:29:34.635028-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:28:47.290081-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:28:47.290081-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:28:47.290081-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:27:24.333683-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:27:24.333683-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:27:24.333683-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:26:37.892179-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:26:37.892179-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:26:37.892179-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:25:54.816070-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:25:54.816070-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:25:54.816070-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:24:27.722306-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:24:27.722306-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:24:27.722306-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:23:38.978795-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:23:38.978795-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:23:38.978795-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:22:55.985401-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:22:55.985401-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:22:55.985401-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:21:29.593163-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:21:29.593163-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:21:29.593163-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:20:45.356836-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:20:45.356836-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:20:45.356836-05:00",
+      "day": "2026-11-11",
+      "branch": "intraday",
+      "value": 9999.84
+    },
+    {
+      "at": "2026-11-11T12:19:56.597172-05:00",
+      "day": "2026-11-11",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:19:56.597172-05:00",
+      "day": "2026-11-11",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-11T12:19:56.597172-05:00",
       "day": "2026-11-11",
       "branch": "intraday",
       "value": 9999.84
@@ -10788,258 +11042,6 @@
     },
     {
       "at": "2026-11-10T17:20:39.007118-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:19:59.300806-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:19:59.300806-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:19:59.300806-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:18:39.760667-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:18:39.760667-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:18:39.760667-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:17:59.992293-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:17:59.992293-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:17:59.992293-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:16:43.646410-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:16:43.646410-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:16:43.646410-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:15:22.440815-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:15:22.440815-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:15:22.440815-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:14:42.504752-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:14:42.504752-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:14:42.504752-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:13:56.753447-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:13:56.753447-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:13:56.753447-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:12:35.900953-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:12:35.900953-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:12:35.900953-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:11:57.855688-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:11:57.855688-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:11:57.855688-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:10:44.702065-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:10:44.702065-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:10:44.702065-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:09:33.394770-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:09:33.394770-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:09:33.394770-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:08:59.096752-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:08:59.096752-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:08:59.096752-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:07:50.124424-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:07:50.124424-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:07:50.124424-05:00",
-      "day": "2026-11-10",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-10T17:06:41.077216-05:00",
-      "day": "2026-11-10",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:06:41.077216-05:00",
-      "day": "2026-11-10",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-10T17:06:41.077216-05:00",
       "day": "2026-11-10",
       "branch": "intraday",
       "value": 9999.84
@@ -11157,7 +11159,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-11T17:19:40.474170+00:00",
+    "as_of": "2026-11-11T17:34:38.084872+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11176,12 +11178,12 @@
       "sessions": [
         {
           "day": "2026-11-11",
-          "recorded_slots": 34,
+          "recorded_slots": 37,
           "expected_slots": 78,
-          "observed_fraction": 0.4358974358974359,
+          "observed_fraction": 0.47435897435897434,
           "whole_session_evaluable": false,
           "complete_observed_session": false,
-          "maximum_unobserved_gap_minutes": 220,
+          "maximum_unobserved_gap_minutes": 205,
           "state": "not_fully_instrumented_or_in_progress"
         },
         {
@@ -11577,7 +11579,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-11T17:19:36.563866+00:00",
+    "as_of": "2026-11-11T17:34:33.601677+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11589,9 +11591,9 @@
       "return_after_extra_friction": -5.5955000000107447e-05,
       "max_drawdown": 1.1999920000560493e-05,
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
-      "verified_equity_marks": 18632,
+      "verified_equity_marks": 18652,
       "reconciled": true,
-      "as_of": "2026-11-11T17:19:13.207299+00:00",
+      "as_of": "2026-11-11T17:33:57.294113+00:00",
       "confirmed_fill_events": 2,
       "filled_orders": 2,
       "execution_verified": true,
@@ -11600,27 +11602,27 @@
       "market_references": [
         {
           "symbol": "SPY",
-          "return": -0.0002695134296571977,
-          "as_of": "2026-11-11T12:19:18.650085-05:00",
+          "return": 0.0005456003575983193,
+          "as_of": "2026-11-11T12:34:04.358420-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         },
         {
           "symbol": "QQQ",
-          "return": -0.004657304217407843,
-          "as_of": "2026-11-11T12:19:18.650085-05:00",
+          "return": -0.0033297213511206403,
+          "as_of": "2026-11-11T12:34:04.358420-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         },
         {
           "symbol": "TLT",
-          "return": -0.01233738471874446,
-          "as_of": "2026-11-11T12:19:18.650085-05:00",
+          "return": -0.011970927746900561,
+          "as_of": "2026-11-11T12:34:04.358420-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         }
       ],
       "basis": "Latest reconciled broker account equity versus $30,000. Drawdown uses only prospective verified marks; legacy marks lack reconciliation flags. Cash comparator assumes zero yield."
     },
     "research_funnel": {
-      "observation_leads": 480,
+      "observation_leads": 487,
       "catalogue_cards": 20,
       "reviewed_hypotheses": 6,
       "held_hypotheses": 14,
@@ -11636,9 +11638,9 @@
     "learning": {
       "proposed_lessons": 42,
       "tested_lessons": 0,
-      "latest_input_at": "2026-11-11T16:57:29.047404+00:00",
-      "input_age_hours": 0.3687545727777778,
-      "latest_observation_at": "2026-11-11T17:15:39.934013+00:00"
+      "latest_input_at": "2026-11-11T17:29:39.442328+00:00",
+      "input_age_hours": 0.08171093027777779,
+      "latest_observation_at": "2026-11-11T17:30:25.889840+00:00"
     },
     "development": {
       "total_proposals": 57,
@@ -11674,39 +11676,39 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-11T17:19:41.543557+00:00",
+    "as_of": "2026-11-11T17:34:39.066499+00:00",
     "records": [
       {
-        "id": "observation:0206b4687158298a43fbccc3",
+        "id": "observation:0d0f94d34e3f10dd4a17abd4",
         "kind": "intraday_relative_move",
         "subject": "MSFT",
-        "observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "input_observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "event_asof": "2026-11-11T17:15:37.854188+00:00",
+        "observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "input_observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "event_asof": "2026-11-11T17:30:24.877493+00:00",
         "values": {
-          "bid": 521.11,
-          "ask": 521.36,
-          "quote_at": "2026-11-11T17:15:37.854188+00:00",
-          "midpoint": 521.235,
+          "bid": 520.44,
+          "ask": 521.21,
+          "quote_at": "2026-11-11T17:30:24.877493+00:00",
+          "midpoint": 520.825,
           "prior_close": 533.18,
           "prior_close_date": "2026-11-10",
-          "change_from_prior_close": -0.022403315953336445,
+          "change_from_prior_close": -0.02317228703252172,
           "spy": {
-            "bid": 760.27,
-            "ask": 760.31,
-            "quote_at": "2026-11-11T17:15:38.016426+00:00",
-            "midpoint": 760.29,
+            "bid": 760.66,
+            "ask": 760.69,
+            "quote_at": "2026-11-11T17:30:24.891030+00:00",
+            "midpoint": 760.675,
             "prior_close": 749.93,
             "prior_close_date": "2026-11-10",
-            "change_from_prior_close": 0.013814622698118617
+            "change_from_prior_close": 0.01432800394703504
           },
-          "relative_change": -0.03621793865145506,
-          "capture_bucket": "2026-11-11T12:15:00-05:00",
+          "relative_change": -0.03750029097955676,
+          "capture_bucket": "2026-11-11T12:30:00-05:00",
           "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
         },
         "provenance": {
           "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-11T12:15:39.934013-05:00",
+          "input_ref": "research-input:2026-11-11T12:30:25.889840-05:00",
           "capture_mode": "quote_monitor"
         },
         "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
@@ -11718,36 +11720,36 @@
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       },
       {
-        "id": "observation:abbbbe252b943f93f4bdc06a",
+        "id": "observation:7528d05e78487664cd2a0a41",
         "kind": "intraday_relative_move",
         "subject": "AVGO",
-        "observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "input_observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "event_asof": "2026-11-11T17:15:38.028765+00:00",
+        "observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "input_observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "event_asof": "2026-11-11T17:30:24.555399+00:00",
         "values": {
-          "bid": 354.46,
-          "ask": 355.5,
-          "quote_at": "2026-11-11T17:15:38.028765+00:00",
-          "midpoint": 354.98,
+          "bid": 355.28,
+          "ask": 356.0,
+          "quote_at": "2026-11-11T17:30:24.555399+00:00",
+          "midpoint": 355.64,
           "prior_close": 332.07,
           "prior_close_date": "2026-11-10",
-          "change_from_prior_close": 0.06899147770048497,
+          "change_from_prior_close": 0.07097901044960397,
           "spy": {
-            "bid": 760.27,
-            "ask": 760.31,
-            "quote_at": "2026-11-11T17:15:38.016426+00:00",
-            "midpoint": 760.29,
+            "bid": 760.66,
+            "ask": 760.69,
+            "quote_at": "2026-11-11T17:30:24.891030+00:00",
+            "midpoint": 760.675,
             "prior_close": 749.93,
             "prior_close_date": "2026-11-10",
-            "change_from_prior_close": 0.013814622698118617
+            "change_from_prior_close": 0.01432800394703504
           },
-          "relative_change": 0.055176855002366354,
-          "capture_bucket": "2026-11-11T12:15:00-05:00",
+          "relative_change": 0.056651006502568935,
+          "capture_bucket": "2026-11-11T12:30:00-05:00",
           "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
         },
         "provenance": {
           "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-11T12:15:39.934013-05:00",
+          "input_ref": "research-input:2026-11-11T12:30:25.889840-05:00",
           "capture_mode": "quote_monitor"
         },
         "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
@@ -11759,36 +11761,36 @@
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       },
       {
-        "id": "observation:d2662692a3a647ca76860f47",
+        "id": "observation:9a7c13b406955534cc47c5ef",
         "kind": "intraday_relative_move",
         "subject": "AMD",
-        "observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "input_observed_at": "2026-11-11T17:15:39.934013+00:00",
-        "event_asof": "2026-11-11T17:15:38.436300+00:00",
+        "observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "input_observed_at": "2026-11-11T17:30:25.889840+00:00",
+        "event_asof": "2026-11-11T17:30:19.574614+00:00",
         "values": {
-          "bid": 553.98,
-          "ask": 556.5,
-          "quote_at": "2026-11-11T17:15:38.436300+00:00",
-          "midpoint": 555.24,
+          "bid": 556.63,
+          "ask": 557.59,
+          "quote_at": "2026-11-11T17:30:19.574614+00:00",
+          "midpoint": 557.11,
           "prior_close": 515.09,
           "prior_close_date": "2026-11-10",
-          "change_from_prior_close": 0.07794754314779939,
+          "change_from_prior_close": 0.08157797666427213,
           "spy": {
-            "bid": 760.27,
-            "ask": 760.31,
-            "quote_at": "2026-11-11T17:15:38.016426+00:00",
-            "midpoint": 760.29,
+            "bid": 760.66,
+            "ask": 760.69,
+            "quote_at": "2026-11-11T17:30:24.891030+00:00",
+            "midpoint": 760.675,
             "prior_close": 749.93,
             "prior_close_date": "2026-11-10",
-            "change_from_prior_close": 0.013814622698118617
+            "change_from_prior_close": 0.01432800394703504
           },
-          "relative_change": 0.06413292044968077,
-          "capture_bucket": "2026-11-11T12:15:00-05:00",
+          "relative_change": 0.0672499727172371,
+          "capture_bucket": "2026-11-11T12:30:00-05:00",
           "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
         },
         "provenance": {
           "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-11T12:15:39.934013-05:00",
+          "input_ref": "research-input:2026-11-11T12:30:25.889840-05:00",
           "capture_mode": "quote_monitor"
         },
         "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
@@ -11800,49 +11802,62 @@
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       },
       {
-        "id": "observation:4ac16391a282963422c74f4f",
-        "kind": "intraday_relative_move",
-        "subject": "AMD",
-        "observed_at": "2026-11-11T17:00:27.468917+00:00",
-        "input_observed_at": "2026-11-11T17:00:27.468917+00:00",
-        "event_asof": "2026-11-11T17:00:26.009337+00:00",
+        "id": "observation:1eea731505c37f1c86ce3ebf",
+        "kind": "intraday_vwap_distance",
+        "subject": "AVGO",
+        "observed_at": "2026-11-11T17:29:44.338077+00:00",
+        "input_observed_at": "2026-11-11T17:29:39.442328+00:00",
+        "event_asof": "2026-11-11T17:29:00+00:00",
         "values": {
-          "bid": 556.17,
-          "ask": 557.0,
-          "quote_at": "2026-11-11T17:00:26.009337+00:00",
-          "midpoint": 556.585,
-          "prior_close": 515.09,
-          "prior_close_date": "2026-11-10",
-          "change_from_prior_close": 0.0805587373080432,
-          "spy": {
-            "bid": 760.16,
-            "ask": 760.18,
-            "quote_at": "2026-11-11T17:00:26.525653+00:00",
-            "midpoint": 760.17,
-            "prior_close": 749.93,
-            "prior_close_date": "2026-11-10",
-            "change_from_prior_close": 0.013654607763391224
-          },
-          "relative_change": 0.06690412954465197,
-          "capture_bucket": "2026-11-11T12:00:00-05:00",
-          "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
+          "last_completed_close": 355.38,
+          "bar_vwap_iex": 351.73128540555655,
+          "distance": 0.010373585591729073,
+          "observed_minute_bars": 179,
+          "selection_rule": "Largest absolute completed-close distance from IEX bar VWAP, at least 0.3%; maximum two."
         },
         "provenance": {
-          "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-11T12:00:27.468917-05:00",
-          "capture_mode": "quote_monitor"
+          "source": "Alpaca free IEX completed-minute bars; complete observed interval coverage",
+          "input_ref": "research-input:2026-11-11T17:29:39.442328+00:00",
+          "capture_mode": "market_packet"
         },
-        "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
+        "question": "Under which verified conditions does this deviation continue or revert over a predeclared forward horizon?",
         "alternatives": [
-          "Different market/sector exposures",
-          "Company-specific repricing",
-          "Temporary noise or feed effects; midpoint movement is not a fill"
+          "Trending price discovery",
+          "Temporary imbalance or noise",
+          "IEX coverage differs from consolidated trading"
+        ],
+        "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
+      },
+      {
+        "id": "observation:f23c27927aa5c5db80eb7f20",
+        "kind": "intraday_vwap_distance",
+        "subject": "AMD",
+        "observed_at": "2026-11-11T17:29:44.338077+00:00",
+        "input_observed_at": "2026-11-11T17:29:39.442328+00:00",
+        "event_asof": "2026-11-11T17:29:00+00:00",
+        "values": {
+          "last_completed_close": 556.62,
+          "bar_vwap_iex": 541.2272363829544,
+          "distance": 0.02844048226381979,
+          "observed_minute_bars": 179,
+          "selection_rule": "Largest absolute completed-close distance from IEX bar VWAP, at least 0.3%; maximum two."
+        },
+        "provenance": {
+          "source": "Alpaca free IEX completed-minute bars; complete observed interval coverage",
+          "input_ref": "research-input:2026-11-11T17:29:39.442328+00:00",
+          "capture_mode": "market_packet"
+        },
+        "question": "Under which verified conditions does this deviation continue or revert over a predeclared forward horizon?",
+        "alternatives": [
+          "Trending price discovery",
+          "Temporary imbalance or noise",
+          "IEX coverage differs from consolidated trading"
         ],
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       }
     ],
-    "total_records": 480,
-    "omitted": 476,
+    "total_records": 487,
+    "omitted": 482,
     "scope": "Immutable local observations, selected descriptively. Dates and alternatives matter; history is context, not new evidence. No causal or profitability claim."
   },
   "adaptive_lab": {
@@ -14887,7 +14902,7 @@
     ]
   },
   "official_calendar": {
-    "observed_at": "2026-11-11T16:57:34.314109+00:00",
+    "observed_at": "2026-11-11T17:29:44.260684+00:00",
     "events": [
       {
         "title": "Experimental Super Intelligence Economic Statistics, 2024",
@@ -15327,6 +15342,46 @@
   ],
   "plans": [],
   "events": [
+    {
+      "id": 971,
+      "at": "2026-11-11T17:30:21.601950+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "agent_research",
+        "reason": "Research did not complete (AgentUnavailable). Protective routines continue; new plans require valid research."
+      }
+    },
+    {
+      "id": 970,
+      "at": "2026-11-11T17:29:55.994216+00:00",
+      "kind": "budget_skip",
+      "branch": null,
+      "payload": {
+        "role": "research",
+        "reason": "20% account reserve reached"
+      }
+    },
+    {
+      "id": 968,
+      "at": "2026-11-11T17:29:34.845114+00:00",
+      "kind": "incident",
+      "branch": null,
+      "payload": {
+        "code": "agent_research",
+        "reason": "Research did not complete (AgentUnavailable). Protective routines continue; new plans require valid research."
+      }
+    },
+    {
+      "id": 967,
+      "at": "2026-11-11T17:29:07.806500+00:00",
+      "kind": "budget_skip",
+      "branch": null,
+      "payload": {
+        "role": "research",
+        "reason": "20% account reserve reached"
+      }
+    },
     {
       "id": 965,
       "at": "2026-11-11T16:58:06.043574+00:00",
@@ -16282,46 +16337,6 @@
     {
       "id": 848,
       "at": "2026-11-10T18:32:06.090785+00:00",
-      "kind": "budget_skip",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "reason": "20% account reserve reached"
-      }
-    },
-    {
-      "id": 846,
-      "at": "2026-11-10T18:31:48.258601+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "agent_research",
-        "reason": "Research did not complete (AgentUnavailable). Protective routines continue; new plans require valid research."
-      }
-    },
-    {
-      "id": 845,
-      "at": "2026-11-10T18:31:29.242315+00:00",
-      "kind": "budget_skip",
-      "branch": null,
-      "payload": {
-        "role": "research",
-        "reason": "20% account reserve reached"
-      }
-    },
-    {
-      "id": 843,
-      "at": "2026-11-10T18:00:56.760768+00:00",
-      "kind": "incident",
-      "branch": null,
-      "payload": {
-        "code": "agent_research",
-        "reason": "Research did not complete (AgentUnavailable). Protective routines continue; new plans require valid research."
-      }
-    },
-    {
-      "id": 842,
-      "at": "2026-11-10T18:00:45.286286+00:00",
       "kind": "budget_skip",
       "branch": null,
       "payload": {
@@ -17855,7 +17870,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-11T16:57:41.847890+00:00",
+    "at": "2026-11-11T17:29:55.957717+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -17889,7 +17904,7 @@
       }
     },
     "latest_eligibility": {
-      "as_of": "2026-11-11T12:15:39.873195-05:00",
+      "as_of": "2026-11-11T12:30:25.825485-05:00",
       "branches": {
         "intraday": {
           "executable_plans": 0,
@@ -17910,21 +17925,21 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-11T17:19:45.506587+00:00",
+    "as_of": "2026-11-11T17:34:43.342544+00:00",
     "status": {
       "state": "blocked_by_account_allowance",
       "role": "deep_research_review",
       "topic": "runtime_reliability",
       "work_id": "71737abe05b80f9c009e9361:0",
       "as_of": "2026-11-10T22:00:55.268702-05:00",
-      "next_eligible_at": null,
+      "next_eligible_at": "2026-11-12T01:58:09+00:00",
       "idle_reasons": [],
       "last_budget_decision": {
         "at": "2026-11-10T22:00:55.268702-05:00",
         "allowed": false,
         "reason": "20% account reserve reached"
       },
-      "reason": "Account quota observation is stale",
+      "reason": "20% account reserve reached",
       "eligibility_scope": "Next eligible is an earliest recheck time, not a promised start; fresh allowance, evidence and worker availability are required."
     },
     "reports": [
@@ -21919,9 +21934,9 @@
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
     "account_used_percent": 81.0,
-    "quota_observed_at": "2026-11-11T16:57:41.847890+00:00",
+    "quota_observed_at": "2026-11-11T17:29:55.957717+00:00",
     "target_gap_percentage_points": 0,
-    "account_limit_reason": "Account quota observation is stale",
+    "account_limit_reason": "20% account reserve reached",
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
   "execution_quality": {
@@ -21947,19 +21962,19 @@
       }
     },
     "SPY": {
-      "return": -0.0002695134296571977,
-      "price": 760.425,
-      "at": "2026-11-11T12:19:18.650085-05:00"
+      "return": 0.0005456003575983193,
+      "price": 761.0450000000001,
+      "at": "2026-11-11T12:34:04.358420-05:00"
     },
     "QQQ": {
-      "return": -0.004657304217407843,
-      "price": 693.51,
-      "at": "2026-11-11T12:19:18.650085-05:00"
+      "return": -0.0033297213511206403,
+      "price": 694.435,
+      "at": "2026-11-11T12:34:04.358420-05:00"
     },
     "TLT": {
-      "return": -0.01233738471874446,
-      "price": 80.85499999999999,
-      "at": "2026-11-11T12:19:18.650085-05:00"
+      "return": -0.011970927746900561,
+      "price": 80.88499999999999,
+      "at": "2026-11-11T12:34:04.358420-05:00"
     },
     "fixed_rule": {
       "day": "2026-11-11",
@@ -21973,137 +21988,28 @@
   "options_research": {
     "feed": "indicative",
     "execution_eligible": false,
-    "observed_at": "2026-11-11T16:57:29.047404+00:00",
+    "observed_at": "2026-11-11T17:29:39.442328+00:00",
     "contracts": [
       {
-        "symbol": "SPY261111C00650000",
+        "symbol": "SPY261111C00645000",
         "underlying": "SPY",
         "quote": {
-          "ap": 109.59,
-          "as": 1,
-          "ax": "C",
-          "bp": 108.68,
+          "ap": 117.05,
+          "as": 5,
+          "ax": "V",
+          "bp": 116.76,
           "bs": 1,
           "bx": "C",
           "c": " ",
-          "t": "2026-11-11T16:57:24.526702751Z"
+          "t": "2026-11-11T17:29:40.481265723Z"
         },
         "trade": {
           "c": "a",
-          "p": 98.59,
+          "p": 103.3,
           "s": 1,
-          "t": "2026-11-10T19:44:38.278572097Z",
+          "t": "2026-11-10T19:17:22.056465733Z",
           "x": "M"
         },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00635000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 125.06,
-          "as": 1,
-          "ax": "Q",
-          "bp": 124.33,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735682868Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 113.38,
-          "s": 1,
-          "t": "2026-11-10T19:24:57.83915048Z",
-          "x": "C"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00675000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 84.35,
-          "as": 1,
-          "ax": "Q",
-          "bp": 84.05,
-          "bs": 5,
-          "bx": "S",
-          "c": " ",
-          "t": "2026-11-11T16:57:23.702550679Z"
-        },
-        "trade": {
-          "c": "f",
-          "p": 80.62,
-          "s": 1,
-          "t": "2026-11-11T14:48:42.757081807Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00695000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 66.14,
-          "as": 24,
-          "ax": "X",
-          "bp": 66,
-          "bs": 24,
-          "bx": "X",
-          "c": "A",
-          "t": "2026-11-11T16:57:32.822807904Z"
-        },
-        "trade": {
-          "c": "I",
-          "p": 61.72,
-          "s": 1,
-          "t": "2026-11-11T15:22:09.297930869Z",
-          "x": "Q"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00600000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 159.32,
-          "as": 1,
-          "ax": "Q",
-          "bp": 157.3,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735682868Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 148.96,
-          "s": 1,
-          "t": "2026-11-10T19:56:27.450207037Z",
-          "x": "A"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00580000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 182.32,
-          "as": 1,
-          "ax": "Q",
-          "bp": 181.41,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735812836Z"
-        },
-        "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
@@ -22111,14 +22017,14 @@
         "symbol": "SPY261111C00640000",
         "underlying": "SPY",
         "quote": {
-          "ap": 119.98,
-          "as": 1,
+          "ap": 123.04,
+          "as": 2,
           "ax": "C",
-          "bp": 119.83,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.89881825Z"
+          "bp": 122.61,
+          "bs": 5,
+          "bx": "S",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.481005673Z"
         },
         "trade": {
           "c": "I",
@@ -22131,17 +22037,206 @@
         "implied_volatility": null
       },
       {
+        "symbol": "SPY261111C00620000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 141.98,
+          "as": 1,
+          "ax": "Q",
+          "bp": 141.69,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-11T17:29:41.754763772Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 128.49,
+          "s": 1,
+          "t": "2026-11-10T19:31:53.260914008Z",
+          "x": "C"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00605000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 156.83,
+          "as": 1,
+          "ax": "C",
+          "bp": 155.98,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.481265723Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 131.71,
+          "s": 1,
+          "t": "2026-11-06T17:49:47.235402332Z",
+          "x": "C"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00565000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 196.08,
+          "as": 1,
+          "ax": "V",
+          "bp": 195.8,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.480930906Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00625000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 135.02,
+          "as": 5,
+          "ax": "V",
+          "bp": 134.52,
+          "bs": 1,
+          "bx": "Z",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.480950707Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 123.59,
+          "s": 1,
+          "t": "2026-11-10T20:01:25.181767568Z",
+          "x": "M"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00695000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 64.879,
+          "as": 71,
+          "ax": "C",
+          "bp": 64.599,
+          "bs": 70,
+          "bx": "C",
+          "c": "A",
+          "t": "2026-11-11T17:29:39.228427573Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 61.72,
+          "s": 1,
+          "t": "2026-11-11T15:22:09.297930869Z",
+          "x": "Q"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00670000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 91.28,
+          "as": 1,
+          "ax": "C",
+          "bp": 89.09,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.481270449Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 79.21,
+          "s": 1,
+          "t": "2026-11-10T19:32:37.833707912Z",
+          "x": "W"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00580000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 182.57,
+          "as": 1,
+          "ax": "V",
+          "bp": 179.32,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.481263876Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00590000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 173.03,
+          "as": 5,
+          "ax": "V",
+          "bp": 172.75,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.481050689Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00600000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 162.6,
+          "as": 1,
+          "ax": "C",
+          "bp": 160.57,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.480965717Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 148.96,
+          "s": 1,
+          "t": "2026-11-10T19:56:27.450207037Z",
+          "x": "A"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
         "symbol": "SPY261111C00685000",
         "underlying": "SPY",
         "quote": {
-          "ap": 75.71,
-          "as": 24,
-          "ax": "X",
-          "bp": 75.57,
-          "bs": 24,
-          "bx": "X",
+          "ap": 77.12,
+          "as": 68,
+          "ax": "C",
+          "bp": 76.51,
+          "bs": 71,
+          "bx": "C",
           "c": "A",
-          "t": "2026-11-11T16:57:32.822782873Z"
+          "t": "2026-11-11T17:29:40.183869954Z"
         },
         "trade": {
           "c": "a",
@@ -22154,172 +22249,87 @@
         "implied_volatility": null
       },
       {
-        "symbol": "SPY261111C00555000",
+        "symbol": "SPY261111C00650000",
         "underlying": "SPY",
         "quote": {
-          "ap": 203.66,
-          "as": 1,
-          "ax": "Q",
-          "bp": 200.98,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735677857Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00630000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 132.59,
+          "ap": 111.3,
           "as": 1,
           "ax": "V",
-          "bp": 131.79,
-          "bs": 5,
-          "bx": "V",
+          "bp": 111.02,
+          "bs": 1,
+          "bx": "C",
           "c": " ",
-          "t": "2026-11-11T16:57:27.002608933Z"
+          "t": "2026-11-11T17:29:40.481263876Z"
         },
         "trade": {
           "c": "a",
-          "p": 119.01,
+          "p": 98.59,
           "s": 1,
-          "t": "2026-11-10T20:19:08.009646356Z",
+          "t": "2026-11-10T19:44:38.278572097Z",
           "x": "M"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "SPY261111C00550000",
+        "symbol": "SPY261111C00555000",
         "underlying": "SPY",
         "quote": {
-          "ap": 212.88,
+          "ap": 207.24,
           "as": 1,
-          "ax": "Q",
-          "bp": 207.44,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735812836Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00590000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 171.42,
-          "as": 4,
-          "ax": "S",
-          "bp": 170.54,
-          "bs": 1,
-          "bx": "Q",
-          "c": " ",
-          "t": "2026-11-11T16:57:32.666042573Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00565000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 198.14,
-          "as": 1,
-          "ax": "Q",
-          "bp": 193.46,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735812836Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00610000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 152.42,
-          "as": 1,
-          "ax": "Q",
-          "bp": 151.5,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735812836Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261111C00585000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 175.14,
-          "as": 1,
-          "ax": "Q",
-          "bp": 174.22,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-11T16:57:28.735812836Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261111C00590000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 105.55,
-          "as": 5,
           "ax": "V",
-          "bp": 100.11,
-          "bs": 12,
-          "bx": "S",
+          "bp": 204.06,
+          "bs": 1,
+          "bx": "C",
           "c": " ",
-          "t": "2026-11-11T16:57:32.531553063Z"
+          "t": "2026-11-11T17:29:40.481251234Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261111C00575000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 186.29,
+          "as": 1,
+          "ax": "V",
+          "bp": 186.01,
+          "bs": 1,
+          "bx": "C",
+          "c": " ",
+          "t": "2026-11-11T17:29:40.480665777Z"
         },
         "trade": {
           "c": "a",
-          "p": 84.78,
+          "p": 176.71,
           "s": 1,
-          "t": "2026-11-09T15:20:59.395301489Z",
-          "x": "J"
+          "t": "2026-11-10T15:10:04.863454782Z",
+          "x": "M"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00545000",
+        "symbol": "QQQ261111C00565000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 147.47,
-          "as": 10,
-          "ax": "I",
-          "bp": 146.91,
-          "bs": 5,
-          "bx": "V",
+          "ap": 130.18,
+          "as": 5,
+          "ax": "V",
+          "bp": 128.61,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:32.851896425Z"
+          "t": "2026-11-11T17:29:43.172945434Z"
         },
         "trade": {
           "c": "f",
-          "p": 128.67,
-          "s": 1,
-          "t": "2026-11-10T16:00:59.933393596Z",
-          "x": "I"
+          "p": 92.37,
+          "s": 2,
+          "t": "2026-11-06T21:09:15.14702175Z",
+          "x": "D"
         },
         "greeks": null,
         "implied_volatility": null
@@ -22328,14 +22338,14 @@
         "symbol": "QQQ261111C00535000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 160.42,
+          "ap": 162.79,
           "as": 10,
           "ax": "I",
-          "bp": 157.79,
+          "bp": 156.03,
           "bs": 10,
           "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:22.312777055Z"
+          "t": "2026-11-11T17:29:42.049486306Z"
         },
         "trade": {
           "c": "f",
@@ -22348,97 +22358,51 @@
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00525000",
+        "symbol": "QQQ261111C00595000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 168.47,
-          "as": 5,
-          "ax": "V",
-          "bp": 163.96,
+          "ap": 99.62,
+          "as": 10,
+          "ax": "I",
+          "bp": 95.87,
           "bs": 10,
           "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:30.784872488Z"
-        },
-        "trade": {
-          "c": "f",
-          "p": 148.89,
-          "s": 1,
-          "t": "2026-11-10T16:01:51.724978822Z",
-          "x": "A"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261111C00585000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 110.49,
-          "as": 4,
-          "ax": "X",
-          "bp": 105.84,
-          "bs": 10,
-          "bx": "I",
-          "c": " ",
-          "t": "2026-11-11T16:57:22.315746609Z"
-        },
-        "trade": {
-          "c": "I",
-          "p": 68.13,
-          "s": 1,
-          "t": "2026-11-05T18:06:44.158221719Z",
-          "x": "N"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261111C00601000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 93.01,
-          "as": 5,
-          "ax": "V",
-          "bp": 89.81,
-          "bs": 9,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-11T16:57:29.004056936Z"
+          "t": "2026-11-11T17:29:42.052066389Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00598000",
+        "symbol": "QQQ261111C00594000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 97.28,
-          "as": 4,
-          "ax": "X",
-          "bp": 93.14,
-          "bs": 11,
+          "ap": 101.97,
+          "as": 10,
+          "ax": "I",
+          "bp": 99.57,
+          "bs": 10,
           "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:22.314851622Z"
+          "t": "2026-11-11T17:29:42.050501272Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00560000",
+        "symbol": "QQQ261111C00599000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 135.17,
-          "as": 4,
-          "ax": "V",
-          "bp": 128.97,
-          "bs": 4,
-          "bx": "V",
+          "ap": 97.82,
+          "as": 2,
+          "ax": "E",
+          "bp": 95.12,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:32.956435994Z"
+          "t": "2026-11-11T17:29:42.051226288Z"
         },
         "trade": null,
         "greeks": null,
@@ -22448,14 +22412,14 @@
         "symbol": "QQQ261111C00602000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 92.2,
-          "as": 5,
-          "ax": "V",
-          "bp": 88.36,
-          "bs": 5,
-          "bx": "V",
+          "ap": 93.69,
+          "as": 10,
+          "ax": "I",
+          "bp": 90.43,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:24.283711393Z"
+          "t": "2026-11-11T17:29:42.053151294Z"
         },
         "trade": {
           "c": "g",
@@ -22468,47 +22432,24 @@
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00530000",
+        "symbol": "QQQ261111C00600000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 165.08,
+          "ap": 93.62,
           "as": 10,
           "ax": "I",
-          "bp": 160.97,
-          "bs": 10,
-          "bx": "I",
+          "bp": 91.98,
+          "bs": 11,
+          "bx": "S",
           "c": " ",
-          "t": "2026-11-11T16:57:28.755032956Z"
+          "t": "2026-11-11T17:29:42.052066389Z"
         },
         "trade": {
-          "c": "I",
-          "p": 143.85,
+          "c": "g",
+          "p": 92.44,
           "s": 1,
-          "t": "2026-11-10T14:30:44.350303615Z",
-          "x": "A"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261111C00570000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 122.74,
-          "as": 5,
-          "ax": "V",
-          "bp": 120.42,
-          "bs": 9,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-11T16:57:32.823856557Z"
-        },
-        "trade": {
-          "c": "f",
-          "p": 90.18,
-          "s": 1,
-          "t": "2026-11-06T20:09:34.974191971Z",
-          "x": "D"
+          "t": "2026-11-11T16:49:51.558155702Z",
+          "x": "C"
         },
         "greeks": null,
         "implied_volatility": null
@@ -22517,14 +22458,14 @@
         "symbol": "QQQ261111C00505000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 191.44,
-          "as": 4,
-          "ax": "X",
-          "bp": 187.02,
-          "bs": 4,
-          "bx": "X",
+          "ap": 193.83,
+          "as": 2,
+          "ax": "G",
+          "bp": 191.37,
+          "bs": 11,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:33.059540347Z"
+          "t": "2026-11-11T17:29:42.048956598Z"
         },
         "trade": {
           "c": "a",
@@ -22537,59 +22478,151 @@
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00595000",
+        "symbol": "QQQ261111C00596000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 97.51,
+          "ap": 100.55,
           "as": 10,
           "ax": "I",
-          "bp": 97.33,
-          "bs": 5,
-          "bx": "V",
+          "bp": 97.17,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:24.164747031Z"
+          "t": "2026-11-11T17:29:42.049336344Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00500000",
+        "symbol": "QQQ261111C00515000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 196.92,
+          "ap": 177.04,
           "as": 10,
           "ax": "I",
-          "bp": 193.24,
-          "bs": 11,
-          "bx": "S",
+          "bp": 174.92,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:33.059540347Z"
+          "t": "2026-11-11T17:29:41.143241063Z"
         },
         "trade": {
           "c": "I",
-          "p": 151.03,
+          "p": 133.64,
           "s": 1,
-          "t": "2026-11-05T20:30:48.363994329Z",
-          "x": "H"
+          "t": "2026-11-05T20:58:48.626058209Z",
+          "x": "N"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261111C00597000",
+        "symbol": "QQQ261111C00555000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 96.43,
+          "ap": 141.56,
+          "as": 5,
+          "ax": "Q",
+          "bp": 135.58,
+          "bs": 10,
+          "bx": "I",
+          "c": " ",
+          "t": "2026-11-11T17:29:42.049011349Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 96.34,
+          "s": 1,
+          "t": "2026-11-05T18:06:45.635103682Z",
+          "x": "N"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261111C00550000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 145.47,
           "as": 5,
           "ax": "V",
-          "bp": 92.63,
-          "bs": 5,
-          "bx": "V",
+          "bp": 142.05,
+          "bs": 10,
+          "bx": "I",
           "c": " ",
-          "t": "2026-11-11T16:57:24.278256432Z"
+          "t": "2026-11-11T17:29:42.061776213Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 103,
+          "s": 1,
+          "t": "2026-11-05T18:06:45.673568432Z",
+          "x": "N"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261111C00601000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 95.86,
+          "as": 10,
+          "ax": "I",
+          "bp": 92.86,
+          "bs": 24,
+          "bx": "M",
+          "c": " ",
+          "t": "2026-11-11T17:29:42.050851507Z"
         },
         "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261111C00540000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 157,
+          "as": 10,
+          "ax": "I",
+          "bp": 154.64,
+          "bs": 10,
+          "bx": "I",
+          "c": " ",
+          "t": "2026-11-11T17:29:42.053931307Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 108.64,
+          "s": 1,
+          "t": "2026-11-05T20:58:47.72142816Z",
+          "x": "N"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261111C00545000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 152.24,
+          "as": 10,
+          "ax": "I",
+          "bp": 145.19,
+          "bs": 10,
+          "bx": "I",
+          "c": " ",
+          "t": "2026-11-11T17:29:42.049266535Z"
+        },
+        "trade": {
+          "c": "f",
+          "p": 128.67,
+          "s": 1,
+          "t": "2026-11-10T16:00:59.933393596Z",
+          "x": "I"
+        },
         "greeks": null,
         "implied_volatility": null
       }
@@ -22926,10 +22959,10 @@
     ]
   },
   "research_input_quality": {
-    "observed_at": "2026-11-11T16:57:29.047404+00:00",
+    "observed_at": "2026-11-11T17:29:39.442328+00:00",
     "acquisition_interval": {
-      "started_at": "2026-11-11T16:57:29.047404+00:00",
-      "completed_at": "2026-11-11T16:57:34.339066+00:00",
+      "started_at": "2026-11-11T17:29:39.442328+00:00",
+      "completed_at": "2026-11-11T17:29:44.288482+00:00",
       "crossed_et_date": false,
       "crossed_regular_open": false,
       "crossed_regular_close": false
