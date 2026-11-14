@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-14T02:22:04.057284+00:00",
+  "generated_at": "2026-11-14T02:36:44.300020+00:00",
   "start_date": "2026-10-29",
   "mode": "paper_pilot",
-  "heartbeat": "2026-11-13T21:21:39.801460-05:00",
+  "heartbeat": "2026-11-13T21:35:55.091316-05:00",
   "watchdog": {
-    "checked_at": "2026-11-14T02:22:04.4475062+00:00",
+    "checked_at": "2026-11-14T02:36:08.0152726+00:00",
     "incident": false,
     "last_restart": "2026-11-13T16:13:42.9247725+00:00",
     "service_owner": "systemd user service",
@@ -48,10 +48,12 @@
   },
   "operational_session": {
     "validation_version": "operational-session-v1",
-    "state": "after_close",
-    "assessed_at": "2026-11-13T21:22:04.057284-05:00",
+    "state": "unknown",
+    "assessed_at": "2026-11-13T21:36:44.300020-05:00",
     "market_open": false,
-    "reason_codes": [],
+    "reason_codes": [
+      "clock_timestamp_stale"
+    ],
     "calendar": {
       "state": "session",
       "day": "2026-11-13",
@@ -60,7 +62,7 @@
     },
     "clock": {
       "reported_is_open": false,
-      "timestamp": "2026-11-13T21:21:41.136768-05:00",
+      "timestamp": "2026-11-13T21:35:58.897699-05:00",
       "next_open": "2026-11-16T09:30:00-05:00",
       "next_close": "2026-11-16T16:00:00-05:00"
     },
@@ -71,9 +73,9 @@
         "received_at": "2026-11-13T11:13:59.211472-05:00"
       },
       "clock": {
-        "sha256": "3b51aae42f9d181e660feca784730cd50a6504d4562ec2cbec06fb13a55e3383",
-        "requested_at": "2026-11-13T21:21:41.583386-05:00",
-        "received_at": "2026-11-13T21:21:41.626558-05:00"
+        "sha256": "38cfb235e16a4f05a474ea936cd599637aa90ab88130913214442413c76fcd64",
+        "requested_at": "2026-11-13T21:35:59.127925-05:00",
+        "received_at": "2026-11-13T21:35:59.178254-05:00"
       }
     },
     "scope": "Session evidence reassessed at snapshot time; not a guarantee of current execution readiness."
@@ -128,7 +130,7 @@
     "branch_ledger_equity": 29999.120000000003,
     "unattributed_equity_difference": -0.0,
     "reconciled": true,
-    "as_of": "2026-11-13T21:21:39.801460-05:00",
+    "as_of": "2026-11-13T21:35:55.091316-05:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -162,7 +164,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.12,
       "broker_cash": 29999.12,
-      "broker_cash_observed_at": "2026-11-13T21:21:39.801460-05:00",
+      "broker_cash_observed_at": "2026-11-13T21:35:55.091316-05:00",
       "broker_minus_ledger": 0.0,
       "attributed_unbooked_fee_net": 0.0,
       "remaining_after_attributed_fees": 0.0,
@@ -310,6 +312,240 @@
   ],
   "equity": [
     {
+      "at": "2026-11-13T21:35:55.091316-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:35:55.091316-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:35:55.091316-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:34:08.742640-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:34:08.742640-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:34:08.742640-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:33:08.093884-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:33:08.093884-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:33:08.093884-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:32:02.316543-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:32:02.316543-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:32:02.316543-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:30:53.727888-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:30:53.727888-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:30:53.727888-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:29:35.674510-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:29:35.674510-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:29:35.674510-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:28:29.678441-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:28:29.678441-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:28:29.678441-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:27:14.873545-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:27:14.873545-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:27:14.873545-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:26:07.224713-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:26:07.224713-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:26:07.224713-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:25:22.885020-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:25:22.885020-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:25:22.885020-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:24:37.100035-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:24:37.100035-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:24:37.100035-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:23:53.773768-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:23:53.773768-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:23:53.773768-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-13T21:22:24.191145-05:00",
+      "day": "2026-11-13",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:22:24.191145-05:00",
+      "day": "2026-11-13",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-13T21:22:24.191145-05:00",
+      "day": "2026-11-13",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
       "at": "2026-11-13T21:21:39.801460-05:00",
       "day": "2026-11-13",
       "branch": "options",
@@ -10871,240 +11107,6 @@
     },
     {
       "at": "2026-11-12T22:53:22.803331-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:52:36.102487-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:52:36.102487-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:52:36.102487-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:51:47.257538-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:51:47.257538-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:51:47.257538-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:50:13.562042-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:50:13.562042-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:50:13.562042-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:49:26.926013-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:49:26.926013-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:49:26.926013-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:48:37.506996-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:48:37.506996-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:48:37.506996-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:47:50.255250-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:47:50.255250-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:47:50.255250-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:46:16.956946-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:46:16.956946-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:46:16.956946-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:45:26.829568-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:45:26.829568-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:45:26.829568-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:44:40.178485-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:44:40.178485-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:44:40.178485-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:43:49.051439-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:43:49.051439-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:43:49.051439-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:42:10.901373-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:42:10.901373-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:42:10.901373-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:41:24.939310-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:41:24.939310-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:41:24.939310-05:00",
-      "day": "2026-11-12",
-      "branch": "intraday",
-      "value": 9999.84
-    },
-    {
-      "at": "2026-11-12T22:40:38.339734-05:00",
-      "day": "2026-11-12",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:40:38.339734-05:00",
-      "day": "2026-11-12",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-12T22:40:38.339734-05:00",
       "day": "2026-11-12",
       "branch": "intraday",
       "value": 9999.84
@@ -11288,7 +11290,7 @@
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-14T02:22:06.018601+00:00",
+    "as_of": "2026-11-14T02:36:48.763052+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11708,7 +11710,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-14T02:22:04.057284+00:00",
+    "as_of": "2026-11-14T02:36:44.300020+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11720,9 +11722,9 @@
       "return_after_extra_friction": -0.000129958333333291,
       "max_drawdown": 3.599976000168148e-05,
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
-      "verified_equity_marks": 21487,
+      "verified_equity_marks": 21502,
       "reconciled": true,
-      "as_of": "2026-11-14T02:21:39.801460+00:00",
+      "as_of": "2026-11-14T02:35:55.091316+00:00",
       "confirmed_fill_events": 4,
       "filled_orders": 4,
       "execution_verified": true,
@@ -11768,7 +11770,7 @@
       "proposed_lessons": 54,
       "tested_lessons": 0,
       "latest_input_at": "2026-11-13T18:00:30.973126+00:00",
-      "input_age_hours": 8.359190043888889,
+      "input_age_hours": 8.603701915,
       "latest_observation_at": "2026-11-13T20:45:23.455904+00:00"
     },
     "development": {
@@ -11801,7 +11803,7 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-14T02:22:06.622159+00:00",
+    "as_of": "2026-11-14T02:36:50.209373+00:00",
     "records": [
       {
         "id": "observation:7f30943bc1c80a6e2021329d",
@@ -20523,7 +20525,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-14T02:19:43.230513+00:00",
+    "at": "2026-11-14T02:35:18.218540+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -20578,10 +20580,10 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-14T02:22:08.604030+00:00",
+    "as_of": "2026-11-14T02:36:55.349464+00:00",
     "status": {
       "state": "waiting_for_evidence",
-      "as_of": "2026-11-13T21:21:41.747402-05:00",
+      "as_of": "2026-11-13T21:35:59.469114-05:00",
       "next_eligible_at": null,
       "reason": "No unreviewed eligible question for the retained evidence; new evidence or an eligible retry is required.",
       "idle_reasons": [
@@ -24766,7 +24768,7 @@
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
     "account_used_percent": 4.0,
-    "quota_observed_at": "2026-11-14T02:19:43.230513+00:00",
+    "quota_observed_at": "2026-11-14T02:35:18.218540+00:00",
     "target_gap_percentage_points": 76.0,
     "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
