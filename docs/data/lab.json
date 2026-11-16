@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-16T04:47:52.013908+00:00",
+  "generated_at": "2026-11-16T15:41:36.630854+00:00",
   "start_date": "2026-10-29",
-  "mode": "market_closed",
-  "heartbeat": "2026-11-15T23:47:25.393300-05:00",
+  "mode": "paper_pilot",
+  "heartbeat": "2026-11-16T10:41:30.114039-05:00",
   "watchdog": {
-    "checked_at": "2026-11-16T04:46:04.7451309+00:00",
+    "checked_at": "2026-11-16T15:40:04.6301956+00:00",
     "incident": false,
-    "last_restart": "2026-11-15T14:53:31.2285822+00:00",
+    "last_restart": "2026-11-16T15:26:00.0291907+00:00",
     "service_owner": "systemd user service",
     "models_paused": false,
     "maintenance": false
   },
-  "status": "Market holiday or weekend. Reconciled; background research is available.",
-  "next_action": "Next trading session: automatic startup and calendar refresh.",
+  "status": "Monitoring the session. Agent reviews material changes and eligible setups.",
+  "next_action": "Intraday closing routine at 15:48 ET.",
   "readiness": {
-    "at": "2026-11-16T03:31:24.169289+00:00",
+    "at": "2026-11-16T15:26:15.400494+00:00",
     "broker_reconciled": true,
     "funded": true,
     "models_available": true,
@@ -33,38 +33,47 @@
   },
   "reconciliation_errors": [],
   "calendar": {
-    "date": "2026-11-15",
-    "session": [],
-    "state": "non_session"
+    "date": "2026-11-16",
+    "session": [
+      {
+        "close": "16:00",
+        "date": "2026-11-16",
+        "open": "09:30",
+        "session_close": "2000",
+        "session_open": "0400",
+        "settlement_date": "2026-11-17"
+      }
+    ],
+    "state": "session"
   },
   "operational_session": {
     "validation_version": "operational-session-v1",
-    "state": "non_session",
-    "assessed_at": "2026-11-15T23:47:52.013908-05:00",
-    "market_open": false,
+    "state": "open",
+    "assessed_at": "2026-11-16T10:41:36.630854-05:00",
+    "market_open": true,
     "reason_codes": [],
     "calendar": {
-      "state": "non_session",
-      "day": "2026-11-15",
-      "open_at": null,
-      "close_at": null
+      "state": "session",
+      "day": "2026-11-16",
+      "open_at": "2026-11-16T09:30:00-05:00",
+      "close_at": "2026-11-16T16:00:00-05:00"
     },
     "clock": {
-      "reported_is_open": false,
-      "timestamp": "2026-11-15T23:47:27.602080-05:00",
-      "next_open": "2026-11-16T09:30:00-05:00",
+      "reported_is_open": true,
+      "timestamp": "2026-11-16T10:41:34.247931-05:00",
+      "next_open": "2026-11-17T09:30:00-05:00",
       "next_close": "2026-11-16T16:00:00-05:00"
     },
     "receipts": {
       "calendar": {
-        "sha256": "660fa96b040993a309a29db6ef6c6552a79de9071464712aa1cae74ea38b049e",
-        "requested_at": "2026-11-15T00:00:11.266353-05:00",
-        "received_at": "2026-11-15T00:00:11.315976-05:00"
+        "sha256": "b5ae460c2b1977a031410b15c78c74d9266030514be4bdabcd64303f1ac7b475",
+        "requested_at": "2026-11-16T10:26:17.855789-05:00",
+        "received_at": "2026-11-16T10:26:17.893034-05:00"
       },
       "clock": {
-        "sha256": "168170dfbb676c30f3fc1d04e46549381ea3a308d7332802320cc0c7b187128e",
-        "requested_at": "2026-11-15T23:47:27.667580-05:00",
-        "received_at": "2026-11-15T23:47:27.711411-05:00"
+        "sha256": "ef0d21ea22a1ed90a3344316303c90939cedc9267c1a1216b5b9475a6e980b0f",
+        "requested_at": "2026-11-16T10:41:34.340491-05:00",
+        "received_at": "2026-11-16T10:41:34.376125-05:00"
       }
     },
     "scope": "Session evidence reassessed at snapshot time; not a guarantee of current execution readiness."
@@ -82,7 +91,7 @@
       "total_pnl": -0.8799999999991996,
       "drawdown": 0.00010799784004322799,
       "valuation_status": "ledger_estimate",
-      "mode": "market_closed"
+      "mode": "paper_pilot"
     },
     {
       "name": "swing",
@@ -96,7 +105,7 @@
       "total_pnl": 0.0,
       "drawdown": 0,
       "valuation_status": "ledger_estimate",
-      "mode": "market_closed"
+      "mode": "paper_pilot"
     },
     {
       "name": "options",
@@ -119,7 +128,7 @@
     "branch_ledger_equity": 29999.120000000003,
     "unattributed_equity_difference": -0.03,
     "reconciled": true,
-    "as_of": "2026-11-15T23:47:25.393300-05:00",
+    "as_of": "2026-11-16T10:41:30.114039-05:00",
     "basis": "Broker equity is the portfolio total. Branch attribution excludes any unresolved residual; no fee attribution is invented."
   },
   "account_activity": {
@@ -169,7 +178,7 @@
     "cash_bridge": {
       "ledger_cash": 29999.12,
       "broker_cash": 29999.09,
-      "broker_cash_observed_at": "2026-11-15T23:47:25.393300-05:00",
+      "broker_cash_observed_at": "2026-11-16T10:41:30.114039-05:00",
       "broker_minus_ledger": -0.03,
       "attributed_unbooked_fee_net": -0.03,
       "remaining_after_attributed_fees": 0.0,
@@ -317,6 +326,528 @@
   ],
   "equity": [
     {
+      "at": "2026-11-16T10:41:30.114039-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:41:30.114039-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:41:30.114039-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:40:36.649038-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:40:36.649038-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:40:36.649038-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:39:54.816830-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:39:54.816830-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:39:54.816830-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:38:26.902019-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:38:26.902019-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:38:26.902019-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:37:35.673684-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:37:35.673684-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:37:35.673684-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:36:49.086730-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:36:49.086730-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:36:49.086730-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:35:22.470827-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:35:22.470827-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:35:22.470827-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:34:35.859846-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:34:35.859846-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:34:35.859846-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:33:53.767099-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:33:53.767099-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:33:53.767099-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:32:30.071759-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:32:30.071759-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:32:30.071759-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:31:41.783975-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:31:41.783975-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:31:41.783975-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:30:44.066272-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:30:44.066272-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:30:44.066272-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:29:59.357424-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:29:59.357424-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:29:59.357424-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:28:30.724692-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:28:30.724692-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:28:30.724692-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:27:44.084886-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:27:44.084886-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:27:44.084886-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T10:26:58.056829-05:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:26:58.056829-05:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T10:26:58.056829-05:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-16T15:26:08.632958+00:00",
+      "day": "2026-11-16",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T15:26:08.632958+00:00",
+      "day": "2026-11-16",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-16T15:26:08.632958+00:00",
+      "day": "2026-11-16",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:59:24.650018-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:59:24.650018-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:59:24.650018-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:58:39.946464-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:58:39.946464-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:58:39.946464-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:57:52.887667-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:57:52.887667-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:57:52.887667-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:56:25.420526-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:56:25.420526-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:56:25.420526-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:55:39.780854-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:55:39.780854-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:55:39.780854-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:54:54.670793-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:54:54.670793-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:54:54.670793-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:53:26.487530-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:53:26.487530-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:53:26.487530-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:52:39.142511-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:52:39.142511-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:52:39.142511-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:51:54.091322-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:51:54.091322-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:51:54.091322-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:50:23.905207-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:50:23.905207-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:50:23.905207-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:49:37.571706-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:49:37.571706-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:49:37.571706-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
+      "at": "2026-11-15T23:48:53.523349-05:00",
+      "day": "2026-11-15",
+      "branch": "options",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:48:53.523349-05:00",
+      "day": "2026-11-15",
+      "branch": "swing",
+      "value": 10000.0
+    },
+    {
+      "at": "2026-11-15T23:48:53.523349-05:00",
+      "day": "2026-11-15",
+      "branch": "intraday",
+      "value": 9999.12
+    },
+    {
       "at": "2026-11-15T23:47:25.393300-05:00",
       "day": "2026-11-15",
       "branch": "options",
@@ -10590,607 +11121,86 @@
     },
     {
       "at": "2026-11-15T13:21:19.831199-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:20:38.413512-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:20:38.413512-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:20:38.413512-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:19:54.140242-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:19:54.140242-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:19:54.140242-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:18:30.702662-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:18:30.702662-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:18:30.702662-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:17:47.472430-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:17:47.472430-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:17:47.472430-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:16:23.954576-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:16:23.954576-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:16:23.954576-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:15:40.447756-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:15:40.447756-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:15:40.447756-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:14:59.330239-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:14:59.330239-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:14:59.330239-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:13:30.231884-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:13:30.231884-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:13:30.231884-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:12:48.742854-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:12:48.742854-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:12:48.742854-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:11:20.980451-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:11:20.980451-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:11:20.980451-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:10:37.851874-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:10:37.851874-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:10:37.851874-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:09:52.455225-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:09:52.455225-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:09:52.455225-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:08:28.022030-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:08:28.022030-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:08:28.022030-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:07:45.868233-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:07:45.868233-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:07:45.868233-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:06:20.277652-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:06:20.277652-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:06:20.277652-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:05:37.977988-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:05:37.977988-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:05:37.977988-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:04:56.169657-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:04:56.169657-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:04:56.169657-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:03:30.215585-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:03:30.215585-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:03:30.215585-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:02:46.979971-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:02:46.979971-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:02:46.979971-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:01:26.243971-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:01:26.243971-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:01:26.243971-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T13:00:44.657440-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:00:44.657440-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T13:00:44.657440-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:59:18.416740-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:59:18.416740-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:59:18.416740-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:58:37.021045-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:58:37.021045-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:58:37.021045-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:57:55.264455-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:57:55.264455-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:57:55.264455-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:56:27.745111-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:56:27.745111-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:56:27.745111-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:55:46.284325-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:55:46.284325-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:55:46.284325-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:54:21.261461-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:54:21.261461-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:54:21.261461-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:53:39.449837-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:53:39.449837-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:53:39.449837-05:00",
-      "day": "2026-11-15",
-      "branch": "intraday",
-      "value": 9999.12
-    },
-    {
-      "at": "2026-11-15T12:52:56.578394-05:00",
-      "day": "2026-11-15",
-      "branch": "options",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:52:56.578394-05:00",
-      "day": "2026-11-15",
-      "branch": "swing",
-      "value": 10000.0
-    },
-    {
-      "at": "2026-11-15T12:52:56.578394-05:00",
       "day": "2026-11-15",
       "branch": "intraday",
       "value": 9999.12
     }
   ],
   "brief": {
-    "summary": "No equity plans. At the supplied 11:14 ET observation, AMD, TSLA and NVDA were below their IEX VWAPs and opening ranges; current long confirmation was absent. NVIDIA's leadership transition and November 17 earnings are verified, while AMD/TSLA event coverage remains incomplete. Today's PPI slowed monthly but accelerated annually. The learning point: fresh prices and an interesting catalyst do not by themselves establish an entry.",
+    "summary": "No equity plans at the supplied 10:26 ET snapshot. SPY and QQQ were below their opening ranges and IEX bar VWAPs; AMD and NVDA also lacked price confirmation. LLY showed relative strength and a verified clinical-data catalyst, but remained below VWAP with conference-event timing incompletely covered. These are setup and event-input abstentions, not demonstrated quote or exit failures. A favorable company announcement can coexist with falling prices; neither establishes an experimental strategy's edge.",
     "regime": "risk_off",
-    "rates_bonds": "Supplied Treasury observations are three calendar days old: November 10 two-year 4.73%, ten-year 4.98%, ten-year real yield 2.78%. They cannot establish today's yield reaction. November 12 high-yield spread of 3.20% and VIX 18.70 are one calendar day old. TLT's supplied trade was 79.59 versus prior close 79.73, above its intraday VWAP 79.41 but below its completed-day SMA20 80.94; this offers limited evidence of an intraday bond recovery, not a confirmed flight to safety.",
-    "fed_macro": "October PPI, released November 13 at 08:30 ET, rose 0.3% monthly versus revised September 1.4%; annual inflation increased to 6.5%. Excluding foods, energy and trade services, prices rose 0.5% monthly and 4.9% annually. Slower headline monthly inflation therefore conflicts with persistent underlying pressure. [BLS release](https://www.bls.gov/news.release/ppi.nr0.htm). Official Fed search excerpts list Bowman at 10:50 ET and Jefferson at 19:00 ET; the opened calendar exposed only a JavaScript shell, so coverage is excerpt-based. [Fed calendar](https://www.federalreserve.gov/newsevents/calendar.htm). The supplied fresh BEA calendar lists GDP and personal income/outlays November 25 at 08:30 ET. BLS ICS remains unavailable, but today's PPI timing and results were independently recovered.",
-    "earnings": "NVIDIA's November 12 issuer release names Kress interim CEO/CFO and schedules results November 17 at approximately 16:20 ET, followed by a 17:00 ET call. The SEC 8-K dates resignation acceptance and appointments to November 11, correcting the supplied reviewed finding's effective-date interpretation. [Issuer release](https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx), [SEC filing](https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm). AMD's readable release index lists November 10 EPYC news and November 3 results; its calendar retrieval supplied no usable upcoming-event details. [AMD releases](https://ir.amd.com/news-events/press-releases). Tesla IR lists October 21 Q3 earnings; its proxy verifies a December 3 annual meeting at 15:00 Central. These checks do not establish absence of intervening company events or verify next AMD/TSLA earnings timing. [Tesla IR](https://ir.tesla.com/), [Tesla proxy](https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm).",
-    "market_conditions": "The bounded IEX packet shows SPY 749.73 versus prior close 757.16 and QQQ 673.30 versus 688.195; both were below session VWAP and their prior completed SMA20. AMD, TSLA and NVDA also traded below VWAP and opening-five-minute lows. This supports a risk-off assessment for the observed growth-heavy subset; exchange-wide breadth and sector leadership remain unknown. Completed daily features are dated November 12 and validation is ready. Minute bars ended 16:14 UTC, approximately 75 seconds before the research-end clock; quote timestamps were approximately 47\u201349 seconds old then. The evolving daily bar's 05:00 UTC timestamp is a session label, not a completed close. TLT has five missing minute intervals. FILTER SAMPLING reports no_plan_inputs/no_valid_plan_stream and zero samples in both branches: this is absent valid setup input, not an observed quote, fill or exit failure.",
-    "cross_market": "November 13 AP coverage reports rising oil amid Iran-related uncertainty and mixed Treasury yields. Its morning market description is less negative than the supplied later IEX snapshot, illustrating timing differences. [AP market report](https://apnews.com/article/f8edd0eeb1494d4d2584715686c5e619). Synchronized oil, dollar, gold, credit and international-equity observations are unavailable here; no precise cross-market prices or causal attribution are asserted.",
-    "narratives": "Research question: does NVIDIA uncertainty produce sustained competitor strength or broader AI exposure reduction? AMD's completed five-session gain of 45.18% contrasts with today's trade below VWAP, challenging a simple competitor-benefit explanation. NVIDIA's board expects operational continuity, which is contrary evidence to an automatic business-disruption thesis. The fresh issuer/SEC checks update work_id 52fcfca471b19b8e2476ae9a:0; omitted findings remain unresolved. Knowledge leads 2026-10-30-intraday-macro and 2026-10-30-intraday-pullback guide caution because their supplied screens reported negative holdout results and review gaps. Under 20261104-swing-rally-giveback-recovery, none of these three symbols meets both completed-day predicates: AMD/TSLA rose yesterday, while NVDA's three-session return was negative. The 2026-10-30-swing-reversal lead does not authorize buying NVDA solely because its three-session return was -7.04%; the prescribed relative-strength observation and supporting historical evidence remain incomplete. Options remain SHADOW ONLY: 30 indicative contracts do not establish executable premiums or a matched event-volatility comparison. Leads 20261029-options-macro-variance and 2026-10-30-options-event-volatility remain research questions; neither directional correctness nor an IV decline establishes option profitability.",
+    "rates_bonds": "Supplied, independently unverified FRED observations: November 12 two-year yield 4.86%, ten-year 5.10%, and ten-year real yield 2.86%; all four calendar days old. The 24 bp nominal curve slope is historical context, not today's yield move. November 9 high-yield spread of 3.34 percentage points is seven days old; November 13 VIX 19.3 is three days old. Supplied TLT completed-minute price 79.68 was approximately 0.38% above Friday's close and above IEX VWAP 79.6333, consistent with defensive demand, although its minute series has three missing intervals.",
+    "fed_macro": "The official Fed November calendar lists Chair Warsh's opening remarks today at noon ET, industrial production tomorrow at 09:15 ET, and October meeting minutes November 18 at 14:00 ET. Barr's AI/financial-stability speech was scheduled for 05:00 ET today; its content was not checked. The accessible BLS monthly calendar repairs the packet's unavailable ICS coverage: no selected release is listed today, and import/export prices are scheduled tomorrow at 08:30 ET. BEA's freshly opened schedule matches the supplied upcoming events, including November 25 GDP and personal income/outlays. This covers those agencies' listed events, not the entire economic calendar. [Fed](https://www.federalreserve.gov/newsevents/2026-november.htm), [BLS](https://www.bls.gov/schedule/2026/11_sched.htm), [BEA](https://www.bea.gov/news/schedule).",
+    "earnings": "NVDA's October 28 issuer notice verifies November 17 results at approximately 16:20 ET and the call at 17:00 ET. Its November 12 SEC filing reports that Huang's resignation and Kress's interim appointment occurred November 11, creating a separate governance catalyst. AMD's reopened calendar lists November 3 results as past and December 1/9 conferences as upcoming; that does not establish absence of other events. Its official newsroom index reports November 12 MI400 updates and November 10 EPYC availability. LLY's November 14 release verifies ObesityWeek participation November 14\u201317 and clinical-data presentations; remaining presentation timing and next earnings timing were not fully established. [NVDA earnings notice](https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/), [NVDA filing](https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm), [AMD calendar](https://ir.amd.com/news-events/ir-calendar), [AMD newsroom](https://newsroom.amd.com/news-types/news/), [Lilly release](https://investor.lilly.com/node/55306/pdf).",
+    "market_conditions": "At the supplied 15:26 UTC completed-minute observation, SPY 743.75 was approximately 1.39% below Friday's close and below VWAP 746.8089 and opening-range low 747.17. QQQ 663.83 was approximately 2.38% lower and below VWAP 668.2136 and opening-range low 667.22. LLY was approximately 1.38% higher, versus AMD down 5.29% and NVDA down 2.17%. This supports technology weakness and stock-specific healthcare strength; advance/decline breadth and broader sector returns are unavailable in the bounded packet. November 13 daily features are the latest completed session, three calendar days old. Minute bars were approximately 29 seconds old at the request timestamp; snapshot quotes were approximately 10 seconds old. Their subsequent freshness requires rechecking. The provider's 05:00 UTC current-session daily-bar timestamp is a date anchor, not an intraday update time or completed daily close.",
+    "cross_market": "Supplied TLT strength alongside SPY/QQQ weakness supports a defensive interpretation, without proving its cause. Current dollar, gold, oil, credit-market prices and international breadth are absent from this packet, so no broader cross-market confirmation is claimed.",
+    "narratives": "AMD's product announcements provide a constructive fundamental narrative, contradicted by its current price weakness. NVDA's verified leadership transition and imminent earnings complicate any oversold-rebound explanation. LLY's clinical-data coverage offers a plausible catalyst for relative strength, but an issuer release is not independent clinical adjudication. Research leads 20261104-swing-rally-giveback-recovery and 2026-10-30-swing-reversal informed contrary-evidence checks: AMD's Friday loss of 8.80% with a positive 3.70% three-session return meets the former descriptive predicates, while NVDA's negative 3.52% three-session return meets the latter decline predicate. Neither authorizes a trade; both cards have unresolved review qualifications. The 2026-10-30-intraday-macro lead motivates observing market confirmation, without adopting a new regime gate. Options remain SHADOW ONLY: NVDA earnings provide a prospective event-volatility observation, but the 30 indicative contracts lack supplied timestamped two-sided prices, spreads and matched-horizon IV data. Leads 20261029-options-macro-variance and 2026-10-30-options-event-volatility remain qualified research questions, not approved strategies or option-return claims.",
     "unknowns": [
-      "AMD intraday abstention: completed-minute close 527.355 was below VWAP 541.055 and opening-range low 563.435. Reassess after fresh completed bars demonstrate a sustained VWAP recovery and a narrow support/stop structure, with usable official event coverage. These are observation references, not entry orders.",
-      "TSLA intraday abstention: 388.81 was below VWAP 392.31 and opening-range low 396.51. Reassess after observable stabilization/recovery and verification of current material disclosures; IR earnings history and a December meeting notice do not clear today's event risk.",
-      "NVDA abstention: 159.68 was below VWAP 161.64 and completed SMA20 201.25. Fresh recovery structure and updated leadership/investigation disclosures would permit reassessment; known November 17 earnings remains an explicit swing risk.",
-      "AMD/TSLA swing abstention: both remain above their completed SMA20, but the packet does not establish a narrow stabilized pullback interval after today's decline. Fresh support confirmation and fuller current event coverage are needed.",
-      "Fed calendar body was unreadable; official search excerpts verify selected Board events only. A secondary listing suggests a noon ET Daly appearance, but its official timing and broader regional-Fed coverage were not verified.",
-      "AMD calendar extraction supplied no usable upcoming-event details; recent AMD filing coverage and comprehensive Tesla current-event coverage were not obtained within the bounded checks. Next AMD/TSLA earnings dates and times remain unknown.",
-      "Current Treasury yields, PPI consensus surprise, exchange-wide breadth and synchronized sector/cross-market data remain unavailable. No release-to-price causal claim is established.",
-      "No selected observation-question records or trial-level adaptive/forward results were supplied. Omitted knowledge is unresolved, and zero filter samples provide no evidence of strategy success.",
-      "Research used eight focused searches and eight source checks. Any later reassessment requires refreshed IEX inputs under existing freshness, spread and risk gates; consolidated paid quotes are not a blanket prerequisite."
+      "AMD abstention: completed-minute price 505.90 is below IEX VWAP 513.5219 and its daily SMA20 518.9103. The calendar and newsroom index cover specified events only; no complete current filing/news review establishes other event timing. Reassessment requires fresh catalyst/filing coverage and observable recovery supporting catalyst-confirmation or a defined trend-pullback.",
+      "NVDA abstention: price 159.30 is below VWAP 160.1217 and daily SMA20 198.689, with verified earnings tomorrow and a recent leadership transition. Fresh price confirmation and an explicit plan for the known event horizon would be necessary; oversold status alone is insufficient.",
+      "LLY abstention: price 1464.725 is below VWAP 1465.6852 despite relative strength. Exact remaining November 16\u201317 conference presentation timing and next earnings timing were not established within the check budget. Reassessment requires that event coverage plus a fresh, sustained reclaim or a concrete supported pullback.",
+      "FILTER SAMPLING reports no_plan_inputs, zero queued/research plans and zero filter samples in both equity branches. These observations diagnose absent valid plans; they establish neither spread rejection nor quote/exit-system failure.",
+      "No independently reviewed research findings, selected prospective trial results or usable observation-question records were included. Omitted findings and ten observed sessions cannot establish profitability or strategy promotion.",
+      "Current consolidated breadth, full sector performance, Treasury yields, dollar, oil, gold and credit quotes were not verified. IEX remains the approved experiment feed; consolidated quotes are not imposed as a blanket requirement.",
+      "Fed monthly-page footer says Last Update November 03, 2025 despite displaying November 2026 events. Today's noon appearance is corroborated by the official calendar search result, but speech content and subsequent schedule changes remain unchecked.",
+      "Research used eight focused searches and eight source checks. Exact browser retrieval times were not exposed; source observations are dated November 16 without invented timestamps. No claim of comprehensive company-event clearance follows."
     ],
     "events": [
       {
-        "title": "October 2026 Producer Price Index",
-        "when": "2026-11-13T08:30:00-05:00",
+        "title": "Chair Warsh opening remarks",
+        "when": "2026-11-16T12:00:00-05:00",
         "timing_known": true,
         "symbols": [
           "SPY",
           "QQQ",
-          "TLT"
+          "TLT",
+          "AMD",
+          "NVDA",
+          "LLY"
         ],
         "importance": "high",
-        "source_url": "https://www.bls.gov/news.release/ppi.nr0.htm",
-        "implication": "Already released: headline monthly inflation slowed, but annual inflation accelerated and the measure excluding foods, energy and trade services rose 0.5% monthly."
+        "source_url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+        "implication": "Scheduled intraday communication risk; content and market reaction remain unknown."
       },
       {
-        "title": "Bowman discussion on supervision and regulation",
-        "when": "2026-11-13T10:50:00-05:00",
-        "timing_known": true,
-        "symbols": [
-          "SPY",
-          "XLF"
-        ],
-        "importance": "medium",
-        "source_url": "https://www.federalreserve.gov/newsevents/calendar.htm",
-        "implication": "Scheduled time verified in official search excerpts and already passed; remarks and market implications were not checked."
-      },
-      {
-        "title": "Jefferson speech on technology and productivity",
-        "when": "2026-11-13T19:00:00-05:00",
-        "timing_known": true,
-        "symbols": [
-          "SPY",
-          "QQQ",
-          "TLT"
-        ],
-        "importance": "medium",
-        "source_url": "https://www.federalreserve.gov/newsevents/calendar.htm",
-        "implication": "Official excerpt schedules an after-hours speech; relevant to overnight exposure, with content unknown."
-      },
-      {
-        "title": "NVIDIA leadership transition",
-        "when": "2026-11-11; publicly announced 2026-11-12; exact effective minute unknown",
+        "title": "Lilly ObesityWeek presentations",
+        "when": "2026-11-14 through 2026-11-17; remaining presentation times not fully verified",
         "timing_known": false,
         "symbols": [
-          "NVDA",
-          "AMD",
-          "QQQ"
+          "LLY"
         ],
         "importance": "high",
-        "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm",
-        "implication": "SEC filing dates the change earlier than the announcement. Continuing leadership uncertainty can produce sector spillovers and gaps."
+        "source_url": "https://investor.lilly.com/node/55306/pdf",
+        "implication": "Verified clinical-data catalyst window; incomplete remaining timing blocks event clearance."
       },
       {
-        "title": "NVIDIA fiscal Q3 2027 results and earnings call",
+        "title": "U.S. import and export price indexes, October",
+        "when": "2026-11-17T08:30:00-05:00",
+        "timing_known": true,
+        "symbols": [
+          "SPY",
+          "QQQ",
+          "TLT"
+        ],
+        "importance": "medium",
+        "source_url": "https://www.bls.gov/schedule/2026/11_sched.htm",
+        "implication": "Scheduled inflation-related data before tomorrow's equity session."
+      },
+      {
+        "title": "Industrial production and capacity utilization",
+        "when": "2026-11-17T09:15:00-05:00",
+        "timing_known": true,
+        "symbols": [
+          "SPY",
+          "QQQ",
+          "TLT"
+        ],
+        "importance": "medium",
+        "source_url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+        "implication": "Scheduled activity data immediately before tomorrow's regular open."
+      },
+      {
+        "title": "NVIDIA third-quarter FY2027 results",
         "when": "2026-11-17 approximately 16:20 America/New_York; call 17:00 America/New_York",
         "timing_known": true,
         "symbols": [
@@ -11199,11 +11209,24 @@
           "QQQ"
         ],
         "importance": "high",
-        "source_url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx",
-        "implication": "Issuer verifies approximate release timing. Earnings and leadership commentary create material gap risk."
+        "source_url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/",
+        "implication": "Issuer-verified approximate release time; overnight earnings and semiconductor spillover risk."
       },
       {
-        "title": "Q3 GDP second estimate and October personal income/outlays",
+        "title": "October 27\u201328 FOMC meeting minutes",
+        "when": "2026-11-18T14:00:00-05:00",
+        "timing_known": true,
+        "symbols": [
+          "SPY",
+          "QQQ",
+          "TLT"
+        ],
+        "importance": "high",
+        "source_url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
+        "implication": "Material scheduled policy communication within a potential swing holding period."
+      },
+      {
+        "title": "GDP second estimate and personal income/outlays",
         "when": "2026-11-25T08:30:00-05:00",
         "timing_known": true,
         "symbols": [
@@ -11212,90 +11235,72 @@
           "TLT"
         ],
         "importance": "high",
-        "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
-        "implication": "Fresh independently fetched packet calendar schedules both releases together; relevant to longer holding horizons."
-      },
-      {
-        "title": "Tesla annual shareholder meeting",
-        "when": "2026-12-03T15:00:00-06:00",
-        "timing_known": true,
-        "symbols": [
-          "TSLA"
-        ],
-        "importance": "medium",
-        "source_url": "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm",
-        "implication": "Proxy verifies meeting timing; it provides no clearance of nearer-term company-event risk."
+        "source_url": "https://www.bea.gov/news/schedule",
+        "implication": "Both releases are listed at the same time; relevant to positions extending into next week."
       }
     ],
     "sources": [
       {
-        "title": "BLS October 2026 PPI release",
-        "url": "https://www.bls.gov/news.release/ppi.nr0.htm",
-        "published_at": "2026-11-13T08:30:00-05:00",
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Readable current release verifies headline and underlying inflation figures; September headline monthly growth was revised to 1.4%."
-      },
-      {
-        "title": "Federal Reserve calendar",
-        "url": "https://www.federalreserve.gov/newsevents/calendar.htm",
-        "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Official search excerpts list November 13 Bowman and Jefferson times. Direct page exposed a JavaScript shell; full schedule and remarks were not verified."
-      },
-      {
-        "title": "NVIDIA announces CEO transition",
-        "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx",
-        "published_at": "2026-11-12",
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Readable issuer release verifies interim leadership, board continuity expectations and November 17 results/call timing. Publication minute is absent."
-      },
-      {
-        "title": "NVIDIA leadership-transition Form 8-K",
-        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm",
-        "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Report is signed November 12 and dates resignation acceptance and appointments to November 11. Exact EDGAR acceptance timestamp was not checked."
-      },
-      {
-        "title": "AMD press-release index",
-        "url": "https://ir.amd.com/news-events/press-releases",
-        "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Readable index lists November 10 EPYC news at noon EST and November 3 results at 16:15 EST; release bodies and comprehensive event absence were not established."
-      },
-      {
         "title": "AMD IR calendar",
         "url": "https://ir.amd.com/news-events/ir-calendar",
         "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Calendar retrieval returned no usable upcoming-event details in the available response; timing remains unresolved."
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only; midnight is not a retrieval time. Readable calendar lists November 3 results as past and December 1/9 conferences as upcoming, without comprehensive event clearance."
       },
       {
-        "title": "Tesla investor relations",
-        "url": "https://ir.tesla.com/",
+        "title": "AMD official newsroom index",
+        "url": "https://newsroom.amd.com/news-types/news/",
         "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Readable quarterly table lists October 21, 2026 Q3 earnings and links its filing; next earnings timing and complete current-event coverage are unavailable."
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Search-returned official index lists November 12 MI400 updates and November 10 EPYC announcements; underlying releases were not opened."
       },
       {
-        "title": "Tesla 2026 definitive proxy",
-        "url": "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm",
+        "title": "NVIDIA earnings conference-call notice",
+        "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Sets-Conference-Call-for-Third-Quarter-Financial-Results/",
+        "published_at": "2026-10-28",
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Opened issuer release verifies November 17 results at approximately 13:20 PT and call at 14:00 PT."
+      },
+      {
+        "title": "NVIDIA November 12 Form 8-K",
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm",
+        "published_at": "2026-11-12",
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Filing identifies November 11 as the effective leadership-transition event date and names Colette Kress interim CEO."
+      },
+      {
+        "title": "Lilly ObesityWeek data announcement",
+        "url": "https://investor.lilly.com/node/55306/pdf",
+        "published_at": "2026-11-14",
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Opened issuer PDF verifies the November 14\u201317 conference window and selected November 15 presentation times; remaining session timing was not fully captured."
+      },
+      {
+        "title": "Federal Reserve November 2026 calendar",
+        "url": "https://www.federalreserve.gov/newsevents/2026-november.htm",
         "published_at": null,
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Readable meeting notice verifies December 3, 2026 at 15:00 Central. Exact filing-publication date was not established from the inspected text."
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Opened monthly calendar lists today's noon remarks, tomorrow's industrial production and November 18 minutes; footer update year is inconsistent."
       },
       {
-        "title": "AP November 13 market report",
-        "url": "https://apnews.com/article/f8edd0eeb1494d4d2584715686c5e619",
-        "published_at": "2026-11-13",
-        "observed_at": "2026-11-13T16:15:15Z",
-        "takeaway": "Search excerpt reports volatile morning stocks, rising oil and mixed yields. Dynamic article timing is not synchronized with the supplied IEX snapshot."
+        "title": "BLS November 2026 release schedule",
+        "url": "https://www.bls.gov/schedule/2026/11_sched.htm",
+        "published_at": null,
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Monthly calendar is accessible despite the packet's ICS failure; no selected November 16 release is listed, and import/export prices are November 17 at 08:30 ET. Page reports modification November 3, 2026."
+      },
+      {
+        "title": "BEA release schedule",
+        "url": "https://www.bea.gov/news/schedule",
+        "published_at": null,
+        "observed_at": "2026-11-16T00:00:00-05:00",
+        "takeaway": "Observation date only. Page reports modification November 16, 2026 and corroborates the supplied upcoming BEA schedule, including November 25 GDP and personal income/outlays."
       }
     ],
     "plans": []
   },
   "project": {
-    "as_of": "2026-11-16T04:47:54.204537+00:00",
+    "as_of": "2026-11-16T15:41:41.554507+00:00",
     "title": "Operational progress. Profitability unproven.",
     "assessment": "Paper execution has begun. Returns and isolated winning trades do not yet establish a repeatable net edge. October 29 was an operationally missed session; premarket research and recovery drills do not count as a trading day.",
     "assessment_basis": "A computed operating assessment, not subjective feelings or a probability of future profitability.",
@@ -11312,6 +11317,16 @@
       "tracking_started": "2026-10-30T01:02:13.727450+00:00",
       "complete_sessions": 10,
       "sessions": [
+        {
+          "day": "2026-11-16",
+          "recorded_slots": 4,
+          "expected_slots": 78,
+          "observed_fraction": 0.05128205128205128,
+          "whole_session_evaluable": false,
+          "complete_observed_session": false,
+          "maximum_unobserved_gap_minutes": 315,
+          "state": "not_fully_instrumented_or_in_progress"
+        },
         {
           "day": "2026-11-13",
           "recorded_slots": 58,
@@ -11394,16 +11409,6 @@
         },
         {
           "day": "2026-11-03",
-          "recorded_slots": 78,
-          "expected_slots": 78,
-          "observed_fraction": 1.0,
-          "whole_session_evaluable": true,
-          "complete_observed_session": true,
-          "maximum_unobserved_gap_minutes": 0,
-          "state": "observed_complete"
-        },
-        {
-          "day": "2026-11-02",
           "recorded_slots": 78,
           "expected_slots": 78,
           "observed_fraction": 1.0,
@@ -11715,7 +11720,7 @@
     ]
   },
   "objective_scorecard": {
-    "as_of": "2026-11-16T04:47:52.013908+00:00",
+    "as_of": "2026-11-16T15:41:36.630854+00:00",
     "objective": "Positive paper portfolio return that survives explicit cost stress and controlled drawdown, then independently verified transferability; research activity alone is not success.",
     "portfolio": {
       "initial_capital": 30000.0,
@@ -11725,11 +11730,11 @@
       "extra_friction_assumption": "Additional 10bp per recorded buy/sell notional; illustrative stress, not actual measured execution cost.",
       "assumed_extra_friction": 3.0187500000000003,
       "return_after_extra_friction": -0.00013095833333331974,
-      "max_drawdown": 3.599976000168148e-05,
+      "max_drawdown": 3.699975333504302e-05,
       "drawdown_observed_since": "2026-10-31T16:14:50.569447+00:00",
-      "verified_equity_marks": 21673,
+      "verified_equity_marks": 21694,
       "reconciled": true,
-      "as_of": "2026-11-16T04:47:25.393300+00:00",
+      "as_of": "2026-11-16T15:41:30.114039+00:00",
       "confirmed_fill_events": 4,
       "filled_orders": 4,
       "execution_verified": true,
@@ -11738,27 +11743,27 @@
       "market_references": [
         {
           "symbol": "SPY",
-          "return": -0.008558694766180763,
-          "as_of": "2026-11-13T15:59:41.706109-05:00",
+          "return": -0.02127841394633423,
+          "as_of": "2026-11-16T10:41:34.740519-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         },
         {
           "symbol": "QQQ",
-          "return": -0.025094904234630566,
-          "as_of": "2026-11-13T15:47:34.215446-05:00",
+          "return": -0.045984600038751156,
+          "as_of": "2026-11-16T10:41:34.740519-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         },
         {
           "symbol": "TLT",
-          "return": -0.03102669028278293,
-          "as_of": "2026-11-13T15:47:34.215446-05:00",
+          "return": -0.027728577536187737,
+          "as_of": "2026-11-16T10:41:34.740519-05:00",
           "started_at": "2026-10-30T09:30:01.141391-04:00"
         }
       ],
       "basis": "Latest reconciled broker account equity versus $30,000. Drawdown uses only prospective verified marks; legacy marks lack reconciliation flags. Cash comparator assumes zero yield."
     },
     "research_funnel": {
-      "observation_leads": 713,
+      "observation_leads": 728,
       "catalogue_cards": 21,
       "reviewed_hypotheses": 7,
       "held_hypotheses": 14,
@@ -11774,9 +11779,9 @@
     "learning": {
       "proposed_lessons": 54,
       "tested_lessons": 0,
-      "latest_input_at": "2026-11-13T18:00:30.973126+00:00",
-      "input_age_hours": 58.789177994999996,
-      "latest_observation_at": "2026-11-13T20:45:23.455904+00:00"
+      "latest_input_at": "2026-11-16T15:26:19.039602+00:00",
+      "input_age_hours": 0.2548864588888889,
+      "latest_observation_at": "2026-11-16T15:30:02.793228+00:00"
     },
     "development": {
       "total_proposals": 117,
@@ -11793,11 +11798,6 @@
         "detail": "Active filter challengers have no completed samples. A catalogue or fixed-cohort count does not test these filters."
       },
       {
-        "id": "input_age",
-        "state": "context",
-        "detail": "No recent captured market packet; check the actual session calendar before classifying this as a fault."
-      },
-      {
         "id": "untested_lessons",
         "state": "observed",
         "detail": "Persisted lessons are proposed process knowledge; none is marked tested. Repetition does not strengthen evidence."
@@ -11812,39 +11812,39 @@
     ]
   },
   "observation_research": {
-    "as_of": "2026-11-16T04:47:54.870157+00:00",
+    "as_of": "2026-11-16T15:41:43.492425+00:00",
     "records": [
       {
-        "id": "observation:7f30943bc1c80a6e2021329d",
+        "id": "observation:541f049c6a4abe1992b44f7c",
         "kind": "intraday_relative_move",
         "subject": "AMD",
-        "observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "input_observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "event_asof": "2026-11-13T20:45:22.788427+00:00",
+        "observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "input_observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "event_asof": "2026-11-16T15:30:02.237521+00:00",
         "values": {
-          "bid": 530.79,
-          "ask": 532.6,
-          "quote_at": "2026-11-13T20:45:22.788427+00:00",
-          "midpoint": 531.6949999999999,
-          "prior_close": 585.69,
-          "prior_close_date": "2026-11-12",
-          "change_from_prior_close": -0.09219040789496169,
+          "bid": 505.0,
+          "ask": 505.6,
+          "quote_at": "2026-11-16T15:30:02.237521+00:00",
+          "midpoint": 505.3,
+          "prior_close": 534.15,
+          "prior_close_date": "2026-11-13",
+          "change_from_prior_close": -0.05401104558644565,
           "spy": {
-            "bid": 752.76,
-            "ask": 752.8,
-            "quote_at": "2026-11-13T20:45:22.987131+00:00",
-            "midpoint": 752.78,
-            "prior_close": 757.16,
-            "prior_close_date": "2026-11-12",
-            "change_from_prior_close": -0.005784774684346794
+            "bid": 743.95,
+            "ask": 744.16,
+            "quote_at": "2026-11-16T15:30:02.286117+00:00",
+            "midpoint": 744.0550000000001,
+            "prior_close": 754.27,
+            "prior_close_date": "2026-11-13",
+            "change_from_prior_close": -0.013542895780025654
           },
-          "relative_change": -0.0864056332106149,
-          "capture_bucket": "2026-11-13T15:45:00-05:00",
+          "relative_change": -0.040468149806419995,
+          "capture_bucket": "2026-11-16T10:30:00-05:00",
           "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
         },
         "provenance": {
           "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-13T15:45:23.455904-05:00",
+          "input_ref": "research-input:2026-11-16T10:30:02.793228-05:00",
           "capture_mode": "quote_monitor"
         },
         "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
@@ -11856,36 +11856,36 @@
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       },
       {
-        "id": "observation:c3aca9ca5ba16c3c0638ebca",
+        "id": "observation:6183ed42edc08f5930af0b7d",
         "kind": "intraday_relative_move",
-        "subject": "WMT",
-        "observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "input_observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "event_asof": "2026-11-13T20:45:22.976252+00:00",
+        "subject": "GOOGL",
+        "observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "input_observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "event_asof": "2026-11-16T15:30:01.877630+00:00",
         "values": {
-          "bid": 127.84,
-          "ask": 127.86,
-          "quote_at": "2026-11-13T20:45:22.976252+00:00",
-          "midpoint": 127.85,
-          "prior_close": 126.17,
-          "prior_close_date": "2026-11-12",
-          "change_from_prior_close": 0.013315368154077856,
+          "bid": 285.0,
+          "ask": 286.1,
+          "quote_at": "2026-11-16T15:30:01.877630+00:00",
+          "midpoint": 285.55,
+          "prior_close": 295.81,
+          "prior_close_date": "2026-11-13",
+          "change_from_prior_close": -0.03468442581386699,
           "spy": {
-            "bid": 752.76,
-            "ask": 752.8,
-            "quote_at": "2026-11-13T20:45:22.987131+00:00",
-            "midpoint": 752.78,
-            "prior_close": 757.16,
-            "prior_close_date": "2026-11-12",
-            "change_from_prior_close": -0.005784774684346794
+            "bid": 743.95,
+            "ask": 744.16,
+            "quote_at": "2026-11-16T15:30:02.286117+00:00",
+            "midpoint": 744.0550000000001,
+            "prior_close": 754.27,
+            "prior_close_date": "2026-11-13",
+            "change_from_prior_close": -0.013542895780025654
           },
-          "relative_change": 0.01910014283842465,
-          "capture_bucket": "2026-11-13T15:45:00-05:00",
+          "relative_change": -0.021141530033841338,
+          "capture_bucket": "2026-11-16T10:30:00-05:00",
           "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
         },
         "provenance": {
           "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-13T15:45:23.455904-05:00",
+          "input_ref": "research-input:2026-11-16T10:30:02.793228-05:00",
           "capture_mode": "quote_monitor"
         },
         "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
@@ -11897,90 +11897,104 @@
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       },
       {
-        "id": "observation:ed1e7481838c3bc67ec27ab9",
+        "id": "observation:84604f1cf60f535e98af11b0",
         "kind": "intraday_relative_move",
+        "subject": "AVGO",
+        "observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "input_observed_at": "2026-11-16T15:30:02.793228+00:00",
+        "event_asof": "2026-11-16T15:30:01.691014+00:00",
+        "values": {
+          "bid": 328.93,
+          "ask": 329.45,
+          "quote_at": "2026-11-16T15:30:01.691014+00:00",
+          "midpoint": 329.19,
+          "prior_close": 346.71,
+          "prior_close_date": "2026-11-13",
+          "change_from_prior_close": -0.050532145020333985,
+          "spy": {
+            "bid": 743.95,
+            "ask": 744.16,
+            "quote_at": "2026-11-16T15:30:02.286117+00:00",
+            "midpoint": 744.0550000000001,
+            "prior_close": 754.27,
+            "prior_close_date": "2026-11-13",
+            "change_from_prior_close": -0.013542895780025654
+          },
+          "relative_change": -0.03698924924030833,
+          "capture_bucket": "2026-11-16T10:30:00-05:00",
+          "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
+        },
+        "provenance": {
+          "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
+          "input_ref": "research-input:2026-11-16T10:30:02.793228-05:00",
+          "capture_mode": "quote_monitor"
+        },
+        "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
+        "alternatives": [
+          "Different market/sector exposures",
+          "Company-specific repricing",
+          "Temporary noise or feed effects; midpoint movement is not a fill"
+        ],
+        "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
+      },
+      {
+        "id": "observation:20d85f496d1e73111ee304d2",
+        "kind": "daily_relative_move",
+        "subject": "AVGO",
+        "observed_at": "2026-11-16T15:26:22.679684+00:00",
+        "input_observed_at": "2026-11-16T15:26:19.039602+00:00",
+        "event_asof": "2026-11-13",
+        "values": {
+          "return_1d": -0.04812760817043715,
+          "spy_return_1d": -0.0038168947118177865,
+          "relative_return_1d": -0.044310713458619366,
+          "return_3d": 0.04408709007137035,
+          "last_daily_close": 346.71,
+          "selection_rule": "Largest absolute one-session difference from SPY, at least 1 percentage point; maximum three."
+        },
+        "provenance": {
+          "source": "Alpaca free IEX (one exchange; not consolidated); completed daily bars, same date for SPY and subject",
+          "input_ref": "research-input:2026-11-16T15:26:19.039602+00:00",
+          "capture_mode": "market_packet"
+        },
+        "question": "Does this observed relative move persist or reverse on new sessions, and what observable information distinguishes those outcomes?",
+        "alternatives": [
+          "Company-specific news or sector exposure",
+          "Market beta/volatility and ordinary noise",
+          "Single-exchange or adjusted-data effects"
+        ],
+        "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
+      },
+      {
+        "id": "observation:4bf97c893fdca698b0401d4f",
+        "kind": "intraday_vwap_distance",
         "subject": "META",
-        "observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "input_observed_at": "2026-11-13T20:45:23.455904+00:00",
-        "event_asof": "2026-11-13T20:45:18.482894+00:00",
+        "observed_at": "2026-11-16T15:26:22.679684+00:00",
+        "input_observed_at": "2026-11-16T15:26:19.039602+00:00",
+        "event_asof": "2026-11-16T15:26:00+00:00",
         "values": {
-          "bid": 640.57,
-          "ask": 641.05,
-          "quote_at": "2026-11-13T20:45:18.482894+00:00",
-          "midpoint": 640.81,
-          "prior_close": 623.51,
-          "prior_close_date": "2026-11-12",
-          "change_from_prior_close": 0.027746146814004558,
-          "spy": {
-            "bid": 752.76,
-            "ask": 752.8,
-            "quote_at": "2026-11-13T20:45:22.987131+00:00",
-            "midpoint": 752.78,
-            "prior_close": 757.16,
-            "prior_close_date": "2026-11-12",
-            "change_from_prior_close": -0.005784774684346794
-          },
-          "relative_change": 0.03353092149835135,
-          "capture_bucket": "2026-11-13T15:45:00-05:00",
-          "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
+          "last_completed_close": 620.9,
+          "bar_vwap_iex": 629.5750146959203,
+          "distance": -0.013779159740178626,
+          "observed_minute_bars": 56,
+          "selection_rule": "Largest absolute completed-close distance from IEX bar VWAP, at least 0.3%; maximum two."
         },
         "provenance": {
-          "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-13T15:45:23.455904-05:00",
-          "capture_mode": "quote_monitor"
+          "source": "Alpaca free IEX completed-minute bars; complete observed interval coverage",
+          "input_ref": "research-input:2026-11-16T15:26:19.039602+00:00",
+          "capture_mode": "market_packet"
         },
-        "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
+        "question": "Under which verified conditions does this deviation continue or revert over a predeclared forward horizon?",
         "alternatives": [
-          "Different market/sector exposures",
-          "Company-specific repricing",
-          "Temporary noise or feed effects; midpoint movement is not a fill"
-        ],
-        "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
-      },
-      {
-        "id": "observation:03507582b18341571f884ece",
-        "kind": "intraday_relative_move",
-        "subject": "META",
-        "observed_at": "2026-11-13T20:30:22.220799+00:00",
-        "input_observed_at": "2026-11-13T20:30:22.220799+00:00",
-        "event_asof": "2026-11-13T20:30:21.322482+00:00",
-        "values": {
-          "bid": 641.58,
-          "ask": 642.22,
-          "quote_at": "2026-11-13T20:30:21.322482+00:00",
-          "midpoint": 641.9000000000001,
-          "prior_close": 623.51,
-          "prior_close_date": "2026-11-12",
-          "change_from_prior_close": 0.029494314445638548,
-          "spy": {
-            "bid": 752.95,
-            "ask": 753.03,
-            "quote_at": "2026-11-13T20:30:21.796266+00:00",
-            "midpoint": 752.99,
-            "prior_close": 757.16,
-            "prior_close_date": "2026-11-12",
-            "change_from_prior_close": -0.005507422473453372
-          },
-          "relative_change": 0.03500173691909192,
-          "capture_bucket": "2026-11-13T15:30:00-05:00",
-          "selection_rule": "Largest absolute prior-close-relative difference from SPY, at least 0.5 percentage points; maximum three, first capture per symbol per 15-minute bucket."
-        },
-        "provenance": {
-          "source": "Alpaca free IEX (one exchange; not consolidated); fresh two-sided quotes versus completed daily close; midpoint descriptive only",
-          "input_ref": "research-input:2026-11-13T15:30:22.220799-05:00",
-          "capture_mode": "quote_monitor"
-        },
-        "question": "What new verified information could explain this current relative movement, and which prospective observation would distinguish continuation from reversal?",
-        "alternatives": [
-          "Different market/sector exposures",
-          "Company-specific repricing",
-          "Temporary noise or feed effects; midpoint movement is not a fill"
+          "Trending price discovery",
+          "Temporary imbalance or noise",
+          "IEX coverage differs from consolidated trading"
         ],
         "authority": "Research lead only; selected descriptively, not independent evidence or a trade signal."
       }
     ],
-    "total_records": 713,
-    "omitted": 709,
+    "total_records": 728,
+    "omitted": 723,
     "scope": "Immutable local observations, selected descriptively. Dates and alternatives matter; history is context, not new evidence. No causal or profitability claim."
   },
   "adaptive_lab": {
@@ -12580,7 +12594,7 @@
           "at": "2026-10-31T12:33:03.514342-04:00"
         },
         "preregistered_opportunities": 360,
-        "pending": 300,
+        "pending": 294,
         "open": 0,
         "closed": 54,
         "closed_signals": 10,
@@ -12679,7 +12693,7 @@
           "missing_or_invalid_spy_receipts": 30,
           "scope": "Recorded per-entry local provenance only; legacy gaps remain missing. No reconstructed quotes or independent price certification."
         },
-        "not_evaluable": 6,
+        "not_evaluable": 12,
         "cumulative": {
           "signal_net": -0.001255603528651164,
           "signal_stressed": -0.0018111590842067196,
@@ -13289,7 +13303,7 @@
           "at": "2026-10-31T12:33:03.514342-04:00"
         },
         "preregistered_opportunities": 360,
-        "pending": 300,
+        "pending": 294,
         "open": 0,
         "closed": 54,
         "closed_signals": 3,
@@ -13388,7 +13402,7 @@
           "missing_or_invalid_spy_receipts": 30,
           "scope": "Recorded per-entry local provenance only; legacy gaps remain missing. No reconstructed quotes or independent price certification."
         },
-        "not_evaluable": 6,
+        "not_evaluable": 12,
         "cumulative": {
           "signal_net": 0.00028725909667215443,
           "signal_stressed": 0.00012059243000548784,
@@ -13993,7 +14007,7 @@
           "at": "2026-11-02T09:30:19.231195-05:00"
         },
         "preregistered_opportunities": 60,
-        "pending": 51,
+        "pending": 50,
         "open": 0,
         "closed": 8,
         "closed_signals": 3,
@@ -14084,7 +14098,7 @@
           "missing_or_invalid_spy_receipts": 4,
           "scope": "Recorded per-entry local provenance only; legacy gaps remain missing. No reconstructed quotes or independent price certification."
         },
-        "not_evaluable": 1,
+        "not_evaluable": 2,
         "cumulative": {
           "signal_net": -0.00649660527734007,
           "signal_stressed": -0.007621605277340069,
@@ -14731,7 +14745,7 @@
           "at": "2026-11-12T09:30:25.388603-05:00"
         },
         "preregistered_opportunities": 360,
-        "pending": 354,
+        "pending": 348,
         "open": 0,
         "closed": 0,
         "closed_signals": 0,
@@ -14757,7 +14771,7 @@
           "missing_or_invalid_spy_receipts": null,
           "scope": "Recorded per-entry local provenance only; legacy gaps remain missing. No reconstructed quotes or independent price certification."
         },
-        "not_evaluable": 6,
+        "not_evaluable": 12,
         "cumulative": {
           "signal_net": null,
           "signal_stressed": null,
@@ -15945,7 +15959,7 @@
     ]
   },
   "official_calendar": {
-    "observed_at": "2026-11-13T18:00:43.499876+00:00",
+    "observed_at": "2026-11-16T15:26:21.724813+00:00",
     "events": [
       {
         "title": "Experimental Super Intelligence Economic Statistics, 2024",
@@ -15955,7 +15969,7 @@
         "importance": "medium",
         "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "agency": "BEA",
-        "observed_at": "2026-11-13T16:14:04.601830+00:00",
+        "observed_at": "2026-11-16T15:26:21.724813+00:00",
         "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
         "calendar_status": "ok"
       },
@@ -15967,7 +15981,7 @@
         "importance": "medium",
         "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "agency": "BEA",
-        "observed_at": "2026-11-13T16:14:04.601830+00:00",
+        "observed_at": "2026-11-16T15:26:21.724813+00:00",
         "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
         "calendar_status": "ok"
       },
@@ -15979,7 +15993,7 @@
         "importance": "medium",
         "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "agency": "BEA",
-        "observed_at": "2026-11-13T16:14:04.601830+00:00",
+        "observed_at": "2026-11-16T15:26:21.724813+00:00",
         "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
         "calendar_status": "ok"
       },
@@ -15991,7 +16005,7 @@
         "importance": "high",
         "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "agency": "BEA",
-        "observed_at": "2026-11-13T16:14:04.601830+00:00",
+        "observed_at": "2026-11-16T15:26:21.724813+00:00",
         "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
         "calendar_status": "ok"
       },
@@ -16003,7 +16017,7 @@
         "importance": "high",
         "source_url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "agency": "BEA",
-        "observed_at": "2026-11-13T16:14:04.601830+00:00",
+        "observed_at": "2026-11-16T15:26:21.724813+00:00",
         "implication": "Official scheduled release; verify revisions and exposure before entry. No consensus forecast supplied.",
         "calendar_status": "ok"
       }
@@ -16019,7 +16033,7 @@
         "agency": "BEA",
         "url": "https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics",
         "status": "ok",
-        "retrieved_at": "2026-11-13T16:14:04.601830+00:00"
+        "retrieved_at": "2026-11-16T15:26:21.724813+00:00"
       }
     ],
     "unknowns": [
@@ -16454,6 +16468,86 @@
   ],
   "plans": [],
   "events": [
+    {
+      "id": 1555,
+      "at": "2026-11-16T15:29:16.772175+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "research:2026-11-16",
+        "title": "Trader - morning research ready"
+      }
+    },
+    {
+      "id": 1554,
+      "at": "2026-11-16T15:29:13.634225+00:00",
+      "kind": "research_completed",
+      "branch": null,
+      "payload": {
+        "summary": "No equity plans at the supplied 10:26 ET snapshot. SPY and QQQ were below their opening ranges and IEX bar VWAPs; AMD and NVDA also lacked price confirmation. LLY showed relative strength and a verified clinical-data catalyst, but remained below VWAP with conference-event timing incompletely covered. These are setup and event-input abstentions, not demonstrated quote or exit failures. A favorable company announcement can coexist with falling prices; neither establishes an experimental strategy's edge.",
+        "plans": 0,
+        "regime": "risk_off"
+      }
+    },
+    {
+      "id": 1553,
+      "at": "2026-11-16T15:28:37.330084+00:00",
+      "kind": "agent_task",
+      "branch": null,
+      "payload": {
+        "role": "research",
+        "model": "gpt-6.1-sol",
+        "context_rotated": false,
+        "state": "completed",
+        "request_id": "2840a2b4fa9c3dc3033ed8bfbb48738c938e36f626435d5ebfb0903f85eb8659",
+        "task_day": "2026-11-16",
+        "schema_id": "0c4d62b84b75498cb9f614c7352c1e1b480ef2d487b9cd1a237b2bc3d32a93e2",
+        "schema_name": "Brief",
+        "previous_attempt_id": null,
+        "started_at": "2026-11-16T15:26:29.972413+00:00",
+        "attempt_id": "usage:351",
+        "searches": 4,
+        "cycles": 11,
+        "budget_notice": false,
+        "budget_notice_status": "not_sent",
+        "terminal_outcome": "validated",
+        "completed_at": "2026-11-16T15:28:37.321851+00:00",
+        "quota_delta_reported": true,
+        "quota_delta_basis": {
+          "selection": "most_consumed_weekly_at_admission",
+          "bucket_fingerprint": "44e3c7eafc663df6",
+          "kind": "primary",
+          "window_duration_minutes": 10080,
+          "resets_at": 1795053622,
+          "before_used_percent": 4,
+          "after_used_percent": 4,
+          "status": "comparable",
+          "scope": "One account-wide meter change, including external usage; not project token consumption."
+        },
+        "reply_usage_reported": true,
+        "metadata_errors": [],
+        "application_outcome": "pending"
+      }
+    },
+    {
+      "id": 1551,
+      "at": "2026-11-16T15:26:18.215855+00:00",
+      "kind": "notification_sent",
+      "branch": null,
+      "payload": {
+        "key": "morning:2026-11-16",
+        "title": "Trader - good morning"
+      }
+    },
+    {
+      "id": 1550,
+      "at": "2026-11-16T15:26:08.385535+00:00",
+      "kind": "startup",
+      "branch": null,
+      "payload": {
+        "summary": "Local supervisor started; recovering durable state."
+      }
+    },
     {
       "id": 1549,
       "at": "2026-11-16T03:31:17.442711+00:00",
@@ -18439,118 +18533,6 @@
         "metadata_errors": [],
         "application_outcome": "pending"
       }
-    },
-    {
-      "id": 1454,
-      "at": "2026-11-13T23:44:54.779034+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "c90881975031c81e965bbf99:1",
-        "topic": "symbol_events:AMZN"
-      }
-    },
-    {
-      "id": 1453,
-      "at": "2026-11-13T23:44:43.295112+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "9ff4abda6f632519d0eb3975a4c56b217444deab34fb4b53d6d71c50e0103c50",
-        "task_day": "2026-11-13",
-        "schema_id": "7b4375a8e04bba2654f8f1cf0d283305bb84eda4a74043096f9f9959672ac177",
-        "schema_name": "ResearchWorkReport",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-13T23:43:09.161820+00:00",
-        "attempt_id": "usage:317",
-        "searches": 4,
-        "cycles": 11,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-13T23:44:43.291247+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1795053622,
-          "before_used_percent": 3,
-          "after_used_percent": 3,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 1452,
-      "at": "2026-11-13T23:42:58.697032+00:00",
-      "kind": "research_work_reviewed",
-      "branch": null,
-      "payload": {
-        "work_id": "c90881975031c81e965bbf99:0",
-        "topic": "symbol_events:AMZN",
-        "disposition": "revise",
-        "summary": "All five sources claimed verified were independently readable and supported their cited facts. Both partial listings reproduced. Findings use zero-based indexes. Finding 3 has correct scheduled-session arithmetic, but misattributes 18:39 EST as the supplied cutoff; that time corresponds to analyst retrievals. The supplied now is 18:41:46 EST. Future earnings, distributions and disclosure completeness remain appropriately unknown."
-      }
-    },
-    {
-      "id": 1451,
-      "at": "2026-11-13T23:42:51.238498+00:00",
-      "kind": "agent_task",
-      "branch": null,
-      "payload": {
-        "role": "deep_research_review",
-        "model": "gpt-6.1-sol",
-        "context_rotated": false,
-        "state": "completed",
-        "request_id": "cb0ef9a887ec2c8c56d1402abf8065cf0e7a63456e3e46296085e3bb4e12b04b",
-        "task_day": "2026-11-13",
-        "schema_id": "490d8c79bdccdf01b5b0833b3cd43e8c6eb7141a755ab5d2b54c79719ac526ea",
-        "schema_name": "ResearchWorkReview",
-        "previous_attempt_id": null,
-        "started_at": "2026-11-13T23:41:47.813265+00:00",
-        "attempt_id": "usage:316",
-        "searches": 3,
-        "cycles": 9,
-        "budget_notice": false,
-        "budget_notice_status": "not_sent",
-        "terminal_outcome": "validated",
-        "completed_at": "2026-11-13T23:42:51.234004+00:00",
-        "quota_delta_reported": true,
-        "quota_delta_basis": {
-          "selection": "most_consumed_weekly_at_admission",
-          "bucket_fingerprint": "44e3c7eafc663df6",
-          "kind": "primary",
-          "window_duration_minutes": 10080,
-          "resets_at": 1795053622,
-          "before_used_percent": 3,
-          "after_used_percent": 3,
-          "status": "comparable",
-          "scope": "One account-wide meter change, including external usage; not project token consumption."
-        },
-        "reply_usage_reported": true,
-        "metadata_errors": [],
-        "application_outcome": "pending"
-      }
-    },
-    {
-      "id": 1450,
-      "at": "2026-11-13T23:41:41.263250+00:00",
-      "kind": "research_work_analyzed",
-      "branch": null,
-      "payload": {
-        "work_id": "c90881975031c81e965bbf99:0",
-        "topic": "symbol_events:AMZN"
-      }
     }
   ],
   "experiments": [
@@ -19550,7 +19532,7 @@
               "closed": 54,
               "closed_signals": 10,
               "closed_sessions": 9,
-              "not_evaluable": 6,
+              "not_evaluable": 12,
               "cumulative": {
                 "signal_net": -0.001255603528651164,
                 "signal_stressed": -0.0018111590842067196,
@@ -19564,7 +19546,7 @@
               "closed": 54,
               "closed_signals": 3,
               "closed_sessions": 9,
-              "not_evaluable": 6,
+              "not_evaluable": 12,
               "cumulative": {
                 "signal_net": 0.00028725909667215443,
                 "signal_stressed": 0.00012059243000548784,
@@ -19611,7 +19593,7 @@
               "closed": 8,
               "closed_signals": 3,
               "closed_sessions": 8,
-              "not_evaluable": 1,
+              "not_evaluable": 2,
               "cumulative": {
                 "signal_net": -0.00649660527734007,
                 "signal_stressed": -0.007621605277340069,
@@ -19658,7 +19640,7 @@
               "closed": 0,
               "closed_signals": 0,
               "closed_sessions": 0,
-              "not_evaluable": 6,
+              "not_evaluable": 12,
               "cumulative": {
                 "signal_net": null,
                 "signal_stressed": null,
@@ -19773,40 +19755,77 @@
     "original_review_preserved": true
   },
   "quality_audit": {
-    "day": "2026-11-15",
-    "as_of": "2026-11-15T05:02:53.440158+00:00",
+    "day": "2026-11-16",
+    "as_of": "2026-11-16T15:29:15.514813+00:00",
     "scope": "Diagnostic patterns in archived outputs and measured telemetry; not a truth score, strategy grade or profitability estimate.",
     "measured_usage": {
-      "calls": 2,
+      "calls": 1,
       "by_role": {
-        "deep_research": 1,
-        "deep_research_review": 1
+        "research": 1
       },
-      "input_tokens": 34771,
-      "cached_input_tokens": 0,
-      "output_tokens": 2991,
-      "web_actions": 0,
+      "input_tokens": 49647,
+      "cached_input_tokens": 46464,
+      "output_tokens": 4236,
+      "web_actions": 4,
       "unreported_attempts": 0
     },
     "artifact_counts": {
-      "deep_research": 1,
-      "deep_research_review": 1
+      "research": 1
     },
     "legacy_snapshot_artifacts": 0,
     "derived_period_reviews": 0,
-    "reported_blockers": {},
-    "reported_mentions": {},
+    "reported_blockers": {
+      "event_coverage": 1,
+      "source_access": 1
+    },
+    "reported_mentions": {
+      "price_structure": 1,
+      "event_coverage": 1,
+      "source_access": 1
+    },
     "feature_diagnostics": {
-      "research_reports": 0,
-      "matched_inputs": 0,
-      "phase_counts": {},
-      "state_counts": {},
-      "records": [],
+      "research_reports": 1,
+      "matched_inputs": 1,
+      "phase_counts": {
+        "regular_session": 1
+      },
+      "state_counts": {
+        "no_reported_feature_blocker": 1
+      },
+      "records": [
+        {
+          "task_key": "research:2026-11-16",
+          "input_observed_at": "2026-11-16T15:26:19.039602+00:00",
+          "input_link": "matched_recorded_timestamp",
+          "session_phase": "regular_session",
+          "state": "no_reported_feature_blocker",
+          "mentioned_features": [
+            "price_structure"
+          ],
+          "reported_unresolved_features": [],
+          "reported_resolved_features": [],
+          "expected_missing_count": 0,
+          "unexpected_missing_count": 0,
+          "missing_examples": [],
+          "input_record_id": "research-input:2026-11-16T15:26:19.039602+00:00",
+          "selected_symbols": [
+            "AMD",
+            "LLY",
+            "NVDA",
+            "QQQ",
+            "SPY",
+            "TLT"
+          ],
+          "daily_complete_symbols": 6,
+          "minute_complete_symbols": 6,
+          "observed_missing_count": 0
+        }
+      ],
       "omitted_records": 0,
       "scope": "Reported feature language plus field presence in the exactly timestamp-linked retained packet and broker session calendar. Expected preopen absence is not a collection fault; supplied fields do not prove correctness or an executable setup."
     },
-    "unique_cited_urls": 0,
-    "known_no_plan_research_outputs": 0,
+    "unique_cited_urls": 8,
+    "known_no_plan_research_outputs": 1,
     "pulse_outputs": 0,
     "pulses_without_verified_delta": 0,
     "reviewed_cards": 7,
@@ -20195,7 +20214,7 @@
   ],
   "maintenance": null,
   "quota": {
-    "at": "2026-11-16T04:32:34.827418+00:00",
+    "at": "2026-11-16T15:28:37.299347+00:00",
     "windows": [
       {
         "bucket": "codex",
@@ -20229,7 +20248,7 @@
       }
     },
     "latest_eligibility": {
-      "as_of": "2026-11-13T15:45:23.409154-05:00",
+      "as_of": "2026-11-16T10:40:40.437295-05:00",
       "branches": {
         "intraday": {
           "executable_plans": 0,
@@ -20250,10 +20269,10 @@
   },
   "background_research": {
     "version": "evidence-research-v1",
-    "as_of": "2026-11-16T04:47:57.073225+00:00",
+    "as_of": "2026-11-16T15:41:50.909470+00:00",
     "status": {
       "state": "waiting_for_evidence",
-      "as_of": "2026-11-15T23:47:27.716628-05:00",
+      "as_of": "2026-11-15T23:59:26.617191-05:00",
       "next_eligible_at": null,
       "reason": "No unreviewed eligible question for the retained evidence; new evidence or an eligible retry is required.",
       "idle_reasons": [
@@ -21542,6 +21561,24 @@
     }
   },
   "usage": [
+    {
+      "at": "2026-11-16T15:28:37.321982+00:00",
+      "day": "2026-11-16",
+      "role": "research",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 49647,
+      "cached_tokens": 46464,
+      "output_tokens": 4236,
+      "quota_delta": 0.0,
+      "state": "completed",
+      "outcome": "validated",
+      "attempt_id": "usage:351",
+      "application_outcome": "accepted",
+      "application_validation_code": null,
+      "reply_usage_reported": 1,
+      "quota_delta_reported": 1,
+      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1795053622,\"before_used_percent\":4,\"after_used_percent\":4,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
+    },
     {
       "at": "2026-11-15T05:02:42.013240+00:00",
       "day": "2026-11-15",
@@ -24223,24 +24260,6 @@
       "reply_usage_reported": 1,
       "quota_delta_reported": 1,
       "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1795053622,\"before_used_percent\":0,\"after_used_percent\":0,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
-    },
-    {
-      "at": "2026-11-12T13:37:08.805208+00:00",
-      "day": "2026-11-12",
-      "role": "research_validation",
-      "model": "gpt-6.1-sol",
-      "input_tokens": 16735,
-      "cached_tokens": 0,
-      "output_tokens": 308,
-      "quota_delta": 0.0,
-      "state": "completed",
-      "outcome": "validated",
-      "attempt_id": "usage:201",
-      "application_outcome": "accepted",
-      "application_validation_code": null,
-      "reply_usage_reported": 1,
-      "quota_delta_reported": 1,
-      "quota_delta_basis": "{\"selection\":\"most_consumed_weekly_at_admission\",\"bucket_fingerprint\":\"44e3c7eafc663df6\",\"kind\":\"primary\",\"window_duration_minutes\":10080,\"resets_at\":1795053622,\"before_used_percent\":0,\"after_used_percent\":0,\"status\":\"comparable\",\"scope\":\"One account-wide meter change, including external usage; not project token consumption.\"}"
     }
   ],
   "budget": {
@@ -24252,9 +24271,9 @@
     "background_daily_call_ceiling": 96,
     "night_review_reserved_calls": 4,
     "account_used_percent": 4.0,
-    "quota_observed_at": "2026-11-16T04:32:34.827418+00:00",
+    "quota_observed_at": "2026-11-16T15:28:37.299347+00:00",
     "target_gap_percentage_points": 76.0,
-    "account_limit_reason": "Account quota observation is stale",
+    "account_limit_reason": null,
     "attribution": "Task tokens are measured when reported. Quota is account-wide, includes other sessions, and is not an exact project token budget. Targets are objectives, not evidence of consumption. Calls already in flight can cross a reported threshold."
   },
   "execution_quality": {
@@ -24280,650 +24299,611 @@
       }
     },
     "SPY": {
-      "return": -0.008558694766180763,
-      "price": 754.12,
-      "at": "2026-11-13T15:59:41.706109-05:00"
+      "return": -0.02127841394633423,
+      "price": 744.4449999999999,
+      "at": "2026-11-16T10:41:34.740519-05:00"
     },
     "QQQ": {
-      "return": -0.025094904234630566,
-      "price": 679.27,
-      "at": "2026-11-13T15:47:34.215446-05:00"
+      "return": -0.045984600038751156,
+      "price": 664.7149999999999,
+      "at": "2026-11-16T10:41:34.740519-05:00"
     },
     "TLT": {
-      "return": -0.03102669028278293,
-      "price": 79.32499999999999,
-      "at": "2026-11-13T15:47:34.215446-05:00"
+      "return": -0.027728577536187737,
+      "price": 79.595,
+      "at": "2026-11-16T10:41:34.740519-05:00"
     },
     "fixed_rule": {
-      "day": "2026-11-13",
-      "entry": 750.41,
-      "entered_at": "2026-11-13T11:14:00.026517-05:00",
+      "day": "2026-11-16",
+      "entry": 743.61,
+      "entered_at": "2026-11-16T10:26:18.514148-05:00",
       "trades": false,
       "name": "SPY above SMA20 at first quote after 09:35; close before session end",
-      "assumptions": "Unit exposure, ask entry/bid exit, 20bp cost; forward shadow only",
-      "last_return": 0,
-      "exit_at": "2026-11-13T15:48:15.848940-05:00",
-      "exit_price": 753.0
+      "assumptions": "Unit exposure, ask entry/bid exit, 20bp cost; forward shadow only"
     }
   },
   "options_research": {
     "feed": "indicative",
     "execution_eligible": false,
-    "observed_at": "2026-11-13T18:00:30.973126+00:00",
+    "observed_at": "2026-11-16T15:26:19.039602+00:00",
     "contracts": [
       {
-        "symbol": "SPY261113C00630000",
+        "symbol": "SPY261116C00580000",
         "underlying": "SPY",
         "quote": {
-          "ap": 123.4,
-          "as": 1,
-          "ax": "Q",
-          "bp": 122.81,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.647540626Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 127.54,
-          "s": 1,
-          "t": "2026-11-12T20:04:05.193253772Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00600000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 151.01,
-          "as": 1,
-          "ax": "Q",
-          "bp": 150.66,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.723605813Z"
-        },
-        "trade": {
-          "c": "f",
-          "p": 151.05,
-          "s": 2,
-          "t": "2026-11-13T17:15:54.16239977Z",
-          "x": "I"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00565000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 188.12,
-          "as": 1,
-          "ax": "Q",
-          "bp": 187.83,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:41.677622891Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 191.56,
-          "s": 1,
-          "t": "2026-11-12T20:46:35.281348255Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00575000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 177.31,
+          "ap": 161.83,
           "as": 1,
           "ax": "C",
-          "bp": 176.83,
+          "bp": 160.56,
           "bs": 1,
           "bx": "Q",
           "c": "A",
-          "t": "2026-11-13T18:00:40.810185987Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 184.54,
-          "s": 1,
-          "t": "2026-11-12T20:58:51.881622411Z",
-          "x": "C"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00530000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 225.46,
-          "as": 1,
-          "ax": "Q",
-          "bp": 223.4,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:41.677622891Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 231.03,
-          "s": 1,
-          "t": "2026-11-12T20:57:53.648421244Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00620000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 133.3,
-          "as": 1,
-          "ax": "Q",
-          "bp": 132.84,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.631715546Z"
-        },
-        "trade": {
-          "c": "j",
-          "p": 130.81,
-          "s": 3,
-          "t": "2026-11-13T17:16:57.746288171Z",
-          "x": "I"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00595000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 157.5,
-          "as": 1,
-          "ax": "Q",
-          "bp": 157.32,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.722225765Z"
+          "t": "2026-11-16T15:26:20.192626611Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "SPY261113C00605000",
+        "symbol": "SPY261116C00680000",
         "underlying": "SPY",
         "quote": {
-          "ap": 146.72,
-          "as": 1,
-          "ax": "Q",
-          "bp": 144.23,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.658240679Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 152.53,
-          "s": 1,
-          "t": "2026-11-12T20:03:24.241548139Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00505000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 247.42,
-          "as": 1,
+          "ap": 63.99,
+          "as": 42,
           "ax": "C",
-          "bp": 242.92,
-          "bs": 1,
+          "bp": 63.49,
+          "bs": 54,
           "bx": "C",
-          "c": " ",
-          "t": "2026-11-13T18:00:39.147547159Z"
+          "c": "A",
+          "t": "2026-11-16T15:26:21.079948834Z"
         },
         "trade": {
           "c": "I",
-          "p": 246.27,
+          "p": 69.79,
           "s": 1,
-          "t": "2026-11-09T19:36:28.63820359Z",
-          "x": "B"
+          "t": "2026-11-16T14:35:15.273979224Z",
+          "x": "Q"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "SPY261113C00550000",
+        "symbol": "SPY261116C00690000",
         "underlying": "SPY",
         "quote": {
-          "ap": 202.12,
-          "as": 1,
-          "ax": "Q",
-          "bp": 197.42,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.603195558Z"
-        },
-        "trade": {
-          "c": "I",
-          "p": 198.99,
-          "s": 10,
-          "t": "2026-11-13T16:05:12.332433387Z",
-          "x": "I"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00585000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 169.21,
-          "as": 1,
-          "ax": "Q",
-          "bp": 168.75,
-          "bs": 1,
-          "bx": "Q",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.710540795Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00500000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 250.79,
-          "as": 51,
-          "ax": "C",
-          "bp": 246.55,
-          "bs": 69,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:41.614577839Z"
-        },
-        "trade": {
-          "c": "f",
-          "p": 251.73,
-          "s": 1,
-          "t": "2026-11-13T17:42:45.059609892Z",
-          "x": "E"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00525000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 225.97,
-          "as": 1,
-          "ax": "Q",
-          "bp": 225.64,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.810460947Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 232.19,
-          "s": 1,
-          "t": "2026-11-12T20:57:42.078452165Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00545000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 209.76,
-          "as": 1,
-          "ax": "Q",
-          "bp": 204.71,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.647540626Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "SPY261113C00555000",
-        "underlying": "SPY",
-        "quote": {
-          "ap": 197.64,
-          "as": 1,
-          "ax": "Q",
-          "bp": 197.23,
-          "bs": 1,
-          "bx": "C",
-          "c": "A",
-          "t": "2026-11-13T18:00:40.591300527Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 203.39,
-          "s": 1,
-          "t": "2026-11-12T20:58:04.046232943Z",
-          "x": "M"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00400000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 278.67,
-          "as": 7,
-          "ax": "A",
-          "bp": 274.73,
-          "bs": 5,
+          "ap": 53.78,
+          "as": 19,
+          "ax": "X",
+          "bp": 53.56,
+          "bs": 19,
           "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.9036319Z"
+          "c": "A",
+          "t": "2026-11-16T15:26:21.540729938Z"
         },
         "trade": {
           "c": "g",
-          "p": 278.03,
-          "s": 1,
-          "t": "2026-11-09T19:07:29.056831328Z",
-          "x": "C"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00440000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 240.09,
-          "as": 26,
-          "ax": "C",
-          "bp": 233.77,
-          "bs": 6,
-          "bx": "V",
-          "c": " ",
-          "t": "2026-11-13T18:00:42.333454139Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00475000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 205.65,
-          "as": 7,
-          "ax": "A",
-          "bp": 203.13,
-          "bs": 9,
-          "bx": "S",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.903716955Z"
-        },
-        "trade": {
-          "c": "g",
-          "p": 221.38,
-          "s": 1,
-          "t": "2026-11-11T18:26:00.489422237Z",
-          "x": "C"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00520000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 159.52,
-          "as": 7,
-          "ax": "A",
-          "bp": 155.34,
-          "bs": 5,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.904168431Z"
-        },
-        "trade": {
-          "c": "a",
-          "p": 173.25,
-          "s": 1,
-          "t": "2026-11-11T17:00:28.614318256Z",
+          "p": 56.04,
+          "s": 75,
+          "t": "2026-11-16T14:53:56.315860688Z",
           "x": "J"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00515000",
-        "underlying": "QQQ",
+        "symbol": "SPY261116C00670000",
+        "underlying": "SPY",
         "quote": {
-          "ap": 161.31,
-          "as": 25,
-          "ax": "C",
-          "bp": 159.16,
-          "bs": 5,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.901666919Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00505000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 176.64,
-          "as": 7,
-          "ax": "A",
-          "bp": 174.12,
+          "ap": 73.48,
+          "as": 1,
+          "ax": "Q",
+          "bp": 73.46,
           "bs": 1,
-          "bx": "E",
+          "bx": "Q",
           "c": " ",
-          "t": "2026-11-13T18:00:37.904352056Z"
+          "t": "2026-11-16T15:26:19.160299065Z"
         },
-        "trade": null,
+        "trade": {
+          "c": "I",
+          "p": 77.62,
+          "s": 1,
+          "t": "2026-11-16T14:40:23.630652323Z",
+          "x": "Q"
+        },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00430000",
-        "underlying": "QQQ",
+        "symbol": "SPY261116C00615000",
+        "underlying": "SPY",
         "quote": {
-          "ap": 246.27,
-          "as": 16,
-          "ax": "X",
-          "bp": 245.27,
-          "bs": 6,
-          "bx": "V",
-          "c": " ",
-          "t": "2026-11-13T18:00:42.333439051Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00410000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 273.34,
-          "as": 27,
+          "ap": 130.09,
+          "as": 1,
           "ax": "C",
-          "bp": 270.83,
-          "bs": 6,
-          "bx": "V",
+          "bp": 128.789,
+          "bs": 1,
+          "bx": "Q",
           "c": "A",
-          "t": "2026-11-13T18:00:42.562377862Z"
+          "t": "2026-11-16T15:26:20.279126865Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00540000",
-        "underlying": "QQQ",
+        "symbol": "SPY261116C00655000",
+        "underlying": "SPY",
         "quote": {
-          "ap": 139.91,
-          "as": 13,
-          "ax": "I",
-          "bp": 137.37,
-          "bs": 6,
-          "bx": "V",
-          "c": " ",
-          "t": "2026-11-13T18:00:42.332919073Z"
+          "ap": 89.11,
+          "as": 1,
+          "ax": "C",
+          "bp": 87.05,
+          "bs": 1,
+          "bx": "C",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.298896902Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 91.93,
+          "s": 1,
+          "t": "2026-11-16T14:51:18.3413533Z",
+          "x": "Q"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00590000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 153.73,
+          "as": 1,
+          "ax": "Q",
+          "bp": 151.78,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.325666943Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00600000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 145.95,
+          "as": 1,
+          "ax": "C",
+          "bp": 145.6,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.192626611Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00645000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 99.99,
+          "as": 1,
+          "ax": "C",
+          "bp": 96.36,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.279126865Z"
         },
         "trade": {
           "c": "f",
-          "p": 151.6,
-          "s": 59,
-          "t": "2026-11-11T20:34:13.581501858Z",
+          "p": 107.19,
+          "s": 1,
+          "t": "2026-11-13T20:59:42.929313698Z",
+          "x": "X"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00565000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 180.76,
+          "as": 1,
+          "ax": "Q",
+          "bp": 175.48,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.325202017Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00570000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 175.81,
+          "as": 1,
+          "ax": "Q",
+          "bp": 174.17,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.325671968Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "SPY261116C00660000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 84.82,
+          "as": 1,
+          "ax": "C",
+          "bp": 82.21,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.279126865Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 91.91,
+          "s": 1,
+          "t": "2026-11-13T20:52:30.452050756Z",
           "x": "M"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00480000",
-        "underlying": "QQQ",
+        "symbol": "SPY261116C00625000",
+        "underlying": "SPY",
         "quote": {
-          "ap": 196.74,
-          "as": 7,
-          "ax": "A",
-          "bp": 192.3,
-          "bs": 5,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.90071193Z"
+          "ap": 120.6,
+          "as": 1,
+          "ax": "Q",
+          "bp": 118.27,
+          "bs": 1,
+          "bx": "C",
+          "c": "A",
+          "t": "2026-11-16T15:26:21.339654355Z"
         },
         "trade": {
-          "c": "f",
-          "p": 192.73,
-          "s": 25,
-          "t": "2026-11-13T15:58:30.519824169Z",
-          "x": "I"
-        },
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00425000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 251.86,
-          "as": 26,
-          "ax": "C",
-          "bp": 248.02,
-          "bs": 6,
-          "bx": "V",
-          "c": " ",
-          "t": "2026-11-13T18:00:42.333399159Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00405000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 269.11,
-          "as": 23,
-          "ax": "C",
-          "bp": 268.48,
-          "bs": 5,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.903636971Z"
-        },
-        "trade": null,
-        "greeks": null,
-        "implied_volatility": null
-      },
-      {
-        "symbol": "QQQ261113C00495000",
-        "underlying": "QQQ",
-        "quote": {
-          "ap": 182.9,
-          "as": 7,
-          "ax": "A",
-          "bp": 180.7,
-          "bs": 5,
-          "bx": "X",
-          "c": " ",
-          "t": "2026-11-13T18:00:37.905067568Z"
-        },
-        "trade": {
-          "c": "j",
-          "p": 193.35,
+          "c": "a",
+          "p": 128.46,
           "s": 1,
-          "t": "2026-10-30T19:29:29.467213202Z",
-          "x": "I"
+          "t": "2026-11-13T20:50:01.100418299Z",
+          "x": "M"
         },
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00470000",
-        "underlying": "QQQ",
+        "symbol": "SPY261116C00550000",
+        "underlying": "SPY",
         "quote": {
-          "ap": 211.49,
-          "as": 23,
-          "ax": "I",
-          "bp": 204.73,
-          "bs": 6,
-          "bx": "V",
-          "c": " ",
-          "t": "2026-11-13T18:00:41.766776988Z"
+          "ap": 193.88,
+          "as": 1,
+          "ax": "Q",
+          "bp": 192.91,
+          "bs": 1,
+          "bx": "Q",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.325671968Z"
         },
         "trade": null,
         "greeks": null,
         "implied_volatility": null
       },
       {
-        "symbol": "QQQ261113C00445000",
+        "symbol": "SPY261116C00695000",
+        "underlying": "SPY",
+        "quote": {
+          "ap": 49.06,
+          "as": 19,
+          "ax": "X",
+          "bp": 48.84,
+          "bs": 19,
+          "bx": "X",
+          "c": "A",
+          "t": "2026-11-16T15:26:21.540714872Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 58.32,
+          "s": 1,
+          "t": "2026-11-13T19:44:28.741006869Z",
+          "x": "M"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00510000",
         "underlying": "QQQ",
         "quote": {
-          "ap": 235.56,
-          "as": 16,
-          "ax": "X",
-          "bp": 229.07,
+          "ap": 153.91,
+          "as": 12,
+          "ax": "S",
+          "bp": 151.02,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.126367787Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00605000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 60.8,
+          "as": 10,
+          "ax": "I",
+          "bp": 57.13,
+          "bs": 1,
+          "bx": "E",
+          "c": " ",
+          "t": "2026-11-16T15:26:18.873798499Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 56.18,
+          "s": 1,
+          "t": "2026-11-05T19:41:29.426631152Z",
+          "x": "Q"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00570000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 96.72,
+          "as": 10,
+          "ax": "S",
+          "bp": 94.2,
+          "bs": 1,
+          "bx": "E",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.127584624Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00590000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 74.92,
+          "as": 10,
+          "ax": "I",
+          "bp": 71.98,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:18.874813148Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00555000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 111.01,
+          "as": 10,
+          "ax": "I",
+          "bp": 107.69,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:18.872139775Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00609000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 55.04,
+          "as": 10,
+          "ax": "I",
+          "bp": 54.03,
+          "bs": 2,
+          "bx": "E",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.12674755Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00500000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 167.59,
+          "as": 10,
+          "ax": "I",
+          "bp": 165.8,
+          "bs": 6,
+          "bx": "V",
+          "c": "A",
+          "t": "2026-11-16T15:26:20.141822303Z"
+        },
+        "trade": {
+          "c": "a",
+          "p": 166.27,
+          "s": 1,
+          "t": "2026-11-05T15:02:37.825313672Z",
+          "x": "B"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00580000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 85.25,
+          "as": 11,
+          "ax": "B",
+          "bp": 83.02,
+          "bs": 10,
+          "bx": "I",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.127052545Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00606000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 58.33,
+          "as": 7,
+          "ax": "S",
+          "bp": 57.45,
+          "bs": 7,
+          "bx": "B",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.133777427Z"
+        },
+        "trade": {
+          "c": "I",
+          "p": 73.58,
+          "s": 1,
+          "t": "2026-11-10T15:02:01.765685748Z",
+          "x": "V"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00595000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 68.96,
+          "as": 12,
+          "ax": "B",
+          "bp": 66.51,
+          "bs": 5,
+          "bx": "X",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.124887414Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00602000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 62.76,
+          "as": 10,
+          "ax": "I",
+          "bp": 60.39,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:18.876033067Z"
+        },
+        "trade": {
+          "c": "g",
+          "p": 63.79,
+          "s": 1,
+          "t": "2026-11-16T14:57:43.948730463Z",
+          "x": "M"
+        },
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00565000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 100.79,
+          "as": 10,
+          "ax": "S",
+          "bp": 96.74,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.126912888Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00520000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 146.9,
+          "as": 7,
+          "ax": "S",
+          "bp": 144.64,
+          "bs": 2,
+          "bx": "G",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.126702967Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00607000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 57.53,
+          "as": 11,
+          "ax": "B",
+          "bp": 56.16,
           "bs": 6,
           "bx": "V",
           "c": " ",
-          "t": "2026-11-13T18:00:42.332324065Z"
+          "t": "2026-11-16T15:26:18.67378912Z"
+        },
+        "trade": null,
+        "greeks": null,
+        "implied_volatility": null
+      },
+      {
+        "symbol": "QQQ261116C00603000",
+        "underlying": "QQQ",
+        "quote": {
+          "ap": 61.33,
+          "as": 10,
+          "ax": "S",
+          "bp": 60.48,
+          "bs": 5,
+          "bx": "X",
+          "c": " ",
+          "t": "2026-11-16T15:26:20.125677597Z"
         },
         "trade": null,
         "greeks": null,
@@ -25262,17 +25242,17 @@
     ]
   },
   "research_input_quality": {
-    "observed_at": "2026-11-13T18:00:30.973126+00:00",
+    "observed_at": "2026-11-16T15:26:19.039602+00:00",
     "acquisition_interval": {
-      "started_at": "2026-11-13T18:00:30.973126+00:00",
-      "completed_at": "2026-11-13T18:00:44.034698+00:00",
+      "started_at": "2026-11-16T15:26:19.039602+00:00",
+      "completed_at": "2026-11-16T15:26:22.651076+00:00",
       "crossed_et_date": false,
       "crossed_regular_open": false,
       "crossed_regular_close": false
     },
     "state": "ready",
     "version": "calendar-daily-inputs-v1",
-    "expected_previous_session": "2026-11-12",
+    "expected_previous_session": "2026-11-13",
     "field_missing_counts": {},
     "calendar_error": null,
     "source": {
